@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	<title>criterion row</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			id="row#{index}"
+			rendered="#{searchBean.isCriterionRowRendered[index]}"
+			styleClass="ctsms-criterion-row-drag"
+			cellpadding="0"
+			columns="8">
+			<p:draggable
+				for="row#{index}"
+				cursor="move"
+				revert="true"
+				opacity="0.5" />
+			<p:droppable
+				for="row#{index}"
+				tolerance="pointer"
+				activeStyleClass="ui-state-highlight"
+				hoverStyleClass="ctsms-criterion-hover"
+				onDrop="criterionRowHandleDrop" />
+			<p:commandButton
+				process=":search_form:tabView:row#{index}"
+				title="#{labels.criterion_insert_button_label}"
+				icon="ui-icon ui-icon-plus"
+				actionListener="#{searchBean.insertCriterion(index)}"
+				ajax="true"
+				disabled="#{!searchBean.isInsertCriterionEnabled[index]}"
+				update=":search_form:tabView:criterions" />
+			<p:commandButton
+				process="@this"
+				title="#{labels.criterion_remove_button_label}"
+				icon="ui-icon ui-icon-close"
+				actionListener="#{searchBean.deleteCriterion(index)}"
+				ajax="true"
+				disabled="#{!searchBean.isCriterionRowRendered[index]}"
+				update=":search_form:tabView:criterions" />
+			<h:panelGrid
+				cellpadding="0"
+				columns="5"
+				styleClass="#{searchBean.criterionRowColor[index]}"
+				style="height:0px;">
+				<h:panelGrid
+					cellpadding="0"
+					columns="1"
+					rendered="#{searchBean.isCriterionRowRendered[index]}"
+					styleClass="ctsms-criterion-position">
+					<h:outputText value="#{searchBean.criterionsIn[index].position}" >
+						<f:convertNumber pattern="#{searchBean.positionDigitsPattern}"/>
+					</h:outputText>
+					<h:outputText value="#{searchBean.criterionRowSelectLabel[index]}" />
+				</h:panelGrid>
+				<p:selectOneMenu
+					id="tie#{index}"
+					value="#{searchBean.criterionsIn[index].tieId}"
+					required="false"
+					rendered="#{searchBean.isCriterionRowRendered[index]}"
+					label="#{labels.criterion_tie} #{searchBean.criterionsIn[index].position}"
+					styleClass="ctsms-criterion-tie">
+					<f:converter converterId="ctsms.ID" />
+					<f:selectItem
+						itemLabel="#{labels.no_selection_label}"
+						itemValue="#{applicationScopeBean.noSelectionValue}" />
+					<f:selectItems
+						value="#{searchBean.ties}"
+						var="selectItem"
+						itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+					<p:ajax
+						update=":search_form:tabView:row#{index}"
+						listener="#{searchBean.handleTieChange(index)}" />
+				</p:selectOneMenu>
+				<p:selectOneMenu
+					id="property#{index}"
+					value="#{searchBean.criterionsIn[index].propertyId}"
+					required="false"
+					height="430"					
+					rendered="#{searchBean.isCriterionPropertyRendered[index]}"
+					label="#{labels.criterion_property} #{searchBean.criterionsIn[index].position}"
+					styleClass="ctsms-criterion-property">
+					<f:converter converterId="ctsms.ID" />
+					<f:selectItem
+						itemLabel="#{labels.no_selection_label}"
+						itemValue="#{applicationScopeBean.noSelectionValue}" />
+					<f:selectItems
+						value="#{searchBean.properties}"
+						var="selectItem"
+						itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+					<p:ajax
+						update=":search_form:tabView:row#{index}"
+						listener="#{searchBean.handlePropertyChange(index)}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<p:selectOneMenu
+				id="restriction#{index}"
+				value="#{searchBean.criterionsIn[index].restrictionId}"
+				required="false"
+				rendered="#{searchBean.isCriterionPropertyRendered[index] and searchBean.isCriterionPropertyRendered[index]}"
+				label="#{labels.criterion_restriction} #{searchBean.criterionsIn[index].position}"
+				styleClass="ctsms-criterion-restriction">
+				<f:converter converterId="ctsms.ID" />
+				<f:selectItem
+					itemLabel="#{labels.no_selection_label}"
+					itemValue="#{applicationScopeBean.noSelectionValue}" />
+				<f:selectItems
+					value="#{searchBean.restrictions[index]}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax
+					update=":search_form:tabView:row#{index}"
+					listener="#{searchBean.handleRestrictionChange(index)}" />
+			</p:selectOneMenu>
+			<p:inputText
+				id="string#{index}"
+				value="#{searchBean.criterionsIn[index].stringValue}"
+				required="false"
+				label="#{labels.criterion_string} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isText[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control">
+				<p:ajax />
+			</p:inputText>
+			<p:autoComplete
+				id="textautocomplete#{index}"
+				value="#{searchBean.criterionsIn[index].stringValue}"
+				required="false"
+				label="#{labels.criterion_string} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isTextAutocomplete[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control"
+				minQueryLength="#{autoCompleteMinQueryLengthCriteriaText}"
+				maxResults="#{autoCompleteMaxResultsCriteriaText}"
+				queryDelay="#{autoCompleteQueryDelayCriteriaText}"
+				dropdown="#{autoCompleteDropdownCriteriaText}"
+				global="#{autoCompleteGlobalCriteriaText}"
+				scrollHeight="#{autoCompleteScrollHeightCriteriaText}"
+				completeMethod="#{searchBean.completeTextValue}">
+				<p:ajax />
+				<f:attribute
+					name="index"
+					value="#{index}" />
+			</p:autoComplete>
+			<p:spinner
+				id="integer#{index}"
+				value="#{searchBean.criterionsIn[index].longValue}"
+				required="false"
+				label="#{labels.criterion_long} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isInteger[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-spinner">
+				<p:ajax />
+				<p:ajax event="keyup" />
+			</p:spinner>
+			<p:selectBooleanCheckbox
+				id="boolean#{index}"
+				value="#{searchBean.criterionsIn[index].booleanValue}"
+				required="false"
+				label="#{labels.criterion_boolean} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isBoolean[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:inputText
+				id="float#{index}"
+				value="#{searchBean.criterionsIn[index].floatValue}"
+				required="false"
+				label="#{labels.criterion_float} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isFloat[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control-float">
+				<p:ajax />
+			</p:inputText>
+			<p:calendar
+				id="date#{index}"
+				value="#{searchBean.criterionsIn[index].dateValue}"
+				required="false"
+				label="#{labels.criterion_date} #{searchBean.criterionsIn[index].position}"
+				pattern="#{applicationScopeBean.inputDatePattern}"
+				yearRange="#{applicationScopeBean.calendarYearRange}"
+				showWeek="true"
+				navigator="true"
+				locale="#{sessionScopeBean.locale}"
+				timeZone="#{sessionScopeBean.timeZone}"
+				rendered="#{searchBean.isDate[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-calendar-date">
+				<p:ajax
+					event="blur"
+					process="@this" />
+				<p:ajax
+					event="dateSelect"
+					process="@this" />
+			</p:calendar>
+			<p:calendar
+				id="timestamp#{index}"
+				value="#{searchBean.criterionsIn[index].timestampValue}"
+				required="false"
+				label="#{labels.criterion_timestamp} #{searchBean.criterionsIn[index].position}"
+				pattern="#{applicationScopeBean.inputDateTimePattern}"
+				yearRange="#{applicationScopeBean.calendarYearRange}"
+				showWeek="true"
+				navigator="true"
+				locale="#{sessionScopeBean.locale}"
+				timeZone="#{sessionScopeBean.timeZone}"
+				rendered="#{searchBean.isTimestamp[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-calendar-datetime">
+				<p:ajax
+					event="blur"
+					process="@this" />
+				<p:ajax
+					event="dateSelect"
+					process="@this" />
+			</p:calendar>
+			
+			<pe:timePicker
+					id="time#{index}"
+					value="#{searchBean.criterionsIn[index].timeValue}"
+					required="false"
+					label="#{labels.criterion_timestamp} #{searchBean.criterionsIn[index].position}"
+					timeSeparator="#{applicationScopeBean.timeSeparator}"
+					mode="spinner"
+					intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
+					showCloseButton="true"
+					locale="#{sessionScopeBean.locale}"
+					rendered="#{searchBean.isTime[index] and searchBean.isCriterionPropertyRendered[index]}"
+					styleClass="ctsms-timepicker" >
+					<p:ajax
+						event="blur"
+						process="@this" />					
+					<p:ajax
+						event="timeSelect"
+						process="@this" />
+			</pe:timePicker>
+			
+			<p:selectOneMenu
+				id="selection#{index}"
+				value="#{searchBean.selectedItem[index]}"
+				required="false"
+				label="#{labels.criterion_selectionitem} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isSelection[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control-larger">
+				<f:selectItem
+					itemLabel="#{labels.no_selection_label}"
+					itemValue="#{applicationScopeBean.noSelectionValue}" />
+				<f:selectItems
+					value="#{searchBean.selectionItems[index]}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectOneMenu>
+			<p:autoComplete
+				id="voautocomplete#{index}"
+				value="#{searchBean.vos[index]}"
+				required="false"
+				label="#{labels.criterion_string} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isVoAutocomplete[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control-larger"
+				minQueryLength="#{autoCompleteMinQueryLengthCriteriaVo}"
+				maxResults="#{autoCompleteMaxResultsCriteriaVo}"
+				queryDelay="#{autoCompleteQueryDelayCriteriaVo}"
+				dropdown="#{autoCompleteDropdownCriteriaVo}"
+				global="#{autoCompleteGlobalCriteriaVo}"
+				scrollHeight="#{autoCompleteScrollHeightCriteriaVo}"
+				completeMethod="#{searchBean.completeVo}"
+				forceSelection="true"
+				var="item"
+				itemValue="#{item}"
+				itemLabel="#{searchBean.converter[index].getLabel(item)}"
+				converter="#{searchBean.converter[index]}">
+				<p:ajax
+					event="itemSelect"
+					process="@this" />
+				<p:ajax
+					event="itemUnselect"
+					process="@this" />
+				<f:attribute
+					name="index"
+					value="#{index}" />
+				<f:facet name="itemtip">
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-criterion-itemtip-panelgrid">
+						<h:outputText
+							styleClass="ctsms-criterion-itemtip-em"
+							value="#{applicationScopeBean.clipStringTrailing(searchBean.converter[index].getName(item),96)}" />
+						<h:outputText value="#{searchBean.getCompleteItemDetailHtml(index,item)}" escape="false"/>
+					</h:panelGrid>
+				</f:facet>
+			</p:autoComplete>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isInventoryPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="inventory#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="inventoryName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.inventoryName[index])}"
+						title="#{labels.open_inventory_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedInventory(':search_form:tabView:inventory#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_inventory_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openInventoryPickerAjaxUpdate(':search_form:tabView:inventory#{index}',':search_form:tabView:inventoryName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_inventory_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:inventory#{index}',':search_form:tabView:inventoryName#{index}','#{applicationScopeBean.noInventoryPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isStaffPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="staff#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="staffName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.staffName[index])}"
+						title="#{labels.open_staff_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedStaff(':search_form:tabView:staff#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_staff_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openStaffPickerAjaxUpdate(':search_form:tabView:staff#{index}',':search_form:tabView:staffName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_staff_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:staff#{index}',':search_form:tabView:staffName#{index}','#{applicationScopeBean.noStaffPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isCoursePicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="course#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="courseName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.courseName[index])}"
+						title="#{labels.open_course_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedCourse(':search_form:tabView:course#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_course_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openCoursePickerAjaxUpdate(':search_form:tabView:course#{index}',':search_form:tabView:courseName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_course_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:course#{index}',':search_form:tabView:courseName#{index}','#{applicationScopeBean.noCoursePickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isUserPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="user#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="userName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.userName[index])}"
+						title="#{labels.open_user_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedUser(':search_form:tabView:user#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_user_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openUserPickerAjaxUpdate(':search_form:tabView:user#{index}',':search_form:tabView:userName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_user_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:user#{index}',':search_form:tabView:userName#{index}','#{applicationScopeBean.noUserPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isTrialPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="trial#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="trialName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.trialName[index])}"
+						title="#{labels.open_trial_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedTrial(':search_form:tabView:trial#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_trial_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openTrialPickerAjaxUpdate(':search_form:tabView:trial#{index}',':search_form:tabView:trialName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_trial_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:trial#{index}',':search_form:tabView:trialName#{index}','#{applicationScopeBean.noTrialPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isProbandPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="proband#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="probandName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.probandName[index])}"
+						title="#{labels.open_proband_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedProband(':search_form:tabView:proband#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_proband_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openProbandPickerAjaxUpdate(':search_form:tabView:proband#{index}',':search_form:tabView:probandName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_proband_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:proband#{index}',':search_form:tabView:probandName#{index}','#{applicationScopeBean.noProbandPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isInputFieldPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="inputField#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="inputFieldName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.inputFieldName[index])}"
+						title="#{labels.open_input_field_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedInputField(':search_form:tabView:inputField#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_input_field_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openInputFieldPickerAjaxUpdate(':search_form:tabView:inputField#{index}',':search_form:tabView:inputFieldName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_input_field_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:inputField#{index}',':search_form:tabView:inputFieldName#{index}','#{applicationScopeBean.noInputFieldPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>
+			<p:message for="tie#{index}" />
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

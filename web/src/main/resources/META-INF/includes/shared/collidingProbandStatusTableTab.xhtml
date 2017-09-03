@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding proband status entries table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_proband_status_tab_label_1}#{collidingProbandStatusEntryModel.allRowCount}#{labels.colliding_proband_status_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{statusEntry.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="statusEntry"
+				value="#{collidingProbandStatusEntryModel.allRows}"
+				id="collidingprobandstatusentry_list">
+				<p:column
+					rendered="#{showProband}"
+					sortBy="#{statusEntry.vo.proband.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_proband_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.proband.name}" />
+						<ui:param
+							name="icon"
+							value="#{statusEntry.vo.proband.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="#{statusEntry.vo.proband.decrypted}" />
+					</ui:include>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.proband.name}" />
+						<ui:param
+							name="icon"
+							value="ctsms-icon-encrypted" />
+						<ui:param
+							name="rendered"
+							value="#{!statusEntry.vo.proband.decrypted}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_status_type_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.type.name}" />
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.probandActive}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_proband_active_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{statusEntry.vo.type.probandActive}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.comment}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingprobandstatusentry_list_comment_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(statusEntry.vo.comment)}" />
+				</p:column>
+				<p:column
+					rendered="#{showProband}"
+					style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_proband_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openProband(#{statusEntry.vo.proband.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

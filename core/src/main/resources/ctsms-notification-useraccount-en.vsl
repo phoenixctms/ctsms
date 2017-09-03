@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+
+   • Username:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • An administrator will inform you of the actual password.
+#else
+   • The password remains unchanged.
+#end
+#elseif($ldap_auth_method)
+   • The password to use is your MUG-password.
+
+#if($new_user)
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+#else
+When logging in the next time, enter your current password as the mandatory "local password".
+#end
+#end
+
+#if($new_user)
+The system is accessible at the site below:
+
+   $http_base_url
+
+#end
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name

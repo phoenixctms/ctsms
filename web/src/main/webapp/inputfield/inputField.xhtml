@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>input field tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inputFieldEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inputFieldBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{inputFieldBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="inputFieldTabView"
+					onTabShow="handleInputFieldTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="inputfieldmain"
+						disabled="false"
+						titleStyleClass="#{!inputFieldBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inputfieldlabels.input_field_main_tab_label}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inputfieldselectionsetvalue"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldSelectionSetValue.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inputfielddummy"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{inputfieldlabels.input_field_preview_tab_label}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldDummy.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inputfieldassociations"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{inputfieldlabels.input_field_associations_tab_label}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldAssociation.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inputfieldjournal"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

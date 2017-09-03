@@ -1,0 +1,32 @@
+#set ($entity = $queryOperation.owner)
+#set ($entityDaoName = "${entity.name}Dao")
+#set ($entityDaoBaseName = "${entity.name}DaoBase")
+#set ($testCaseBaseClassName = "${entityDaoBaseName}Test")
+#set ($testCaseClassName = "${entityDaoName}_${queryOperation.name}Test")
+#set ($generatedFile = "${entity.packagePath}/test/${testCaseClassName}.java")
+// license-header java merge-point
+//
+package ${entity.packageName}.test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+/**
+ * TestCase for testing DAO <code>${entityDaoName}</code> methods.
+ *
+ * @see $entity.fullyQualifiedEntityName
+ */
+@Test(groups={"finder","$entityDaoName"})
+public class $testCaseClassName extends $testCaseBaseClassName {
+
+    /**
+     * Testcase success path for DAO finder $queryOperation.name.
+     *
+     *  @see ${entity.fullyQualifiedEntityName}Dao#${queryOperation.name}(${queryOperation.argumentTypeNames})
+     */
+    @Test
+    public void testSuccessPath() {
+      Assert.fail( "Test '${testCaseClassName}.testSuccessPath()' not implemented!" );
+    }
+
+}

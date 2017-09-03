@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>summary warn message</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGroup
+		    id="#{error_message_id}_div"
+			rendered="#{rendered}"
+			layout="block"
+			style="#{hidden ? 'display: none;' : ''}"
+			styleClass="ui-messages ui-widget ui-messages-warn ui-corner-all">
+			<span class="ui-messages-warn-icon"></span>
+			<ul>
+				<li><h:outputText
+						id="#{error_message_id}"
+						styleClass="ui-messages-warn-summary"
+						value="#{value}" /></li>
+			</ul>
+		</h:panelGroup>
+	</ui:composition>
+</h:body>
+</html>

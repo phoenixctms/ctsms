@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    This is used to map merge patterns in files generated
+    by spring cartridge to new patterns. Just add content to the
+    CDATA sections of the <to/> elements in order to
+    use the following merge points.
+-->
+<mappings name="SpringMerge">
+
+  <mapping>
+    <from><![CDATA[// license-header java merge-point]]></from>
+    <to><![CDATA[// This file is part of the Phoenix CTMS project (www.phoenixctms.org),
+// distributed under LGPL v2.1. Copyright (C) 2011 - 2017. ]]></to>
+  </mapping>
+
+	<mapping>
+        <from><![CDATA[<!-- ToolsService service property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="notificationEmailSender" ref="notificationEmailSender"/>
+                <property name="authenticator" ref="authenticator"/>
+                <property name="sessionFactory" ref="sessionFactory"/>
+            ]]>
+        </to>
+    </mapping>
+	<mapping>
+        <from><![CDATA[<!-- SearchService service property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="criterionSyntaxParser" ref="criterionSyntaxParser"/>
+                <property name="criterionIntermediateSetParser" ref="criterionIntermediateSetParser"/>
+            ]]>
+        </to>
+    </mapping>
+
+	<mapping>
+        <from><![CDATA[<!-- Notification entity property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="velocityEngine" ref="notificationVelocityEngine"/>
+            ]]>
+        </to>
+    </mapping>
+
+    <mapping>
+        <from><![CDATA[<!-- applicationContext hibernateProperties merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            ]]>
+        </to>
+    </mapping>
+
+    <mapping>
+        <from><![CDATA[<!-- beanRefFactory merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                    <value>applicationContext-main.xml</value>
+            ]]>
+        </to>
+    </mapping>
+
+    <mapping>
+        <from><![CDATA[<!-- InventoryService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- StaffService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- CourseService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- TrialService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+	<mapping>
+        <from><![CDATA[<!-- UserService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- ProbandService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- FileService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- HyperlinkService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- InputFieldService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- JournalService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- SearchService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- SelectionSetService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- ToolsService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+
+    <mapping>
+        <from><![CDATA[<!-- namespace-propertyGroup merge-point -->]]></from>
+        <to>
+            <![CDATA[
+        <propertyGroup name="ctsms-outlet">
+            <documentation>
+                Defines the locations to which output is generated. For my own extensions to spring cartridge.
+            </documentation>
+            <property name="dao-base-test" required="false">
+                <documentation>
+                    The location where dao base test files will be generated.
+                </documentation>
+            </property>
+            <property name="dao-test" required="false">
+                <documentation>
+                    The location where dao test files will be generated.
+                </documentation>
+            </property>
+            <property name="service-base-test" required="false">
+                <documentation>
+                    The location where service base test files will be generated.
+                </documentation>
+            </property>
+            <property name="service-test" required="false">
+                <documentation>
+                    The location where service method test files will be generated.
+                </documentation>
+            </property>
+            <property name="generateTestRefFiles" required="false">
+                <default>false</default>
+                <documentation>
+                    If set to true filename.ref - files are generated for test case classes in src/main/test/.
+                </documentation>
+            </property>
+            <property name="ref-test" required="false">
+                <documentation>
+                    Outlet for ref-files.
+                </documentation>
+            </property>
+            <property name="baseServiceTestClass">
+                <default>org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests</default>
+                <documentation>
+                    The fqn of the class from which the base service test class is derived.
+                </documentation>
+            </property>
+            <property name="baseDaoTestClass">
+                <default>org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests</default>
+                <documentation>
+                    The fqn of the class from which the base dao test class is derived.
+                </documentation>
+            </property>
+            <property name="baseDaoTestngGroup" required="false">
+                <default>empty</default>
+                <documentation>
+                    Default TestNG group for dao tests.
+                </documentation>
+            </property>
+            <property name="baseDaoTransformTestngGroup" required="false">
+                <default>empty</default>
+                <documentation>
+                    Default TestNG group for dao tests.
+                </documentation>
+            </property>
+            <property name="baseServiceTestngGroup" required="false">
+                <default>empty</default>
+                <documentation>
+                    Default TestNG group for dao tests.
+                </documentation>
+            </property>
+        </propertyGroup>
+]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- cartridge-template merge-point -->]]></from>
+        <to><![CDATA[
+    <!--
+      DAO tests
+    -->
+    <template
+        path="templates/spring/SpringDaoTransformTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="dao-test"
+        overwrite="false"
+        outputOnEmptyElements="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.spring.metafacades.SpringEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/spring/SpringDaoTransformTest.vsl"
+        outputPattern="${generatedFile}.ref"
+        outlet="ref-test"
+        overwrite="true"
+        outputOnEmptyElements="false"
+        outputCondition="generateTestRefFiles">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.spring.metafacades.SpringEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/spring/SpringDaoBaseTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="dao-base-test"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.spring.metafacades.SpringEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <!--
+    TODO: this does not work yet because SpringQueryOperation is not found I guess it is not defined as contextRoot
+    in the metafaceda.xml, it works for i.e. org.andromda.cartridges.spring.metafacades.SpringEntity
+    -->
+    <template
+        path="templates/spring/SpringDaoOperationTest.vsl"
+        outputPattern="${generatedFile}"
+        outlet="dao-test"
+        overwrite="false"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="queryOperation">
+                <type name="org.andromda.cartridges.spring.metafacades.SpringQueryOperationLogicImpl"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <!--
+      Service tests
+    -->
+    <template
+        path="templates/spring/SpringServiceBaseTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="service-base-test"
+        overwrite="true"
+        outputOnEmptyElements="false">
+        <modelElements variable="service">
+            <modelElement>
+                <type name="org.andromda.cartridges.spring.metafacades.SpringService">
+                    <property name="configonly">false</property>
+                    <property name="private">false</property>
+                </type>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/spring/SpringServiceOperationTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="service-test"
+        overwrite="false"
+        outputOnEmptyElements="false">
+        <modelElements variable="serviceOperation">
+            <modelElement>
+                <type name="org.andromda.cartridges.spring.metafacades.SpringServiceOperation"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/spring/ctsms/MethodParameterNames.java.vsl"
+        outputPattern="$generatedFile"
+        outlet="service-interfaces"
+        overwrite="true"
+        outputToSingleFile="true"/>
+    ]]></to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- cartridge-property merge-point -->]]></from>
+        <to><![CDATA[
+    <property reference="generateTestRefFiles"/>
+    <property reference="baseServiceTestClass"/>
+    <property reference="baseDaoTestClass"/>
+    <property reference="baseDaoTestngGroup"/>
+    <property reference="baseDaoTransformTestngGroup"/>
+    <property reference="baseServiceTestngGroup"/>
+    ]]></to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- condition merge-point-->]]></from>
+        <to><![CDATA[
+    <condition name="generateTestRefFiles">$generateTestRefFiles.equalsIgnoreCase("true")</condition>
+    ]]></to>
+    </mapping>
+
+</mappings>

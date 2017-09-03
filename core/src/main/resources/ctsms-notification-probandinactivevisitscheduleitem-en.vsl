@@ -1,0 +1,29 @@
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+
+this is a notification for the following event:
+
+   $type
+
+   • Proband ID:    $probandstatusentry_proband_id
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
+
+   • Status type:   $probandstatusentry_type
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
+
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name

@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory status entries</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inventorystatus_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeInventoryStatus"
+				actionListener="#{inventoryStatusBean.change(inventoryBean.in.id)}"
+				update="inventorystatus_list,inventorystatus_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{statusEntry.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="statusEntry"
+					value="#{inventoryStatusBean.statusEntryModel}"
+					id="inventorystatus_list"
+					selectionMode="single"
+					selection="#{inventoryStatusBean.selectedInventoryStatusEntry}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:inventorystatus_form:inventorystatus_input" />
+					<f:facet name="header">
+						<h:outputText value="#{inventoryStatusBean.statusEntryModel.rowCount} #{inventorylabels.inventory_status_inventorystatus_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.id}" />
+					</p:column>
+					<ui:include src="../shared/inventoryStatusEntryTableColumns.xhtml" />
+					<p:column sortBy="#{statusEntry.vo.originator}">
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_originator_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{statusEntry.vo.originator.name}" />
+							<ui:param
+								name="icon"
+								value="#{statusEntry.vo.originator.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.addressee}">
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_addressee_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{statusEntry.vo.addressee.name}" />
+							<ui:param
+								name="icon"
+								value="#{statusEntry.vo.addressee.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_colliding_inventory_booking_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{inventoryStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param
+									name="collidingInventoryBookingModel"
+									value="#{inventoryStatusBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
+								<ui:param
+									name="showInventory"
+									value="false" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<p:panel id="inventorystatus_input">
+					<f:facet name="header">
+						<h:outputText value="#{inventoryStatusBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="inventoryStatusType"
+								value="#{inventorylabels.inventory_status_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="inventoryStatusType"
+									value="#{inventoryStatusBean.in.typeId}"
+									required="true"
+									label="#{inventorylabels.inventory_status_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{inventoryStatusBean.statusTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										update="inventory_inactive_message"
+										listener="#{inventoryStatusBean.handleTypeChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inventoryStatusType">
+									<h:outputText
+										value="#{inventorylabels.inventory_status_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inventoryStatusType" />
+							<h:outputLabel />
+							<h:outputText
+								value="#{inventoryStatusBean.showInventoryInActiveMessage ? inventorylabels.inventory_status_inventory_inactive_message_label : ''}"
+								id="inventory_inactive_message" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="originator"
+								value="#{inventorylabels.inventory_status_originator_label}" />
+							<h:panelGrid
+								columns="4"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="originator"
+										required="false"
+										value="#{inventoryStatusBean.in.originatorId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="originatorName"
+										value="#{applicationScopeBean.clipStringPicker(inventoryStatusBean.originatorName)}"
+										title="#{inventorylabels.inventory_status_originator_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff(':tabView:inventorystatus_form:originator')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_active_identity_staff_button_label}"
+									icon="ui-icon ui-icon-person"
+									type="button"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									onclick="setIDAjax(':tabView:inventorystatus_form:originator',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':tabView:inventorystatus_form:originatorName','#{sessionScopeBean.userIdentityName}')" />
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax(':tabView:inventorystatus_form:originator',':tabView:inventorystatus_form:originatorName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax(':tabView:inventorystatus_form:originator',':tabView:inventorystatus_form:originatorName','#{applicationScopeBean.noStaffPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="originator" />
+							<h:outputLabel
+								for="addressee"
+								value="#{inventorylabels.inventory_status_addressee_label}" />
+							<h:panelGrid
+								columns="4"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="addressee"
+										required="false"
+										value="#{inventoryStatusBean.in.addresseeId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="addresseeName"
+										value="#{applicationScopeBean.clipStringPicker(inventoryStatusBean.addresseeName)}"
+										title="#{inventorylabels.inventory_status_addressee_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff(':tabView:inventorystatus_form:addressee')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax(':tabView:inventorystatus_form:addressee',':tabView:inventorystatus_form:addresseeName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax(':tabView:inventorystatus_form:addressee',':tabView:inventorystatus_form:addresseeName','#{applicationScopeBean.noStaffPickedMessage}')" />
+								<p:commandButton
+									title="#{messages.create_new_staff}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button"
+									onclick="openNewStaff()" />
+							</h:panelGrid>
+							<p:message for="addressee" />
+							<h:outputLabel
+								for="statusstart"
+								value="#{inventorylabels.inventory_status_start_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstart"
+									value="#{inventoryStatusBean.in.start}"
+									required="true"
+									label="#{inventorylabels.inventory_status_start}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstart">
+									<h:outputText
+										value="#{inventorylabels.inventory_status_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstart" />
+							<h:outputLabel
+								for="statusstop"
+								value="#{inventorylabels.inventory_status_stop_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstop"
+									value="#{inventoryStatusBean.in.stop}"
+									required="false"
+									label="#{inventorylabels.inventory_status_stop}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstop">
+									<h:outputText
+										value="#{inventorylabels.inventory_status_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstop" />
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="statuscomment"
+								value="#{inventorylabels.inventory_status_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="statuscomment"
+									value="#{inventoryStatusBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inventorylabels.inventory_status_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statuscomment">
+									<h:outputText
+										value="#{inventorylabels.inventory_status_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{inventoryStatusBean.created ? inventoryStatusBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{inventoryStatusBean.reset}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="inventorystatus_list,inventorystatus_input" />
+								<p:commandButton
+									process="@this,inventorystatus_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{inventoryStatusBean.add}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!inventoryStatusBean.createable}"
+									update="inventorystatus_list,inventorystatus_input" />
+								<p:commandButton
+									process="@this,inventorystatus_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{inventoryStatusBean.update}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!inventoryStatusBean.editable}"
+									update="inventorystatus_list,inventorystatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{inventoryStatusBean.delete}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!inventoryStatusBean.removable}"
+									update="inventorystatus_list,inventorystatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{inventoryStatusBean.load}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!inventoryStatusBean.created}"
+									update="inventorystatus_list,inventorystatus_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

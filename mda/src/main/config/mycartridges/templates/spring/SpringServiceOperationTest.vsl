@@ -1,0 +1,44 @@
+#set ($service = $serviceOperation.service)
+#set ($testCaseClassName = "${service.name}_${serviceOperation.name}Test")
+#set ($testCaseBaseClassName = "${service.baseName}Test")
+#set ($generatedFile = "${service.implementationPackagePath}/test/${testCaseClassName}.java")
+// license-header java merge-point
+//
+package ${service.implementationPackageName}.test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+/**
+ * <p>
+ * Test case for method <code>${serviceOperation.name}</code> of service <code>${service.name}</code>.
+ * </p>
+ *
+ * @see $service.fullyQualifiedName#${serviceOperation.name}(${serviceOperation.argumentTypeNames})
+ */
+@Test(groups={"$baseServiceTestngGroup","${service.name}"})
+public class $testCaseClassName extends $testCaseBaseClassName {
+
+  /**
+   * Test succes path for service method <code>${serviceOperation.name}</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test '${testCaseClassName}.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the '${service.name}.${serviceOperation}()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
+}

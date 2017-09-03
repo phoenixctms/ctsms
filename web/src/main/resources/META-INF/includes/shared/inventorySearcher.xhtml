@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory search</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid"
+			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
+			<ui:include src="searchInput.xhtml">
+				<ui:param
+					name="searchBean"
+					value="#{inventorySearchBean}" />
+				<ui:param
+					name="result_list"
+					value="inventory_result_list" />
+				<ui:param
+					name="resultListWidgetVar"
+					value="inventoryResultList" />
+			</ui:include>
+			<p:messages
+				id="messages"
+				globalOnly="true" />
+			<p:toolbar id="criteria_toolbar">
+				<p:toolbarGroup align="left">
+					<h:outputText
+						styleClass="ctsms-toolbar-text"
+						value="#{inventorySearchBean.created ? inventorySearchBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<p:commandButton
+						process="@this"
+						value="#{labels.reset_button_label}"
+						actionListener="#{inventorySearchBean.reset}"
+						icon="ui-icon ui-icon-close"
+						ajax="true"
+						onstart="inventoryResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="false"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,inventory_result_list" />
+					<p:commandButton
+						rendered="#{!inventorySearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input"
+						id="add"
+						value="#{labels.add_button_label}"
+						actionListener="#{inventorySearchBean.add}"
+						icon="ui-icon ui-icon-plusthick"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!inventorySearchBean.createable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						rendered="#{inventorySearchBean.created}"
+						process="@this"
+						value="#{labels.add_button_label}"
+						onclick="criteriaAddConfirmation.show()"
+						disabled="#{!inventorySearchBean.createable}"
+						icon="ui-icon ui-icon-plusthick"
+						type="button" />
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						id="update"
+						value="#{labels.update_button_label}"
+						actionListener="#{inventorySearchBean.update}"
+						icon="ui-icon ui-icon-disk"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!inventorySearchBean.editable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.delete_button_label}"
+						onclick="criteriaDeleteConfirmation.show()"
+						disabled="#{!inventorySearchBean.removable}"
+						icon="ui-icon ui-icon-trash"
+						type="button" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{inventorySearchBean.load}"
+						icon="ui-icon-refresh"
+						ajax="true"
+						onstart="inventoryResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!inventorySearchBean.created}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,inventory_result_list" />
+					<ui:insert name="toolbarbuttons"></ui:insert>
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						value="#{labels.search_button_label}"
+						actionListener="#{inventorySearchBean.search}"
+						icon="ui-icon ui-icon-search"
+						ajax="true"
+						onstart="inventoryResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!inventorySearchBean.createable}"
+						update=":search_form:tabView:criteria_input,messages,inventory_result_list" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				widgetVar="inventoryResultList"
+				rows="#{dataTablesRowsSearch}"
+				paginator="#{dataTablesPaginatorSearch}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
+				paginatorPosition="#{dataTablesPaginatorPositionSearch}"
+				pageLinks="#{dataTablesPageLinksSearch}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleSearch}"
+				scrollable="#{dataTablesScrollableSearch}"
+				scrollHeight="#{dataTablesScrollHeightSearch}"
+				resizableColumns="#{dataTablesResizableColumnsSearch}"
+				sortBy="#{inventory.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}"
+				var="inventory"
+				value="#{inventorySearchBean.inventoryResultModel}"
+				id="inventory_result_list"
+				rowStyleClass="#{inventory.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventorySearchBean.inventoryToColor(inventory.vo)}">
+				<f:facet name="header">
+					<h:outputText value="#{inventorySearchBean.queryResultTitle}" />
+				</f:facet>
+				<p:column
+					sortBy="#{inventory.vo.id}"
+					filterBy="#{inventory.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{inventory.vo.id}" />
+				</p:column>
+				<p:column
+					sortBy="#{inventory.vo.name}"
+					filterBy="#{inventory.vo.name}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_inventory_name_column}" />
+					</f:facet>
+					<h:outputText value="#{inventory.vo.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{inventory.vo.department}"
+					filterBy="#{inventory.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_inventory_department_column}" />
+					</f:facet>
+					<h:outputText value="#{inventory.vo.department.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{inventory.vo.category}"
+					filterBy="#{inventory.vo.category.id}"
+					filterOptions="#{sessionScopeBean.filterInventoryCategories}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_inventory_category_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{inventory.vo.category.name}" />
+						<ui:param
+							name="icon"
+							value="#{inventory.vo.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{inventory.vo.owner}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_owner_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{inventory.vo.owner.name}" />
+						<ui:param
+							name="icon"
+							value="#{inventory.vo.owner.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{inventory.vo.maxOverlappingBookings}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_bookable_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{inventorySearchBean.getMaxOverlappingBookingsString(inventory.vo)}" />
+						<ui:param
+							name="icon"
+							value="#{inventory.vo.bookable ? 'ctsms-icon-true' : 'ctsms-icon-false'}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{inventory.vo.pieces}"
+					filterBy="#{inventory.vo.pieces}"
+					rendered="#{!inventorySearchBean.picker}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_pieces_column}" />
+					</f:facet>
+					<h:outputText value="#{inventory.vo.pieces}" />
+				</p:column>
+				<p:column
+					sortBy="#{inventory.vo.parent}"
+					filterBy="#{inventory.vo.parent.name}">
+					<f:facet name="header">
+						<h:outputText value="#{inventorylabels.search_inventory_result_list_parent_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{inventory.vo.parent.name}" />
+						<ui:param
+							name="icon"
+							value="#{inventory.vo.parent.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<ui:insert name="pickbutton"></ui:insert>
+			</p:dataTable>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="alert"
+			widgetVar="criteriaDeleteConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_delete_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this"
+				value="#{labels.yes_button_label}"
+				actionListener="#{inventorySearchBean.delete}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="criteriaAddConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_add_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed"
+				value="#{labels.yes_button_label}"
+				actionListener="#{inventorySearchBean.add}"
+				onclick="criteriaAddConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

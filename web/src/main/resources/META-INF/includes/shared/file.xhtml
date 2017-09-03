@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>files</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:remoteCommand
+			process="@this"
+			name="selectFileByTreeNode"
+			actionListener="#{fileBean.selectFileByNode()}"
+			update="#{namingContainer}:file_filters,#{namingContainer}:file_inputs,#{namingContainer}:messages,#{namingContainer}:toolbar" />
+		<h:panelGrid
+			columns="2"
+			cellpadding="0"
+			styleClass="ctsms-file-content-panelgrid"
+			columnClasses="ctsms-file-treetable-column,ctsms-file-input-column">
+			<p:panel styleClass="ctsms-file-treetable-panel-maxheight">
+				<f:facet name="header">
+					<h:outputText value="#{labels.file_tree_label}" />
+				</f:facet>
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-file-treetable-panelgrid"
+					rowClasses="ctsms-file-treetable-filter-row,ctsms-file-treetable-row">
+					<h:panelGrid
+						id="file_filters"
+						columns="14"
+						cellpadding="0"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-delete-pdf-files-button-column,ctsms-aggregated-pdf-files-button-column">
+						<h:outputLabel
+							for="filelogicalpath_filter"
+							value="#{labels.file_filelogicalpath_filter_label}" />
+						<h:panelGroup>
+							<p:autoComplete
+								id="filelogicalpath_filter"
+								value="#{fileBean.fileLogicalPathFilter}"
+								required="false"
+								label="#{labels.file_filelogicalpath_filter}"
+								styleClass="ctsms-file-filter-control"
+								minQueryLength="#{autoCompleteMinQueryLengthLogicalPath}"
+								maxResults="#{autoCompleteMaxResultsLogicalPath}"
+								queryDelay="#{autoCompleteQueryDelayLogicalPath}"
+								dropdown="#{autoCompleteDropdownLogicalPath}"
+								global="#{autoCompleteGlobalLogicalPath}"
+								scrollHeight="#{autoCompleteScrollHeightLogicalPath}"
+								completeMethod="#{fileBean.completeLogicalPathFilter}">
+								<p:ajax
+									listener="#{fileBean.handleLogicalPathFilterSelect}"
+									update="file_treetable,file_tree,delete_files_btn"
+									event="itemSelect"
+									process="@this" />
+								<p:ajax
+									event="blur"
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleFileNameFilterKeyUp}"
+									process="@this" />
+								<!-- <p:ajax
+									event="keyup"
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleFileNameFilterKeyUp}" /> -->
+								<p:ajax
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleFileNameFilterKeyUp}" />
+							</p:autoComplete>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="filelogicalpath_filter">
+								<h:outputText
+									value="#{labels.file_filelogicalpath_filter_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="filelogicalpath_filter" />
+						<h:outputLabel
+							styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-searchencrypted' : ''}"
+							for="filename_filter"
+							value="#{labels.file_filename_filter_label}" />
+						<h:panelGroup>
+							<p:inputText
+								id="filename_filter"
+								value="#{fileBean.fileNameFilter}"
+								required="false"
+								label="#{labels.file_filename_filter}"
+								styleClass="ctsms-file-filter-control">
+								<p:ajax
+									event="keyup"
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleFileNameFilterKeyUp}" />
+								<p:ajax
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleFileNameFilterKeyUp}" />
+							</p:inputText>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="filename_filter">
+								<h:outputText
+									value="#{labels.file_filename_filter_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="filename_filter" />
+						<h:outputLabel
+							styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-searchencrypted' : ''}"
+							for="title_filter"
+							value="#{labels.file_title_filter_label}" />
+						<h:panelGroup>
+							<p:inputText
+								id="title_filter"
+								value="#{fileBean.titleFilter}"
+								required="false"
+								label="#{labels.file_title_filter}"
+								styleClass="ctsms-file-filter-control">
+								<p:ajax
+									event="keyup"
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleTitleFilterKeyUp}" />
+								<p:ajax
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleTitleFilterKeyUp}" />
+							</p:inputText>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="title_filter">
+								<h:outputText
+									value="#{labels.file_title_filter_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="title_filter" />
+						<h:outputLabel
+							for="active_filter"
+							value="#{labels.file_active_filter_label}" />
+						<h:panelGroup>
+							<p:selectOneRadio
+								id="active_filter"
+								layout="lineDirection"
+								value="#{fileBean.activeFilter}">
+								<f:selectItem
+									itemLabel="#{labels.file_active_filter_all_option_label}"
+									itemValue="#{applicationScopeBean.noSelectionValue}" />
+								<f:selectItem
+									itemLabel="#{labels.file_active_filter_active_option_label}"
+									itemValue="true" />
+								<f:selectItem
+									itemLabel="#{labels.file_active_filter_inactive_option_label}"
+									itemValue="false" />
+								<f:converter converterId="ctsms.Tristate" />
+								<p:ajax
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handleActiveFilterChanged}" />
+							</p:selectOneRadio>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="active_filter">
+								<h:outputText
+									value="#{labels.file_active_filter_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="active_filter" />
+						<p:commandButton
+							immediate="true"
+							ajax="false"
+							title="#{labels.open_aggregated_pdf_files_button_title}"
+							icon="ui-icon ui-icon-pdf">
+							<p:fileDownload value="#{fileBean.aggregatedPdfFilesStreamedContent}" />
+						</p:commandButton>
+						
+						<p:commandButton
+							id="delete_files_btn"
+							title="#{labels.delete_files_button_title}"
+							onclick="deleteFilesConfirmation.show();"
+							disabled="#{!fileBean.bulkRemovable}"
+							icon="ui-icon ui-icon-trash"
+							type="button" />
+					</h:panelGrid>
+					<p:treeTable
+						styleClass="ctsms-filetreetable"
+						id="file_treetable"
+						rendered="#{!fileBean.dynamic}"
+						value="#{fileBean.fileRoot}"
+						var="filefolder"
+						scrollable="false"
+						selectionMode="single"
+						selection="#{fileBean.selectedFile}">
+						<p:ajax
+							event="select"
+							update="#{namingContainer}:file_filters,#{namingContainer}:file_inputs,#{namingContainer}:messages,#{namingContainer}:toolbar" />
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_title_column}" />
+							</f:facet>
+							<ui:include src="treeTableIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-mimetype-unkown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
+							</ui:include>
+							<h:outputText value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,36) : labels.encrypted_file_label}" />
+						</p:column>
+						<p:column style="width:32px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_active_column}" />
+							</f:facet>
+							<ui:include src="listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{filefolder.active}" />
+							</ui:include>
+						</p:column>
+						<p:column style="width:66px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_size_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.byteCountToString(filefolder.size)}" />
+						</p:column>
+						<p:column style="width:100px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_user_column}" />
+							</f:facet>
+							<h:outputText value="#{filefolder.modifiedUser.identity.lastName}" />
+						</p:column>
+						<p:column style="width:106px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_timestamp_column}" />
+							</f:facet>
+							<h:outputText value="#{filefolder.modifiedTimestamp}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{fileBean.logicalFileSystemStats}" />
+						</f:facet>
+					</p:treeTable>
+					<p:tree
+						styleClass="ctsms-filetree"
+						rendered="#{fileBean.dynamic}"
+						id="file_tree"
+						value="#{fileBean.fileRoot}"
+						var="filefolder"
+						dynamic="true"
+						cache="true">
+						<p:ajax
+							event="expand"
+							update="#{namingContainer}:file_tree"
+							listener="#{fileBean.onNodeExpand}" />
+						<p:treeNode type="#{applicationScopeBean.folderNodeType}">
+							<ui:include src="treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-mimetype-unkown #{filefolder.contentType.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="ctsms-filetree-node-folder"
+								onclick="selectFileByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('LOGICAL_PATH')}:'#{filefolder.logicalPathBase64}'}));">
+								<h:outputText value="#{applicationScopeBean.clipStringTrailing(filefolder.title,96)}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.fileNodeType}">
+							<ui:include src="treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-mimetype-unkown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
+							</ui:include>
+							<span
+								class="ctsms-filetree-node-file"
+								onclick="selectFileByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('FILE_ID')}:#{filefolder.id}}));"> <h:outputText
+									value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,96) : labels.encrypted_file_label}" />
+							</span>
+						</p:treeNode>
+					</p:tree>
+				</h:panelGrid>
+			</p:panel>
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-file-input-panelgrid"
+				rowClasses="ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row,ctsms-fileupload-row">
+				<p:panel id="file_inputs">
+					<f:facet name="header">
+						<h:outputText value="#{fileBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row">
+						<h:panelGrid
+							rendered="#{fileBean.inputVisible}"
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+								for="filetitle"
+								value="#{fileBean.useFileEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_short_label : '')}#{labels.file_title_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="filetitle"
+									value="#{fileBean.in.title}"
+									required="true"
+									label="#{labels.file_title}"
+									styleClass="ctsms-control-larger">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="filetitle">
+									<h:outputText
+										value="#{labels.file_title_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="filetitle" />
+							<h:outputLabel
+								styleClass="#{markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : ''}"
+								for="filelogicalPath"
+								value="#{markUnEncrypted ? labels.noencryption_warning_short_label : ''}#{labels.file_logical_path_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="filelogicalPath"
+									value="#{fileBean.in.logicalPath}"
+									required="false"
+									label="#{labels.file_logical_path}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthLogicalPath}"
+									maxResults="#{autoCompleteMaxResultsLogicalPath}"
+									queryDelay="#{autoCompleteQueryDelayLogicalPath}"
+									dropdown="#{autoCompleteDropdownLogicalPath}"
+									global="#{autoCompleteGlobalLogicalPath}"
+									scrollHeight="#{autoCompleteScrollHeightLogicalPath}"
+									completeMethod="#{fileBean.completeLogicalPath}">
+									<p:ajax
+										listener="#{fileBean.handleLogicalPathSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="filelogicalPath">
+									<h:outputText
+										value="#{labels.file_logical_path_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="filelogicalPath" />
+							<h:outputLabel
+								for="fileactive"
+								value="#{labels.file_active_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="fileactive"
+									value="#{fileBean.in.active}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="fileactive">
+									<h:outputText
+										value="#{labels.file_active_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="fileactive" />
+							<h:outputLabel
+								styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+								rendered="#{fileBean.created}"
+								for="filedownload"
+								value="#{fileBean.useFileEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_short_label : '')}#{labels.file_download_label}" />
+							<p:commandLink
+								immediate="true"
+								id="filedownload"
+								rendered="#{fileBean.created}"
+								ajax="false"
+								title="#{labels.file_download_tooltip} #{fileBean.fileDownloadLinkLabel}">
+								<h:outputText value="#{fileBean.fileDownloadLinkLabel}" />
+								<p:fileDownload value="#{fileBean.fileStreamedContent}" />
+							</p:commandLink>
+							<p:message for="filedownload" />
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{fileBean.created}"
+							columns="2"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
+							<h:outputLabel value="#{labels.file_size_label}" />
+							<h:outputLabel value="#{applicationScopeBean.byteCountToString(fileBean.out.size)}" />
+							<h:outputLabel value="#{labels.file_md5_label}" />
+							<h:outputText value="#{fileBean.out.md5}" />
+							<h:outputLabel value="#{labels.file_mime_type_label}" />
+							<h:outputText value="#{fileBean.out.contentType.mimeType}" />
+							<h:outputLabel value="#{labels.file_version_label}" />
+							<h:outputText value="#{fileBean.out.version}" />
+							<h:outputLabel value="#{labels.file_user_label}" />
+							<h:outputText value="#{applicationScopeBean.getIdentityString(fileBean.out.modifiedUser)}" />
+							<h:outputLabel value="#{labels.file_timestamp_label}" />
+							<h:outputText value="#{fileBean.out.modifiedTimestamp}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{fileBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+								for="filecomment"
+								value="#{fileBean.useFileEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_label : '')}#{labels.file_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="filecomment"
+									value="#{fileBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{labels.file_comment}">
+									<p:ajax />
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="filecomment">
+									<h:outputText
+										value="#{labels.file_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:panel>
+				<p:messages id="messages" />
+				<p:toolbar id="toolbar">
+					<p:toolbarGroup align="right">
+						<p:commandButton
+							process="@this"
+							actionListener="#{fileBean.reset}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							icon="ui-icon ui-icon-close"
+							title="#{labels.reset_button_label}"
+							ajax="true"
+							disabled="false"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+						<p:commandButton
+							process="@this,file_inputs"
+							actionListener="#{fileBean.add}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							icon="ui-icon ui-icon-plusthick"
+							title="#{labels.add_button_label}"
+							ajax="true"
+							disabled="#{!fileBean.createable}"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+						<p:commandButton
+							process="@this,file_inputs"
+							id="updateFileMetadata"
+							value="#{labels.update_file_metadata_button_label}"
+							actionListener="#{fileBean.update}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							icon="ui-icon ui-icon-disk"
+							title="#{labels.update_file_metadata_button_title}"
+							ajax="true"
+							disabled="#{!fileBean.editable}"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+						<p:commandButton
+							process="@this,file_inputs"
+							id="update"
+							value="#{labels.update_file_button_label}"
+							actionListener="#{fileBean.updateFile}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							title="#{labels.update_file_button_title}"
+							icon="ui-icon ui-icon-disk"
+							ajax="true"
+							disabled="#{!fileBean.fileUpdateEnabled}"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+						<p:commandButton
+							process="@this"
+							actionListener="#{fileBean.delete}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							icon="ui-icon ui-icon-trash"
+							title="#{labels.delete_button_label}"
+							ajax="true"
+							disabled="#{!fileBean.removable}"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+						<p:commandButton
+							process="@this"
+							actionListener="#{fileBean.load}"
+							oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+							icon="ui-icon-refresh"
+							title="#{labels.reload_button_label}"
+							ajax="true"
+							disabled="#{!fileBean.created}"
+							update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" />
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:fileUpload
+					rendered="#{fileBean.inputVisible}"
+					id="fileUpload"
+					fileUploadListener="#{fileBean.handleFileUpload}"
+					mode="advanced"
+					update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar"
+					multiple="true"
+					auto="true"
+					label="#{labels.choose_file_button_label}"
+					styleClass="ctsms-upload-control"
+					sizeLimit="#{fileBean.getUploadSizeLimit()}"
+					allowTypes="#{fileBean.allowTypes}" />
+			</h:panelGrid>
+		</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="deleteFilesConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{labels.delete_files_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{fileBean.deleteBulk}"
+					onstart="deleteFilesConfirmation.hide();"
+					oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+					icon="ui-icon ui-icon-trash"
+					ajax="true"
+					update="#{namingContainer}:file_filters,#{namingContainer}:file_treetable,#{namingContainer}:file_tree,#{namingContainer}:file_inputs,#{namingContainer}:messages,#{namingContainer}:toolbar" />
+
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="deleteFilesConfirmation.hide();"
+					type="button" />
+
+			</p:confirmDialog>					
+	</ui:composition>
+</h:body>
+</html>

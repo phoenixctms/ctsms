@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inventorymain_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryTag"
+				actionListener="#{inventoryTagBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorytag_form:inventorytag_list,:tabView:inventorytag_form:inventorytag_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryStatus"
+				actionListener="#{inventoryStatusBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorystatus_form:inventorystatus_list,:tabView:inventorystatus_form:inventorystatus_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryMaintenance"
+				actionListener="#{inventoryMaintenanceBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorymaintenance_form:inventorymaintenance_list,:tabView:inventorymaintenance_form:inventorymaintenance_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryBooking"
+				actionListener="#{inventoryBookingBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorybooking_form:inventorybooking_list,:tabView:inventorybooking_form:inventorybooking_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryBookingDuration"
+				actionListener="#{inventoryBookingDurationBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorybookingduration_form:bookingDurationSummaryDataTable" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryFile"
+				actionListener="#{fileBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryfile_form" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryHyperlink"
+				actionListener="#{hyperlinkBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryhyperlink_form:hyperlink_list,:tabView:inventoryhyperlink_form:hyperlink_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryJournalEntry"
+				actionListener="#{journalBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryjournal_form:journal_list,:tabView:inventoryjournal_form:journal_input" />		
+		
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByTag"
+				actionListener="#{inventoryBean.change(inventoryTagBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByStatus"
+				actionListener="#{inventoryBean.change(inventoryStatusBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByMaintenance"
+				actionListener="#{inventoryBean.change(inventoryMaintenanceBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByBooking"
+				actionListener="#{inventoryBean.change(inventoryBookingBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByHyperlink"
+				actionListener="#{inventoryBean.change(hyperlinkBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByJournalEntry"
+				actionListener="#{inventoryBean.change(journalBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByFile"
+				actionListener="#{inventoryBean.change(fileBean.in.inventoryId)}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryByTreeNode"
+				actionListener="#{inventoryBean.changeByNode()}"
+				oncomplete="handleInventoryChanged(xhr, status, args)"
+				update="inventory_tree,inventory_input" />
+			<h:panelGrid
+				columns="2"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
+				columnClasses="ctsms-inventory-tree-column,ctsms-inventory-input-column">
+				<p:panel styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{inventoryBean.inventoryTreeLabel}" />
+					</f:facet>
+					<p:tree
+						id="inventory_tree"
+						value="#{inventoryBean.inventoryRoot}"
+						styleClass="ctsms-inventory-tree"
+						var="inventory"
+						dynamic="false"
+						expanded="true">
+						<p:treeNode type="#{applicationScopeBean.parentNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-inventorycategory-unkown #{inventory.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{inventory.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-inventory-tree-node-parent"
+								onclick="changeInventoryByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(inventory.name)} (#{applicationScopeBean.getListSize(inventory.children)})" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.leafNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-inventorycategory-unkown #{inventory.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{inventory.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-inventory-tree-node-leaf"
+								onclick="changeInventoryByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(inventory.name)}" />
+							</span>
+						</p:treeNode>
+					</p:tree>
+				</p:panel>
+				<p:panel
+					id="inventory_input"
+					styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{inventoryBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-inventory-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="name"
+								value="#{inventorylabels.inventory_name_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="name"
+									value="#{inventoryBean.in.name}"
+									required="true"
+									label="#{inventorylabels.inventory_name}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="name">
+									<h:outputText
+										value="#{inventorylabels.inventory_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="name" />
+							<h:outputLabel
+								for="department"
+								value="#{inventorylabels.inventory_department_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department"
+									value="#{inventoryBean.in.departmentId}"
+									required="true"
+									label="#{inventorylabels.inventory_department}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{inventoryBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department">
+									<h:outputText
+										value="#{inventorylabels.inventory_department_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department" />
+							<h:outputLabel
+								for="category"
+								value="#{inventorylabels.inventory_category_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="category"
+									value="#{inventoryBean.in.categoryId}"
+									required="true"
+									label="#{inventorylabels.inventory_category}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{inventoryBean.categories}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="category">
+									<h:outputText
+										value="#{inventorylabels.inventory_category_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="category" />
+							<h:outputLabel
+								for="pieces"
+								value="#{inventorylabels.inventory_pieces_label}" />
+							<h:panelGroup>
+								<p:spinner
+									id="pieces"
+									value="#{inventoryBean.in.pieces}"
+									styleClass="ctsms-spinner"
+									required="true"
+									label="#{inventorylabels.inventory_pieces}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="pieces">
+									<h:outputText
+										value="#{inventorylabels.inventory_pieces_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="pieces" />
+							<h:outputLabel
+								for="bookable"
+								value="#{inventorylabels.inventory_bookable_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="bookable"
+									value="#{inventoryBean.in.bookable}">
+									<p:ajax
+										listener="#{inventoryBean.handleBookableChange}"
+										update="maxOverlappingBookings" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bookable">
+									<h:outputText
+										value="#{inventorylabels.inventory_bookable_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="bookable" />
+							<h:outputLabel
+								for="maxOverlappingBookings"
+								value="#{inventorylabels.inventory_max_overlapping_bookings_label}" />
+							<h:panelGroup>
+								<p:spinner
+									id="maxOverlappingBookings"
+									value="#{inventoryBean.in.maxOverlappingBookings}"
+									styleClass="ctsms-spinner"
+									required="true"
+									disabled="#{!inventoryBean.in.bookable}"
+									label="#{inventorylabels.inventory_max_overlapping_bookings}">
+									<p:ajax />
+									<p:ajax event="keyup" />
+								</p:spinner>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxOverlappingBookings">
+									<h:outputText
+										value="#{inventorylabels.inventory_max_overlapping_bookings_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="maxOverlappingBookings" />
+							<h:outputLabel
+								for="owner"
+								value="#{inventorylabels.inventory_owner_label}" />
+							<h:panelGrid
+								columns="4"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="owner"
+										required="false"
+										value="#{inventoryBean.in.ownerId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="ownerName"
+										value="#{applicationScopeBean.clipStringPicker(inventoryBean.ownerName)}"
+										title="#{inventorylabels.inventory_owner_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff('tabView:inventorymain_form:owner')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_active_identity_staff_button_label}"
+									icon="ui-icon ui-icon-person"
+									type="button"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									onclick="setIDAjax('tabView:inventorymain_form:owner',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},'tabView:inventorymain_form:ownerName','#{sessionScopeBean.userIdentityName}')" />
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax('tabView:inventorymain_form:owner','tabView:inventorymain_form:ownerName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax('tabView:inventorymain_form:owner','tabView:inventorymain_form:ownerName','#{applicationScopeBean.noStaffPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="owner" />
+							<h:outputLabel
+								for="parent"
+								value="#{inventorylabels.inventory_parent_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="parent"
+										required="false"
+										value="#{inventoryBean.in.parentId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="parentName"
+										value="#{applicationScopeBean.clipStringPicker(inventoryBean.parentName)}"
+										title="#{inventorylabels.inventory_parent_tooltip}#{labels.open_inventory_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedInventory('tabView:inventorymain_form:parent')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_inventory_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openInventoryPickerAjax('tabView:inventorymain_form:parent','tabView:inventorymain_form:parentName')" />
+								<p:commandButton
+									title="#{labels.clear_inventory_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax('tabView:inventorymain_form:parent','tabView:inventorymain_form:parentName','#{applicationScopeBean.noInventoryPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="parent" />
+						</h:panelGrid>
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{inventoryBean.created ? inventoryBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{inventoryBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleInventoryChanged(xhr, status, args)"
+									disabled="false"
+									update="inventory_tree,inventory_input" />
+								<p:commandButton
+									rendered="#{!inventoryBean.created}"
+									process="@this,inventory_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{inventoryBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleInventoryChanged(xhr, status, args)"
+									disabled="#{!inventoryBean.createable}"
+									update="inventory_tree,inventory_input" />
+								<p:commandButton
+									rendered="#{inventoryBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="inventoryAddConfirmation.show()"
+									disabled="#{!inventoryBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,inventory_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{inventoryBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleInventoryChanged(xhr, status, args)"
+									disabled="#{!inventoryBean.editable}"
+									update="inventory_tree,inventory_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="inventoryDeleteConfirmation.show()"
+									disabled="#{!inventoryBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{inventoryBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleInventoryChanged(xhr, status, args)"
+									disabled="#{!inventoryBean.created}"
+									update="inventory_tree,inventory_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="inventoryDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{inventorylabels.inventory_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{inventoryBean.delete}"
+					onclick="inventoryDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleInventoryChanged(xhr, status, args)"
+					update="inventory_tree,inventory_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="inventoryDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="inventoryAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{inventorylabels.inventory_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,inventory_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{inventoryBean.add}"
+					onclick="inventoryAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleInventoryChanged(xhr, status, args)"
+					update="inventory_tree,inventory_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="inventoryAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

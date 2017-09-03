@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial money transfer summary overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/trialHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{triallabels.money_transfer_overview_title}" />
+		<ui:define name="content">
+			<h:form id="moneytransferoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="9"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="department_filter"
+								value="#{triallabels.money_transfer_summary_department_filter_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department_filter"
+									value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel.departmentId}"
+									required="false"
+									label="#{triallabels.money_transfer_summary_department_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{moneyTransferOverviewBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{moneyTransferOverviewBean.handleDepartmentCostTypeChange}"
+										update="costtype_filter,moneytransfersummary_list" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department_filter">
+									<h:outputText
+										value="#{triallabels.money_transfer_summary_department_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department_filter" />
+							<h:outputLabel
+								for="costtype_filter"
+								value="#{triallabels.money_transfer_summary_cost_type_filter_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="costtype_filter"
+									value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel.costType}"
+									required="false"
+									label="#{triallabels.money_transfer_summary_cost_type_filter}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{moneyTransferOverviewBean.filterCostTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{moneyTransferOverviewBean.handleDepartmentCostTypeChange}"
+										update="moneytransfersummary_list" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="costtype_filter">
+									<h:outputText
+										value="#{triallabels.money_transfer_summary_cost_type_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="costtype_filter" />
+							<h:outputLabel
+								for="paid_filter"
+								value="#{triallabels.money_transfer_summary_paid_filter_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="paid_filter"
+									value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel.paid}"
+									required="false"
+									label="#{triallabels.money_transfer_summary_paid_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.Tristate" />
+									<f:selectItem
+										itemLabel="#{triallabels.money_transfer_summary_paid_filter_all_option_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItem
+										itemLabel="#{triallabels.money_transfer_summary_paid_filter_booked_option_label}"
+										itemValue="true" />
+									<f:selectItem
+										itemLabel="#{triallabels.money_transfer_summary_paid_filter_open_option_label}"
+										itemValue="false" />
+									<p:ajax
+										listener="#{moneyTransferOverviewBean.handleDepartmentCostTypeChange}"
+										update="moneytransfersummary_list" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="paid_filter">
+									<h:outputText
+										value="#{triallabels.money_transfer_summary_paid_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="paid_filter" />
+						</h:panelGrid>
+					</p:panel>
+					<h:panelGroup id="moneytransfersummary_list_wrapper">
+						<p:dataTable
+							styleClass="ctsms-datatable"
+							lazy="true"
+							rows="#{dataTablesRowsFullPage}"
+							paginator="#{dataTablesPaginatorFullPage}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+							paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+							pageLinks="#{dataTablesPageLinksFullPage}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+							scrollable="#{dataTablesScrollableFullPage}"
+							scrollHeight="#{dataTablesScrollHeightFullPage}"
+							resizableColumns="#{dataTablesResizableColumnsFullPage}"
+							sortBy="#{summary.vo.id}"
+							sortOrder="descending"
+							emptyMessage="#{labels.datatable_permission_empty_message}"
+							var="summary"
+							value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel}"
+							id="moneytransfersummary_list"
+							rowStyleClass="#{summary.vo.trial.deferredDelete ? 'ctsms-strikethrough' : ''}">
+							<f:facet name="header">
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+									<h:outputText
+										value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel.rowCount} #{triallabels.money_transfer_overview_money_transfer_summary_list_header}" />
+									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+									<p:commandButton
+										process="@this"
+										actionListener="#{moneyTransferOverviewBean.load}"
+										title="#{labels.update_datatable_button_title}"
+										icon="ui-icon-refresh"
+										styleClass="ctsms-list-header-button"
+										ajax="true"
+										update=":moneytransferoverview_form:moneytransfersummary_list_wrapper" />
+								</h:panelGrid>
+							</f:facet>
+							<p:column style="width:16px;">
+								<p:rowToggler />
+							</p:column>
+							<p:column
+								sortBy="#{summary.vo.id}"
+								filterBy="#{summary.vo.id}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.id_column}" />
+								</f:facet>
+								<h:outputText value="#{summary.vo.trial.id}" />
+							</p:column>
+							<p:column
+								sortBy="#{summary.vo.name}"
+								filterBy="#{summary.vo.name}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_trial_name_column}" />
+								</f:facet>
+								<h:outputText value="#{summary.vo.trial.name}" />
+							</p:column>
+							<p:column sortBy="#{summary.vo.department}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_department_column}" />
+								</f:facet>
+								<h:outputText value="#{summary.vo.trial.department.name}" />
+							</p:column>
+							<p:column
+								sortBy="#{summary.vo.type}"
+								filterBy="#{summary.vo.type.id}"
+								filterOptions="#{sessionScopeBean.filterTrialTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_trial_type_column}" />
+								</f:facet>
+								<h:outputText value="#{summary.vo.trial.type.name}" />
+							</p:column>
+							<p:column
+								sortBy="#{summary.vo.status}"
+								filterBy="#{summary.vo.status.id}"
+								filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_trial_status_type_column}" />
+								</f:facet>
+								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+									<ui:param
+										name="label"
+										value="#{summary.vo.trial.status.name}" />
+									<ui:param
+										name="icon"
+										value="#{summary.vo.trial.status.nodeStyleClass}" />
+									<ui:param
+										name="rendered"
+										value="true" />
+								</ui:include>
+							</p:column>
+							<p:column
+								sortBy="#{summary.vo.sponsoring}"
+								filterBy="#{summary.vo.sponsoring.id}"
+								filterOptions="#{sessionScopeBean.filterSponsoringTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_sponsoring_type_column}" />
+								</f:facet>
+								<h:outputText value="#{summary.vo.trial.sponsoring.name}" />
+							</p:column>
+							<p:columns
+								value="#{moneyTransferOverviewBean.paymentMethods}"
+								var="method"
+								columnIndexVar="methodIndex">
+								<f:facet name="header">
+									<h:outputText value="#{method.name}" />
+								</f:facet>
+								<h:outputFormat
+									styleClass="ctsms-list-cell-normal"
+									rendered="#{summary.vo.totalsByPaymentMethods[methodIndex].count > 0}"
+									value="#{labels.currency_items_format}">
+									<f:param value="#{summary.vo.totalsByPaymentMethods[methodIndex].total}" />
+									<f:param value="#{applicationScopeBean.currencySymbol}" />
+									<f:param value="#{summary.vo.totalsByPaymentMethods[methodIndex].count}" />
+								</h:outputFormat>
+							</p:columns>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.money_transfer_overview_money_transfer_summary_list_total_column}" />
+								</f:facet>
+								<h:outputFormat
+									rendered="#{summary.vo.count > 0}"
+									value="#{labels.currency_items_format}">
+									<f:param value="#{summary.vo.total}" />
+									<f:param value="#{applicationScopeBean.currencySymbol}" />
+									<f:param value="#{summary.vo.count}" />
+								</h:outputFormat>
+							</p:column>
+							<p:column style="width:32px;">
+								<p:commandButton
+									type="button"
+									title="#{labels.open_trial_button_label}"
+									icon="ui-icon ui-icon-extlink"
+									onclick="openTrial(#{summary.vo.trial.id})" />
+							</p:column>
+							<p:rowExpansion>
+								<p:panel>
+									<ui:include src="/META-INF/includes/shared/moneyTransferSummaryDetailTable.xhtml">
+										<ui:param
+											name="summary"
+											value="#{summary}" />
+										<ui:param
+											name="dataTableRows"
+											value="#{dataTablesRowsRowExpansion}" />
+										<ui:param
+											name="dataTablePaginator"
+											value="#{dataTablesPaginatorRowExpansion}" />
+										<ui:param
+											name="dataTablePaginatorTemplate"
+											value="#{dataTablesPaginatorTemplateRowExpansion}" />
+										<ui:param
+											name="dataTableRowsPerPageTemplate"
+											value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+										<ui:param
+											name="dataTablePaginatorPosition"
+											value="#{dataTablesPaginatorPositionRowExpansion}" />
+										<ui:param
+											name="dataTablePageLinks"
+											value="#{dataTablesPageLinksRowExpansion}" />
+										<ui:param
+											name="dataTablePaginatorAlwaysVisible"
+											value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+										<ui:param
+											name="dataTableScrollable"
+											value="#{dataTablesScrollableRowExpansion}" />
+										<ui:param
+											name="dataTableScrollHeight"
+											value="#{dataTablesScrollHeightRowExpansion}" />
+										<ui:param
+											name="dataTableResizableColumns"
+											value="#{dataTablesResizableColumnsRowExpansion}" />
+									</ui:include>
+								</p:panel>
+							</p:rowExpansion>
+						</p:dataTable>
+					</h:panelGroup>
+					<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

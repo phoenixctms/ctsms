@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>lecturer datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column
+			sortBy="#{lecturer.vo.competence}"
+			filterBy="#{lecturer.vo.competence.id}"
+			filterOptions="#{sessionScopeBean.filterLecturerCompetences}">
+			<f:facet name="header">
+				<h:outputText value="#{courselabels.lecturer_list_competence_column}" />
+			</f:facet>
+			<h:outputText value="#{lecturer.vo.competence.name}" />
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

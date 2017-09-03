@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial tags</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="trialtag_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeTrialTag"
+				actionListener="#{trialTagBean.change(trialBean.in.id)}"
+				update="trialtag_list,trialtag_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{tagValue.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="tagValue"
+					value="#{trialTagBean.tagValueModel}"
+					id="trialtag_list"
+					selectionMode="single"
+					selection="#{trialTagBean.selectedTrialTagValue}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:trialtag_form:trialtag_input" />
+					<f:facet name="header">
+						<h:outputText value="#{trialTagBean.tagValueModel.rowCount} #{triallabels.trial_tag_trialtag_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{tagValue.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{tagValue.vo.id}" />
+					</p:column>
+					<p:column sortBy="#{tagValue.vo.tag}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.trial_tag_trialtag_list_tag_name_column}" />
+						</f:facet>
+						<h:outputText value="#{tagValue.vo.tag.name}" />
+					</p:column>
+					<p:column sortBy="#{tagValue.vo.value}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.trial_tag_trialtag_list_value_column}" />
+						</f:facet>
+						<h:outputText value="#{tagValue.vo.value}" />
+					</p:column>
+				</p:dataTable>
+				<p:panel id="trialtag_input">
+					<f:facet name="header">
+						<h:outputText value="#{trialTagBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{trialTagBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="trialTag"
+								value="#{triallabels.trial_tag_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="trialTag"
+									value="#{trialTagBean.in.tagId}"
+									required="true"
+									label="#{triallabels.trial_tag}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialTagBean.availableTags}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialTag">
+									<h:outputText
+										value="#{triallabels.trial_tag_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="trialTag" />
+							<h:outputLabel
+								for="tagValue"
+								value="#{triallabels.trial_tag_value_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="tagValue"
+									value="#{trialTagBean.in.value}"
+									required="true"
+									label="#{triallabels.trial_tag_value}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="tagValue">
+									<h:outputText
+										value="#{triallabels.trial_tag_value_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="tagValue" />
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!trialTagBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{trialTagBean.created ? trialTagBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{trialTagBean.reset}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="trialtag_list,trialtag_input" />
+								<p:commandButton
+									process="@this,trialtag_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{trialTagBean.add}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!trialTagBean.createable}"
+									update="trialtag_list,trialtag_input" />
+								<p:commandButton
+									process="@this,trialtag_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{trialTagBean.update}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!trialTagBean.editable}"
+									update="trialtag_list,trialtag_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{trialTagBean.delete}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!trialTagBean.removable}"
+									update="trialtag_list,trialtag_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{trialTagBean.load}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!trialTagBean.created}"
+									update="trialtag_list,trialtag_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

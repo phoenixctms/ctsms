@@ -1,0 +1,28 @@
+Hallo Angehörige/r der Org.einheit $proband_department,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Proband ID:          $proband_id
+   • Proband Org.einheit: $proband_department
+   • Proband Kategorie:   $proband_category
+
+   • Löschung geplant:    $proband_autodeletedeadline
+
+   • Zuletzt bearbeitet:  $proband_modifiedtimestamp
+   • Benutzer:            #if($notification.proband.modifiedUser.identity)$proband_modifieduser_identity_name#{else}$proband_modifieduser_name#end
+
+
+Sofern keine Einverständniserklärung des Probanden vorliegt, ist die Löschung von Datensätzen eine Erfordernis des Datenschutzes, um sensible Inforamtionen des Probanden zu schützen und personenbezogene Daten zu verwerfen. Die Löschung kann folgedessen nicht rückgängig gemacht werden.
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

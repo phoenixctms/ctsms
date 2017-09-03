@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>booking summary overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inventoryHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inventorylabels.booking_summary_overview_title}" />
+		<ui:define name="content">
+			<h:form id="bookingsummaryoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<ui:include src="/META-INF/includes/shared/bookingDurationSummaryTable.xhtml">
+						<ui:param
+							name="bookingDurationSummaryModel"
+							value="#{bookingDurationOverviewBean.bookingDurationModel}" />
+						<ui:param
+							name="namingContainer"
+							value="bookingsummaryoverview_form" />
+						<ui:param
+							name="showInventory"
+							value="true" />
+						<ui:param
+							name="showProband"
+							value="false" />
+						<ui:param
+							name="showCourse"
+							value="false" />
+						<ui:param
+							name="showTrial"
+							value="false" />
+						<ui:param
+							name="dataTableRows"
+							value="#{dataTablesRowsFullPageTab}" />
+						<ui:param
+							name="dataTablePaginator"
+							value="#{dataTablesPaginatorFullPageTab}" />
+						<ui:param
+							name="dataTablePaginatorTemplate"
+							value="#{dataTablesPaginatorTemplateFullPageTab}" />
+						<ui:param
+							name="dataTableRowsPerPageTemplate"
+							value="#{dataTablesRowsPerPageTemplateFullPageTab}" />
+						<ui:param
+							name="dataTablePaginatorPosition"
+							value="#{dataTablesPaginatorPositionFullPageTab}" />
+						<ui:param
+							name="dataTablePageLinks"
+							value="#{dataTablesPageLinksFullPageTab}" />
+						<ui:param
+							name="dataTablePaginatorAlwaysVisible"
+							value="#{dataTablesPaginatorAlwaysVisibleFullPageTab}" />
+						<ui:param
+							name="dataTableScrollable"
+							value="#{dataTablesScrollableFullPageTab}" />
+						<ui:param
+							name="dataTableScrollHeight"
+							value="#{dataTablesScrollHeightFullPageTab}" />
+						<ui:param
+							name="dataTableResizableColumns"
+							value="#{dataTablesResizableColumnsFullPageTab}" />
+					</ui:include>
+				</h:panelGrid>
+				<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

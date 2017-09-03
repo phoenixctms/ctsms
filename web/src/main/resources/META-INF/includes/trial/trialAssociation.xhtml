@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial associations</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="trialassociation_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeTrialAssociation"
+				actionListener="#{trialAssociationBean.change(trialBean.in.id)}"
+				update="association_lists" /> -->
+			<p:remoteCommand
+				process="@this"
+				name="changeEnrollmentChart"
+				actionListener="#{trialAssociationBean.handleEnrollmentChartChange}"
+				update=":tabView:trialassociation_form:association_lists:enrollmentChart" />
+				<!-- 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)" -->	
+			<p:remoteCommand
+				process="@this"
+				name="changeShiftDurationSummary"
+				actionListener="#{trialAssociationBean.handleShiftDurationSummaryChange}"
+				update=":tabView:trialassociation_form:association_lists:shiftDurationSummaryDataTable" />	
+			<p:remoteCommand
+				process="@this"
+				name="changeBookingDurationSummary"
+				actionListener="#{trialAssociationBean.handleBookingDurationSummaryChange}"
+				update=":tabView:trialassociation_form:association_lists:bookingDurationSummaryDataTable" />				
+
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialCourses"
+				actionListener="#{trialAssociationBean.handleTrialCoursesChange}"
+				update=":tabView:trialassociation_form:association_lists:trialcourses_list" />					
+										
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView onTabChange="handleTrialAssociationTabChange(index)" id="association_lists">
+					<p:tab title="#{triallabels.trial_association_courses_tab_label}">
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<p:dataTable
+								styleClass="ctsms-datatable"
+								lazy="true"
+								rows="#{dataTablesRowsFullPageTab}"
+								paginator="#{dataTablesPaginatorFullPageTab}"
+								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
+								rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPageTab}"
+								paginatorPosition="#{dataTablesPaginatorPositionFullPageTab}"
+								pageLinks="#{dataTablesPageLinksFullPageTab}"
+								paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPageTab}"
+								scrollable="#{dataTablesScrollableFullPageTab}"
+								scrollHeight="#{dataTablesScrollHeightFullPageTab}"
+								resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
+								sortBy="#{course.vo.id}"
+								emptyMessage="#{labels.datatable_permission_empty_message}"
+								var="course"
+								value="#{trialAssociationBean.trialCourseModel}"
+								id="trialcourses_list">
+								<f:facet name="header">
+									<h:panelGrid
+										columns="3"
+										cellpadding="0"
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										<h:outputText value="#{trialAssociationBean.trialCourseModel.rowCount} #{triallabels.trial_association_courses_list_header}" />
+										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											process="@this"
+											actionListener="#{trialAssociationBean.refreshTrialCourses}"
+											title="#{labels.update_datatable_button_title}"
+											icon="ui-icon-refresh"
+											styleClass="ctsms-list-header-button"
+											ajax="true"
+											update=":tabView:trialassociation_form:association_lists:trialcourses_list" />
+									</h:panelGrid>
+								</f:facet>
+								<p:column sortBy="#{course.vo.id}">
+									<f:facet name="header">
+										<h:outputText value="#{labels.id_column}" />
+									</f:facet>
+									<h:outputText value="#{course.vo.id}" />
+								</p:column>
+								<p:column
+									sortBy="#{course.vo.name}"
+									filterBy="#{course.vo.name}">
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.trial_association_courses_list_course_name_column}" />
+									</f:facet>
+									<h:outputText value="#{course.vo.name}" />
+								</p:column>
+								<p:column
+									sortBy="#{course.vo.department}"
+									filterBy="#{course.vo.department.id}"
+									filterOptions="#{sessionScopeBean.filterDepartments}">
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.trial_association_courses_list_course_department_column}" />
+									</f:facet>
+									<h:outputText value="#{course.vo.department.name}" />
+								</p:column>
+								<p:column
+									sortBy="#{course.vo.category}"
+									filterBy="#{course.vo.category.id}"
+									filterOptions="#{sessionScopeBean.filterCourseCategories}">
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.trial_association_courses_list_course_category_column}" />
+									</f:facet>
+									<ui:include src="../shared/listIcon.xhtml">
+										<ui:param
+											name="label"
+											value="#{course.vo.category.name}" />
+										<ui:param
+											name="icon"
+											value="#{course.vo.category.nodeStyleClass}" />
+										<ui:param
+											name="rendered"
+											value="true" />
+									</ui:include>
+								</p:column>
+								<p:column
+									sortBy="#{course.vo.stop}"
+									filterBy="#{course.vo.stop}">
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.trial_association_courses_list_course_stop_column}" />
+									</f:facet>
+									<h:outputText value="#{course.vo.stop}">
+										<f:converter converterId="ctsms.Date" />
+									</h:outputText>
+								</p:column>
+								<p:column style="width:32px;">
+									<p:commandButton
+										type="button"
+										title="#{labels.open_course_button_label}"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openCourse(#{course.vo.id})" />
+								</p:column>
+							</p:dataTable>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{triallabels.trial_association_shift_duration_summary_tab_label}">
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<ui:include src="../shared/shiftDurationSummaryTable.xhtml">
+								<ui:param
+									name="shiftDurationSummaryModel"
+									value="#{trialAssociationBean.shiftDurationModel}" />
+								<ui:param
+									name="namingContainer"
+									value=":tabView:trialassociation_form:association_lists" />
+								<ui:param
+									name="showTrials"
+									value="false" />
+								<ui:param
+									name="showStaff"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsFullPageTab}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateFullPageTab}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionFullPageTab}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleFullPageTab}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableFullPageTab}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightFullPageTab}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsFullPageTab}" />
+							</ui:include>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{triallabels.trial_association_booking_duration_summary_tab_label}">
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<ui:include src="../shared/bookingDurationSummaryTable.xhtml">
+								<ui:param
+									name="bookingDurationSummaryModel"
+									value="#{trialAssociationBean.bookingDurationModel}" />
+								<ui:param
+									name="namingContainer"
+									value=":tabView:trialassociation_form:association_lists" />
+								<ui:param
+									name="showInventory"
+									value="true" />
+								<ui:param
+									name="showProband"
+									value="false" />
+								<ui:param
+									name="showCourse"
+									value="false" />
+								<ui:param
+									name="showTrial"
+									value="false" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsFullPageTab}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateFullPageTab}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionFullPageTab}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksFullPageTab}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleFullPageTab}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableFullPageTab}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightFullPageTab}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsFullPageTab}" />
+							</ui:include>
+						</h:panelGrid>
+					</p:tab>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+										<p:tab title="#{triallabels.trial_association_enrollment_chart_tab_label}">
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+
+
+
+
+
+
+
+
+				<p:panel>
+					<h:panelGrid
+						columns="3"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel
+							for="stacked"
+							value="#{triallabels.trial_association_enrollment_chart_stacked_label}" />
+						<h:panelGroup>
+							<p:selectBooleanCheckbox
+								id="stacked"
+								value="#{trialAssociationBean.enrollmentChartBean.stacked}">
+								<p:ajax update="enrollmentChart" />
+							</p:selectBooleanCheckbox>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="stacked">
+								<h:outputText
+									value="#{triallabels.trial_association_enrollment_chart_stacked_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="stacked" />
+					</h:panelGrid>
+				</p:panel>
+				<p:panel>
+					<p:lineChart
+						id="enrollmentChart"
+						value="#{trialAssociationBean.enrollmentChartBean.chartModel}"
+						legendPosition="e"
+						styleClass="ctsms-chart"
+						minX="#{trialAssociationBean.enrollmentChartBean.minX}"
+						maxX="#{trialAssociationBean.enrollmentChartBean.maxX}"
+						minY="0"
+						maxY="#{trialAssociationBean.enrollmentChartBean.maxY}"
+						stacked="#{trialAssociationBean.enrollmentChartBean.stacked}"
+						fill="true"
+						xaxisLabel="#{triallabels.trial_association_enrollment_chart_xaxis_label}"
+						yaxisLabel="#{triallabels.trial_association_enrollment_chart_yaxis_label}"
+						seriesColors="#{trialAssociationBean.enrollmentChartBean.seriesColors}" />
+				</p:panel>
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton
+							disabled="#{!trialAssociationBean.enrollmentChartBean.enableExports}"
+							immediate="true"
+							ajax="false"
+							value="#{triallabels.export_sicl_button_label}"
+							title="#{triallabels.export_sicl_button_title}"
+							icon="ui-icon ui-icon-xls">
+							<p:fileDownload value="#{trialAssociationBean.enrollmentChartBean.siclExcelStreamedContent}" />
+						</p:commandButton>
+						<p:commandButton
+							disabled="#{!trialAssociationBean.enrollmentChartBean.enableExports}"
+							immediate="true"
+							ajax="false"
+							value="#{triallabels.export_pre_screening_log_button_label}"
+							title="#{triallabels.export_pre_screening_log_button_title}"
+							icon="ui-icon ui-icon-xls">
+							<p:fileDownload value="#{trialAssociationBean.enrollmentChartBean.preScreeningLogExcelStreamedContent}" />
+						</p:commandButton>
+						<p:commandButton
+						    disabled="#{!trialAssociationBean.enrollmentChartBean.enableExports}"
+							immediate="true"
+							ajax="false"
+							value="#{triallabels.export_screening_log_button_label}"
+							title="#{triallabels.export_screening_log_button_title}"
+							icon="ui-icon ui-icon-xls">
+							<p:fileDownload value="#{trialAssociationBean.enrollmentChartBean.screeningLogExcelStreamedContent}" />
+						</p:commandButton>
+						<p:commandButton
+						    disabled="#{!trialAssociationBean.enrollmentChartBean.enableExports}"
+							immediate="true"
+							ajax="false"
+							value="#{triallabels.export_enrollment_log_button_label}"
+							title="#{triallabels.export_enrollment_log_button_title}"
+							icon="ui-icon ui-icon-xls">
+							<p:fileDownload value="#{trialAssociationBean.enrollmentChartBean.enrollmentLogExcelStreamedContent}" />
+						</p:commandButton>
+						<p:commandButton
+							process="@this"
+							actionListener="#{trialAssociationBean.enrollmentChartBean.updateChart}"
+							value="#{labels.update_chart_button_label}"
+							icon="ui-icon-refresh"
+							ajax="true"
+							update="stacked,enrollmentChart" />
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+
+
+
+
+
+						</h:panelGrid>
+					</p:tab>
+					
+					
+					
+					
+					
+					
+					
+				</p:tabView>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

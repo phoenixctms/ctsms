@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>course journal</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="coursejournal_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeCourseJournalEntry"
+				actionListener="#{journalBean.changeCourse(courseBean.in.id)}"
+				update="journal_list,journal_input" /> -->
+			<ui:include src="/META-INF/includes/shared/journal.xhtml">
+				<ui:param
+					name="namingContainer"
+					value=":tabView:coursejournal_form" />
+				<ui:param
+					name="validate"
+					value="true" />
+				<ui:param
+					name="markUnEncrypted"
+					value="false" />
+				<ui:param
+					name="jsUpdateTabTitles"
+					value="handleUpdateCourseTabTitles" />
+			</ui:include>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,40 @@
+Hallo $staff_firstname,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Studie:            $dutyrosterturn_trial_name
+   • Dienst von:        $dutyrosterturn_start
+   • Dienst bis:        $dutyrosterturn_stop
+
+   • Kalender:          $dutyrosterturn_calendar
+   • Dienst Titel:      $dutyrosterturn_title
+   • Visite:            $dutyrosterturn_visitscheduleitem_name
+
+   • Neuer Mitarbeiter: $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Selbstzuteilung möglich.
+#else
+   • Keine Selbstzuteilung.
+#end
+
+   • Bearbeitet:        #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Dienst Kommentar:
+
+$dutyrosterturn_comment
+
+Diensteinteilungen sind verpflichtend und können sich ändern, bevor eine endgültige Fixierung erfolgt. Die aktuelle Übersicht kann auf folgender Seite eingesehen werden:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

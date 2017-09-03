@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>duty roster turn input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:outputLabel
+			for="trial"
+			value="#{stafflabels.duty_roster_turn_input_trial_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="trial"
+					required="false"
+					value="#{dutyRosterTurnBean.in.trialId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="trialName"
+					value="#{applicationScopeBean.clipStringPicker(dutyRosterTurnBean.trialName)}"
+					title="#{stafflabels.duty_roster_turn_input_trial_tooltip}#{labels.open_trial_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedTrial('#{namingContainer}:trial')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.pick_trial_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openTrialPickerAjaxUpdate('#{namingContainer}:trial','#{namingContainer}:trialName','#{namingContainer}:dutyrosterturnvisitscheduleitem')" />
+			<p:commandButton
+				title="#{labels.clear_trial_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjaxUpdate('#{namingContainer}:trial','#{namingContainer}:trialName','#{applicationScopeBean.noTrialPickedMessage}','#{namingContainer}:dutyrosterturnvisitscheduleitem')" />
+		</h:panelGrid>
+		<p:message for="trial" />
+		<ui:include src="dutyRosterTurnCoreInput.xhtml">
+			<ui:param
+				name="dutyRosterTurnBean"
+				value="#{dutyRosterTurnBean}" />
+			<ui:param
+				name="visitScheduleItemChangeUpdate"
+				value="#{visitScheduleItemChangeUpdate}" />
+		</ui:include>
+	</ui:composition>
+</h:body>
+</html>

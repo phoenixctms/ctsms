@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>photo capture and upload</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid">
+			<h:panelGrid
+				columns="2"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
+				columnClasses="ctsms-photo-column,ctsms-photo-column">
+				<p:panel styleClass="ctsms-photo-panel">
+					<f:facet name="header">
+						<h:outputText value="#{labels.photo_cam_label}" />
+					</f:facet>
+					<p:photoCam
+						widgetVar="photocam"
+						listener="#{photoBean.onCapture}"
+						update="photo,photo_input" />
+				</p:panel>
+				<p:panel styleClass="ctsms-photo-panel">
+					<f:facet name="header">
+						<h:outputText
+							styleClass="#{usePhotoEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : ''}"
+							value="#{labels.photo_preview_label}" />
+					</f:facet>
+					<p:graphicImage
+						id="photo"
+						value="#{sessionScopeBean.getImage()}">
+						<f:param
+							name="#{applicationScopeBean.parameterName('UUID')}"
+							value="#{photoBean.uuid}" />
+					</p:graphicImage>
+				</p:panel>
+			</h:panelGrid>
+			<h:panelGrid
+				id="photo_input"
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-input-row,ctsms-fileupload-row,ctsms-message-row,ctsms-toolbar-row">
+				<h:panelGrid
+					rendered="#{photoBean.inputVisible}"
+					columns="6"
+					cellpadding="2"
+					columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+					<h:outputLabel value="#{labels.photo_timestamp_label}" />
+					<h:outputText value="#{photoBean.timestamp}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+					<h:outputLabel />
+					<h:outputLabel
+						styleClass="#{usePhotoEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : ''}"
+						for="filedownload"
+						value="#{labels.photo_filename_label}" />
+					<p:commandLink
+						immediate="true"
+						id="filedownload"
+						ajax="false"
+						disabled="#{!photoBean.hasPhoto}"
+						title="#{labels.file_download_tooltip} #{photoBean.fileDownloadLinkLabel}">
+						<h:outputText value="#{photoBean.fileDownloadLinkLabel}" />
+						<p:fileDownload value="#{photoBean.fileStreamedContent}" />
+					</p:commandLink>
+					<p:message for="filedownload" />
+					<ui:insert name="photoFields"></ui:insert>
+				</h:panelGrid>
+				<p:fileUpload
+					rendered="#{photoBean.inputVisible}"
+					id="imageUpload"
+					fileUploadListener="#{photoBean.handleFileUpload}"
+					mode="advanced"
+					update="photo,photo_input"
+					multiple="false"
+					auto="true"
+					label="#{labels.choose_file_button_label}"
+					styleClass="ctsms-upload-control"
+					sizeLimit="#{photoBean.getUploadSizeLimit()}"
+					allowTypes="#{photoBean.allowTypes}" />
+				<h:outputLabel rendered="#{!photoBean.inputVisible}" />
+				<h:outputLabel rendered="#{!photoBean.inputVisible}" />
+				<p:messages />
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton
+							type="button"
+							icon="ui-icon ui-icon-video"
+							value="#{labels.capture_photo_label}"
+							onclick="photocam.capture()" />
+						<p:commandButton
+							process="@this"
+							value="#{labels.clear_photo_label}"
+							actionListener="#{photoBean.clearImage}"
+							icon="ui-icon ui-icon-close"
+							ajax="true"
+							disabled="#{!photoBean.hasPhoto}"
+							update="photo,photo_input" />
+						<p:commandButton
+							process="@this"
+							id="update"
+							value="#{labels.update_button_label}"
+							actionListener="#{photoBean.update}"
+							icon="ui-icon ui-icon-disk"
+							ajax="true"
+							oncomplete="#{oncomplete}"
+							disabled="#{!photoBean.editable}"
+							update="photo,photo_input" />
+						<p:commandButton
+							process="@this"
+							value="#{labels.load_button_label}"
+							actionListener="#{photoBean.load}"
+							icon="ui-icon-refresh"
+							ajax="true"
+							oncomplete="#{oncomplete}"
+							disabled="#{!photoBean.created}"
+							update="photo,photo_input" />
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:panelGrid>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

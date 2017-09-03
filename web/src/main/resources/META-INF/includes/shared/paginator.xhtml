@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>paginator</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="#{valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)}"
+			cellpadding="0"
+			rendered="#{valueBean.paginator.psf.rowCount gt 0}"
+			styleClass="ui-widget-header ui-corner-all ctsms-pages-panelgrid"
+			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}ctsms-pages-message-column,ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
+			
+			
+			<p:selectOneMenu
+			    required="false"
+				rendered="#{valueBean.paginator.inputFieldForm}"
+				layout="lineDirection"
+				value="#{valueBean.paginator.fieldsPerRow}">
+				<f:selectItems
+					value="#{valueBean.paginator.fieldsPerRows}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<!-- <f:selectItem
+					itemLabel="1"
+					itemValue="1" />
+				<f:selectItem
+					itemLabel="2"
+					itemValue="2" />
+				<f:selectItem
+					itemLabel="3 #{labels.fields_per_row_label}"
+					itemValue="3" /> -->
+				<p:ajax
+					update="#{update}"
+					listener="#{valueBean.handleFieldsPerRowChange}"
+					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
+			</p:selectOneMenu>
+
+			<h:outputText value="#{valueBean.paginator.showPagesMessage ? labels.pages_save_before_change_message : ''}" />
+			
+			<p:selectOneMenu
+				value="#{valueBean.paginator.pageSize}"
+				required="false"
+				styleClass="ctsms-control-pagesize">
+				<f:selectItems
+					value="#{valueBean.paginator.pageSizes}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax
+					update="#{update}"
+					listener="#{valueBean.handlePageSizeChange}"
+					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
+			</p:selectOneMenu>
+			<p:commandButton
+				process="@this"
+				rendered="#{valueBean.paginator.showNavigatorButtons}"
+				actionListener="#{valueBean.handleFirstPage}"
+				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+				icon="ui-icon ui-icon-seek-first"
+				ajax="true"
+				disabled="#{valueBean.paginator.firstPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				update="#{update}" />
+			<p:commandButton
+				process="@this"
+				rendered="#{valueBean.paginator.showNavigatorButtons}"
+				actionListener="#{valueBean.handlePrevPage}"
+				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+				icon="ui-icon ui-icon-seek-prev"
+				ajax="true"
+				disabled="#{valueBean.paginator.firstPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				update="#{update}" />
+			<p:selectOneButton
+				rendered="#{valueBean.paginator.numOfPages le (pagesLimit gt 0 ? pagesLimit : 15)}"
+				required="false"
+				disabled="#{!(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				value="#{valueBean.paginator.selectedPage}">
+				<f:selectItems
+					value="#{valueBean.paginator.pages}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax
+					update="#{update}"
+					listener="#{valueBean.handlePageChange}"
+					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
+			</p:selectOneButton>
+			<p:selectOneMenu
+				required="false"
+				rendered="#{valueBean.paginator.numOfPages gt (pagesLimit gt 0 ? pagesLimit : 15)}"
+				disabled="#{!(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				value="#{valueBean.paginator.selectedPage}"
+				styleClass="ctsms-control-pageselect">
+				<f:selectItems
+					value="#{valueBean.paginator.pages}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax
+					update="#{update}"
+					listener="#{valueBean.handlePageChange}"
+					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
+			</p:selectOneMenu>
+			<p:commandButton
+				process="@this"
+				rendered="#{valueBean.paginator.showNavigatorButtons}"
+				actionListener="#{valueBean.handleNextPage}"
+				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+				icon="ui-icon ui-icon-seek-next"
+				ajax="true"
+				disabled="#{valueBean.paginator.lastPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				update="#{update}" />
+			<p:commandButton
+				process="@this"
+				rendered="#{valueBean.paginator.showNavigatorButtons}"
+				actionListener="#{valueBean.handleLastPage}"
+				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+				icon="ui-icon ui-icon-seek-end"
+				ajax="true"
+				disabled="#{valueBean.paginator.lastPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
+				update="#{update}" />
+		</h:panelGrid>
+		<h:outputLabel rendered="#{valueBean.paginator.psf.rowCount le 0}" />
+	</ui:composition>
+</h:body>
+</html>

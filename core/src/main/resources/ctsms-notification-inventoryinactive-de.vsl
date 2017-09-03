@@ -1,0 +1,31 @@
+Hallo Angehörige/r der Org.einheit $inventorystatusentry_inventory_department,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Inventar:             $inventorystatusentry_inventory_name
+   • Inventar Org.einheit: $inventorystatusentry_inventory_department
+   • Inventar Kategorie:   $inventorystatusentry_inventory_category
+
+   • Typ:                  $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Antragsteller:        $inventorystatusentry_originator_name
+#end
+   • Von:                  $inventorystatusentry_start
+   • Bis:                  $inventorystatusentry_stop
+
+Kommentar:
+
+$inventorystatusentry_comment
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

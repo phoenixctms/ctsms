@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    This is used to map merge patterns in files generated
+    by spring cartridge to new patterns. Just add content to the
+    CDATA sections of the <to/> elements in order to
+    use the following merge points.
+-->
+<mappings name="SpringMerge">
+    <!-- 
+    <extends>LicenseMerge</extends> 
+    -->
+    <mapping>
+        <from><![CDATA[<!-- namespace-propertyGroup merge-point -->]]></from>
+        <to>
+            <![CDATA[
+        <propertyGroup name="ctsms-outlet">
+            <documentation>
+                Defines the locations to which output is generated. For my own extensions to hibernate cartridge.
+            </documentation>
+            <property name="entity-test" required="false">
+                <documentation>
+                    The location where entity test files will be generated.
+                </documentation>
+            </property>
+            <property name="generateTestRefFiles" required="false">
+                <default>false</default>
+                <documentation>
+                    If set to true filename.ref - files are generated for test case classes in src/main/test/.
+                </documentation>
+            </property>
+            <property name="ref-test" required="false">
+                <documentation>
+                    Outlet for ref-files.
+                </documentation>
+            </property>
+        </propertyGroup>
+]]>
+        </to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- cartridge-template merge-point -->]]></from>
+        <to><![CDATA[
+    <!--
+      Entity operation tests
+    -->
+    <template
+        path="templates/hibernate/HibernateEntityTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="entity-test"
+        overwrite="false">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.hibernate.metafacades.HibernateEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <template
+        path="templates/hibernate/HibernateEntityTest.vsl"
+        outputPattern="$generatedFile"
+        outlet="ref-test"
+        overwrite="true"
+        outputCondition="generateTestRefFiles">
+        <modelElements variable="entity">
+            <modelElement>
+                <type name="org.andromda.cartridges.hibernate.metafacades.HibernateEntity"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    <!--
+    TODO: this does not work yet because SpringQueryOperation is not found I guess it is not defined as contextRoot
+    in the metafaceda.xml, it works for i.e. org.andromda.cartridges.spring.metafacades.SpringEntity
+    -->
+    <template
+        path="templates/spring/SpringDaoOperationTest.vsl"
+        outputPattern="${generatedFile}"
+        outlet="entity-test"
+        overwrite="false"
+        outputOnEmptyElements="false">
+        <modelElements>
+            <modelElement variable="queryOperation">
+                <type name="org.andromda.cartridges.hibernate.metafacades.HibernateFinderMethod"/>
+            </modelElement>
+        </modelElements>
+    </template>
+    ]]></to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- cartridge-property merge-point -->]]></from>
+        <to><![CDATA[
+    <property reference="generateTestRefFiles"/>
+    ]]></to>
+    </mapping>
+    <mapping>
+        <from><![CDATA[<!-- condition merge-point-->]]></from>
+        <to><![CDATA[
+    <condition name="generateTestRefFiles">$generateTestRefFiles.equalsIgnoreCase("true")</condition>
+    ]]></to>
+    </mapping>
+</mappings>

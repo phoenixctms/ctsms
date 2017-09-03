@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/probandEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{probandBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{probandBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="probandTabView"
+					onTabShow="handleProbandTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="probandmain"
+						disabled="false"
+						titleStyleClass="#{!probandBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandlabels.proband_main_tab_label}">
+						<ui:include src="/META-INF/includes/proband/probandMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandimage"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_IMAGE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_IMAGE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandImage.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandtags"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_TAG_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandTag.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandcontactdetails"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandContactDetail.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandaddresses"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_ADDRESS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_ADDRESS_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandAddress.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="probandstatus"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_STATUS_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandStatus.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandinventorybookings"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_INVENTORY_BOOKING_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandInventoryBooking.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="diagnoses"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_DIAGNOSIS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_DIAGNOSIS_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/diagnosis.xhtml" />
+					</p:tab>
+					<p:tab
+						id="procedures"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROCEDURE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROCEDURE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/procedure.xhtml" />
+					</p:tab>
+					
+					<p:tab
+						id="medications"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MEDICATION_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MEDICATION_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/medication.xhtml" />
+					</p:tab>
+					
+					<p:tab
+						id="inquiryvalues"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INQUIRY_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INQUIRY_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/inquiryValue.xhtml" />
+					</p:tab>
+					
+					<p:tab
+						id="trialparticipations"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_PARTICIPATION_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_PARTICIPATION_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/trialParticipation.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandvisitschedule"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandVisitSchedule.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandecrfstatusentries"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{probandlabels.probandecrfstatusentries_tab_label}">
+						<ui:include src="/META-INF/includes/proband/probandEcrfStatusEntry.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="bankaccounts"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_BANK_ACCOUNT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_BANK_ACCOUNT_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/bankAccount.xhtml" />
+					</p:tab>
+					<p:tab
+						id="moneytransfers"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MONEY_TRANSFER_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MONEY_TRANSFER_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/moneyTransfer.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="probandfiles"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_FILE_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandFile.xhtml" />
+					</p:tab>
+					<p:tab
+						id="probandjournal"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

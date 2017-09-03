@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory status entry datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column sortBy="#{statusEntry.vo.type}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_status_type_column}" />
+			</f:facet>
+			<h:outputText value="#{statusEntry.vo.type.name}" />
+		</p:column>
+		<p:column sortBy="#{statusEntry.vo.start}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_start_column}" />
+			</f:facet>
+			<h:outputText value="#{statusEntry.vo.start}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column sortBy="#{statusEntry.vo.stop}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_stop_column}" />
+			</f:facet>
+			<h:outputText value="#{statusEntry.vo.stop}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column sortBy="#{statusEntry.vo.type.inventoryActive}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventory_status_inventorystatus_list_inventory_active_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{statusEntry.vo.type.inventoryActive}" />
+			</ui:include>
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

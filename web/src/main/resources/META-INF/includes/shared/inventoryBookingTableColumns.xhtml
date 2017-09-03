@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory booking datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column
+			sortBy="#{booking.vo.calendar}"
+			filterBy="#{booking.vo.calendar}"
+			filterOptions="#{bookingBean.filterCalendars}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorybooking_list_calendar_column}" />
+			</f:facet>
+			<h:outputText value="#{booking.vo.calendar}" />
+		</p:column>
+		<p:column
+			sortBy="#{booking.vo.start}"
+			filterBy="#{booking.vo.start}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorybooking_list_start_column}" />
+			</f:facet>
+			<h:outputText value="#{booking.vo.start}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column
+			sortBy="#{booking.vo.stop}"
+			filterBy="#{booking.vo.stop}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorybooking_list_stop_column}" />
+			</f:facet>
+			<h:outputText value="#{booking.vo.stop}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorybooking_list_duration_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.getInventoryBookingDurationString(booking.vo)}" />
+		</p:column>
+		<p:column
+			sortBy="#{booking.vo.comment}"
+			filterBy="#{booking.vo.comment}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorybooking_list_comment_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.clipStringTrailing(booking.vo.comment)}" />
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

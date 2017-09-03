@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>field value audit trail and field status entry log</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tabView styleClass="ctsms-rowexpansion-tabview">
+			<ui:include src="ecrfFieldValueLogTab.xhtml">
+				<ui:param
+					name="auditTrailLogEagerModel"
+					value="#{ecrfStatusEntryBean.getEcrfAuditTrailLogModel(ecrf)}" />
+				<ui:param
+					name="showFieldDetails"
+					value="true" />					
+			</ui:include>
+			<ui:include src="ecrfFieldStatusEntryLogTab.xhtml">
+				<ui:param
+					name="showFieldDetails"
+					value="true" />	
+				<ui:param
+					name="fieldStatusLogEagerModel"
+					value="#{ecrfStatusEntryBean.getFieldStatusEntryLogModel('VALIDATION',ecrf)}" />							
+				<ui:param
+					name="tabTitle"
+					value="#{ecrfStatusEntryBean.getFieldStatusEntryLogTabTitle('VALIDATION',ecrf)}" />
+				<ui:param 
+					name="id_prefix"
+					value="trialecrfstatus_ecrf_#{ecrfStatusEntryBean.convertToQueue('VALIDATION').value}" />
+			</ui:include>
+			<ui:include src="ecrfFieldStatusEntryLogTab.xhtml">
+				<ui:param
+					name="showFieldDetails"
+					value="true" />
+				<ui:param
+					name="fieldStatusLogEagerModel"
+					value="#{ecrfStatusEntryBean.getFieldStatusEntryLogModel('QUERY',ecrf)}" />					
+				<ui:param
+					name="tabTitle"
+					value="#{ecrfStatusEntryBean.getFieldStatusEntryLogTabTitle('QUERY',ecrf)}" />	
+				<ui:param 
+					name="id_prefix"
+					value="trialecrfstatus_ecrf_#{ecrfStatusEntryBean.convertToQueue('QUERY').value}" />
+			</ui:include>			
+		</p:tabView>
+	</ui:composition>
+</h:body>
+</html>

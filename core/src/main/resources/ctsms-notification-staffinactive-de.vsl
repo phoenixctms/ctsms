@@ -1,0 +1,28 @@
+Lieber Supervisor von $staffstatusentry_staff_name,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Mitarbeiter:             $staffstatusentry_staff_name
+   • Mitarbeiter Org.einheit: $staffstatusentry_staff_department
+   • Mitarbeiter Kategorie:   $staffstatusentry_staff_category
+
+   • Typ:                     $staffstatusentry_type
+   • Von:                     $staffstatusentry_start
+   • Bis:                     $staffstatusentry_stop
+
+Kommentar:
+
+$staffstatusentry_comment
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

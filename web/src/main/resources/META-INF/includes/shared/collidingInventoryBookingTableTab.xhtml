@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding inventory booking table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_inventory_booking_tab_label_1}#{collidingInventoryBookingModel.allRowCount}#{labels.colliding_inventory_booking_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{booking.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="booking"
+				value="#{collidingInventoryBookingModel.allRows}"
+				id="collidinginventorybooking_list">
+				<p:column
+					rendered="#{showInventory}"
+					sortBy="#{booking.vo.inventory.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_inventory_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.inventory.name}" />
+						<ui:param
+							name="icon"
+							value="#{booking.vo.inventory.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{booking.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{booking.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{booking.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{booking.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_duration_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.getInventoryBookingDurationString(booking.vo)}" />
+				</p:column>
+				<p:column sortBy="#{booking.vo.comment}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_comment_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(booking.vo.comment)}" />
+				</p:column>
+				<p:column sortBy="#{booking.vo.onBehalfOf.nameSortable}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_on_behalf_of_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.onBehalfOf.name}" />
+						<ui:param
+							name="icon"
+							value="#{booking.vo.onBehalfOf.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{booking.vo.course.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_course_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.course.name}" />
+						<ui:param
+							name="icon"
+							value="#{booking.vo.course.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{booking.vo.trial.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_trial_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.trial.name}" />
+						<ui:param
+							name="icon"
+							value="#{booking.vo.trial.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{booking.vo.proband.nameSortable}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorybooking_list_proband_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.proband.name}" />
+						<ui:param
+							name="icon"
+							value="#{booking.vo.proband.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="#{booking.vo.proband != null and booking.vo.proband.decrypted}" />
+					</ui:include>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{booking.vo.proband.name}" />
+						<ui:param
+							name="icon"
+							value="ctsms-icon-encrypted" />
+						<ui:param
+							name="rendered"
+							value="#{booking.vo.proband != null and !booking.vo.proband.decrypted}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					rendered="#{showInventory}"
+					style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_inventory_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openInventory(#{booking.vo.inventory.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

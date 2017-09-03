@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>team member datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column
+			sortBy="#{teamMember.vo.role}"
+			filterBy="#{teamMember.vo.role.id}"
+			filterOptions="#{sessionScopeBean.filterTeamMemberRoles}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_role_column}" />
+			</f:facet>
+			<h:outputText value="#{teamMember.vo.role.name}" />
+		</p:column>
+		<p:column
+			sortBy="#{teamMember.vo.access}"
+			filterBy="#{teamMember.vo.access}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_access_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.access}" />
+			</ui:include>
+		</p:column>
+		<p:column
+			sortBy="#{teamMember.vo.sign}"
+			filterBy="#{teamMember.vo.sign}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_sign_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.sign}" />
+			</ui:include>
+		</p:column>		
+		
+		<p:column
+			sortBy="#{teamMember.vo.resolve}"
+			filterBy="#{teamMember.vo.resolve}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_resolve_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.resolve}" />
+			</ui:include>
+		</p:column>				
+		
+				<p:column
+			sortBy="#{teamMember.vo.verify}"
+			filterBy="#{teamMember.vo.verify}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_verify_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.verify}" />
+			</ui:include>
+		</p:column>		
+		
+		<p:column
+			sortBy="#{teamMember.vo.notifyTimelineEvent}"
+			filterBy="#{teamMember.vo.notifyTimelineEvent}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifytimelineevent_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyTimelineEvent}" />
+			</ui:include>
+		</p:column>
+		
+		
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifyecrfstatus_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyEcrfValidatedStatus or teamMember.vo.notifyEcrfReviewStatus or teamMember.vo.notifyEcrfVerifiedStatus}" />
+			</ui:include>
+		</p:column>
+		<!-- <p:column
+			sortBy="#{teamMember.vo.notifyEcrfReviewStatus}"
+			filterBy="#{teamMember.vo.notifyEcrfReviewStatus}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifyecrfreviewstatus_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyEcrfReviewStatus}" />
+			</ui:include>
+		</p:column>
+		<p:column
+			sortBy="#{teamMember.vo.notifyEcrfVerifiedStatus}"
+			filterBy="#{teamMember.vo.notifyEcrfVerifiedStatus}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifyecrfverifiedstatus_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyEcrfVerifiedStatus}" />
+			</ui:include>
+		</p:column>	-->		
+		
+		<p:column
+			sortBy="#{teamMember.vo.notifyEcrfFieldStatus}"
+			filterBy="#{teamMember.vo.notifyEcrfFieldStatus}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifyecrffieldstatus_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyEcrfFieldStatus}" />
+			</ui:include>
+		</p:column>		
+
+
+		<p:column
+			sortBy="#{teamMember.vo.notifyOther}"
+			filterBy="#{teamMember.vo.notifyOther}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_notifyother_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.notifyOther}" />
+			</ui:include>
+		</p:column>
+
+		
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inquiry values dummy</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inquiryvaluedummy_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeInquiryValueDummy"
+				actionListener="#{dummyInquiryValueBean.change(trialBean.in.id)}"
+				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update="inquiry_input_grid" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<h:panelGrid
+					id="inquiry_input_grid"
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-inquiryvalues-input-panelgrid"
+					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+					<p:dataGrid
+						var="category"
+						value="#{dummyInquiryValueBean.categories}"
+						paginator="false"
+						emptyMessage="#{triallabels.inquiry_value_dummy_inquiries_empty_message}"
+						columns="1"
+						id="inquiry_inputs">
+						<p:column>
+							<p:panel
+								toggleable="true"
+								collapsed="false">
+								<f:facet name="header">
+									<h:outputText value="#{category.category}" />
+								</f:facet>
+<ui:include src="../shared/inquiryValue.xhtml">
+									<ui:param
+										name="inquiryValueBean"
+										value="#{dummyInquiryValueBean}" />
+									<ui:param
+										name="namingContainer"
+										value=":tabView:inquiryvaluedummy_form" />
+									<ui:param
+										name="update"
+										value="" />
+										<ui:param
+										name="enabled"
+										value="#{dummyInquiryValueBean.created}" />
+										
+								</ui:include>
+							</p:panel>
+						</p:column>
+					</p:dataGrid>
+					<p:messages />
+					<p:toolbar>
+						<p:toolbarGroup align="right">
+							<p:commandButton
+								process="@this"
+								value="#{labels.reset_button_label}"
+								actionListener="#{dummyInquiryValueBean.reset}"
+								oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+								icon="ui-icon ui-icon-close"
+								ajax="true"
+								disabled="#{!dummyInquiryValueBean.created}"
+								update="inquiry_input_grid" />
+							<p:commandButton
+								process="@this,inquiry_input_grid"
+								value="#{labels.test_dummy_input_page_button_label}"
+								actionListener="#{dummyInquiryValueBean.checkInput}"
+								oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+								icon="ui-icon ui-icon-help"
+								ajax="true"
+								disabled="#{!dummyInquiryValueBean.created}"
+								update="inquiry_input_grid" />
+							<p:commandButton
+								process="@this"
+								value="#{labels.load_button_label}"
+								actionListener="#{dummyInquiryValueBean.load}"
+								oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+								icon="ui-icon-refresh"
+								ajax="true"
+								disabled="#{!dummyInquiryValueBean.created}"
+								update="inquiry_input_grid" />
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup align="right">
+							<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+						</p:toolbarGroup>
+					</p:toolbar>
+					<ui:include src="../shared/paginator.xhtml">
+						<ui:param
+							name="valueBean"
+							value="#{dummyInquiryValueBean}" />
+						<ui:param
+							name="update"
+							value=":tabView:inquiryvaluedummy_form:inquiry_input_grid" />
+					</ui:include>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

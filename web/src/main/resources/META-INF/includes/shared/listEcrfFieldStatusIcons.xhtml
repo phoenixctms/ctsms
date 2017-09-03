@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>list ecrf field status icons</title>
+</h:head>
+<h:body>
+	<ui:composition>
+
+		<h:outputText rendered="#{validationStatus != null and validationStatus.validationStatus == 'FAILED'}"
+			styleClass="ctsms-list-icon ctsms-icon-error"
+			value="#{validationStatus.name}" />
+		<h:panelGrid
+			style="width:0%;"
+			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value != null and value.total > 0}"
+			columns="4"
+			columnClasses="ctsms-list-cell-noborder,ctsms-list-cell-noborder,ctsms-list-cell-noborder,ctsms-list-cell-noborder"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:outputLink
+					styleClass="outputLinkAsText"
+					id="#{idSuffix}InitialEcrfFieldStatusIcon"
+					value="#">
+					<h:outputText
+						rendered="#{showNew}"
+						styleClass="#{value.initial > 0 ? 'ctsms-list-icon ctsms-icon-flag-red' : 'ctsms-list-icon ctsms-icon-flag'}"
+						value="(#{value.initial})" />
+				</h:outputLink>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="#{idSuffix}InitialEcrfFieldStatusIcon">
+					<h:outputFormat
+						value="#{labels.initial_ecrf_field_status_type_icon_tooltip}"
+						escape="false">
+						<f:param value="#{value.initial}" />
+					</h:outputFormat>
+				</p:tooltip>
+			</h:panelGroup>
+			<h:panelGroup>
+				<h:outputLink
+					styleClass="outputLinkAsText"
+					id="#{idSuffix}UpdatedEcrfFieldStatusIcon"
+					value="#">
+					<h:outputText
+						rendered="#{showUpdate}"
+						styleClass="#{value.updated > 0 ? 'ctsms-list-icon ctsms-icon-flag-orange' : 'ctsms-list-icon ctsms-icon-flag'}"
+						value="(#{value.updated})" />
+				</h:outputLink>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="#{idSuffix}UpdatedEcrfFieldStatusIcon">
+					<h:outputFormat
+						value="#{labels.updated_ecrf_field_status_type_icon_tooltip}"
+						escape="false">
+						<f:param value="#{value.updated}" />
+					</h:outputFormat>
+				</p:tooltip>
+			</h:panelGroup>
+			<h:panelGroup>
+				<h:outputLink
+					styleClass="outputLinkAsText"
+					id="#{idSuffix}ProposedEcrfFieldStatusIcon"
+					value="#">
+					<h:outputText
+						rendered="#{showProposed}"
+						styleClass="#{value.proposed > 0 ? 'ctsms-list-icon ctsms-icon-flag-blue' : 'ctsms-list-icon ctsms-icon-flag'}"
+						value="(#{value.proposed})" />
+				</h:outputLink>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="#{idSuffix}ProposedEcrfFieldStatusIcon">
+					<h:outputFormat
+						value="#{labels.proposed_ecrf_field_status_type_icon_tooltip}"
+						escape="false">
+						<f:param value="#{value.proposed}" />
+					</h:outputFormat>
+				</p:tooltip>
+			</h:panelGroup>
+			<h:panelGroup>
+				<h:outputLink
+					styleClass="outputLinkAsText"
+					id="#{idSuffix}ResolvedEcrfFieldStatusIcon"
+					value="#">
+					<h:outputText
+						rendered="#{showResolved}"
+						styleClass="#{value.resolved > 0 ? 'ctsms-list-icon ctsms-icon-flag-green' : 'ctsms-list-icon ctsms-icon-flag'}"
+						value="(#{value.resolved})" />
+				</h:outputLink>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="#{idSuffix}ResolvedEcrfFieldStatusIcon">
+					<h:outputFormat
+						value="#{labels.resolved_ecrf_field_status_type_icon_tooltip}"
+						escape="false">
+						<f:param value="#{value.resolved}" />
+					</h:outputFormat>
+				</p:tooltip>
+			</h:panelGroup>
+		</h:panelGrid>
+		<h:panelGrid
+			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value != null and value.total == 0}"
+			columns="1"
+			columnClasses="ctsms-list-cell-noborder"
+			cellpadding="0">
+			
+			<h:outputText 
+				styleClass="ctsms-list-icon"
+				value="" />
+			
+		</h:panelGrid>		
+	
+	</ui:composition>
+</h:body>
+</html>

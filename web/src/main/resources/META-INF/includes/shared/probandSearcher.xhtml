@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband search</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid"
+			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
+			<ui:include src="searchInput.xhtml">
+				<ui:param
+					name="searchBean"
+					value="#{probandSearchBean}" />
+				<ui:param
+					name="result_list"
+					value="proband_result_list" />
+				<ui:param
+					name="resultListWidgetVar"
+					value="probandResultList" />
+			</ui:include>
+			<p:messages
+				id="messages"
+				globalOnly="true" />
+			<p:toolbar id="criteria_toolbar">
+				<p:toolbarGroup align="left">
+					<h:outputText
+						styleClass="ctsms-toolbar-text"
+						value="#{probandSearchBean.created ? probandSearchBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<p:commandButton
+						process="@this"
+						value="#{labels.reset_button_label}"
+						actionListener="#{probandSearchBean.reset}"
+						icon="ui-icon ui-icon-close"
+						ajax="true"
+						onstart="probandResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="false"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,proband_result_list" />
+					<p:commandButton
+						rendered="#{!probandSearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input"
+						id="add"
+						value="#{labels.add_button_label}"
+						actionListener="#{probandSearchBean.add}"
+						icon="ui-icon ui-icon-plusthick"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!probandSearchBean.createable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						rendered="#{probandSearchBean.created}"
+						process="@this"
+						value="#{labels.add_button_label}"
+						onclick="criteriaAddConfirmation.show()"
+						disabled="#{!probandSearchBean.createable}"
+						icon="ui-icon ui-icon-plusthick"
+						type="button" />
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						id="update"
+						value="#{labels.update_button_label}"
+						actionListener="#{probandSearchBean.update}"
+						icon="ui-icon ui-icon-disk"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!probandSearchBean.editable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.delete_button_label}"
+						onclick="criteriaDeleteConfirmation.show()"
+						disabled="#{!probandSearchBean.removable}"
+						icon="ui-icon ui-icon-trash"
+						type="button" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{probandSearchBean.load}"
+						icon="ui-icon-refresh"
+						ajax="true"
+						onstart="probandResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!probandSearchBean.created}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,proband_result_list" />
+					<ui:insert name="toolbarbuttons"></ui:insert>
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						value="#{labels.search_button_label}"
+						actionListener="#{probandSearchBean.search}"
+						icon="ui-icon ui-icon-search"
+						ajax="true"
+						onstart="probandResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!probandSearchBean.createable}"
+						update=":search_form:tabView:criteria_input,messages,proband_result_list" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				widgetVar="probandResultList"
+				rows="#{dataTablesRowsSearch}"
+				paginator="#{dataTablesPaginatorSearch}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
+				paginatorPosition="#{dataTablesPaginatorPositionSearch}"
+				pageLinks="#{dataTablesPageLinksSearch}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleSearch}"
+				scrollable="#{dataTablesScrollableSearch}"
+				scrollHeight="#{dataTablesScrollHeightSearch}"
+				resizableColumns="#{dataTablesResizableColumnsSearch}"
+				sortBy="#{proband.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}"
+				var="proband"
+				value="#{probandSearchBean.probandResultModel}"
+				id="proband_result_list"
+				rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandSearchBean.probandToColor(proband.vo)}">
+				<f:facet name="header">
+					<h:outputText value="#{probandSearchBean.queryResultTitle}" />
+				</f:facet>
+				<p:column style="width:16px;">
+					<p:rowToggler />
+				</p:column>
+				<p:column
+					sortBy="#{proband.vo.id}"
+					filterBy="#{proband.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{proband.vo.id}" />
+				</p:column>
+				<p:column filterBy="#{proband.vo.personParticulars.lastNameHash}">
+					<f:facet name="header">
+						<h:outputText
+							styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+							value="#{probandlabels.search_proband_result_list_particulars_last_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{proband.vo.name}" />
+						<ui:param
+							name="icon"
+							value="#{proband.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+						<ui:param
+							name="rendered"
+							value="#{proband.vo.person}" />
+					</ui:include>
+				</p:column>
+				
+				<p:column filterBy="#{proband.vo.animalParticulars.animalName}"
+					sortBy="#{proband.vo.animalParticulars.animalName}">
+					<f:facet name="header">
+						<h:outputText
+							value="#{probandlabels.search_proband_result_list_particulars_animal_name_column}" />
+					</f:facet>
+					<h:outputText rendered="#{!proband.vo.person}" value="#{proband.vo.name}" />
+				</p:column>
+				
+				<p:column
+					sortBy="#{proband.vo.department}"
+					filterBy="#{proband.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_proband_department_column}" />
+					</f:facet>
+					<h:outputText value="#{proband.vo.department.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{proband.vo.category}"
+					filterBy="#{proband.vo.category.id}"
+					filterOptions="#{sessionScopeBean.filterProbandCategories}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_proband_category_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{proband.vo.category.name}" />
+						<ui:param
+							name="icon"
+							value="#{proband.vo.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column>
+					<!-- filterBy="#{proband.vo.personParticulars.gender}"
+					filterOptions="#{sessionScopeBean.filterSexes}">  -->
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_gender_column}" />
+					</f:facet>
+					<h:outputText value="#{proband.vo.gender.name}" />
+					<!-- rendered="#{proband.vo.person}" -->
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_age_column}" />
+					</f:facet>
+					<h:panelGroup rendered="#{proband.vo.decrypted}">
+       					#{proband.vo.age}
+       				</h:panelGroup>
+					<h:panelGroup rendered="#{!proband.vo.decrypted}">
+						<table style="border: none; padding: 0pt;">
+							<tr>
+								<td
+									style="border: none;"
+									rowspan="2">#{proband.vo.age}</td>
+								<td style="border: none; font-size: 0.7em;">+0</td>
+							</tr>
+							<tr>
+								<td style="border: none; font-size: 0.7em;">-1</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:column>
+				<p:column sortBy="#{proband.vo.category.locked}"
+					filterBy="#{proband.vo.category.locked}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_locked_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{proband.vo.category.locked}" />
+					</ui:include>
+				</p:column>				
+				<!-- <p:column sortBy="#{proband.vo.available}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_available_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{proband.vo.available}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{proband.vo.recruitmentForOtherTrialsAllowed}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_recruitment_for_other_trials_allowed_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{proband.vo.recruitmentForOtherTrialsAllowed}" />
+					</ui:include>
+				</p:column> -->
+				<!-- <p:column sortBy="#{proband.vo.privacyConsentStatus.autoDelete}"
+					filterBy="#{proband.vo.privacyConsentStatus.autoDelete}"
+					filterOptions="#{sessionScopeBean.filterBooleans}"> -->
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_auto_delete_column}" />
+					</f:facet>
+					<ui:include src="listDeletionIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{proband.vo.privacyConsentStatus.autoDelete and proband.vo.category.delete}" />
+					</ui:include>					
+					<!-- <ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{proband.vo.privacyConsentStatus.autoDelete}" />
+					</ui:include> -->
+				</p:column>
+				<p:column
+					sortBy="#{proband.vo.privacyConsentStatus}"
+					filterBy="#{proband.vo.privacyConsentStatus.id}"
+					filterOptions="#{sessionScopeBean.filterPrivacyConsentStatusTypes}"
+					rendered="#{!probandSearchBean.picker}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_privacy_consent_status_column}" />
+					</f:facet>
+					<h:outputText value="#{proband.vo.privacyConsentStatus.name}" />
+				</p:column>
+				<ui:insert name="pickbutton"></ui:insert>
+				<p:rowExpansion>
+					<h:panelGrid
+						columns="4"
+						cellpadding="0"
+						styleClass="ctsms-resultsetlist-rowexpansion-panelgrid"
+						columnClasses="ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column">
+						<h:outputText
+							rendered="#{empty proband.vo.comment}"
+							value="#{probandlabels.no_proband_comment_label}" />
+						<ui:include src="rowExpansionOutputText.xhtml">
+							<ui:param
+								name="rowExpansionText"
+								value="#{proband.vo.comment}" />
+							<ui:param
+								name="rendered"
+								value="#{not empty proband.vo.comment}" />
+							<ui:param
+								name="rowExpansionTextClass"
+								value="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext" />
+							<ui:param
+								name="escapeHtml"
+								value="true" />
+						</ui:include>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandContactDetailValues(proband.vo)) == 0}"
+							value="#{probandlabels.no_proband_contact_detail_values_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandContactDetailValues(proband.vo)) > 0}"
+							value="#{probandSearchBean.getProbandContactDetailValues(proband.vo)}"
+							var="contactDetailValue"
+							type="definition">
+							<h:outputText value="#{contactDetailValue.vo.type.name}:" />
+							<f:facet name="description">
+								<ui:include src="contactDetailValue.xhtml">
+									<ui:param
+										name="decrypted"
+										value="#{contactDetailValue.vo.decrypted}" />
+									<ui:param
+										name="contactDetailValue"
+										value="#{contactDetailValue.vo}" />
+									<ui:param
+										name="styleClass"
+										value="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext" />
+								</ui:include>
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandAddresses(proband.vo)) == 0}"
+							value="#{probandlabels.no_proband_addresses_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandAddresses(proband.vo)) > 0}"
+							value="#{probandSearchBean.getProbandAddresses(proband.vo)}"
+							var="address"
+							type="definition">
+							<h:outputText value="#{address.vo.type.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{address.vo.name}" />
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandListStatus(proband.vo)) == 0}"
+							value="#{probandlabels.no_proband_list_status_entries_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(probandSearchBean.getProbandListStatus(proband.vo)) > 0}"
+							value="#{probandSearchBean.getProbandListStatus(proband.vo)}"
+							var="statusEntry"
+							type="definition">
+							<h:outputText value="#{statusEntry.vo.listEntry.trial.name} (#{statusEntry.vo.listEntry.trial.status.name}):" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{statusEntry.vo.status.name}" />
+							</f:facet>
+						</p:dataList>
+					</h:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="alert"
+			widgetVar="criteriaDeleteConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_delete_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this"
+				value="#{labels.yes_button_label}"
+				actionListener="#{probandSearchBean.delete}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="criteriaAddConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_add_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed"
+				value="#{labels.yes_button_label}"
+				actionListener="#{probandSearchBean.add}"
+				onclick="criteriaAddConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

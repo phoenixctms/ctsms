@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>money transfers</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="moneytransfer_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeMoneyTransfer"
+				actionListener="#{moneyTransferBean.change(probandBean.in.id)}"
+				update="moneytransfer_list,moneytransfer_input" /> -->
+			<p:remoteCommand
+				process="@this"
+				name="updatePaid"
+				actionListener="#{moneyTransferBean.updatePaid}"
+				update="moneytransfer_list,moneytransfer_input" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{moneyTransfer.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="moneyTransfer"
+					value="#{moneyTransferBean.moneyTransferModel}"
+					id="moneytransfer_list"
+					selectionMode="single"
+					selection="#{moneyTransferBean.selectedMoneyTransfer}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:moneytransfer_form:moneytransfer_input" />
+					<f:facet name="header">
+						<h:outputText value="#{moneyTransferBean.moneyTransferModel.rowCount} #{probandlabels.money_transfer_moneytransfer_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{moneyTransfer.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.id}" />
+					</p:column>
+					<p:column
+						sortBy="#{moneyTransfer.vo.trial.name}"
+						filterBy="#{moneyTransfer.vo.trial.id}"
+						filterOptions="#{moneyTransferBean.filterTrials}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_trial_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{moneyTransfer.vo.trial.name}" />
+							<ui:param
+								name="icon"
+								value="#{moneyTransfer.vo.trial.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column
+						sortBy="#{moneyTransfer.vo.costType}"
+						filterBy="#{moneyTransfer.vo.costType}"
+						filterOptions="#{moneyTransferBean.filterCostTypes}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_cost_type_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.costType}" />
+					</p:column>
+					<p:column
+						sortBy="#{moneyTransfer.vo.method}"
+						filterBy="#{moneyTransfer.vo.method}"
+						filterOptions="#{sessionScopeBean.filterPaymentMethods}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_payment_method_name_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.method.name}" />
+					</p:column>
+					<p:column sortBy="#{moneyTransfer.vo.amount}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_amount_column}" />
+						</f:facet>
+						<h:outputFormat value="#{labels.currency_format}">
+							<f:param value="#{moneyTransfer.vo.amount}" />
+							<f:param value="#{applicationScopeBean.currencySymbol}" />
+						</h:outputFormat>
+					</p:column>
+					<p:column sortBy="#{moneyTransfer.vo.transactionTimestamp}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_transaction_timestamp_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.transactionTimestamp}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column
+						sortBy="#{moneyTransfer.vo.bankAccount}"
+						filterBy="#{moneyTransfer.vo.bankAccount.id}"
+						filterOptions="#{moneyTransferBean.filterBankAccounts}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_bank_account_name_column}" />
+						</f:facet>
+						<h:outputText value="#{applicationScopeBean.clipStringTrailing(moneyTransfer.vo.bankAccount.name)}" />
+					</p:column>
+					<p:column sortBy="#{moneyTransfer.vo.reference}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_reference_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.reference}" />
+					</p:column>
+					<p:column sortBy="#{moneyTransfer.vo.reasonForPayment}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_reason_for_payment_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.reasonForPayment}" />
+					</p:column>
+					<p:column sortBy="#{moneyTransfer.vo.voucherCode}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_voucher_code_column}" />
+						</f:facet>
+						<h:outputText value="#{moneyTransfer.vo.voucherCode}" />
+					</p:column>
+					
+					
+					
+					<p:column
+						sortBy="#{moneyTransfer.vo.showComment}"
+						filterBy="#{moneyTransfer.vo.showComment}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_show_comment_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{moneyTransfer.vo.showComment}" />
+						</ui:include>
+					</p:column>
+					
+					<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_comment_column}" />
+									</f:facet>
+									<h:outputText value="#{applicationScopeBean.clipStringTrailing(moneyTransfer.vo.comment)}" />
+								</p:column>
+					
+					<p:column
+						sortBy="#{moneyTransfer.vo.paid}"
+						filterBy="#{moneyTransfer.vo.paid}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_paid_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{moneyTransfer.vo.paid}" />
+						</ui:include>
+					</p:column>
+					<p:column style="width:64px;white-space:nowrap;">
+						<p:commandButton
+							title="#{probandlabels.money_transfer_update_paid_button_title}"
+							id="updateMoneyTransferPaid"
+							icon="ui-icon ui-icon-check"
+							type="button"
+							disabled="#{moneyTransfer.vo.paid}"
+							onclick="updatePaid(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('MONEY_TRANSFER_ID')}:'#{moneyTransfer.vo.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{moneyTransfer.vo.version}' }));" />
+						<p:commandButton
+							type="button"
+							title="#{labels.open_trial_button_label}"
+							icon="ui-icon ui-icon-extlink"
+							disabled="#{empty moneyTransfer.vo.trial}"
+							onclick="openTrial(#{moneyTransfer.vo.trial.id})" />
+					</p:column>
+				</p:dataTable>
+				<p:panel id="moneytransfer_input">
+					<f:facet name="header">
+						<h:outputText value="#{moneyTransferBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{moneyTransferBean.inputVisible}"
+							columns="9"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="trial"
+								value="#{probandlabels.money_transfer_trial_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="trial"
+										required="false"
+										value="#{moneyTransferBean.in.trialId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="trialName"
+										value="#{applicationScopeBean.clipStringPicker(moneyTransferBean.trialName)}"
+										title="#{probandlabels.money_transfer_trial_tooltip}#{labels.open_trial_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedTrial(':tabView:moneytransfer_form:trial')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_trial_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openTrialPickerAjaxUpdate(':tabView:moneytransfer_form:trial',':tabView:moneytransfer_form:trialName',':tabView:moneytransfer_form:costtype')" />
+								<p:commandButton
+									title="#{labels.clear_trial_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjaxUpdate(':tabView:moneytransfer_form:trial',':tabView:moneytransfer_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:moneytransfer_form:costtype')" />
+							</h:panelGrid>
+							<p:message for="trial" />
+							
+							
+<ui:include src="../shared/moneyTransferCoreInput.xhtml">
+				<ui:param
+					name="namingContainer"
+					value=":tabView:moneytransfer_form" />					
+				<ui:param
+					name="reimbursementBean"
+					value="#{moneyTransferBean}" />
+
+			</ui:include>									
+							
+							
+							<!-- <h:outputLabel
+								for="moneyTransferMethod"
+								value="#{probandlabels.money_transfer_method_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="moneyTransferMethod"
+									value="#{moneyTransferBean.method.paymentMethod}"
+									required="true"
+									label="#{probandlabels.money_transfer_method}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{moneyTransferBean.method.paymentMethods}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{moneyTransferBean.handleMethodChange}"
+										update="moneytransfer_input" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferMethod">
+									<h:outputText
+										value="#{probandlabels.money_transfer_method_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="moneyTransferMethod" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="costtype"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_cost_type_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="costtype"
+									value="#{moneyTransferBean.in.costType}"
+									required="false"
+									label="#{probandlabels.money_transfer_cost_type}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCostType}"
+									maxResults="#{autoCompleteMaxResultsCostType}"
+									queryDelay="#{autoCompleteQueryDelayCostType}"
+									dropdown="#{autoCompleteDropdownCostType}"
+									global="#{autoCompleteGlobalCostType}"
+									scrollHeight="#{autoCompleteScrollHeightCostType}"
+									completeMethod="#{moneyTransferBean.completeCostType}">
+									<p:ajax
+										listener="#{moneyTransferBean.handleCostTypeSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="costtype">
+									<h:outputText
+										value="#{probandlabels.money_transfer_cost_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="costtype" /> -->
+							<h:outputLabel
+								for="moneyTransferAmount"
+								value="#{probandlabels.money_transfer_amount_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="moneyTransferAmount"
+									value="#{moneyTransferBean.in.amount}"
+									required="true"
+									label="#{probandlabels.money_transfer_amount}"
+									styleClass="ctsms-control-float">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferAmount">
+									<h:outputText
+										value="#{probandlabels.money_transfer_amount_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="moneyTransferAmount" />
+							<h:outputLabel
+								for="moneyTransferTransactionTimestamp"
+								value="#{probandlabels.money_transfer_transaction_timestamp_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="moneyTransferTransactionTimestamp"
+									value="#{moneyTransferBean.in.transactionTimestamp}"
+									required="true"
+									label="#{probandlabels.money_transfer_transaction_timestamp}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime">
+									<p:ajax />
+								</p:calendar>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferTransactionTimestamp">
+									<h:outputText
+										value="#{probandlabels.money_transfer_transaction_timestamp_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="moneyTransferTransactionTimestamp" />
+							<h:outputLabel
+								for="paid"
+								value="#{probandlabels.money_transfer_paid_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="paid"
+									value="#{moneyTransferBean.in.paid}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="paid">
+									<h:outputText
+										value="#{probandlabels.money_transfer_paid_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="paid" />
+							<!-- <h:outputLabel
+								rendered="#{moneyTransferBean.bankAccountVisible}"
+								for="moneyTransferBankAccount"
+								value="#{probandlabels.money_transfer_bank_account_label}" />
+							<h:panelGroup rendered="#{moneyTransferBean.bankAccountVisible}">
+								<p:selectOneMenu
+									id="moneyTransferBankAccount"
+									value="#{moneyTransferBean.in.bankAccountId}"
+									required="false"
+									label="#{probandlabels.money_transfer_bank_account}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{moneyTransferBean.bankAccounts}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferBankAccount">
+									<h:outputText
+										value="#{probandlabels.money_transfer_bank_account_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{moneyTransferBean.bankAccountVisible}"
+								for="moneyTransferBankAccount" />
+							<h:outputLabel
+								rendered="#{moneyTransferBean.referenceVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferReference"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_reference_label}" />
+							<h:panelGroup rendered="#{moneyTransferBean.referenceVisible}">
+								<p:inputText
+									id="moneyTransferReference"
+									value="#{moneyTransferBean.in.reference}"
+									required="false"
+									label="#{probandlabels.money_transfer_reference}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferReference">
+									<h:outputText
+										value="#{probandlabels.money_transfer_reference_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{moneyTransferBean.referenceVisible}"
+								for="moneyTransferReference" />
+							<h:outputLabel
+								rendered="#{moneyTransferBean.reasonForPaymentVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferReasonForPayment"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_reason_for_payment_label}" />
+							<h:panelGroup rendered="#{moneyTransferBean.reasonForPaymentVisible}">
+								<p:inputText
+									id="moneyTransferReasonForPayment"
+									value="#{moneyTransferBean.in.reasonForPayment}"
+									required="false"
+									label="#{probandlabels.money_transfer_reason_for_payment}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferReasonForPayment">
+									<h:outputText
+										value="#{probandlabels.money_transfer_reason_for_payment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{moneyTransferBean.reasonForPaymentVisible}"
+								for="moneyTransferReasonForPayment" />
+							<h:outputLabel
+								rendered="#{moneyTransferBean.voucherCodeVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferVoucherCode"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_voucher_code_label}" />
+							<h:panelGroup rendered="#{moneyTransferBean.voucherCodeVisible}">
+								<p:inputText
+									id="moneyTransferVoucherCode"
+									value="#{moneyTransferBean.in.voucherCode}"
+									required="false"
+									label="#{probandlabels.money_transfer_voucher_code}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferVoucherCode">
+									<h:outputText
+										value="#{probandlabels.money_transfer_voucher_code_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{moneyTransferBean.voucherCodeVisible}"
+								for="moneyTransferVoucherCode" /> -->
+								
+								
+							<h:outputLabel
+								for="moneyTransferShowComment"
+								value="#{probandlabels.money_transfer_show_comment_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="moneyTransferShowComment"
+									widgetVar="moneyTransferShowComment"
+									value="#{moneyTransferBean.in.showComment}" >
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferShowComment">
+									<h:outputText
+										value="#{probandlabels.money_transfer_show_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="moneyTransferShowComment" />		
+													
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{moneyTransferBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="comment"
+								value="#{probandlabels.money_transfer_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="comment"
+									value="#{moneyTransferBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea ctsms-moneytransfer-comment"
+									label="#{probandlabels.money_transfer_comment}">
+									<p:ajax />
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="comment">
+									<h:outputText
+										value="#{probandlabels.money_transfer_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!moneyTransferBean.inputVisible}" />
+						<h:outputLabel rendered="#{!moneyTransferBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{moneyTransferBean.created ? moneyTransferBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{moneyTransferBean.reset}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="moneytransfer_list,moneytransfer_input" />
+								<p:commandButton
+									process="@this,moneytransfer_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{moneyTransferBean.add}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!moneyTransferBean.createable}"
+									update="moneytransfer_list,moneytransfer_input" />
+								<p:commandButton
+									process="@this,moneytransfer_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{moneyTransferBean.update}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!moneyTransferBean.editable}"
+									update="moneytransfer_list,moneytransfer_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{moneyTransferBean.delete}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!moneyTransferBean.removable}"
+									update="moneytransfer_list,moneytransfer_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{moneyTransferBean.load}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!moneyTransferBean.created}"
+									update="moneytransfer_list,moneytransfer_input" />
+								<p:commandButton
+									immediate="true"
+									ajax="false"
+									disabled="#{!moneyTransferBean.person}"
+									value="#{labels.reimbursements_export_button_label}"
+									title="#{labels.reimbursements_export_button_label}"
+									icon="ui-icon ui-icon-xls">
+									<p:fileDownload value="#{moneyTransferBean.reimbursementsExcelStreamedContent}" />
+								</p:commandButton>
+								<p:splitButton
+									immediate="true"
+									ajax="false"
+									disabled="#{!moneyTransferBean.person or moneyTransferBean.openSummary.count == 0}"
+									value="#{moneyTransferBean.getReimbursementsPdfNoTrialButtonLabel()}"
+									title="#{labels.reimbursements_pdf_button_label}"
+									icon="ui-icon ui-icon-pdf">
+									<p:fileDownload value="#{moneyTransferBean.getReimbursementsPdfNoTrialStreamedContent()}" />
+									<c:forEach
+										var="trial"
+										items="#{moneyTransferBean.reimbursementTrials}">
+										<p:menuitem
+											immediate="true"
+											ajax="false"
+											value="#{moneyTransferBean.getReimbursementsPdfButtonLabel(trial)}"
+											title="#{labels.reimbursements_pdf_button_label}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload value="#{moneyTransferBean.getReimbursementsPdfStreamedContent(trial.value)}" />
+										</p:menuitem>
+									</c:forEach>
+								</p:splitButton>
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

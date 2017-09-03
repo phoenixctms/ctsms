@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband list status entry datatable</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dataTable
+			styleClass="ctsms-datatable"
+			lazy="true"
+			rows="#{dataTablesRowsDefault}"
+			paginator="#{dataTablesPaginatorDefault}"
+			paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+			rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+			paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+			pageLinks="#{dataTablesPageLinksDefault}"
+			paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+			scrollable="#{dataTablesScrollableDefault}"
+			scrollHeight="#{dataTablesScrollHeightDefault}"
+			resizableColumns="#{dataTablesResizableColumnsDefault}"
+			sortBy="#{probandListStatusEntry.vo.id}"
+			sortOrder="descending"
+			emptyMessage="#{labels.datatable_permission_empty_message}"
+			var="probandListStatusEntry"
+			value="#{probandListBean.probandListStatusEntryBean.probandListStatusEntryModel}"
+			id="probandliststatus_list"
+			selectionMode="single"
+			selection="#{probandListBean.probandListStatusEntryBean.selectedProbandListStatusEntry}"
+			rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListStatusEntry.vo)}">
+			<p:ajax
+				event="rowSelect"
+				update="#{namingContainer}:probandliststatus_input" />
+			<f:facet name="header">
+				<h:outputText value="#{probandListBean.probandListStatusEntryBean.probandListStatusEntryModel.rowCount} #{triallabels.probandliststatus_list_header}" />
+			</f:facet>
+			<p:column sortBy="#{probandListStatusEntry.vo.id}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.id_column}" />
+				</f:facet>
+				<h:outputText value="#{probandListStatusEntry.vo.id}" />
+			</p:column>
+			<p:column sortBy="#{probandListStatusEntry.vo.status}">
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_status_column}" />
+				</f:facet>
+				<h:outputText value="#{probandListStatusEntry.vo.status.name}" />
+			</p:column>
+			<p:column sortBy="#{probandListStatusEntry.vo.status.count}">
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_status_count_column}" />
+				</f:facet>
+				<ui:include src="listBooleanIcon.xhtml">
+					<ui:param
+						name="value"
+						value="#{probandListStatusEntry.vo.status.count}" />
+				</ui:include>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_reason_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{probandListStatusEntry.vo.decrypted ? applicationScopeBean.clipStringTrailing(probandListStatusEntry.vo.reason,56) : triallabels.encrypted_proband_list_status_reason}" />
+					<ui:param
+						name="icon"
+						value="#{probandListStatusEntry.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+					<ui:param
+						name="rendered"
+						value="true" />
+				</ui:include>
+			</p:column>
+			<p:column sortBy="#{probandListStatusEntry.vo.modifiedUser.name}">
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_modified_user_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getIdentityString(probandListStatusEntry.vo.modifiedUser)}" />
+			</p:column>
+			<p:column sortBy="#{probandListStatusEntry.vo.realTimestamp}">
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_real_timestamp_column}" />
+				</f:facet>
+				<h:outputText value="#{probandListStatusEntry.vo.realTimestamp}">
+					<f:converter converterId="ctsms.DateTime" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</ui:composition>
+</h:body>
+</html>

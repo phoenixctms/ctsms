@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>input field pick search</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/popupTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inputFieldSearchBean.multiPicker ? labels.multipick_input_field_button_label : labels.pick_input_field_button_label}" />
+		<ui:define name="head">
+			<h:outputStylesheet
+				name="search.css"
+				library="css"
+				target="head" />
+			<h:outputScript
+				name="search.js"
+				library="js"
+				target="head" />
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="search_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+				<p:remoteCommand
+					process="@this"
+					name="pickCurrentPage"
+					actionListener="#{inputFieldSearchBean.handlePickCurrentPage()}"
+					oncomplete="handlePickCurrentPage(xhr, status, args)" />
+				<ui:decorate template="/META-INF/includes/shared/inputFieldSearcher.xhtml">
+					<ui:define name="pickbutton">
+						<p:column style="width:32px;">
+							<f:facet name="header">
+								<p:commandButton
+									title="#{labels.pick_page_input_field_button_label}"
+									type="button"
+									rendered="#{inputFieldSearchBean.multiPicker}"
+									icon="ui-icon ui-icon-arrowthickstop-1-s"
+									onclick="pickCurrentPage()" />
+							</f:facet>
+							<p:commandButton
+								title="#{labels.pick_input_field_button_label}"
+								type="button"
+								icon="ui-icon ui-icon-arrowreturnthick-1-w"
+								onclick="#{inputFieldSearchBean.getSetPickerIDJSCall(inputField.vo)}" />
+						</p:column>
+					</ui:define>
+				</ui:decorate>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

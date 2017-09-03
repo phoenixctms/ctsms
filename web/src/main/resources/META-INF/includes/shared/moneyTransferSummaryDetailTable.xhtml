@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>money transfer summary detail table for row expansion</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dataTable
+			styleClass="ctsms-datatable"
+			lazy="false"
+			rows="#{dataTableRows}"
+			paginator="#{dataTablePaginator}"
+			paginatorTemplate="#{dataTablePaginatorTemplate}"
+			rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+			paginatorPosition="#{dataTablePaginatorPosition}"
+			pageLinks="#{dataTablePageLinks}"
+			paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+			scrollable="#{dataTableScrollable}"
+			scrollHeight="#{dataTableScrollHeight}"
+			resizableColumns="#{dataTableResizableColumns}"
+			emptyMessage="#{labels.datatable_permission_empty_message}"
+			id="moneyTransferDetailDataTable"
+			value="#{summary.vo.totalsByCostTypes}"
+			var="detail">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.money_transfer_summary_detail_list_cost_type_column_header}" />
+				</f:facet>
+				<h:outputText value="#{empty detail.costType ? messages.empty_cost_type : detail.costType}" />
+				<f:facet name="footer">
+					<h:outputText value="#{triallabels.money_transfer_summary_detail_list_cost_type_column_footer}" />
+				</f:facet>
+			</p:column>
+			<p:columns
+				value="#{summary.vo.totalsByPaymentMethods}"
+				var="methodDetail"
+				columnIndexVar="methodIndex">
+				<f:facet name="header">
+					<h:outputText value="#{methodDetail.method.name}" />
+				</f:facet>
+				<h:outputFormat
+					styleClass="ctsms-list-cell-normal"
+					rendered="#{!empty detail.byPaymentMethods and detail.byPaymentMethods[methodIndex].count > 0}"
+					value="#{labels.currency_items_format}">
+					<f:param value="#{detail.byPaymentMethods[methodIndex].total}" />
+					<f:param value="#{applicationScopeBean.currencySymbol}" />
+					<f:param value="#{detail.byPaymentMethods[methodIndex].count}" />
+				</h:outputFormat>
+				<f:facet name="footer">
+					<h:outputFormat
+						rendered="#{methodDetail.count > 0}"
+						value="#{labels.currency_items_format}">
+						<f:param value="#{methodDetail.total}" />
+						<f:param value="#{applicationScopeBean.currencySymbol}" />
+						<f:param value="#{methodDetail.count}" />
+					</h:outputFormat>
+				</f:facet>
+			</p:columns>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.money_transfer_summary_detail_list_total_column_header}" />
+				</f:facet>
+				<h:outputFormat
+					rendered="#{detail.count > 0}"
+					value="#{labels.currency_items_format}">
+					<f:param value="#{detail.total}" />
+					<f:param value="#{applicationScopeBean.currencySymbol}" />
+					<f:param value="#{detail.count}" />
+				</h:outputFormat>
+				<f:facet name="footer">
+					<h:outputFormat
+						rendered="#{summary.vo.count > 0}"
+						value="#{labels.currency_items_format}">
+						<f:param value="#{summary.vo.total}" />
+						<f:param value="#{applicationScopeBean.currencySymbol}" />
+						<f:param value="#{summary.vo.count}" />
+					</h:outputFormat>
+				</f:facet>
+			</p:column>
+		</p:dataTable>
+	</ui:composition>
+</h:body>
+</html>

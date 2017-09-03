@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>booking duration summary table</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:remoteCommand
+			process="@this,#{namingContainer}:bookingDurationSummaryDataTable:bookingDurationSummaryStart,#{namingContainer}:bookingDurationSummaryDataTable:bookingDurationSummaryStop,#{namingContainer}:bookingDurationSummaryDataTable:bookingDurationSummaryCalendar"
+			name="refreshDurationSummary"
+			actionListener="#{bookingDurationSummaryModel.update}"
+			update="#{namingContainer}:bookingDurationSummaryDataTable" />
+		<p:dataTable
+			styleClass="ctsms-datatable"
+			lazy="false"
+			rows="#{dataTableRows}"
+			paginator="#{dataTablePaginator}"
+			paginatorTemplate="#{dataTablePaginatorTemplate}"
+			rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+			paginatorPosition="#{dataTablePaginatorPosition}"
+			pageLinks="#{dataTablePageLinks}"
+			paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+			scrollable="#{dataTableScrollable}"
+			scrollHeight="#{dataTableScrollHeight}"
+			resizableColumns="#{dataTableResizableColumns}"
+			emptyMessage="#{labels.datatable_permission_empty_message}"
+			id="bookingDurationSummaryDataTable"
+			value="#{bookingDurationSummaryModel.allRows}"
+			var="bookingDurationSummaryDetail">
+			<f:facet name="header">
+				<h:panelGrid
+					columns="6"
+					cellpadding="0"
+					columnClasses="ctsms-bookingduration-header-text-column,ctsms-bookingduration-header-timespan-column,ctsms-bookingduration-header-text-column,ctsms-bookingduration-header-calendar-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+					<h:outputText
+						rendered="#{showInventory}"
+						value="#{bookingDurationSummaryModel.allRowCount} #{labels.booking_duration_summary_inventory_table_header} " />
+					<h:outputText
+						rendered="#{showProband or showCourse or showTrial}"
+						value="#{bookingDurationSummaryModel.allRowCount} #{labels.booking_duration_summary_proband_course_trial_table_header} " />
+					<h:panelGroup>
+						<h:panelGroup>
+							<p:calendar
+								id="bookingDurationSummaryStart"
+								value="#{bookingDurationSummaryModel.start}"
+								required="false"
+								label="#{labels.booking_duration_summary_table_header_start}"
+								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								yearRange="#{applicationScopeBean.calendarYearRange}"
+								showWeek="true"
+								navigator="true"
+								locale="#{sessionScopeBean.locale}"
+								timeZone="#{sessionScopeBean.timeZone}"
+								styleClass="ctsms-calendar-datetime">
+							</p:calendar>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="bookingDurationSummaryStart">
+								<h:outputText
+									value="#{labels.booking_duration_summary_table_header_start_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<h:outputText value="#{labels.booking_duration_summary_table_header_2}" />
+						<h:panelGroup>
+							<p:calendar
+								id="bookingDurationSummaryStop"
+								value="#{bookingDurationSummaryModel.stop}"
+								required="false"
+								label="#{labels.booking_duration_summary_table_header_stop}"
+								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								yearRange="#{applicationScopeBean.calendarYearRange}"
+								showWeek="true"
+								navigator="true"
+								locale="#{sessionScopeBean.locale}"
+								timeZone="#{sessionScopeBean.timeZone}"
+								styleClass="ctsms-calendar-datetime">
+							</p:calendar>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="bookingDurationSummaryStop">
+								<h:outputText
+									value="#{labels.booking_duration_summary_table_header_stop_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:outputText value="#{labels.booking_duration_summary_table_header_3}" />
+					<h:panelGroup>
+						<p:selectOneMenu
+							id="bookingDurationSummaryCalendar"
+							value="#{bookingDurationSummaryModel.calendar}"
+							required="false"
+							label="#{labels.shift_duration_summary_table_header_calendar}"
+							styleClass="ctsms-control">
+							<f:selectItems
+								value="#{bookingDurationSummaryModel.filterCalendars}"
+								var="selectItem"
+								itemLabel="#{selectItem.label}"
+								itemValue="#{selectItem.value}" />
+						</p:selectOneMenu>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="bookingDurationSummaryCalendar">
+							<h:outputText
+								value="#{labels.shift_duration_summary_table_header_calendar_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+					<ui:include src="ajaxStatus.xhtml" />
+					<p:commandButton
+						title="#{labels.update_booking_summary_button_title}"
+						id="updateBookingDurationSummary"
+						icon="ui-icon-refresh"
+						styleClass="ctsms-list-header-button"
+						type="button"
+						onclick="refreshDurationSummary();" />
+				</h:panelGrid>
+			</f:facet>
+			<p:column
+				rendered="#{showInventory}"
+				sortBy="#{bookingDurationSummaryDetail.vo.inventory.name}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_inventory_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{bookingDurationSummaryDetail.vo.inventory.name}" />
+					<ui:param
+						name="icon"
+						value="#{bookingDurationSummaryDetail.vo.inventory.category.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="true" />
+				</ui:include>
+			</p:column>
+			<p:column
+				rendered="#{showInventory}"
+				sortBy="#{bookingDurationSummaryDetail.vo.inventory.department.name}"
+				filterBy="#{bookingDurationSummaryDetail.vo.inventory.department.id}"
+				filterOptions="#{sessionScopeBean.filterDepartments}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_inventory_department_column}" />
+				</f:facet>
+				<h:outputText value="#{bookingDurationSummaryDetail.vo.inventory.department.name}" />
+			</p:column>
+			<p:column
+				rendered="#{showProband}"
+				sortBy="#{bookingDurationSummaryDetail.vo.proband.nameSortable}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_proband_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{bookingDurationSummaryDetail.vo.proband.name}" />
+					<ui:param
+						name="icon"
+						value="#{bookingDurationSummaryDetail.vo.proband.category.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="#{bookingDurationSummaryDetail.vo.proband != null}" />
+				</ui:include>
+			</p:column>
+			<p:column
+				rendered="#{showCourse}"
+				sortBy="#{bookingDurationSummaryDetail.vo.course.name}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_course_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{bookingDurationSummaryDetail.vo.course.name}" />
+					<ui:param
+						name="icon"
+						value="#{bookingDurationSummaryDetail.vo.course.category.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="#{bookingDurationSummaryDetail.vo.course != null}" />
+				</ui:include>
+			</p:column>
+			<p:column
+				rendered="#{showTrial}"
+				sortBy="#{bookingDurationSummaryDetail.vo.trial.name}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_trial_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{bookingDurationSummaryDetail.vo.trial.name}" />
+					<ui:param
+						name="icon"
+						value="#{bookingDurationSummaryDetail.vo.trial.status.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="#{bookingDurationSummaryDetail.vo.trial != null}" />
+				</ui:include>
+			</p:column>
+			<p:column sortBy="#{bookingDurationSummaryDetail.vo.bookingCount}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_booking_count_column}" />
+				</f:facet>
+				<h:outputText value="#{bookingDurationSummaryDetail.vo.bookingCount}" />
+			</p:column>
+			<p:column sortBy="#{bookingDurationSummaryDetail.vo.totalDuration}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_total_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{empty bookingDurationSummaryDetail.vo.totalDuration ? '' : applicationScopeBean.getBookingDurationString(bookingDurationSummaryDetail.vo.totalDuration)}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_interval_duration_column}" />
+				</f:facet>
+				<h:outputText value="" />
+			</p:column>
+			<p:column sortBy="#{bookingDurationSummaryDetail.vo.load}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_load_column}" />
+				</f:facet>
+				<h:outputText value="#{empty bookingDurationSummaryDetail.vo.load ? '' : applicationScopeBean.getPercentageString(bookingDurationSummaryDetail.vo.load)}" />
+			</p:column>
+			<p:columnGroup type="footer">
+				<p:row rendered="#{!showInventory}">
+					<p:column colspan="#{(showInventory ? 2 : 0) + (showProband ? 1 : 0) + (showCourse ? 1 : 0) + (showTrial ? 1 : 0)}">
+						<f:facet name="footer">
+							<h:outputText value="#{labels.booking_duration_summary_table_footer_first_row}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{bookingDurationSummaryModel.summary.notAssigned.bookingCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{empty bookingDurationSummaryModel.summary.notAssigned.totalDuration ? '' : applicationScopeBean.getBookingDurationString(bookingDurationSummaryModel.summary.notAssigned.totalDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{empty bookingDurationSummaryModel.summary.notAssigned.load ? '' : applicationScopeBean.getPercentageString(bookingDurationSummaryModel.summary.notAssigned.load)}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="#{(showInventory ? 2 : 0) + (showProband ? 1 : 0) + (showCourse ? 1 : 0) + (showTrial ? 1 : 0)}">
+						<f:facet name="footer">
+							<h:outputText value="#{labels.booking_duration_summary_table_footer_second_row}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{bookingDurationSummaryModel.summary.bookingCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{empty bookingDurationSummaryModel.summary.totalDuration ? '' : applicationScopeBean.getBookingDurationString(bookingDurationSummaryModel.summary.totalDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getBookingDurationString(bookingDurationSummaryModel.summary.intervalDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{empty bookingDurationSummaryModel.summary.load ? '' : applicationScopeBean.getPercentageString(bookingDurationSummaryModel.summary.load)}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+	</ui:composition>
+</h:body>
+</html>

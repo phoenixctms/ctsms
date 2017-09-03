@@ -1,0 +1,53 @@
+#set ($testCaseClassName = "${service.baseName}Test")
+#set ($generatedFile = "${service.implementationPackagePath}/test/${testCaseClassName}.java")
+#if (!$service.operations.empty)
+// license-header java merge-point
+//
+package ${service.implementationPackageName}.test;
+
+import javax.annotation.Resource;
+import $baseServiceTestClass;
+
+/**
+ * <p>
+ * Spring Service base test class for <code>$service.fullyQualifiedName</code>,
+ * defines protected variables for all dependencies to entities and services.
+ * </p>
+ *
+ * @see $service.fullyQualifiedName
+ */
+public abstract class $testCaseClassName extends $stringUtils.substringAfterLast($baseServiceTestClass,".") {
+
+    /**
+     * Service to test - autowired via spring
+     */
+    @Resource
+    protected $service.fullyQualifiedName $service.getBeanName(false);
+
+#foreach($serviceRef in $service.serviceReferences)
+#set ($targetElement = $serviceRef.targetElement)
+    /**
+     * Referenced service - autowired via spring
+     */
+    @Resource
+    protected $targetElement.fullyQualifiedName $serviceRef.name;
+
+#end
+#foreach($entityRef in $service.entityReferences)
+    /**
+     * Referenced DAO - autowired via spring
+     */
+    @Resource
+    protected $entityRef.targetElement.fullyQualifiedDaoName $entityRef.daoName;
+
+#end
+#foreach($destination in $service.messagingDestinations)
+    /**
+     * Referenced jms operation
+     */
+    @Resource
+    protected org.springframework.jms.core.JmsOperations $destination.templateBeanName;
+
+#end
+}
+#end

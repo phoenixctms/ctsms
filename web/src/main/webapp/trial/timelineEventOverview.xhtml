@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>timeline event overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/trialHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{triallabels.timeline_event_overview_title}" />
+		<ui:define name="content">
+			<h:form id="timelineeventoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="9"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="teammember_filter"
+								value="#{triallabels.timeline_event_overview_team_member_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="teammember_filter"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									value="#{timelineEventOverviewBean.timelineScheduleModel.identityTeamMember}">
+									<p:ajax
+										listener="#{timelineEventOverviewBean.handleIdentityTeamMemberChange}"
+										update="timelineevent_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="teammember_filter">
+									<h:outputText
+										value="#{triallabels.timeline_event_overview_team_member_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="teammember_filter" />
+							<h:outputLabel
+								for="ignore_obselete"
+								value="#{triallabels.timeline_event_overview_ignore_obsolete_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="ignore_obselete"
+									disabled="false"
+									value="#{timelineEventOverviewBean.timelineScheduleModel.ignoreObsolete}">
+									<p:ajax
+										listener="#{timelineEventOverviewBean.handleIdentityTeamMemberChange}"
+										update="timelineevent_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="ignore_obselete">
+									<h:outputText
+										value="#{triallabels.timeline_event_overview_ignore_obsolete_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="ignore_obselete" />
+							<h:outputLabel
+								for="show_notify_only"
+								value="#{triallabels.timeline_event_overview_show_notify_only_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="show_notify_only"
+									disabled="false"
+									value="#{timelineEventOverviewBean.timelineScheduleModel.showNotifyOnly}">
+									<p:ajax
+										listener="#{timelineEventOverviewBean.handleIdentityTeamMemberChange}"
+										update="timelineevent_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="show_notify_only">
+									<h:outputText
+										value="#{triallabels.timeline_event_overview_show_notify_only_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="show_notify_only" />
+						</h:panelGrid>
+					</p:panel>
+					<h:panelGroup id="timelineevent_list_wrapper">
+						<p:dataTable
+							styleClass="ctsms-datatable"
+							lazy="true"
+							rows="#{dataTablesRowsFullPage}"
+							paginator="#{dataTablesPaginatorFullPage}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+							paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+							pageLinks="#{dataTablesPageLinksFullPage}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+							scrollable="#{dataTablesScrollableFullPage}"
+							scrollHeight="#{dataTablesScrollHeightFullPage}"
+							resizableColumns="#{dataTablesResizableColumnsFullPage}"
+							sortBy="#{timelineEvent.vo.id}"
+							emptyMessage="#{labels.datatable_permission_empty_message}"
+							var="timelineEvent"
+							value="#{timelineEventOverviewBean.timelineScheduleModel}"
+							id="timelineevent_list"
+							rowStyleClass="#{timelineEvent.vo.trial.deferredDelete ? 'ctsms-strikethrough' : ''} #{timelineEventOverviewBean.timelineEventToColor(timelineEvent.vo)}">
+							<f:facet name="header">
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+									<h:outputText value="#{timelineEventOverviewBean.timelineScheduleModel.rowCount} #{triallabels.timeline_event_overview_timelineevent_list_header}" />
+									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+									<p:commandButton
+										process="@this"
+										actionListener="#{timelineEventOverviewBean.load}"
+										title="#{labels.update_datatable_button_title}"
+										icon="ui-icon-refresh"
+										styleClass="ctsms-list-header-button"
+										ajax="true"
+										update=":timelineeventoverview_form:timelineevent_list_wrapper" />
+								</h:panelGrid>
+							</f:facet>
+							<p:column sortBy="#{timelineEvent.vo.id}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.id_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.id}" />
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.trial.name}"
+								filterBy="#{timelineEvent.vo.trial.name}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_trial_name_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.trial.name}" />
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.trial.department}"
+								filterBy="#{timelineEvent.vo.trial.department.id}"
+								filterOptions="#{sessionScopeBean.filterDepartments}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_trial_department_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.trial.department.name}" />
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.trial.status}"
+								filterBy="#{timelineEvent.vo.trial.status.id}"
+								filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_trial_status_type_column}" />
+								</f:facet>
+								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+									<ui:param
+										name="label"
+										value="#{timelineEvent.vo.trial.status.name}" />
+									<ui:param
+										name="icon"
+										value="#{timelineEvent.vo.trial.status.nodeStyleClass}" />
+									<ui:param
+										name="rendered"
+										value="true" />
+								</ui:include>
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.type}"
+								filterBy="#{timelineEvent.vo.type.id}"
+								filterOptions="#{sessionScopeBean.filterTimelineEventTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_event_type_column}" />
+								</f:facet>
+								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+									<ui:param
+										name="label"
+										value="#{timelineEvent.vo.type.name}" />
+									<ui:param
+										name="icon"
+										value="#{timelineEvent.vo.type.nodeStyleClass}" />
+									<ui:param
+										name="rendered"
+										value="true" />
+								</ui:include>
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.title}"
+								filterBy="#{timelineEvent.vo.title}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_title_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.title}" />
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.start}"
+								filterBy="#{timelineEvent.vo.start}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_start_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.start}">
+									<f:converter converterId="ctsms.Date" />
+								</h:outputText>
+							</p:column>
+							<p:column
+								sortBy="#{timelineEvent.vo.stop}"
+								filterBy="#{timelineEvent.vo.stop}">
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_stop_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.stop}">
+									<f:converter converterId="ctsms.Date" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_due_in_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEventOverviewBean.getTimelineEventDueInString(timelineEvent.vo)}" />
+							</p:column>
+							<p:column style="width:64px;white-space:nowrap;">
+								<p:commandButton
+									process="@this"
+									title="#{triallabels.dismiss_timeline_event_button_label}"
+									actionListener="#{timelineEventOverviewBean.dismiss(timelineEvent.vo)}"
+									icon="ui-icon ui-icon-check"
+									ajax="true"
+									disabled="false"
+									update=":timelineeventoverview_form:timelineevent_list_wrapper,:timelineeventoverview_form:messages" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_trial_button_label}"
+									icon="ui-icon ui-icon-extlink"
+									onclick="openTrial(#{timelineEvent.vo.trial.id})" />
+							</p:column>
+						</p:dataTable>
+					</h:panelGroup>
+					<p:growl
+						id="messages"
+						showDetail="false" />
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

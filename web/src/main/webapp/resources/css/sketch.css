@@ -1,0 +1,359 @@
+body::after{
+    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+    content:url(../resources/images/sketchpad/regions.png) url(../resources/images/sketchpad/regions_disabled.png) url(../resources/images/sketchpad/regions_pressed.png) url(../resources/images/sketchpad/pencil.png) url(../resources/images/sketchpad/eraser.png) url(../resources/images/sketchpad/undo.png) url(../resources/images/sketchpad/undo_pressed.png) url(../resources/images/sketchpad/undo_disabled.png) url(../resources/images/sketchpad/redo.png) url(../resources/images/sketchpad/redo_pressed.png) url(../resources/images/sketchpad/redo_disabled.png) url(../resources/images/sketchpad/clear.png) url(../resources/images/sketchpad/clear_pressed.png) url(../resources/images/sketchpad/clear_disabled.png) url(../resources/images/sketchpad/pen_width_0.png) url(../resources/images/sketchpad/pen_width_0_disabled.png) url(../resources/images/sketchpad/pen_width_1.png) url(../resources/images/sketchpad/pen_width_1_disabled.png) url(../resources/images/sketchpad/pen_width_2.png) url(../resources/images/sketchpad/pen_width_2_disabled.png) url(../resources/images/sketchpad/pen_width_3.png) url(../resources/images/sketchpad/pen_width_3_disabled.png) url(../resources/images/sketchpad/pen_opacity_pressed.png) url(../resources/images/sketchpad/pen_opacity_0.png) url(../resources/images/sketchpad/pen_opacity_0_disabled.png) url(../resources/images/sketchpad/pen_opacity_1.png) url(../resources/images/sketchpad/pen_opacity_1_disabled.png) url(../resources/images/sketchpad/pen_opacity_2.png) url(../resources/images/sketchpad/pen_opacity_2_disabled.png)
+}
+
+.sketch_container {
+
+}
+
+div.sketchpad {
+	background-color: #ffc;
+	border: 1px solid #ccc;
+}
+
+.sketchpad_actions div {
+	cursor: pointer;
+	margin: 4px 0 0;
+	color: #1D72C2;
+	background-color: #D4ECFF;
+	border: 1px solid #57B6FF;
+	text-align: center;
+	text-decoration: none;
+}
+
+.sketchpad_actions div.disabled {
+	text-decoration: none;
+	color: #666;
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+
+.sketchpad_actions div.selected {
+	font-weight: bold;
+}
+
+.sketchpad_actions div._title {
+	cursor: default;
+	color: #666;
+	background-color: transparent;
+	border-color: transparent;
+}
+
+.sketch-toolbar-table {
+	border-spacing: 0px;
+}
+
+.sketch-toolbar-table>tbody>tr:first-child>td:first-child {
+	padding-left: 0px;
+}
+
+.sketch-region-toggler-on {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/regions.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-region-toggler-off {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/regions_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-region-toggler-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #eee;
+	background: url(../resources/images/sketchpad/regions_pressed.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-draw-mode {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pencil.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-erase-mode {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/eraser.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-draw-mode-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #eee;
+	background-color: transparent;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-undo {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/undo.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-undo-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ddd;
+	background: url(../resources/images/sketchpad/undo_pressed.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-undo-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/undo_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-redo {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/redo.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-redo-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ddd;
+	background: url(../resources/images/sketchpad/redo_pressed.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-redo-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/redo_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-clear {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/clear.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-clear-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ddd;
+	background: url(../resources/images/sketchpad/clear_pressed.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-clear-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/clear_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ddd;
+	background-color: white;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-0 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_0.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-0-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_0_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-1 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_1.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-1-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_1_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-2 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_2.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-2-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_2_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-3 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_3.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-width-3-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_width_3_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-pressed {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ddd;
+	background: url(../resources/images/sketchpad/pen_opacity_pressed.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-0 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_0.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-0-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_0_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-1 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_1.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-1-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_1_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-2 {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_2.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}
+
+.sketch-pen-opacity-2-disabled {
+	height: 24px;
+	width: 24px;
+	padding: 0 !important;
+	border: 1px solid #ccc;
+	background: url(../resources/images/sketchpad/pen_opacity_2_disabled.png) no-repeat top right;
+	cursor: pointer;
+	line-height: 24px;
+}

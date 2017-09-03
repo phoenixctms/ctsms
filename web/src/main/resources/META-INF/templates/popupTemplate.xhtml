@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>popup template</title>
+</head>
+<body>
+	<ui:composition template="baseTemplate.xhtml">
+		<ui:param
+			name="showUserMenuBar"
+			value="false" />
+		<ui:param
+			name="favicon"
+			value="picker.ico" />
+		<ui:param
+			name="showStatusBar"
+			value="false" />
+		<ui:define name="menu"></ui:define>
+	</ui:composition>
+</body>
+</html>

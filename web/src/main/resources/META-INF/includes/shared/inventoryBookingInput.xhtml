@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory booking input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:outputLabel
+			for="inventory"
+			value="#{inventorylabels.inventory_booking_input_inventory_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="inventory"
+					required="true"
+					requiredMessage="#{inventorylabels.inventory_booking_input_inventory_required_message}"
+					value="#{bookingBean.in.inventoryId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="inventoryName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.inventoryName)}"
+					title="#{inventorylabels.inventory_booking_input_inventory_tooltip}#{labels.open_inventory_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedInventory('#{namingContainer}:inventory')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.pick_inventory_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openInventoryPickerAjax('#{namingContainer}:inventory','#{namingContainer}:inventoryName')" />
+			<p:commandButton
+				title="#{labels.clear_inventory_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:inventory','#{namingContainer}:inventoryName','#{applicationScopeBean.noInventoryPickedMessage}')" />
+		</h:panelGrid>
+		<p:message for="inventory" />
+		<h:outputLabel
+			rendered="#{showProband}"
+			for="proband"
+			value="#{inventorylabels.inventory_booking_input_proband_label}" />
+		<h:panelGrid
+			rendered="#{showProband}"
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="proband"
+					required="false"
+					value="#{bookingBean.in.probandId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="probandName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.probandName)}"
+					title="#{inventorylabels.inventory_booking_input_proband_tooltip}#{labels.open_proband_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedProband('#{namingContainer}:proband')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.pick_proband_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openProbandPickerAjax('#{namingContainer}:proband','#{namingContainer}:probandName')" />
+			<p:commandButton
+				title="#{labels.clear_proband_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:proband','#{namingContainer}:probandName','#{applicationScopeBean.noProbandPickedMessage}')" />
+		</h:panelGrid>
+		<p:message
+			rendered="#{showProband}"
+			for="proband" />
+		<h:outputLabel
+			rendered="#{showCourse}"
+			for="course"
+			value="#{inventorylabels.inventory_booking_input_course_label}" />
+		<h:panelGrid
+			rendered="#{showCourse}"
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="course"
+					required="false"
+					value="#{bookingBean.in.courseId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="courseName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.courseName)}"
+					title="#{inventorylabels.inventory_booking_input_course_tooltip}#{labels.open_course_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedCourse('#{namingContainer}:course')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.open_course_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openCoursePickerAjax('#{namingContainer}:course','#{namingContainer}:courseName')" />
+			<p:commandButton
+				title="#{labels.clear_course_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:course','#{namingContainer}:courseName','#{applicationScopeBean.noCoursePickedMessage}')" />
+		</h:panelGrid>
+		<p:message
+			rendered="#{showCourse}"
+			for="course" />
+		<h:outputLabel
+			rendered="#{showTrial}"
+			for="trial"
+			value="#{inventorylabels.inventory_booking_input_trial_label}" />
+		<h:panelGrid
+			rendered="#{showTrial}"
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="trial"
+					required="false"
+					value="#{bookingBean.in.trialId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="trialName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.trialName)}"
+					title="#{inventorylabels.inventory_booking_input_trial_tooltip}#{labels.open_trial_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedTrial('#{namingContainer}:trial')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.open_trial_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openTrialPickerAjax('#{namingContainer}:trial','#{namingContainer}:trialName')" />
+			<p:commandButton
+				title="#{labels.clear_trial_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:trial','#{namingContainer}:trialName','#{applicationScopeBean.noTrialPickedMessage}')" />
+		</h:panelGrid>
+		<p:message
+			rendered="#{showTrial}"
+			for="trial" />
+		<ui:include src="inventoryBookingCoreInput.xhtml">
+			<ui:param
+				name="bookingBean"
+				value="#{bookingBean}" />
+			<ui:param
+				name="namingContainer"
+				value="#{namingContainer}" />
+		</ui:include>
+	</ui:composition>
+</h:body>
+</html>

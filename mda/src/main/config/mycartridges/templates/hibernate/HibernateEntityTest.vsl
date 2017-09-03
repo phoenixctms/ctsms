@@ -1,0 +1,32 @@
+#set ($testCaseClassName = "${entity.entityName}Test")
+#set ($generatedFile = "${entity.packagePath}/test/${testCaseClassName}.java")
+#if (!$entity.businessOperations.empty)
+// license-header java merge-point
+//
+package ${entity.packageName}.test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+/**
+ * Test case for entity methods defined in <code>${entity.entityName}</code>.
+ *
+ * Tests all defined business methods in entity.
+ * @see ${entity.fullyQualifiedEntityName}
+ */
+@Test(groups={"entity",${entity.entityName}})
+public class $testCaseClassName {
+#foreach ($operation in ${entity.businessOperations})
+#set ($testMethodName = "test$stringUtils.capitalise(${operation.name})")
+  /**
+   * Test entity business operation <code>${operation.name}</code>.
+   *
+   * @see ${entity.fullyQualifiedEntityName}#${operation.name}(${operation.argumentTypeNames})
+   */
+   @Test
+   public void $testMethodName() {
+     Assert.fail( "Test '$testCaseClassName.$testMethodName()' not implemented!" );
+   }
+#end
+}
+#end

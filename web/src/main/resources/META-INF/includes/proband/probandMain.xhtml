@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="probandmain_form">
+
+			<p:remoteCommand
+				process="@this"
+				name="changeDiagnosis"
+				actionListener="#{diagnosisBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:diagnosis_form:diagnosis_list,:tabView:diagnosis_form:diagnosis_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMedication"
+				actionListener="#{medicationBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:medication_form:medication_list,:tabView:medication_form:medication_input" />				
+	
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandImage"
+				actionListener="#{probandImageBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandimage_form:photo,:tabView:probandimage_form:photo_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandContactDetail"
+				actionListener="#{probandContactDetailBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandcontactdetail_form:probandcontactdetail_list,:tabView:probandcontactdetail_form:probandcontactdetail_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandTag"
+				actionListener="#{probandTagBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandtag_form:probandtag_list,:tabView:probandtag_form:probandtag_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandAddress"
+				actionListener="#{probandAddressBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandaddress_form:probandaddress_list,:tabView:probandaddress_form:probandaddress_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandStatus"
+				actionListener="#{probandStatusBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandstatus_form:probandstatus_list,:tabView:probandstatus_form:probandstatus_input" />
+
+
+			<p:remoteCommand
+				process="@this"
+				name="changeProcedure"
+				actionListener="#{procedureBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:procedure_form:procedure_list,:tabView:procedure_form:procedure_input" />		
+				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandInventoryBooking"
+				actionListener="#{probandInventoryBookingBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandinventorybooking_form:inventorybooking_list,:tabView:probandinventorybooking_form:inventorybooking_input" />				
+
+
+			<p:remoteCommand
+				process="@this"
+				name="changeInquiryValue"
+				actionListener="#{inquiryValueBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiry_input_grid" />
+				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandVisitSchedule"
+				actionListener="#{probandVisitScheduleBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandvisitschedule_form:probandvisitschedule_list,:tabView:probandvisitschedule_form:toolbar" />
+				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandEcrfStatusEntry"
+				actionListener="#{probandEcrfStatusEntryBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:ecrf_header,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />				
+				
+			<p:remoteCommand
+				process="@this"
+				name="changeBankAccount"
+				actionListener="#{bankAccountBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:bankaccount_form:bankaccount_list,:tabView:bankaccount_form:bankaccount_input" />						
+			<p:remoteCommand
+				process="@this"
+				name="changeMoneyTransfer"
+				actionListener="#{moneyTransferBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:moneytransfer_form:moneytransfer_list,:tabView:moneytransfer_form:moneytransfer_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialParticipation"
+				actionListener="#{trialParticipationBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:trialparticipation_form:trialparticipation_list,:tabView:trialparticipation_form:trialParticipationListTabView" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandFile"
+				actionListener="#{fileBean.changeProband(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandfile_form" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandJournalEntry"
+				actionListener="#{journalBean.changeProband(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandjournal_form:journal_list,:tabView:probandjournal_form:journal_input" />				
+				
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByTag"
+				actionListener="#{probandBean.change(probandTagBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByImage"
+				actionListener="#{probandBean.change(probandImageBean.in.id)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByContactDetail"
+				actionListener="#{probandBean.change(probandContactDetailBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByAddress"
+				actionListener="#{probandBean.change(probandAddressBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByDiagnosis"
+				actionListener="#{probandBean.change(diagnosisBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByProcedure"
+				actionListener="#{probandBean.change(procedureBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByMedication"
+				actionListener="#{probandBean.change(medicationBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByStatus"
+				actionListener="#{probandBean.change(probandStatusBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByInventoryBooking"
+				actionListener="#{probandBean.change(probandInventoryBookingBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByBankAccount"
+				actionListener="#{probandBean.change(bankAccountBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByMoneyTransfer"
+				actionListener="#{probandBean.change(moneyTransferBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByTrialParticipation"
+				actionListener="#{probandBean.change(trialParticipationBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByJournalEntry"
+				actionListener="#{probandBean.change(journalBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByFile"
+				actionListener="#{probandBean.change(fileBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this,lastPickedProbandChildIds"
+				name="addChildIDs"
+				actionListener="#{probandBean.addChildIds()}"
+				update="children" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByTreeNode"
+				actionListener="#{probandBean.changeByNode()}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />				
+			<h:panelGrid
+				columns="2"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
+				columnClasses="ctsms-proband-tree-column,ctsms-proband-input-column">
+				
+				<p:panel styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{probandBean.probandTreeLabel}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-content-panelgrid">
+						<h:outputText value="#{probandBean.probandTreeParentsLabel}" />
+						<!-- 							id="child_tree"
+							value="#{probandBean.childrenRoot}" -->
+						<p:tree
+							id="parent_tree"
+							value="#{probandBean.parentsRoot}" 						
+							styleClass="ctsms-proband-tree"
+							var="proband"
+							dynamic="false"
+							expanded="true">
+							<p:treeNode type="#{applicationScopeBean.parentNodeType}">
+								<ui:include src="../shared/treeIcon.xhtml">
+									<ui:param
+										name="iconClass"
+										value="ctsms-probandcategory-unkown #{proband.category.nodeStyleClass}" />
+								</ui:include>
+								<span
+									class="#{proband.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-proband-tree-node-parent"
+									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:#{proband.id}}));"> <h:outputText
+										value="#{applicationScopeBean.clipStringMid(proband.name)}" />
+								</span>
+							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.leafNodeType}">
+								<ui:include src="../shared/treeIcon.xhtml">
+									<ui:param
+										name="iconClass"
+										value="ctsms-probandcategory-unkown #{proband.category.nodeStyleClass}" />
+								</ui:include>
+								<span
+									class="#{proband.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-proband-tree-node-leaf"
+									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:#{proband.id}}));"> <h:outputText
+										value="#{applicationScopeBean.clipStringMid(proband.name)}" />
+								</span>
+							</p:treeNode>
+						</p:tree>
+						<h:outputText value="#{probandBean.probandTreeChildrenLabel}" />
+						<!--
+													id="parent_tree"
+							value="#{probandBean.parentsRoot}" 
+						 -->
+						<p:tree
+							id="child_tree"
+							value="#{probandBean.childrenRoot}"
+							styleClass="ctsms-proband-tree"
+							var="proband"
+							dynamic="false"
+							expanded="true">
+							<p:treeNode type="#{applicationScopeBean.parentNodeType}">
+								<ui:include src="../shared/treeIcon.xhtml">
+									<ui:param
+										name="iconClass"
+										value="ctsms-probandcategory-unkown #{proband.category.nodeStyleClass}" />
+								</ui:include>
+								<span
+									class="#{proband.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-proband-tree-node-parent"
+									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{proband.id}'}));"> <h:outputText
+										value="#{applicationScopeBean.clipStringMid(proband.name)} (#{applicationScopeBean.getListSize(proband.children)})" />
+								</span>
+							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.leafNodeType}">
+								<ui:include src="../shared/treeIcon.xhtml">
+									<ui:param
+										name="iconClass"
+										value="ctsms-probandcategory-unkown #{proband.category.nodeStyleClass}" />
+								</ui:include>
+								<span
+									class="#{proband.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-proband-tree-node-leaf"
+									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{proband.id}'}));"> <h:outputText
+										value="#{applicationScopeBean.clipStringMid(proband.name)}" />
+								</span>
+							</p:treeNode>
+						</p:tree>
+					</h:panelGrid>
+				</p:panel>
+				<p:panel
+					id="proband_input"
+					styleClass="ctsms-panel-maxheight">				
+					<f:facet name="header">
+						<h:outputText value="#{probandBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-proband-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+					<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{probandlabels.proband_main_field_set}" />
+							</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-textarea-row">
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
+
+							<h:outputLabel
+								for="person"
+								value="#{probandlabels.proband_person_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="person"
+									disabled="#{probandBean.created}"
+									value="#{probandBean.in.person}">
+									<p:ajax
+									    listener="#{probandBean.handlePersonChange}"
+										update=":tabView:probandmain_form:proband_input" />
+										<!-- listener="#{probandBean.handlePersonChange}" -->
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="person">
+									<h:outputText
+										value="#{probandlabels.proband_person_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="blinded" />
+							<h:outputLabel
+								for="blinded"
+								value="#{probandlabels.proband_blinded_label}" />
+							<h:panelGroup>
+								<!-- disabled="#{probandBean.created}" -->
+								<p:selectBooleanCheckbox
+									id="blinded"
+									disabled="false"
+									value="#{probandBean.in.blinded}">
+									<p:ajax
+									    
+										update=":tabView:probandmain_form:proband_input" />
+										<!-- listener="#{probandBean.handleBlindedChange}" -->
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="blinded">
+									<h:outputText
+										value="#{probandlabels.proband_blinded_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="blinded" />							
+
+
+
+							<h:outputLabel
+								for="animalName"
+								rendered="#{!probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.animal_name_label}" />
+							<h:panelGroup rendered="#{!probandBean.in.person and !probandBean.in.blinded}">
+								<p:inputText
+									id="animalName"
+									value="#{probandBean.in.animalName}"
+									required="#{!probandBean.in.person}"
+									label="#{probandlabels.animal_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="animalName">
+									<h:outputText
+										value="#{probandlabels.animal_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="animalName"
+								rendered="#{!probandBean.in.person and !probandBean.in.blinded}" />
+
+
+
+
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="prefixedTitle1"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.prefixed_titles_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}">
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle1"
+										value="#{probandBean.in.prefixedTitle1}"
+										required="false"
+										label="#{probandlabels.prefixed_title1}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePrefixedTitle1}">
+										<p:ajax
+											listener="#{probandBean.handlePrefixedTitle1Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle1">
+										<h:outputText
+											value="#{probandlabels.prefixed_title1_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle2"
+										value="#{probandBean.in.prefixedTitle2}"
+										required="false"
+										label="#{probandlabels.prefixed_title2}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePrefixedTitle2}">
+										<p:ajax
+											listener="#{probandBean.handlePrefixedTitle2Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle1">
+										<h:outputText
+											value="#{probandlabels.prefixed_title2_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle3"
+										value="#{probandBean.in.prefixedTitle3}"
+										required="false"
+										label="#{probandlabels.prefixed_title3}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePrefixedTitle3}">
+										<p:ajax
+											listener="#{probandBean.handlePrefixedTitle3Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle1">
+										<h:outputText
+											value="#{probandlabels.prefixed_title3_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<p:message for="prefixedTitle1" 
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"/>
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="firstName"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.first_name_label}" />
+							<h:panelGroup rendered="#{probandBean.in.person and !probandBean.in.blinded}">
+								<p:inputText
+									id="firstName"
+									value="#{probandBean.in.firstName}"
+									required="true"
+									label="#{probandlabels.first_name}"
+									styleClass="ctsms-control" >
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="firstName">
+									<h:outputText
+										value="#{probandlabels.first_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="firstName"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}" />
+							
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="lastName"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.last_name_label}" />
+							<h:panelGroup rendered="#{probandBean.in.person and !probandBean.in.blinded}">
+								<p:inputText
+									id="lastName"
+									value="#{probandBean.in.lastName}"
+									required="true"
+									label="#{probandlabels.last_name}"
+									styleClass="ctsms-control" >
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="lastName">
+									<h:outputText
+										value="#{probandlabels.last_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="lastName"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}" />
+							
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="postpositionedTitle1"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.postpositioned_titles_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}">
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle1"
+										value="#{probandBean.in.postpositionedTitle1}"
+										required="false"
+										label="#{probandlabels.postpositioned_title1}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePostpositionedTitle1}">
+										<p:ajax
+											listener="#{probandBean.handlePostpositionedTitle1Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle1">
+										<h:outputText
+											value="#{probandlabels.postpositioned_title1_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle2"
+										value="#{probandBean.in.postpositionedTitle2}"
+										required="false"
+										label="#{probandlabels.postpositioned_title2}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePostpositionedTitle2}">
+										<p:ajax
+											listener="#{probandBean.handlePostpositionedTitle2Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle2">
+										<h:outputText
+											value="#{probandlabels.postpositioned_title2_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle3"
+										value="#{probandBean.in.postpositionedTitle3}"
+										required="false"
+										label="#{probandlabels.postpositioned_title3}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{probandBean.completePostpositionedTitle3}">
+										<p:ajax
+											listener="#{probandBean.handlePostpositionedTitle3Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle3">
+										<h:outputText
+											value="#{probandlabels.postpositioned_title3_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<p:message for="postpositionedTitle1" 
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"/>
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="dateOfBirth"
+								value="#{probandlabels.date_of_birth_label}" />
+							<h:panelGroup >
+								<p:calendar
+									id="dateOfBirth"
+									value="#{probandBean.in.dateOfBirth}"
+									required="#{!probandBean.in.blinded}"
+									label="#{probandlabels.date_of_birth}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date">
+									<p:ajax
+										event="blur"
+										process="@this"
+										update="age" />
+									<p:ajax
+										event="dateSelect"
+										process="@this"
+										update="age" />
+								</p:calendar>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dateOfBirth">
+									<h:outputText
+										value="#{probandlabels.date_of_birth_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dateOfBirth" />
+							<h:outputLabel value="#{probandlabels.age_label}" />
+							<h:outputText
+								value="#{probandBean.age}"
+								
+								id="age" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="gender"
+								
+								value="#{probandlabels.gender_label}" />
+							<h:panelGroup >
+								<p:selectOneMenu
+									id="gender"
+									value="#{probandBean.gender.sex}"
+									required="#{!probandBean.in.blinded}"
+									label="#{probandlabels.gender}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{probandBean.gender.sexes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="gender">
+									<h:outputText
+										value="#{probandlabels.gender_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message  for="gender" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="citizenship"
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"
+								value="#{probandlabels.citizenship_label}" />
+							<h:panelGroup rendered="#{probandBean.in.person and !probandBean.in.blinded}">
+								<p:autoComplete
+									id="citizenship"
+									value="#{probandBean.in.citizenship}"
+									required="false"
+									label="#{probandlabels.citizenship}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCountry}"
+									maxResults="#{autoCompleteMaxResultsCountry}"
+									queryDelay="#{autoCompleteQueryDelayCountry}"
+									dropdown="#{autoCompleteDropdownCountry}"
+									global="#{autoCompleteGlobalCountry}"
+									scrollHeight="#{autoCompleteScrollHeightCountry}"
+									completeMethod="#{probandBean.completeCitizenship}">
+									<p:ajax
+										listener="#{probandBean.handleCitizenshipSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="citizenship">
+									<h:outputText
+										value="#{probandlabels.citizenship_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="citizenship" 
+								rendered="#{probandBean.in.person and !probandBean.in.blinded}"/>
+							<h:outputLabel
+								for="department"
+								value="#{probandlabels.proband_department_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department"
+									value="#{probandBean.in.departmentId}"
+									required="true"
+									disabled="true"
+									label="#{probandlabels.proband_department}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{probandBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department">
+									<h:outputText
+										value="#{probandlabels.proband_department_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department" />
+							<h:outputLabel
+								for="category"
+								value="#{probandlabels.proband_category_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="category"
+									value="#{probandBean.in.categoryId}"
+									required="true"
+									label="#{probandlabels.proband_category}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{probandBean.categories}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{probandBean.handleCategoryChange}"
+										update="auto_delete_message, proband_locked_message" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="category">
+									<h:outputText
+										value="#{probandlabels.proband_category_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="category" />
+							<h:outputLabel />
+							<h:outputText
+								styleClass="#{probandBean.autoDelete ? (probandBean.category.delete ? 'ctsms-text-red' : 'ctsms-text-bold') : ''}"
+								value="#{probandBean.autoDeleteMessage}"
+								id="auto_delete_message" />
+							<h:outputLabel />
+							<h:outputLabel />
+							<h:outputText
+								styleClass="#{probandBean.probandLocked ? 'ctsms-text-red' : ''}"
+								value="#{probandBean.probandLockedMessage}"
+								id="proband_locked_message" />
+							<h:outputLabel />
+							<!-- <h:outputLabel
+								for="available"
+								value="#{probandlabels.proband_available}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="available"
+									value="#{probandBean.in.available}">
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="available">
+									<h:outputText
+										value="#{probandlabels.proband_available_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="available" />
+							<h:outputLabel
+								for="recruitmentForOtherTrialsAllowed"
+								value="#{probandlabels.recruitment_for_other_trials_allowed_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="recruitmentForOtherTrialsAllowed"
+									value="#{probandBean.in.recruitmentForOtherTrialsAllowed}">
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="recruitmentForOtherTrialsAllowed">
+									<h:outputText
+										value="#{probandlabels.recruitment_for_other_trials_allowed_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="recruitmentForOtherTrialsAllowed" /> -->
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="comment"
+								value="#{probandlabels.proband_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="comment"
+									value="#{probandBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{probandlabels.proband_comment}" >
+									<p:ajax />									
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="comment">
+									<h:outputText
+										value="#{probandlabels.proband_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						
+						
+						
+						
+						</h:panelGrid>
+					</p:fieldset>
+					
+					
+					<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{probandlabels.proband_physician_field_set}" />
+							</f:facet>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row">
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								
+								
+
+
+
+							<h:outputLabel
+								for="physician"
+								value="#{probandlabels.proband_physician_label}" />
+							<h:panelGrid
+								columns="4"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="physician"
+										required="false"
+										value="#{probandBean.in.physicianId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="physicianName"
+										value="#{applicationScopeBean.clipStringPicker(probandBean.physicianName)}"
+										title="#{probandlabels.proband_physician_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff('tabView:probandmain_form:physician')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax('tabView:probandmain_form:physician','tabView:probandmain_form:physicianName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax('tabView:probandmain_form:physician','tabView:probandmain_form:physicianName','#{applicationScopeBean.noStaffPickedMessage}')" />
+								<p:commandButton
+									title="#{messages.create_new_staff}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button"
+									onclick="openNewStaff()" />									
+							</h:panelGrid>
+							<p:message for="physician" />
+
+
+
+								
+								
+							</h:panelGrid>
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset
+						toggleable="true"
+						collapsed="true">
+						<f:facet name="legend">
+							<h:outputText value="#{probandlabels.proband_children_field_set}" />
+						</f:facet>
+					
+								<h:panelGrid
+									id="children"
+									columns="1"
+									cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-input-tied-row,ctsms-input-tied-row">
+									<h:panelGrid
+										columns="3"
+										cellpadding="0"
+										columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
+										<h:outputText value="#{probandBean.childrenMultiPicker.count} #{probandlabels.proband_children_label}" />
+										<p:commandButton
+											title="#{labels.multipick_proband_button_label}"
+											icon="ui-icon ui-icon-cart"
+											type="button"
+											onclick="openProbandMultiPicker(':tabView:probandmain_form:lastPickedProbandChildIds','addChildIDs')" />
+										<p:commandButton
+											process="@this"
+											title="#{labels.multipick_clear_all_button_label}"
+											actionListener="#{probandBean.childrenMultiPicker.clear}"
+											icon="ui-icon ui-icon-close"
+											ajax="true"
+											disabled="#{!probandBean.childrenMultiPicker.isEnabled}"
+											update="children" />
+										<h:inputHidden
+											id="lastPickedProbandChildIds"
+											required="false"
+											value="#{probandBean.childrenMultiPicker.ids}">
+										</h:inputHidden>
+									</h:panelGrid>
+									<p:dataList
+										type="#{multiPickerDataListsType}"
+										rows="#{multiPickerDataListsRows}"
+										paginator="#{multiPickerDataListsPaginator}"
+										paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
+										rowsPerPageTemplate="#{multiPickerDataListsRowsPerPageTemplate}"
+										paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
+										pageLinks="#{multiPickerDataListsPageLinks}"
+										paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
+										id="children_selection"
+										var="proband"
+										styleClass="ctsms-proband-probandpicker-list"
+										value="#{probandBean.childrenMultiPicker.selection}">
+										<f:facet name="description">
+											<h:outputText value="" />
+										</f:facet>
+										<p:column>
+											<h:outputText value="#{proband.rowPosition}." />
+										</p:column>
+										<p:column>
+											<h:outputText value=" " />
+										</p:column>
+										<p:column style="width:32px;">
+											<p:commandButton
+												type="button"
+												title="#{labels.open_proband_button_label}"
+												icon="ui-icon ui-icon-extlink"
+												onclick="openProband(#{proband.vo.id})" />
+										</p:column>
+										<p:column style="width:32px;">
+											<p:commandButton
+												process="@this"
+												title="#{labels.multipick_clear_button_label}"
+												actionListener="#{probandBean.childrenMultiPicker.removeId(proband.vo.id)}"
+												icon="ui-icon ui-icon-close"
+												update=":tabView:probandmain_form:children" />
+										</p:column>
+										<p:column>
+											<h:outputText value=" " />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.escapeHtml(proband.vo.name)}"
+												escape="false" />
+										</p:column>
+									</p:dataList>
+								</h:panelGrid>					
+					
+					
+					</p:fieldset>
+					
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{probandBean.created ? probandBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{probandBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleProbandChanged(xhr, status, args)"
+									disabled="false"
+									update="parent_tree,child_tree,proband_input" />
+								<p:commandButton
+									rendered="#{!probandBean.created}"
+									process="@this,proband_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{probandBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleProbandChanged(xhr, status, args)"
+									disabled="#{!probandBean.createable}"
+									update="parent_tree,child_tree,proband_input" />
+								<p:commandButton
+									rendered="#{probandBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="probandAddConfirmation.show()"
+									disabled="#{!probandBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,proband_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{probandBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleProbandChanged(xhr, status, args)"
+									disabled="#{!probandBean.editable}"
+									update="parent_tree,child_tree,proband_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="probandDeleteConfirmation.show()"
+									disabled="#{!probandBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{probandBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleProbandChanged(xhr, status, args)"
+									disabled="#{!probandBean.created}"
+									update="parent_tree,child_tree,proband_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="probandDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{probandlabels.proband_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{probandBean.delete}"
+					onclick="probandDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleProbandChanged(xhr, status, args)"
+					update="parent_tree,child_tree,proband_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="probandDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="probandAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{probandlabels.proband_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,proband_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{probandBean.add}"
+					onclick="probandAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleProbandChanged(xhr, status, args)"
+					update="parent_tree,child_tree,proband_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="probandAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

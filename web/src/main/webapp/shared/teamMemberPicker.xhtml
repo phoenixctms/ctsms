@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>team member picker</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/popupTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{teamMemberPickerBean.title}" />
+		<ui:define name="head">
+			<h:outputStylesheet
+				name="trial.css"
+				library="css"
+				target="head" />
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="teammemberpicker_form">
+				<p:remoteCommand
+					process="@this"
+					name="pickCurrentPage"
+					actionListener="#{teamMemberPickerBean.handlePickCurrentPage()}"
+					oncomplete="handlePickCurrentPage(xhr, status, args)" />
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid"
+					rowClasses="ctsms-teammemberpicker-list-row">
+					<p:dataTable
+						styleClass="ctsms-datatable"
+						lazy="true"
+						rows="10"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,20,50"
+						paginatorPosition="both"
+						pageLinks="10"
+						paginatorAlwaysVisible="true"
+						scrollable="false"
+						scrollHeight=""
+						resizableColumns="false"
+						sortBy="#{teamMember.vo.id}"
+						emptyMessage="#{labels.datatable_permission_empty_message}"
+						var="teamMember"
+						value="#{teamMemberPickerBean.teamMemberModel}"
+						id="team_member_list"
+						rowStyleClass="#{applicationScopeBean.staffToColor(teamMember.vo.staff)}">
+						<f:facet name="header">
+							<h:outputText value="#{teamMemberPickerBean.teamMemberModel.rowCount} #{triallabels.team_member_picker_team_member_list_header}" />
+						</f:facet>
+						<p:column style="width:16px;">
+							<p:rowToggler />
+						</p:column>
+						<p:column
+							sortBy="#{teamMember.vo.id}"
+							filterBy="#{teamMember.vo.id}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>
+							<h:outputText value="#{teamMember.vo.id}" />
+						</p:column>
+						<p:column filterBy="#{teamMember.vo.staff.personParticulars.lastName}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.team_member_picker_team_member_list_staff_last_name_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{teamMember.vo.staff.name}" />
+								<ui:param
+									name="icon"
+									value="#{teamMember.vo.staff.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="#{teamMember.vo.staff.person}" />
+							</ui:include>
+						</p:column>
+						<p:column filterBy="#{teamMember.vo.staff.organisationParticulars.organisationName}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.team_member_picker_team_member_list_staff_organisation_name_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{teamMember.vo.staff.organisationName}" />
+								<ui:param
+									name="icon"
+									value="#{teamMember.vo.staff.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="#{!teamMember.vo.staff.person}" />
+							</ui:include>
+						</p:column>
+						<p:column
+							sortBy="#{teamMember.vo.role}"
+							filterBy="#{teamMember.vo.role.id}"
+							filterOptions="#{sessionScopeBean.filterTeamMemberRoles}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.team_member_picker_team_member_list_role_column}" />
+							</f:facet>
+							<h:outputText value="#{teamMember.vo.role.name}" />
+						</p:column>
+						<p:column sortBy="#{teamMember.vo.staff.maxOverlappingShifts}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.team_member_picker_team_member_list_allocatable_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{teamMemberPickerBean.getMaxOverlappingShiftsString(teamMember.vo.staff)}" />
+								<ui:param
+									name="icon"
+									value="#{teamMember.vo.staff.allocatable ? 'ctsms-icon-true' : 'ctsms-icon-false'}" />
+								<ui:param
+									name="rendered"
+									value="true" />
+							</ui:include>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{labels.shift_duration_summary_table_total_weighted_duration_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(teamMemberPickerBean.getShiftDurationModel(teamMember.vo.staff).summary.totalWeightedDuration)}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.team_member_picker_team_member_list_colliding_staff_status_entry_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{teamMemberPickerBean.getCollidingStaffStatusEntryModel(teamMember.vo.staff).allRowCount}" />
+							</ui:include>
+						</p:column>
+						<p:column style="width:32px;">
+							<f:facet name="header">
+								<p:commandButton
+									title="#{labels.pick_page_staff_button_label}"
+									type="button"
+									rendered="#{teamMemberPickerBean.multiPicker}"
+									icon="ui-icon ui-icon-arrowthickstop-1-s"
+									onclick="pickCurrentPage()" />
+							</f:facet>
+							<p:commandButton
+								title="#{labels.pick_staff_button_label}"
+								type="button"
+								icon="ui-icon ui-icon-arrowreturnthick-1-w"
+								onclick="#{staffSearchBean.getSetPickerIDJSCall(teamMember.vo.staff)}" />
+						</p:column>
+						<p:rowExpansion>
+							<p:panel>
+								<ui:include src="/META-INF/includes/shared/shiftDurationSummaryTableForRowExpansion.xhtml">
+									<ui:param
+										name="shiftDurationSummaryModel"
+										value="#{teamMemberPickerBean.getShiftDurationModel(teamMember.vo.staff)}" />
+									<ui:param
+										name="namingContainer"
+										value=":teammemberpicker_form:team_member_list:#{teamMember.rowIndex}" />
+									<ui:param
+										name="showTrials"
+										value="true" />
+									<ui:param
+										name="showStaff"
+										value="false" />
+									<ui:param
+										name="dataTableRows"
+										value="#{dataTablesRowsRowExpansion}" />
+									<ui:param
+										name="dataTablePaginator"
+										value="#{dataTablesPaginatorRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorTemplate"
+										value="#{dataTablesPaginatorTemplateRowExpansion}" />
+									<ui:param
+										name="dataTableRowsPerPageTemplate"
+										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorPosition"
+										value="#{dataTablesPaginatorPositionRowExpansion}" />
+									<ui:param
+										name="dataTablePageLinks"
+										value="#{dataTablesPageLinksRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorAlwaysVisible"
+										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+									<ui:param
+										name="dataTableScrollable"
+										value="#{dataTablesScrollableRowExpansion}" />
+									<ui:param
+										name="dataTableScrollHeight"
+										value="#{dataTablesScrollHeightRowExpansion}" />
+									<ui:param
+										name="dataTableResizableColumns"
+										value="#{dataTablesResizableColumnsRowExpansion}" />
+								</ui:include>
+							</p:panel>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

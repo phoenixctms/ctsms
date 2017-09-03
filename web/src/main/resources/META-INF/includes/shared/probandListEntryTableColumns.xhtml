@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	<title>proband list entry columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column
+			rendered="#{person and lazyModel}"
+			sortBy="#{probandListEntry.vo.lastStatus.status}"
+			filterBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterOptions="#{sessionScopeBean.filterPersonProbandListStatusTypes}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_last_status_column}" />
+			</f:facet>
+			<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
+		</p:column>
+		<p:column
+			rendered="#{!person and lazyModel}"
+			sortBy="#{probandListEntry.vo.lastStatus.status}"
+			filterBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterOptions="#{sessionScopeBean.filterAnimalProbandListStatusTypes}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_last_status_column}" />
+			</f:facet>
+			<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
+		</p:column>		
+		<p:column
+			rendered="#{person and !lazyModel}"
+			sortBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterOptions="#{sessionScopeBean.filterPersonProbandListStatusTypes}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_last_status_column}" />
+			</f:facet>
+			<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
+		</p:column>
+		<p:column
+			rendered="#{!person and !lazyModel}"
+			sortBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterBy="#{probandListEntry.vo.lastStatus.status.id}"
+			filterOptions="#{sessionScopeBean.filterAnimalProbandListStatusTypes}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_last_status_column}" />
+			</f:facet>
+			<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
+		</p:column>		
+		<p:column rendered="#{lazyModel and showStatusDetails}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_reason_column}" />
+			</f:facet>
+			<ui:include src="listIcon.xhtml">
+				<ui:param
+					name="label"
+					value="#{probandListEntry.vo.lastStatus.decrypted ? applicationScopeBean.clipStringTrailing(probandListEntry.vo.lastStatus.reason) : triallabels.encrypted_proband_list_status_reason}" />
+				<ui:param
+					name="icon"
+					value="#{probandListEntry.vo.lastStatus.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+				<ui:param
+					name="rendered"
+					value="#{!empty probandListEntry.vo.lastStatus}" />
+			</ui:include>
+		</p:column>
+		<p:column
+			rendered="#{!lazyModel and showStatusDetails}"
+			filterBy="#{probandListEntry.vo.lastStatus.reason}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_reason_column}" />
+			</f:facet>
+			<ui:include src="listIcon.xhtml">
+				<ui:param
+					name="label"
+					value="#{probandListEntry.vo.lastStatus.decrypted ? applicationScopeBean.clipStringTrailing(probandListEntry.vo.lastStatus.reason) : triallabels.encrypted_proband_list_status_reason}" />
+				<ui:param
+					name="icon"
+					value="#{probandListEntry.vo.lastStatus.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+				<ui:param
+					name="rendered"
+					value="#{!empty probandListEntry.vo.lastStatus}" />
+			</ui:include>
+		</p:column>
+		<p:column rendered="#{showStatusDetails}"
+			sortBy="#{probandListEntry.vo.lastStatus.realTimestamp}"
+			filterBy="#{probandListEntry.vo.lastStatus.realTimestamp}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_realtimestamp_column}" />
+			</f:facet>
+			<h:outputText value="#{probandListEntry.vo.lastStatus.realTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column rendered="#{showReimbursementTotalsColumn}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_reimbursements_total_column}" />
+			</f:facet>
+			<h:outputFormat
+				rendered="#{probandListEntryModel.getPayOffSummary(probandListEntry.vo).count > 0}"
+				value="#{labels.currency_items_format}">
+				<f:param value="#{probandListEntryModel.getPayOffSummary(probandListEntry.vo).total}" />
+				<f:param value="#{applicationScopeBean.currencySymbol}" />
+				<f:param value="#{probandListEntryModel.getPayOffSummary(probandListEntry.vo).count}" />
+			</h:outputFormat>
+		</p:column>
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagA"
+						value="#{probandListEntryModel.columnProbandListEntryTagAId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_a}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTags}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagA','#{probandlistentry_list}:columnProbandListEntryTagA','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagA">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_a_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup
+				rendered="#{probandListEntryModel.isProbandListEntryTagABoolean(probandListEntry.vo)}"
+				layout="block">
+				<ui:include src="listBooleanIcon.xhtml">
+					<ui:param
+						name="value"
+						value="#{probandListEntryModel.getProbandListEntryTagAValue(probandListEntry.vo).booleanValue}" />
+				</ui:include>
+			</h:panelGroup>
+			<h:outputText
+				rendered="#{!probandListEntryModel.isProbandListEntryTagABoolean(probandListEntry.vo)}"
+				value="#{probandListEntryModel.getProbandListEntryTagAValueString(probandListEntry.vo)}" />
+		</p:column>
+		<p:column rendered="#{probandListEntryModel.showInquiryColumn and !byInquiryInputField}">
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnInquiry"
+						value="#{probandListEntryModel.columnInquiryId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_inquiry}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.inquiries}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript execute="ajaxRequest('#{probandlistentry_list}:columnInquiry','#{probandlistentry_list}:columnInquiry','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnInquiry">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_inquiry_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup
+				rendered="#{probandListEntryModel.isInquiryBoolean(probandListEntry.vo)}"
+				layout="block">
+				<ui:include src="listBooleanIcon.xhtml">
+					<ui:param
+						name="value"
+						value="#{probandListEntryModel.getInquiryValue(probandListEntry.vo).booleanValue}" />
+				</ui:include>
+			</h:panelGroup>
+			<h:outputText
+				rendered="#{!probandListEntryModel.isInquiryBoolean(probandListEntry.vo)}"
+				value="#{probandListEntryModel.getInquiryValueString(probandListEntry.vo)}" />
+		</p:column>
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagInputFieldA"
+						value="#{probandListEntryModel.columnProbandListEntryTagInputFieldAId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_a}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTagInputFields}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagInputFieldA','#{probandlistentry_list}:columnProbandListEntryTagInputFieldA','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagInputFieldA">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_a_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<p:dataList
+				value="#{probandListEntryModel.getProbandListEntryTagInputFieldAValues(probandListEntry.vo)}"
+				var="tagValue"
+				type="definition">
+				<h:outputText value="#{probandListEntryModel.getProbandListEntryTagValueLabel(tagValue)}" />
+				<f:facet name="description">
+					<h:panelGroup
+						rendered="#{applicationScopeBean.clipStringMid(probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue))}"
+						layout="block">
+						<ui:include src="listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{tagValue.booleanValue}" />
+						</ui:include>
+					</h:panelGroup>
+					<h:outputText
+						rendered="#{!probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue)}"
+						value="#{probandListEntryModel.probandListEntryTagValueToString(tagValue)}" />
+				</f:facet>
+			</p:dataList>
+		</p:column>
+		<p:column rendered="#{probandListEntryModel.showInquiryColumn and byInquiryInputField}">
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnInquiryInputField"
+						value="#{probandListEntryModel.columnInquiryInputFieldId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_inquiry_input_field}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.inquiryInputFields}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnInquiryInputField','#{probandlistentry_list}:columnInquiryInputField','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnInquiryInputField">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_inquiry_input_field_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<p:dataList
+				value="#{allTrials ? probandListEntryModel.getAllTrialsInquiryInputFieldValues(probandListEntry.vo) : probandListEntryModel.getInquiryInputFieldValues(probandListEntry.vo)}"
+				var="inquiryValue"
+				type="definition">
+				<h:outputText value="#{applicationScopeBean.clipStringMid(probandListEntryModel.getAllTrialsInquiryValueLabel(inquiryValue,allTrials))}" />
+				<f:facet name="description">
+					<h:panelGroup
+						rendered="#{probandListEntryModel.isInquiryValueBoolean(inquiryValue)}"
+						layout="block">
+						<ui:include src="listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{inquiryValue.booleanValue}" />
+						</ui:include>
+					</h:panelGroup>
+					<h:outputText
+						rendered="#{!probandListEntryModel.isInquiryValueBoolean(inquiryValue)}"
+						value="#{probandListEntryModel.inquiryValueToString(inquiryValue)}" />
+				</f:facet>
+			</p:dataList>
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

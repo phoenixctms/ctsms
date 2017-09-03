@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>shift duration summary table</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:remoteCommand
+			process="@this,#{namingContainer}:shiftDurationSummaryDataTable:shiftDurationSummaryStart,#{namingContainer}:shiftDurationSummaryDataTable:shiftDurationSummaryStop,#{namingContainer}:shiftDurationSummaryDataTable:shiftDurationSummaryCalendar"
+			name="refreshShiftSummary"
+			actionListener="#{shiftDurationSummaryModel.update}"
+			update="#{namingContainer}:shiftDurationSummaryDataTable" />
+		<p:dataTable
+			styleClass="ctsms-datatable"
+			lazy="false"
+			rows="#{dataTableRows}"
+			paginator="#{dataTablePaginator}"
+			paginatorTemplate="#{dataTablePaginatorTemplate}"
+			rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+			paginatorPosition="#{dataTablePaginatorPosition}"
+			pageLinks="#{dataTablePageLinks}"
+			paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+			scrollable="#{dataTableScrollable}"
+			scrollHeight="#{dataTableScrollHeight}"
+			resizableColumns="#{dataTableResizableColumns}"
+			emptyMessage="#{labels.datatable_permission_empty_message}"
+			id="shiftDurationSummaryDataTable"
+			value="#{shiftDurationSummaryModel.allRows}"
+			var="shiftDurationSummaryDetail">
+			<f:facet name="header">
+				<h:panelGrid
+					columns="6"
+					cellpadding="0"
+					columnClasses="ctsms-shiftsummary-header-text-column,ctsms-shiftsummary-header-timespan-column,ctsms-shiftsummary-header-text-column,ctsms-shiftsummary-header-calendar-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+					<h:outputText
+						rendered="#{showTrials}"
+						value="#{shiftDurationSummaryModel.allRowCount} #{labels.shift_duration_summary_staff_table_header} " />
+					<h:outputText
+						rendered="#{showStaff}"
+						value="#{shiftDurationSummaryModel.allRowCount} #{labels.shift_duration_summary_trial_table_header} " />
+					<h:panelGroup>
+						<h:panelGroup>
+							<p:calendar
+								id="shiftDurationSummaryStart"
+								value="#{shiftDurationSummaryModel.start}"
+								required="false"
+								label="#{labels.shift_duration_summary_table_header_start}"
+								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								yearRange="#{applicationScopeBean.calendarYearRange}"
+								showWeek="true"
+								navigator="true"
+								locale="#{sessionScopeBean.locale}"
+								timeZone="#{sessionScopeBean.timeZone}"
+								styleClass="ctsms-calendar-datetime">
+							</p:calendar>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="shiftDurationSummaryStart">
+								<h:outputText
+									value="#{labels.shift_duration_summary_table_header_start_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<h:outputText value="#{labels.shift_duration_summary_table_header_2}" />
+						<h:panelGroup>
+							<p:calendar
+								id="shiftDurationSummaryStop"
+								value="#{shiftDurationSummaryModel.stop}"
+								required="false"
+								label="#{labels.shift_duration_summary_table_header_stop}"
+								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								yearRange="#{applicationScopeBean.calendarYearRange}"
+								showWeek="true"
+								navigator="true"
+								locale="#{sessionScopeBean.locale}"
+								timeZone="#{sessionScopeBean.timeZone}"
+								styleClass="ctsms-calendar-datetime">
+							</p:calendar>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="shiftDurationSummaryStop">
+								<h:outputText
+									value="#{labels.shift_duration_summary_table_header_stop_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:outputText value="#{labels.shift_duration_summary_table_header_3}" />
+					<h:panelGroup>
+						<p:selectOneMenu
+							id="shiftDurationSummaryCalendar"
+							value="#{shiftDurationSummaryModel.calendar}"
+							required="false"
+							label="#{labels.shift_duration_summary_table_header_calendar}"
+							styleClass="ctsms-control">
+							<f:selectItems
+								value="#{shiftDurationSummaryModel.filterCalendars}"
+								var="selectItem"
+								itemLabel="#{selectItem.label}"
+								itemValue="#{selectItem.value}" />
+						</p:selectOneMenu>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="shiftDurationSummaryCalendar">
+							<h:outputText
+								value="#{labels.shift_duration_summary_table_header_calendar_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+					<ui:include src="ajaxStatus.xhtml" />
+					<p:commandButton
+						title="#{labels.update_shift_summary_button_title}"
+						id="updateShiftDurationSummary"
+						icon="ui-icon-refresh"
+						styleClass="ctsms-list-header-button"
+						type="button"
+						onclick="refreshShiftSummary();" />
+				</h:panelGrid>
+			</f:facet>
+			<p:column
+				rendered="#{showTrials}"
+				sortBy="#{shiftDurationSummaryDetail.vo.trial.name}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_trial_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{shiftDurationSummaryDetail.vo.trial.name}" />
+					<ui:param
+						name="icon"
+						value="#{shiftDurationSummaryDetail.vo.trial.status.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="true" />
+				</ui:include>
+			</p:column>
+			<p:column
+				rendered="#{showTrials}"
+				sortBy="#{shiftDurationSummaryDetail.vo.trial.department.name}"
+				filterBy="#{shiftDurationSummaryDetail.vo.trial.department.id}"
+				filterOptions="#{sessionScopeBean.filterDepartments}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_trial_department_column}" />
+				</f:facet>
+				<h:outputText value="#{shiftDurationSummaryDetail.vo.trial.department.name}" />
+			</p:column>
+			<p:column
+				rendered="#{showStaff}"
+				sortBy="#{shiftDurationSummaryDetail.vo.staff.nameSortable}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_staff_name_column}" />
+				</f:facet>
+				<ui:include src="listIcon.xhtml">
+					<ui:param
+						name="label"
+						value="#{shiftDurationSummaryDetail.vo.staff.name}" />
+					<ui:param
+						name="icon"
+						value="#{shiftDurationSummaryDetail.vo.staff.category.nodeStyleClass}" />
+					<ui:param
+						name="rendered"
+						value="true" />
+				</ui:include>
+			</p:column>
+			<p:column
+				rendered="#{showStaff}"
+				sortBy="#{shiftDurationSummaryDetail.vo.staff.department.name}"
+				filterBy="#{shiftDurationSummaryDetail.vo.staff.department.id}"
+				filterOptions="#{sessionScopeBean.filterDepartments}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_staff_department_column}" />
+				</f:facet>
+				<h:outputText value="#{shiftDurationSummaryDetail.vo.staff.department.name}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.nightShiftCount}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_night_shift_count_column}" />
+				</f:facet>
+				<h:outputText value="#{shiftDurationSummaryDetail.vo.nightShiftCount}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.totalNightDuration}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_total_night_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryDetail.vo.totalNightDuration)}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.extraShiftCount}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_extra_shift_count_column}" />
+				</f:facet>
+				<h:outputText value="#{shiftDurationSummaryDetail.vo.extraShiftCount}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.totalHolidayDuration}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_total_holiday_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryDetail.vo.totalHolidayDuration)}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.shiftCount}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_shift_count_column}" />
+				</f:facet>
+				<h:outputText value="#{shiftDurationSummaryDetail.vo.shiftCount}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.totalDuration}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_total_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryDetail.vo.totalDuration)}" />
+			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.totalWeightedDuration}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_total_weighted_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryDetail.vo.totalWeightedDuration)}" />
+			</p:column>
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="2">
+						<f:facet name="footer">
+							<h:outputText
+								rendered="#{showTrials}"
+								value="#{labels.shift_duration_summary_staff_table_footer_first_row}" />
+							<h:outputText
+								rendered="#{showStaff}"
+								value="#{labels.shift_duration_summary_trial_table_footer_first_row}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.notAssigned.nightShiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.notAssigned.totalNightDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.notAssigned.extraShiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.notAssigned.totalHolidayDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.notAssigned.shiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.notAssigned.totalDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.notAssigned.totalWeightedDuration)}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<f:facet name="footer">
+							<h:outputText value="#{labels.shift_duration_summary_table_footer_second_row}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.nightShiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.totalNightDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.extraShiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.totalHolidayDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{shiftDurationSummaryModel.summary.shiftCount}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.totalDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.totalWeightedDuration)}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>add booking reimbursement dialog</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:remoteCommand
+			process="@this"
+			name="#{openAddReimbursementRemoteCommand}"
+			actionListener="#{inventoryBookingBean.changeAddReimbursement()}"
+			oncomplete="#{addReimbursementDialog}.show();if(#{calcDistanceOnShow}){calcBookingReimbursementLocationDistance();}"
+			update="add_reimbursement_dialog" />
+		<p:dialog
+			widgetVar="#{addReimbursementDialog}"
+			modal="true"
+			id="add_reimbursement_dialog"
+			header="#{reimbursementBean.title}"
+			showEffect="#{effect}"
+			hideEffect="#{effect}"
+			styleClass="ctsms-addreimbursement-dialog">
+			<h:panelGrid
+				id="moneytransfer_input"
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-input-row,ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+				<h:panelGrid
+					columns="9"
+					cellpadding="2"
+					columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+					<ui:include src="moneyTransferCoreInput.xhtml" />
+				</h:panelGrid>
+
+				<ui:include src="reimbursementAmountInput.xhtml" >
+					<ui:param
+							name="reimbursementLocationDistance"
+							value="bookingReimbursementLocationDistance" />
+					<ui:param
+							name="calcReimbursementLocationDistance"
+							value="calcBookingReimbursementLocationDistance" />							
+				</ui:include>
+
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+					<h:outputLabel
+						styleClass="ctsms-field-icon ctsms-icon-encryption"
+						for="comment"
+						value="#{probandlabels.money_transfer_comment_label}" />
+					<h:panelGroup>
+						<p:inputTextarea
+							id="comment"
+							value="#{reimbursementBean.in.comment}"
+							required="false"
+							autoResize="false"
+							styleClass="ctsms-textarea ctsms-moneytransfer-comment"
+							label="#{probandlabels.money_transfer_comment}">
+							<p:ajax />
+						</p:inputTextarea>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="comment">
+							<h:outputText
+								value="#{probandlabels.money_transfer_comment_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+				</h:panelGrid>
+				<p:messages />
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<h:outputText
+							styleClass="ctsms-toolbar-text"
+							value="#{reimbursementBean.created ? reimbursementBean.modifiedAnnotation : ''}" />
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<p:commandButton
+							process="@this"
+							value="#{labels.reset_button_label}"
+							actionListener="#{reimbursementBean.reset}"
+							oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+							icon="ui-icon ui-icon-close"
+							ajax="true"
+							disabled="false"
+							update="moneytransfer_input" />
+
+						<p:commandButton
+							process="@this,moneyTransferReimbursementAmount,moneyTransferTravelExpenseAmount,moneyTransferAccommodationExpenseAmount,moneyTransferTicketExpenseAmount"
+							id="updateAmount"
+							value="#{probandlabels.update_reimbursement_amount_button_label}"
+							actionListener="#{reimbursementBean.updateCommentAmount}"
+							icon="ui-icon ui-icon-arrowreturn-1-n"
+							ajax="true"
+							update="moneyTransferAmount,comment" />
+
+						<p:commandButton
+							process="@this,moneytransfer_input"
+							id="addReimbursement"
+							value="#{labels.add_button_label}"
+							actionListener="#{reimbursementBean.add}"
+							oncomplete="handleUpdateProbandTabTitles(xhr, status, args);if(#{closeDialog} &amp;&amp; _testFlag(args, AJAX_OPERATION_SUCCESS)){setTimeout(function(){#{addReimbursementDialog}.hide();},1000);}"
+							icon="ui-icon ui-icon-plusthick"
+							ajax="true"
+							disabled="#{!reimbursementBean.createable}"
+							update="moneytransfer_input" />
+							
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:panelGrid>
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

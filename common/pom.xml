@@ -1,0 +1,131 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.phoenixctms.ctsms</groupId>
+        <artifactId>ctsms</artifactId>
+        <version>1.6.0</version>
+    </parent>
+    <artifactId>ctsms-common</artifactId>
+    <packaging>jar</packaging>
+    <name>Clinical Trial Site Management System Common</name>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ctsms-mda</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+		 <!-- <dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>twelvemonkeys-imageio-core</artifactId>
+		</dependency> -->
+
+<!--         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+        </dependency> -->
+
+<!--         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+
+        <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+        </dependency> -->
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <!-- <version>2.2.2</version> -->
+</dependency>
+<dependency>
+    <groupId>commons-codec</groupId>
+    <artifactId>commons-codec</artifactId>
+    <!-- <version>1.5</version> -->
+</dependency>
+<dependency>
+    <groupId>fr.marcwrobel</groupId>
+    <artifactId>jbanking</artifactId>
+    <version>1.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.xmlgraphics</groupId>
+    <artifactId>batik-transcoder</artifactId>
+    <version>1.8</version>
+</dependency>
+
+
+<dependency>
+    <groupId>org.apache.xmlgraphics</groupId>
+    <artifactId>batik-xml</artifactId>
+    <version>1.8</version>
+</dependency>
+
+
+ <dependency>
+    <groupId>org.apache.xmlgraphics</groupId>
+    <artifactId>batik-ext</artifactId>
+    <version>1.8</version>
+</dependency>
+
+<dependency> <!-- java.lang.NoClassDefFoundError: org/w3c/dom/ElementTraversal -->
+    <groupId>xml-apis</groupId>
+    <artifactId>xml-apis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.xmlgraphics</groupId>
+    <artifactId>xmlgraphics-commons</artifactId>
+    <version>2.1</version>
+</dependency>
+<!-- <dependency>
+    <groupId>com.kitfox</groupId>
+    <artifactId>kitfox-svg-salamander</artifactId>
+    <version>1.0.8</version>
+</dependency> -->
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.2.2</version>
+</dependency>
+
+    </dependencies>
+    <build>
+        <!-- To change from default src/main/java and src/test/java - doesn't work for Cobertura>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>src-test</testSourceDirectory -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

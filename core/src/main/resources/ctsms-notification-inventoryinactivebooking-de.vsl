@@ -1,0 +1,42 @@
+Hallo $inventorybooking_onbehalfof_firstname,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Inventar:             $inventorybooking_inventory_name
+   • Inventar Org.einheit: $inventorybooking_inventory_department
+   • Inventar Kategorie:   $inventorybooking_inventory_category
+
+   • Status Type:          $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Antragsteller:        $inventorystatusentry_originator_name
+#end
+   • Status von:           $inventorystatusentry_start
+   • Status bis:           $inventorystatusentry_stop
+
+   • Buchung von:          $inventorybooking_start
+   • Buchung bis:          $inventorybooking_stop
+
+   • Für Kurs:             $inventorybooking_course_name
+   • Für Studie:           $inventorybooking_trial_name
+   • Für Proband ID:       $inventorybooking_proband_id
+
+Status Kommentar:
+
+$inventorystatusentry_comment
+
+Buchung Kommentar:
+
+$inventorybooking_comment
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

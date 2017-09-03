@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inventoryEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inventoryBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{inventoryBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="inventoryTabView"
+					onTabShow="handleInventoryTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="inventorymain"
+						disabled="false"
+						titleStyleClass="#{!inventoryBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventorylabels.inventory_main_tab_label}">
+						<ui:include src="/META-INF/includes/inventory/inventoryMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventorytags"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryTag.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventorystatus"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryStatus.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventorymaintenance"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryMaintenance.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventorybookings"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryBooking.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventorybookingsummary"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{inventorylabels.inventory_booking_summary_tab_label}">
+						<ui:include src="/META-INF/includes/inventory/inventoryBookingDuration.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventoryhyperlinks"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryHyperlink.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventoryfiles"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryFile.xhtml" />
+					</p:tab>
+					<p:tab
+						id="inventoryjournal"
+						disabled="#{!inventoryBean.created}"
+						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/inventory/inventoryJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

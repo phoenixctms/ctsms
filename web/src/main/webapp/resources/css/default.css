@@ -1,0 +1,2049 @@
+body {
+	margin: 0px;
+	padding: 0;
+	font-size: 10px;
+	color: #616161;
+}
+
+.ctsms-js-off .ctsms-js-only {
+	display: none;
+}
+
+/* http://stackoverflow.com/questions/8856704/ie8-and-primefaces-pselectonemenu-misbehave-when-having-a-lots-of-pselectoneme */
+td .ui-selectonemenu {
+	display: block;
+}
+
+.outputLinkAsText {
+	cursor: default !important;
+	text-decoration: none !important;
+}
+
+.ui-editor {
+	width: 99.5% !important;
+}
+
+.ui-datatable-odd,.ui-datatable-even {
+	font-weight: bolder !important;
+	font-size: 12px;
+}
+
+.fileupload-content {
+	border-top-width: 0;
+	height: 100%;
+	padding: 0.2em 0.4em;
+	background-image: url(../resources/images/css/save-file.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	min-height: 48px;
+}
+
+.ui-menu .ui-menu-parent .ui-menu-child {
+	width: 250px;
+}
+
+.ui-menu .ui-menuitem-text {
+	float: left;
+	font-size: 1.3em;
+	padding-left: 1px;
+	padding-top: 1px;
+}
+
+/* splitbuttons */
+.ui-menu.ui-menu-dynamic {
+	display: none;
+	position: absolute;
+	width: 320px;
+	z-index: 100000;
+}
+
+.ui-icon {
+    -webkit-border-radius: 0px !important;
+	-moz-border-radius: 0px !important;
+	-o-border-radius: 0px !important;
+	border-radius: 0px !important;
+}
+
+.ctsms-tabtitle a { /* background-color: blue; */
+
+}
+
+.ctsms-tabtitle-emphasized a {
+	background-image: url(../resources/images/css/star_yellow_add.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	margin-left: 6px;
+	text-indent: 10px;
+	/* background-color: red; */
+}
+
+.ctsms-headline {
+	margin-left: 2px;
+	margin-right: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+	display: block;
+	font-weight: bold;
+	font-size: x-large;
+	white-space: nowrap;
+	border: none;
+	/* fallback (Opera) */
+	/* background: #008800; */
+	/* Mozilla: */
+	background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0.6), rgba(192, 192, 192, 0.6) ) !important;
+	/* Chrome, Safari:*/
+	background-image: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0.6) ), to(rgba(192, 192, 192, 0.6) ) ) !important;
+	/* MSIE */
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#99FFFFFF', EndColorStr='#99C0C0C0', GradientType=1 );
+}
+
+/* input elements */
+.ctsms-control-smaller { /* min-width:180px; */
+	width: 100px !important;
+}
+
+.ctsms-control-smaller .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-smaller .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-smaller .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control-smaller .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+.ctsms-control-codeline {
+	width: 200px !important;
+	font-family: monospace !important;
+}
+
+.ctsms-control-codeline .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-codeline .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-codeline .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control-small { /* min-width:180px; */
+	width: 150px !important;
+}
+
+.ctsms-control-small .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-small .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-small .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control-small .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+.ctsms-control {
+	width: 200px !important;
+}
+
+.ctsms-control .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+.ctsms-control-larger {
+	width: 300px !important;
+}
+
+.ctsms-control-larger .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-larger .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-larger .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control-larger .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+.ctsms-control-largest {
+	width: 500px !important;
+}
+
+.ctsms-control-largest .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-largest .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-largest .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+/*.ctsms-autocomplete-multiple {
+	width: 300px !important;
+	width: 100%;
+	max-width: 100%;
+	 height: 48px;
+	min-height: 48px;
+} */
+
+.ctsms-control-largest .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+.ctsms-picker {
+	width: 168px;
+}
+
+.ctsms-list-header-button {
+	height: 26px;
+}
+
+.ctsms-list-cell-normal {
+	font-weight: normal;
+}
+
+.ctsms-list-cell-noborder {
+	border: none !important;
+	padding: 0px !important;
+}
+
+.ctsms-list-cell-noborder-ui {
+	border: none !important;
+	padding: 0px !important;
+	min-width: 46px;
+}
+
+.ctsms-picker-multi-header-label-column {
+	width: 100%;
+}
+
+.ctsms-picker-multi-header-btn-column {
+
+}
+
+.ctsms-password {
+	width: 200px;
+}
+
+.ui-password {
+	width: 200px;
+}
+
+.ctsms-spinner {
+	width: 80px;
+}
+
+.ctsms-spinner .ui-spinner-input {
+	width: 54px !important;
+}
+
+.ctsms-calendar-date {
+	width: 80px;
+}
+
+.ctsms-calendar-date .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-calendar-datetime {
+	width: 120px;
+}
+
+.ctsms-calendar-datetime .ui-inputfield {
+	width: inherit !important;
+}
+
+
+.ctsms-timepicker {
+	width: 60px;
+}
+
+.ctsms-control-float {
+	width: 80px !important;
+}
+
+.ctsms-control-float .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-datatable {
+	width: 100%;
+}
+
+.ctsms-filetree {
+	width: 100%;
+}
+
+.ctsms-filetreetable {
+	width: 100%;
+}
+
+.ctsms-filetree-node-folder {
+	cursor: pointer;
+}
+
+.ctsms-filetree-node-file {
+	cursor: pointer;
+}
+
+.ctsms-multilinetext {
+
+}
+
+.ctsms-multilinetext-icon {
+	min-height: 16px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
+.ctsms-monospaced {
+	font-family: Monospace;
+}
+
+.ctsms-tabview {
+	height: 100%;
+}
+
+.ctsms-probandlist-tabview {
+	width: 100%;
+	height: 100%;
+}
+
+.ctsms-content-panelgrid {
+	width: 100%;
+	height: 100%;
+}
+
+.ctsms-content-panelgrid-maxheight {
+	padding-bottom: 7px;
+}
+
+.ctsms-panel-maxheight {
+	height: 100%;
+}
+
+.ctsms-input-panelgrid {
+	width: 100%;
+}
+
+.ctsms-calendar-panelgrid {
+	width: 0%;
+}
+
+.ctsms-login-panelgrid {
+	width: 100%;
+	height: 95%;
+}
+
+.ctsms-label-for-column {
+	white-space: nowrap;
+	border: none !important;
+}
+
+.ctsms-label-for-top-column {
+	white-space: nowrap;
+	vertical-align: top;
+	padding-top: 0.6667em;
+}
+
+.ctsms-ajaxstatus-column {
+	white-space: nowrap;
+	width: 24px;
+}
+
+.ctsms-input-column {
+	white-space: nowrap;
+}
+
+.ctsms-input-top-column {
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.ctsms-text-column-bold {
+	vertical-align: top;
+	white-space: nowrap;
+	font-weight: bold;
+	border: none !important;
+}
+
+.ctsms-multilinetext-bold-large {
+	vertical-align: top;
+	font-weight: bold;
+	font-size: 2.0em !important;
+	margin: 0px;
+}
+.ctsms-multilinetext-large {
+	vertical-align: top;
+	font-size: 2.0em !important;
+	margin: 0px;
+}
+
+.ctsms-text-column {
+	vertical-align: top;
+	white-space: nowrap;
+	border: none !important;
+}
+
+.ctsms-label-for-text-column-bold {
+	white-space: nowrap;
+	vertical-align: top;
+	padding-top: 1.2em !important;
+	border: none !important;
+}
+
+.ctsms-text-red {
+	font-weight: bold;
+	color: red;
+}
+
+.ctsms-text-bold {
+	font-weight: bold;
+}
+
+.ctsms-text-green {
+	font-weight: bold;
+	color: green;
+}
+
+.ctsms-message-for-column {
+	width: 50%;
+}
+
+.ctsms-message-for-top-column {
+	width: 50%;
+	vertical-align: top;
+	padding-top: 0.6667em;
+}
+
+.ctsms-textarea-label-for-row {
+	white-space: nowrap;
+}
+
+.ctsms-textarea-input-row {
+	width: 100%;
+}
+
+.ctsms-textarea-message-for-row {
+	 width: 50%;
+}
+
+
+
+.ctsms-fieldrow-label-for-top-column {
+	white-space: nowrap;
+	vertical-align: top;
+	padding-top: 0.6667em;
+}
+
+.ctsms-fieldrow-label-for-top-radio-column {
+	white-space: nowrap;
+	vertical-align: top;
+	padding-top: 0.8667em;
+}
+
+.ctsms-fieldrow-input-top-column {
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.ctsms-fieldrow-message-for-top-column {
+	width: 50%;
+	vertical-align: top;
+	padding-top: 0.6667em;
+}
+
+.ctsms-fieldrow-label-for-column {
+	white-space: nowrap;
+	border: none !important;
+	padding-top: 0.5em;
+}
+
+.ctsms-fieldrow-input-column {
+	white-space: nowrap;
+}
+
+.ctsms-fieldrow-message-for-column {
+	width: 50%;
+	padding-top: 0.5em;
+}
+
+.ctsms-fieldrow-label-for-indent-row {
+	/* white-space: nowrap; */
+}
+
+.ctsms-fieldrow-input-indent-row {
+	width: 100%;
+}
+
+.ctsms-fieldrow-input-indent-row > td {
+	padding-left: 180px;
+}
+
+.ctsms-fieldrow-message-for-indent-row {
+	 width: 50%;
+}
+
+/* .ctsms-autocomplete-multiple-label-for-row {
+	white-space: nowrap;
+}
+
+.ctsms-autocomplete-multiple-input-row {
+	width: 100%;
+}
+
+.ctsms-autocomplete-multiple-message-for-row {
+
+} */
+
+
+.ctsms-codemirror-label-for-row {
+	white-space: nowrap;
+}
+
+.ctsms-codemirror-input-row {
+	width: 100%;
+	background-color: white;
+}
+
+.ctsms-codemirror-input-row>td {
+	border: thin solid black;
+	width: 50%;
+}
+
+.ctsms-codemirror-message-for-row {
+
+}
+
+.ctsms-sketchpad-label-for-row {
+	white-space: nowrap;
+}
+
+.ctsms-sketchpad-input-row {
+	width: 100%;
+}
+
+.ctsms-sketchpad-message-for-row {
+	width: 50%;
+}
+
+.ctsms-photo-column {
+	vertical-align: top;
+	height: 100%;
+	width: 50%;
+}
+
+.ctsms-photo-panel {
+	text-align: center;
+	height: 100%;
+}
+
+.ctsms-input-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-input-tied-row {
+
+}
+
+/* .ctsms-autocomplete-multiple-row {
+	vertical-align: top;
+	height: 100%;
+} */
+
+.ctsms-textarea-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-fileupload-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-sketchpad-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-signature-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-schedule-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-chart-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-timeline-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-timeline-group {
+	background-repeat: no-repeat !important;
+	background-position: left center !important;
+	font-weight: bold;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	display: block;
+	cursor: pointer;
+}
+
+.timeline-groups-text {
+	padding-left: 1px !important;
+	padding-right: 0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+div.timeline-event-content {
+	margin: 0px !important;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.ctsms-timeline-event-datagrid {
+	border-radius: 3px !important;
+	width: 100%;
+}
+
+.ctsms-schedule {
+	height: 100%;
+}
+
+.ctsms-chart {
+	height: 400px !important;
+}
+
+/* .ctsms-text-row {
+
+} */
+
+.ctsms-message-row {
+
+}
+
+.ctsms-toolbar-row {
+
+}
+
+.ctsms-ecrf-section-series {
+	border-style: dashed;
+	/* border-width: 2px; */
+}
+
+ctsms-ecrf-section {
+
+}
+
+.ctsms-values-datagrid-1>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 100%;
+}
+
+.ctsms-values-datagrid-1>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+.ctsms-values-datagrid-2>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 50%;
+}
+
+.ctsms-values-datagrid-2>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+.ctsms-values-datagrid-3>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 33%;
+}
+
+.ctsms-values-datagrid-3>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+.ctsms-values-datagrid-4>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 25%;
+}
+
+.ctsms-values-datagrid-4>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-5>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 20%;
+}
+
+.ctsms-values-datagrid-5>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-6>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 16%;
+}
+
+.ctsms-values-datagrid-6>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-7>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 14%;
+}
+
+.ctsms-values-datagrid-7>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-8>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 12%;
+}
+
+.ctsms-values-datagrid-8>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-9>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 11%;
+}
+
+.ctsms-values-datagrid-9>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+
+.ctsms-values-datagrid-10>div>table>tbody>tr>td>table>tbody>tr>td {
+	vertical-align: top;
+	width: 10%;
+}
+
+.ctsms-values-datagrid-10>div>table>tbody>tr>td>table {
+	width: 100%;
+}
+
+.ctsms-pages-row {
+	width: 100%;
+}
+
+.ctsms-control-pagesize {
+	width: 45px !important;
+}
+
+.ctsms-control-pageselect {
+	width: 180px !important;
+}
+
+.ctsms-pages-panelgrid {
+	width: 100%;
+}
+
+.ctsms-pages-fieldsperrow-column {
+	/* width: 0%; */
+	white-space: nowrap;
+}
+
+.ctsms-pages-message-column {
+	text-align: center;
+	width: 100%;
+}
+
+.ctsms-pages-pagesize-column {
+
+}
+
+.ctsms-pages-button-column {
+	white-space: nowrap;
+}
+
+.ctsms-pages-button-column .ui-buttonset {
+	margin-right: 1px;
+}
+
+.ctsms-pages-navbutton-column {
+
+}
+
+.ctsms-login-notification-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-textarea {
+	width: 100%;
+	max-width: 100%;
+	height: 48px;
+	min-height: 48px;
+}
+
+.ctsms-editor {
+	width: 100%;
+	max-width: 100%;
+	/* height: 48px; */
+	min-height: 48px;
+}
+
+
+.ctsms-file-content-panelgrid {
+	width: 100%;
+	height: 100%;
+	border-spacing: 0px;
+	padding-bottom: 41px;
+}
+
+.ctsms-file-treetable-column {
+	vertical-align: top;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+	width: 100%;
+	height: 100%;
+}
+
+.ctsms-file-treetable-panel-maxheight {
+	height: 100%;
+	padding-bottom: 34px;
+}
+
+.ctsms-file-input-column {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-file-treetable-panelgrid {
+	height: 100%;
+	width: 100%;
+}
+
+.ctsms-file-filter-control {
+	width: 140px;
+}
+
+.ctsms-inquiryvalues-input-panelgrid {
+	width: 100%;
+	border-spacing: 0px 2px;
+}
+
+.ctsms-ecrffieldvalues-input-panelgrid {
+	width: 100%;
+	border-spacing: 0px 2px;
+}
+
+
+.ctsms-file-treetable-filter-row {
+	width: 100%;
+}
+
+.ctsms-file-treetable-row {
+	width: 100%;
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-file-input-panelgrid {
+	width: 360px;
+	height: 100%;
+}
+
+.ctsms-fileupload-row {
+	vertical-align: top;
+	height: 100%;
+}
+
+.ctsms-upload-control {
+	height: 100%;
+}
+
+.ui-state-default .ui-icon-pdf {
+	background-image: url(../resources/images/css/pdf_small.gif);
+	background-position: 0px 2px;
+	background-repeat: no-repeat;
+}
+
+.ui-state-default .ui-icon-xls {
+	background-image: url(../resources/images/css/excel_small.gif);
+	background-position: 0px 2px;
+	background-repeat: no-repeat;
+}
+
+.ui-state-default .ui-icon-signature {
+	background-image: url(../resources/images/css/rosette.png);
+	background-position: 0px 1px;
+	background-repeat: no-repeat;
+}
+
+.ui-state-default .ui-icon-team {
+	background-image: url(../resources/images/css/team.png);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+
+.tree-icon {
+	margin-right: 2px;
+	margin-top: -1px;
+	height: 16px;
+	width: 16px;
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+.treetable-icon {
+	height: 16px;
+	width: 16px;
+	background-repeat: no-repeat;
+	background-position: left;
+	display: block;
+	float: left;
+	cursor: pointer;
+}
+
+.ctsms-event-icon.fc-event-vert .fc-event-inner {
+	background-image: inherit ! important;
+	background-position: left bottom ! important;
+	background-repeat: no-repeat ! important;
+}
+
+.ctsms-event-icon.fc-event-hori .fc-event-inner {
+	background-image: inherit ! important;
+	background-position: right bottom ! important;
+	background-repeat: no-repeat ! important;
+}
+
+.fc-event {
+	border-color: gray;
+	background-color: #36c;
+}
+
+.fc-event-time {
+	font-size: 0.9em !important;
+	opacity: 0.6;
+}
+
+.ctsms-schedule-holiday-event {
+	font-weight: bold;
+	font-style: italic;
+	background-color: #ff4500; /* orangered */
+}
+
+.ctsms-schedule-holiday-event .fc-event-inner {
+	background-color: #ff4500; /* orangered */
+}
+
+.ctsms-schedule-no-holiday-event {
+	font-weight: bold;
+	font-style: italic;
+	background-color: #DCDCDC; /* gainsboro */
+}
+
+.ctsms-schedule-no-holiday-event .fc-event-inner {
+	background-color: #DCDCDC; /* gainsboro */
+}
+
+.ctsms-proband-schedule-status-event {
+	font-weight: bold;
+	font-style: italic;
+	background-color: #ff4500; /* orangered */
+}
+
+.ctsms-proband-schedule-status-event .fc-event-inner {
+	background-color: #ff4500; /* orangered */
+}
+
+.ctsms-rowexpansion-tabview {
+
+}
+
+.ctsms-menubar {
+	width: 100%;
+}
+
+.ctsms-menubar-column {
+	white-space: nowrap;
+}
+
+.ctsms-welcome-column {
+
+}
+
+.ctsms-welcome-panelgrid {
+	width: 100%;
+	padding: 0 4px 0 0;
+}
+
+.ctsms-welcometitle-row {
+	font-size: large;
+	line-height: 20px;
+	color: graytext;
+}
+
+.ctsms-welcomedetail-row {
+	font-size: smaller;
+	color: graytext;
+}
+
+.ctsms-welcome-leftcolumn {
+	white-space: nowrap;
+}
+
+.ctsms-welcome-centercolumn {
+	text-align: right;
+	white-space: nowrap;
+	width: 100%;
+	padding-right: 1px;
+}
+
+.ctsms-welcome-rightcolumn {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.ctsms-portalitemicon-column {
+	width: 48px !important;
+}
+
+.ctsms-portalitemdescription-column {
+	font-size: 1.1em;
+	width: 80%;
+}
+
+.ctsms-portalitems-datagrid>div>table>tbody>tr>td {
+	vertical-align: top;
+}
+
+.ctsms-signatureicon-column {
+	width: 54px !important;
+}
+
+.ctsms-signaturedescription-column {
+
+}
+
+.ctsms-notificationlist-header-text-column {
+	text-align: left;
+}
+
+.ctsms-bookingduration-header-text-column {
+	text-align: left;
+	padding-left: 2px;
+}
+
+.ctsms-bookingduration-header-timespan-column {
+	text-align: left;
+	padding-left: 2px;
+}
+
+.ctsms-bookingduration-header-calendar-column {
+	text-align: left;
+	width: 100%;
+	padding-left: 2px;
+}
+
+.ctsms-shiftsummary-header-text-column {
+	text-align: left;
+	padding-left: 2px;
+}
+
+.ctsms-shiftsummary-header-timespan-column {
+	text-align: left;
+	padding-left: 2px;
+}
+
+.ctsms-shiftsummary-header-calendar-column {
+	text-align: left;
+	width: 100%;
+	padding-left: 2px;
+}
+
+.ctsms-datatable-header-button-column {
+	width: 32px;
+}
+
+.ctsms-delete-pdf-files-button-column {
+	width: 32px;
+}
+
+.ctsms-aggregated-pdf-files-button-column {
+	width: 32px;
+}
+
+.ctsms-datatable-header-text-column {
+	text-align: left;
+}
+
+.ctsms-rowexpansion-panelgrid {
+	width: 100%;
+}
+
+.ctsms-notificationlist-rowexpansion-left-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+	max-width: 300px;
+}
+
+.ctsms-notificationlist-rowexpansion-left-column div {
+	border: none;
+}
+
+.ctsms-notificationlist-rowexpansion-right-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+}
+
+.ctsms-notificationlist-rowexpansion-right-column div {
+	border: none;
+}
+
+.ctsms-notificationlist-rowexpansion-right-column pre {
+	max-width: 600px;
+	white-space: pre-wrap;
+}
+
+.ctsms-systemmessage-left-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+	max-width: 400px;
+	width: 100%;
+}
+
+.ctsms-systemmessage-left-column div {
+	border: none;
+}
+
+.ctsms-systemmessage-right-column {
+	vertical-align: top;
+	padding: 2px !important;
+	max-width: 700px;
+	overflow-x: auto !important;
+	display: block;
+	border: 1px solid;
+	margin: 2px !important;
+}
+
+.ctsms-systemmessage-right-column div {
+	border: none;
+}
+
+.ctsms-audittrail-left-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+	max-width: 400px;
+	width: 100%;
+}
+
+.ctsms-audittrail-left-column div {
+	border: none;
+}
+
+.ctsms-audittrail-right-column {
+	vertical-align: top;
+	padding: 2px !important;
+	max-width: 700px;
+	overflow-x: auto !important;
+	display: block;
+	border: 1px solid;
+	margin: 2px !important;
+}
+
+.ctsms-audittrail-right-column div {
+	border: none;
+}
+
+.ctsms-recent-notification {
+
+}
+
+.ctsms-obsolete-notification {
+	background: none;
+	background-color: #dcdcdc;
+	font-weight: lighter !important;
+}
+
+.ctsms-logo-column {
+	background-image: url("../resources/images/css/logo_phoenix.png");
+	background-position: left top;
+	background-repeat: no-repeat;
+	width: 38px;
+}
+
+.ctsms-usermenubar-column {
+	width: 260px;
+	white-space: nowrap;
+}
+
+.ctsms-statusbar {
+	background-image: url("../resources/images/css/sponsors.png");
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	height: 30px;
+	padding: 0;
+}
+
+.ctsms-statusbar-panelgrid {
+	width: 100%;
+	padding-right: 250px;
+}
+
+.ctsms-statusbar-left-column {
+	width: 100%;
+	white-space: nowrap;
+	padding-right: 10px;
+}
+
+.ctsms-statusbar-version-column {
+	white-space: nowrap;
+	padding-right: 10px;
+}
+
+.ctsms-statusbar-contact-column {
+	white-space: nowrap;
+}
+
+.ctsms-statusbar-icon {
+	padding-left: 34px;
+	display: block;
+	background-repeat: no-repeat;
+}
+
+.ctsms-statusbar-icon-small {
+	background-repeat: no-repeat;
+	display: block;
+	height: 16px;
+	padding-left: 20px;
+	padding-top: 1px;
+}
+
+.ctsms-toolbar-text {
+	display: inline-block;
+	padding-top: 0.6667em;
+}
+
+.ctsms-toolbar-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	padding-top: 0.5em;
+	padding-right: 0.5em;
+	background-repeat: no-repeat;
+	background-position: 0px 6px;
+}
+
+.ctsms-field-icon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+	padding-left: 20px;
+	padding-top: 2px;
+}
+
+.ctsms-list-icon {
+	min-height: 16px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
+.ctsms-list-ui-icon {
+    height: 16px;
+    overflow: visible;
+    padding-left: 2px;
+    padding-top: 2px;
+    text-indent: 20px;
+    white-space: nowrap;
+    width: 16px;
+}
+
+.ctsms-list-header-icon {
+	min-height: 16px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
+.ctsms-portalitem-icon {
+	width: 48px;
+	height: 48px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.ctsms-signature-icon {
+	width: 48px;
+	height: 48px;
+	background-repeat: no-repeat;
+}
+
+.ctsms-menubar-icon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+	padding-left: 2px;
+	padding-top: 2px;
+}
+
+.ctsms-mimetype-unkown {
+	background-image: url(../resources/images/mimetypes/_misc.gif);
+}
+
+.ctsms-icon-filefolder {
+	background-image: url(../resources/images/css/folder.png) !important;
+}
+
+.ctsms-icon-xls {
+	background-image: url(../resources/images/css/excel_small.gif) !important;
+}
+
+.ctsms-icon-pdf {
+	background-image: url(../resources/images/css/pdf_small.gif) !important;
+}
+
+.ctsms-icon-encryption {
+	background-image: url(../resources/images/css/encryption.png) !important;
+}
+
+.ctsms-icon-noencryption {
+	background-image: url(../resources/images/css/noencryption.png) !important;
+}
+
+.ctsms-icon-encrypted {
+	background-image: url(../resources/images/css/lock.png) !important;
+}
+
+.ctsms-icon-decrypted {
+	background-image: url(../resources/images/css/lock_open.png) !important;
+}
+
+.ctsms-icon-searchencrypted {
+	background-image: url(../resources/images/css/lock_view.png) !important;
+}
+
+.ctsms-icon-loading {
+	background-image: url(../resources/images/css/loading.gif) !important;
+}
+
+.ctsms-ajax-success {
+	background-image: url(../resources/images/css/accept.png) !important;
+}
+
+.ctsms-ajax-error {
+	background-image: url(../resources/images/css/exclamation.gif) !important;
+}
+
+.ctsms-icon-error {
+	background-image: url(../resources/images/css/error.png) !important;
+}
+
+.ctsms-icon-warning {
+	background-image: url(../resources/images/css/warning.png) !important;
+}
+
+
+.ctsms-icon-warning-large {
+	background-image: url(../resources/images/css/warning_large.png) !important;
+}
+
+.ctsms-icon-check {
+	background-image: url(../resources/images/css/check2.png) !important;
+}
+
+.ctsms-icon-information {
+	background-image: url(../resources/images/css/information.png) !important;
+}
+
+.ctsms-icon-clock {
+	background-image: url(../resources/images/css/clock.png) !important;
+}
+
+.ctsms-icon-calendar {
+	background-image: url(../resources/images/css/calendar.png) !important;
+}
+
+.ctsms-icon-identity {
+	background-image: url(../resources/images/css/id_card.png) !important;
+}
+
+.ctsms-icon-true {
+	background-image: url(../resources/images/css/true.png) !important;
+}
+
+.ctsms-icon-false {
+	background-image: url(../resources/images/css/false.png) !important;
+}
+
+.ctsms-icon-timezone {
+	background-image: url(../resources/images/css/timezone.png) !important;
+}
+
+.ctsms-icon-activeuser {
+	background-image: url(../resources/images/css/active_user.png) !important;
+}
+
+.ctsms-icon-exit {
+	background-image: url(../resources/images/css/exit.png) !important;
+}
+
+.ctsms-icon-key {
+	background-image: url(../resources/images/css/key.png) !important;
+}
+
+.ctsms-icon-theme {
+	background-image: url(../resources/images/css/theme.png) !important;
+}
+
+.ctsms-icon-tooltip {
+	background-image: url(../resources/images/css/help.png) !important;
+}
+
+.ctsms-icon-locale {
+	background-image: url(../resources/images/css/locale.png) !important;
+}
+
+.ctsms-icon-home {
+	background-image: url(../resources/images/css/home.png) !important;
+}
+
+.ctsms-icon-search {
+	background-image: url(../resources/images/css/view.png) !important;
+}
+
+.ctsms-icon-new {
+	background-image: url(../resources/images/css/add2.png) !important;
+}
+
+.ctsms-icon-history {
+	background-image: url(../resources/images/css/history2.png) !important;
+}
+
+.ctsms-icon-notification-new {
+	background-image: url(../resources/images/css/flag_red.png) !important;
+}
+
+.ctsms-icon-notification-obsolete {
+	background-image: url(../resources/images/css/flag_grey.png) !important;
+}
+
+.ctsms-icon-notification-email {
+	background-image: url(../resources/images/css/at.png) !important;
+}
+
+.ctsms-icon-notification-sent {
+	background-image: url(../resources/images/css/mail_sent.gif) !important;
+}
+
+.ctsms-icon-notification-sentobsolete {
+	background-image: url(../resources/images/css/mail_sent_grey.gif) !important;
+}
+
+.ctsms-icon-flag {
+	background-image: url(../resources/images/css/flag_grey.png) !important;
+}
+
+.ctsms-icon-flag-red {
+	background-image: url(../resources/images/css/flag_red.png) !important;
+}
+
+.ctsms-icon-flag-green {
+	background-image: url(../resources/images/css/flag_green.png) !important;
+}
+.ctsms-icon-flag-blue {
+	background-image: url(../resources/images/css/flag_blue.png) !important;
+}
+
+.ctsms-icon-flag-orange {
+	background-image: url(../resources/images/css/flag_orange.png) !important;
+}
+
+.ctsms-icon-maintenance {
+	background-image: url(../resources/images/css/screwdriver.png) !important;
+}
+
+.ctsms-inventorycategory-unkown {
+	background-image: url(../resources/images/inventorycategories/cubes.png);
+}
+
+.ctsms-inventorycategory-room {
+	background-image: url(../resources/images/inventorycategories/door.png) !important;
+}
+
+.ctsms-inventorycategory-bed {
+	background-image: url(../resources/images/inventorycategories/bed.png) !important;
+}
+
+.ctsms-inventorycategory-expendable {
+	background-image: url(../resources/images/inventorycategories/first_aid_box.png) !important;
+}
+
+.ctsms-inventorycategory-study-specific-equipment {
+	background-image: url(../resources/images/inventorycategories/stethoscope.png) !important;
+}
+
+.ctsms-inventorycategory-laboratory-equipment {
+	background-image: url(../resources/images/inventorycategories/gauge.png) !important;
+}
+
+.ctsms-inventorycategory-basic-equipment {
+	background-image: url(../resources/images/inventorycategories/medical_bag.png) !important;
+}
+
+.ctsms-inventorycategory-examination-room {
+	background-image: url(../resources/images/inventorycategories/crutch.png) !important;
+}
+
+.ctsms-inventorycategory-av {
+	background-image: url(../resources/images/inventorycategories/tv.png) !important;
+}
+
+.ctsms-inventorycategory-building {
+	background-image: url(../resources/images/inventorycategories/house.png) !important;
+}
+
+.ctsms-inventorycategory-substance {
+	background-image: url(../resources/images/inventorycategories/potion_green.png) !important;
+}
+
+.ctsms-inventorycategory-drug {
+	background-image: url(../resources/images/inventorycategories/bottle_of_pills.png) !important;
+}
+
+.ctsms-inventorycategory-other {
+	background-image: url(../resources/images/inventorycategories/cubes.png) !important;
+}
+
+.ctsms-staffcategory-unkown {
+	background-image: url(../resources/images/staffcategories/businessmen.png);
+}
+
+.ctsms-staffcategory-institution {
+	background-image: url(../resources/images/staffcategories/office_building.png) !important;
+}
+
+.ctsms-staffcategory-division {
+	background-image: url(../resources/images/staffcategories/chart_organisation.png) !important;
+}
+
+.ctsms-staffcategory-vendor {
+	background-image: url(../resources/images/staffcategories/factory.png) !important;
+}
+
+.ctsms-staffcategory-sponsor {
+	background-image: url(../resources/images/staffcategories/money2.png) !important;
+}
+
+.ctsms-staffcategory-auditor {
+	background-image: url(../resources/images/staffcategories/policeman_bobby.png) !important;
+}
+
+.ctsms-staffcategory-contractor {
+	background-image: url(../resources/images/staffcategories/businessman2.png) !important;
+}
+
+.ctsms-staffcategory-external {
+	background-image: url(../resources/images/staffcategories/user1_back.png) !important;
+}
+
+.ctsms-staffcategory-investigator {
+	background-image: url(../resources/images/staffcategories/doctor.png) !important;
+}
+
+.ctsms-staffcategory-scientist {
+	background-image: url(../resources/images/staffcategories/scientist.png) !important;
+}
+
+.ctsms-staffcategory-nurse {
+	background-image: url(../resources/images/staffcategories/nurse1.png) !important;
+}
+
+.ctsms-staffcategory-cra {
+	background-image: url(../resources/images/staffcategories/user1_monitor.png) !important;
+}
+
+.ctsms-staffcategory-manager {
+	background-image: url(../resources/images/staffcategories/businessman.png) !important;
+}
+
+.ctsms-staffcategory-clerk {
+	background-image: url(../resources/images/staffcategories/user_headset.png) !important;
+}
+
+.ctsms-staffcategory-student {
+	background-image: url(../resources/images/staffcategories/dude4.png) !important;
+}
+
+.ctsms-staffcategory-pysician {
+	background-image: url(../resources/images/staffcategories/doctor.png) !important;
+}
+
+.ctsms-staffcategory-ordination {
+	background-image: url(../resources/images/staffcategories/doctor.png) !important;
+}
+
+.ctsms-staffcategory-coordinator {
+	background-image: url(../resources/images/staffcategories/woman2.png) !important;
+}
+
+.ctsms-staffcategory-personnel {
+	background-image: url(../resources/images/staffcategories/user_headset.png) !important;
+}
+
+.ctsms-staffcategory-person {
+	background-image: url(../resources/images/staffcategories/user1_back.png) !important;
+}
+
+.ctsms-staffcategory-graduand {
+	background-image: url(../resources/images/staffcategories/dude2.png) !important;
+}
+
+.ctsms-icon-courseexpiration {
+	background-image: url(../resources/images/css/course_expiration.png) !important;
+}
+
+.ctsms-icon-upcomingcourse {
+	background-image: url(../resources/images/css/upcoming_course.png) !important;
+}
+
+.ctsms-icon-admincourseexpiration {
+	background-image: url(../resources/images/css/admin_course_expiration.png) !important;
+}
+
+.ctsms-coursecategory-unkown {
+	background-image: url(../resources/images/coursecategories/books.png);
+}
+
+.ctsms-coursecategory-gcp {
+	background-image: url(../resources/images/coursecategories/book_red.png) !important;
+}
+
+.ctsms-coursecategory-study-specific {
+	background-image: url(../resources/images/coursecategories/book_yellow.png) !important;
+}
+
+.ctsms-coursecategory-continuing-education {
+	background-image: url(../resources/images/coursecategories/book_green.png) !important;
+}
+
+.ctsms-coursecategory-first-aid {
+	background-image: url(../resources/images/coursecategories/first_aid.png) !important;
+}
+
+.ctsms-icon-timeline {
+	background-image: url(../resources/images/css/timeline.png) !important;
+}
+
+.ctsms-icon-timelineevents {
+	background-image: url(../resources/images/css/timeline_events.png) !important;
+}
+
+.ctsms-icon-moneytransfers {
+	background-image: url(../resources/images/css/money2.png) !important;
+}
+
+.ctsms-trialstatus-planned {
+	background-image: url(../resources/images/trialstatus/handshake.png) !important;
+}
+
+.ctsms-trialstatus-fixed {
+	background-image: url(../resources/images/trialstatus/pin_red.png) !important;
+}
+
+.ctsms-trialstatus-started {
+	background-image: url(../resources/images/trialstatus/media_play_green.png) !important;
+}
+
+.ctsms-trialstatus-closed {
+	background-image: url(../resources/images/trialstatus/media_stop_red.png) !important;
+}
+
+.ctsms-trialstatus-lockdown {
+	background-image: url(../resources/images/trialstatus/data_lock.png) !important;
+}
+
+.ctsms-trialstatus-cancelled {
+	background-image: url(../resources/images/trialstatus/stop.png) !important;
+}
+
+.ctsms-trialstatus-interrupted {
+	background-image: url(../resources/images/trialstatus/media_pause.png) !important;
+}
+
+.ctsms-trialstatus-migrationstarted {
+	background-image: url(../resources/images/trialstatus/data_edit.png) !important;
+}
+
+.ctsms-trialstatus-migrated {
+	background-image: url(../resources/images/trialstatus/data_ok.png) !important;
+}
+
+.ctsms-icon-timeline-trial {
+	background-image: url(../resources/images/timeline/trial.png) !important;
+}
+
+.ctsms-icon-timeline-phase {
+	background-image: url(../resources/images/timeline/orange_triangle_small.png) !important;
+}
+
+.ctsms-icon-timeline-deadline {
+	background-image: url(../resources/images/timeline/red_marker_small.png) !important;
+}
+
+.ctsms-icon-timeline-event {
+	background-image: url(../resources/images/timeline/blue_point_small.png) !important;
+}
+
+.ctsms-icon-timeline-phase-initiation {
+	background-image: url(../resources/images/timeline/handshake.png) !important;
+}
+
+.ctsms-icon-timeline-phase-design {
+	background-image: url(../resources/images/timeline/pin_red_play.png) !important;
+}
+
+.ctsms-icon-timeline-phase-recruitment {
+	background-image: url(../resources/images/timeline/megaphone.png) !important;
+}
+
+.ctsms-icon-timeline-phase-carrying-out {
+	background-image: url(../resources/images/timeline/media_play_green.png) !important;
+}
+
+.ctsms-icon-timeline-phase-phase-out {
+	background-image: url(../resources/images/timeline/media_stop_red.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-kickoff {
+	background-image: url(../resources/images/timeline/football.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-initiation {
+	background-image: url(../resources/images/timeline/pin_red.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-ethical-review-committee-submission {
+	background-image: url(../resources/images/timeline/document_out.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-ethical-review-committee-vote-expiration {
+	background-image: url(../resources/images/timeline/document_time.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-project-order {
+	background-image: url(../resources/images/timeline/shoppingbasket_add.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-contract {
+	background-image: url(../resources/images/timeline/contract.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-inform-legal-department {
+	background-image: url(../resources/images/timeline/paragraph.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-fpfv {
+	background-image: url(../resources/images/timeline/flag_checkered.png) !important;
+}
+
+.ctsms-icon-timeline-deadline-lplv {
+	background-image: url(../resources/images/timeline/flag_checkered.png) !important;
+}
+
+.ctsms-inputfieldtype-singlelinetext {
+	background-image: url(../resources/images/inputfieldtypes/textfield.png) !important;
+}
+
+.ctsms-inputfieldtype-multilinetext {
+	background-image: url(../resources/images/inputfieldtypes/multilinetextfield.png) !important;
+}
+
+.ctsms-inputfieldtype-selectonedropdown {
+	background-image: url(../resources/images/inputfieldtypes/dropdown.png) !important;
+}
+.ctsms-inputfieldtype-selectoneradioh {
+	background-image: url(../resources/images/inputfieldtypes/radiosh.png) !important;
+}
+.ctsms-inputfieldtype-selectoneradiov {
+	background-image: url(../resources/images/inputfieldtypes/radiosv.png) !important;
+}
+
+.ctsms-inputfieldtype-autocomplete {
+	background-image: url(../resources/images/inputfieldtypes/autocomplete.png) !important;
+}
+
+.ctsms-inputfieldtype-selectmanyh {
+	background-image: url(../resources/images/inputfieldtypes/checkboxesh.png) !important;
+}
+.ctsms-inputfieldtype-selectmanyv {
+	background-image: url(../resources/images/inputfieldtypes/checkboxesv.png) !important;
+}
+
+.ctsms-inputfieldtype-checkbox {
+	background-image: url(../resources/images/inputfieldtypes/checkbox.png) !important;
+}
+
+.ctsms-inputfieldtype-integer {
+	background-image: url(../resources/images/inputfieldtypes/integer.png) !important;
+}
+
+.ctsms-inputfieldtype-float {
+	background-image: url(../resources/images/inputfieldtypes/float.png) !important;
+}
+
+.ctsms-inputfieldtype-date {
+	background-image: url(../resources/images/inputfieldtypes/calendar.png) !important;
+}
+
+.ctsms-inputfieldtype-timestamp {
+	background-image: url(../resources/images/inputfieldtypes/date_time.png) !important;
+}
+.ctsms-inputfieldtype-time {
+	background-image: url(../resources/images/inputfieldtypes/clock.png) !important;
+}
+
+
+.ctsms-inputfieldtype-sketch {
+	background-image: url(../resources/images/inputfieldtypes/pencil.png) !important;
+}
+
+.ctsms-probandcategory-unkown {
+	background-image: url(../resources/images/probandcategories/businessmen.png);
+}
+
+.ctsms-probandcategory-new-person {
+	background-image: url(../resources/images/probandcategories/new_person.png) !important;
+}
+
+.ctsms-probandcategory-new-animal {
+	background-image: url(../resources/images/probandcategories/new_animal.png) !important;
+}
+
+.ctsms-probandcategory-signup {
+	background-image: url(../resources/images/probandcategories/star.png) !important;
+}
+
+.ctsms-probandcategory-migrated {
+	background-image: url(../resources/images/probandcategories/data_copy.png) !important;
+}
+
+.ctsms-probandcategory-test {
+	background-image: url(../resources/images/probandcategories/data_warning.png) !important;
+}
+
+.ctsms-probandcategory-unable-to-reach {
+	background-image: url(../resources/images/probandcategories/unable_to_reach.png) !important;
+}
+
+.ctsms-probandcategory-to-be-deleted {
+	background-image: url(../resources/images/probandcategories/step_delete.png) !important;
+}
+
+.ctsms-probandcategory-duplicate {
+	background-image: url(../resources/images/probandcategories/duplicate.png) !important;
+}
+
+.ctsms-probandcategory-locked {
+	background-image: url(../resources/images/probandcategories/lock2.png) !important;
+}
+
+.ctsms-probandcategory-participant-to-be-deleted {
+	background-image: url(../resources/images/probandcategories/patient_delete.png) !important;
+}
+
+.ctsms-icon-autodelete {
+	background-image: url(../resources/images/css/autodelete.png) !important;
+}
+
+.ctsms-icon-inventoryhome {
+	background-image: url(../resources/images/css/inventory_home.png) !important;
+}
+
+.ctsms-icon-staffhome {
+	background-image: url(../resources/images/css/staff_home.png) !important;
+}
+
+.ctsms-icon-coursehome {
+	background-image: url(../resources/images/css/course_home.png) !important;
+}
+
+.ctsms-icon-trialhome {
+	background-image: url(../resources/images/css/trial_home.png) !important;
+}
+
+.ctsms-icon-probandhome {
+	background-image: url(../resources/images/css/proband_home.png) !important;
+}
+
+.ctsms-icon-userhome {
+	background-image: url(../resources/images/css/user_home.png) !important;
+}
+
+.ctsms-icon-inputfieldhome {
+	background-image: url(../resources/images/css/input_field_home.png) !important;
+}
+
+.ctsms-largeicon-inventoryhome {
+	background-image: url(../resources/images/css/inventory_home_large.png) !important;
+}
+
+.ctsms-largeicon-staffhome {
+	background-image: url(../resources/images/css/staff_home_large.png) !important;
+}
+
+.ctsms-largeicon-coursehome {
+	background-image: url(../resources/images/css/course_home_large.png) !important;
+}
+
+.ctsms-largeicon-trialhome {
+	background-image: url(../resources/images/css/trial_home_large.png) !important;
+}
+
+.ctsms-largeicon-probandhome {
+	background-image: url(../resources/images/css/proband_home_large.png) !important;
+}
+
+.ctsms-largeicon-userhome {
+	background-image: url(../resources/images/css/user_home_large.png) !important;
+}
+
+.ctsms-largeicon-inputfieldhome {
+	background-image: url(../resources/images/css/input_field_home_large.png) !important;
+}
+
+.ctsms-largeicon-signaturevalid {
+	background-image: url(../resources/images/css/certificate_ok.png) !important;
+}
+
+.ctsms-largeicon-signatureinvalid {
+	background-image: url(../resources/images/css/certificate_broken.png) !important;
+}
+
+.ctsms-largeicon-signatureavailable {
+	background-image: url(../resources/images/css/signature_available.png) !important;
+}
+
+.ctsms-icon-inventoryentity {
+	background-image: url(../resources/images/css/inventory_entity.png) !important;
+}
+
+.ctsms-icon-staffentity {
+	background-image: url(../resources/images/css/staff_entity.png) !important;
+}
+
+.ctsms-icon-courseentity {
+	background-image: url(../resources/images/css/course_entity.png) !important;
+}
+
+.ctsms-icon-trialentity {
+	background-image: url(../resources/images/css/trial_entity.png) !important;
+}
+
+.ctsms-icon-probandentity {
+	background-image: url(../resources/images/css/proband_entity.png) !important;
+}
+
+.ctsms-icon-userentity {
+	background-image: url(../resources/images/css/user_entity.png) !important;
+}
+
+.ctsms-icon-inputfieldentity {
+	background-image: url(../resources/images/css/input_field_entity.png) !important;
+}
+
+.ctsms-journalcategory-problem {
+	background-image: url(../resources/images/journalcategories/document_warning.png) !important;
+}
+
+.ctsms-journalcategory-hint {
+	background-image: url(../resources/images/journalcategories/lightbulb_on.png) !important;
+}
+
+.ctsms-journalcategory-general {
+	background-image: url(../resources/images/journalcategories/document_info.png) !important;
+}
+
+.ctsms-journalcategory-announcement {
+	background-image: url(../resources/images/journalcategories/megaphone.png) !important;
+}
+
+.ctsms-journalcategory-call {
+	background-image: url(../resources/images/journalcategories/telephone.png) !important;
+}
+
+.ctsms-journalcategory-mail {
+	background-image: url(../resources/images/journalcategories/mail.png) !important;
+}
+
+.ctsms-journalcategory-instruction {
+	background-image: url(../resources/images/journalcategories/about.png) !important;
+}
+
+.ctsms-strikethrough {
+	text-decoration: line-through;
+}
+
+.ctsms-strikethrough span {
+	text-decoration: line-through;
+}

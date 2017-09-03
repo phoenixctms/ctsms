@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/staffEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{staffBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{staffBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="staffTabView"
+					onTabShow="handleStaffTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="staffmain"
+						disabled="false"
+						titleStyleClass="#{!staffBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{stafflabels.staff_main_tab_label}">
+						<ui:include src="/META-INF/includes/staff/staffMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffimage"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_IMAGE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_IMAGE_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffImage.xhtml" />
+					</p:tab>
+					<p:tab
+						id="stafftags"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_TAG_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffTag.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffcontactdetails"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_CONTACT_DETAIL_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_CONTACT_DETAIL_VALUE_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffContactDetail.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffaddresses"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_ADDRESS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_ADDRESS_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffAddress.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffstatus"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_STATUS_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffStatus.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffdutyrosterturns"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_DUTY_ROSTER_TURN_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_DUTY_ROSTER_TURN_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffDutyRosterTurn.xhtml" />
+					</p:tab>
+					<p:tab
+						id="cvPositions"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_CV_POSITION_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_CV_POSITION_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/cvPosition.xhtml" />
+					</p:tab>
+					<p:tab
+						id="courseParticipationStatus"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/courseParticipationStatus.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffassociations"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{stafflabels.staff_associations_tab_label}">
+						<ui:include src="/META-INF/includes/staff/staffAssociation.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffhyperlinks"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_HYPERLINK_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffHyperlink.xhtml" />
+					</p:tab>
+					<p:tab
+						id="stafffiles"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_FILE_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffFile.xhtml" />
+					</p:tab>
+					<p:tab
+						id="staffjournal"
+						disabled="#{!staffBean.created}"
+						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/staff/staffJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

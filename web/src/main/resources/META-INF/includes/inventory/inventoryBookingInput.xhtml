@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory booking input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<ui:include src="../shared/inventoryBookingCoreInput.xhtml">
+			<ui:param
+				name="bookingBean"
+				value="#{bookingBean}" />
+			<ui:param
+				name="namingContainer"
+				value="#{namingContainer}" />
+		</ui:include>
+		<h:outputLabel
+			for="proband"
+			value="#{inventorylabels.inventory_booking_input_proband_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="proband"
+					required="false"
+					value="#{bookingBean.in.probandId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="probandName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.probandName)}"
+					title="#{inventorylabels.inventory_booking_input_proband_tooltip}#{labels.open_proband_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedProband('#{namingContainer}:proband')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.pick_proband_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openProbandPickerAjax('#{namingContainer}:proband','#{namingContainer}:probandName')" />
+			<p:commandButton
+				title="#{labels.clear_proband_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:proband','#{namingContainer}:probandName','#{applicationScopeBean.noProbandPickedMessage}')" />
+		</h:panelGrid>
+		<p:message for="proband" />
+		<h:outputLabel
+			for="course"
+			value="#{inventorylabels.inventory_booking_input_course_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="course"
+					required="false"
+					value="#{bookingBean.in.courseId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="courseName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.courseName)}"
+					title="#{inventorylabels.inventory_booking_input_course_tooltip}#{labels.open_course_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedCourse('#{namingContainer}:course')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.open_course_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openCoursePickerAjax('#{namingContainer}:course','#{namingContainer}:courseName')" />
+			<p:commandButton
+				title="#{labels.clear_course_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:course','#{namingContainer}:courseName','#{applicationScopeBean.noCoursePickedMessage}')" />
+		</h:panelGrid>
+		<p:message for="course" />
+		<h:outputLabel
+			for="trial"
+			value="#{inventorylabels.inventory_booking_input_trial_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="trial"
+					required="false"
+					value="#{bookingBean.in.trialId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="trialName"
+					value="#{applicationScopeBean.clipStringPicker(bookingBean.trialName)}"
+					title="#{inventorylabels.inventory_booking_input_trial_tooltip}#{labels.open_trial_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedTrial('#{namingContainer}:trial')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.open_trial_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openTrialPickerAjax('#{namingContainer}:trial','#{namingContainer}:trialName')" />
+			<p:commandButton
+				title="#{labels.clear_trial_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax('#{namingContainer}:trial','#{namingContainer}:trialName','#{applicationScopeBean.noTrialPickedMessage}')" />
+		</h:panelGrid>
+		<p:message for="trial" />
+	</ui:composition>
+</h:body>
+</html>

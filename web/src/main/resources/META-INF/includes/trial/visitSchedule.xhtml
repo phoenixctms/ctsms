@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>visit schedule items</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="visitschedule_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeVisitSchedule"
+				actionListener="#{visitScheduleBean.change(trialBean.in.id)}"
+				update="visitschedule_list,visitschedule_matrix,visitschedule_input" /> -->
+			<p:remoteCommand
+				process="@this"
+				name="visitScheduleItemSelectVisitGroup"
+				actionListener="#{visitScheduleBean.matrix.selectVisitGroup()}"
+				update="visitschedulevisit,visitschedulegroup" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{visitScheduleItem.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="visitScheduleItem"
+					value="#{visitScheduleBean.visitScheduleItemModel}"
+					id="visitschedule_list"
+					selectionMode="single"
+					selection="#{visitScheduleBean.selectedVisitScheduleItem}"
+					rowStyleClass="#{applicationScopeBean.visitToColor(visitScheduleItem.vo.visit)}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:visitschedule_form:visitschedule_input" />
+					<f:facet name="header">
+						<h:outputText value="#{visitScheduleBean.visitScheduleItemModel.rowCount} #{triallabels.visit_schedule_visitschedule_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{visitScheduleItem.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{visitScheduleItem.vo.id}" />
+					</p:column>
+					<p:column
+						sortBy="#{visitScheduleItem.vo.group.title}"
+						filterBy="#{visitScheduleItem.vo.group.id}"
+						filterOptions="#{visitScheduleBean.filterProbandGroups}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_group_title_column}" />
+						</f:facet>
+						<h:outputText value="#{visitScheduleItem.vo.group.title}" />
+					</p:column>
+					<p:column
+						sortBy="#{visitScheduleItem.vo.visit.title}"
+						filterBy="#{visitScheduleItem.vo.visit.id}"
+						filterOptions="#{visitScheduleBean.filterVisits}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_visit_title_column}" />
+						</f:facet>
+						<h:outputText value="#{visitScheduleItem.vo.visit.title}" />
+					</p:column>
+					<ui:include src="../shared/visitScheduleItemTableColumns.xhtml" />
+					<p:column
+						sortBy="#{visitScheduleItem.vo.notify}"
+						filterBy="#{visitScheduleItem.vo.notify}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_notify_column}" />
+			</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{visitScheduleItem.vo.notify}" />
+						</ui:include>
+		</p:column>					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_colliding_proband_status_entry_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{visitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingProbandStatusTableTab.xhtml">
+								<ui:param
+									name="collidingProbandStatusEntryModel"
+									value="#{visitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo)}" />
+								<ui:param
+									name="showProband"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<h:panelGrid
+					columns="2"
+					cellpadding="0"
+					styleClass="ctsms-trialvisitschedule-content-panelgrid ctsms-content-panelgrid-maxheight"
+					columnClasses="ctsms-trialvisitschedule-matrix-column,ctsms-trialvisitschedule-input-column">
+					<p:panel
+						id="visitschedule_matrix"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.select_group_visit_label}" />
+						</f:facet>
+							<ui:include src="../shared/groupVisitMatrix.xhtml">
+								<ui:param
+									name="matrixBean"
+									value="#{visitScheduleBean}" />
+								<ui:param
+									name="selectRemoteCommand"
+									value="visitScheduleItemSelectVisitGroup" />									
+								<ui:param
+									name="update"
+									value=":tabView:visitschedule_form:visitschedule_matrix" />
+							</ui:include>
+					</p:panel>
+					<p:panel
+						id="visitschedule_input"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{visitScheduleBean.title}" />
+						</f:facet>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								rendered="#{visitScheduleBean.inputVisible}"
+								columns="9"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="visitschedulegroup"
+									value="#{triallabels.visit_schedule_group_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="visitschedulegroup"
+										value="#{visitScheduleBean.in.groupId}"
+										required="false"
+										label="#{triallabels.visit_schedule_group}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{visitScheduleBean.probandGroups}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="visitschedulegroup">
+										<h:outputText
+											value="#{triallabels.visit_schedule_group_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="visitschedulegroup" />
+								<h:outputLabel
+									for="visitschedulevisit"
+									value="#{triallabels.visit_schedule_visit_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="visitschedulevisit"
+										value="#{visitScheduleBean.in.visitId}"
+										required="false"
+										label="#{triallabels.visit_schedule_visit}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{visitScheduleBean.visits}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="visitschedulevisit">
+										<h:outputText
+											value="#{triallabels.visit_schedule_visit_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="visitschedulevisit" />
+								<h:outputLabel
+									for="visitscheduletoken"
+									value="#{triallabels.visit_schedule_token_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="visitscheduletoken"
+										value="#{visitScheduleBean.in.token}"
+										required="false"
+										label="#{triallabels.visit_schedule_token}"
+										styleClass="ctsms-control-smaller" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="visitscheduletoken">
+										<h:outputText
+											value="#{triallabels.visit_schedule_token_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="visitscheduletoken" />
+								<h:outputLabel
+									for="visitscheduleitemstart"
+									value="#{triallabels.visit_schedule_start_label}" />
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									styleClass="ctsms-calendar-panelgrid">
+									<h:panelGroup>
+										<p:calendar
+											id="visitscheduleitemstart"
+											value="#{visitScheduleBean.in.start}"
+											required="true"
+											label="#{triallabels.visit_schedule_start}"
+											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											yearRange="#{applicationScopeBean.calendarYearRange}"
+											showWeek="true"
+											navigator="true"
+											locale="#{sessionScopeBean.locale}"
+											timeZone="#{sessionScopeBean.timeZone}"
+											styleClass="ctsms-calendar-datetime" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="visitscheduleitemstart">
+											<h:outputText
+												value="#{triallabels.visit_schedule_start_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:commandButton
+										process="@this,visitscheduleitemstart"
+										title="#{labels.add_one_day_button_label}"
+										actionListener="#{visitScheduleBean.visitScheduleItemStartAddOneDay}"
+										icon="ui-icon ui-icon-squaresmall-plus"
+										ajax="true"
+										update="visitscheduleitemstart" />
+									<p:commandButton
+										process="@this,visitscheduleitemstart"
+										title="#{labels.sub_one_day_button_label}"
+										actionListener="#{visitScheduleBean.visitScheduleItemStartSubOneDay}"
+										icon="ui-icon ui-icon-squaresmall-minus"
+										ajax="true"
+										update="visitscheduleitemstart" />
+								</h:panelGrid>
+								<p:message for="visitscheduleitemstart" />
+								<h:outputLabel
+									for="visitscheduleitemstop"
+									value="#{triallabels.visit_schedule_stop_label}" />
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									styleClass="ctsms-calendar-panelgrid">
+									<h:panelGroup>
+										<p:calendar
+											id="visitscheduleitemstop"
+											value="#{visitScheduleBean.in.stop}"
+											required="false"
+											label="#{triallabels.visit_schedule_stop}"
+											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											yearRange="#{applicationScopeBean.calendarYearRange}"
+											showWeek="true"
+											navigator="true"
+											locale="#{sessionScopeBean.locale}"
+											timeZone="#{sessionScopeBean.timeZone}"
+											styleClass="ctsms-calendar-datetime" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="visitscheduleitemstop">
+											<h:outputText
+												value="#{triallabels.visit_schedule_stop_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:commandButton
+										process="@this,visitscheduleitemstop"
+										title="#{labels.add_one_day_button_label}"
+										actionListener="#{visitScheduleBean.visitScheduleItemStopAddOneDay}"
+										icon="ui-icon ui-icon-squaresmall-plus"
+										ajax="true"
+										update="visitscheduleitemstop" />
+									<p:commandButton
+										process="@this,visitscheduleitemstop"
+										title="#{labels.sub_one_day_button_label}"
+										actionListener="#{visitScheduleBean.visitScheduleItemStopSubOneDay}"
+										icon="ui-icon ui-icon-squaresmall-minus"
+										ajax="true"
+										update="visitscheduleitemstop" />
+								</h:panelGrid>
+								<p:message for="visitscheduleitemstop" />
+								
+		<h:outputLabel
+			for="visitscheduleitemnotify"
+			value="#{triallabels.visit_schedule_notify_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox
+				id="visitscheduleitemnotify"
+				value="#{visitScheduleBean.in.notify}">
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="visitscheduleitemnotify">
+				<h:outputText
+					value="#{triallabels.visit_schedule_notify_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="visitscheduleitemnotify" />		
+										
+							</h:panelGrid>
+							<h:outputLabel rendered="#{!visitScheduleBean.inputVisible}" />
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="left">
+									<h:outputText
+										styleClass="ctsms-toolbar-text"
+										value="#{visitScheduleBean.created ? visitScheduleBean.modifiedAnnotation : ''}" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this"
+										value="#{labels.reset_button_label}"
+										actionListener="#{visitScheduleBean.reset}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-close"
+										ajax="true"
+										disabled="false"
+										update="visitschedule_list,visitschedule_matrix,visitschedule_input" />
+									<p:commandButton
+										process="@this,visitschedule_input"
+										id="add"
+										value="#{labels.add_button_label}"
+										actionListener="#{visitScheduleBean.add}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!visitScheduleBean.createable}"
+										update="visitschedule_list,visitschedule_matrix,visitschedule_input" />
+									<p:commandButton
+										process="@this,visitschedule_input"
+										id="update"
+										value="#{labels.update_button_label}"
+										actionListener="#{visitScheduleBean.update}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-disk"
+										ajax="true"
+										disabled="#{!visitScheduleBean.editable}"
+										update="visitschedule_list,visitschedule_matrix,visitschedule_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.delete_button_label}"
+										actionListener="#{visitScheduleBean.delete}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-trash"
+										ajax="true"
+										disabled="#{!visitScheduleBean.removable}"
+										update="visitschedule_list,visitschedule_matrix,visitschedule_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.load_button_label}"
+										actionListener="#{visitScheduleBean.load}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon-refresh"
+										ajax="true"
+										disabled="#{!visitScheduleBean.created}"
+										update="visitschedule_list,visitschedule_matrix,visitschedule_input" />
+									<p:commandButton
+										immediate="true"
+										ajax="false"
+										value="#{triallabels.export_visit_schedule_button_label}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload value="#{visitScheduleBean.visitScheduleExcelStreamedContent}" />
+									</p:commandButton>
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

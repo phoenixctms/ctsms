@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff search</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid"
+			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
+			<ui:include src="searchInput.xhtml">
+				<ui:param
+					name="searchBean"
+					value="#{staffSearchBean}" />
+				<ui:param
+					name="result_list"
+					value="staff_result_list" />
+				<ui:param
+					name="resultListWidgetVar"
+					value="staffResultList" />
+			</ui:include>
+			<p:messages
+				id="messages"
+				globalOnly="true" />
+			<p:toolbar id="criteria_toolbar">
+				<p:toolbarGroup align="left">
+					<h:outputText
+						styleClass="ctsms-toolbar-text"
+						value="#{staffSearchBean.created ? staffSearchBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<p:commandButton
+						process="@this"
+						value="#{labels.reset_button_label}"
+						actionListener="#{staffSearchBean.reset}"
+						icon="ui-icon ui-icon-close"
+						ajax="true"
+						onstart="staffResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="false"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,staff_result_list" />
+					<p:commandButton
+						rendered="#{!staffSearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input"
+						id="add"
+						value="#{labels.add_button_label}"
+						actionListener="#{staffSearchBean.add}"
+						icon="ui-icon ui-icon-plusthick"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!staffSearchBean.createable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						rendered="#{staffSearchBean.created}"
+						process="@this"
+						value="#{labels.add_button_label}"
+						onclick="criteriaAddConfirmation.show()"
+						disabled="#{!staffSearchBean.createable}"
+						icon="ui-icon ui-icon-plusthick"
+						type="button" />
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						id="update"
+						value="#{labels.update_button_label}"
+						actionListener="#{staffSearchBean.update}"
+						icon="ui-icon ui-icon-disk"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!staffSearchBean.editable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.delete_button_label}"
+						onclick="criteriaDeleteConfirmation.show()"
+						disabled="#{!staffSearchBean.removable}"
+						icon="ui-icon ui-icon-trash"
+						type="button" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{staffSearchBean.load}"
+						icon="ui-icon-refresh"
+						ajax="true"
+						onstart="staffResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!staffSearchBean.created}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,staff_result_list" />
+					<ui:insert name="toolbarbuttons"></ui:insert>
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						value="#{labels.search_button_label}"
+						actionListener="#{staffSearchBean.search}"
+						icon="ui-icon ui-icon-search"
+						ajax="true"
+						onstart="staffResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!staffSearchBean.createable}"
+						update=":search_form:tabView:criteria_input,messages,staff_result_list" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				widgetVar="staffResultList"
+				rows="#{dataTablesRowsSearch}"
+				paginator="#{dataTablesPaginatorSearch}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
+				paginatorPosition="#{dataTablesPaginatorPositionSearch}"
+				pageLinks="#{dataTablesPageLinksSearch}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleSearch}"
+				scrollable="#{dataTablesScrollableSearch}"
+				scrollHeight="#{dataTablesScrollHeightSearch}"
+				resizableColumns="#{dataTablesResizableColumnsSearch}"
+				sortBy="#{staff.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}"
+				var="staff"
+				value="#{staffSearchBean.staffResultModel}"
+				id="staff_result_list"
+				rowStyleClass="#{staff.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.staffToColor(staff.vo)}">
+				<f:facet name="header">
+					<h:outputText value="#{staffSearchBean.queryResultTitle}" />
+				</f:facet>
+				<p:column style="width:16px;">
+					<p:rowToggler />
+				</p:column>
+				<p:column
+					sortBy="#{staff.vo.id}"
+					filterBy="#{staff.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{staff.vo.id}" />
+				</p:column>
+				<p:column filterBy="#{staff.vo.personParticulars.lastName}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_personparticulars_last_name_column}" />
+					</f:facet>
+					<h:outputText value="#{staff.vo.person ? staff.vo.name : ''}" />
+				</p:column>
+				<p:column filterBy="#{staff.vo.organisationParticulars.organisationName}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_organisationparticulars_organisation_name_column}" />
+					</f:facet>
+					<h:outputText value="#{!staff.vo.person ? staff.vo.name : ''}" />
+				</p:column>
+				<p:column
+					sortBy="#{staff.vo.department}"
+					filterBy="#{staff.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_staff_department_column}" />
+					</f:facet>
+					<h:outputText value="#{staff.vo.department.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{staff.vo.category}"
+					filterBy="#{staff.vo.category.id}"
+					filterOptions="#{sessionScopeBean.filterStaffCategories}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_staff_category_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{staff.vo.category.name}" />
+						<ui:param
+							name="icon"
+							value="#{staff.vo.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{staff.vo.person}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_person_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{staff.vo.person}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{staff.vo.employee}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_employee_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{staff.vo.employee}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{staff.vo.maxOverlappingShifts}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_allocatable_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{staffSearchBean.getMaxOverlappingShiftsString(staff.vo)}" />
+						<ui:param
+							name="icon"
+							value="#{staff.vo.allocatable ? 'ctsms-icon-true' : 'ctsms-icon-false'}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{staff.vo.parent}"
+					rendered="#{!staffSearchBean.picker}">
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_parent_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{staff.vo.parent.name}" />
+						<ui:param
+							name="icon"
+							value="#{staff.vo.parent.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<ui:insert name="pickbutton"></ui:insert>
+				<p:rowExpansion>
+					<h:panelGrid
+						columns="3"
+						cellpadding="0"
+						styleClass="ctsms-resultsetlist-rowexpansion-panelgrid"
+						columnClasses="ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column">
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffTagValues(staff.vo)) == 0}"
+							value="#{stafflabels.no_staff_tag_values_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffTagValues(staff.vo)) > 0}"
+							value="#{staffSearchBean.getStaffTagValues(staff.vo)}"
+							var="tagValue"
+							type="definition">
+							<h:outputText value="#{tagValue.vo.tag.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{tagValue.vo.value}" />
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffContactDetailValues(staff.vo)) == 0}"
+							value="#{stafflabels.no_staff_contact_detail_values_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffContactDetailValues(staff.vo)) > 0}"
+							value="#{staffSearchBean.getStaffContactDetailValues(staff.vo)}"
+							var="contactDetailValue"
+							type="definition">
+							<h:outputText value="#{contactDetailValue.vo.type.name}:" />
+							<f:facet name="description">
+								<ui:include src="contactDetailValue.xhtml">
+									<ui:param
+										name="decrypted"
+										value="true" />
+									<ui:param
+										name="contactDetailValue"
+										value="#{contactDetailValue.vo}" />
+									<ui:param
+										name="styleClass"
+										value="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext" />
+								</ui:include>
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffAddresses(staff.vo)) == 0}"
+							value="#{stafflabels.no_staff_addresses_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(staffSearchBean.getStaffAddresses(staff.vo)) > 0}"
+							value="#{staffSearchBean.getStaffAddresses(staff.vo)}"
+							var="address"
+							type="definition">
+							<h:outputText value="#{address.vo.type.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{address.vo.name}" />
+							</f:facet>
+						</p:dataList>
+					</h:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="alert"
+			widgetVar="criteriaDeleteConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_delete_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this"
+				value="#{labels.yes_button_label}"
+				actionListener="#{staffSearchBean.delete}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="criteriaAddConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_add_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed"
+				value="#{labels.yes_button_label}"
+				actionListener="#{staffSearchBean.add}"
+				onclick="criteriaAddConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

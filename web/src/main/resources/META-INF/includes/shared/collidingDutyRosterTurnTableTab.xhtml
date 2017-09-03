@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding duty roster turn table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_duty_roster_turn_tab_label_1}#{collidingDutyRosterTurnModel.allRowCount}#{labels.colliding_duty_roster_turn_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{dutyRosterTurn.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="dutyRosterTurn"
+				value="#{collidingDutyRosterTurnModel.allRows}"
+				id="collidingdutyrosterturn_list">
+				<p:column
+					rendered="#{showStaff}"
+					sortBy="#{dutyRosterTurn.vo.staff.nameSortable}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_staff_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{dutyRosterTurn.vo.staff.name}" />
+						<ui:param
+							name="icon"
+							value="#{dutyRosterTurn.vo.staff.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					rendered="#{showTrial}"
+					sortBy="#{dutyRosterTurn.vo.trial.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_trial_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{dutyRosterTurn.vo.trial.name}" />
+						<ui:param
+							name="icon"
+							value="#{dutyRosterTurn.vo.trial.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{dutyRosterTurn.vo.title}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_title_column}" />
+					</f:facet>
+					<h:outputText value="#{dutyRosterTurn.vo.title}" />
+				</p:column>
+				<p:column sortBy="#{dutyRosterTurn.vo.visitScheduleItem.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_visit_schedule_item_column}" />
+					</f:facet>
+					<h:outputText value="#{dutyRosterTurn.vo.visitScheduleItem.name}" />
+				</p:column>
+				<p:column sortBy="#{dutyRosterTurn.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{dutyRosterTurn.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{dutyRosterTurn.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{dutyRosterTurn.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingdutyrosterturn_list_duration_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.getDutyRosterTurnDurationString(dutyRosterTurn.vo)}" />
+				</p:column>
+				<p:column
+					rendered="#{showStaff or showTrial}"
+					style="width:#{showStaff and showTrial ? '64' : '32'}px;white-space:nowrap;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_staff_button_label}"
+						rendered="#{showStaff}"
+						disabled="#{dutyRosterTurn.vo.staff == null}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openStaff(#{dutyRosterTurn.vo.staff.id})" />
+					<p:commandButton
+						type="button"
+						title="#{labels.open_trial_button_label}"
+						rendered="#{showTrial}"
+						disabled="#{dutyRosterTurn.vo.trial == null}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openTrial(#{dutyRosterTurn.vo.trial.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

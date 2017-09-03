@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd">
+
+<!-- http://mytechhell.com/blog/?p=322 -->
+<bean id="applicationContextBundle"
+    class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
+<property name="basename" value="ctsms-applicationcontext" />
+</bean>
+
+<bean id="applicationContextProperties"
+    factory-bean="applicationContextBundle"
+    factory-method="getProperties" />
+
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="properties">
+        <ref local="applicationContextProperties" />
+    </property>
+</bean>
+
+<import resource="applicationContext-localDataSource.xml"/>
+
+   <!-- <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+      <property name="velocityProperties">
+         <value>
+            resource.loader=class
+            class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+         </value>
+      </property>
+   </bean> -->
+       <bean id="notificationVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">class</prop>
+                <prop key="class.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <!-- <prop key="eventhandler.referenceinsertion.class">org.apache.velocity.app.event.implement.EscapeHtmlReference</prop>
+                <prop key="eventhandler.escape.html.match">/.*/</prop> -->
+                <prop key="input.encoding" >UTF-8</prop>
+                <prop key="output.encoding" >UTF-8</prop>
+            </props>
+        </property>
+
+    </bean>
+
+<bean id="notificationMailSenderJavaMailBundle"
+    class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
+<property name="basename" value="ctsms-notification-mail-sender" />
+</bean>
+
+<bean id="notificationMailSenderJavaMailProperties"
+    factory-bean="notificationMailSenderJavaMailBundle"
+    factory-method="getProperties" />
+
+    <bean id="notificationMailSenderJavaMailPropertiesFactory" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="properties">
+        <ref local="notificationMailSenderJavaMailProperties" />
+    </property>
+    </bean>
+
+    <bean id="notificationMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${notification_mail_sender_host}"/>
+        <property name="port" value="${notification_mail_sender_port}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+		<property name="protocol" value="${notification_mail_sender_protocol}"/>
+        <property name="username" value="${notification_mail_sender_username}"/>
+        <property name="password" value="${notification_mail_sender_password}"/>
+
+        <property name="javaMailProperties" ref="notificationMailSenderJavaMailPropertiesFactory"/>
+
+        <!-- <props>
+        	<prop key="mail.smtp.starttls.enable">${notification_mail_sender_starttls}</prop>
+            <prop key="mail.smtp.auth">${notification_mail_sender_auth}</prop>
+        </props> -->
+
+    </bean>
+
+	<bean id="notificationEmailSender" class="org.phoenixctms.ctsms.email.NotificationEmailSender">
+		<property name="staffDao" ref="staffDao" />
+		<property name="mailSender" ref="notificationMailSender"/>
+	</bean>
+
+    <!-- http://docs.spring.io/spring-ldap/docs/1.3.x/reference/html/introduction.html -->
+    <bean id="ldapContextSource1" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="${ldap_context_source_1_url}" />
+      <property name="base" value="${ldap_context_source_1_base}" />
+      <property name="userDn" value="${ldap_context_source_1_user_dn}" />
+      <property name="password" value="${ldap_context_source_1_password}" />
+      <property name="anonymousReadOnly" value="${ldap_context_source_1_anonymous_read_only}" />
+      <property name="pooled" value="${ldap_context_source_1_pooled}"/>
+    </bean>
+    <bean id="ldapTemplate1" class="org.springframework.ldap.core.LdapTemplate">
+        <constructor-arg ref="ldapContextSource1" />
+    </bean>
+    <bean id="ldapService1" class="org.phoenixctms.ctsms.security.LdapService">
+        <property name="ldapTemplate" ref="ldapTemplate1" />
+        <property name="baseFormat" value="${ldap_service_1_base_format}" />
+        <property name="authFilterFormat" value="${ldap_service_1_auth_filter_format}" />
+        <property name="searchFilterFormat" value="${ldap_service_1_search_filter_format}" />
+        <property name="searchResultAttributes" value="${ldap_service_1_search_result_attributes}" /> <!-- cn,givenName,sn, -->
+    </bean>
+
+    <bean id="ldapContextSource2" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="${ldap_context_source_2_url}" />
+      <property name="base" value="${ldap_context_source_2_base}" />
+      <property name="userDn" value="${ldap_context_source_2_user_dn}" />
+      <property name="password" value="${ldap_context_source_2_password}" />
+      <property name="anonymousReadOnly" value="${ldap_context_source_2_anonymous_read_only}" />
+      <property name="pooled" value="${ldap_context_source_2_pooled}"/>
+    </bean>
+    <bean id="ldapTemplate2" class="org.springframework.ldap.core.LdapTemplate">
+        <constructor-arg ref="ldapContextSource2" />
+    </bean>
+    <bean id="ldapService2" class="org.phoenixctms.ctsms.security.LdapService">
+        <property name="ldapTemplate" ref="ldapTemplate2" />
+        <property name="baseFormat" value="${ldap_service_2_base_format}" />
+        <property name="authFilterFormat" value="${ldap_service_2_auth_filter_format}" />
+        <property name="searchFilterFormat" value="${ldap_service_2_search_filter_format}" />
+        <property name="searchResultAttributes" value="${ldap_service_2_search_result_attributes}" /> <!-- cn,givenName,sn -->
+    </bean>
+
+    <bean id="authenticator" class="org.phoenixctms.ctsms.security.Authenticator">
+        <property name="ldapService1" ref="ldapService1" />
+        <property name="ldapService2" ref="ldapService2" />
+        <property name="passwordDao" ref="passwordDao" />
+        <property name="userDao" ref="userDao" />
+        <property name="journalEntryDao" ref="journalEntryDao" />
+    </bean>
+
+    <bean id="criterionSyntaxParser" class="org.phoenixctms.ctsms.query.parser.CriterionSyntaxParser">
+        <property name="criterionTieDao" ref="criterionTieDao" />
+        <property name="criterionRestrictionDao" ref="criterionRestrictionDao" />
+        <property name="criterionPropertyDao" ref="criterionPropertyDao" />
+
+        <property name="inventoryDao" ref="inventoryDao" />
+        <property name="staffDao" ref="staffDao" />
+		<property name="courseDao" ref="courseDao" />
+		<property name="trialDao" ref="trialDao" />
+		<property name="probandDao" ref="probandDao" />
+		<property name="inputFieldDao" ref="inputFieldDao" />
+		<property name="userDao" ref="userDao" />
+
+		<property name="departmentDao" ref="departmentDao" />
+		<property name="inventoryCategoryDao" ref="inventoryCategoryDao" />
+		<property name="inventoryTagDao" ref="inventoryTagDao" />
+		<property name="inventoryStatusTypeDao" ref="inventoryStatusTypeDao" />
+		<property name="staffCategoryDao" ref="staffCategoryDao" />
+		<property name="courseCategoryDao" ref="courseCategoryDao" />
+		<property name="cvSectionDao" ref="cvSectionDao" />
+		<property name="staffTagDao" ref="staffTagDao" />
+		<property name="contactDetailTypeDao" ref="contactDetailTypeDao" />
+		<property name="staffStatusTypeDao" ref="staffStatusTypeDao" />
+		<property name="trialStatusTypeDao" ref="trialStatusTypeDao" />
+		<property name="trialTypeDao" ref="trialTypeDao" />
+		<property name="sponsoringTypeDao" ref="sponsoringTypeDao" />
+		<property name="surveyStatusTypeDao" ref="surveyStatusTypeDao" />
+		<property name="teamMemberRoleDao" ref="teamMemberRoleDao" />
+		<property name="trialTagDao" ref="trialTagDao" />
+		<property name="probandCategoryDao" ref="probandCategoryDao" />
+		<property name="privacyConsentStatusTypeDao" ref="privacyConsentStatusTypeDao" />
+		<property name="addressTypeDao" ref="addressTypeDao" />
+		<property name="inquiryDao" ref="inquiryDao" />
+		<property name="inputFieldSelectionSetValueDao" ref="inputFieldSelectionSetValueDao" />
+		<property name="probandListEntryTagDao" ref="probandListEntryTagDao" />
+		<property name="probandTagDao" ref="probandTagDao" />
+		<property name="ecrfFieldDao" ref="eCRFFieldDao" />
+
+    </bean>
+    <bean id="criterionIntermediateSetParser" class="org.phoenixctms.ctsms.query.parser.CriterionIntermediateSetParser">
+        <property name="criterionTieDao" ref="criterionTieDao" />
+        <property name="criterionRestrictionDao" ref="criterionRestrictionDao" />
+        <property name="criterionPropertyDao" ref="criterionPropertyDao" />
+
+        <property name="inventoryDao" ref="inventoryDao" />
+        <property name="staffDao" ref="staffDao" />
+		<property name="courseDao" ref="courseDao" />
+		<property name="trialDao" ref="trialDao" />
+		<property name="probandDao" ref="probandDao" />
+		<property name="inputFieldDao" ref="inputFieldDao" />
+		<property name="userDao" ref="userDao" />
+
+		<property name="departmentDao" ref="departmentDao" />
+		<property name="inventoryCategoryDao" ref="inventoryCategoryDao" />
+		<property name="inventoryTagDao" ref="inventoryTagDao" />
+		<property name="inventoryStatusTypeDao" ref="inventoryStatusTypeDao" />
+		<property name="staffCategoryDao" ref="staffCategoryDao" />
+		<property name="courseCategoryDao" ref="courseCategoryDao" />
+		<property name="cvSectionDao" ref="cvSectionDao" />
+		<property name="staffTagDao" ref="staffTagDao" />
+		<property name="contactDetailTypeDao" ref="contactDetailTypeDao" />
+		<property name="staffStatusTypeDao" ref="staffStatusTypeDao" />
+		<property name="trialStatusTypeDao" ref="trialStatusTypeDao" />
+		<property name="trialTypeDao" ref="trialTypeDao" />
+		<property name="sponsoringTypeDao" ref="sponsoringTypeDao" />
+		<property name="surveyStatusTypeDao" ref="surveyStatusTypeDao" />
+		<property name="teamMemberRoleDao" ref="teamMemberRoleDao" />
+		<property name="trialTagDao" ref="trialTagDao" />
+		<property name="probandCategoryDao" ref="probandCategoryDao" />
+		<property name="privacyConsentStatusTypeDao" ref="privacyConsentStatusTypeDao" />
+		<property name="addressTypeDao" ref="addressTypeDao" />
+		<property name="inquiryDao" ref="inquiryDao" />
+		<property name="inputFieldSelectionSetValueDao" ref="inputFieldSelectionSetValueDao" />
+		<property name="probandListEntryTagDao" ref="probandListEntryTagDao" />
+		<property name="probandTagDao" ref="probandTagDao" />
+		<property name="ecrfFieldDao" ref="eCRFFieldDao" />
+    </bean>
+
+    <!-- <bean id="ldapContextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="ldap://localhost:389" />
+      <property name="base" value="" />
+      <property name="userDn" value="cn=Manager,dc=maxcrc,dc=com" />
+      <property name="password" value="mypassword" />
+      <property name="pooled" value="false"/>
+    </bean>
+    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+        <constructor-arg ref="ldapContextSource" />
+    </bean>
+    <bean id="authenticator" class="org.phoenixctms.ctsms.security.Authenticator">
+        <property name="ldapTemplate" ref="ldapTemplate" />
+        <property name="baseFormat" value="ou=People,dc=maxcrc,dc=com" />
+        <property name="filterFormat" value="(uid={0})" />
+        <property name="passwordDao" ref="passwordDao" />
+        <property name="userDao" ref="userDao" />
+        <property name="journalEntryDao" ref="journalEntryDao" />
+    </bean> -->
+
+
+	<!-- <bean id="PDFMerger" class="org.phoenixctms.ctsms.pdf.PDFMerger">
+		<property name="fileDao" ref="fileDao" />
+	</bean>  -->
+
+	<bean id="org.phoenixctms.ctsms.intercept.ErrorLogger" class="org.phoenixctms.ctsms.intercept.ErrorLogger">
+		<property name="errorDao" ref="errorDao" />
+		<!-- <property name="mailSender" ref="mailSender"/> -->
+	</bean>
+	<bean id="org.phoenixctms.ctsms.intercept.AuthenticationInterceptor" class="org.phoenixctms.ctsms.intercept.AuthenticationInterceptor">
+		<!-- <property name="userDao" ref="userDao" /> -->
+		<!-- <property name="passwordDao" ref="passwordDao" /> -->
+		<property name="authenticator" ref="authenticator" />
+	</bean>
+	<bean id="org.phoenixctms.ctsms.intercept.AuthorisationInterceptor" class="org.phoenixctms.ctsms.intercept.AuthorisationInterceptor">
+		<property name="permissionDao" ref="permissionDao" />
+		<property name="inventoryTagValueDao" ref="inventoryTagValueDao" />
+		<property name="inventoryStatusEntryDao" ref="inventoryStatusEntryDao" />
+		<property name="inventoryBookingDao" ref="inventoryBookingDao" />
+		<property name="maintenanceItemDao" ref="maintenanceScheduleItemDao" />
+		<property name="staffDao" ref="staffDao" />
+		<property name="departmentDao" ref="departmentDao" />
+		<property name="inventoryDao" ref="inventoryDao" />
+		<property name="courseDao" ref="courseDao" />
+		<property name="trialDao" ref="trialDao" />
+		<property name="probandDao" ref="probandDao" />
+		<property name="staffTagValueDao" ref="staffTagValueDao" />
+		<property name="staffStatusEntryDao" ref="staffStatusEntryDao" />
+		<property name="criteriaDao" ref="criteriaDao" />
+		<property name="criterionDao" ref="criterionDao" />
+		<property name="criterionPropertyDao" ref="criterionPropertyDao" />
+		<property name="criterionTieDao" ref="criterionTieDao" />
+		<property name="staffContactDetailValueDao" ref="staffContactDetailValueDao" />
+		<property name="staffAddressDao" ref="staffAddressDao" />
+		<property name="courseParticipationStatusEntryDao" ref="courseParticipationStatusEntryDao" />
+		<property name="dutyRosterTurnDao" ref="dutyRosterTurnDao" />
+		<property name="lecturerDao" ref="lecturerDao" />
+		<property name="trialTagValueDao" ref="trialTagValueDao" />
+		<property name="teamMemberDao" ref="teamMemberDao" />
+		<property name="timelineEventDao" ref="timelineEventDao" />
+		<property name="probandGroupDao" ref="probandGroupDao" />
+		<property name="visitDao" ref="visitDao" />
+		<property name="ecrfDao" ref="eCRFDao" />
+		<property name="ecrfFieldDao" ref="eCRFFieldDao" />
+		<property name="visitScheduleItemDao" ref="visitScheduleItemDao" />
+		<property name="probandListEntryTagDao" ref="probandListEntryTagDao" />
+		<property name="inquiryDao" ref="inquiryDao" />
+		<property name="probandListEntryDao" ref="probandListEntryDao" />
+		<property name="probandListStatusEntryDao" ref="probandListStatusEntryDao" />
+		<property name="cvPositionDao" ref="cvPositionDao" />
+		<property name="journalEntryDao" ref="journalEntryDao" />
+		<property name="userDao" ref="userDao" />
+		<property name="hyperlinkDao" ref="hyperlinkDao" />
+		<property name="fileDao" ref="fileDao" />
+		<property name="probandTagValueDao" ref="probandTagValueDao" />
+		<property name="probandStatusEntryDao" ref="probandStatusEntryDao" />
+		<property name="probandContactDetailValueDao" ref="probandContactDetailValueDao" />
+		<property name="probandAddressDao" ref="probandAddressDao" />
+		<property name="bankAccountDao" ref="bankAccountDao" />
+		<property name="moneyTransferDao" ref="moneyTransferDao" />
+		<property name="userPermissionProfileDao" ref="userPermissionProfileDao" />
+		<property name="diagnosisDao" ref="diagnosisDao" />
+		<property name="procedureDao" ref="procedureDao" />
+		<property name="medicationDao" ref="medicationDao" />
+		<property name="inquiryValueDao" ref="inquiryValueDao" />
+		<property name="probandListEntryTagValueDao" ref="probandListEntryTagValueDao" />
+		<property name="ecrfFieldValueDao" ref="eCRFFieldValueDao" />
+		<property name="ecrfFieldStatusEntryDao" ref="eCRFFieldStatusEntryDao" />
+	</bean>
+
+   <bean id="l10nUtil" class="org.phoenixctms.ctsms.util.L10nUtil">
+   <property name="defaultLocale" value="${default_locale}" />
+   <property name="timeZone" value="${time_zone}" />
+
+   <property name="journalDatabaseWriteLocale" value="${journal_database_write_locale}" />
+   <property name="auditTrailDatabaseWriteLocale" value="${audit_trail_database_write_locale}" />
+   <property name="notificationsDatabaseWriteLocale" value="${notifications_database_write_locale}" />
+   <property name="probandListStatusReasonsDatabaseWriteLocale" value="${proband_list_status_reasons_database_write_locale}" />
+   <property name="cvPdfLocale" value="${cv_pdf_locale}" />
+   <property name="reimbursementsPdfLocale" value="${reimbursements_pdf_locale}" />
+   <property name="courseParticipantListPdfLocale" value="${course_participant_list_pdf_locale}" />
+   <property name="probandLetterPdfLocale" value="${proband_letter_pdf_locale}" />
+   <property name="courseCertificatePdfLocale" value="${course_certificate_pdf_locale}" />
+
+   <property name="ecrfPdfLocale" value="${ecrf_pdf_locale}" />
+   <property name="inquiriesPdfLocale" value="${inquiries_pdf_locale}" />
+   <property name="probandListEntryTagsPdfLocale" value="${proband_list_entry_tags_pdf_locale}" />
+
+   <property name="departmentsBundleBasename" value="ctsms-departments" />
+
+   <property name="inventoryCategoriesBundleBasename" value="ctsms-inventorycategories" />
+   <property name="inventoryStatusTypesBundleBasename" value="ctsms-inventorystatustypes" />
+   <property name="inventoryTagsBundleBasename" value="ctsms-inventorytags" />
+   <property name="maintenanceTypesBundleBasename" value="ctsms-maintenancetypes" />
+   <property name="maintenanceTitlePresetsBundleBasename" value="ctsms-maintenancetitlepresets" />
+
+   <property name="staffCategoriesBundleBasename" value="ctsms-staffcategories" />
+   <property name="staffTagsBundleBasename" value="ctsms-stafftags" />
+   <property name="addressTypesBundleBasename" value="ctsms-addresstypes" />
+   <property name="contactDetailTypesBundleBasename" value="ctsms-contactdetailtypes" />
+   <property name="courseParticipationStatusTypesBundleBasename" value="ctsms-courseparticipationstatustypes" />
+   <property name="cvSectionsBundleBasename" value="ctsms-cvsections" />
+   <property name="cvSectionTitlePresetBundleBasename" value="ctsms-cvsectiontitlepresets" />
+   <property name="cvSectionDescriptionBundleBasename" value="ctsms-cvsectiondescriptions" />
+   <property name="staffStatusTypesBundleBasename" value="ctsms-staffstatustypes" />
+
+   <!-- <property name="cvPdfLocale" value="en" /> -->
+   <property name="cvPdfLabelsBundleBasename" value="ctsms-cv-pdf-labels" />
+
+   <property name="ecrfPdfLabelsBundleBasename" value="ctsms-ecrf-pdf-labels" />
+   <property name="inquiriesPdfLabelsBundleBasename" value="ctsms-inquiries-pdf-labels" />
+   <property name="probandListEntryTagsPdfLabelsBundleBasename" value="ctsms-probandlistentrytags-pdf-labels" />
+
+   <property name="reimbursementsPdfLabelsBundleBasename" value="ctsms-reimbursements-pdf-labels" />
+
+   <!-- <property name="courseParticipantListPdfLocale" value="en" /> -->
+   <property name="courseParticipantListPdfLabelsBundleBasename" value="ctsms-courseparticipantlist-pdf-labels" />
+
+   <property name="probandLetterPdfLabelsBundleBasename" value="ctsms-probandletter-pdf-labels" />
+
+   <property name="courseCertificatePdfLabelsBundleBasename" value="ctsms-coursecertificate-pdf-labels" />
+
+   <!-- <property name="searchResultExcelLocale" value="de" />
+   <property name="journalExcelLocale" value="de" />
+   <property name="probandListExcelLocale" value="de" /> -->
+   <property name="searchResultExcelLabelsBundleBasename" value="ctsms-searchresult-excel-labels" />
+   <property name="journalExcelLabelsBundleBasename" value="ctsms-journal-excel-labels" />
+   <property name="probandListExcelLabelsBundleBasename" value="ctsms-probandlist-excel-labels" />
+   <property name="visitScheduleExcelLabelsBundleBasename" value="ctsms-visitschedule-excel-labels" />
+   <property name="teamMembersExcelLabelsBundleBasename" value="ctsms-teammembers-excel-labels" />
+   <property name="reimbursementsExcelLabelsBundleBasename" value="ctsms-reimbursements-excel-labels" />
+   <property name="auditTrailExcelLabelsBundleBasename" value="ctsms-audittrail-excel-labels" />
+
+   <property name="courseCategoriesBundleBasename" value="ctsms-coursecategories" />
+   <property name="lecturerCompetencesBundleBasename" value="ctsms-lecturercompetences" />
+
+   <property name="probandCategoriesBundleBasename" value="ctsms-probandcategories" />
+   <property name="privacyConsentStatusTypeBundleBasename" value="ctsms-privacyconsentstatustypes" />
+
+   <property name="visitTypesBundleBasename" value="ctsms-visittypes" />
+   <property name="trialTagsBundleBasename" value="ctsms-trialtags" />
+   <property name="trialStatusTypesBundleBasename" value="ctsms-trialstatustypes" />
+   <property name="ecrfStatusTypesBundleBasename" value="ctsms-ecrfstatustypes" />
+   <property name="ecrfFieldStatusTypesBundleBasename" value="ctsms-ecrffieldstatustypes" />
+   <property name="trialTypesBundleBasename" value="ctsms-trialtypes" />
+   <property name="sponsoringTypesBundleBasename" value="ctsms-sponsoringtypes" />
+   <property name="surveyStatusTypesBundleBasename" value="ctsms-surveystatustypes" />
+   <property name="timelineEventTypesBundleBasename" value="ctsms-timelineeventtypes" />
+   <property name="timelineEventTitlePresetsBundleBasename" value="ctsms-timelineeventtitlepresets" />
+   <property name="teamMemberRolesBundleBasename" value="ctsms-teammemberroles" />
+   <property name="probandListStatusTypesBundleBasename" value="ctsms-probandliststatustypes" />
+
+
+   <property name="probandStatusTypesBundleBasename" value="ctsms-probandstatustypes" />
+   <property name="probandTagsBundleBasename" value="ctsms-probandtags" />
+
+
+
+   <property name="inputFieldSelectionSetValuesBundleBasename" value="ctsms-inputfieldselectionsetvalues" />
+   <property name="inputFieldValidationErrorMsgsBundleBasename" value="ctsms-inputfieldvalidationerrormsgs" />
+   <property name="inputFieldTitlesBundleBasename" value="ctsms-inputfieldtitles" />
+   <property name="inputFieldTextPresetsBundleBasename" value="ctsms-inputfieldtextpresets" />
+   <property name="inputFieldNamesBundleBasename" value="ctsms-inputfieldnames" />
+   <property name="inputFieldCommentsBundleBasename" value="ctsms-inputfieldcomments" />
+
+   <property name="serviceExceptionMessagesBundleBasename" value="ctsms-serviceexceptionmessages" />
+   <property name="authenticationExceptionMessagesBundleBasename" value="ctsms-authenticationexceptionmessages" />
+   <property name="authorisationExceptionMessagesBundleBasename" value="ctsms-authorisationexceptionmessages" />
+
+   <property name="messagesBundleBasename" value="ctsms-messages" />
+
+   <property name="authenticationTypeNamesBundleBasename" value="ctsms-authenticationtypenames" />
+   <property name="variablePeriodNamesBundleBasename" value="ctsms-variableperiodnames" />
+   <property name="inputFieldTypeNamesBundleBasename" value="ctsms-inputfieldtypenames" />
+   <property name="eventImportanceNamesBundleBasename" value="ctsms-eventimportancenames" />
+   <property name="sexNamesBundleBasename" value="ctsms-sexnames" />
+   <property name="exportStatusNamesBundleBasename" value="ctsms-exportstatusnames" />
+   <property name="ecrfValidationStatusNamesBundleBasename" value="ctsms-ecrfvalidationstatusnames" />
+   <property name="paymentMethodNamesBundleBasename" value="ctsms-paymentmethodnames" />
+   <property name="dbModuleNamesBundleBasename" value="ctsms-dbmodulenames" />
+   <property name="journalModuleNamesBundleBasename" value="ctsms-journalmodulenames" />
+   <property name="hyperlinkModuleNamesBundleBasename" value="ctsms-hyperlinkmodulenames" />
+   <property name="fileModuleNamesBundleBasename" value="ctsms-filemodulenames" />
+
+   <property name="criterionTiesBundleBasename" value="ctsms-criterionties" />
+   <property name="criterionRestrictionsBundleBasename" value="ctsms-criterionrestrictions" />
+   <property name="criterionPropertiesBundleBasename" value="ctsms-criterionproperties" />
+
+
+
+   <property name="systemMessageTitlesBundleBasename" value="ctsms-systemmessagetitles" />
+   <property name="systemMessageCommentsBundleBasename" value="ctsms-systemmessagecomments" />
+   <property name="systemMessageCommentFieldLabelsBundleBasename" value="ctsms-systemmessagecommentfieldlabels" />
+   <property name="auditTrailChangeCommentFieldLabelsBundleBasename" value="ctsms-audittrailchangecommentfieldlabels" />
+   <property name="probandListStatusReasonsBundleBasename" value="ctsms-probandliststatusreasons" />
+   <property name="holidayBundleBasename" value="ctsms-holidays" />
+
+   <property name="notificationTypeNamesBundleBasename" value="ctsms-notificationtypenames" />
+   <property name="notificationSubjectsBundleBasename" value="ctsms-notificationsubjects" />
+   <property name="notificationMessageTemplatesBundleBasename" value="ctsms-notificationmessagetemplates" />
+
+   <property name="hyperlinkCategoriesBundleBasename" value="ctsms-hyperlinkcategories" />
+   <property name="hyperlinkTitlePresetsBundleBasename" value="ctsms-hyperlinktitlepresets" />
+   <property name="journalCategoriesBundleBasename" value="ctsms-journalcategories" />
+   <property name="journalTitlePresetsBundleBasename" value="ctsms-journaltitlepresets" />
+
+   <property name="permissionProfileNamesBundleBasename" value="ctsms-permissionprofilenames" />
+   <property name="permissionProfileGroupNamesBundleBasename" value="ctsms-permissionprofilegroupnames" />
+
+   </bean>
+
+	<bean id="settings" class="org.phoenixctms.ctsms.util.Settings">
+	   <property name="settingsBundleBasename" value="ctsms-settings" />
+	   <property name="trustedHostsBundleBasename" value="ctsms-trustedhosts" />
+	   <property name="cvPdfSettingsBundleBasename" value="ctsms-cv-pdf-settings" />
+	   <property name="reimbursementsPdfSettingsBundleBasename" value="ctsms-reimbursements-pdf-settings" />
+       <property name="courseParticipantListPdfSettingsBundleBasename" value="ctsms-courseparticipantlist-pdf-settings" />
+       <property name="probandLetterPdfSettingsBundleBasename" value="ctsms-probandletter-pdf-settings" />
+       <property name="courseCertificatePdfSettingsBundleBasename" value="ctsms-coursecertificate-pdf-settings" />
+       <property name="ecrfPdfSettingsBundleBasename" value="ctsms-ecrf-pdf-settings" />
+       <property name="inquiriesPdfSettingsBundleBasename" value="ctsms-inquiries-pdf-settings" />
+       <property name="probandListEntryTagsPdfSettingsBundleBasename" value="ctsms-probandlistentrytags-pdf-settings" />
+
+       <property name="journalExcelSettingsBundleBasename" value="ctsms-journal-excel-settings" />
+       <!-- <property name="journalFormattedExcelSettingsBundleBasename" value="ctsms-journal-formattedexcel-settings" /> -->
+       <property name="probandListExcelSettingsBundleBasename" value="ctsms-probandlist-excel-settings" />
+       <!-- <property name="probandListFormattedExcelSettingsBundleBasename" value="ctsms-probandlist-formattedexcel-settings" /> -->
+       <property name="searchResultExcelSettingsBundleBasename" value="ctsms-searchresult-excel-settings" />
+       <!-- <property name="searchResultFormattedExcelSettingsBundleBasename" value="ctsms-searchresult-formattedexcel-settings" /> -->
+       <property name="visitScheduleExcelSettingsBundleBasename" value="ctsms-visitschedule-excel-settings" />
+       <!-- <property name="visitScheduleFormattedExcelSettingsBundleBasename" value="ctsms-visitschedule-formattedexcel-settings" /> -->
+       <property name="teamMembersExcelSettingsBundleBasename" value="ctsms-teammembers-excel-settings" />
+
+       <property name="auditTrailExcelSettingsBundleBasename" value="ctsms-audittrail-excel-settings" />
+
+	   <property name="reimbursementsExcelSettingsBundleBasename" value="ctsms-reimbursements-excel-settings" />
+       <!-- <property name="hibernateDialect" value="${hibernate.dialect}" /> -->
+	</bean>
+
+</beans>

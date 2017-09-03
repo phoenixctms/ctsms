@@ -1,0 +1,37 @@
+Hallo $user_identity_firstname,
+
+dein ${application.abbreviation} Benutzerkonto wurde #if($new_user)erstellt#{else}umgestellt#end.
+
+   • Benutzername: $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Das Passwort wird von einem Administrator mitgeteilt.
+#else
+   • Das Passwort bleibt unverändert.
+#end
+#elseif($ldap_auth_method)
+   • Das Passwort entspricht dem MUG-Passwort.
+
+#if($new_user)
+Bei der ersten Anmeldung muss als "lokales Passwort" zusätzlich das vom Administrator mitgeteilte Passwort eingegeben werden.
+#else
+Bei der nächsten Anmeldung muss als "lokales Passwort" zusätzlich das bisherige Passwort eingegeben werden.
+#end
+#end
+
+#if($new_user)
+Die Anmeldung am System erfolgt auf folgender Seite:
+
+   $http_base_url
+
+#end
+WICHTIG: Mit diesem Benutzerkonto können direkt personenbezogene Daten von Probanden gelesen werden, die von Benutzern der Organisationseinheit "$user_department" registriert wurden. Um den Datenschutz zu gewährleisten, müssen die Zugangsdaten geheim gehalten werden. Es wird niemals dazu aufgefordert, Zugangsdaten per Email bekanntzugeben oder sich bei einem anderen Server als "$http_domain_name" anzumelden!
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

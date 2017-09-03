@@ -1,0 +1,113 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd">
+
+  <import resource="applicationContext.xml"/>
+  <!-- <import resource="applicationContext-localDataSource.xml"/> -->
+  <import resource="applicationContext-main.xml"/>
+
+  <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+  <bean id="productionDataProvider" class="org.phoenixctms.ctsms.executable.ProductionDataProvider"/>
+  <bean id="externalFileChecker" class="org.phoenixctms.ctsms.executable.ExternalFileChecker"/>
+  <bean id="csvImporter" class="org.phoenixctms.ctsms.executable.csv.CsvImporter"/>
+  <bean id="bankIdentificationLineProcessor" class="org.phoenixctms.ctsms.executable.csv.BankIdentificationLineProcessor"/>
+  <bean id="countryLineProcessor" class="org.phoenixctms.ctsms.executable.csv.CountryLineProcessor"/>
+  <bean id="mimeTypeLineProcessor" class="org.phoenixctms.ctsms.executable.csv.MimeTypeLineProcessor"/>
+  <bean id="streetLineProcessor" class="org.phoenixctms.ctsms.executable.csv.StreetLineProcessor"/>
+  <bean id="titleLineProcessor" class="org.phoenixctms.ctsms.executable.csv.TitleLineProcessor"/>
+  <bean id="zipLineProcessor" class="org.phoenixctms.ctsms.executable.csv.ZipLineProcessor"/>
+  <bean id="permissionDefinitionLineProcessor" class="org.phoenixctms.ctsms.executable.csv.PermissionDefinitionLineProcessor"/>
+  <bean id="criterionPropertyLineProcessor" class="org.phoenixctms.ctsms.executable.csv.CriterionPropertyLineProcessor"/>
+  <bean id="csvExporter" class="org.phoenixctms.ctsms.executable.csv.CsvExporter"/>
+  <bean id="permissionTemplateWriter" class="org.phoenixctms.ctsms.executable.csv.PermissionTemplateWriter"/>
+  <bean id="departmentManager" class="org.phoenixctms.ctsms.executable.DepartmentManager">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
+  <bean id="demoDataProvider" class="org.phoenixctms.ctsms.executable.DemoDataProvider"/>
+  <bean id="fileSystemLoader" class="org.phoenixctms.ctsms.executable.FileSystemLoader"/>
+  <bean id="notificationSender" class="org.phoenixctms.ctsms.executable.NotificationSender"/>
+  <!-- <bean id="probandRemover" class="org.phoenixctms.ctsms.executable.ProbandRemover"/> -->
+  <bean id="serviceMethodExecutor" class="org.phoenixctms.ctsms.executable.ServiceMethodExecutor"/>
+  <bean id="probandImageFieldInitializer" class="org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
+  <bean id="probandCommentFieldInitializer" class="org.phoenixctms.ctsms.executable.migration.ProbandCommentFieldInitializer">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
+  <bean id="fileDecryptInitializer" class="org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
+  <bean id="alphaIdLineProcessor" class="org.phoenixctms.ctsms.executable.csv.AlphaIdLineProcessor"/>
+  <bean id="opsCodeLineProcessor" class="org.phoenixctms.ctsms.executable.csv.OpsCodeLineProcessor"/>
+  <bean id="clamlImporter" class="org.phoenixctms.ctsms.executable.claml.ClamlImporter"/>
+  <bean id="icdSystClassProcessor" class="org.phoenixctms.ctsms.executable.claml.IcdSystClassProcessor"/>
+  <bean id="opsSystClassProcessor" class="org.phoenixctms.ctsms.executable.claml.OpsSystClassProcessor"/>
+
+  <bean id="xlslImporter" class="org.phoenixctms.ctsms.executable.xls.XlsImporter"/>
+	<bean id="selectionSetValueRowProcessor" class="org.phoenixctms.ctsms.executable.xls.SelectionSetValueRowProcessor"/>
+	<bean id="inputFieldRowProcessor" class="org.phoenixctms.ctsms.executable.xls.InputFieldRowProcessor"/>
+	<bean id="ecrfFieldRowProcessor" class="org.phoenixctms.ctsms.executable.xls.EcrfFieldRowProcessor"/>
+	<bean id="ecrfRowProcessor" class="org.phoenixctms.ctsms.executable.xls.EcrfRowProcessor"/>
+	<bean id="aspRowProcessor" class="org.phoenixctms.ctsms.executable.xls.AspRowProcessor"/>
+
+	<bean id="xlslExporter" class="org.phoenixctms.ctsms.executable.xls.XlsExporter"/>
+	<bean id="selectionSetValueRowWriter" class="org.phoenixctms.ctsms.executable.xls.SelectionSetValueRowWriter"/>
+	<bean id="inputFieldRowWriter" class="org.phoenixctms.ctsms.executable.xls.InputFieldRowWriter"/>
+	<bean id="ecrfFieldRowWriter" class="org.phoenixctms.ctsms.executable.xls.EcrfFieldRowWriter"/>
+	<bean id="ecrfRowWriter" class="org.phoenixctms.ctsms.executable.xls.EcrfRowWriter"/>
+
+  <bean id="journalPurger" class="org.phoenixctms.ctsms.executable.JournalPurger"/>
+  <bean id="jobOutput" class="org.phoenixctms.ctsms.util.JobOutput">
+  	<property name="mailSender" ref="jobMailSender"/>
+  </bean>
+
+	<bean id="jobMailSenderJavaMailBundle"
+	    class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
+	<property name="basename" value="ctsms-job-mail-sender" />
+	</bean>
+
+	<bean id="jobMailSenderJavaMailProperties"
+	    factory-bean="jobMailSenderJavaMailBundle"
+	    factory-method="getProperties" />
+
+	<bean id="jobMailSenderJavaMailPropertiesFactory" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<ref local="jobMailSenderJavaMailProperties" />
+		</property>
+	</bean>
+
+    <bean id="jobMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${job_mail_sender_host}"/>
+        <property name="port" value="${job_mail_sender_port}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+		<property name="protocol" value="${job_mail_sender_protocol}"/>
+        <property name="username" value="${job_mail_sender_username}"/>
+        <property name="password" value="${job_mail_sender_password}"/>
+
+        <property name="javaMailProperties" ref="jobMailSenderJavaMailPropertiesFactory"/>
+
+    </bean>
+
+	<bean id="execSettings" class="org.phoenixctms.ctsms.util.ExecSettings">
+	<property name="defaultBundleBasename" value="ctsms-dbtool" />
+	</bean>
+	 <!--  <bean id="dbTool" class="org.phoenixctms.ctsms.executable.DBTool">
+	  	<property name="productionDataProvider" ref="productionDataProvider" />
+	  	<property name="externalFileChecker" ref="externalFileChecker" />
+	  	<property name="csvImporter" ref="csvImporter" />
+	  	<property name="departmentManager" ref="departmentManager" />
+	  	<property name="demoDataProvider" ref="demoDataProvider" />
+	  	<property name="fileSystemLoader" ref="fileSystemLoader" />
+	  	<property name="notificationSender" ref="notificationSender" />
+
+	  </bean> -->
+	 <!-- <property name="bankIdentificationLineProcessor" ref="bankIdentificationLineProcessor" />
+	  	<property name="countryLineProcessor" ref="countryLineProcessor" />
+	  	<property name="mimeTypeLineProcessor" ref="mimeTypeLineProcessor" />
+	  	<property name="streetLineProcessor" ref="streetLineProcessor" />
+	  	<property name="titleLineProcessor" ref="titleLineProcessor" />
+	  	<property name="zipLineProcessor" ref="zipLineProcessor" /> -->
+</beans>

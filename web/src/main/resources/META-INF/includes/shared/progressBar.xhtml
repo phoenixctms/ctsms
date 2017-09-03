@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>progress bar</title>
+</h:head>
+<h:body>
+	<ui:composition>
+<div id="#{id}" class="ui-progressbar ui-widget ui-widget-content ui-corner-all" style="width:#{width}px"><div class="ui-progressbar-value ui-widget-header ui-corner-all"></div><div class="ui-progressbar-label"></div></div>
+<script id="#{id}_s" type="text/javascript">$(function() {PrimeFaces.cw('ProgressBar','#{widgetVar}',{id:'#{id}',value:#{value},ajax:false,labelTemplate:'#{labelTemplate}'});});</script>
+	</ui:composition>
+</h:body>
+</html>

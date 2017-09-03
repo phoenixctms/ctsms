@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband files</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form
+			id="probandfile_form"
+			enctype="multipart/form-data">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeProbandFile"
+				actionListener="#{fileBean.changeProband(probandBean.in.id)}"
+				update=":tabView:probandfile_form" /> -->
+			<ui:include src="/META-INF/includes/shared/file.xhtml">
+				<ui:param
+					name="namingContainer"
+					value=":tabView:probandfile_form" />
+				<ui:param
+					name="markUnEncrypted"
+					value="true" />
+				<ui:param
+					name="jsUpdateTabTitles"
+					value="handleUpdateProbandTabTitles" />
+			</ui:include>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

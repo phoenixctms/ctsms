@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff pick search</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/popupTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{staffSearchBean.multiPicker ? labels.multipick_staff_button_label : labels.pick_staff_button_label}" />
+		<ui:define name="head">
+			<h:outputStylesheet
+				name="search.css"
+				library="css"
+				target="head" />
+			<h:outputScript
+				name="search.js"
+				library="js"
+				target="head" />
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="search_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+				<p:remoteCommand
+					process="@this"
+					name="pickCurrentPage"
+					actionListener="#{staffSearchBean.handlePickCurrentPage()}"
+					oncomplete="handlePickCurrentPage(xhr, status, args)" />
+				<ui:decorate template="/META-INF/includes/shared/staffSearcher.xhtml">
+					<ui:define name="pickbutton">
+						<p:column style="width:32px;">
+							<f:facet name="header">
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									type="button"
+									rendered="#{staffSearchBean.multiPicker}"
+									icon="ui-icon ui-icon-arrowthickstop-1-s"
+									onclick="pickCurrentPage()" />
+							</f:facet>
+							<p:commandButton
+								title="#{labels.pick_staff_button_label}"
+								type="button"
+								icon="ui-icon ui-icon-arrowreturnthick-1-w"
+								onclick="#{staffSearchBean.getSetPickerIDJSCall(staff.vo)}" />
+						</p:column>
+					</ui:define>
+				</ui:decorate>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

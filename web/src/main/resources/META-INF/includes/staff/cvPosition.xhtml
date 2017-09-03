@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff cv positions</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="cvposition_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeCvPosition"
+				actionListener="#{cvPositionBean.change(staffBean.in.id)}"
+				update="cvposition_list,cvposition_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{cvPosition.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="cvPosition"
+					value="#{cvPositionBean.cvPositionModel}"
+					id="cvposition_list"
+					selectionMode="single"
+					selection="#{cvPositionBean.selectedCvPosition}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:cvposition_form:cvposition_input" />
+					<f:facet name="header">
+						<h:outputText value="#{cvPositionBean.cvPositionModel.rowCount} #{stafflabels.cv_position_cvposition_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{cvPosition.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{cvPosition.vo.id}" />
+					</p:column>
+					<p:column
+						sortBy="#{cvPosition.vo.section}"
+						filterBy="#{cvPosition.vo.section.id}"
+						filterOptions="#{sessionScopeBean.filterCvSections}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_section_name_column}" />
+						</f:facet>
+						<h:outputText value="#{cvPosition.vo.section.name}" />
+					</p:column>
+					<p:column sortBy="#{cvPosition.vo.title}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_title_column}" />
+						</f:facet>
+						<h:outputText value="#{cvPosition.vo.title}" />
+					</p:column>
+					<p:column sortBy="#{cvPosition.vo.institution}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_institution_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{cvPosition.vo.institution.name}" />
+							<ui:param
+								name="icon"
+								value="#{cvPosition.vo.institution.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{cvPosition.vo.start}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_start_column}" />
+						</f:facet>
+						<h:outputText value="#{cvPosition.vo.start}">
+							<f:converter converterId="ctsms.Date" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{cvPosition.vo.stop}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_stop_column}" />
+						</f:facet>
+						<h:outputText value="#{cvPosition.vo.stop}">
+							<f:converter converterId="ctsms.Date" />
+						</h:outputText>
+					</p:column>
+					<p:column
+						sortBy="#{cvPosition.vo.showCv}"
+						filterBy="#{cvPosition.vo.showCv}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_show_cv_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{cvPosition.vo.showCv}" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{cvPosition.vo.showCommentCv}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.cv_position_cvposition_list_show_comment_cv_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{cvPosition.vo.showCommentCv}" />
+						</ui:include>
+					</p:column>
+				</p:dataTable>
+				<p:panel id="cvposition_input">
+					<f:facet name="header">
+						<h:outputText value="#{cvPositionBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{cvPositionBean.inputVisible}"
+							columns="9"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="cvPositionSection"
+								value="#{stafflabels.cv_position_section_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="cvPositionSection"
+									value="#{cvPositionBean.in.sectionId}"
+									required="true"
+									label="#{stafflabels.cv_position_section}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{cvPositionBean.cvSections}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										oncomplete="handleCvPositionCvSectionSelected(xhr, status, args)"
+										listener="#{cvPositionBean.handleSectionChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvPositionSection">
+									<h:outputText
+										value="#{stafflabels.cv_position_section_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvPositionSection" />
+							<h:outputLabel
+								for="cvpositiontitle"
+								value="#{stafflabels.cv_position_title_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="cvpositiontitle"
+									widgetVar="cvPositionTitle"
+									value="#{cvPositionBean.in.title}"
+									required="true"
+									label="#{stafflabels.cv_position_title}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvpositiontitle">
+									<h:outputText
+										value="#{stafflabels.cv_position_title_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvpositiontitle" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="cvpositionstart"
+								value="#{stafflabels.cv_position_start_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="cvpositionstart"
+									value="#{cvPositionBean.in.start}"
+									required="false"
+									label="#{stafflabels.cv_position_start}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvpositionstart">
+									<h:outputText
+										value="#{stafflabels.cv_position_start_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvpositionstart" />
+							<h:outputLabel
+								for="cvpositionstop"
+								value="#{stafflabels.cv_position_stop_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="cvpositionstop"
+									value="#{cvPositionBean.in.stop}"
+									required="false"
+									label="#{stafflabels.cv_position_stop}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvpositionstop">
+									<h:outputText
+										value="#{stafflabels.cv_position_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvpositionstop" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="institution"
+								value="#{stafflabels.institution_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="institution"
+										required="false"
+										value="#{cvPositionBean.in.institutionId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="institutionName"
+										value="#{applicationScopeBean.clipStringPicker(cvPositionBean.institutionName)}"
+										title="#{stafflabels.institution_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff(':tabView:cvposition_form:institution')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax(':tabView:cvposition_form:institution',':tabView:cvposition_form:institutionName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax(':tabView:cvposition_form:institution',':tabView:cvposition_form:institutionName','#{applicationScopeBean.noStaffPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="institution" />
+							<h:outputLabel
+								for="cvPositionShowCv"
+								value="#{stafflabels.cv_position_show_cv_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="cvPositionShowCv"
+									widgetVar="cvPositionShowCv"
+									value="#{cvPositionBean.in.showCv}">
+									<p:ajax
+										listener="#{cvPositionBean.handleShowCvChange}"
+										update="cvPositionShowCommentCv" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvPositionShowCv">
+									<h:outputText
+										value="#{stafflabels.cv_position_show_cv_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvPositionShowCv" />
+							<h:outputLabel
+								for="cvPositionShowCommentCv"
+								value="#{stafflabels.cv_position_show_comment_cv_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="cvPositionShowCommentCv"
+									widgetVar="cvPositionShowCommentCv"
+									disabled="#{!cvPositionBean.in.showCv}"
+									value="#{cvPositionBean.in.showCommentCv}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvPositionShowCommentCv">
+									<h:outputText
+										value="#{stafflabels.cv_position_show_comment_cv_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cvPositionShowCommentCv" />
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{cvPositionBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="cvPositionComment"
+								value="#{stafflabels.cv_position_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="cvPositionComment"
+									value="#{cvPositionBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{stafflabels.cv_position_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvPositionComment">
+									<h:outputText
+										value="#{stafflabels.cv_position_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!cvPositionBean.inputVisible}" />
+						<h:outputLabel rendered="#{!cvPositionBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{cvPositionBean.created ? cvPositionBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{cvPositionBean.reset}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="cvposition_list,cvposition_input" />
+								<p:commandButton
+									process="@this,cvposition_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{cvPositionBean.add}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!cvPositionBean.createable}"
+									update="cvposition_list,cvposition_input" />
+								<p:commandButton
+									process="@this,cvposition_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{cvPositionBean.update}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!cvPositionBean.editable}"
+									update="cvposition_list,cvposition_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{cvPositionBean.delete}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!cvPositionBean.removable}"
+									update="cvposition_list,cvposition_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{cvPositionBean.load}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-refresh"
+									ajax="true"
+									disabled="#{!cvPositionBean.created}"
+									update="cvposition_list,cvposition_input" />
+								<p:commandButton
+									immediate="true"
+									ajax="false"
+									value="#{stafflabels.open_cv_button_label}"
+									icon="ui-icon ui-icon-pdf"
+									disabled="#{!cvPositionBean.person}">
+									<p:fileDownload value="#{cvPositionBean.cvPdfStreamedContent}" />
+								</p:commandButton>
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="cvPositionCvSectionTitlePresetOverrideConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{stafflabels.cv_position_cv_section_title_preset_override_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					value="#{labels.yes_button_label}"
+					onclick="setCvPositionTitle(true)"
+					type="button" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="setCvPositionTitle(false)"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="cvPositionCvSectionShowCvPresetOverrideConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{stafflabels.cv_position_cv_section_show_cv_preset_override_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					value="#{labels.yes_button_label}"
+					onclick="setCvPositionShowCv(true)"
+					type="button" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="setCvPositionShowCv(false)"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

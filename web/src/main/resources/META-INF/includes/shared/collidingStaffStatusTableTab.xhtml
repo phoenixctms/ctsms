@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding staff status entries table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_staff_status_tab_label_1}#{collidingStaffStatusEntryModel.allRowCount}#{labels.colliding_staff_status_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{statusEntry.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="statusEntry"
+				value="#{collidingStaffStatusEntryModel.allRows}"
+				id="collidingstaffstatusentry_list">
+				<p:column
+					rendered="#{showStaff}"
+					sortBy="#{statusEntry.vo.staff.nameSortable}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_staff_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.staff.name}" />
+						<ui:param
+							name="icon"
+							value="#{statusEntry.vo.staff.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_status_type_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.type.name}" />
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.staffActive}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_staff_active_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{statusEntry.vo.type.staffActive}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.comment}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingstaffstatusentry_list_comment_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(statusEntry.vo.comment)}" />
+				</p:column>
+				<p:column
+					rendered="#{showStaff}"
+					style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_staff_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openStaff(#{statusEntry.vo.staff.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding inventory status entries table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_inventory_status_tab_label_1}#{collidingInventoryStatusEntryModel.allRowCount}#{labels.colliding_inventory_status_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{statusEntry.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="statusEntry"
+				value="#{collidingInventoryStatusEntryModel.allRows}"
+				id="collidinginventorystatusentry_list">
+				<p:column
+					rendered="#{showInventory}"
+					sortBy="#{statusEntry.vo.inventory.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_inventory_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.inventory.name}" />
+						<ui:param
+							name="icon"
+							value="#{statusEntry.vo.inventory.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_status_type_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.type.name}" />
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.type.inventoryActive}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_inventory_active_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{statusEntry.vo.type.inventoryActive}" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.comment}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidinginventorystatusentry_list_comment_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(statusEntry.vo.comment)}" />
+				</p:column>
+				<p:column
+					rendered="#{showInventory}"
+					style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_inventory_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openInventory(#{statusEntry.vo.inventory.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

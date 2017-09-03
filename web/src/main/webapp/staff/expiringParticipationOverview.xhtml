@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>expiring course participation status entries</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/staffHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{stafflabels.expiring_participation_overview_title}" />
+		<ui:define name="content">
+			<h:form id="expiringparticipationoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="reminderPeriod"
+								value="#{stafflabels.expiring_participation_overview_reminder_period_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="reminderPeriod"
+									value="#{expiringParticipationOverviewBean.reminder.period}"
+									required="false"
+									label="#{stafflabels.expiring_participation_overview_reminder_period}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{expiringParticipationOverviewBean.reminder.variablePeriods}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										update="expiringparticipation_list,reminderPeriodDays"
+										listener="#{expiringParticipationOverviewBean.handleReminderChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="reminderPeriod">
+									<h:outputText
+										value="#{stafflabels.expiring_participation_overview_reminder_period_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="reminderPeriod" />
+							<h:outputLabel
+								for="reminderPeriodDays"
+								value="#{stafflabels.expiring_participation_overview_reminder_period_days_label}" />
+							<h:panelGroup>
+								<p:spinner
+									id="reminderPeriodDays"
+									disabled="#{!expiringParticipationOverviewBean.reminderPeriodSpinnerEnabled}"
+									value="#{expiringParticipationOverviewBean.expiringParticipationModel.reminderPeriodDays}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{stafflabels.expiring_participation_overview_reminder_period_days}">
+									<p:ajax
+										update="expiringparticipation_list"
+										listener="#{expiringParticipationOverviewBean.handleReminderChange}" />
+									<p:ajax
+										event="keyup"
+										update="expiringparticipation_list"
+										listener="#{expiringParticipationOverviewBean.handleReminderChange}" />
+								</p:spinner>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="reminderPeriodDays">
+									<h:outputText
+										value="#{stafflabels.expiring_participation_overview_reminder_period_days_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="reminderPeriodDays" />
+						</h:panelGrid>
+					</p:panel>
+					<p:dataTable
+						styleClass="ctsms-datatable"
+						lazy="true"
+						rows="#{dataTablesRowsFullPage}"
+						paginator="#{dataTablesPaginatorFullPage}"
+						paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+						paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+						pageLinks="#{dataTablesPageLinksFullPage}"
+						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+						scrollable="#{dataTablesScrollableFullPage}"
+						scrollHeight="#{dataTablesScrollHeightFullPage}"
+						resizableColumns="#{dataTablesResizableColumnsFullPage}"
+						sortBy="#{statusEntry.vo.id}"
+						emptyMessage="#{labels.datatable_empty_message}"
+						var="statusEntry"
+						value="#{expiringParticipationOverviewBean.expiringParticipationModel}"
+						id="expiringparticipation_list"
+						rowStyleClass="#{statusEntry.vo.course.deferredDelete or statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{expiringParticipationOverviewBean.courseToColor(statusEntry.vo.course)}">
+						<f:facet name="header">
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+								<h:outputText
+									value="#{expiringParticipationOverviewBean.expiringParticipationModel.rowCount} #{stafflabels.expiring_participation_overview_expiringparticipation_list_header}" />
+								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton
+									process="@this"
+									actionListener="#{expiringParticipationOverviewBean.load}"
+									title="#{labels.update_datatable_button_title}"
+									icon="ui-icon-refresh"
+									styleClass="ctsms-list-header-button"
+									ajax="true"
+									update=":expiringparticipationoverview_form:expiringparticipation_list" />
+							</h:panelGrid>
+						</f:facet>
+						<p:column style="width:16px;">
+							<p:rowToggler />
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.id}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.id}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.course.name}"
+							filterBy="#{statusEntry.vo.course.name}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_name_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.course.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.course.department}"
+							filterBy="#{statusEntry.vo.course.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_department_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.course.department.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.course.category}"
+							filterBy="#{statusEntry.vo.course.category.id}"
+							filterOptions="#{sessionScopeBean.filterCourseCategories}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_category_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{statusEntry.vo.course.category.name}" />
+								<ui:param
+									name="icon"
+									value="#{statusEntry.vo.course.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="true" />
+							</ui:include>
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.course.selfRegistration}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_self_registration_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{statusEntry.vo.course.selfRegistration}" />
+							</ui:include>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.course.stop}"
+							filterBy="#{statusEntry.vo.course.stop}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_stop_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.course.stop}">
+								<f:converter converterId="ctsms.Date" />
+							</h:outputText>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.course.validityPeriod}"
+							filterBy="#{statusEntry.vo.course.validityPeriod}"
+							filterOptions="#{sessionScopeBean.filterVariablePeriods}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_course_validity_period_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.courseValidityPeriodToString(statusEntry.vo.course)}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.expiring_participation_overview_expiringparticipation_list_due_in_column}" />
+							</f:facet>
+							<h:outputText value="#{expiringParticipationOverviewBean.getCourseDueInString(statusEntry.vo.course)}" />
+						</p:column>
+						<p:column style="width:32px;">
+							<p:commandButton
+								type="button"
+								title="#{labels.open_course_button_label}"
+								icon="ui-icon ui-icon-extlink"
+								onclick="openCourse(#{statusEntry.vo.course.id})" />
+						</p:column>
+						<p:rowExpansion>
+							<p:panel>
+								<p:dataTable
+									styleClass="ctsms-datatable"
+									lazy="false"
+									rows="#{dataTablesRows}"
+									paginator="#{dataTablesPaginator}"
+									paginatorTemplate="#{dataTablesPaginatorTemplate}"
+									rowsPerPageTemplate="#{dataTablesRowsPerPageTemplate}"
+									paginatorPosition="#{dataTablesPaginatorPosition}"
+									pageLinks="#{dataTablesPageLinks}"
+									paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisible}"
+									scrollable="#{dataTablesScrollable}"
+									scrollHeight="#{dataTablesScrollHeight}"
+									resizableColumns="#{dataTablesResizableColumns}"
+									sortBy="#{course.vo.stop}"
+									emptyMessage="#{labels.datatable_empty_message}"
+									var="course"
+									value="#{expiringParticipationOverviewBean.getCachedUpcomingRenewalCourseModel(statusEntry.vo).allRows}"
+									id="renewalcourse_list"
+									rowStyleClass="#{expiringParticipationOverviewBean.renewalCourseToColor(course.vo)}">
+									<f:facet name="header">
+										<h:outputText
+											value="#{expiringParticipationOverviewBean.getCachedUpcomingRenewalCourseModel(statusEntry.vo).allRowCount} #{stafflabels.expiring_participation_overview_renewalcourse_list_header}" />
+									</f:facet>
+									<ui:include src="/META-INF/includes/shared/upcomingCourseTableColumns.xhtml" />
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{stafflabels.expiring_participation_overview_renewalcourse_list_participation_status_type_column}" />
+										</f:facet>
+										<h:outputText value="#{expiringParticipationOverviewBean.getCourseParticipationStatusTypeName(course.vo)}" />
+									</p:column>
+									<p:column style="width:64px;white-space:nowrap;">
+										<p:commandButton
+											process="@this"
+											id="participateSelfRegistrationCourse"
+											title="#{stafflabels.participate_self_registration_course_button_label}"
+											actionListener="#{expiringParticipationOverviewBean.participateSelfRegistrationCourse(course.vo)}"
+											icon="ui-icon ui-icon-circle-check"
+											ajax="true"
+											rendered="#{course.vo.selfRegistration}"
+											disabled="#{expiringParticipationOverviewBean.isParticipating(course.vo)}"
+											update=":expiringparticipationoverview_form:messages"
+											oncomplete="ajaxRequest(':expiringparticipationoverview_form:expiringparticipation_list:#{statusEntry.rowIndex}:renewalcourse_list:#{course.rowIndex}:participateSelfRegistrationCourse','@none',':expiringparticipationoverview_form:expiringparticipation_list:#{statusEntry.rowIndex}:renewalcourse_list')" />
+										<p:commandButton
+											type="button"
+											title="#{labels.open_course_button_label}"
+											icon="ui-icon ui-icon-extlink"
+											onclick="openCourse(#{course.vo.id})" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+						</p:rowExpansion>
+					</p:dataTable>
+					<p:growl
+						id="messages"
+						showDetail="false" />
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

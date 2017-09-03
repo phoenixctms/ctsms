@@ -1,0 +1,2 @@
+#!/bin/bash
+$JRE_HOME/bin/java -DCTSMS_PROPERTIES="c:\ctsms\properties" -Dfile.encoding=Cp1252 $CATALINA_OPTS -classpath $CATALINA_HOME/webapps/ctsms-web/WEB-INF/lib/ctsms-core-1.6.0.jar:$CATALINA_HOME/webapps/ctsms-web/WEB-INF/lib/* org.phoenixctms.ctsms.executable.DBTool $*

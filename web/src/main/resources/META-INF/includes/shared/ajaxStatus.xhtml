@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>ajax status</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:ajaxStatus>
+			<f:facet name="default">
+				<h:outputText value="" />
+			</f:facet>
+			<f:facet name="start">
+				<span class="ctsms-field-icon ctsms-icon-loading"></span>
+			</f:facet>
+			<f:facet name="success">
+				<span class="ctsms-field-icon ctsms-icon-accept"></span>
+			</f:facet>
+			<f:facet name="error">
+				<span class="ctsms-field-icon ctsms-icon-exclamation"></span>
+			</f:facet>
+			<f:facet name="complete">
+				<h:outputText value="" />
+			</f:facet>
+		</p:ajaxStatus>
+	</ui:composition>
+</h:body>
+</html>

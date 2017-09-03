@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>user menubar</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:menubar
+			id="userMenuBar"
+			rendered="#{showUserMenuBar}"
+			model="#{sessionScopeBean.userMenuModel}" />
+		<h:outputText
+			rendered="#{!showUserMenuBar}"
+			value="" />
+	</ui:composition>
+</h:body>
+</html>

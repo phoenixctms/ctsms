@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>system message journal entry</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			rendered="#{rendered}"
+			columns="2"
+			cellpadding="0"
+			styleClass="ctsms-rowexpansion-panelgrid"
+			columnClasses="ctsms-systemmessage-left-column,ctsms-systemmessage-right-column">
+			<h:panelGrid
+				columns="1"
+				cellpadding="2"
+				columnClasses="ctsms-label-for-text-column-bold">
+				<h:outputText value="#{labels.journal_system_message_label}" />
+				<h:panelGrid
+					columns="2"
+					cellpadding="2"
+					columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
+					<h:outputLabel value="#{labels.system_message_title_label}" />
+					<h:outputText value="#{title}" />
+					<h:outputLabel value="#{labels.system_message_real_timestamp_label}" />
+					<h:outputText value="#{timestamp}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid
+				columns="1"
+				cellpadding="2"
+				columnClasses="ctsms-text-column-bold">
+				<ui:include src="multiLineOutputText.xhtml">
+					<ui:param
+						name="multiLineText"
+						value="#{comment}" />
+					<ui:param
+						name="rendered"
+						value="true" />
+					<ui:param
+						name="multiLineTextClass"
+						value="" />
+					<ui:param
+						name="escapeHtml"
+						value="#{!applicationScopeBean.htmlSystemMessageComments}" />
+				</ui:include>
+			</h:panelGrid>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

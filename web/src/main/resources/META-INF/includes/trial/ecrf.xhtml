@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>ecrfs</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="ecrf_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeEcrf"
+				actionListener="#{ecrfBean.change(trialBean.in.id)}"
+				update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" /> -->
+			<p:remoteCommand
+				process="@this"
+				name="moveEcrfTo"
+				actionListener="#{ecrfBean.moveTo}"
+				update="ecrf_list,ecrf_input" />
+			<p:remoteCommand
+				process="@this"
+				name="ecrfSelectVisitGroup"
+				actionListener="#{ecrfBean.matrix.selectVisitGroup()}"
+				update="ecrfvisit,ecrfgroup" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{ecrf.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="ecrf"
+					value="#{ecrfBean.ecrfModel}"
+					id="ecrf_list"
+					selectionMode="single"
+					selection="#{ecrfBean.selectedEcrf}"
+					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitToColor(ecrf.vo.visit)}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:ecrf_form:ecrf_input,:tabView:ecrf_form:ecrf_clone" />
+					<f:facet name="header">
+						<h:outputText value="#{ecrfBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{ecrf.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{ecrf.vo.id}" />
+					</p:column>
+					<ui:include src="../shared/ecrfTableColumns.xhtml">
+						<ui:param
+							name="ecrfSelectionBean"
+							value="#{ecrfBean}" />
+						<ui:param
+							name="showPosition"
+							value="false" />
+						<ui:param
+							name="showVisit"
+							value="true" />
+						<ui:param
+							name="showGroup"
+							value="true" />
+						<ui:param
+							name="showActive"
+							value="true" />
+						<ui:param
+							name="showEnableBrowserFieldCalculation"
+							value="true" />							
+						<ui:param
+							name="showFieldCount"
+							value="true" />							
+					</ui:include>
+					<p:column sortBy="#{ecrf.vo.position}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.ecrf_list_position_column}" />
+						</f:facet>
+						<h:outputText
+							rendered="#{!ecrfBean.inputVisible or not (empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id'))}"
+							value="#{ecrf.vo.position}" />
+						<h:panelGroup rendered="#{ecrfBean.inputVisible and (empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id'))}">
+							<p:spinner
+								widgetVar="ecrfTargetPosition#{ecrf.vo.id}"
+								id="targetPosition"
+								value="#{ecrf.vo.position}"
+								styleClass="ctsms-spinner"
+								required="false"
+								label="#{triallabels.ecrf_target_position}" />
+							<p:tooltip
+								rendered="#{enableTooltips and ecrf.rowIndex == 0}"
+								for="targetPosition">
+								<h:outputText
+									value="#{triallabels.ecrf_target_position_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+					</p:column>
+					<p:column
+						rendered="#{ecrfBean.inputVisible}"
+						style="width:32px;white-space:nowrap;">
+						<p:commandButton
+							title="#{labels.rotate_positions_button_label}"
+							id="moveToTargetPosition"
+							icon="ui-icon-arrowstop-1-e"
+							type="button"
+							rendered="#{empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id')}"
+							onclick="moveEcrfTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_ID')}:'#{ecrf.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:ecrfTargetPosition#{ecrf.vo.id}.getValue() }));" />
+					</p:column>
+					<!-- <p:column sortBy="#{ecrf.vo.position}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrf_position_column}" />
+							</f:facet>
+							<h:outputText
+								rendered="#{!ecrfBean.inputVisible}"
+								value="#{ecrf.vo.position}" />
+							<h:panelGroup rendered="#{ecrfBean.inputVisible}">
+								<p:spinner
+									widgetVar="ecrfTargetPosition#{ecrf.vo.id}"
+									id="targetPosition"
+									value="#{ecrf.vo.position}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{triallabels.proband_list_entry_tag_target_position}" />
+								<p:tooltip
+									rendered="#{enableTooltips and ecrf.rowIndex == 0}"
+									for="targetPosition">
+									<h:outputText
+										value="#{triallabels.proband_list_entry_tag_target_position_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</p:column>
+						<p:column
+							rendered="#{ecrfBean.inputVisible}"
+							style="width:32px;white-space:nowrap;">
+							<p:commandButton
+								title="#{labels.rotate_positions_button_label}"
+								id="moveToTargetPosition"
+								icon="ui-icon-arrowstop-1-e"
+								type="button"
+								onclick="moveEcrfTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_TAG_ID')}:'#{probandListEntryTag.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:probandListEntryTagTargetPosition#{probandListEntryTag.vo.id}.getValue() }));" />
+						</p:column> -->
+				</p:dataTable>
+				<h:panelGrid
+					columns="2"
+					cellpadding="0"
+					styleClass="ctsms-ecrf-content-panelgrid ctsms-content-panelgrid-maxheight"
+					columnClasses="ctsms-ecrf-matrix-column,ctsms-ecrf-input-column">
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-ecrf-matrixcolumn-panelgrid"
+						rowClasses="ctsms-ecrf-matrixcolumn-matrix-row,ctsms-ecrf-matrixcolumn-clone-row">
+						<p:panel
+							id="ecrf_matrix">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.select_group_visit_label}" />
+							</f:facet>
+							<ui:include src="../shared/groupVisitMatrix.xhtml">
+								<ui:param
+									name="matrixBean"
+									value="#{ecrfBean}" />
+								<ui:param
+									name="selectRemoteCommand"
+									value="ecrfSelectVisitGroup" />
+								<ui:param
+									name="update"
+									value=":tabView:ecrf_form:ecrf_matrix" />
+							</ui:include>
+						</p:panel>
+						<p:panel
+							id="ecrf_clone"
+							styleClass="ctsms-panel-maxheight">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.clone_ecrf_label}" />
+							</f:facet>
+							<h:panelGrid
+								rendered="#{ecrfBean.cloneable}"
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+								<h:panelGrid
+									columns="3"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									
+			<h:outputLabel
+				for="cloneAddTrial"
+				value="#{triallabels.cloneadd_ecrf_trial_label}" />
+			<h:panelGrid
+				columns="4"
+				cellpadding="0">
+				<h:panelGroup>
+					<h:inputHidden
+						id="cloneAddTrial"
+						required="false"
+						requiredMessage="#{triallabels.cloneadd_ecrf_trial_required_message}"
+						value="#{ecrfBean.cloneAddTrialId}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="cloneAddTrialName"
+						value="#{applicationScopeBean.clipStringPicker(ecrfBean.cloneAddTrialName)}"
+						title="#{triallabels.cloneadd_ecrf_trial_tooltip}#{labels.open_trial_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedTrial(':tabView:ecrf_form:cloneAddTrial')" />
+				</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_current_trial_button_label}"
+									icon="ui-icon ui-icon-document"
+									type="button"
+									disabled="#{!ecrfBean.cloneable or !ecrfBean.cloneAddTrialEnabled}"
+									onclick="setIDAjax(':tabView:ecrf_form:cloneAddTrial',#{ecrfBean.cloneable ? ecrfBean.in.trialId : 'null'},':tabView:ecrf_form:cloneAddTrialName','#{ecrfBean.trialName}')" />				
+				<p:commandButton
+					title="#{labels.pick_trial_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					disabled="#{!ecrfBean.cloneable or !ecrfBean.cloneAddTrialEnabled}"
+					onclick="openTrialPickerAjax(':tabView:ecrf_form:cloneAddTrial',':tabView:ecrf_form:cloneAddTrialName')" />
+				<p:commandButton
+					title="#{labels.clear_trial_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					disabled="#{!ecrfBean.cloneable or !ecrfBean.cloneAddTrialEnabled}"
+					onclick="clearIDAjax(':tabView:ecrf_form:cloneAddTrial',':tabView:ecrf_form:cloneAddTrialName','#{applicationScopeBean.noTrialPickedMessage}')" />
+			</h:panelGrid>
+			<p:message
+				for="cloneAddTrial" />
+									
+								</h:panelGrid>
+								<p:messages for="cloneEcrfMessages"/>
+								<p:toolbar>
+									<p:toolbarGroup align="right">
+										<p:commandButton
+											process="@this,cloneAddTrial"
+											id="addClone"
+											value="#{labels.clone_button_label}"
+											actionListener="#{ecrfBean.addClone}"
+											oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+											icon="ui-icon ui-icon-copy"
+											ajax="true"
+											disabled="#{!ecrfBean.cloneable}"
+											update="ecrf_list,ecrf_matrix,ecrf_clone" />
+									</p:toolbarGroup>
+								</p:toolbar>
+							</h:panelGrid>
+						</p:panel>
+					</h:panelGrid>
+					<p:panel
+						id="ecrf_input"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{ecrfBean.title}" />
+						</f:facet>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								rendered="#{ecrfBean.inputVisible}"
+								columns="9"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="ecrfname"
+									value="#{triallabels.ecrf_name_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="ecrfname"
+										value="#{ecrfBean.in.name}"
+										required="true"
+										label="#{triallabels.ecrf_name}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfname">
+										<h:outputText
+											value="#{triallabels.ecrf_name_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfname" />
+								<h:outputLabel
+									for="ecrfPosition"
+									value="#{triallabels.ecrf_position_label}" />
+								<h:panelGroup>
+									<p:spinner
+										id="ecrfPosition"
+										value="#{ecrfBean.in.position}"
+										styleClass="ctsms-spinner"
+										required="true"
+										label="#{triallabels.ecrf_position}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfPosition">
+										<h:outputText
+											value="#{triallabels.ecrf_position_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfPosition" />
+								<h:outputLabel
+									for="ecrfDisabled"
+									value="#{triallabels.ecrf_disabled_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="ecrfDisabled"
+										value="#{ecrfBean.in.disabled}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfDisabled">
+										<h:outputText
+											value="#{triallabels.ecrf_disabled_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfDisabled" />
+								<h:outputLabel
+									for="ecrfActive"
+									value="#{triallabels.ecrf_active_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="ecrfActive"
+										value="#{ecrfBean.in.active}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfActive">
+										<h:outputText
+											value="#{triallabels.ecrf_active_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfActive" />
+								<h:outputLabel
+									for="ecrfgroup"
+									value="#{triallabels.ecrf_group_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="ecrfgroup"
+										value="#{ecrfBean.in.groupId}"
+										required="false"
+										label="#{triallabels.ecrf_group}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{ecrfBean.probandGroups}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfgroup">
+										<h:outputText
+											value="#{triallabels.ecrf_group_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfgroup" />
+								<h:outputLabel
+									for="ecrfvisit"
+									value="#{triallabels.ecrf_visit_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="ecrfvisit"
+										value="#{ecrfBean.in.visitId}"
+										required="false"
+										label="#{triallabels.ecrf_visit}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{ecrfBean.visits}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfvisit">
+										<h:outputText
+											value="#{triallabels.ecrf_visit_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfvisit" />
+								
+								
+								
+			<h:outputLabel
+				for="probandListStatus"
+				value="#{triallabels.ecrf_proband_list_status_label}" />
+			<h:panelGroup>
+				<p:selectOneMenu
+					id="probandListStatus"
+					value="#{ecrfBean.in.probandListStatusId}"
+					required="false"
+					label="#{triallabels.ecrf_proband_list_status}"
+					styleClass="ctsms-control">
+					<f:converter converterId="ctsms.ID" />
+					<f:selectItem
+						itemLabel="#{labels.no_selection_label}"
+						itemValue="#{applicationScopeBean.noSelectionValue}" />
+					<f:selectItems
+						value="#{ecrfBean.probandListStatusTypes}"
+						var="selectItem"
+						itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+				</p:selectOneMenu>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="probandListStatus">
+					<h:outputText
+						value="#{triallabels.ecrf_proband_list_status_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="probandListStatus" />								
+								
+<h:outputLabel
+									for="ecrfexternalid"
+									value="#{triallabels.ecrf_externalid_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="ecrfexternalid"
+										value="#{ecrfBean.in.externalId}"
+										required="false"
+										label="#{triallabels.ecrf_externalid}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfexternalid">
+										<h:outputText
+											value="#{triallabels.ecrf_externalid_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfexternalid" />								
+								
+								<h:outputLabel
+									for="ecrfEnableBrowserFieldCalculation"
+									value="#{triallabels.ecrf_enablebrowserfieldcalculation_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="ecrfEnableBrowserFieldCalculation"
+										value="#{ecrfBean.in.enableBrowserFieldCalculation}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfEnableBrowserFieldCalculation">
+										<h:outputText
+											value="#{triallabels.ecrf_enablebrowserfieldcalculation_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfEnableBrowserFieldCalculation" />
+								
+							</h:panelGrid>
+							<h:panelGrid
+								rendered="#{ecrfBean.inputVisible}"
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+								<h:outputLabel
+									for="ecrftitle"
+									value="#{triallabels.ecrf_title_label}" />
+								<h:panelGroup>
+									<p:inputTextarea
+										id="ecrftitle"
+										value="#{ecrfBean.in.title}"
+										required="true"
+										autoResize="false"
+										styleClass="ctsms-textarea"
+										label="#{triallabels.ecrf_title}">
+									</p:inputTextarea>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrftitle">
+										<h:outputText
+											value="#{triallabels.ecrf_title_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:panelGrid
+								rendered="#{ecrfBean.inputVisible}"
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+								<h:outputLabel
+									for="ecrfdescription"
+									value="#{triallabels.ecrf_description_label}" />
+								<h:panelGroup>
+									<p:inputTextarea
+										id="ecrfdescription"
+										value="#{ecrfBean.in.description}"
+										required="false"
+										autoResize="false"
+										styleClass="ctsms-textarea"
+										label="#{triallabels.ecrf_description}">
+									</p:inputTextarea>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfdescription">
+										<h:outputText
+											value="#{triallabels.ecrf_description_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:outputLabel rendered="#{!ecrfBean.inputVisible}" />
+							<h:outputLabel rendered="#{!ecrfBean.inputVisible}" />
+							<h:outputLabel rendered="#{!ecrfBean.inputVisible}" />
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="left">
+									<h:outputText
+										styleClass="ctsms-toolbar-text"
+										value="#{ecrfBean.created ? ecrfBean.modifiedAnnotation : ''}" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this"
+										value="#{labels.reset_button_label}"
+										actionListener="#{ecrfBean.reset}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-close"
+										ajax="true"
+										disabled="false"
+										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+									<p:commandButton
+										process="@this,ecrf_input"
+										id="add"
+										value="#{labels.add_button_label}"
+										actionListener="#{ecrfBean.add}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!ecrfBean.createable}"
+										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+									<p:commandButton
+										process="@this,ecrf_input"
+										id="update"
+										value="#{labels.update_button_label}"
+										actionListener="#{ecrfBean.update}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-disk"
+										ajax="true"
+										disabled="#{!ecrfBean.editable}"
+										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.normalize_positions_button_label}"
+										title="#{labels.normalize_positions_button_title}"
+										actionListener="#{ecrfBean.normalizePositions}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-link"
+										ajax="true"
+										disabled="#{!ecrfBean.editable}"
+										update="ecrf_list,ecrf_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.delete_button_label}"
+										onclick="ecrfDeleteConfirmation.show()"
+										disabled="#{!ecrfBean.removable}"
+										icon="ui-icon ui-icon-trash"
+										type="button" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.load_button_label}"
+										actionListener="#{ecrfBean.load}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon-refresh"
+										ajax="true"
+										disabled="#{!ecrfBean.created}"
+										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="ecrfDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.ecrf_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{ecrfBean.delete}"
+					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+					onclick="ecrfDeleteConfirmation.hide()"
+					ajax="true"
+					update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="ecrfDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>maintenanceitem datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column sortBy="#{maintenanceItem.vo.id}">
+			<f:facet name="header">
+				<h:outputText value="#{labels.id_column}" />
+			</f:facet>
+			<h:outputText value="#{maintenanceItem.vo.id}" />
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.inventory.name}"
+			filterBy="#{maintenanceItem.vo.inventory.name}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_inventory_name_column}" />
+			</f:facet>
+			<h:outputText value="#{maintenanceItem.vo.inventory.name}" />
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.inventory.department}"
+			filterBy="#{maintenanceItem.vo.inventory.department.id}"
+			filterOptions="#{sessionScopeBean.filterDepartments}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_inventory_department_column}" />
+			</f:facet>
+			<h:outputText value="#{maintenanceItem.vo.inventory.department.name}" />
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.inventory.category}"
+			filterBy="#{maintenanceItem.vo.inventory.category.id}"
+			filterOptions="#{sessionScopeBean.filterInventoryCategories}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_inventory_category_column}" />
+			</f:facet>
+			<ui:include src="listIcon.xhtml">
+				<ui:param
+					name="label"
+					value="#{maintenanceItem.vo.inventory.category.name}" />
+				<ui:param
+					name="icon"
+					value="#{maintenanceItem.vo.inventory.category.nodeStyleClass}" />
+				<ui:param
+					name="rendered"
+					value="true" />
+			</ui:include>
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.type}"
+			filterBy="#{maintenanceItem.vo.type.id}"
+			filterOptions="#{sessionScopeBean.filterMaintenanceTypes}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_maintenance_type_column}" />
+			</f:facet>
+			<h:outputText value="#{maintenanceItem.vo.type.name}" />
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.title}"
+			filterBy="#{maintenanceItem.vo.title}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_maintenance_title_column}" />
+			</f:facet>
+			<h:outputText value="#{maintenanceItem.vo.title}" />
+		</p:column>
+		<p:column
+			sortBy="#{maintenanceItem.vo.recurrencePeriod}"
+			filterBy="#{maintenanceItem.vo.recurrencePeriod}"
+			filterOptions="#{sessionScopeBean.filterVariablePeriods}">
+			<f:facet name="header">
+				<h:outputText value="#{inventorylabels.inventorymaintenance_list_recurrence_period_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.maintenanceScheduleItemRecurringPeriodToString(maintenanceItem.vo)}" />
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

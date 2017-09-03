@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory bookings</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inventorybooking_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeInventoryBooking"
+				actionListener="#{inventoryBookingBean.change(inventoryBean.in.id)}"
+				update="inventorybooking_list,inventorybooking_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{booking.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="booking"
+					value="#{inventoryBookingBean.bookingModel}"
+					id="inventorybooking_list"
+					selectionMode="single"
+					selection="#{inventoryBookingBean.selectedInventoryBooking}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:inventorybooking_form:inventorybooking_input" />
+					<f:facet name="header">
+						<h:outputText value="#{inventoryBookingBean.bookingModel.rowCount} #{inventorylabels.inventory_booking_inventorybooking_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{booking.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{booking.vo.id}" />
+					</p:column>
+					<ui:include src="../shared/inventoryBookingTableColumns.xhtml">
+						<ui:param
+							name="bookingBean"
+							value="#{inventoryBookingBean}" />
+					</ui:include>
+					<p:column sortBy="#{booking.vo.onBehalfOf}">
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_booking_inventorybooking_list_onbehalfof_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.onBehalfOf.name}" />
+							<ui:param
+								name="icon"
+								value="#{booking.vo.onBehalfOf.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column filterBy="#{booking.vo.proband.personParticulars.lastNameHash}">
+						<f:facet name="header">
+							<h:outputText
+								styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+								value="#{inventorylabels.inventory_booking_inventorybooking_list_proband_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.proband.name}" />
+							<ui:param
+								name="icon"
+								value="#{booking.vo.proband.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="#{booking.vo.proband != null and booking.vo.proband.person and booking.vo.proband.decrypted}" />
+						</ui:include>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.proband.name}" />
+							<ui:param
+								name="icon"
+								value="ctsms-icon-encrypted" />
+							<ui:param
+								name="rendered"
+								value="#{booking.vo.proband != null and booking.vo.proband.person and !booking.vo.proband.decrypted}" />
+						</ui:include>
+					</p:column>
+					
+					<p:column filterBy="#{booking.vo.proband.animalParticulars.animalName}"
+					    sortBy="#{booking.vo.proband.animalParticulars.animalName}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{inventorylabels.inventory_booking_inventorybooking_list_animal_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.proband.name}" />
+							<ui:param
+								name="icon"
+								value="#{booking.vo.proband.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="#{booking.vo.proband != null and !booking.vo.proband.person}" />
+						</ui:include>
+					</p:column>					
+					
+					<p:column
+						sortBy="#{booking.vo.course.name}"
+						filterBy="#{booking.vo.course.name}">
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_booking_inventorybooking_list_course_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.course.name}" />
+							<ui:param
+								name="icon"
+								value="#{booking.vo.course.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column
+						sortBy="#{booking.vo.trial.name}"
+						filterBy="#{booking.vo.trial.name}">
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_booking_inventorybooking_list_trial_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{booking.vo.trial.name}" />
+							<ui:param
+								name="icon"
+								value="#{booking.vo.trial.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_booking_inventorybooking_list_collisions_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{inventoryBookingBean.getCollidingInventoryStatusEntryModel(booking.vo).allRowCount + 
+						inventoryBookingBean.getCollidingStaffStatusEntryModel(booking.vo).allRowCount + 
+						inventoryBookingBean.getCollidingDutyRosterTurnModel(booking.vo).allRowCount + 
+						inventoryBookingBean.getCollidingProbandStatusEntryModel(booking.vo).allRowCount +
+						inventoryBookingBean.getCollidingCourseParticipationStatusEntryModel(booking.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingInventoryStatusTableTab.xhtml">
+								<ui:param
+									name="collidingInventoryStatusEntryModel"
+									value="#{inventoryBookingBean.getCollidingInventoryStatusEntryModel(booking.vo)}" />
+								<ui:param
+									name="showInventory"
+									value="false" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
+								<ui:param
+									name="collidingStaffStatusEntryModel"
+									value="#{inventoryBookingBean.getCollidingStaffStatusEntryModel(booking.vo)}" />
+								<ui:param
+									name="showStaff"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingDutyRosterTurnTableTab.xhtml">
+								<ui:param
+									name="collidingDutyRosterTurnModel"
+									value="#{inventoryBookingBean.getCollidingDutyRosterTurnModel(booking.vo)}" />
+								<ui:param
+									name="showStaff"
+									value="true" />
+								<ui:param
+									name="showTrial"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingProbandStatusTableTab.xhtml">
+								<ui:param
+									name="collidingProbandStatusEntryModel"
+									value="#{inventoryBookingBean.getCollidingProbandStatusEntryModel(booking.vo)}" />
+								<ui:param
+									name="showProband"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingCourseParticipationTableTab.xhtml">
+								<ui:param
+									name="collidingCourseParticipationStatusEntryModel"
+									value="#{inventoryBookingBean.getCollidingCourseParticipationStatusEntryModel(booking.vo)}" />
+								<ui:param
+									name="showStaff"
+									value="true" />
+								<ui:param
+									name="showCourse"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<p:panel id="inventorybooking_input">
+					<f:facet name="header">
+						<h:outputText value="#{inventoryBookingBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{inventoryBookingBean.inputVisible}"
+							columns="12"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<ui:include src="inventoryBookingInput.xhtml">
+								<ui:param
+									name="bookingBean"
+									value="#{inventoryBookingBean}" />
+								<ui:param
+									name="namingContainer"
+									value=":tabView:inventorybooking_form" />
+							</ui:include>
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{inventoryBookingBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="bookingcomment"
+								value="#{labels.noencryption_warning_label}#{inventorylabels.inventory_booking_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="bookingcomment"
+									value="#{inventoryBookingBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inventorylabels.inventory_booking_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bookingcomment">
+									<h:outputText
+										value="#{inventorylabels.inventory_booking_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!inventoryBookingBean.inputVisible}" />
+						<h:outputLabel rendered="#{!inventoryBookingBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{inventoryBookingBean.created ? inventoryBookingBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{inventoryBookingBean.reset}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="inventorybooking_list,inventorybooking_input" />
+								<p:commandButton
+									process="@this,inventorybooking_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{inventoryBookingBean.add}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!inventoryBookingBean.createable}"
+									update="inventorybooking_list,inventorybooking_input" />
+								<p:commandButton
+									process="@this,inventorybooking_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{inventoryBookingBean.update}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!inventoryBookingBean.editable}"
+									update="inventorybooking_list,inventorybooking_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{inventoryBookingBean.delete}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!inventoryBookingBean.created}"
+									update="inventorybooking_list,inventorybooking_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{inventoryBookingBean.load}"
+									oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-refresh"
+									ajax="true"
+									disabled="#{!inventoryBookingBean.created}"
+									update="inventorybooking_list,inventorybooking_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

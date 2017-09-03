@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding visit schedule items table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab title="#{labels.colliding_visit_schedule_tab_label_1}#{collidingVisitScheduleItemModel.allRowCount}#{labels.colliding_visit_schedule_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{visitScheduleItem.vo.start}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="visitScheduleItem"
+				value="#{collidingVisitScheduleItemModel.allRows}"
+				id="collidingvisitscheduleitem_list">
+				<p:column
+					sortBy="#{visitScheduleItem.vo.trial.name}"
+					filterBy="#{visitScheduleItem.vo.trial.id}"
+					filterOptions="#{collidingVisitScheduleItemModel.filterTrials}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_trial_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{visitScheduleItem.vo.trial.name}" />
+						<ui:param
+							name="icon"
+							value="#{visitScheduleItem.vo.trial.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{visitScheduleItem.vo.group.token}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_group_token_column}" />
+					</f:facet>
+					<h:outputText value="#{visitScheduleItem.vo.group.token}" />
+				</p:column>
+				<p:column sortBy="#{visitScheduleItem.vo.visit.token}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_visit_token_column}" />
+					</f:facet>
+					<h:outputText value="#{visitScheduleItem.vo.visit.token}" />
+				</p:column>
+				<p:column sortBy="#{visitScheduleItem.vo.token}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_token_column}" />
+					</f:facet>
+					<h:outputText value="#{visitScheduleItem.vo.token}" />
+				</p:column>
+				<p:column sortBy="#{visitScheduleItem.vo.start}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_start_column}" />
+					</f:facet>
+					<h:outputText value="#{visitScheduleItem.vo.start}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{visitScheduleItem.vo.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{visitScheduleItem.vo.stop}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_trial_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openTrial(#{visitScheduleItem.vo.trial.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

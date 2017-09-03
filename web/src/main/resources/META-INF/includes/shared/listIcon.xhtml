@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>list icon</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:outputText
+			styleClass="#{uiicon and not empty icon ? 'ctsms-list-ui-icon ui-icon' : 'ctsms-list-icon'} #{icon}"
+			rendered="#{rendered}"
+			value="#{label}" >
+			<f:converter converterId="#{empty converter ? 'ctsms.String' : converter}" />
+		</h:outputText>			
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory status overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inventoryHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inventorylabels.inventory_status_overview_title}" />
+		<ui:define name="content">
+			<h:form id="inventorystatusoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="ignore_obselete"
+								value="#{inventorylabels.inventory_status_overview_ignore_obsolete_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="ignore_obselete"
+									disabled="false"
+									value="#{inventoryStatusOverviewBean.inventoryStatusModel.ignoreObsolete}">
+									<p:ajax
+										listener="#{inventoryStatusOverviewBean.handleIgnoreObsoleteChange}"
+										update="inventorystatus_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="ignore_obselete">
+									<h:outputText
+										value="#{inventorylabels.inventory_status_overview_ignore_obsolete_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="ignore_obselete" />
+						</h:panelGrid>
+					</p:panel>
+					<p:dataTable
+						styleClass="ctsms-datatable"
+						lazy="true"
+						rows="#{dataTablesRowsFullPage}"
+						paginator="#{dataTablesPaginatorFullPage}"
+						paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+						paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+						pageLinks="#{dataTablesPageLinksFullPage}"
+						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+						scrollable="#{dataTablesScrollableFullPage}"
+						scrollHeight="#{dataTablesScrollHeightFullPage}"
+						resizableColumns="#{dataTablesResizableColumnsFullPage}"
+						sortBy="#{statusEntry.vo.id}"
+						emptyMessage="#{labels.datatable_permission_empty_message}"
+						var="statusEntry"
+						value="#{inventoryStatusOverviewBean.inventoryStatusModel}"
+						id="inventorystatus_list"
+						rowStyleClass="#{statusEntry.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryStatusOverviewBean.inventoryStatusToColor(statusEntry.vo)}">
+						<f:facet name="header">
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{inventoryStatusOverviewBean.inventoryStatusModel.rowCount} #{inventorylabels.inventory_status_overview_inventorystatus_list_header}" />
+								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton
+									process="@this"
+									actionListener="#{inventoryStatusOverviewBean.load}"
+									title="#{labels.update_datatable_button_title}"
+									icon="ui-icon-refresh"
+									styleClass="ctsms-list-header-button"
+									ajax="true"
+									update=":inventorystatusoverview_form:inventorystatus_list" />
+							</h:panelGrid>
+						</f:facet>
+						<p:column style="width:16px;">
+							<p:rowToggler />
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.id}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.id}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.inventory.name}"
+							filterBy="#{statusEntry.vo.inventory.name}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_inventory_name_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.inventory.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.inventory.department}"
+							filterBy="#{statusEntry.vo.inventory.department.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_inventory_department_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.inventory.department.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.inventory.category}"
+							filterBy="#{statusEntry.vo.inventory.category.id}"
+							filterOptions="#{sessionScopeBean.filterInventoryCategories}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_inventory_category_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{statusEntry.vo.inventory.category.name}" />
+								<ui:param
+									name="icon"
+									value="#{statusEntry.vo.inventory.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="true" />
+							</ui:include>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.type}"
+							filterBy="#{statusEntry.vo.type.id}"
+							filterOptions="#{sessionScopeBean.filterInventoryStatusTypes}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_status_type_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.type.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.start}"
+							filterBy="#{statusEntry.vo.start}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_start_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.start}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.stop}"
+							filterBy="#{statusEntry.vo.stop}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_stop_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.stop}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.type.inventoryActive}">
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_inventory_available_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{statusEntry.vo.type.inventoryActive}" />
+							</ui:include>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_colliding_inventory_booking_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{inventoryStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
+							</ui:include>
+						</p:column>
+						<p:column style="width:32px;">
+							<p:commandButton
+								type="button"
+								title="#{labels.open_inventory_button_label}"
+								icon="ui-icon ui-icon-extlink"
+								onclick="openInventory(#{statusEntry.vo.inventory.id})" />
+						</p:column>
+						<p:rowExpansion>
+							<p:tabView styleClass="ctsms-rowexpansion-tabview">
+								<ui:include src="/META-INF/includes/shared/collidingInventoryBookingTableTab.xhtml">
+									<ui:param
+										name="collidingInventoryBookingModel"
+										value="#{inventoryStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
+									<ui:param
+										name="showInventory"
+										value="false" />
+									<ui:param
+										name="dataTableRows"
+										value="#{dataTablesRowsRowExpansion}" />
+									<ui:param
+										name="dataTablePaginator"
+										value="#{dataTablesPaginatorRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorTemplate"
+										value="#{dataTablesPaginatorTemplateRowExpansion}" />
+									<ui:param
+										name="dataTableRowsPerPageTemplate"
+										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorPosition"
+										value="#{dataTablesPaginatorPositionRowExpansion}" />
+									<ui:param
+										name="dataTablePageLinks"
+										value="#{dataTablesPageLinksRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorAlwaysVisible"
+										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+									<ui:param
+										name="dataTableScrollable"
+										value="#{dataTablesScrollableRowExpansion}" />
+									<ui:param
+										name="dataTableScrollHeight"
+										value="#{dataTablesScrollHeightRowExpansion}" />
+									<ui:param
+										name="dataTableResizableColumns"
+										value="#{dataTablesResizableColumnsRowExpansion}" />
+								</ui:include>
+							</p:tabView>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGrid>
+				<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,26 @@
+Hallo $maintenancescheduleitem_responsibleperson_firstname,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Inventar:             $maintenancescheduleitem_inventory_name
+   • Inventar Org.einheit: $maintenancescheduleitem_inventory_department
+   • Inventar Kategorie:   $maintenancescheduleitem_inventory_category
+
+   • Titel:                '$notification.maintenanceScheduleItem.title'
+   • Typ:                  $maintenancescheduleitem_type
+   • Datum:                $maintenancescheduleitem_nextrecurrence
+
+   • Firmenkontakt:        $maintenancescheduleitem_companycontact_name
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

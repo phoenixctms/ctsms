@@ -1,0 +1,50 @@
+package org.phoenixctms.ctsms.pdf;
+
+public interface ReimbursementsPDFLabelCodes {
+
+	public static final String RECIPIENT_ADDRESS_LINE1 = "recipient_address_line1";
+	public static final String RECIPIENT_ADDRESS_LINE2 = "recipient_address_line2";
+	public static final String RECIPIENT_ADDRESS_LINE3 = "recipient_address_line3";
+	public static final String RECIPIENT_ADDRESS_LINE4 = "recipient_address_line4";
+	public static final String RECIPIENT_ADDRESS_LINE5 = "recipient_address_line5";
+	public static final String RECIPIENT_ADDRESS_LINE6 = "recipient_address_line6";
+	public static final String SENDER_ADDRESS_LINE1 = "sender_address_line1";
+	public static final String SENDER_ADDRESS_LINE2 = "sender_address_line2";
+	public static final String SENDER_ADDRESS_LINE3 = "sender_address_line3";
+	public static final String SENDER_ADDRESS_LINE4 = "sender_address_line4";
+	public static final String SENDER_ADDRESS_LINE5 = "sender_address_line5";
+	public static final String SENDER_ADDRESS_LINE6 = "sender_address_line6";
+	public static final String DATE = "date";
+	public static final String BODY_MALE_SALUTATION = "body_male_salutation";
+	public static final String BODY_FEMALE_SALUTATION = "body_female_salutation";
+	public final static String PAGE_NUMBER = "page_number";
+	public static final String MALE_SALUTATION = "male_salutation";
+	public static final String FEMALE_SALUTATION = "female_salutation";
+	public final static String SIGNATURE = "signature";
+	public final static String SIGNATURE_ANNOTATION = "signature_annotation";
+	public static final String SIGNATURE_DATE = "signature_date";
+	public static final String DATE_ANNOTATION = "date_annotation";
+	public static final String PAYMENT_METHOD_COLUMN_NAME = "payment_method_column_name";
+	public static final String COST_TYPE_COLUMN_NAME = "cost_type_column_name";
+	public static final String AMOUNT_COLUMN_NAME = "amount_column_name";
+	public static final String TOTAL_LABEL = "total_label";
+	public static final String AMOUNT_LABEL = "amount_label";
+	public static final String ACCOUNT_HOLDER_NAME_LABEL = "account_holder_name_label";
+	public static final String BANK_NAME_LABEL = "bank_name_label";
+	public static final String BIC_LABEL = "bic_label";
+	public static final String IBAN_LABEL = "iban_label";
+	public static final String ACCOUNT_HOLDER_NAME_NA_LABEL = "account_holder_name_na_label";
+	public static final String BANK_NAME_NA_LABEL = "bank_name_na_label";
+	public static final String BIC_NA_LABEL = "bic_na_label";
+	public static final String IBAN_NA_LABEL = "iban_na_label";
+	public static final String BANK_CODE_NUMBER_LABEL = "bank_code_number_label";
+	public static final String ACCOUNT_NUMBER_LABEL = "account_number_label";
+	public static final String FIRST_PAGE_SUBJECT = "first_page_subject";
+	public static final String FIRST_PAGE_SUBJECT_NO_TRIAL = "first_page_subject_no_trial";
+	public static final String TRIAL_TITLE = "trial_title";
+	public static final String SECOND_PAGE_SUBJECT = "second_page_subject";
+	public static final String SECOND_PAGE_SUBJECT_NO_TRIAL = "second_page_subject_no_trial";
+	public static final String TRIAL_TAG_NAME_LABEL = "trial_tag_name_label";
+	public static final String RETURN_ADDRESS = "return_address";
+	public static final String COMPLETE_INSTRUCTION_PARAGRAPH = "complete_instruction_paragraph";
+}

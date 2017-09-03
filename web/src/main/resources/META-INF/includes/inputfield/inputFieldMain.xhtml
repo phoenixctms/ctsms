@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	<title>input field main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inputfieldmain_form">
+
+
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldAssociation"
+				actionListener="#{inputFieldAssociationBean.change(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldassociation_form:association_lists" />
+			<p:remoteCommand
+				process="@this"
+				name="changeDummy"
+				actionListener="#{dummyInputFieldValueBean.change(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:inputfielddummy_form:input_dummy_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldJournalEntry"
+				actionListener="#{journalBean.changeInputField(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldjournal_form:journal_list,:tabView:inputfieldjournal_form:journal_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeSelectionSetValue"
+				actionListener="#{selectionSetValueBean.change(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldselectionsetvalue_form:selectionsetvalue_list,:tabView:inputfieldselectionsetvalue_form:selectionsetvalue_input" />		
+		
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldBySelectionSetValue"
+				actionListener="#{inputFieldBean.change(selectionSetValueBean.in.fieldId)}"
+				oncomplete="handleInputFieldChanged(xhr, status, args)"
+				update="input_field_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldByJournalEntry"
+				actionListener="#{inputFieldBean.change(journalBean.in.inputFieldId)}"
+				oncomplete="handleInputFieldChanged(xhr, status, args)"
+				update="input_field_input" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:panel id="input_field_input">
+					<f:facet name="header">
+						<h:outputText value="#{inputFieldBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-fileupload-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="inputfieldname"
+								value="#{inputfieldlabels.input_field_name_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="inputfieldname"
+									value="#{inputFieldBean.in.name}"
+									required="true"
+									label="#{inputfieldlabels.input_field_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputfieldname">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inputfieldname" />
+							
+							
+							
+							<h:outputLabel
+								for="inputfieldlocalized"
+								value="#{inputfieldlabels.input_field_localized_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="inputfieldlocalized"
+									value="#{inputFieldBean.in.localized}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputfieldlocalized">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_localized_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inputfieldlocalized" />
+							
+							<h:outputLabel
+								for="inputfieldtitle"
+								value="#{inputfieldlabels.input_field_title_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="inputfieldtitle"
+									value="#{inputFieldBean.in.title}"
+									required="true"
+									label="#{inputfieldlabels.input_field_title}"
+									styleClass="ctsms-control-largest">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputfieldtitle">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_title_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inputfieldtitle" />
+							<h:outputLabel
+								for="inputFieldCategory"
+								value="#{inputfieldlabels.input_field_category_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="inputFieldCategory"
+									value="#{inputFieldBean.in.category}"
+									required="false"
+									label="#{inputfieldlabels.input_field_category}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCategory}"
+									maxResults="#{autoCompleteMaxResultsCategory}"
+									queryDelay="#{autoCompleteQueryDelayCategory}"
+									dropdown="#{autoCompleteDropdownCategory}"
+									global="#{autoCompleteGlobalCategory}"
+									scrollHeight="#{autoCompleteScrollHeightCategory}"
+									completeMethod="#{inputFieldBean.completeCategory}">
+									<p:ajax
+										listener="#{inputFieldBean.handleCategorySelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputFieldCategory">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_category_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inputFieldCategory" />
+							
+							<h:outputLabel
+									for="inputfieldexternalid"
+									value="#{inputfieldlabels.input_field_externalid_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="inputfieldexternalid"
+										value="#{inputFieldBean.in.externalId}"
+										required="false"
+										label="#{inputfieldlabels.input_field_externalid}"
+										styleClass="ctsms-control">
+										<p:ajax />
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inputfieldexternalid">
+										<h:outputText
+											value="#{inputfieldlabels.input_field_externalid_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="inputfieldexternalid" />								
+							
+							<h:outputLabel
+								for="inputFieldType"
+								value="#{inputfieldlabels.input_field_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="inputFieldType"
+									disabled="false"
+									value="#{inputFieldBean.fieldType.type}"
+									required="true"
+									label="#{inputfieldlabels.input_field_type}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{inputFieldBean.fieldType.inputFieldTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update=":tabView:inputfieldmain_form:input_field_input" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputFieldType">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inputFieldType" />
+							<h:outputLabel
+								for="regExp"
+								rendered="#{inputFieldBean.config.text}"
+								value="#{inputfieldlabels.input_field_regexp_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.text}">
+								<p:inputText
+									id="regExp"
+									value="#{inputFieldBean.in.regExp}"
+									required="false"
+									label="#{inputfieldlabels.input_field_regexp}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="regExp">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_regexp_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="regExp"
+								rendered="#{inputFieldBean.config.text}" />
+							<h:outputLabel
+								for="singleLineTextPreset"
+								rendered="#{inputFieldBean.config.singleLineText}"
+								value="#{inputfieldlabels.input_field_single_line_text_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.singleLineText}">
+								<p:inputText
+									id="singleLineTextPreset"
+									value="#{inputFieldBean.in.textPreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_single_line_text_preset}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="singleLineTextPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_single_line_text_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="singleLineTextPreset"
+								rendered="#{inputFieldBean.config.singleLineText}" />
+							<h:outputLabel
+								for="minSelections"
+								rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}"
+								value="#{inputfieldlabels.input_field_min_selections_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}">
+								<p:spinner
+									id="minSelections"
+									value="#{inputFieldBean.in.minSelections}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_min_selections}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="minSelections">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_min_selections_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="minSelections"
+								rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}" />
+							<h:outputLabel
+								for="maxSelections"
+								rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}"
+								value="#{inputfieldlabels.input_field_max_selections_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}">
+								<p:spinner
+									id="maxSelections"
+									value="#{inputFieldBean.in.maxSelections}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_max_selections}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxSelections">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_max_selections_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="maxSelections"
+								rendered="#{inputFieldBean.config.selectMany or inputFieldBean.config.sketch}" />
+							<h:outputLabel
+								for="learn"
+								rendered="#{inputFieldBean.config.autocomplete}"
+								value="#{inputfieldlabels.input_field_learn_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.autocomplete}">
+								<p:selectBooleanCheckbox
+									id="learn"
+									value="#{inputFieldBean.in.learn}">
+									<p:ajax
+										listener="#{inputFieldBean.handleLearnChange}"
+										update="strict" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="learn">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_learn_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="learn"
+								rendered="#{inputFieldBean.config.autocomplete}" />
+							<h:outputLabel
+								for="strict"
+								rendered="#{inputFieldBean.config.autocomplete}"
+								value="#{inputfieldlabels.input_field_strict_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.autocomplete}">
+								<p:selectBooleanCheckbox
+									id="strict"
+									disabled="#{inputFieldBean.in.learn}"
+									value="#{inputFieldBean.in.strict}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="strict">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_strict_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="strict"
+								rendered="#{inputFieldBean.config.autocomplete}" />
+							<h:outputLabel
+								for="booleanPreset"
+								rendered="#{inputFieldBean.config.checkBox}"
+								value="#{inputfieldlabels.input_field_boolean_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.checkBox}">
+								<p:selectOneMenu
+									id="booleanPreset"
+									value="#{inputFieldBean.in.booleanPreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_boolean_preset}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{inputFieldBean.booleans}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="booleanPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_boolean_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="booleanPreset"
+								rendered="#{inputFieldBean.config.checkBox}" />
+							<h:outputLabel
+								for="longLowerLimit"
+								rendered="#{inputFieldBean.config.integer}"
+								value="#{inputfieldlabels.input_field_long_lower_limit_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
+								<p:spinner
+									id="longLowerLimit"
+									value="#{inputFieldBean.in.longLowerLimit}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_long_lower_limit}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="longLowerLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_lower_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="longLowerLimit"
+								rendered="#{inputFieldBean.config.integer}" />
+							<h:outputLabel
+								for="longUpperLimit"
+								rendered="#{inputFieldBean.config.integer}"
+								value="#{inputfieldlabels.input_field_long_upper_limit_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
+								<p:spinner
+									id="longUpperLimit"
+									value="#{inputFieldBean.in.longUpperLimit}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_long_upper_limit}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="longUpperLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_upper_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="longUpperLimit"
+								rendered="#{inputFieldBean.config.integer}" />
+							<h:outputLabel
+								for="longPreset"
+								rendered="#{inputFieldBean.config.integer}"
+								value="#{inputfieldlabels.input_field_long_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
+								<p:spinner
+									id="longPreset"
+									value="#{inputFieldBean.in.longPreset}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_long_preset}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="longPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="longPreset"
+								rendered="#{inputFieldBean.config.integer}" />
+							<h:outputLabel
+								for="floatLowerLimit"
+								rendered="#{inputFieldBean.config.float}"
+								value="#{inputfieldlabels.input_field_float_lower_limit_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.float}">
+								<p:inputText
+									id="floatLowerLimit"
+									value="#{inputFieldBean.in.floatLowerLimit}"
+									required="false"
+									label="#{inputfieldlabels.input_field_float_lower_limit}"
+									styleClass="ctsms-control-float" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="floatLowerLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_float_lower_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="floatLowerLimit"
+								rendered="#{inputFieldBean.config.float}" />
+							<h:outputLabel
+								for="floatUpperLimit"
+								rendered="#{inputFieldBean.config.float}"
+								value="#{inputfieldlabels.input_field_float_upper_limit_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.float}">
+								<p:inputText
+									id="floatUpperLimit"
+									value="#{inputFieldBean.in.floatUpperLimit}"
+									required="false"
+									label="#{inputfieldlabels.input_field_float_upper_limit}"
+									styleClass="ctsms-control-float" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="floatUpperLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_float_upper_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="floatUpperLimit"
+								rendered="#{inputFieldBean.config.float}" />
+							<h:outputLabel
+								for="floatPreset"
+								rendered="#{inputFieldBean.config.float}"
+								value="#{inputfieldlabels.input_field_float_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.float}">
+								<p:inputText
+									id="floatPreset"
+									value="#{inputFieldBean.in.floatPreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_float_preset}"
+									styleClass="ctsms-control-float" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="floatPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_float_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="floatPreset"
+								rendered="#{inputFieldBean.config.float}" />
+							<h:outputLabel
+								for="minDate"
+								rendered="#{inputFieldBean.config.date}"
+								value="#{inputfieldlabels.input_field_min_date_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.date}">
+								<p:calendar
+									id="minDate"
+									value="#{inputFieldBean.in.minDate}"
+									required="false"
+									label="#{inputfieldlabels.input_field_min_date}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="minDate">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_min_date_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="minDate"
+								rendered="#{inputFieldBean.config.date}" />
+							<h:outputLabel
+								for="maxDate"
+								rendered="#{inputFieldBean.config.date}"
+								value="#{inputfieldlabels.input_field_max_date_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.date}">
+								<p:calendar
+									id="maxDate"
+									value="#{inputFieldBean.in.maxDate}"
+									required="false"
+									label="#{inputfieldlabels.input_field_max_date}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxDate">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_max_date_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="maxDate"
+								rendered="#{inputFieldBean.config.date}" />
+							<h:outputLabel
+								for="datePreset"
+								rendered="#{inputFieldBean.config.date}"
+								value="#{inputfieldlabels.input_field_date_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.date}">
+								<p:calendar
+									id="datePreset"
+									value="#{inputFieldBean.in.datePreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_date_preset}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="datePreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_date_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="datePreset"
+								rendered="#{inputFieldBean.config.date}" />
+							<h:outputLabel
+								for="minTimestamp"
+								rendered="#{inputFieldBean.config.timestamp}"
+								value="#{inputfieldlabels.input_field_min_timestamp_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.timestamp}">
+								<p:calendar
+									id="minTimestamp"
+									value="#{inputFieldBean.in.minTimestamp}"
+									required="false"
+									label="#{inputfieldlabels.input_field_min_timestamp}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="minTimestamp">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_min_timestamp_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="minTimestamp"
+								rendered="#{inputFieldBean.config.timestamp}" />
+							<h:outputLabel
+								for="maxTimestamp"
+								rendered="#{inputFieldBean.config.timestamp}"
+								value="#{inputfieldlabels.input_field_max_timestamp_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.timestamp}">
+								<p:calendar
+									id="maxTimestamp"
+									value="#{inputFieldBean.in.maxTimestamp}"
+									required="false"
+									label="#{inputfieldlabels.input_field_max_timestamp}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxTimestamp">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_max_timestamp_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="maxTimestamp"
+								rendered="#{inputFieldBean.config.timestamp}" />
+							<h:outputLabel
+								for="timestampPreset"
+								rendered="#{inputFieldBean.config.timestamp}"
+								value="#{inputfieldlabels.input_field_timestamp_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.timestamp}">
+								<p:calendar
+									id="timestampPreset"
+									value="#{inputFieldBean.in.timestampPreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_timestamp_preset}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="timestampPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_timestamp_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="timestampPreset"
+								rendered="#{inputFieldBean.config.timestamp}" />
+								
+
+
+
+
+
+
+
+
+
+							<h:outputLabel
+								for="minTime"
+								rendered="#{inputFieldBean.config.time}"
+								value="#{inputfieldlabels.input_field_min_time_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.time}">
+								<pe:timePicker
+									id="minTime"
+									value="#{inputFieldBean.in.minTime}"
+									required="false"
+									label="#{inputfieldlabels.input_field_min_time}"
+									timeSeparator="#{applicationScopeBean.timeSeparator}"
+									mode="spinner"
+									intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
+									showCloseButton="true"
+									locale="#{sessionScopeBean.locale}"
+									styleClass="ctsms-timepicker" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="minTime">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_min_time_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="minTime"
+								rendered="#{inputFieldBean.config.time}" />
+							<h:outputLabel
+								for="maxTime"
+								rendered="#{inputFieldBean.config.time}"
+								value="#{inputfieldlabels.input_field_max_time_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.time}">
+								<pe:timePicker
+									id="maxTime"
+									value="#{inputFieldBean.in.maxTime}"
+									required="false"
+									label="#{inputfieldlabels.input_field_max_time}"
+									timeSeparator="#{applicationScopeBean.timeSeparator}"
+									mode="spinner"
+									intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
+									showCloseButton="true"
+									locale="#{sessionScopeBean.locale}"
+									styleClass="ctsms-timepicker" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxTime">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_max_time_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="maxTime"
+								rendered="#{inputFieldBean.config.time}" />
+							<h:outputLabel
+								for="datePreset"
+								rendered="#{inputFieldBean.config.time}"
+								value="#{inputfieldlabels.input_field_time_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.time}">
+								<pe:timePicker
+									id="timePreset"
+									value="#{inputFieldBean.in.timePreset}"
+									required="false"
+									label="#{inputfieldlabels.input_field_time_preset}"
+									timeSeparator="#{applicationScopeBean.timeSeparator}"
+									mode="spinner"
+									intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
+									showCloseButton="true"
+									locale="#{sessionScopeBean.locale}"
+									styleClass="ctsms-timepicker" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="timePreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_time_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="timePreset"
+								rendered="#{inputFieldBean.config.time}" />
+
+
+
+								
+								
+								
+							<h:outputLabel
+								for="width"
+								rendered="#{inputFieldBean.config.sketch}"
+								value="#{inputfieldlabels.input_field_width_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.sketch}">
+								<p:spinner
+									id="width"
+									value="#{inputFieldBean.in.width}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_width}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="width">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_width_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="width"
+								rendered="#{inputFieldBean.config.sketch}" />
+							<h:outputLabel
+								for="height"
+								rendered="#{inputFieldBean.config.sketch}"
+								value="#{inputfieldlabels.input_field_height_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.sketch}">
+								<p:spinner
+									id="height"
+									value="#{inputFieldBean.in.height}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inputfieldlabels.input_field_height}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="height">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_height_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="height"
+								rendered="#{inputFieldBean.config.sketch}" />
+							<h:outputLabel
+								rendered="#{inputFieldBean.config.sketch}"
+								value="#{inputfieldlabels.input_field_image_label}" />
+							<p:commandLink
+								immediate="true"
+								id="filedownload"
+								ajax="false"
+								rendered="#{inputFieldBean.config.sketch}"
+								disabled="#{!inputFieldBean.hasImage}"
+								title="#{labels.file_download_tooltip} #{inputFieldBean.fileDownloadLinkLabel}">
+								<h:outputText value="#{inputFieldBean.fileDownloadLinkLabel}" />
+								<p:fileDownload value="#{inputFieldBean.fileStreamedContent}" />
+							</p:commandLink>
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid">
+							<p:fileUpload
+								rendered="#{inputFieldBean.config.sketch}"
+								id="imageUpload"
+								fileUploadListener="#{inputFieldBean.handleFileUpload}"
+								mode="advanced"
+								update="clearimagebutton,filedownload,width,height,messages"
+								multiple="false"
+								auto="true"
+								label="#{labels.choose_file_button_label}"
+								styleClass="ctsms-upload-control"
+								sizeLimit="#{inputFieldBean.getUploadSizeLimit()}"
+								allowTypes="#{inputFieldBean.allowTypes}" />
+							<h:outputLabel rendered="#{!inputFieldBean.config.sketch}" />
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="multiLineTextPreset"
+								rendered="#{inputFieldBean.config.multiLineText}"
+								value="#{inputfieldlabels.input_field_multi_line_text_preset_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.multiLineText}">
+								<p:inputTextarea
+									id="multiLineTextPreset"
+									value="#{inputFieldBean.in.textPreset}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inputfieldlabels.input_field_multi_line_text_preset}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="multiLineTextPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_multi_line_text_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!inputFieldBean.config.multiLineText}" />
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="validationErrorMsg"
+								rendered="#{inputFieldBean.config.validationErrorMsg}"
+								value="#{inputfieldlabels.input_field_validation_error_message_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.validationErrorMsg}">
+								<p:inputTextarea
+									id="validationErrorMsg"
+									value="#{inputFieldBean.in.validationErrorMsg}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inputfieldlabels.input_field_validation_error_message}">
+									<p:ajax />
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="validationErrorMsg">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_validation_error_message_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!inputFieldBean.config.validationErrorMsg}" />
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="inputfieldcomment"
+								value="#{inputfieldlabels.input_field_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="inputfieldcomment"
+									value="#{inputFieldBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inputfieldlabels.input_field_comment}">
+									<p:ajax />
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputfieldcomment">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<p:messages id="messages" />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{inputFieldBean.created ? inputFieldBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									id="clearimagebutton"
+									value="#{inputfieldlabels.clear_input_field_image_label}"
+									actionListener="#{inputFieldBean.clearImage}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="#{!inputFieldBean.hasImage}"
+									rendered="#{inputFieldBean.config.sketch}"
+									update="filedownload" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{inputFieldBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleInputFieldChanged(xhr, status, args)"
+									disabled="false"
+									update="input_field_input" />
+								<p:commandButton
+									rendered="#{!inputFieldBean.created}"
+									process="@this,input_field_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{inputFieldBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleInputFieldChanged(xhr, status, args)"
+									disabled="#{!inputFieldBean.createable}"
+									update="input_field_input" />
+									
+									
+									
+				<p:commandButton
+											process="@this,inputfieldname"
+											id="addClone"
+											value="#{labels.clone_button_label}"
+											actionListener="#{inputFieldBean.addClone}"
+											oncomplete="handleInputFieldChanged(xhr, status, args)"
+											icon="ui-icon ui-icon-copy"
+											ajax="true"
+											disabled="#{!inputFieldBean.cloneable}"
+											update="input_field_input" />									
+									
+									
+									
+									
+								<p:commandButton
+									rendered="#{inputFieldBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="inputFieldAddConfirmation.show()"
+									disabled="#{!inputFieldBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,input_field_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{inputFieldBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleInputFieldChanged(xhr, status, args)"
+									disabled="#{!inputFieldBean.editable}"
+									update="input_field_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="inputFieldDeleteConfirmation.show()"
+									disabled="#{!inputFieldBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{inputFieldBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleInputFieldChanged(xhr, status, args)"
+									disabled="#{!inputFieldBean.created}"
+									update="input_field_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="inputFieldDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{inputfieldlabels.input_field_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{inputFieldBean.delete}"
+					onclick="inputFieldDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleInputFieldChanged(xhr, status, args)"
+					update="input_field_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="inputFieldDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="inputFieldAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{inputfieldlabels.input_field_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,input_field_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{inputFieldBean.add}"
+					onclick="inputFieldAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleInputFieldChanged(xhr, status, args)"
+					update="input_field_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="inputFieldAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff duty roster turns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="staffdutyrosterturn_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeStaffDutyRosterTurn"
+				actionListener="#{staffDutyRosterTurnBean.change(staffBean.in.id)}"
+				update="dutyrosterturn_list,dutyrosterturn_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="10"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{dutyRosterTurn.vo.start}"
+					sortOrder='descending'
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="dutyRosterTurn"
+					value="#{staffDutyRosterTurnBean.dutyRosterTurnModel}"
+					id="dutyrosterturn_list"
+					selectionMode="single"
+					selection="#{staffDutyRosterTurnBean.selectedDutyRosterTurn}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:staffdutyrosterturn_form:dutyrosterturn_input" />
+					<f:facet name="header">
+						<h:outputText value="#{staffDutyRosterTurnBean.dutyRosterTurnModel.rowCount} #{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{dutyRosterTurn.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{dutyRosterTurn.vo.id}" />
+					</p:column>
+					<p:column
+						sortBy="#{dutyRosterTurn.vo.trial.name}"
+						filterBy="#{dutyRosterTurn.vo.trial.name}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_trial_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{dutyRosterTurn.vo.trial.name}" />
+							<ui:param
+								name="icon"
+								value="#{dutyRosterTurn.vo.trial.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<ui:include src="../shared/dutyRosterTurnTableColumns.xhtml">
+						<ui:param
+							name="dutyRosterTurnBean"
+							value="#{staffDutyRosterTurnBean}" />
+					</ui:include>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_colliding_staff_status_entry_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{staffDutyRosterTurnBean.getCollidingStaffStatusEntryModel(dutyRosterTurn.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_colliding_course_inventory_booking_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{staffDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
+								<ui:param
+									name="collidingStaffStatusEntryModel"
+									value="#{staffDutyRosterTurnBean.getCollidingStaffStatusEntryModel(dutyRosterTurn.vo)}" />
+								<ui:param
+									name="showStaff"
+									value="false" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param
+									name="collidingInventoryBookingModel"
+									value="#{staffDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo)}" />
+								<ui:param
+									name="showInventory"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<p:panel id="dutyrosterturn_input">
+					<f:facet name="header">
+						<h:outputText value="#{staffDutyRosterTurnBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{staffDutyRosterTurnBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<ui:include src="../shared/dutyRosterTurnInput.xhtml">
+								<ui:param
+									name="dutyRosterTurnBean"
+									value="#{staffDutyRosterTurnBean}" />
+								<ui:param
+									name="namingContainer"
+									value=":tabView:staffdutyrosterturn_form" />
+								<ui:param
+									name="visitScheduleItemChangeUpdate"
+									value=":tabView:staffdutyrosterturn_form:trial,:tabView:staffdutyrosterturn_form:trialName" />
+							</ui:include>
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{staffDutyRosterTurnBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="dutyRosterTurnComment"
+								value="#{labels.noencryption_warning_label}#{stafflabels.duty_roster_turn_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="dutyRosterTurnComment"
+									value="#{staffDutyRosterTurnBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{stafflabels.duty_roster_turn_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dutyRosterTurnComment">
+									<h:outputText
+										value="#{stafflabels.duty_roster_turn_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!staffDutyRosterTurnBean.inputVisible}" />
+						<h:outputLabel rendered="#{!staffDutyRosterTurnBean.inputVisible}" />
+						<p:messages for="dutyRosterScheduleInputMessages"/>
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{staffDutyRosterTurnBean.created ? staffDutyRosterTurnBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{staffDutyRosterTurnBean.reset}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="dutyrosterturn_list,dutyrosterturn_input" />
+								<p:commandButton
+									process="@this,dutyrosterturn_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{staffDutyRosterTurnBean.add}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!staffDutyRosterTurnBean.createable}"
+									update="dutyrosterturn_list,dutyrosterturn_input" />
+								<p:commandButton
+									process="@this,dutyrosterturn_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{staffDutyRosterTurnBean.update}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!staffDutyRosterTurnBean.editable}"
+									update="dutyrosterturn_list,dutyrosterturn_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{staffDutyRosterTurnBean.delete}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!staffDutyRosterTurnBean.removable}"
+									update="dutyrosterturn_list,dutyrosterturn_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{staffDutyRosterTurnBean.load}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-refresh"
+									ajax="true"
+									disabled="#{!staffDutyRosterTurnBean.created}"
+									update="dutyrosterturn_list,dutyrosterturn_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband image</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="probandimage_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeProbandImage"
+				actionListener="#{probandImageBean.change(probandBean.in.id)}"
+				update="photo,photo_input" /> -->
+			<ui:decorate template="../shared/photo.xhtml">
+				<ui:param
+					name="photoBean"
+					value="#{probandImageBean}" />
+				<ui:param
+					name="usePhotoEncryption"
+					value="true" />
+				<ui:param
+					name="oncomplete"
+					value="handleUpdateProbandTabTitles(xhr, status, args)" />>
+    		
+    		
+			</ui:decorate>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

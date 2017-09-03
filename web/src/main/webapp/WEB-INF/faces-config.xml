@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <!-- Settings for application -->
+ <application>
+  <locale-config>
+   <default-locale>en</default-locale>
+   <!-- <supported-locale>de</supported-locale> -->
+  </locale-config>
+  <message-bundle>org.phoenixctms.ctsms.web.messages</message-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.inventory.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.InventoryLabels</base-name>
+   <var>inventorylabels</var>
+  </resource-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.staff.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.StaffLabels</base-name>
+   <var>stafflabels</var>
+  </resource-bundle>  
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.course.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.CourseLabels</base-name>
+   <var>courselabels</var>
+  </resource-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.inputfield.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.InputFieldLabels</base-name>
+   <var>inputfieldlabels</var>
+  </resource-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.trial.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.TrialLabels</base-name>
+   <var>triallabels</var>
+  </resource-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.proband.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.ProbandLabels</base-name>
+   <var>probandlabels</var>
+  </resource-bundle>  
+   <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.user.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.UserLabels</base-name>
+   <var>userlabels</var>
+  </resource-bundle> 
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.labels</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.Labels</base-name>
+   <var>labels</var>
+  </resource-bundle>
+  <resource-bundle>
+   <!-- <base-name>org.phoenixctms.ctsms.web.messages</base-name> -->
+   <base-name>org.phoenixctms.ctsms.web.bundle.Messages</base-name>
+   <var>messages</var>
+  </resource-bundle> 
+  
+  <resource-bundle>
+   <base-name>org.phoenixctms.ctsms.web.settings</base-name>
+   <var>settings</var>
+  </resource-bundle>
+  <resource-bundle>
+   <base-name>org.phoenixctms.ctsms.web.themes</base-name>
+   <var>themes</var>
+  </resource-bundle>  
+  <resource-bundle>
+   <base-name>org.phoenixctms.ctsms.web.windows</base-name>
+   <var>windows</var>
+  </resource-bundle>   
+  
+  <!--        <el-resolver>
+          org.springframework.web.jsf.el.SpringBeanFacesELResolver
+        </el-resolver>  -->
+        
+        <default-validators>
+         <validator>
+  <validator-id>javax.faces.Bean</validator-id>
+  <validator-class>org.phoenixctms.ctsms.web.SkipBeanValidator</validator-class>
+ </validator>
+ <validator>
+  <validator-id>javax.faces.Required</validator-id>
+  <validator-class>org.phoenixctms.ctsms.web.SkipRequiredValidator</validator-class>
+ </validator>
+        </default-validators>
+ </application>
+ 
+  <lifecycle>
+     <phase-listener>org.phoenixctms.ctsms.web.ResetInputAjaxActionListener</phase-listener>
+ </lifecycle>
+ 
+ <!-- PhaseListener 
+ 	<lifecycle>
+		<phase-listener>
+			at.irian.jsfatwork.gui.jsf.DebugPhaseListener
+		</phase-listener>
+		<phase-listener>
+			at.irian.jsfatwork.gui.jsf.ParameterPhaseListener
+		</phase-listener>
+	</lifecycle> -->
+	
+	<factory>
+        <exception-handler-factory>org.phoenixctms.ctsms.web.ExceptionHandlerFactory</exception-handler-factory>
+    </factory>	
+    
+    <!-- <converter>
+		<converter-for-class>java.util.Date</converter-for-class>
+		<converter-class>org.phoenixctms.ctsms.web.convert.DateTimeConverter</converter-class>
+	</converter> -->
+	<!-- <view-handler>org.phoenixctms.ctsms.web.LocaleViewHandler</view-handler> -->
+</faces-config>

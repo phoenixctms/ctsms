@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="trialmain_form">
+		
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialTag"
+				actionListener="#{trialTagBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialtag_form:trialtag_list,:tabView:trialtag_form:trialtag_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeTeamMember"
+				actionListener="#{teamMemberBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:teammember_form:team_member_list,:tabView:teammember_form:team_member_bulkadd,:tabView:teammember_form:team_member_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTimelineEvent"
+				actionListener="#{timelineEventBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:timelineevent_form:timelineevent_list,:tabView:timelineevent_form:timelineevent_input" />								
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialInventoryBooking"
+				actionListener="#{trialInventoryBookingBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialinventorybooking_form:inventorybooking_list,:tabView:trialinventorybooking_form:inventorybooking_input" />	
+			<p:remoteCommand
+				process="@this"
+				name="changeVisit"
+				actionListener="#{visitBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:visit_form:visit_list,:tabView:visit_form:visit_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandGroup"
+				actionListener="#{probandGroupBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:probandgroup_form:probandgroup_list,:tabView:probandgroup_form:probandgroup_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeVisitSchedule"
+				actionListener="#{visitScheduleBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:visitschedule_form:visitschedule_list,:tabView:visitschedule_form:visitschedule_matrix,:tabView:visitschedule_form:visitschedule_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialDutyRosterTurn"
+				actionListener="#{trialDutyRosterTurnBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialdutyrosterturn_form:dutyrosterturn_list,:tabView:trialdutyrosterturn_form:dutyrosterturn_input" />			
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandListEntryTag"
+				actionListener="#{probandListEntryTagBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:probandlistentrytag_form:probandlistentrytag_list,:tabView:probandlistentrytag_form:probandlistentrytag_bulkadd,:tabView:probandlistentrytag_form:probandlistentrytag_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeInquiry"
+				actionListener="#{inquiryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:inquiry_form:inquiry_list,:tabView:inquiry_form:inquiry_bulkadd,:tabView:inquiry_form:inquiry_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeInquiryValueDummy"
+				actionListener="#{dummyInquiryValueBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:inquiryvaluedummy_form:inquiry_input_grid" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeEcrf"
+				actionListener="#{ecrfBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrf_form:ecrf_list,:tabView:ecrf_form:ecrf_matrix,:tabView:ecrf_form:ecrf_clone,:tabView:ecrf_form:ecrf_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeEcrfField"
+				actionListener="#{ecrfFieldBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrffield_form:ecrffield_ecrf_list,:tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandListEntry"
+				actionListener="#{probandListEntryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandlist_bulkadd,:tabView:probandlist_form:probandListTabView" />
+			<!-- onstart="ecrfAuditTrailDialog.hide()" -->
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialEcrfStatusEntry"
+				actionListener="#{trialEcrfStatusEntryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeEcrfFieldStatus"
+				actionListener="#{ecrfFieldStatusBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrffieldstatus_form:ecrffieldstatus_list,:tabView:ecrffieldstatus_form:ecrffieldstatus_input" />								
+			<p:remoteCommand
+				process="@this"
+				name="changeReimbursements"
+				actionListener="#{reimbursementsBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:reimbursements_form:probandmoneytransfersummary_list,:tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list,:tabView:reimbursements_form:toolbar,:tabView:reimbursements_form:messages" />									
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeEnrollmentChart"
+				actionListener="#{enrollmentChartBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:enrollmentchart_form:enrollmentChart" /> -->
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialAssociation"
+				actionListener="#{trialAssociationBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialassociation_form:association_lists" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialHyperlink"
+				actionListener="#{hyperlinkBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialhyperlink_form:hyperlink_list,:tabView:trialhyperlink_form:hyperlink_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialFile"
+				actionListener="#{fileBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialfile_form" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialJournalEntry"
+				actionListener="#{journalBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialjournal_form:journal_list,:tabView:trialjournal_form:journal_input" />				
+
+
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByTag"
+				actionListener="#{trialBean.change(trialTagBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByTeamMember"
+				actionListener="#{trialBean.change(teamMemberBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByTimelineEvent"
+				actionListener="#{trialBean.change(timelineEventBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByInventoryBooking"
+				actionListener="#{trialBean.change(trialInventoryBookingBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByVisit"
+				actionListener="#{trialBean.change(visitBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByProbandGroup"
+				actionListener="#{trialBean.change(probandGroupBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByVisitSchedule"
+				actionListener="#{trialBean.change(visitScheduleBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByDutyRosterTurn"
+				actionListener="#{trialBean.change(trialDutyRosterTurnBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByProbandListEntryTag"
+				actionListener="#{trialBean.change(probandListEntryTagBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByInquiry"
+				actionListener="#{trialBean.change(inquiryBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByEcrf"
+				actionListener="#{trialBean.change(ecrfBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByEcrfField"
+				actionListener="#{trialBean.change(ecrfFieldBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByProbandListEntry"
+				actionListener="#{trialBean.change(probandListEntryBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByHyperlink"
+				actionListener="#{trialBean.change(hyperlinkBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByJournalEntry"
+				actionListener="#{trialBean.change(journalBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByFile"
+				actionListener="#{trialBean.change(fileBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+				
+			<p:remoteCommand
+									process="@this,trial_input"
+									name="updateTrial"
+									actionListener="#{trialBean.update}"
+									oncomplete="handleTrialChanged(xhr, status, args)"
+									update="trial_input" />				
+				
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:panel id="trial_input">
+					<f:facet name="header">
+						<h:outputText value="#{trialBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-input-tied-row,ctsms-input-row,ctsms-signature-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="trialname"
+								value="#{triallabels.trial_name_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="trialname"
+									value="#{trialBean.in.name}"
+									required="true"
+									label="#{triallabels.trial_name}"
+									styleClass="ctsms-control">
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialname">
+									<h:outputText
+										value="#{triallabels.trial_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="trialname" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="department"
+								value="#{triallabels.trial_department_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department"
+									value="#{trialBean.in.departmentId}"
+									required="true"
+									label="#{triallabels.trial_department}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department">
+									<h:outputText
+										value="#{triallabels.trial_department_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="trialType"
+								value="#{triallabels.trial_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="trialType"
+									value="#{trialBean.in.typeId}"
+									required="true"
+									label="#{triallabels.trial_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.trialTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialType">
+									<h:outputText
+										value="#{triallabels.trial_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="trialType" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="sponsoringType"
+								value="#{triallabels.trial_sponsoring_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="sponsoringType"
+									value="#{trialBean.in.sponsoringId}"
+									required="true"
+									label="#{triallabels.trial_sponsoring_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.sponsoringTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="sponsoringType">
+									<h:outputText
+										value="#{triallabels.trial_sponsoring_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="sponsoringType" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="surveyStatusType"
+								value="#{triallabels.trial_survey_status_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="surveyStatusType"
+									value="#{trialBean.in.surveyStatusId}"
+									required="true"
+									label="#{triallabels.trial_survey_status_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.surveyStatusTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="surveyStatusType">
+									<h:outputText
+										value="#{triallabels.trial_survey_status_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="surveyStatusType" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel value="#{triallabels.current_trial_status_label}" />
+							<h:outputText value="#{trialBean.out.status.name}" />
+							<h:outputLabel />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="trialStatusType"
+								value="#{triallabels.trial_status_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="trialStatusType"
+									value="#{trialBean.in.statusId}"
+									required="true"
+									label="#{triallabels.trial_status_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.statusTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,toolbar"
+										listener="#{trialBean.handleStatusTypeChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialStatusType">
+									<h:outputText
+										value="#{triallabels.trial_status_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="trialStatusType" />
+							<h:outputLabel />
+							<h:panelGrid
+								columns="1"
+								cellpadding="0">
+								<h:outputText
+									styleClass="ctsms-text-red"
+									value="#{trialBean.showTerminalStateMessage ? triallabels.trial_status_terminal_state_message : ''}"
+									id="trialStatusType_terminal_state_message" />
+								<h:outputText
+									value="#{trialBean.trialStatusType.lockdown ? triallabels.trial_status_lockdown_message : ''}"
+									id="trialStatusType_lockdown_message" />
+								<h:outputText
+									value="#{trialBean.trialStatusType.inquiryValueInputEnabled ? triallabels.trial_status_inquiry_value_input_enabled_message : triallabels.trial_status_inquiry_value_input_disabled_message}"
+									id="trialStatusType_inquiryValueInputEnabled_message" />
+							</h:panelGrid>
+							<h:outputLabel />
+							<h:outputLabel
+								for="dutySelfAllocationLocked"
+								value="#{triallabels.trial_duty_self_allocation_locked_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="dutySelfAllocationLocked"
+									value="#{trialBean.in.dutySelfAllocationLocked}">
+									<p:ajax
+										listener="#{trialBean.handleDutySelfAllocationLockedChange}"
+										update="dutySelfAllocationLockedUntil,dutySelfAllocationLockedFrom" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dutySelfAllocationLocked">
+									<h:outputText
+										value="#{triallabels.trial_duty_self_allocation_locked_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dutySelfAllocationLocked" />
+							<h:outputLabel
+								for="dutySelfAllocationLockedUntil"
+								value="#{triallabels.trial_duty_self_allocation_locked_until_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="dutySelfAllocationLockedUntil"
+									value="#{trialBean.in.dutySelfAllocationLockedUntil}"
+									required="false"
+									disabled="#{!trialBean.in.dutySelfAllocationLocked}"
+									label="#{triallabels.trial_duty_self_allocation_locked_until}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime">
+									<p:ajax
+										event="blur"
+										process="@this" />
+									<p:ajax
+										event="dateSelect"
+										process="@this" />
+								</p:calendar>
+								<p:tooltip for="dutySelfAllocationLockedUntil">
+									<h:outputText
+										value="#{triallabels.trial_duty_self_allocation_locked_until_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dutySelfAllocationLockedUntil" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="dutySelfAllocationLockedFrom"
+								value="#{triallabels.trial_duty_self_allocation_locked_from_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="dutySelfAllocationLockedFrom"
+									value="#{trialBean.in.dutySelfAllocationLockedFrom}"
+									required="false"
+									disabled="#{!trialBean.in.dutySelfAllocationLocked}"
+									label="#{triallabels.trial_duty_self_allocation_locked_from}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime">
+									<p:ajax
+										event="blur"
+										process="@this" />
+									<p:ajax
+										event="dateSelect"
+										process="@this" />
+								</p:calendar>
+								<p:tooltip for="dutySelfAllocationLockedFrom">
+									<h:outputText
+										value="#{triallabels.trial_duty_self_allocation_locked_from_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dutySelfAllocationLockedFrom" />
+							<h:outputLabel
+								for="exclusiveProbands"
+								value="#{triallabels.trial_exclusive_probands_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="exclusiveProbands"
+									value="#{trialBean.in.exclusiveProbands}">
+									<p:ajax update="blockingPeriod,blockingPeriodDays" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="exclusiveProbands">
+									<h:outputText
+										value="#{triallabels.trial_exclusive_probands_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="exclusiveProbands" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="blockingPeriod"
+								value="#{triallabels.trial_blocking_period_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="blockingPeriod"
+									disabled="#{!trialBean.blockingPeriodSelectorEnabled}"
+									value="#{trialBean.blocking.period}"
+									required="false"
+									label="#{triallabels.trial_blocking_period}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{trialBean.blocking.variablePeriods}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="blockingPeriodDays" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="blockingPeriod">
+									<h:outputText
+										value="#{triallabels.trial_blocking_period_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="blockingPeriod" />
+							<h:outputLabel
+								for="blockingPeriodDays"
+								value="#{triallabels.trial_blocking_period_days_label}" />
+							<h:panelGroup>
+								<p:spinner
+									disabled="#{!trialBean.blockingPeriodSpinnerEnabled}"
+									id="blockingPeriodDays"
+									value="#{trialBean.in.blockingPeriodDays}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{triallabels.trial_blocking_period_days}">
+								</p:spinner>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="blockingPeriodDays">
+									<h:outputText
+										value="#{triallabels.trial_blocking_period_days_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="blockingPeriodDays" />
+							
+
+														
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="trialtitle"
+								value="#{triallabels.trial_title_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="trialtitle"
+									value="#{trialBean.in.title}"
+									required="true"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{triallabels.trial_title}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialtitle">
+									<h:outputText
+										value="#{triallabels.trial_title_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="trialdescription"
+								value="#{triallabels.trial_description_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="trialdescription"
+									value="#{trialBean.in.description}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{triallabels.trial_description}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialdescription">
+									<h:outputText
+										value="#{triallabels.trial_description_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						
+						<p:fieldset
+						toggleable="true"
+						collapsed="true">
+						<f:facet name="legend">
+							<h:outputText value="#{triallabels.trial_signup_field_set}" />
+						</f:facet>
+						
+													<h:panelGrid
+
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
+						
+						
+							<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							
+							<h:outputLabel
+								for="signupprobandlist"
+								value="#{triallabels.trial_signup_proband_list_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="signupprobandlist"
+									value="#{trialBean.in.signupProbandList}">
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="signupprobandlist">
+									<h:outputText
+										value="#{triallabels.trial_signup_proband_list_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="signupprobandlist" />
+							
+							<h:outputLabel
+								for="signupinquiries"
+								value="#{triallabels.trial_signup_inquiries_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="signupinquiries"
+									value="#{trialBean.in.signupInquiries}">
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="signupinquiries">
+									<h:outputText
+										value="#{triallabels.trial_signup_inquiries_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="signupinquiries" />
+							
+							</h:panelGrid>
+						
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="trialsignupdescription"
+								value="#{triallabels.trial_signup_description_label}" />
+							<h:panelGroup>
+								<p:editor
+									id="trialsignupdescription"
+									value="#{trialBean.in.signupDescription}"
+									required="false"
+									controls="bold italic underline strikethrough color indent outdent bullets numbering"
+									height="280"
+									styleClass="ctsms-editor"
+									label="#{triallabels.trial_signup_description}">
+								</p:editor>
+								<!-- autoResize="false" -->
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialsignupdescription">
+									<h:outputText
+										value="#{triallabels.trial_signup_description_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+</h:panelGrid>						
+						</p:fieldset>
+						
+					 <h:inputHidden
+									id="trialStatusPassword"
+									required="false"
+									value="#{trialBean.password}">
+															</h:inputHidden> 					
+						<ui:include src="../shared/signature.xhtml">
+							<ui:param
+								name="id"
+								value="signature" />
+							<ui:param
+								name="signature"
+								value="#{trialBean.signature}" />
+							<ui:param
+								name="tooltip"
+								value="#{triallabels.trial_signature_tooltip}" />
+						</ui:include>
+						<p:messages />
+						<p:toolbar id="toolbar">
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{trialBean.created ? trialBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{trialBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleTrialChanged(xhr, status, args)"
+									disabled="false"
+									update="trial_input" />
+								<p:commandButton
+									rendered="#{!trialBean.created}"
+									process="@this,trial_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{trialBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleTrialChanged(xhr, status, args)"
+									disabled="#{!trialBean.createable}"
+									update="trial_input" />
+								<p:commandButton
+									rendered="#{trialBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="trialAddConfirmation.show()"
+									disabled="#{!trialBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.update_button_label}"
+									onclick="if(#{trialBean.trialStatusTypePasswordRequired}){trialStatusPassword.setValue('');trialUpdatePassword.show();}else{updateTrial();}"
+									disabled="#{!trialBean.editable}"
+									icon="ui-icon ui-icon-disk"
+									type="button" />									
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="trialDeleteConfirmation.show()"
+									disabled="#{!trialBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{trialBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleTrialChanged(xhr, status, args)"
+									disabled="#{!trialBean.created}"
+									update="trial_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.verify_signature_button_label}"
+									actionListener="#{trialBean.verifySignature}"
+									icon="ui-icon ui-icon-signature"
+									ajax="true"
+									disabled="#{empty trialBean.signature}"
+									update="signature" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="trialDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.trial_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{trialBean.delete}"
+					onclick="trialDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleTrialChanged(xhr, status, args)"
+					update="trial_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="trialDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="trialAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.trial_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,trial_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{trialBean.add}"
+					onclick="trialAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleTrialChanged(xhr, status, args)"
+					update="trial_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="trialAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			
+
+
+			
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="trialUpdatePassword">
+				<f:facet name="message">
+<h:outputText
+							value="#{triallabels.trial_password_prompt_dialog_message}"
+							escape="false" />				
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">				
+							<h:outputLabel
+								for="passwordTrialStatus"
+								value="#{triallabels.trial_signing_password_label}" />
+							<h:panelGroup>
+								<p:password
+									id="passwordTrialStatus"
+									widgetVar="trialStatusPassword"
+									required="false"
+									feedback="false"
+									redisplay="false"
+									label="#{triallabels.trial_signing_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="passwordTrialStatus">
+									<h:outputText
+										value="#{triallabels.trial_signing_password_tooltip}"
+										escape="false" />
+								</p:tooltip>								
+							</h:panelGroup>
+							<p:message for="passwordTrialStatus" />						
+						</h:panelGrid> 
+					</h:panelGrid>
+				</f:facet>
+				
+				<!-- <p:commandButton
+					process="@this,trial_input"
+					id="updatePassword"
+					value="#{labels.ok_button_label}"
+					actionListener="#{trialBean.update}"
+					onclick="trialStatusPassword.hide()"
+					ajax="true"
+					oncomplete="handleTrialChanged(xhr, status, args)"
+					update="trial_input" /> -->
+				<p:commandButton
+					value="#{labels.ok_button_label}"
+					onclick="setHiddenField('tabView:trialmain_form:trialStatusPassword',trialStatusPassword.getValue());trialUpdatePassword.hide();updateTrial();"
+					type="button" />					
+				<p:commandButton
+					value="#{labels.cancel_button_label}"
+					onclick="trialUpdatePassword.hide();trialStatusPassword.setValue('');"
+					type="button" />
+				
+			</p:confirmDialog>	
+								
+
+						
+			
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

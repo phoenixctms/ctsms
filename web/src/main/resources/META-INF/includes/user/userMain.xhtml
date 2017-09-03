@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>user main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="usermain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+
+			<p:remoteCommand
+				process="@this"
+				name="changePassword"
+				actionListener="#{passwordBean.change(userBean.in.id)}"
+				update=":tabView:password_form:password_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeUserActivity"
+				actionListener="#{userActivityBean.change(userBean.in.id)}"
+				update=":tabView:useractivity_form:useractivity_list" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeUserPermissionProfiles"
+				actionListener="#{userPermissionProfileBean.change(userBean.in.id)}"
+				update=":tabView:userpermissionprofile_form:userpermissionprofile_input_grid" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeUserJournalEntry"
+				actionListener="#{journalBean.changeUser(userBean.in.id)}"
+				update=":tabView:userjournal_form:journal_list,:tabView:userjournal_form:journal_input" />		
+		
+		
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeUserByJournalEntry"
+				actionListener="#{userBean.change(journalBean.in.userId)}"
+				oncomplete="handleUserChanged(xhr, status, args)"
+				update="user_input" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:panel
+					id="user_input"
+					rendered="#{sessionScopeBean.loggedIn}">
+					<f:facet name="header">
+						<h:outputText value="#{userBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="authMethod"
+								value="#{userlabels.user_auth_method_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="authMethod"
+									value="#{userBean.authMethod.authenticationType}"
+									required="true"
+									label="#{userlabels.user_auth_method}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{userBean.authMethod.authenticationTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{userBean.handleAuthMethodChange}"
+										update=":tabView:usermain_form:user_input" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="authMethod">
+									<h:outputText
+										value="#{userlabels.user_auth_method_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="authMethod" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="username"
+								value="#{userlabels.user_name_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="username"
+									value="#{userBean.in.name}"
+									required="true"
+									label="#{userlabels.user_name}"
+									styleClass="ctsms-control">
+									<p:ajax
+										event="keyup"
+										listener="#{userBean.handleNameKeyUp}"
+										update="remoteUserMessage" />
+									<p:ajax
+										listener="#{userBean.handleNameKeyUp}"
+										update="remoteUserMessage" />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="username">
+									<h:outputText
+										value="#{userlabels.user_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="username" />
+							<h:outputLabel
+								rendered="#{userBean.ldap1}"
+								for="ldapEntry1"
+								value="#{userlabels.user_ldapentry1_label}" />
+							<h:panelGroup rendered="#{userBean.ldap1}">
+								<p:autoComplete
+									id="ldapEntry1"
+									required="false"
+									value="#{userBean.ldapEntry1}"
+									label="#{userlabels.user_ldapentry1}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
+									maxResults="#{autoCompleteMaxResultsLdapEntry}"
+									queryDelay="#{autoCompleteQueryDelayLdapEntry}"
+									dropdown="#{autoCompleteDropdownLdapEntry}"
+									global="#{autoCompleteGlobalLdapEntry}"
+									scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
+									completeMethod="#{userBean.completeLdapEntry1}"
+									forceSelection="true"
+									var="ldapEntry"
+									itemValue="#{ldapEntry}"
+									itemLabel="#{ldapEntry.username}"
+									converter="ctsms.LdapEntry1">
+									<p:ajax
+										listener="#{userBean.handleLdapEntry1Select}"
+										event="itemSelect"
+										process="@this"
+										update="username,remoteUserMessage" />
+									<p:column>
+										<h:outputText value="#{ldapEntry.username}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
+									</p:column>
+									<f:facet name="itemtip">
+										<h:panelGrid
+											columns="1"
+											cellpadding="0"
+											styleClass="ctsms-ldapentry-itemtip-panelgrid">
+											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
+											<h:panelGroup>
+												<ul>
+													<ui:repeat
+														value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
+														var="attribute">
+														<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
+													</ui:repeat>
+												</ul>
+											</h:panelGroup>
+										</h:panelGrid>
+									</f:facet>
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="ldapEntry1">
+									<h:outputText
+										value="#{userlabels.user_ldapentry1_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{userBean.ldap1}"
+								for="ldapEntry1" />
+							<h:outputLabel
+								rendered="#{userBean.ldap2}"
+								for="ldapEntry2"
+								value="#{userlabels.user_ldapentry2_label}" />
+							<h:panelGroup rendered="#{userBean.ldap2}">
+								<p:autoComplete
+									id="ldapEntry2"
+									required="false"
+									value="#{userBean.ldapEntry2}"
+									label="#{userlabels.user_ldapentry2}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
+									maxResults="#{autoCompleteMaxResultsLdapEntry}"
+									queryDelay="#{autoCompleteQueryDelayLdapEntry}"
+									dropdown="#{autoCompleteDropdownLdapEntry}"
+									global="#{autoCompleteGlobalLdapEntry}"
+									scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
+									completeMethod="#{userBean.completeLdapEntry2}"
+									forceSelection="true"
+									var="ldapEntry"
+									itemValue="#{ldapEntry}"
+									itemLabel="#{ldapEntry.username}"
+									converter="ctsms.LdapEntry2">
+									<p:ajax
+										listener="#{userBean.handleLdapEntry2Select}"
+										event="itemSelect"
+										process="@this"
+										update="username,remoteUserMessage" />
+									<p:column>
+										<h:outputText value="#{ldapEntry.username}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
+									</p:column>
+									<f:facet name="itemtip">
+										<h:panelGrid
+											columns="1"
+											cellpadding="0"
+											styleClass="ctsms-ldapentry-itemtip-panelgrid">
+											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
+											<h:panelGroup>
+												<ul>
+													<ui:repeat
+														value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
+														var="attribute">
+														<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
+													</ui:repeat>
+												</ul>
+											</h:panelGroup>
+										</h:panelGrid>
+									</f:facet>
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="ldapEntry2">
+									<h:outputText
+										value="#{userlabels.user_ldapentry2_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{userBean.ldap2}"
+								for="ldapEntry2" />
+							<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
+							<h:outputText
+								rendered="#{!userBean.ldap1 and !userBean.ldap2}"
+								value="" />
+							<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
+							<h:outputLabel />
+							<h:outputText
+								id="remoteUserMessage"
+								styleClass="#{empty userBean.remoteUserOk ? '' : (userBean.remoteUserOk ? 'ctsms-text-green' : 'ctsms-text-red')}"
+								value="#{userBean.remoteUserMessage}" />
+							<h:outputLabel />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="department"
+								value="#{userlabels.user_department_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department"
+									value="#{userBean.in.departmentId}"
+									required="true"
+									label="#{userlabels.user_department}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department">
+									<h:outputText
+										value="#{userlabels.user_department_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="identity"
+								value="#{userlabels.user_identity_label}" />
+							<h:panelGrid
+								columns="5"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="identity"
+										required="false"
+										value="#{userBean.in.identityId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="identityName"
+										value="#{applicationScopeBean.clipStringPicker(userBean.identityName)}"
+										title="#{userlabels.user_identity_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff('tabView:usermain_form:identity')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_active_identity_staff_button_label}"
+									icon="ui-icon ui-icon-person"
+									type="button"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									onclick="setIDAjax('tabView:usermain_form:identity',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},'tabView:usermain_form:identityName','#{sessionScopeBean.userIdentityName}')" />
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName','#{applicationScopeBean.noStaffPickedMessage}')" />
+								<p:commandButton
+									title="#{messages.create_new_staff}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button"
+									onclick="openNewStaff()" />
+							</h:panelGrid>
+							<p:message for="identity" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="locale"
+								value="#{userlabels.user_locale_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="locale"
+									value="#{userBean.in.locale}"
+									required="true"
+									label="#{userlabels.user_locale}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.locales}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="locale">
+									<h:outputText
+										value="#{userlabels.user_locale_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="locale" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="timeZone"
+								value="#{userlabels.user_time_zone_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="timeZone"
+									value="#{userBean.in.timeZone}"
+									required="true"
+									label="#{userlabels.user_time_zone}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.timeZones}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="timeZone">
+									<h:outputText
+										value="#{userlabels.user_time_zone_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="timeZone" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="theme"
+								value="#{userlabels.user_theme_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="theme"
+									value="#{userBean.in.theme}"
+									required="false"
+									label="#{userlabels.user_theme}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.themes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="theme">
+									<h:outputText
+										value="#{userlabels.user_theme_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="theme" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="showTooltips"
+								value="#{userlabels.user_show_tooltips_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="showTooltips"
+									value="#{userBean.in.showTooltips}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="showTooltips">
+									<h:outputText
+										value="#{userlabels.user_show_tooltips_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="showTooltips" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="locked"
+								value="#{userlabels.user_locked_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="locked"
+									value="#{userBean.in.locked}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="locked">
+									<h:outputText
+										value="#{userlabels.user_locked_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="locked" />
+						</h:panelGrid>
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{userBean.created ? userBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{userBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleUserChanged(xhr, status, args)"
+									disabled="false"
+									update="user_input" />
+								<p:commandButton
+									rendered="#{!userBean.created}"
+									process="@this,user_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{userBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleUserChanged(xhr, status, args)"
+									disabled="#{!userBean.createable}"
+									update="user_input" />
+								<p:commandButton
+									rendered="#{userBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="userAddConfirmation.show()"
+									disabled="#{!userBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,user_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{userBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleUserChanged(xhr, status, args)"
+									disabled="#{!userBean.editable}"
+									update="user_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="userDeleteConfirmation.show()"
+									disabled="#{!userBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{userBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleUserChanged(xhr, status, args)"
+									disabled="#{!userBean.created}"
+									update="user_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="userDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{userlabels.user_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{userBean.delete}"
+					onclick="userDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleUserChanged(xhr, status, args)"
+					update="user_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="userDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="userAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{userlabels.user_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,user_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{userBean.add}"
+					onclick="userAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleUserChanged(xhr, status, args)"
+					update="user_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="userAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

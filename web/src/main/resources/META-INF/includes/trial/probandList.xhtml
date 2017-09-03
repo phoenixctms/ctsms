@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband list entries</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="probandlist_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeProbandListEntry"
+				actionListener="#{probandListEntryBean.change(trialBean.in.id)}"
+				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update="proband_list,probandlist_bulkadd,probandListTabView" /> -->
+			<p:remoteCommand
+				process="@this,lastPickedProbandIds"
+				name="addProbandIDs"
+				actionListener="#{probandListEntryBean.probandMultiPicker.addIds(probandListEntryBean.probandMultiPicker.ids)}"
+				update="probandlist_bulkadd" />
+			<p:remoteCommand
+				process="@this"
+				name="moveProbandListEntryTo"
+				actionListener="#{probandListEntryBean.moveTo}"
+				update="proband_list,probandListTabView" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<h:panelGroup id="proband_list_wrapper">
+					<p:dataTable
+						styleClass="ctsms-datatable"
+						lazy="true"
+						widgetVar="probandList"
+						rows="#{dataTablesRowsDefault}"
+						paginator="#{dataTablesPaginatorDefault}"
+						paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+						paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+						pageLinks="#{dataTablesPageLinksDefault}"
+						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+						scrollable="#{dataTablesScrollableDefault}"
+						scrollHeight="#{dataTablesScrollHeightDefault}"
+						resizableColumns="#{dataTablesResizableColumnsDefault}"
+						sortBy="#{probandListEntry.vo.position}"
+						emptyMessage="#{labels.datatable_permission_empty_message}"
+						var="probandListEntry"
+						value="#{probandListEntryBean.probandListEntryModel}"
+						id="proband_list"
+						selectionMode="single"
+						selection="#{probandListEntryBean.selectedProbandListEntry}"
+						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}">
+						<p:ajax
+							event="rowSelect"
+							update=":tabView:probandlist_form:probandListTabView:probandlistentry_input,:tabView:probandlist_form:probandListTabView:probandliststatus_list,:tabView:probandlist_form:probandListTabView:probandliststatus_input,:tabView:probandlist_form:probandListTabView:tagvalue_input_grid"
+							oncomplete="handleUpdateProbandListTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
+						<f:facet name="header">
+							<h:outputText value="#{probandListEntryBean.probandListEntryModel.rowCount} #{triallabels.proband_list_proband_list_header}" />
+						</f:facet>
+						<p:column style="width:16px;">
+							<p:rowToggler />
+						</p:column>
+						<p:column sortBy="#{probandListEntry.vo.id}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.id}" />
+						</p:column>
+					
+						<p:column
+							sortBy="#{probandListEntry.vo.group.title}"
+							filterBy="#{probandListEntry.vo.group.id}"
+							filterOptions="#{probandListEntryBean.filterProbandGroups}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_group_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.group.title}" />
+						</p:column>
+
+						<p:column sortBy="#{probandListEntry.vo.proband.id}"
+						    filterBy="#{probandListEntry.vo.proband.id}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_proband_id_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.id}" />
+						</p:column>	
+
+						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}"
+							rendered="#{probandListEntryBean.trial.type.person}">
+							<f:facet name="header">
+								<h:outputText
+									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+									value="#{triallabels.proband_list_proband_list_proband_name_column}" />
+							</f:facet>
+							<ui:include src="../shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{probandListEntry.vo.proband.name}" />
+								<ui:param
+									name="icon"
+									value="#{probandListEntry.vo.proband.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="#{probandListEntry.vo.proband.decrypted}" />
+							</ui:include>
+							<ui:include src="../shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{probandListEntry.vo.proband.name}" />
+								<ui:param
+									name="icon"
+									value="ctsms-icon-encrypted" />
+								<ui:param
+									name="rendered"
+									value="#{!probandListEntry.vo.proband.decrypted}" />
+							</ui:include>
+						</p:column>
+
+						<p:column filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
+							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
+							rendered="#{!probandListEntryBean.trial.type.person}">
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.proband_list_proband_list_animal_name_column}" />
+							</f:facet>
+							<ui:include src="../shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{probandListEntry.vo.proband.name}" />
+								<ui:param
+									name="icon"
+									value="#{probandListEntry.vo.proband.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="true" />
+							</ui:include>							
+						</p:column>
+
+						<p:column
+							filterBy="#{probandListEntry.vo.proband.personParticulars.gender}"
+							filterOptions="#{sessionScopeBean.filterSexes}"
+							rendered="#{probandListEntryBean.trial.type.person}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_proband_gender_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
+						</p:column>
+						
+						<p:column
+							filterBy="#{probandListEntry.vo.proband.animalParticulars.gender}"
+							filterOptions="#{sessionScopeBean.filterSexes}"
+							rendered="#{!probandListEntryBean.trial.type.person}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_proband_gender_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
+						</p:column>
+						
+						<ui:include src="../shared/probandListEntryTableColumns.xhtml">
+							<ui:param
+								name="probandListEntryModel"
+								value="#{probandListEntryBean.probandListEntryModel}" />
+							<ui:param
+								name="probandlistentry_list"
+								value=":tabView:probandlist_form:proband_list" />
+							<ui:param
+								name="showReimbursementTotalsColumn"
+								value="false" />
+							<ui:param
+								name="showStatusDetails"
+								value="true" />								
+							<ui:param
+								name="byTagInputField"
+								value="false" />
+							<ui:param
+								name="byInquiryInputField"
+								value="true" />
+							<ui:param
+								name="allTrials"
+								value="true" />
+							<ui:param
+								name="lazyModel"
+								value="true" />
+							<ui:param
+								name="person"
+								value="#{probandListEntryBean.trial.type.person}" />								
+						</ui:include>
+						<p:column sortBy="#{probandListEntry.vo.position}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_position_column}" />
+							</f:facet>
+							<h:outputText
+								rendered="#{!probandListEntryBean.inputVisible}"
+								value="#{probandListEntry.vo.position}" />
+							<h:panelGroup rendered="#{probandListEntryBean.inputVisible}">
+								<p:spinner
+									widgetVar="probandListEntryTargetPosition#{probandListEntry.vo.id}"
+									id="targetPosition"
+									value="#{probandListEntry.vo.position}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{triallabels.proband_list_target_position}" />
+								<p:tooltip
+									rendered="#{enableTooltips and probandListEntry.rowIndex == 0}"
+									for="targetPosition">
+									<h:outputText
+										value="#{triallabels.proband_list_target_position_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</p:column>
+						<p:column style="width:#{probandListEntryBean.inputVisible ? '64' : '32'}px;white-space:nowrap;">
+							<p:commandButton
+								title="#{labels.rotate_positions_button_label}"
+								id="moveToTargetPosition"
+								icon="ui-icon-arrowstop-1-e"
+								type="button"
+								rendered="#{probandListEntryBean.inputVisible}"
+								onclick="moveProbandListEntryTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:'#{probandListEntry.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:probandListEntryTargetPosition#{probandListEntry.vo.id}.getValue() }));" />
+							<p:commandButton
+								title="#{labels.open_proband_button_label}"
+								type="button"
+								icon="ui-icon ui-icon-extlink"
+								onclick="openProband(#{probandListEntry.vo.proband.id})" />
+						</p:column>
+						<p:rowExpansion>
+							<h:panelGrid
+								columns="5"
+								cellpadding="0"
+								styleClass="ctsms-probandlist-rowexpansion-panelgrid"
+								columnClasses="ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column">
+								<h:outputText
+									rendered="#{empty probandListEntry.vo.proband.comment}"
+									value="#{probandlabels.no_proband_comment_label}" />
+								<ui:include src="../shared/rowExpansionOutputText.xhtml">
+									<ui:param
+										name="rowExpansionText"
+										value="#{probandListEntry.vo.proband.comment}" />
+									<ui:param
+										name="rendered"
+										value="#{not empty probandListEntry.vo.proband.comment}" />
+									<ui:param
+										name="rowExpansionTextClass"
+										value="ctsms-probandlist-rowexpansion-datalist-descriptiontext" />
+									<ui:param
+										name="escapeHtml"
+										value="true" />
+								</ui:include>
+								<h:outputText
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandContactDetailValues(probandListEntry.vo.proband)) == 0}"
+									value="#{probandlabels.no_proband_contact_detail_values_label}" />
+								<p:dataList
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandContactDetailValues(probandListEntry.vo.proband)) > 0}"
+									value="#{probandListEntryBean.getProbandContactDetailValues(probandListEntry.vo.proband)}"
+									var="contactDetailValue"
+									type="definition">
+									<h:outputText value="#{contactDetailValue.vo.type.name}:" />
+									<f:facet name="description">
+										<ui:include src="../shared/contactDetailValue.xhtml">
+											<ui:param
+												name="decrypted"
+												value="#{contactDetailValue.vo.decrypted}" />
+											<ui:param
+												name="contactDetailValue"
+												value="#{contactDetailValue.vo}" />
+											<ui:param
+												name="styleClass"
+												value="ctsms-probandlist-rowexpansion-datalist-descriptiontext" />
+										</ui:include>
+									</f:facet>
+								</p:dataList>
+								<h:outputText
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandAddresses(probandListEntry.vo.proband)) == 0}"
+									value="#{probandlabels.no_proband_addresses_label}" />
+								<p:dataList
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandAddresses(probandListEntry.vo.proband)) > 0}"
+									value="#{probandListEntryBean.getProbandAddresses(probandListEntry.vo.proband)}"
+									var="address"
+									type="definition">
+									<h:outputText value="#{address.vo.type.name}:" />
+									<f:facet name="description">
+										<h:outputText
+											styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
+											value="#{address.vo.name}" />
+									</f:facet>
+								</p:dataList>
+								<h:outputText
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandStatus(probandListEntry.vo.proband)) == 0}"
+									value="#{probandlabels.no_proband_status_label}" />
+								<p:dataList
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandStatus(probandListEntry.vo.proband)) > 0}"
+									value="#{probandListEntryBean.getProbandStatus(probandListEntry.vo.proband)}"
+									var="statusEntry"
+									type="definition">
+									<h:outputText value="#{statusEntry.vo.type.name}:" />
+									<f:facet name="description">
+										<h:outputText
+											styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
+											value="#{applicationScopeBean.getProbandStatusEntryStartStopString(statusEntry.vo)}" />
+									</f:facet>
+								</p:dataList>
+								<h:outputText
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandListStatus(probandListEntry.vo.proband)) == 0}"
+									value="#{probandlabels.no_proband_list_status_label}" />
+								<p:dataList
+									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandListStatus(probandListEntry.vo.proband)) > 0}"
+									value="#{probandListEntryBean.getProbandListStatus(probandListEntry.vo.proband)}"
+									var="statusEntry"
+									type="definition">
+									<h:outputText value="#{statusEntry.vo.status.name}:" />
+									<f:facet name="description">
+										<h:outputText
+											styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
+											value="#{statusEntry.vo.decrypted ? statusEntry.vo.reason : triallabels.encrypted_proband_list_status_reason}" />
+									</f:facet>
+								</p:dataList>
+							</h:panelGrid>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGroup>
+				<h:panelGrid
+					columns="2"
+					cellpadding="0"
+					styleClass="ctsms-probandlist-content-panelgrid ctsms-content-panelgrid-maxheight"
+					columnClasses="ctsms-probandlist-probandpicker-column,ctsms-probandlist-input-column">
+					<p:panel
+						id="probandlist_bulkadd"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{labels.bulk_creation_deletion_label}" />
+						</f:facet>
+						<h:panelGrid
+							rendered="#{probandListEntryBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
+								<h:outputText value="#{probandListEntryBean.probandMultiPicker.count} #{triallabels.participants_picked_label}" />
+								<p:commandButton
+									title="#{labels.multipick_proband_button_label}"
+									icon="ui-icon ui-icon-cart"
+									type="button"
+									onclick="openProbandMultiPicker(':tabView:probandlist_form:lastPickedProbandIds','addProbandIDs')" />
+								<p:commandButton
+									process="@this"
+									title="#{labels.multipick_clear_all_button_label}"
+									actionListener="#{probandListEntryBean.probandMultiPicker.clear}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="#{!probandListEntryBean.probandMultiPicker.isEnabled}"
+									update="probandlist_bulkadd" />
+								<h:inputHidden
+									id="lastPickedProbandIds"
+									required="false"
+									value="#{probandListEntryBean.probandMultiPicker.ids}">
+								</h:inputHidden>
+							</h:panelGrid>
+							<p:dataList
+								type="#{multiPickerDataListsType}"
+								rows="#{multiPickerDataListsRows}"
+								paginator="#{multiPickerDataListsPaginator}"
+								paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
+								rowsPerPageTemplate="#{multiPickerDataListsRowsPerPageTemplate}"
+								paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
+								pageLinks="#{multiPickerDataListsPageLinks}"
+								paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
+								id="proband_selection"
+								var="proband"
+								styleClass="ctsms-probandlist-probandpicker-list"
+								value="#{probandListEntryBean.probandMultiPicker.selection}">
+								<f:facet name="description">
+									<h:outputText value="" />
+								</f:facet>
+								<p:column>
+									<h:outputText value="#{proband.rowPosition}." />
+								</p:column>
+								<p:column>
+									<h:outputText value=" " />
+								</p:column>
+								<p:column style="width:32px;">
+									<h:outputText value=" " />
+									<p:commandButton
+										type="button"
+										title="#{labels.open_proband_button_label}"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openProband(#{proband.vo.id})" />
+								</p:column>
+								<p:column style="width:32px;">
+									<p:commandButton
+										process="@this"
+										title="#{labels.multipick_clear_button_label}"
+										actionListener="#{probandListEntryBean.probandMultiPicker.removeId(proband.vo.id)}"
+										icon="ui-icon ui-icon-close"
+										update=":tabView:probandlist_form:probandlist_bulkadd" />
+								</p:column>
+								<p:column>
+									<h:outputText value=" " />
+								</p:column>
+								<p:column>
+									<h:outputText
+										value="#{applicationScopeBean.escapeHtml(proband.vo.name)}"
+										escape="false" />
+								</p:column>
+							</p:dataList>
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="bulkAddProbandListEntryProbandGroup"
+									value="#{triallabels.bulkadd_proband_list_proband_group_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="bulkAddProbandListEntryProbandGroup"
+										value="#{probandListEntryBean.bulkAddGroupId}"
+										required="false"
+										label="#{triallabels.bulkadd_proband_list_proband_group}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{probandListEntryBean.probandGroups}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddProbandListEntryProbandGroup">
+										<h:outputText
+											value="#{triallabels.bulkadd_proband_list_proband_group_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddProbandListEntryProbandGroup" />
+								<h:outputLabel
+									for="bulkAddShuffle"
+									value="#{triallabels.bulkadd_shuffle_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddShuffle"
+										value="#{probandListEntryBean.bulkAddShuffle}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddShuffle">
+										<h:outputText
+											value="#{triallabels.bulkadd_shuffle_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddShuffle" />
+								<h:outputLabel
+									for="bulkAddLimit"
+									value="#{triallabels.bulkadd_limit_label}" />
+								<h:panelGroup>
+									<p:spinner
+										id="bulkAddLimit"
+										value="#{probandListEntryBean.bulkAddLimit}"
+										styleClass="ctsms-spinner"
+										required="true"
+										label="#{triallabels.bulkadd_limit}">
+										<p:ajax />
+										<p:ajax event="keyup" />
+									</p:spinner>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddLimit">
+										<h:outputText
+											value="#{triallabels.bulkadd_limit_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddLimit" />
+							</h:panelGrid>
+							<!-- <h:outputLabel rendered="#{!probandListEntryBean.inputVisible}" /> -->
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this"
+										value="#{labels.delete_button_label}"
+										onclick="probandListEntryBulkDeleteConfirmation.show()"
+										disabled="#{!probandListEntryBean.probandBulkRemovable}"
+										icon="ui-icon ui-icon-minusthick"
+										type="button" />										
+									<p:commandButton
+										process="@this,bulkAddProbandListEntryProbandGroup,bulkAddShuffle,bulkAddLimit"
+										id="bulkAddProbandListEntry"
+										value="#{labels.add_button_label}"
+										actionListener="#{probandListEntryBean.addBulk}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!probandListEntryBean.probandBulkCreateable}"
+										update="proband_list,probandlist_bulkadd" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+					<p:tabView
+						widgetVar="probandListTabView"
+						id="probandListTabView"
+						styleClass="ctsms-probandlist-tabview">
+						<!-- 						activeIndex="1" -->
+						<!-- <p:ajax
+							event="tabChange"
+							listener="#{probandListEntryBean.onTabViewChange}"
+							process="@none"
+							update="probandListEntryMessages,probandListStatusEntryMessages,probandListEntryTagValueMessages" /> -->
+						<p:tab
+							id="probandListEntryMain"
+							title="#{probandListEntryBean.mainTabTitle}">
+							<p:panel id="probandlistentry_input">
+								<f:facet name="header">
+									<h:outputText value="#{probandListEntryBean.title}" />
+								</f:facet>
+								<h:panelGrid
+									columns="1"
+									cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+									<ui:include src="../shared/probandListEntry.xhtml">
+										<ui:param
+											name="namingContainer"
+											value=":tabView:probandlist_form:probandListTabView" />
+										<ui:param
+											name="probandList"
+											value=":tabView:probandlist_form:proband_list" />
+										<ui:param
+											name="probandListBean"
+											value="#{probandListEntryBean}" />
+										<ui:param
+											name="showProbandPicker"
+											value="true" />
+										<ui:param
+											name="showTrialPicker"
+											value="false" />
+									</ui:include>
+									<p:messages for="probandListEntryMessages" />
+									<p:toolbar>
+										<p:toolbarGroup align="left">
+											<h:outputText
+												styleClass="ctsms-toolbar-text"
+												value="#{probandListEntryBean.created ? probandListEntryBean.modifiedAnnotation : ''}" />
+										</p:toolbarGroup>
+										<p:separator />
+										<p:toolbarGroup align="right">
+											<p:commandButton
+												process="@this"
+												title="#{labels.reset_button_label}"
+												actionListener="#{probandListEntryBean.reset}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+												icon="ui-icon ui-icon-close"
+												ajax="true"
+												disabled="false"
+												update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandListTabView" />
+											<p:commandButton
+												process="@this,probandlistentry_input"
+												id="addProbandListEntry"
+												value="#{labels.add_button_label}"
+												actionListener="#{probandListEntryBean.add}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												icon="ui-icon ui-icon-plusthick"
+												ajax="true"
+												disabled="#{!probandListEntryBean.createable}"
+												update=":tabView:probandlist_form:probandListTabView" />
+											<p:commandButton
+												process="@this,probandlistentry_input"
+												id="updateProbandListEntry"
+												value="#{labels.update_button_label}"
+												actionListener="#{probandListEntryBean.update}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												icon="ui-icon ui-icon-disk"
+												ajax="true"
+												disabled="#{!probandListEntryBean.editable}"
+												update=":tabView:probandlist_form:probandListTabView" />
+											<p:commandButton
+												process="@this"
+												value="#{labels.normalize_positions_button_label}"
+												title="#{labels.normalize_positions_button_title}"
+												actionListener="#{probandListEntryBean.normalizePositions}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												icon="ui-icon ui-icon-link"
+												ajax="true"
+												disabled="#{!probandListEntryBean.createable}"
+												update=":tabView:probandlist_form:probandListTabView" />
+											<p:commandButton
+												process="@this"
+												value="#{labels.delete_button_label}"
+												onclick="probandListEntryDeleteConfirmation.show()"
+												disabled="#{!probandListEntryBean.removable}"
+												icon="ui-icon ui-icon-trash"
+												type="button" />
+											<p:commandButton
+												process="@this"
+												title="#{labels.load_button_label}"
+												actionListener="#{probandListEntryBean.load}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												icon="ui-icon-refresh"
+												ajax="true"
+												disabled="#{!probandListEntryBean.created}"
+												update=":tabView:probandlist_form:probandListTabView" />
+											<p:commandButton
+												disabled="#{!probandListEntryBean.enableExports}"
+												immediate="true"
+												ajax="false"
+												value="#{triallabels.export_proband_list_button_label}"
+												title="#{triallabels.export_proband_list_button_title}"
+												icon="ui-icon ui-icon-xls">
+												<p:fileDownload value="#{probandListEntryBean.probandListExcelStreamedContent}" />
+											</p:commandButton>
+										</p:toolbarGroup>
+										<p:separator />
+										<p:toolbarGroup align="right">
+											<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+										</p:toolbarGroup>
+									</p:toolbar>
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+						<p:tab
+							id="probandListStatusEntries"
+							title="#{triallabels.proband_list_status_tab_label}">
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-content-panelgrid">
+								<ui:include src="../shared/probandListStatusEntryTable.xhtml">
+									<ui:param
+										name="namingContainer"
+										value=":tabView:probandlist_form:probandListTabView" />
+									<ui:param
+										name="probandListBean"
+										value="#{probandListEntryBean}" />
+								</ui:include>
+								<p:panel id="probandliststatus_input">
+									<f:facet name="header">
+										<h:outputText value="#{probandListEntryBean.probandListStatusEntryBean.title}" />
+									</f:facet>
+									<h:panelGrid
+										columns="1"
+										cellpadding="0"
+										styleClass="ctsms-input-panelgrid"
+										rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+										<ui:include src="../shared/probandListStatusEntryInput.xhtml">
+											<ui:param
+												name="probandListBean"
+												value="#{probandListEntryBean}" />
+											<ui:param
+												name="person"
+												value="#{probandListEntryBean.trial.type.person}" />											
+										</ui:include>
+										<p:messages for="probandListStatusEntryMessages" />
+										<p:toolbar>
+											<p:toolbarGroup align="left">
+												<h:outputText
+													styleClass="ctsms-toolbar-text"
+													value="#{probandListEntryBean.probandListStatusEntryBean.created ? probandListEntryBean.probandListStatusEntryBean.modifiedAnnotation : ''}" />
+											</p:toolbarGroup>
+											<p:separator />
+											<p:toolbarGroup align="right">
+												<p:commandButton
+													process="@this"
+													value="#{labels.new_state_button_label}"
+													actionListener="#{probandListEntryBean.probandListStatusEntryBean.reset}"
+													icon="ui-icon ui-icon-star"
+													ajax="true"
+													disabled="false"
+													update="probandliststatus_list,probandliststatus_input" />
+												<p:commandButton
+													process="@this,probandliststatus_input"
+													id="addProbandListStatusEntry"
+													value="#{labels.add_button_label}"
+													actionListener="#{probandListEntryBean.probandListStatusEntryBean.add}"
+													oncomplete="probandList.filter()"
+													icon="ui-icon ui-icon-plusthick"
+													ajax="true"
+													disabled="#{!probandListEntryBean.probandListStatusEntryBean.createable}"
+													update="probandliststatus_list,probandliststatus_input" />
+												<p:commandButton
+													process="@this"
+													value="#{labels.delete_button_label}"
+													actionListener="#{probandListEntryBean.probandListStatusEntryBean.delete}"
+													oncomplete="probandList.filter()"
+													icon="ui-icon ui-icon-trash"
+													ajax="true"
+													disabled="#{!probandListEntryBean.probandListStatusEntryBean.removable}"
+													update="probandliststatus_list,probandliststatus_input" />
+												<p:commandButton
+													process="@this"
+													value="#{labels.load_button_label}"
+													actionListener="#{probandListEntryBean.probandListStatusEntryBean.load}"
+													icon="ui-icon-refresh"
+													ajax="true"
+													disabled="#{!probandListEntryBean.probandListStatusEntryBean.created}"
+													update="probandliststatus_list,probandliststatus_input" />
+											</p:toolbarGroup>
+											<p:separator />
+											<p:toolbarGroup align="right">
+												<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+											</p:toolbarGroup>
+										</p:toolbar>
+									</h:panelGrid>
+								</p:panel>
+							</h:panelGrid>
+						</p:tab>
+						<p:tab
+							id="probandListEntryTagValues"
+							title="#{triallabels.proband_list_entry_tag_values_tab_label}">
+							<h:panelGrid
+								id="tagvalue_input_grid"
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+								<ui:include src="../shared/probandListEntryTagValue.xhtml">
+									<ui:param
+										name="probandListBean"
+										value="#{probandListEntryBean}" />
+									<ui:param
+										name="namingContainer"
+										value=":tabView:probandlist_form:probandListTabView" />
+									<ui:param
+										name="updateProbandListWidget"
+										value="probandList.filter()" />
+								</ui:include>
+								<p:messages for="probandListEntryTagValueMessages" />
+								<p:toolbar>
+									<p:toolbarGroup align="left">
+										<h:outputText
+											styleClass="ctsms-toolbar-text"
+											value="#{probandListEntryBean.probandListEntryTagValueBean.created ? probandListEntryBean.probandListEntryTagValueBean.modifiedAnnotation : ''}" />
+									</p:toolbarGroup>
+									<p:separator />
+									<p:toolbarGroup align="right">
+										<p:commandButton
+											process="@this"
+											value="#{labels.reset_button_label}"
+											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.reset}"
+											oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+											icon="ui-icon ui-icon-close"
+											ajax="true"
+											disabled="false"
+											update="tagvalue_input_grid" />
+										<p:commandButton
+											process="@this,tagvalue_inputs"
+											id="updateProbandListEntryTagValues"
+											value="#{labels.update_page_button_label}"
+											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.update}"
+											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);probandList.filter()"
+											icon="ui-icon ui-icon-disk"
+											ajax="true"
+											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.editable}"
+											update="tagvalue_input_grid" />
+										<p:commandButton
+											process="@this"
+											value="#{labels.load_button_label}"
+											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.load}"
+											oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+											icon="ui-icon-refresh"
+											ajax="true"
+											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.created}"
+											update="tagvalue_input_grid" />
+											
+											
+								<p:splitButton
+									immediate="true"
+									ajax="false"
+											value="#{triallabels.probandlistentrytag_pdf_button_label}"
+											title="#{triallabels.probandlistentrytag_pdf_button_title}"
+											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.created}"
+									icon="ui-icon ui-icon-pdf">
+									<p:fileDownload value="#{probandListEntryBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(false)}" />
+										
+									<p:menuitem
+										immediate="true"
+										ajax="false"
+										value="#{triallabels.blank_probandlistentrytag_pdf_button_label}"
+											title="#{triallabels.blank_probandlistentrytag_pdf_button_title}"
+											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.created}"
+										icon="ctsms-menubar-icon ctsms-icon-pdf">
+										<p:fileDownload value="#{probandListEntryBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(true)}" />
+									</p:menuitem>
+									
+								</p:splitButton>												
+											
+																					
+									</p:toolbarGroup>
+									<p:separator />
+									<p:toolbarGroup align="right">
+										<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+									</p:toolbarGroup>
+								</p:toolbar>
+								<ui:include src="../shared/paginator.xhtml">
+									<ui:param
+										name="valueBean"
+										value="#{probandListEntryBean.probandListEntryTagValueBean}" />
+									<ui:param
+										name="update"
+										value=":tabView:probandlist_form:probandListTabView:tagvalue_input_grid" />
+								</ui:include>
+							</h:panelGrid>
+						</p:tab>
+					</p:tabView>
+				</h:panelGrid>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="probandListEntryDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.proband_list_entry_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{probandListEntryBean.delete}"
+					oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+					onclick="probandListEntryDeleteConfirmation.hide()"
+					ajax="true"
+					update=":tabView:probandlist_form:probandListTabView" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="probandListEntryDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="probandListEntryBulkDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.proband_list_entry_bulk_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				
+				<p:commandButton
+					process="@this,:tabView:probandlist_form:bulkAddShuffle,:tabView:probandlist_form:bulkAddLimit"
+					id="bulkDeleteProbandListEntry"
+					value="#{labels.yes_button_label}"
+					actionListener="#{probandListEntryBean.deleteBulk}"
+					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+					onclick="probandListEntryBulkDeleteConfirmation.hide()"
+					ajax="true"
+					update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandlist_bulkadd" />
+					
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="probandListEntryBulkDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>			
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

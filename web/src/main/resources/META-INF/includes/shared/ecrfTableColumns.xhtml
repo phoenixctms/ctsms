@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>ecrf datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column
+			sortBy="#{ecrf.vo.name}"
+			filterBy="#{ecrf.vo.name}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_name_column}" />
+			</f:facet>
+			<h:outputText value="#{ecrf.vo.name}" />
+		</p:column>
+		<p:column
+			rendered="#{showGroup}"
+			sortBy="#{ecrf.vo.group.title}"
+			filterBy="#{ecrf.vo.group.id}"
+			filterOptions="#{ecrfSelectionBean.filterProbandGroups}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_group_title_column}" />
+			</f:facet>
+			<h:outputText value="#{ecrf.vo.group.title}" />
+		</p:column>
+		<p:column
+			rendered="#{showPosition}"
+			sortBy="#{ecrf.vo.position}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_position_column}" />
+			</f:facet>
+			<h:outputText value="#{ecrf.vo.position}" />
+		</p:column>		
+		<p:column
+			rendered="#{showVisit}"
+			sortBy="#{ecrf.vo.visit.title}"
+			filterBy="#{ecrf.vo.visit.id}"
+			filterOptions="#{ecrfSelectionBean.filterVisits}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_visit_title_column}" />
+			</f:facet>
+			<h:outputText value="#{ecrf.vo.visit.title}" />
+		</p:column>
+		<p:column
+		    rendered="#{showActive}"
+			sortBy="#{ecrf.vo.active}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_active_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{ecrf.vo.active}" />
+			</ui:include>
+		</p:column>
+		<p:column sortBy="#{ecrf.vo.disabled}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_enabled_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{!ecrf.vo.disabled}" />
+			</ui:include>
+		</p:column>
+		<p:column
+		    rendered="#{showEnableBrowserFieldCalculation}"
+			sortBy="#{ecrf.vo.enableBrowserFieldCalculation}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_enablebrowserfieldcalculation_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{ecrf.vo.enableBrowserFieldCalculation}" />
+			</ui:include>
+		</p:column>
+		
+		
+						<p:column rendered="#{showFieldCount}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrf_list_number_of_fields_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.getEcrfFieldCount(ecrf.vo)}" />
+						</p:column>		
+		
+		
+	</ui:composition>
+</h:body>
+</html>

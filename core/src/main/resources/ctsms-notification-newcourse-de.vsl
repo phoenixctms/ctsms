@@ -1,0 +1,27 @@
+Hallo Angehörige/r der Org.einheit $course_department,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Kurs:             $course_name
+   • Kurs CV Titel:    $course_cvtitle
+   • Kurs Org.einheit: $course_department
+   • Kurs Kategorie:   $course_category
+
+   • Kursbeginn:       $course_start
+   • Kursende:         $course_stop
+   • Anmeldeschluss:   $course_participationdeadline
+
+Zum Kurs anmelden:
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

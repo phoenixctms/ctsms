@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>row expansion outputtext</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGroup rendered="#{rendered}">
+			<div class="ui-datalist ui-widget">
+				<div class="ui-datalist-content ui-widget-content">
+					<h:outputText
+						escape="#{escapeHtml}"
+						styleClass="#{rowExpansionTextClass}"
+						value="#{rowExpansionText}" />
+				</div>
+			</div>
+		</h:panelGroup>
+	</ui:composition>
+</h:body>
+</html>

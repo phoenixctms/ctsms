@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>timeline events input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:outputLabel
+			for="timelineeventtype"
+			value="#{triallabels.timeline_event_type_label}" />
+		<h:panelGroup>
+			<p:selectOneMenu
+				id="timelineeventtype"
+				value="#{timelineEventBean.in.typeId}"
+				required="true"
+				label="#{triallabels.timeline_event_type}"
+				styleClass="ctsms-control">
+				<f:converter converterId="ctsms.ID" />
+				<f:selectItem
+					itemLabel="#{labels.no_selection_label}"
+					itemValue="#{applicationScopeBean.noSelectionValue}" />
+				<f:selectItems
+					value="#{timelineEventBean.availableTypes}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax
+					oncomplete="handleTimelineEventTypeSelected(xhr, status, args)"
+					listener="#{timelineEventBean.handleTypeChange}" />
+			</p:selectOneMenu>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventtype">
+				<h:outputText
+					value="#{triallabels.timeline_event_type_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="timelineeventtype" />
+		<h:outputLabel
+			for="timelineeventtitle"
+			value="#{triallabels.timeline_event_title_label}" />
+		<h:panelGroup>
+			<p:inputText
+				id="timelineeventtitle"
+				value="#{timelineEventBean.in.title}"
+				required="true"
+				disabled="#{timelineEventBean.timelineEventType.titlePresetFixed}"
+				widgetVar="timelineEventTitle"
+				label="#{triallabels.timeline_event_title}"
+				styleClass="ctsms-control" />
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventtitle">
+				<h:outputText
+					value="#{triallabels.timeline_event_title_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="timelineeventtitle" />
+		<h:outputLabel
+			for="timelineeventshow"
+			value="#{triallabels.timeline_event_show_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox
+				id="timelineeventshow"
+				widgetVar="timelineEventShow"
+				value="#{timelineEventBean.in.show}">
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventshow">
+				<h:outputText
+					value="#{triallabels.timeline_event_show_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<h:outputLabel
+			for="timelineeventstart"
+			value="#{triallabels.timeline_event_start_label}" />
+		<h:panelGroup>
+			<p:calendar
+				id="timelineeventstart"
+				value="#{timelineEventBean.in.start}"
+				required="true"
+				label="#{triallabels.timeline_event_start}"
+				pattern="#{applicationScopeBean.inputDatePattern}"
+				yearRange="#{applicationScopeBean.calendarYearRange}"
+				showWeek="true"
+				navigator="true"
+				locale="#{sessionScopeBean.locale}"
+				timeZone="#{sessionScopeBean.timeZone}"
+				styleClass="ctsms-calendar-date" />
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventstart">
+				<h:outputText
+					value="#{triallabels.timeline_event_start_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="timelineeventstart" />
+		<h:outputLabel
+			for="timelineeventstop"
+			value="#{triallabels.timeline_event_stop_label}" />
+		<h:panelGroup>
+			<p:calendar
+				id="timelineeventstop"
+				value="#{timelineEventBean.in.stop}"
+				required="false"
+				label="#{triallabels.timeline_event_stop}"
+				pattern="#{applicationScopeBean.inputDatePattern}"
+				yearRange="#{applicationScopeBean.calendarYearRange}"
+				showWeek="true"
+				navigator="true"
+				locale="#{sessionScopeBean.locale}"
+				timeZone="#{sessionScopeBean.timeZone}"
+				styleClass="ctsms-calendar-date" />
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventstop">
+				<h:outputText
+					value="#{triallabels.timeline_event_stop_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="timelineeventstop" />
+		<h:outputLabel
+			for="timelineeventnotify"
+			value="#{triallabels.timeline_event_notify_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox
+				id="timelineeventnotify"
+				widgetVar="timelineEventNotify"
+				value="#{timelineEventBean.in.notify}">
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="timelineeventnotify">
+				<h:outputText
+					value="#{triallabels.timeline_event_notify_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<h:outputLabel
+			for="reminderPeriod"
+			value="#{triallabels.timeline_event_reminder_period_label}" />
+		<h:panelGroup>
+			<p:selectOneMenu
+				id="reminderPeriod"
+				disabled="#{!timelineEventBean.reminderPeriodSelectorEnabled}"
+				value="#{timelineEventBean.reminder.period}"
+				required="true"
+				label="#{triallabels.timeline_event_reminder_period}"
+				styleClass="ctsms-control">
+				<f:selectItems
+					value="#{timelineEventBean.reminder.variablePeriods}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax update="reminderPeriodDays" />
+			</p:selectOneMenu>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="reminderPeriod">
+				<h:outputText
+					value="#{triallabels.timeline_event_reminder_period_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="reminderPeriod" />
+		<h:outputLabel
+			for="reminderPeriodDays"
+			value="#{triallabels.timeline_event_reminder_period_days_label}" />
+		<h:panelGroup>
+			<p:spinner
+				disabled="#{!timelineEventBean.reminderPeriodSpinnerEnabled}"
+				id="reminderPeriodDays"
+				value="#{timelineEventBean.in.reminderPeriodDays}"
+				styleClass="ctsms-spinner"
+				required="false"
+				label="#{triallabels.timeline_event_reminder_period_days}" />
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="reminderPeriodDays">
+				<h:outputText
+					value="#{triallabels.timeline_event_reminder_period_days_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="reminderPeriodDays" />
+		<h:outputLabel
+			for="dismissed"
+			value="#{triallabels.timeline_event_dismissed_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox
+				id="dismissed"
+				value="#{timelineEventBean.in.dismissed}" />
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="dismissed">
+				<h:outputText
+					value="#{triallabels.timeline_event_dismissed_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<h:outputLabel
+			for="eventimportance"
+			value="#{triallabels.timeline_event_importance_label}" />
+		<h:panelGroup>
+			<p:selectOneMenu
+				id="eventimportance"
+				disabled="false"
+				widgetVar="timelineEventImportance"
+				value="#{timelineEventBean.eventImportance.importance}"
+				required="true"
+				label="#{triallabels.timeline_event_importance}"
+				styleClass="ctsms-control">
+				<f:selectItem
+					itemLabel="#{labels.no_selection_label}"
+					itemValue="#{applicationScopeBean.noSelectionValue}" />
+				<f:selectItems
+					value="#{timelineEventBean.eventImportance.eventImportances}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+			</p:selectOneMenu>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="eventimportance">
+				<h:outputText
+					value="#{triallabels.timeline_event_importance_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="eventimportance" />
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="timelineEventTitleOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{triallabels.timeline_event_title_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setTimelineEventTitle(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setTimelineEventTitle(false)"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="timelineEventShowOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{triallabels.timeline_event_show_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setTimelineEventShow(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setTimelineEventShow(false)"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="timelineEventNotifyOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{triallabels.timeline_event_notify_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setTimelineEventNotify(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setTimelineEventNotify(false)"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="timelineEventImportanceOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{triallabels.timeline_event_importance_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setTimelineEventImportance(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setTimelineEventImportance(false)"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

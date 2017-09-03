@@ -1,0 +1,55 @@
+Liebes $ecrffieldstatusentry_listentry_trial_name Studienteammitglied oder Angehörige/r der Org.einheit $ecrffieldstatusentry_listentry_trial_department,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Studie:             $ecrffieldstatusentry_listentry_trial_name
+   • Studie Org.einheit: $ecrffieldstatusentry_listentry_trial_department
+   • Proband ID:         $ecrffieldstatusentry_listentry_proband_id
+   • eCRF:               ${ecrffieldstatusentry_ecrffield_ecrf_position}. $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.group)
+   • eCRF Probandengr.:  $notification.ecrfFieldStatusEntry.ecrfField.ecrf.group.title
+#end
+#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit)
+   • eCRF Visite:        $notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit.title
+#end
+   • eCRF Abschnitt:     $ecrffieldstatusentry_ecrffield_section
+   • Eingabefeld:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Index:              $ecrffieldstatusentry_index
+#end
+
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
+
+   • Bearbeitet:         #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+
+
+Kommentar:
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0)Verlauf:
+
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • Gespeichert (Version $log.version): $!log.reasonForChange
+#end
+#end
+
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+Bitte die Eingaben überprüfen, um die eCRF Issue aufzulösen.
+#else
+Die eCRF Issue ist geschlossen.
+#end
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

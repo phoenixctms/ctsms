@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory search</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inventoryHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inventorySearchBean.title}" />
+		<ui:define name="head">
+			<h:outputStylesheet
+				name="search.css"
+				library="css"
+				target="head" />
+			<h:outputStylesheet
+				name="inventory.css"
+				library="css"
+				target="head" />
+			<h:outputScript
+				name="d3.v4.min.js"
+				library="js"
+				target="head" />
+			<h:outputScript
+				name="venn.js"
+				library="js"
+				target="head" />				
+			<h:outputScript
+				name="inventory.js"
+				library="js"
+				target="head" />
+			<h:outputScript
+				name="search.js"
+				library="js"
+				target="head" />
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="search_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<f:facet name="header">
+							<h:outputText value="#{inventorySearchBean.searchTitle}" />
+						</f:facet>
+						<ui:decorate template="/META-INF/includes/shared/inventorySearcher.xhtml">
+							<ui:define name="toolbarbuttons">
+								<p:commandButton
+								    disabled="#{!inventorySearchBean.enableExports}"
+									process="@this,:search_form:tabView:criteria_input"
+									ajax="false"
+									value="#{labels.search_export_results_button_label}"
+									icon="ui-icon ui-icon-xls">
+									<p:fileDownload value="#{inventorySearchBean.excelStreamedContent}" />
+								</p:commandButton>
+							</ui:define>
+							<ui:define name="pickbutton">
+								<p:column style="width:32px;">
+									<p:commandButton
+										title="#{labels.open_inventory_button_label}"
+										type="button"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openInventory(#{inventory.vo.id})" />
+								</p:column>
+							</ui:define>
+						</ui:decorate>
+					</p:panel>
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

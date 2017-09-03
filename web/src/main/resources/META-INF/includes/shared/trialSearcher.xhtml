@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial search</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid"
+			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
+			<ui:include src="searchInput.xhtml">
+				<ui:param
+					name="searchBean"
+					value="#{trialSearchBean}" />
+				<ui:param
+					name="result_list"
+					value="trial_result_list" />
+				<ui:param
+					name="resultListWidgetVar"
+					value="trialResultList" />
+			</ui:include>
+			<p:messages
+				id="messages"
+				globalOnly="true" />
+			<p:toolbar id="criteria_toolbar">
+				<p:toolbarGroup align="left">
+					<h:outputText
+						styleClass="ctsms-toolbar-text"
+						value="#{trialSearchBean.created ? trialSearchBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<p:commandButton
+						process="@this"
+						value="#{labels.reset_button_label}"
+						actionListener="#{trialSearchBean.reset}"
+						icon="ui-icon ui-icon-close"
+						ajax="true"
+						onstart="trialResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="false"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,trial_result_list" />
+					<p:commandButton
+						rendered="#{!trialSearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input"
+						id="add"
+						value="#{labels.add_button_label}"
+						actionListener="#{trialSearchBean.add}"
+						icon="ui-icon ui-icon-plusthick"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!trialSearchBean.createable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						rendered="#{trialSearchBean.created}"
+						process="@this"
+						value="#{labels.add_button_label}"
+						onclick="criteriaAddConfirmation.show()"
+						disabled="#{!trialSearchBean.createable}"
+						icon="ui-icon ui-icon-plusthick"
+						type="button" />
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						id="update"
+						value="#{labels.update_button_label}"
+						actionListener="#{trialSearchBean.update}"
+						icon="ui-icon ui-icon-disk"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!trialSearchBean.editable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.delete_button_label}"
+						onclick="criteriaDeleteConfirmation.show()"
+						disabled="#{!trialSearchBean.removable}"
+						icon="ui-icon ui-icon-trash"
+						type="button" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{trialSearchBean.load}"
+						icon="ui-icon-refresh"
+						ajax="true"
+						onstart="trialResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!trialSearchBean.created}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,trial_result_list" />
+					<ui:insert name="toolbarbuttons"></ui:insert>
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						value="#{labels.search_button_label}"
+						actionListener="#{trialSearchBean.search}"
+						icon="ui-icon ui-icon-search"
+						ajax="true"
+						onstart="trialResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!trialSearchBean.createable}"
+						update=":search_form:tabView:criteria_input,messages,trial_result_list" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				widgetVar="trialResultList"
+				rows="#{dataTablesRowsSearch}"
+				paginator="#{dataTablesPaginatorSearch}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
+				paginatorPosition="#{dataTablesPaginatorPositionSearch}"
+				pageLinks="#{dataTablesPageLinksSearch}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleSearch}"
+				scrollable="#{dataTablesScrollableSearch}"
+				scrollHeight="#{dataTablesScrollHeightSearch}"
+				resizableColumns="#{dataTablesResizableColumnsSearch}"
+				sortBy="#{trial.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}"
+				var="trial"
+				value="#{trialSearchBean.trialResultModel}"
+				id="trial_result_list"
+				rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{trialSearchBean.trialToColor(trial.vo)}">
+				<f:facet name="header">
+					<h:outputText value="#{trialSearchBean.queryResultTitle}" />
+				</f:facet>
+				<p:column style="width:16px;">
+					<p:rowToggler />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.id}"
+					filterBy="#{trial.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{trial.vo.id}" />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.name}"
+					filterBy="#{trial.vo.name}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_trial_name_column}" />
+					</f:facet>
+					<h:outputText value="#{trial.vo.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.title}"
+					filterBy="#{trial.vo.title}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_trial_title_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(trial.vo.title)}" />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.department}"
+					filterBy="#{trial.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_trial_department_column}" />
+					</f:facet>
+					<h:outputText value="#{trial.vo.department.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.type}"
+					filterBy="#{trial.vo.type.id}"
+					filterOptions="#{sessionScopeBean.filterTrialTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_trial_type_column}" />
+					</f:facet>
+					<h:outputText value="#{trial.vo.type.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.status}"
+					filterBy="#{trial.vo.status.id}"
+					filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_trial_status_type_column}" />
+					</f:facet>
+					<ui:include src="../shared/listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{trial.vo.status.name}" />
+						<ui:param
+							name="icon"
+							value="#{trial.vo.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.dutySelfAllocationLockedUntil}"
+					filterBy="#{trial.vo.dutySelfAllocationLocked}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_duty_self_allocation_locked_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{applicationScopeBean.getDutySelfAllocationLockedString(trial.vo)}" />
+						<ui:param
+							name="icon"
+							value="#{trial.vo.dutySelfAllocationLocked ? 'ctsms-icon-true' : 'ctsms-icon-false'}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{trial.vo.blockingPeriod}"
+					rendered="#{!trialSearchBean.picker}"
+					filterBy="#{trial.vo.exclusiveProbands}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_exclusive_probands_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{trialSearchBean.getExclusiveProbandsString(trial.vo)}" />
+						<ui:param
+							name="icon"
+							value="#{trial.vo.exclusiveProbands ? 'ctsms-icon-true' : 'ctsms-icon-false'}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column rendered="#{!trialSearchBean.picker}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_signup_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{trial.vo.signupProbandList or trial.vo.signupInquiries}" />
+					</ui:include>
+				</p:column>				
+				<p:column rendered="#{!trialSearchBean.picker}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_proband_list_entry_count_column}" />
+					</f:facet>
+					<h:outputText value="#{trialSearchBean.getProbandListEntryCount(trial.vo)}" />
+				</p:column>
+				<ui:insert name="pickbutton"></ui:insert>
+				<p:rowExpansion>
+					<h:panelGrid
+						columns="4"
+						cellpadding="0"
+						styleClass="ctsms-resultsetlist-rowexpansion-panelgrid"
+						columnClasses="ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column">
+						<ui:include src="rowExpansionOutputText.xhtml">
+							<ui:param
+								name="rowExpansionText"
+								value="#{trial.vo.title}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+							<ui:param
+								name="rowExpansionTextClass"
+								value="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext" />
+							<ui:param
+								name="escapeHtml"
+								value="true" />
+						</ui:include>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTrialTagValues(trial.vo)) == 0}"
+							value="#{triallabels.no_trial_tag_values_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTrialTagValues(trial.vo)) > 0}"
+							value="#{trialSearchBean.getTrialTagValues(trial.vo)}"
+							var="tagValue"
+							type="definition">
+							<h:outputText value="#{tagValue.vo.tag.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{tagValue.vo.value}" />
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTeamMembers(trial.vo)) == 0}"
+							value="#{triallabels.no_team_members_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTeamMembers(trial.vo)) > 0}"
+							value="#{trialSearchBean.getTeamMembers(trial.vo)}"
+							var="teamMember"
+							type="definition">
+							<h:outputText value="#{teamMember.vo.role.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{teamMember.vo.staff.name}" />
+							</f:facet>
+						</p:dataList>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTimelineEvents(trial.vo)) == 0}"
+							value="#{triallabels.no_timeline_events_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(trialSearchBean.getTimelineEvents(trial.vo)) > 0}"
+							value="#{trialSearchBean.getTimelineEvents(trial.vo)}"
+							var="timelineEvent"
+							type="definition">
+							<h:outputText value="#{timelineEvent.vo.title}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-resultsetlist-rowexpansion-datalist-descriptiontext"
+									value="#{applicationScopeBean.timelineEventToStartStopString(timelineEvent.vo)}" />
+							</f:facet>
+						</p:dataList>
+					</h:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="alert"
+			widgetVar="criteriaDeleteConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_delete_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this"
+				value="#{labels.yes_button_label}"
+				actionListener="#{trialSearchBean.delete}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="criteriaAddConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_add_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed"
+				value="#{labels.yes_button_label}"
+				actionListener="#{trialSearchBean.add}"
+				onclick="criteriaAddConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

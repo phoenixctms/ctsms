@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff addresses</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="staffaddress_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeStaffAddress"
+				actionListener="#{staffAddressBean.change(staffBean.in.id)}"
+				update="staffaddress_list,staffaddress_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{address.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="address"
+					value="#{staffAddressBean.addressModel}"
+					id="staffaddress_list"
+					selectionMode="single"
+					selection="#{staffAddressBean.selectedStaffAddress}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:staffaddress_form:staffaddress_input" />
+					<f:facet name="header">
+						<h:outputText value="#{staffAddressBean.addressModel.rowCount} #{stafflabels.staff_address_staffaddress_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{address.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.id}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.type}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_type_name_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.type.name}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.countryName}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_country_name_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.countryName}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.zipCode}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_zip_code_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.zipCode}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.cityName}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_city_name_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.cityName}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.streetName}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_street_name_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.streetName}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.houseNumber}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_house_number_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.houseNumber}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.entrance}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_entrance_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.entrance}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.doorNumber}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_door_number_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.doorNumber}" />
+					</p:column>
+					<p:column sortBy="#{address.vo.cv}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_cv_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{address.vo.cv}" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{address.vo.deliver}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_deliver_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{address.vo.deliver}" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{address.vo.afnus}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_address_staffaddress_list_afnus_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{address.vo.afnus}" />
+						</ui:include>
+					</p:column>
+				</p:dataTable>
+				<p:panel id="staffaddress_input">
+					<f:facet name="header">
+						<h:outputText value="#{staffAddressBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="12"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="addressType"
+								value="#{stafflabels.address_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="addressType"
+									value="#{staffAddressBean.in.typeId}"
+									required="true"
+									label="#{stafflabels.address_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{staffAddressBean.availableTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										oncomplete="handleAddressTypeSelected(xhr, status, args)"
+										listener="#{staffAddressBean.handleTypeChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="addressType">
+									<h:outputText
+										value="#{stafflabels.address_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="addressType" />
+							<h:outputLabel
+								for="cv"
+								value="#{stafflabels.cv_address_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="cv"
+									value="#{staffAddressBean.in.cv}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cv">
+									<h:outputText
+										value="#{stafflabels.cv_address_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cv" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="countryName"
+								value="#{stafflabels.country_name_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="countryName"
+									value="#{staffAddressBean.in.countryName}"
+									required="false"
+									label="#{stafflabels.country_name}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCountry}"
+									maxResults="#{autoCompleteMaxResultsCountry}"
+									queryDelay="#{autoCompleteQueryDelayCountry}"
+									dropdown="#{autoCompleteDropdownCountry}"
+									global="#{autoCompleteGlobalCountry}"
+									scrollHeight="#{autoCompleteScrollHeightCountry}"
+									completeMethod="#{staffAddressBean.completeCountryName}">
+									<p:ajax
+										listener="#{staffAddressBean.handleCountryNameSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="countryName">
+									<h:outputText
+										value="#{stafflabels.country_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="countryName" />
+							<h:outputLabel
+								for="cityName"
+								value="#{stafflabels.city_name_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="cityName"
+									value="#{staffAddressBean.in.cityName}"
+									required="false"
+									label="#{stafflabels.city_name}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCityName}"
+									maxResults="#{autoCompleteMaxResultsCityName}"
+									queryDelay="#{autoCompleteQueryDelayCityName}"
+									dropdown="#{autoCompleteDropdownCityName}"
+									global="#{autoCompleteGlobalCityName}"
+									scrollHeight="#{autoCompleteScrollHeightCityName}"
+									completeMethod="#{staffAddressBean.completeCityName}">
+									<p:ajax
+										listener="#{staffAddressBean.handleCityNameSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cityName">
+									<h:outputText
+										value="#{stafflabels.city_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="cityName" />
+							<h:outputLabel
+								for="zipCode"
+								value="#{stafflabels.zip_code_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="zipCode"
+									value="#{staffAddressBean.in.zipCode}"
+									required="false"
+									label="#{stafflabels.zip_code}"
+									styleClass="ctsms-control-smaller"
+									minQueryLength="#{autoCompleteMinQueryLengthZipCode}"
+									maxResults="#{autoCompleteMaxResultsZipCode}"
+									queryDelay="#{autoCompleteQueryDelayZipCode}"
+									dropdown="#{autoCompleteDropdownZipCode}"
+									global="#{autoCompleteGlobalZipCode}"
+									scrollHeight="#{autoCompleteScrollHeightZipCode}"
+									completeMethod="#{staffAddressBean.completeZipCode}">
+									<p:ajax
+										listener="#{staffAddressBean.handleZipCodeSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="zipCode">
+									<h:outputText
+										value="#{stafflabels.zip_code_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="zipCode" />
+							<h:outputLabel value="" />
+							<h:outputText value="" />
+							<h:outputLabel value="" />
+							<h:outputLabel
+								for="streetName"
+								value="#{stafflabels.street_name_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="streetName"
+									value="#{staffAddressBean.in.streetName}"
+									required="false"
+									label="#{stafflabels.street_name}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthStreetName}"
+									maxResults="#{autoCompleteMaxResultsStreetName}"
+									queryDelay="#{autoCompleteQueryDelayStreetName}"
+									dropdown="#{autoCompleteDropdownStreetName}"
+									global="#{autoCompleteGlobalStreetName}"
+									scrollHeight="#{autoCompleteScrollHeightStreetName}"
+									completeMethod="#{staffAddressBean.completeStreetName}">
+									<p:ajax
+										listener="#{staffAddressBean.handleStreetNameSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="streetName">
+									<h:outputText
+										value="#{stafflabels.street_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="streetName" />
+							<h:outputLabel
+								for="houseNumber"
+								value="#{stafflabels.house_number_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="houseNumber"
+									value="#{staffAddressBean.in.houseNumber}"
+									required="true"
+									label="#{stafflabels.house_number}"
+									styleClass="ctsms-control-smaller" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="houseNumber">
+									<h:outputText
+										value="#{stafflabels.house_number_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="houseNumber" />
+							<h:outputLabel
+								for="entrance"
+								value="#{stafflabels.entrance_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="entrance"
+									value="#{staffAddressBean.in.entrance}"
+									required="false"
+									label="#{stafflabels.entrance}"
+									styleClass="ctsms-control-smaller" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="entrance">
+									<h:outputText
+										value="#{stafflabels.entrance_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="entrance" />
+							<h:outputLabel
+								for="doorNumber"
+								value="#{stafflabels.door_number_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="doorNumber"
+									value="#{staffAddressBean.in.doorNumber}"
+									required="false"
+									label="#{stafflabels.door_number}"
+									styleClass="ctsms-control-smaller" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="doorNumber">
+									<h:outputText
+										value="#{stafflabels.door_number_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="doorNumber" />
+							<h:outputLabel
+								for="careOf"
+								value="#{stafflabels.care_of_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="careOf"
+									value="#{staffAddressBean.in.careOf}"
+									required="false"
+									label="#{stafflabels.care_of}"
+									styleClass="ctsms-control" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="careOf">
+									<h:outputText
+										value="#{stafflabels.care_of_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="careOf" />
+							<h:outputLabel
+								for="deliver"
+								value="#{stafflabels.deliver_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="deliver"
+									widgetVar="addressDeliver"
+									value="#{staffAddressBean.in.deliver}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="deliver">
+									<h:outputText
+										value="#{stafflabels.deliver_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="deliver" />
+							<h:outputLabel
+								for="afnus"
+								value="#{stafflabels.afnus_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="afnus"
+									value="#{staffAddressBean.in.afnus}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="afnus">
+									<h:outputText
+										value="#{stafflabels.afnus_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="afnus" />
+						</h:panelGrid>
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{staffAddressBean.created ? staffAddressBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{staffAddressBean.reset}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="staffaddress_list,staffaddress_input" />
+								<p:commandButton
+									process="@this,staffaddress_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{staffAddressBean.add}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!staffAddressBean.createable}"
+									update="staffaddress_list,staffaddress_input" />
+								<p:commandButton
+									process="@this,staffaddress_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{staffAddressBean.update}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!staffAddressBean.editable}"
+									update="staffaddress_list,staffaddress_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{staffAddressBean.delete}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!staffAddressBean.removable}"
+									update="staffaddress_list,staffaddress_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{staffAddressBean.load}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!staffAddressBean.created}"
+									update="staffaddress_list,staffaddress_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="addressDeliverPresetOverrideConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{stafflabels.staff_address_deliver_preset_override_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					value="#{labels.yes_button_label}"
+					onclick="setAddressDeliver(true)"
+					type="button" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="setAddressDeliver(false)"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

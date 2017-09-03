@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>colliding course participation status entry table tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:tab
+			title="#{labels.colliding_course_participation_tab_label_1}#{collidingCourseParticipationStatusEntryModel.allRowCount}#{labels.colliding_course_participation_tab_label_2}">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="false"
+				rows="#{dataTableRows}"
+				paginator="#{dataTablePaginator}"
+				paginatorTemplate="#{dataTablePaginatorTemplate}"
+				rowsPerPageTemplate="#{dataTableRowsPerPageTemplate}"
+				paginatorPosition="#{dataTablePaginatorPosition}"
+				pageLinks="#{dataTablePageLinks}"
+				paginatorAlwaysVisible="#{dataTablePaginatorAlwaysVisible}"
+				scrollable="#{dataTableScrollable}"
+				scrollHeight="#{dataTableScrollHeight}"
+				resizableColumns="#{dataTableResizableColumns}"
+				sortBy="#{statusEntry.vo.course.stop}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="statusEntry"
+				value="#{collidingCourseParticipationStatusEntryModel.allRows}"
+				id="collidingcourseparticipationstatusentry_list">
+				<p:column
+					rendered="#{showStaff}"
+					sortBy="#{statusEntry.vo.staff.nameSortable}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingcourseparticipationstatusentry_list_staff_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.staff.name}" />
+						<ui:param
+							name="icon"
+							value="#{statusEntry.vo.staff.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					rendered="#{showCourse}"
+					sortBy="#{statusEntry.vo.course.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingcourseparticipationstatusentry_list_course_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{statusEntry.vo.course.name}" />
+						<ui:param
+							name="icon"
+							value="#{statusEntry.vo.course.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.status.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingcourseparticipationstatusentry_list_status_name_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.status.name}" />
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.course.selfRegistration}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingcourseparticipationstatusentry_list_course_self_registration_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.course.selfRegistration}" />
+				</p:column>
+				<p:column sortBy="#{statusEntry.vo.course.stop}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingcourseparticipationstatusentry_list_course_stop_column}" />
+					</f:facet>
+					<h:outputText value="#{statusEntry.vo.course.stop}">
+						<f:converter converterId="ctsms.Date" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					rendered="#{showCourse or showStaff}"
+					style="width:#{showCourse and showStaff ? '64' : '32'}px;white-space:nowrap;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_course_button_label}"
+						rendered="#{showCourse}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openCourse(#{statusEntry.vo.course.id})" />
+					<p:commandButton
+						type="button"
+						title="#{labels.open_staff_button_label}"
+						rendered="#{showStaff}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openStaff(#{statusEntry.vo.staff.id})" />
+				</p:column>
+			</p:dataTable>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

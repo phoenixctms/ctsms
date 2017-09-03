@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>list ecrf status icons</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			style="width:0%;"
+			rendered="#{value != null and value.size() > 0 and statusTypes.size() > 0}"
+			columns="#{statusTypes.size()}"
+			columnClasses="#{applicationScopeBean.repeatString('ctsms-list-cell-noborder-ui',',',statusTypes.size())}"
+			cellpadding="0">
+			<c:forEach
+				items="#{statusTypes}"
+				var="statusType">
+				<h:panelGroup rendered="#{value.get(statusType.id) > 0}">
+					<h:outputLink
+						styleClass="outputLinkAsText"
+						id="statusTypeIcon#{statusType.id}"
+						value="#">
+						<h:outputText
+							styleClass="ctsms-list-ui-icon ui-icon #{statusType.nodeStyleClass}"
+							value="(#{value.get(statusType.id)})" />
+					</h:outputLink>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="statusTypeIcon#{statusType.id}">
+						<h:outputFormat
+							value="#{labels.ecrf_status_type_icon_tooltip}"
+							escape="false">
+							<f:param value="#{statusType.name}" />
+							<f:param value="#{value.get(statusType.id)}" />
+						</h:outputFormat>
+					</p:tooltip>
+				</h:panelGroup>
+			</c:forEach>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

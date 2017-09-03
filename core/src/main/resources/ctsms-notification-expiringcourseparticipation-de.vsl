@@ -1,0 +1,26 @@
+Hallo $courseparticipationstatusentry_staff_firstname,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Kurs:                 $courseparticipationstatusentry_course_name
+   • Kurs CV Titel:        $courseparticipationstatusentry_course_cvtitle
+   • Kurs Org.einheit:     $courseparticipationstatusentry_course_department
+   • Kurskategorie:        $courseparticipationstatusentry_course_category
+
+   • Kursende:             $courseparticipationstatusentry_course_stop
+   • Ablauf d. Gültigkeit: $courseparticipationstatusentry_course_expiration
+
+Für einen passenden Auffrischungskurs anmelden:
+
+   $http_base_url/staff/expiringParticipationOverview.jsf
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

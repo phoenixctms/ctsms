@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>input field dummy</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="inputfielddummy_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeDummy"
+				actionListener="#{dummyInputFieldValueBean.change(inputFieldBean.in.id)}"
+				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update="input_dummy_input" /> -->
+			<h:panelGrid
+				columns="1"
+				id="input_dummy_input"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:panel > <!-- id="input_dummy_input"> -->
+					<f:facet name="header">
+						<h:outputText value="#{dummyInputFieldValueBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+						<ui:include src="../shared/inputFieldRow.xhtml">
+							<ui:param
+								name="rendered"
+								value="#{dummyInputFieldValueBean.inputVisible}" />
+							<ui:param
+								name="index"
+								value="dummy" />
+							<ui:param
+								name="toggleable"
+								value="false" />
+							<ui:param
+								name="editable"
+								value="#{dummyInputFieldValueBean.created}" />
+							<ui:param
+								name="reasonForChangeRequired"
+								value="false" />								
+							<ui:param
+								name="namingContainer"
+								value=":tabView:inputfielddummy_form" />
+							<ui:param
+								name="update"
+								value="@none" />
+							<ui:param
+								name="enabled"
+								value="#{true}" />
+							<ui:param
+								name="optional"
+								value="#{false}" />								
+							<ui:param
+								name="fieldInput"
+								value="#{dummyInputFieldValueBean.inputModel}" />
+						</ui:include>
+						<h:panelGrid
+							rendered="#{dummyInputFieldValueBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="dummyoptional"
+								value="#{inputfieldlabels.input_field_dummy_optional_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="dummyoptional"
+									value="#{dummyInputFieldValueBean.inputModel.inputFieldValue.optional}">
+									<p:ajax update="input_dummy_input" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dummyoptional">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_dummy_optional_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dummyoptional" />
+							<h:outputLabel
+								for="dummydisabled"
+								value="#{inputfieldlabels.input_field_dummy_disabled_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="dummydisabled"
+									value="#{dummyInputFieldValueBean.inputModel.disabled}">
+									<p:ajax update="input_dummy_input" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dummydisabled">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_dummy_disabled_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dummydisabled" />
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!dummyInputFieldValueBean.inputVisible}" />
+						<h:outputLabel rendered="#{!dummyInputFieldValueBean.inputVisible}" />
+						<p:messages globalOnly="true" />
+						<!-- ><p:messages /> -->
+						<p:toolbar>
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{dummyInputFieldValueBean.reset}"
+									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="#{!dummyInputFieldValueBean.created}"
+									update="input_dummy_input" />
+								<p:commandButton
+									process="@this,input_dummy_input"
+									id="check"
+									value="#{labels.test_dummy_input_button_label}"
+									actionListener="#{dummyInputFieldValueBean.checkInput}"
+									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+									icon="ui-icon ui-icon-help"
+									ajax="true"
+									disabled="#{!dummyInputFieldValueBean.created}"
+									update="input_dummy_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{dummyInputFieldValueBean.load}"
+									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+									icon="ui-icon ui-icon-refresh"
+									ajax="true"
+									disabled="#{!dummyInputFieldValueBean.created}"
+									update="input_dummy_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

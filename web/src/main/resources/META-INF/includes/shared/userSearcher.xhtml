@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>user search</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid"
+			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
+			<ui:include src="searchInput.xhtml">
+				<ui:param
+					name="searchBean"
+					value="#{userSearchBean}" />
+				<ui:param
+					name="result_list"
+					value="user_result_list" />
+				<ui:param
+					name="resultListWidgetVar"
+					value="userResultList" />
+			</ui:include>
+			<p:messages
+				id="messages"
+				globalOnly="true" />
+			<p:toolbar id="criteria_toolbar">
+				<p:toolbarGroup align="left">
+					<h:outputText
+						styleClass="ctsms-toolbar-text"
+						value="#{userSearchBean.created ? userSearchBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<p:commandButton
+						process="@this"
+						value="#{labels.reset_button_label}"
+						actionListener="#{userSearchBean.reset}"
+						icon="ui-icon ui-icon-close"
+						ajax="true"
+						onstart="userResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="false"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,user_result_list" />
+					<p:commandButton
+						rendered="#{!userSearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input"
+						id="add"
+						value="#{labels.add_button_label}"
+						actionListener="#{userSearchBean.add}"
+						icon="ui-icon ui-icon-plusthick"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!userSearchBean.createable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						rendered="#{userSearchBean.created}"
+						process="@this"
+						value="#{labels.add_button_label}"
+						onclick="criteriaAddConfirmation.show()"
+						disabled="#{!userSearchBean.createable}"
+						icon="ui-icon ui-icon-plusthick"
+						type="button" />
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						id="update"
+						value="#{labels.update_button_label}"
+						actionListener="#{userSearchBean.update}"
+						icon="ui-icon ui-icon-disk"
+						ajax="true"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!userSearchBean.editable}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.delete_button_label}"
+						onclick="criteriaDeleteConfirmation.show()"
+						disabled="#{!userSearchBean.removable}"
+						icon="ui-icon ui-icon-trash"
+						type="button" />
+					<p:commandButton
+						process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{userSearchBean.load}"
+						icon="ui-icon-refresh"
+						ajax="true"
+						onstart="userResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!userSearchBean.created}"
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,user_result_list" />
+					<ui:insert name="toolbarbuttons"></ui:insert>
+					<p:commandButton
+						process="@this,:search_form:tabView:criteria_input"
+						value="#{labels.search_button_label}"
+						actionListener="#{userSearchBean.search}"
+						icon="ui-icon ui-icon-search"
+						ajax="true"
+						onstart="userResultList.clearFilters()"
+						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+						disabled="#{!userSearchBean.createable}"
+						update=":search_form:tabView:criteria_input,messages,user_result_list" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				widgetVar="userResultList"
+				rows="#{dataTablesRowsSearch}"
+				paginator="#{dataTablesPaginatorSearch}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
+				paginatorPosition="#{dataTablesPaginatorPositionSearch}"
+				pageLinks="#{dataTablesPageLinksSearch}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleSearch}"
+				scrollable="#{dataTablesScrollableSearch}"
+				scrollHeight="#{dataTablesScrollHeightSearch}"
+				resizableColumns="#{dataTablesResizableColumnsSearch}"
+				sortBy="#{user.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}"
+				var="user"
+				value="#{userSearchBean.userResultModel}"
+				id="user_result_list"
+				rowStyleClass="#{user.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{userSearchBean.userToColor(user.vo)}">
+				<f:facet name="header">
+					<h:outputText value="#{userSearchBean.queryResultTitle}" />
+				</f:facet>
+				<p:column
+					sortBy="#{user.vo.id}"
+					filterBy="#{user.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{user.vo.id}" />
+				</p:column>
+				<p:column
+					sortBy="#{user.vo.name}"
+					filterBy="#{user.vo.name}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_user_name_column}" />
+					</f:facet>
+					<h:outputText value="#{user.vo.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{user.vo.department}"
+					filterBy="#{user.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_user_department_column}" />
+					</f:facet>
+					<h:outputText value="#{user.vo.department.name}" />
+				</p:column>
+				<p:column filterBy="#{user.vo.identity.personParticulars.lastName}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_identity_last_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{user.vo.identity.name}" />
+						<ui:param
+							name="icon"
+							value="#{user.vo.identity.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="#{user.vo.identity.person}" />
+					</ui:include>
+				</p:column>
+				<p:column filterBy="#{user.vo.identity.organisationParticulars.organisationName}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_identity_organisation_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{user.vo.identity.name}" />
+						<ui:param
+							name="icon"
+							value="#{user.vo.identity.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="#{!user.vo.identity.person}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					filterBy="#{user.vo.identity.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_identity_department_column}" />
+					</f:facet>
+					<h:outputText value="#{user.vo.identity.department.name}" />
+				</p:column>
+				<p:column
+					filterBy="#{user.vo.authMethod}"
+					filterOptions="#{sessionScopeBean.filterAuthenticationTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_auth_method_column}" />
+					</f:facet>
+					<h:outputText value="#{user.vo.authMethod.name}" />
+				</p:column>
+				<p:column sortBy="#{user.vo.locked}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_unlocked_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{!user.vo.locked}" />
+					</ui:include>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_password_valid_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{userSearchBean.getPasswordValid(user.vo)}" />
+					</ui:include>
+				</p:column>
+				<ui:insert name="pickbutton"></ui:insert>
+			</p:dataTable>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="alert"
+			widgetVar="criteriaDeleteConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_delete_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this"
+				value="#{labels.yes_button_label}"
+				actionListener="#{userSearchBean.delete}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="criteriaAddConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.criteria_add_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed"
+				value="#{labels.yes_button_label}"
+				actionListener="#{userSearchBean.add}"
+				onclick="criteriaAddConfirmation.hide()"
+				ajax="true"
+				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
+				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

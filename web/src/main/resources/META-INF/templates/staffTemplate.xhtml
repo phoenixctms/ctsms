@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>staff template</title>
+</head>
+<body>
+	<ui:composition template="moduleTemplate.xhtml">
+		<ui:define name="head">
+			<h:outputStylesheet
+				name="staff.css"
+				library="css"
+				target="head" />
+			<h:outputStylesheet
+				name="mimetypes.css"
+				library="css"
+				target="head" />
+			<h:outputScript
+				name="staff.js"
+				library="js"
+				target="head" />
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

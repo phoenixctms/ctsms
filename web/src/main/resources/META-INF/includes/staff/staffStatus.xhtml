@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff status entries</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="staffstatus_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeStaffStatus"
+				actionListener="#{staffStatusBean.change(staffBean.in.id)}"
+				update="staffstatus_list,staffstatus_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{statusEntry.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="statusEntry"
+					value="#{staffStatusBean.statusEntryModel}"
+					id="staffstatus_list"
+					selectionMode="single"
+					selection="#{staffStatusBean.selectedStaffStatusEntry}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:staffstatus_form:staffstatus_input" />
+					<f:facet name="header">
+						<h:outputText value="#{staffStatusBean.statusEntryModel.rowCount} #{stafflabels.staff_status_staffstatus_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.id}" />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.type}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_status_type_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.type.name}" />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.start}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_start_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.start}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.stop}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_stop_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.stop}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.type.staffActive}">
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_staff_active_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{statusEntry.vo.type.staffActive}" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_colliding_duty_roster_turn_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{staffStatusBean.getCollidingDutyRosterTurnModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_colliding_course_inventory_booking_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{staffStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingDutyRosterTurnTableTab.xhtml">
+								<ui:param
+									name="collidingDutyRosterTurnModel"
+									value="#{staffStatusBean.getCollidingDutyRosterTurnModel(statusEntry.vo)}" />
+								<ui:param
+									name="showStaff"
+									value="false" />
+								<ui:param
+									name="showTrial"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param
+									name="collidingInventoryBookingModel"
+									value="#{staffStatusBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
+								<ui:param
+									name="showInventory"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<p:panel id="staffstatus_input">
+					<f:facet name="header">
+						<h:outputText value="#{staffStatusBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{staffStatusBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="staffStatusType"
+								value="#{stafflabels.staff_status_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="staffStatusType"
+									value="#{staffStatusBean.in.typeId}"
+									required="true"
+									label="#{stafflabels.staff_status_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{staffStatusBean.statusTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										update="staff_inactive_message"
+										listener="#{staffStatusBean.handleTypeChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="staffStatusType">
+									<h:outputText
+										value="#{stafflabels.staff_status_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="staffStatusType" />
+							<h:outputLabel />
+							<h:outputText
+								value="#{staffStatusBean.showStaffInActiveMessage ? stafflabels.staff_status_staff_inactive_message_label : ''}"
+								id="staff_inactive_message" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="statusstart"
+								value="#{stafflabels.staff_status_start_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstart"
+									value="#{staffStatusBean.in.start}"
+									required="true"
+									label="#{stafflabels.staff_status_start}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstart">
+									<h:outputText
+										value="#{stafflabels.staff_status_start_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstart" />
+							<h:outputLabel
+								for="statusstop"
+								value="#{stafflabels.staff_status_stop_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstop"
+									value="#{staffStatusBean.in.stop}"
+									required="false"
+									label="#{stafflabels.staff_status_stop}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstop">
+									<h:outputText
+										value="#{stafflabels.staff_status_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstop" />
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{staffStatusBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="statuscomment"
+								value="#{stafflabels.staff_status_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="statuscomment"
+									value="#{staffStatusBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{stafflabels.staff_status_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statuscomment">
+									<h:outputText
+										value="#{stafflabels.staff_status_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!staffStatusBean.inputVisible}" />
+						<h:outputLabel rendered="#{!staffStatusBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{staffStatusBean.created ? staffStatusBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{staffStatusBean.reset}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="staffstatus_list,staffstatus_input" />
+								<p:commandButton
+									process="@this,staffstatus_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{staffStatusBean.add}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!staffStatusBean.createable}"
+									update="staffstatus_list,staffstatus_input" />
+								<p:commandButton
+									process="@this,staffstatus_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{staffStatusBean.update}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!staffStatusBean.editable}"
+									update="staffstatus_list,staffstatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{staffStatusBean.delete}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!staffStatusBean.removable}"
+									update="staffstatus_list,staffstatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{staffStatusBean.load}"
+									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!staffStatusBean.created}"
+									update="staffstatus_list,staffstatus_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

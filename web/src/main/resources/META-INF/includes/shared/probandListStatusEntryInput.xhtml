@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband list status entry input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			rendered="#{probandListBean.probandListStatusEntryBean.inputVisible}"
+			columns="9"
+			cellpadding="2"
+			columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+			<h:outputLabel
+				for="probandStatusType"
+				value="#{triallabels.proband_list_status_entry_input_status_type_label}" />
+			<h:panelGroup>
+				<p:selectOneMenu
+					id="probandStatusType"
+					value="#{probandListBean.probandListStatusEntryBean.in.statusId}"
+					required="true"
+					label="#{triallabels.proband_list_status_entry_input_status_type}"
+					styleClass="ctsms-control">
+					<f:converter converterId="ctsms.ID" />
+					<f:selectItem
+						itemLabel="#{labels.no_selection_label}"
+						itemValue="#{applicationScopeBean.noSelectionValue}" />
+					<f:selectItems
+						value="#{probandListBean.probandListStatusEntryBean.statusTypes}"
+						var="selectItem"
+						itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+					<p:ajax update="probandStatusType_terminal_state_message" />
+				</p:selectOneMenu>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="probandStatusType">
+					<h:outputText
+						value="#{empty probandListBean.probandListStatusEntryBean.probandListEntry ? (person ? triallabels.proband_list_status_entry_input_status_type_person_tooltip : triallabels.proband_list_status_entry_input_status_type_animal_tooltip) : (probandListBean.probandListStatusEntryBean.probandListEntry.proband.person ? triallabels.proband_list_status_entry_input_status_type_person_tooltip : triallabels.proband_list_status_entry_input_status_type_animal_tooltip)}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="probandStatusType" />
+			<h:outputLabel />
+			<h:outputText
+				styleClass="ctsms-text-red"
+				value="#{probandListBean.probandListStatusEntryBean.showTerminalStateMessage ? triallabels.proband_list_status_entry_input_terminal_state_message : ''}"
+				id="probandStatusType_terminal_state_message" />
+			<h:outputLabel />
+			<h:outputLabel
+				for="realTimestamp"
+				value="#{triallabels.proband_list_status_entry_input_real_timestamp_label}" />
+			<h:panelGroup>
+				<p:calendar
+					id="realTimestamp"
+					value="#{probandListBean.probandListStatusEntryBean.in.realTimestamp}"
+					required="true"
+					label="#{triallabels.proband_list_status_entry_input_real_timestamp}"
+					pattern="#{applicationScopeBean.inputDateTimePattern}"
+					yearRange="#{applicationScopeBean.calendarYearRange}"
+					showWeek="true"
+					navigator="true"
+					locale="#{sessionScopeBean.locale}"
+					timeZone="#{sessionScopeBean.timeZone}"
+					styleClass="ctsms-calendar-datetime" />
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="realTimestamp">
+					<h:outputText
+						value="#{triallabels.proband_list_status_entry_input_real_timestamp_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="realTimestamp" />
+		</h:panelGrid>
+		<h:panelGrid
+			rendered="#{probandListBean.probandListStatusEntryBean.inputVisible}"
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-input-panelgrid"
+			rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+			<h:outputLabel
+				styleClass="ctsms-field-icon ctsms-icon-encryption"
+				for="probandliststatusreason"
+				value="#{triallabels.proband_list_status_entry_input_reason_label}" />
+			<h:panelGroup>
+				<p:inputTextarea
+					id="probandliststatusreason"
+					value="#{probandListBean.probandListStatusEntryBean.in.reason}"
+					required="false"
+					autoResize="false"
+					styleClass="ctsms-textarea"
+					label="#{triallabels.proband_list_status_entry_input_reason}">
+				</p:inputTextarea>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="probandliststatusreason">
+					<h:outputText
+						value="#{triallabels.proband_list_status_entry_input_reason_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+		</h:panelGrid>
+		<h:outputLabel rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
+		<h:outputLabel rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
+	</ui:composition>
+</h:body>
+</html>

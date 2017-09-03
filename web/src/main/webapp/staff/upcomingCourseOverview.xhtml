@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>upcoming courses</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/staffHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{stafflabels.upcoming_course_overview_title}" />
+		<ui:define name="content">
+			<h:form id="upcomingcourseoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<h:panelGroup id="upcomingcourse_list_wrapper">
+						<p:dataTable
+							styleClass="ctsms-datatable"
+							lazy="true"
+							rows="#{dataTablesRowsFullPage}"
+							paginator="#{dataTablesPaginatorFullPage}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+							paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+							pageLinks="#{dataTablesPageLinksFullPage}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+							scrollable="#{dataTablesScrollableFullPage}"
+							scrollHeight="#{dataTablesScrollHeightFullPage}"
+							resizableColumns="#{dataTablesResizableColumnsFullPage}"
+							sortBy="#{course.vo.stop}"
+							emptyMessage="#{labels.datatable_empty_message}"
+							var="course"
+							value="#{upcomingCourseOverviewBean.upcomingCourseModel}"
+							id="upcomingcourse_list"
+							rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{upcomingCourseOverviewBean.courseToColor(course.vo)}">
+							<f:facet name="header">
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+									<h:outputText value="#{upcomingCourseOverviewBean.upcomingCourseModel.rowCount} #{stafflabels.upcoming_course_overview_upcomingcourse_list_header}" />
+									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+									<p:commandButton
+										process="@this"
+										actionListener="#{upcomingCourseOverviewBean.load}"
+										title="#{labels.update_datatable_button_title}"
+										icon="ui-icon-refresh"
+										styleClass="ctsms-list-header-button"
+										ajax="true"
+										update=":upcomingcourseoverview_form:upcomingcourse_list" />
+								</h:panelGrid>
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/upcomingCourseTableColumns.xhtml" />
+							<p:column
+								filterBy="#{course.vo.participations.status.id}"
+								filterOptions="#{sessionScopeBean.filterCourseParticipationStatusTypes}">
+								<f:facet name="header">
+									<h:outputText value="#{stafflabels.upcoming_course_overview_upcomingcourse_list_participation_status_type_column}" />
+								</f:facet>
+								<h:outputText value="#{upcomingCourseOverviewBean.getCourseParticipationStatusTypeName(course.vo)}" />
+							</p:column>
+							<p:column style="width:64px;white-space:nowrap;">
+								<p:commandButton
+									process="@this"
+									title="#{stafflabels.participate_self_registration_course_button_label}"
+									actionListener="#{upcomingCourseOverviewBean.participateSelfRegistrationCourse(course.vo)}"
+									icon="ui-icon ui-icon-circle-check"
+									ajax="true"
+									rendered="#{course.vo.selfRegistration}"
+									disabled="#{upcomingCourseOverviewBean.isParticipating(course.vo)}"
+									update=":upcomingcourseoverview_form:upcomingcourse_list_wrapper,:upcomingcourseoverview_form:messages" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_course_button_label}"
+									icon="ui-icon ui-icon-extlink"
+									onclick="openCourse(#{course.vo.id})" />
+							</p:column>
+						</p:dataTable>
+					</h:panelGroup>
+					<p:growl
+						id="messages"
+						showDetail="false" />
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

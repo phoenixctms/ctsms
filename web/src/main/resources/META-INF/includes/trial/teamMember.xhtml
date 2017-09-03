@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trial team members</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="teammember_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeTeamMember"
+				actionListener="#{teamMemberBean.change(trialBean.in.id)}"
+				update="team_member_list,team_member_bulkadd,team_member_input" /> -->
+			<p:remoteCommand
+				process="@this,lastPickedStaffIds"
+				name="addStaffIDs"
+				actionListener="#{teamMemberBean.staffMultiPicker.addIds(teamMemberBean.staffMultiPicker.ids)}"
+				update="team_member_bulkadd" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{teamMember.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="teamMember"
+					value="#{teamMemberBean.teamMemberModel}"
+					id="team_member_list"
+					selectionMode="single"
+					selection="#{teamMemberBean.selectedTeamMember}"
+					rowStyleClass="#{teamMember.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:teammember_form:team_member_input" />
+					<f:facet name="header">
+						<h:outputText value="#{teamMemberBean.teamMemberModel.rowCount} #{triallabels.team_member_team_member_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{teamMember.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{teamMember.vo.id}" />
+					</p:column>
+					<p:column filterBy="#{teamMember.vo.staff.personParticulars.lastName}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.team_member_team_member_list_staff_last_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{teamMember.vo.staff.name}" />
+							<ui:param
+								name="icon"
+								value="#{teamMember.vo.staff.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="#{teamMember.vo.staff.person}" />
+						</ui:include>
+					</p:column>
+					<p:column filterBy="#{teamMember.vo.staff.organisationParticulars.organisationName}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.team_member_team_member_list_staff_organisation_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{teamMember.vo.staff.organisationName}" />
+							<ui:param
+								name="icon"
+								value="#{teamMember.vo.staff.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="#{!teamMember.vo.staff.person}" />
+						</ui:include>
+					</p:column>
+					<ui:include src="../shared/teamMemberTableColumns.xhtml" />
+					<p:rowExpansion>
+						<p:panel>
+							<ui:include src="../shared/shiftDurationSummaryTableForRowExpansion.xhtml">
+								<ui:param
+									name="shiftDurationSummaryModel"
+									value="#{teamMemberBean.getShiftDurationModel(teamMember.vo.staff)}" />
+								<ui:param
+									name="namingContainer"
+									value=":tabView:teammember_form:team_member_list:#{teamMember.rowIndex}" />
+								<ui:param
+									name="showTrials"
+									value="true" />
+								<ui:param
+									name="showStaff"
+									value="false" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:panel>
+					</p:rowExpansion>
+				</p:dataTable>
+				<h:panelGrid
+					columns="2"
+					cellpadding="0"
+					styleClass="ctsms-teammember-content-panelgrid ctsms-content-panelgrid-maxheight"
+					columnClasses="ctsms-teammember-staffpicker-column,ctsms-teammember-input-column">
+					<p:panel
+						id="team_member_bulkadd"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{labels.bulk_creation_label}" />
+						</f:facet>
+						<h:panelGrid
+							rendered="#{teamMemberBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
+								<h:outputText value="#{teamMemberBean.staffMultiPicker.count} #{triallabels.teammembers_picked_label}" />
+								<p:commandButton
+									title="#{labels.multipick_staff_button_label}"
+									icon="ui-icon ui-icon-cart"
+									type="button"
+									onclick="openStaffMultiPicker(':tabView:teammember_form:lastPickedStaffIds','addStaffIDs')" />
+								<p:commandButton
+									process="@this"
+									title="#{labels.multipick_clear_all_button_label}"
+									actionListener="#{teamMemberBean.staffMultiPicker.clear}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="#{!teamMemberBean.staffMultiPicker.isEnabled}"
+									update="team_member_bulkadd" />
+								<h:inputHidden
+									id="lastPickedStaffIds"
+									required="false"
+									value="#{teamMemberBean.staffMultiPicker.ids}">
+								</h:inputHidden>
+							</h:panelGrid>
+							<p:dataList
+								type="#{multiPickerDataListsType}"
+								rows="#{multiPickerDataListsRows}"
+								paginator="#{multiPickerDataListsPaginator}"
+								paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
+								rowsPerPageTemplate="#{multiPickerDataListsRowsPerPageTemplate}"
+								paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
+								pageLinks="#{multiPickerDataListsPageLinks}"
+								paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
+								id="staff_selection"
+								var="staff"
+								styleClass="ctsms-teammember-staffpicker-list"
+								value="#{teamMemberBean.staffMultiPicker.selection}">
+								<f:facet name="description">
+									<h:outputText value="" />
+								</f:facet>
+								<p:column>
+									<h:outputText value="#{staff.rowPosition}." />
+								</p:column>
+								<p:column>
+									<h:outputText value=" " />
+								</p:column>
+								<p:column style="width:32px;">
+									<p:commandButton
+										type="button"
+										title="#{labels.open_staff_button_label}"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openStaff(#{staff.vo.id})" />
+								</p:column>
+								<p:column style="width:32px;">
+									<p:commandButton
+										process="@this"
+										title="#{labels.multipick_clear_button_label}"
+										actionListener="#{teamMemberBean.staffMultiPicker.removeId(staff.vo.id)}"
+										icon="ui-icon ui-icon-close"
+										update=":tabView:teammember_form:team_member_bulkadd" />
+								</p:column>
+								<p:column>
+									<h:outputText value=" " />
+								</p:column>
+								<p:column>
+									<h:outputText
+										value="#{applicationScopeBean.escapeHtml(staff.vo.name)}"
+										escape="false" />
+								</p:column>
+							</p:dataList>
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="bulkAddTeamMemberRole"
+									value="#{triallabels.bulkadd_team_member_role_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="bulkAddTeamMemberRole"
+										value="#{teamMemberBean.bulkAddRoleId}"
+										required="false"
+										label="#{triallabels.bulkadd_team_member_role}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{teamMemberBean.availableRoles}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddTeamMemberRole">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_role_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddTeamMemberRole" />
+								<h:outputLabel
+									for="bulkAddAccess"
+									value="#{triallabels.bulkadd_team_member_access_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddAccess"
+										value="#{teamMemberBean.bulkAddAccess}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddAccess">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_access_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddAccess" />
+								<!-- <h:outputLabel
+									for="bulkAddNotifyTimelineEvent"
+									value="#{triallabels.bulkadd_team_member_notify_timeline_event_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddNotifyTimelineEvent"
+										value="#{teamMemberBean.bulkAddNotifyTimelineEvent}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddNotifyTimelineEvent">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_notify_timeline_event_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddNotifyTimelineEvent" /> -->
+							</h:panelGrid>
+							<!-- <h:outputLabel rendered="#{!teamMemberBean.inputVisible}" /> -->
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this,bulkAddTeamMemberRole,bulkAddAccess"
+										id="bulkAdd"
+										value="#{labels.add_button_label}"
+										actionListener="#{teamMemberBean.addBulk}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!teamMemberBean.staffBulkCreateable}"
+										update="team_member_list,team_member_bulkadd" />
+								</p:toolbarGroup>
+								<!-- bulkAddNotifyTimelineEvent -->
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+					<p:panel
+						id="team_member_input"
+						styleClass="ctsms-panel-maxheight">
+						<f:facet name="header">
+							<h:outputText value="#{teamMemberBean.title}" />
+						</f:facet>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								rendered="#{teamMemberBean.inputVisible}"
+								columns="9"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="teamMemberRole"
+									value="#{triallabels.team_member_role_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="teamMemberRole"
+										value="#{teamMemberBean.in.roleId}"
+										required="true"
+										label="#{triallabels.team_member_role}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{teamMemberBean.availableRoles}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="teamMemberRole">
+										<h:outputText
+											value="#{triallabels.team_member_role_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="teamMemberRole" />
+								<h:outputLabel
+									for="teamMemberStaff"
+									value="#{triallabels.team_member_staff_label}" />
+								<h:panelGrid
+									columns="4"
+									cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden
+											id="teamMemberStaff"
+											required="true"
+											requiredMessage="#{triallabels.team_member_staff_required_message}"
+											value="#{teamMemberBean.in.staffId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton
+											id="teamMemberStaffName"
+											value="#{applicationScopeBean.clipStringPicker(teamMemberBean.staffName)}"
+											title="#{triallabels.team_member_staff_tooltip}#{labels.open_staff_button_label}"
+											styleClass="ctsms-picker"
+											icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedStaff(':tabView:teammember_form:teamMemberStaff')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_active_identity_staff_button_label}"
+										icon="ui-icon ui-icon-person"
+										type="button"
+										disabled="#{!sessionScopeBean.hasUserIdentity}"
+										onclick="setIDAjax(':tabView:teammember_form:teamMemberStaff',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':tabView:teammember_form:teamMemberStaffName','#{sessionScopeBean.userIdentityName}')" />
+									<p:commandButton
+										title="#{labels.pick_staff_button_label}"
+										icon="ui-icon ui-icon-search"
+										type="button"
+										onclick="openStaffPickerAjax(':tabView:teammember_form:teamMemberStaff',':tabView:teammember_form:teamMemberStaffName')" />
+									<p:commandButton
+										title="#{labels.clear_staff_button_label}"
+										icon="ui-icon ui-icon-close"
+										type="button"
+										onclick="clearIDAjax(':tabView:teammember_form:teamMemberStaff',':tabView:teammember_form:teamMemberStaffName','#{applicationScopeBean.noStaffPickedMessage}')" />
+								</h:panelGrid>
+								<p:message for="teamMemberStaff" />
+								
+								<!-- <h:outputLabel value="" />
+									<h:outputText value="" />
+									<h:outputLabel value="" /> -->	
+								
+								<h:outputLabel
+									for="access"
+									value="#{triallabels.team_member_access_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="access"
+										value="#{teamMemberBean.in.access}" >
+										<p:ajax
+											listener="#{teamMemberBean.handleAccessChange}"
+											update="sign,resolve,verify" />										
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="access">
+										<h:outputText
+											value="#{triallabels.team_member_access_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="access" />
+								
+								<h:outputLabel
+									for="sign"
+									value="#{triallabels.team_member_sign_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="sign"
+										disabled="#{!teamMemberBean.in.access}"
+										value="#{teamMemberBean.in.sign}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="sign">
+										<h:outputText
+											value="#{triallabels.team_member_sign_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="sign" />	
+								
+								<h:outputLabel
+									for="resolve"
+									value="#{triallabels.team_member_resolve_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="resolve"
+										disabled="#{!teamMemberBean.in.access}"
+										value="#{teamMemberBean.in.resolve}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="resolve">
+										<h:outputText
+											value="#{triallabels.team_member_resolve_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="resolve" />	
+								
+								<h:outputLabel
+									for="verify"
+									value="#{triallabels.team_member_verify_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="verify"
+										disabled="#{!teamMemberBean.in.access}"
+										value="#{teamMemberBean.in.verify}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="verify">
+										<h:outputText
+											value="#{triallabels.team_member_verify_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="verify" />	
+
+
+								<h:outputLabel
+									for="notifyEcrfValidatedStatus"
+									value="#{triallabels.team_member_notify_ecrf_validated_status_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyEcrfValidatedStatus"
+										value="#{teamMemberBean.in.notifyEcrfValidatedStatus}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyEcrfValidatedStatus">
+										<h:outputText
+											value="#{triallabels.team_member_notify_ecrf_validated_status_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyEcrfValidatedStatus" />
+								<h:outputLabel
+									for="notifyEcrfReviewStatus"
+									value="#{triallabels.team_member_notify_ecrf_review_status_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyEcrfReviewStatus"
+										value="#{teamMemberBean.in.notifyEcrfReviewStatus}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyEcrfReviewStatus">
+										<h:outputText
+											value="#{triallabels.team_member_notify_ecrf_review_status_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyEcrfReviewStatus" />	
+								<h:outputLabel
+									for="notifyEcrfVerfifiedStatus"
+									value="#{triallabels.team_member_notify_ecrf_verified_status_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyEcrfVerifiedStatus"
+										value="#{teamMemberBean.in.notifyEcrfVerifiedStatus}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyEcrfVerifiedStatus">
+										<h:outputText
+											value="#{triallabels.team_member_notify_ecrf_verified_status_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyEcrfVerifiedStatus" />															
+
+
+								<h:outputLabel
+									for="notifyEcrfFieldStatus"
+									value="#{triallabels.team_member_notify_ecrf_field_status_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyEcrfFieldStatus"
+										value="#{teamMemberBean.in.notifyEcrfFieldStatus}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyEcrfFieldStatus">
+										<h:outputText
+											value="#{triallabels.team_member_notify_ecrf_field_status_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyEcrfFieldStatus" />
+
+															
+								<h:outputLabel
+									for="notifyTimelineEvent"
+									value="#{triallabels.team_member_notify_timeline_event_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyTimelineEvent"
+										value="#{teamMemberBean.in.notifyTimelineEvent}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyTimelineEvent">
+										<h:outputText
+											value="#{triallabels.team_member_notify_timeline_event_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyTimelineEvent" />
+								
+								
+
+								
+								<h:outputLabel
+									for="notifyOther"
+									value="#{triallabels.team_member_notify_other_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="notifyOther"
+										value="#{teamMemberBean.in.notifyOther}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="notifyOther">
+										<h:outputText
+											value="#{triallabels.team_member_notify_other_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="notifyOther" />
+								
+							</h:panelGrid>
+							<h:outputLabel rendered="#{!teamMemberBean.inputVisible}" />
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="left">
+									<h:outputText
+										styleClass="ctsms-toolbar-text"
+										value="#{teamMemberBean.created ? teamMemberBean.modifiedAnnotation : ''}" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this"
+										value="#{labels.reset_button_label}"
+										actionListener="#{teamMemberBean.reset}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-close"
+										ajax="true"
+										disabled="false"
+										update="team_member_list,team_member_input" />
+									<p:commandButton
+										process="@this,team_member_input"
+										id="add"
+										value="#{labels.add_button_label}"
+										actionListener="#{teamMemberBean.add}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!teamMemberBean.createable}"
+										update="team_member_list,team_member_input" />
+									<p:commandButton
+										process="@this,team_member_input"
+										id="update"
+										value="#{labels.update_button_label}"
+										actionListener="#{teamMemberBean.update}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-disk"
+										ajax="true"
+										disabled="#{!teamMemberBean.editable}"
+										update="team_member_list,team_member_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.delete_button_label}"
+										actionListener="#{teamMemberBean.delete}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-trash"
+										ajax="true"
+										disabled="#{!teamMemberBean.removable}"
+										update="team_member_list,team_member_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.load_button_label}"
+										actionListener="#{teamMemberBean.load}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon-refresh"
+										ajax="true"
+										disabled="#{!teamMemberBean.created}"
+										update="team_member_list,team_member_input" />
+									<p:commandButton
+										immediate="true"
+										ajax="false"
+										value="#{triallabels.export_team_members_button_label}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload value="#{teamMemberBean.teamMembersExcelStreamedContent}" />
+									</p:commandButton>
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

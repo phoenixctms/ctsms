@@ -1,0 +1,43 @@
+#if ($daoInheritance)
+#set ($queryOperations = $entity.getQueryOperations(true))
+#else
+#set ($queryOperations = $entity.queryOperations)
+#end
+## Alyways generate the DaoBaseTest because we often need it for the DaoTransformationTests which
+## perform a searchUnique i.e. WardDaoImpl.loadWardFromWardVO there a searchUniqueWardID is performed
+##if (!($queryOperations.empty && $entity.daoBusinessOperations.empty))
+#set ($testCaseClassName = "${entity.daoBaseName}Test")
+#set ($generatedFile = "${entity.packagePath}/test/${testCaseClassName}.java")
+// license-header java merge-point
+//
+package ${entity.packageName}.test;
+
+import javax.annotation.Resource;
+
+import $baseDaoTestClass;
+
+/**
+ * Test base class for spring aware DAO test cases like finders and dao business operations.
+ *
+ * @see $entity.fullyQualifiedDaoName
+ */
+public abstract class $testCaseClassName extends $stringUtils.substringAfterLast($baseDaoTestClass,".") {
+
+    /**
+     * The Dao to test, populated via spring 'populate protected variables'
+     */
+    @Resource
+    protected $entity.fullyQualifiedDaoName $entity.getBeanName(false);
+
+#foreach($entityRef in $entity.entityReferences)
+
+    /**
+     * Entity dependency to $entityRef.daoName
+     */
+    @Resource
+    protected $entityRef.targetElement.fullyQualifiedDaoName $entityRef.daoName;
+
+#end
+
+}
+##end

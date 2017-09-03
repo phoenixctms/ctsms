@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>bank accounts</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="bankaccount_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeBankAccount"
+				actionListener="#{bankAccountBean.change(probandBean.in.id)}"
+				update="bankaccount_list,bankaccount_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{bankAccount.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="bankAccount"
+					value="#{bankAccountBean.bankAccountModel}"
+					id="bankaccount_list"
+					selectionMode="single"
+					selection="#{bankAccountBean.selectedBankAccount}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:bankaccount_form:bankaccount_input" />
+					<f:facet name="header">
+						<h:outputText value="#{bankAccountBean.bankAccountModel.rowCount} #{probandlabels.bank_account_bankaccount_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{bankAccount.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.id}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_account_holder_name_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.accountHolderName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_bank_name_column}" />
+						</f:facet>
+						<h:outputText value="#{applicationScopeBean.clipStringTrailing(bankAccount.vo.bankName)}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_iban_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.iban}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_bic_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.bic}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_account_number_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.accountNumber}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_bank_code_number_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccount.vo.bankCodeNumber}" />
+					</p:column>
+					<p:column
+						sortBy="#{bankAccount.vo.active}">
+						<!-- filterBy="#{bankAccount.vo.active}"
+						filterOptions="#{sessionScopeBean.filterBooleans}"> -->
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_active_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{bankAccount.vo.active}" />
+						</ui:include>
+					</p:column>
+					<p:column sortBy="#{bankAccount.vo.na}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_na_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{bankAccount.vo.na}" />
+						</ui:include>
+					</p:column>					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.bank_account_bankaccount_list_money_transfer_count_column}" />
+						</f:facet>
+						<h:outputText value="#{bankAccountBean.getMoneyTransferCount(bankAccount.vo)}" />
+					</p:column>					
+				</p:dataTable>
+				<p:panel id="bankaccount_input">
+					<f:facet name="header">
+						<h:outputText value="#{bankAccountBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{bankAccountBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="accountHolderName"
+								value="#{probandlabels.account_holder_name_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="accountHolderName"
+									value="#{bankAccountBean.in.accountHolderName}"
+									required="false"
+									label="#{probandlabels.account_holder_name}"
+									styleClass="ctsms-control" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="accountHolderName">
+									<h:outputText
+										value="#{probandlabels.account_holder_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="accountHolderName" />
+							<h:outputLabel
+								for="bankAccountActive"
+								value="#{probandlabels.bank_account_active_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="bankAccountActive"
+									value="#{bankAccountBean.in.active}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bankAccountActive">
+									<h:outputText
+										value="#{probandlabels.bank_account_active_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="bankAccountActive" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="bankName"
+								value="#{probandlabels.bank_name_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="bankName"
+									value="#{bankAccountBean.in.bankName}"
+									required="false"
+									label="#{probandlabels.bank_name}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthBankName}"
+									maxResults="#{autoCompleteMaxResultsBankName}"
+									queryDelay="#{autoCompleteQueryDelayBankName}"
+									dropdown="#{autoCompleteDropdownBankName}"
+									global="#{autoCompleteGlobalBankName}"
+									scrollHeight="#{autoCompleteScrollHeightBankName}"
+									completeMethod="#{bankAccountBean.completeBankName}">
+									<p:ajax
+										listener="#{bankAccountBean.handleBankNameSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bankName">
+									<h:outputText
+										value="#{probandlabels.bank_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="bankName" />
+							<h:outputLabel />
+							<h:outputText />
+							<h:outputLabel />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="iban"
+								value="#{probandlabels.iban_label}" />
+							<h:panelGroup>
+								<p:inputMask
+									id="iban"
+									value="#{bankAccountBean.in.iban}"
+									required="false"
+									placeHolder="_"
+									mask="#{applicationScopeBean.ibanMask}"
+									label="#{probandlabels.iban}"
+									styleClass="ctsms-control" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="iban">
+									<h:outputText
+										value="#{probandlabels.iban_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="iban" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="bic"
+								value="#{probandlabels.bic_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="bic"
+									value="#{bankAccountBean.in.bic}"
+									required="false"
+									label="#{probandlabels.bic}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthBic}"
+									maxResults="#{autoCompleteMaxResultsBic}"
+									queryDelay="#{autoCompleteQueryDelayBic}"
+									dropdown="#{autoCompleteDropdownBic}"
+									global="#{autoCompleteGlobalBic}"
+									scrollHeight="#{autoCompleteScrollHeightBic}"
+									completeMethod="#{bankAccountBean.completeBic}">
+									<p:ajax
+										listener="#{bankAccountBean.handleBicSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bic">
+									<h:outputText
+										value="#{probandlabels.bic_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="bic" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="accountNumber"
+								value="#{probandlabels.account_number_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="accountNumber"
+									value="#{bankAccountBean.in.accountNumber}"
+									required="false"
+									label="#{probandlabels.account_number}"
+									styleClass="ctsms-control" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="accountNumber">
+									<h:outputText
+										value="#{probandlabels.account_number_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="accountNumber" />
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="bankCodeNumber"
+								value="#{probandlabels.bank_code_number_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="bankCodeNumber"
+									value="#{bankAccountBean.in.bankCodeNumber}"
+									required="false"
+									label="#{probandlabels.bank_code_number}"
+									styleClass="ctsms-control-smaller"
+									minQueryLength="#{autoCompleteMinQueryLengthBankCodeNumber}"
+									maxResults="#{autoCompleteMaxResultsBankCodeNumber}"
+									queryDelay="#{autoCompleteQueryDelayBankCodeNumber}"
+									dropdown="#{autoCompleteDropdownBankCodeNumber}"
+									global="#{autoCompleteGlobalBankCodeNumber}"
+									scrollHeight="#{autoCompleteScrollHeightBankCodeNumber}"
+									completeMethod="#{bankAccountBean.completeBankCodeNumber}">
+									<p:ajax
+										listener="#{bankAccountBean.handleBankCodeNumberSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="bankCodeNumber">
+									<h:outputText
+										value="#{probandlabels.bank_code_number_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="bankCodeNumber" />
+							
+							<h:outputLabel
+								for="na"
+								value="#{probandlabels.bank_account_na_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="na"
+									widgetVar="bankAccountNa"
+									value="#{bankAccountBean.in.na}">
+									<p:ajax
+										listener="#{bankAccountBean.handleNaChange}"
+										update="accountHolderName,bankName,iban,bic,accountNumber,bankCodeNumber" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="na">
+									<h:outputText
+										value="#{probandlabels.bank_account_na_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="na" />							
+							
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!bankAccountBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{bankAccountBean.created ? bankAccountBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{bankAccountBean.reset}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="bankaccount_list,bankaccount_input" />
+								<p:commandButton
+									process="@this,bankaccount_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{bankAccountBean.add}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!bankAccountBean.createable}"
+									update="bankaccount_list,bankaccount_input" />
+								<p:commandButton
+									process="@this,bankaccount_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{bankAccountBean.update}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!bankAccountBean.editable}"
+									update="bankaccount_list,bankaccount_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="bankAccountDeleteConfirmation.show()"
+									disabled="#{!bankAccountBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{bankAccountBean.load}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!bankAccountBean.created}"
+									update="bankaccount_list,bankaccount_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="bankAccountDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{probandlabels.bank_account_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{bankAccountBean.delete}"
+					oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+					onclick="bankAccountDeleteConfirmation.hide()"
+					ajax="true"
+					update="bankaccount_list,bankaccount_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="bankAccountDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

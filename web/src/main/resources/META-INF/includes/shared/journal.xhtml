@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>journal</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				rows="#{dataTablesRowsDefault}"
+				paginator="#{dataTablesPaginatorDefault}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+				paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+				pageLinks="#{dataTablesPageLinksDefault}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+				scrollable="#{dataTablesScrollableDefault}"
+				scrollHeight="#{dataTablesScrollHeightDefault}"
+				resizableColumns="#{dataTablesResizableColumnsDefault}"
+				sortBy="#{journalEntry.vo.id}"
+				sortOrder="descending"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="journalEntry"
+				value="#{journalBean.journalEntryModel}"
+				id="journal_list"
+				selectionMode="single"
+				selection="#{journalBean.selectedJournalEntry}"
+				rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}">
+				<p:ajax
+					event="rowSelect"
+					update="#{namingContainer}:journal_input" />
+				<f:facet name="header">
+					<h:outputText value="#{journalBean.journalEntryModel.rowCount} #{labels.journal_journal_list_header}" />
+				</f:facet>
+				<p:column sortBy="#{journalEntry.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{journalEntry.vo.id}" />
+				</p:column>
+				<p:column
+					sortBy="#{journalEntry.vo.category}"
+					filterBy="#{journalEntry.vo.category.id}"
+					filterOptions="#{journalBean.filterCategories}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_category_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{journalEntry.vo.category.name}" />
+						<ui:param
+							name="icon"
+							value="#{journalEntry.vo.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="#{!journalEntry.vo.systemMessage}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{journalEntry.vo.systemMessage}"
+					filterBy="#{journalEntry.vo.systemMessage}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_system_message_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{journalEntry.vo.systemMessage}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					rendered="#{!journalBean.useJournalEncryption}"
+					sortBy="#{journalEntry.vo.title}"
+					filterBy="#{journalEntry.vo.title}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_title_column}" />
+					</f:facet>
+					<h:outputText value="#{journalEntry.vo.title}" />
+				</p:column>
+				<p:column
+					rendered="#{journalBean.useJournalEncryption}"
+					filterBy="#{journalEntry.vo.titleHash}">
+					<f:facet name="header">
+						<h:outputText
+							styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+							value="#{labels.journal_journal_list_title_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{journalEntry.vo.decrypted ? journalEntry.vo.title : labels.encrypted_journal_entry_title}" />
+						<ui:param
+							name="icon"
+							value="#{journalEntry.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{journalEntry.vo.realTimestamp}"
+					filterBy="#{journalEntry.vo.realTimestamp}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_real_timestamp_column}" />
+					</f:facet>
+					<h:outputText value="#{journalEntry.vo.realTimestamp}">
+						<f:converter converterId="ctsms.DateTime" />
+					</h:outputText>
+				</p:column>
+				<p:column
+				    rendered="#{journalBean.loadFilterUsers}"
+					sortBy="#{journalEntry.vo.modifiedUser.name}"
+					filterBy="#{journalEntry.vo.modifiedUser.id}"
+					filterOptions="#{journalBean.filterUsers}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_user_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.getIdentityString(journalEntry.vo.modifiedUser)} " />
+				</p:column>
+				<p:column
+					rendered="#{!journalBean.loadFilterUsers}"
+					sortBy="#{journalEntry.vo.modifiedUser.name}"
+					filterBy="#{journalEntry.vo.modifiedUser.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_user_column}" />
+					</f:facet>
+					<h:outputText value="#{journalEntry.vo.modifiedUser.name} " />
+				</p:column>
+			</p:dataTable>
+			<p:panel id="journal_input">
+				<f:facet name="header">
+					<h:outputText value="#{journalBean.title}" />
+				</f:facet>
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-input-row-no-textarea,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+					<h:panelGrid
+						rendered="#{journalBean.inputVisible and !journalBean.systemMessage}"
+						columns="6"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel
+							for="journalcategory"
+							value="#{labels.journal_category_label}" />
+						<h:panelGroup>
+							<p:selectOneMenu
+								id="journalcategory"
+								value="#{journalBean.in.categoryId}"
+								required="#{validate}"
+								label="#{labels.journal_category}"
+								styleClass="ctsms-control">
+								<f:converter converterId="ctsms.ID" />
+								<f:selectItem
+									itemLabel="#{labels.no_selection_label}"
+									itemValue="#{applicationScopeBean.noSelectionValue}" />
+								<f:selectItems
+									value="#{journalBean.categories}"
+									var="selectItem"
+									itemLabel="#{selectItem.label}"
+									itemValue="#{selectItem.value}" />
+								<p:ajax
+									oncomplete="handleJournalCategorySelected(xhr, status, args)"
+									listener="#{journalBean.handleCategoryChange}" />
+							</p:selectOneMenu>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="journalcategory">
+								<h:outputText
+									value="#{labels.journal_category_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="journalcategory" />
+						<h:outputLabel
+							for="journalrealTimestamp"
+							value="#{labels.journal_real_timestamp_label}" />
+						<h:panelGroup>
+							<p:calendar
+								id="journalrealTimestamp"
+								value="#{journalBean.in.realTimestamp}"
+								required="#{validate}"
+								label="#{labels.journal_real_timestamp}"
+								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								yearRange="#{applicationScopeBean.calendarYearRange}"
+								showWeek="true"
+								navigator="true"
+								locale="#{sessionScopeBean.locale}"
+								timeZone="#{sessionScopeBean.timeZone}"
+								styleClass="ctsms-calendar-datetime" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="journalrealTimestamp">
+								<h:outputText
+									value="#{labels.journal_real_timestamp_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="journalrealTimestamp" />
+						<h:outputLabel
+							styleClass="#{journalBean.useJournalEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+							for="journaltitle"
+							value="#{journalBean.useJournalEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_short_label : '')}#{labels.journal_title_label}" />
+						<h:panelGroup>
+							<p:inputText
+								id="journaltitle"
+								widgetVar="journalEntryTitle"
+								value="#{journalBean.in.title}"
+								required="#{validate}"
+								label="#{labels.journal_title}"
+								styleClass="ctsms-control-larger" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="journaltitle">
+								<h:outputText
+									value="#{labels.journal_title_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="journaltitle" />
+					</h:panelGrid>
+					<h:panelGrid
+						rendered="#{journalBean.inputVisible and !journalBean.systemMessage}"
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+						<h:outputLabel
+							styleClass="#{journalBean.useJournalEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+							for="journalcomment"
+							value="#{journalBean.useJournalEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_label : '')}#{labels.journal_comment_label}" />
+						<h:panelGroup>
+							<p:inputTextarea
+								id="journalcomment"
+								value="#{journalBean.in.comment}"
+								required="false"
+								styleClass="ctsms-textarea"
+								autoResize="false"
+								label="#{labels.journal_comment}" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="journalcomment">
+								<h:outputText
+									value="#{labels.journal_comment_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:outputLabel rendered="#{!journalBean.inputVisible and !journalBean.systemMessage}" />
+					<h:outputLabel rendered="#{!journalBean.inputVisible and !journalBean.systemMessage}" />
+					<ui:include src="systemMessage.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{journalBean.inputVisible and journalBean.systemMessage}" />
+						<ui:param
+							name="timestamp"
+							value="#{journalBean.in.realTimestamp}" />
+						<ui:param
+							name="title"
+							value="#{journalBean.in.title}" />
+						<ui:param
+							name="comment"
+							value="#{journalBean.in.comment}" />
+					</ui:include>
+					<h:outputLabel rendered="#{journalBean.systemMessage}" />
+					<h:outputLabel rendered="#{!journalBean.inputVisible and !journalBean.systemMessage}" />
+					<p:messages id="journalMessages" />
+					<p:toolbar>
+						<p:toolbarGroup align="left">
+							<h:outputText
+								styleClass="ctsms-toolbar-text"
+								value="#{journalBean.created ? journalBean.modifiedAnnotation : ''}" />
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup align="right">
+							<p:commandButton
+								process="@this"
+								value="#{labels.reset_button_label}"
+								actionListener="#{journalBean.reset}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-close"
+								ajax="true"
+								disabled="false"
+								update="journal_list,journal_input" />
+							<p:commandButton
+								process="@this,journal_input"
+								id="addJournalEntry"
+								value="#{labels.add_button_label}"
+								actionListener="#{journalBean.add}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-plusthick"
+								ajax="true"
+								disabled="#{!journalBean.createable}"
+								update="journal_list,journal_input" />
+							<p:commandButton
+								process="@this,journal_input"
+								id="updateJournalEntry"
+								value="#{labels.update_button_label}"
+								actionListener="#{journalBean.update}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-disk"
+								ajax="true"
+								disabled="#{!journalBean.editable}"
+								update="journal_list,journal_input" />
+							<p:commandButton
+								process="@this"
+								value="#{labels.delete_button_label}"
+								actionListener="#{journalBean.delete}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-trash"
+								ajax="true"
+								disabled="#{!journalBean.removable}"
+								update="journal_list,journal_input" />
+							<p:commandButton
+								process="@this"
+								value="#{labels.load_button_label}"
+								actionListener="#{journalBean.load}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon-refresh"
+								ajax="true"
+								disabled="#{!journalBean.created}"
+								update="journal_list,journal_input" />
+							<p:commandButton
+							    disabled="#{!journalBean.enableExports}"
+								immediate="true"
+								ajax="false"
+								value="#{labels.journal_export_journal_button_label}"
+								icon="ui-icon ui-icon-xls">
+								<p:fileDownload value="#{journalBean.excelStreamedContent}" />
+							</p:commandButton>
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup rendered="#{!journalBean.criteriaJournal}" align="right">
+							<ui:include src="toolbarAjaxStatus.xhtml" />
+						</p:toolbarGroup>
+					</p:toolbar>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="journalEntryTitlePresetOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.journal_entry_title_preset_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setJournalEntryTitle(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setJournalEntryTitle(false)"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

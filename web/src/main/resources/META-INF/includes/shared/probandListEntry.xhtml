@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband list entry</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			rendered="#{probandListBean.inputVisible}"
+			columns="6"
+			cellpadding="2"
+			columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+			<h:outputLabel
+				rendered="#{showProbandPicker}"
+				for="probandListEntryProband"
+				value="#{triallabels.proband_list_proband_label}" />
+			<h:panelGrid
+				rendered="#{showProbandPicker}"
+				columns="4"
+				cellpadding="0">
+				<h:panelGroup>
+					<h:inputHidden
+						id="probandListEntryProband"
+						required="true"
+						requiredMessage="#{triallabels.proband_list_proband_required_message}"
+						value="#{probandListBean.in.probandId}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="probandListEntryProbandName"
+						value="#{applicationScopeBean.clipStringPicker(probandListBean.probandName)}"
+						title="#{triallabels.proband_list_proband_tooltip}#{labels.open_proband_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedProband('#{namingContainer}:probandListEntryProband')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_proband_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openProbandPickerAjax('#{namingContainer}:probandListEntryProband','#{namingContainer}:probandListEntryProbandName')" />
+				<p:commandButton
+					title="#{labels.clear_proband_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjax('#{namingContainer}:probandListEntryProband','#{namingContainer}:probandListEntryProbandName','#{applicationScopeBean.noProbandPickedMessage}')" />
+				<p:commandButton
+					title="#{messages.create_new_proband}"
+					icon="ui-icon ui-icon-plusthick"
+					type="button"
+					onclick="openNewProband()" />						
+			</h:panelGrid>
+			<p:message
+				rendered="#{showProbandPicker}"
+				for="probandListEntryProband" />
+			<h:outputLabel
+				rendered="#{showTrialPicker}"
+				for="probandListEntryTrial"
+				value="#{triallabels.proband_list_trial_label}" />
+			<h:panelGrid
+				rendered="#{showTrialPicker}"
+				columns="3"
+				cellpadding="0">
+				<h:panelGroup>
+					<h:inputHidden
+						id="probandListEntryTrial"
+						required="false"
+						requiredMessage="#{triallabels.proband_list_trial_required_message}"
+						value="#{probandListBean.trialId}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="probandListEntryTrialName"
+						value="#{applicationScopeBean.clipStringPicker(probandListBean.trialName)}"
+						title="#{triallabels.proband_list_trial_tooltip}#{labels.open_trial_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedTrial('#{namingContainer}:probandListEntryTrial')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_trial_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					disabled="#{probandListBean.created}"
+					onclick="openTrialPickerAjaxUpdate('#{namingContainer}:probandListEntryTrial','#{namingContainer}:probandListEntryTrialName','#{namingContainer}')" />
+				<p:commandButton
+					title="#{labels.clear_trial_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					disabled="#{probandListBean.created}"
+					onclick="clearIDAjaxUpdate('#{namingContainer}:probandListEntryTrial','#{namingContainer}:probandListEntryTrialName','#{applicationScopeBean.noTrialPickedMessage}','#{namingContainer}')" />
+			</h:panelGrid>
+			<p:message
+				rendered="#{showTrialPicker}"
+				for="probandListEntryTrial" />
+			<h:outputLabel
+				for="probandListEntryProbandGroup"
+				value="#{triallabels.proband_list_proband_group_label}" />
+			<h:panelGroup>
+				<p:selectOneMenu
+					id="probandListEntryProbandGroup"
+					value="#{probandListBean.in.groupId}"
+					required="false"
+					label="#{triallabels.proband_list_proband_group}"
+					styleClass="ctsms-control">
+					<f:converter converterId="ctsms.ID" />
+					<f:selectItem
+						itemLabel="#{labels.no_selection_label}"
+						itemValue="#{applicationScopeBean.noSelectionValue}" />
+					<f:selectItems
+						value="#{probandListBean.probandGroups}"
+						var="selectItem"
+						itemLabel="#{selectItem.label}"
+						itemValue="#{selectItem.value}" />
+				</p:selectOneMenu>
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="probandListEntryProbandGroup">
+					<h:outputText
+						value="#{triallabels.proband_list_proband_group_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="probandListEntryProbandGroup" />
+			<h:outputLabel
+				for="probandListEntryPosition"
+				value="#{triallabels.proband_list_position_label}" />
+			<h:panelGroup>
+				<p:spinner
+					id="probandListEntryPosition"
+					value="#{probandListBean.in.position}"
+					styleClass="ctsms-spinner"
+					required="true"
+					label="#{triallabels.proband_list_position}" />
+				<p:tooltip
+					rendered="#{enableTooltips}"
+					for="probandListEntryPosition">
+					<h:outputText
+						value="#{triallabels.proband_list_position_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="probandListEntryPosition" />
+		</h:panelGrid>
+		<h:outputLabel rendered="#{!probandListBean.inputVisible}" />
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff status overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/staffHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{stafflabels.staff_status_overview_title}" />
+		<ui:define name="content">
+			<h:form id="staffstatusoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="ignore_obselete"
+								value="#{stafflabels.staff_status_overview_ignore_obsolete_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="ignore_obselete"
+									disabled="false"
+									value="#{staffStatusOverviewBean.staffStatusModel.ignoreObsolete}">
+									<p:ajax
+										listener="#{staffStatusOverviewBean.handleIgnoreObsoleteChange}"
+										update="staffstatus_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="ignore_obselete">
+									<h:outputText
+										value="#{stafflabels.staff_status_overview_ignore_obsolete_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="ignore_obselete" />
+						</h:panelGrid>
+					</p:panel>
+					<p:dataTable
+						styleClass="ctsms-datatable"
+						lazy="true"
+						rows="#{dataTablesRowsFullPage}"
+						paginator="#{dataTablesPaginatorFullPage}"
+						paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+						paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+						pageLinks="#{dataTablesPageLinksFullPage}"
+						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+						scrollable="#{dataTablesScrollableFullPage}"
+						scrollHeight="#{dataTablesScrollHeightFullPage}"
+						resizableColumns="#{dataTablesResizableColumnsFullPage}"
+						sortBy="#{statusEntry.vo.id}"
+						emptyMessage="#{labels.datatable_permission_empty_message}"
+						var="statusEntry"
+						value="#{staffStatusOverviewBean.staffStatusModel}"
+						id="staffstatus_list"
+						rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{staffStatusOverviewBean.staffStatusToColor(statusEntry.vo)}">
+						<f:facet name="header">
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{staffStatusOverviewBean.staffStatusModel.rowCount} #{stafflabels.staff_status_overview_staffstatus_list_header}" />
+								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton
+									process="@this"
+									actionListener="#{staffStatusOverviewBean.load}"
+									title="#{labels.update_datatable_button_title}"
+									icon="ui-icon-refresh"
+									styleClass="ctsms-list-header-button"
+									ajax="true"
+									update=":staffstatusoverview_form:staffstatus_list" />
+							</h:panelGrid>
+						</f:facet>
+						<p:column style="width:16px;">
+							<p:rowToggler />
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.id}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.id}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.staff.personParticulars.lastName}"
+							filterBy="#{statusEntry.vo.staff.personParticulars.lastName}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_personparticulars_last_name_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.staff.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.staff.department}"
+							filterBy="#{statusEntry.vo.staff.department.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_staff_department_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.staff.department.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.staff.category}"
+							filterBy="#{statusEntry.vo.staff.category.id}"
+							filterOptions="#{sessionScopeBean.filterStaffCategories}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_staff_category_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+								<ui:param
+									name="label"
+									value="#{statusEntry.vo.staff.category.name}" />
+								<ui:param
+									name="icon"
+									value="#{statusEntry.vo.staff.category.nodeStyleClass}" />
+								<ui:param
+									name="rendered"
+									value="true" />
+							</ui:include>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.type}"
+							filterBy="#{statusEntry.vo.type.id}"
+							filterOptions="#{sessionScopeBean.filterStaffStatusTypes}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_status_type_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.type.name}" />
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.start}"
+							filterBy="#{statusEntry.vo.start}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_start_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.start}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>
+						<p:column
+							sortBy="#{statusEntry.vo.stop}"
+							filterBy="#{statusEntry.vo.stop}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_stop_column}" />
+							</f:facet>
+							<h:outputText value="#{statusEntry.vo.stop}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>
+						<p:column sortBy="#{statusEntry.vo.type.staffActive}">
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_staff_available_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{statusEntry.vo.type.staffActive}" />
+							</ui:include>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_colliding_duty_roster_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{staffStatusOverviewBean.getCollidingDutyRosterTurnModel(statusEntry.vo).allRowCount}" />
+							</ui:include>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_colliding_course_bookings_column}" />
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{staffStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
+							</ui:include>
+						</p:column>
+						<p:column style="width:32px;">
+							<p:commandButton
+								type="button"
+								title="#{labels.open_staff_button_label}"
+								icon="ui-icon ui-icon-extlink"
+								onclick="openStaff(#{statusEntry.vo.staff.id})" />
+						</p:column>
+						<p:rowExpansion>
+							<p:tabView styleClass="ctsms-rowexpansion-tabview">
+								<ui:include src="/META-INF/includes/shared/collidingDutyRosterTurnTableTab.xhtml">
+									<ui:param
+										name="collidingDutyRosterTurnModel"
+										value="#{staffStatusOverviewBean.getCollidingDutyRosterTurnModel(statusEntry.vo)}" />
+									<ui:param
+										name="showStaff"
+										value="false" />
+									<ui:param
+										name="showTrial"
+										value="true" />
+									<ui:param
+										name="dataTableRows"
+										value="#{dataTablesRowsRowExpansion}" />
+									<ui:param
+										name="dataTablePaginator"
+										value="#{dataTablesPaginatorRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorTemplate"
+										value="#{dataTablesPaginatorTemplateRowExpansion}" />
+									<ui:param
+										name="dataTableRowsPerPageTemplate"
+										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorPosition"
+										value="#{dataTablesPaginatorPositionRowExpansion}" />
+									<ui:param
+										name="dataTablePageLinks"
+										value="#{dataTablesPageLinksRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorAlwaysVisible"
+										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+									<ui:param
+										name="dataTableScrollable"
+										value="#{dataTablesScrollableRowExpansion}" />
+									<ui:param
+										name="dataTableScrollHeight"
+										value="#{dataTablesScrollHeightRowExpansion}" />
+									<ui:param
+										name="dataTableResizableColumns"
+										value="#{dataTablesResizableColumnsRowExpansion}" />
+								</ui:include>
+								<ui:include src="/META-INF/includes/shared/collidingInventoryBookingTableTab.xhtml">
+									<ui:param
+										name="collidingInventoryBookingModel"
+										value="#{staffStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
+									<ui:param
+										name="showInventory"
+										value="true" />
+									<ui:param
+										name="dataTableRows"
+										value="#{dataTablesRowsRowExpansion}" />
+									<ui:param
+										name="dataTablePaginator"
+										value="#{dataTablesPaginatorRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorTemplate"
+										value="#{dataTablesPaginatorTemplateRowExpansion}" />
+									<ui:param
+										name="dataTableRowsPerPageTemplate"
+										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorPosition"
+										value="#{dataTablesPaginatorPositionRowExpansion}" />
+									<ui:param
+										name="dataTablePageLinks"
+										value="#{dataTablesPageLinksRowExpansion}" />
+									<ui:param
+										name="dataTablePaginatorAlwaysVisible"
+										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+									<ui:param
+										name="dataTableScrollable"
+										value="#{dataTablesScrollableRowExpansion}" />
+									<ui:param
+										name="dataTableScrollHeight"
+										value="#{dataTablesScrollHeightRowExpansion}" />
+									<ui:param
+										name="dataTableResizableColumns"
+										value="#{dataTablesResizableColumnsRowExpansion}" />
+								</ui:include>
+							</p:tabView>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGrid>
+				<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

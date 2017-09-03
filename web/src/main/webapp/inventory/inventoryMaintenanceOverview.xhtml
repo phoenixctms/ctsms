@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>inventory maintenance overview</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/inventoryHomeTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{inventorylabels.inventory_maintenance_overview_title}" />
+		<ui:define name="content">
+			<h:form id="inventorymaintenanceoverview_form">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel>
+						<h:panelGrid
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="responsibleperson_filter"
+								value="#{inventorylabels.inventory_maintenance_overview_responsibleperson_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="responsibleperson_filter"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel.identityResponsiblePerson}">
+									<p:ajax
+										listener="#{inventoryMaintenanceOverviewBean.handleIdentityResponsiblePersonChange}"
+										update="inventorymaintenance_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="responsibleperson_filter">
+									<h:outputText
+										value="#{inventorylabels.inventory_maintenance_overview_responsibleperson_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="responsibleperson_filter" />
+							<h:outputLabel
+								for="show_notify_only"
+								value="#{inventorylabels.inventory_maintenance_overview_show_notify_only_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="show_notify_only"
+									disabled="false"
+									value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel.showNotifyOnly}">
+									<p:ajax
+										listener="#{inventoryMaintenanceOverviewBean.handleIdentityResponsiblePersonChange}"
+										update="inventorymaintenance_list" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="show_notify_only">
+									<h:outputText
+										value="#{inventorylabels.inventory_maintenance_overview_show_notify_only_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="show_notify_only" />
+						</h:panelGrid>
+					</p:panel>
+					<h:panelGroup id="inventorymaintenance_list_wrapper">
+						<p:dataTable
+							styleClass="ctsms-datatable"
+							lazy="true"
+							rows="#{dataTablesRowsFullPage}"
+							paginator="#{dataTablesPaginatorFullPage}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPage}"
+							paginatorPosition="#{dataTablesPaginatorPositionFullPage}"
+							pageLinks="#{dataTablesPageLinksFullPage}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPage}"
+							scrollable="#{dataTablesScrollableFullPage}"
+							scrollHeight="#{dataTablesScrollHeightFullPage}"
+							resizableColumns="#{dataTablesResizableColumnsFullPage}"
+							sortBy="#{maintenanceItem.vo.id}"
+							emptyMessage="#{labels.datatable_permission_empty_message}"
+							var="maintenanceItem"
+							value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel}"
+							id="inventorymaintenance_list"
+							rowStyleClass="#{maintenanceItem.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryMaintenanceOverviewBean.maintenanceItemToColor(maintenanceItem.vo)}">
+							<f:facet name="header">
+								<h:panelGrid
+									columns="3"
+									cellpadding="0"
+									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+									<h:outputText
+										value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel.rowCount} #{inventorylabels.inventory_maintenance_overview_inventorymaintenance_list_header}" />
+									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+									<p:commandButton
+										process="@this"
+										actionListener="#{inventoryMaintenanceOverviewBean.load}"
+										title="#{labels.update_datatable_button_title}"
+										icon="ui-icon-refresh"
+										styleClass="ctsms-list-header-button"
+										ajax="true"
+										update=":inventorymaintenanceoverview_form:inventorymaintenance_list" />
+								</h:panelGrid>
+							</f:facet>
+							<ui:include src="/META-INF/includes/shared/maintenanceItemTableColumns.xhtml" />
+							<p:column
+								sortBy="#{maintenanceItem.vo.date}"
+								filterBy="#{maintenanceItem.vo.date}">
+								<f:facet name="header">
+									<h:outputText value="#{inventorylabels.inventory_maintenance_overview_inventorymaintenance_list_initial_date_column}" />
+								</f:facet>
+								<h:outputText value="#{maintenanceItem.vo.date}">
+									<f:converter converterId="ctsms.Date" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{inventorylabels.inventory_maintenance_overview_inventorymaintenance_list_next_recurrence_column}" />
+								</f:facet>
+								<h:outputText
+									rendered="#{maintenanceItem.vo.recurring}"
+									value="#{maintenanceItem.vo.nextRecurrence}">
+									<f:converter converterId="ctsms.Date" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{inventorylabels.inventory_maintenance_overview_inventorymaintenance_list_due_in_column}" />
+								</f:facet>
+								<h:outputText value="#{inventoryMaintenanceOverviewBean.getMaintenanceScheduleItemDueInString(maintenanceItem.vo)}" />
+							</p:column>
+							<p:column style="width:64px;white-space:nowrap;">
+								<p:commandButton
+									process="@this"
+									title="#{inventorylabels.dismiss_maintenance_item_button_label}"
+									actionListener="#{inventoryMaintenanceOverviewBean.dismiss(maintenanceItem.vo)}"
+									icon="ui-icon ui-icon-check"
+									ajax="true"
+									disabled="false"
+									update=":inventorymaintenanceoverview_form:inventorymaintenance_list_wrapper,:inventorymaintenanceoverview_form:messages" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_inventory_button_label}"
+									icon="ui-icon ui-icon-extlink"
+									onclick="openInventory(#{maintenanceItem.vo.inventory.id})" />
+							</p:column>
+						</p:dataTable>
+					</h:panelGroup>
+					<p:growl
+						id="messages"
+						showDetail="false" />
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

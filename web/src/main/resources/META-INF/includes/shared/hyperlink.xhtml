@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>hyperlinks</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="1"
+			cellpadding="0"
+			styleClass="ctsms-content-panelgrid">
+			<p:dataTable
+				styleClass="ctsms-datatable"
+				lazy="true"
+				rows="#{dataTablesRowsDefault}"
+				paginator="#{dataTablesPaginatorDefault}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+				paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+				pageLinks="#{dataTablesPageLinksDefault}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+				scrollable="#{dataTablesScrollableDefault}"
+				scrollHeight="#{dataTablesScrollHeightDefault}"
+				resizableColumns="#{dataTablesResizableColumnsDefault}"
+				sortBy="#{hyperlink.vo.id}"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="hyperlink"
+				value="#{hyperlinkBean.hyperlinkModel}"
+				id="hyperlink_list"
+				selectionMode="single"
+				selection="#{hyperlinkBean.selectedHyperlink}">
+				<p:ajax
+					event="rowSelect"
+					update="#{namingContainer}:hyperlink_input" />
+				<f:facet name="header">
+					<h:outputText value="#{hyperlinkBean.hyperlinkModel.rowCount} #{labels.hyperlink_hyperlink_list_header}" />
+				</f:facet>
+				<p:column sortBy="#{hyperlink.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{hyperlink.vo.id}" />
+				</p:column>
+				<p:column
+					sortBy="#{hyperlink.vo.category}"
+					filterBy="#{hyperlink.vo.category.id}"
+					filterOptions="#{hyperlinkBean.filterCategories}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.hyperlink_hyperlink_list_category_column}" />
+					</f:facet>
+					<h:outputText value="#{hyperlink.vo.category.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{hyperlink.vo.title}"
+					filterBy="#{hyperlink.vo.title}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.hyperlink_hyperlink_list_title_column}" />
+					</f:facet>
+					<h:outputText value="#{hyperlink.vo.title}" />
+				</p:column>
+				<p:column
+					sortBy="#{hyperlink.vo.url}"
+					filterBy="#{hyperlink.vo.url}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.hyperlink_hyperlink_list_link_column}" />
+					</f:facet>
+					<h:outputLink
+						rendered="#{hyperlink.vo.active}"
+						value="#{hyperlink.vo.url}"
+						target="_blank">
+						<h:outputText value="#{hyperlink.vo.url}" />
+					</h:outputLink>
+					<h:outputText
+						rendered="#{!hyperlink.vo.active}"
+						value="#{hyperlink.vo.url}" />
+				</p:column>
+				<p:column
+					sortBy="#{hyperlink.vo.active}"
+					filterBy="#{hyperlink.vo.active}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.hyperlink_hyperlink_list_active_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{hyperlink.vo.active}" />
+					</ui:include>
+				</p:column>
+			</p:dataTable>
+			<p:panel id="hyperlink_input">
+				<f:facet name="header">
+					<h:outputText value="#{hyperlinkBean.title}" />
+				</f:facet>
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+					<h:panelGrid
+						rendered="#{hyperlinkBean.inputVisible}"
+						columns="6"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel
+							for="hyperlinkcategory"
+							value="#{labels.hyperlink_category_label}" />
+						<h:panelGroup>
+							<p:selectOneMenu
+								id="hyperlinkcategory"
+								value="#{hyperlinkBean.in.categoryId}"
+								required="true"
+								label="#{labels.hyperlink_category}"
+								styleClass="ctsms-control">
+								<f:converter converterId="ctsms.ID" />
+								<f:selectItem
+									itemLabel="#{labels.no_selection_label}"
+									itemValue="#{applicationScopeBean.noSelectionValue}" />
+								<f:selectItems
+									value="#{hyperlinkBean.categories}"
+									var="selectItem"
+									itemLabel="#{selectItem.label}"
+									itemValue="#{selectItem.value}" />
+								<p:ajax
+									oncomplete="handleHyperlinkCategorySelected(xhr, status, args)"
+									listener="#{hyperlinkBean.handleCategoryChange}" />
+							</p:selectOneMenu>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="hyperlinkcategory">
+								<h:outputText
+									value="#{labels.hyperlink_category_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="hyperlinkcategory" />
+						<h:outputLabel
+							for="hyperlinktitle"
+							value="#{labels.hyperlink_title_label}" />
+						<h:panelGroup>
+							<p:inputText
+								id="hyperlinktitle"
+								widgetVar="hyperlinkTitle"
+								value="#{hyperlinkBean.in.title}"
+								required="true"
+								label="#{labels.hyperlink_title}"
+								styleClass="ctsms-control-larger" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="hyperlinktitle">
+								<h:outputText
+									value="#{labels.hyperlink_title_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="hyperlinktitle" />
+						<h:outputLabel
+							for="hyperlinkurl"
+							value="#{labels.hyperlink_url_label}" />
+						<h:panelGroup>
+							<p:inputText
+								id="hyperlinkurl"
+								value="#{hyperlinkBean.in.url}"
+								required="true"
+								label="#{labels.hyperlink_url}"
+								styleClass="ctsms-control-larger" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="hyperlinkurl">
+								<h:outputText
+									value="#{labels.hyperlink_url_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="hyperlinkurl" />
+						<h:outputLabel
+							for="hyperlinkactive"
+							value="#{labels.hyperlink_active_label}" />
+						<h:panelGroup>
+							<p:selectBooleanCheckbox
+								id="hyperlinkactive"
+								value="#{hyperlinkBean.in.active}" />
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="hyperlinkactive">
+								<h:outputText
+									value="#{labels.hyperlink_active_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="hyperlinkactive" />
+					</h:panelGrid>
+					<h:outputLabel rendered="#{!hyperlinkBean.inputVisible}" />
+					<p:messages />
+					<p:toolbar>
+						<p:toolbarGroup align="left">
+							<h:outputText
+								styleClass="ctsms-toolbar-text"
+								value="#{hyperlinkBean.created ? hyperlinkBean.modifiedAnnotation : ''}" />
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup align="right">
+							<p:commandButton
+								process="@this"
+								value="#{labels.reset_button_label}"
+								actionListener="#{hyperlinkBean.reset}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-close"
+								ajax="true"
+								disabled="false"
+								update="hyperlink_list,hyperlink_input" />
+							<p:commandButton
+								process="@this,hyperlink_input"
+								id="addHyperlink"
+								value="#{labels.add_button_label}"
+								actionListener="#{hyperlinkBean.add}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-plusthick"
+								ajax="true"
+								disabled="#{!hyperlinkBean.createable}"
+								update="hyperlink_list,hyperlink_input" />
+							<p:commandButton
+								process="@this,hyperlink_input"
+								id="updateHyperlink"
+								value="#{labels.update_button_label}"
+								actionListener="#{hyperlinkBean.update}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-disk"
+								ajax="true"
+								disabled="#{!hyperlinkBean.editable}"
+								update="hyperlink_list,hyperlink_input" />
+							<p:commandButton
+								process="@this"
+								value="#{labels.delete_button_label}"
+								actionListener="#{hyperlinkBean.delete}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-trash"
+								ajax="true"
+								disabled="#{!hyperlinkBean.removable}"
+								update="hyperlink_list,hyperlink_input" />
+							<p:commandButton
+								process="@this"
+								value="#{labels.load_button_label}"
+								actionListener="#{hyperlinkBean.load}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon-refresh"
+								ajax="true"
+								disabled="#{!hyperlinkBean.created}"
+								update="hyperlink_list,hyperlink_input" />
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup align="right">
+							<ui:include src="toolbarAjaxStatus.xhtml" />
+						</p:toolbarGroup>
+					</p:toolbar>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGrid>
+		<p:confirmDialog
+			appendToBody="false"
+			severity="info"
+			widgetVar="hyperlinkTitlePresetOverrideConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.hyperlink_title_preset_override_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton
+				value="#{labels.yes_button_label}"
+				onclick="setHyperlinkTitle(true)"
+				type="button" />
+			<p:commandButton
+				value="#{labels.no_button_label}"
+				onclick="setHyperlinkTitle(false)"
+				type="button" />
+		</p:confirmDialog>
+	</ui:composition>
+</h:body>
+</html>

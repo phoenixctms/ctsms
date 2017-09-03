@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>field value audit trail tab</title>
+</h:head>
+<h:body>
+	<ui:composition>
+
+
+
+
+
+			<p:tab title="#{labels.audit_trail_tab_title_1}#{auditTrailLogEagerModel.allRowCount}#{labels.audit_trail_tab_title_2}">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="false"
+					rows="#{dataTablesRowsRowExpansion}"
+					paginator="#{dataTablesPaginatorRowExpansion}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateRowExpansion}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateRowExpansion}"
+					paginatorPosition="#{dataTablesPaginatorPositionRowExpansion}"
+					pageLinks="#{dataTablesPageLinksRowExpansion}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleRowExpansion}"
+					scrollable="#{dataTablesScrollableRowExpansion}"
+					scrollHeight="#{dataTablesScrollHeightRowExpansion}"
+					resizableColumns="#{dataTablesResizableColumnsRowExpansion}"
+					var="ecrfFieldValue"
+					sortBy="#{ecrfFieldValue.vo.id}"
+					sortOrder="descending"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					value="#{auditTrailLogEagerModel.allRows}"
+					id="trialecrfstatus_ecrf_value_log_list">
+
+					<!-- sortOrder="descending" -->
+
+					<p:column sortBy="#{ecrfFieldValue.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{ecrfFieldValue.vo.id}" />
+					</p:column>
+					
+					<p:column sortBy="#{ecrfFieldValue.vo.ecrfField.section}"
+					        filterBy="#{ecrfFieldValue.vo.ecrfField.section}" rendered="#{showFieldDetails}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_ecrffield_section_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.ecrfField.section}" />
+						</p:column>
+					<p:column sortBy="#{ecrfFieldValue.vo.index}" rendered="#{showFieldDetails}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_index_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.index}" />
+						</p:column>						
+					<p:column sortBy="#{ecrfFieldValue.vo.ecrfField.position}" rendered="#{showFieldDetails}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_ecrffield_position_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.ecrfField.position}" />
+						</p:column>
+					<p:column sortBy="#{ecrfFieldValue.vo.ecrfField.field.name}"
+					        filterBy="#{ecrfFieldValue.vo.ecrfField.field.name}" rendered="#{showFieldDetails}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_ecrffield_field_name_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.ecrfField.field.name}" />
+						</p:column>
+					
+						<p:column sortBy="#{ecrfFieldValue.vo.version}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_version_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.version}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_value_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.getAuditTrailFieldValueString(ecrfFieldValue.vo)}" />
+						</p:column>
+
+						<p:column sortBy="#{ecrfFieldValue.vo.modifiedUser.name}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_user_column}" />
+							</f:facet>
+							<h:outputText value="#{applicationScopeBean.getIdentityString(ecrfFieldValue.vo.modifiedUser)} " />
+						</p:column>
+						
+						<p:column sortBy="#{ecrfFieldValue.vo.modifiedTimestamp}">
+							<f:facet name="header">
+								<h:outputText value="#{labels.audit_trail_list_timestamp_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldValue.vo.modifiedTimestamp}">
+								<f:converter converterId="ctsms.DateTime" />
+							</h:outputText>
+						</p:column>					
+
+						<p:column style="width:32px;" rendered="#{showFieldDetails}">
+							<!-- disabled="#{empty ecrfStatusEntryBean.ecrfStatus}" -->
+							<p:commandButton
+								type="button"
+								
+							title="#{labels.audit_trail_button_title}"
+							icon="ui-icon ui-icon-flag"
+								onclick="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{ecrfFieldValue.vo.listEntry.id},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{ecrfFieldValue.vo.ecrfField.id},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty ecrfFieldValue.vo.index ? 'null' : ecrfFieldValue.vo.index}}));" />
+						</p:column>
+				</p:dataTable>
+			</p:tab>
+			
+			
+	</ui:composition>
+</h:body>
+</html>			

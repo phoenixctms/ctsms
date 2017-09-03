@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband list entry tag values</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dataGrid
+			var="inputModelRow"
+			value="#{probandListBean.probandListEntryTagValueBean.inputModels}"
+			paginator="false"
+			columns="1"
+			emptyMessage="#{probandlabels.proband_list_entry_tag_values_empty_message}"
+			styleClass="ctsms-values-datagrid-#{probandListBean.probandListEntryTagValueBean.paginator.fieldsPerRow}"
+			id="tagvalue_inputs">
+			<p:column>
+				<h:panelGrid
+					columns="#{probandListBean.probandListEntryTagValueBean.paginator.fieldsPerRow}"
+					cellpadding="0">
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[0]}" />
+						<ui:param
+							name="index"
+							value="0" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[0]}" />
+					</ui:include>
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[1]}" />
+						<ui:param
+							name="index"
+							value="1" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[1]}" />
+					</ui:include>
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[2]}" />
+						<ui:param
+							name="index"
+							value="2" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[2]}" />
+					</ui:include>
+					
+					
+					
+										<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[3]}" />
+						<ui:param
+							name="index"
+							value="3" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[3]}" />
+					</ui:include>
+					
+					
+		
+		
+		
+		<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[4]}" />
+						<ui:param
+							name="index"
+							value="4" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[4]}" />
+					</ui:include>
+		
+		
+		
+		<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[5]}" />
+						<ui:param
+							name="index"
+							value="5" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[5]}" />
+					</ui:include>
+					
+					
+					
+					
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[6]}" />
+						<ui:param
+							name="index"
+							value="6" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[6]}" />
+					</ui:include>
+					
+					
+					
+					
+					
+					
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[7]}" />
+						<ui:param
+							name="index"
+							value="7" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[7]}" />
+					</ui:include>
+					
+					
+					
+					
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[8]}" />
+						<ui:param
+							name="index"
+							value="8" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[8]}" />
+					</ui:include>
+					
+					
+					<ui:include src="inputFieldRow.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty inputModelRow[9]}" />
+						<ui:param
+							name="index"
+							value="9" />
+						<ui:param
+							name="toggleable"
+							value="false" />
+						<ui:param
+							name="editable"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="reasonForChangeRequired"
+							value="false" />							
+						<ui:param
+							name="namingContainer"
+							value="#{namingContainer}:tagvalue_inputs:#{inputModelRow[10]}" />
+						<ui:param
+							name="update"
+							value="#{probandList}" />
+						<ui:param
+							name="updateOnComplete"
+							value="#{updateProbandListWidget}" />
+						<ui:param
+							name="enabled"
+							value="#{probandListBean.probandListEntryTagValueBean.editable}" />
+						<ui:param
+							name="optional"
+							value="#{false}" />
+						<ui:param
+							name="fieldInput"
+							value="#{inputModelRow[9]}" />
+					</ui:include>
+					
+					
+					
+					
+					
+				</h:panelGrid>
+			</p:column>
+		</p:dataGrid>
+	</ui:composition>
+</h:body>
+</html>

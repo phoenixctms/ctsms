@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>user tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/userEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{userBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{userBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="userTabView"
+					onTabShow="handleUserTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="usermain"
+						disabled="false"
+						titleStyleClass="#{!userBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{userlabels.user_main_tab_label}">
+						<ui:include src="/META-INF/includes/user/userMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="setpassword"
+						disabled="#{!userBean.created}"
+						titleStyleClass="#{userBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PASSWORD_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{userBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PASSWORD_COUNT'))}">
+						<ui:include src="/META-INF/includes/user/password.xhtml" />
+					</p:tab>
+					<p:tab
+						id="setpermissions"
+						disabled="#{!userBean.created}"
+						titleStyleClass="#{userBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_USER_PERMISSION_PROFILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{userBean.getTabTitle(applicationScopeBean.jsValue('AJAX_USER_PERMISSION_PROFILE_COUNT'))}">
+						<ui:include src="/META-INF/includes/user/userPermissionProfile.xhtml" />
+					</p:tab>
+					<p:tab
+						id="useractivity"
+						disabled="#{!userBean.created}"
+						titleStyleClass="tsms-tabtitle"
+						title="#{userlabels.user_activity_tab_label}">
+						<ui:include src="/META-INF/includes/user/userActivity.xhtml" />
+					</p:tab>
+					<p:tab
+						id="userjournal"
+						disabled="#{!userBean.created}"
+						titleStyleClass="#{userBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_USER_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{userBean.getTabTitle(applicationScopeBean.jsValue('AJAX_USER_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/user/userJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

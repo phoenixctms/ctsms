@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff image</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="staffimage_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeStaffImage"
+				actionListener="#{staffImageBean.change(staffBean.in.id)}"
+				update="photo,photo_input" /> -->
+			<ui:decorate template="../shared/photo.xhtml">
+				<ui:param
+					name="photoBean"
+					value="#{staffImageBean}" />
+				<ui:param
+					name="usePhotoEncryption"
+					value="false" />
+				<ui:param
+					name="oncomplete"
+					value="handleUpdateStaffTabTitles(xhr, status, args)" />>
+    		
+    		<ui:define name="photoFields">
+					<h:outputLabel
+						for="showCv"
+						value="#{stafflabels.staff_image_show_cv_label}" />
+					<h:panelGroup>
+						<p:selectBooleanCheckbox
+							id="showCv"
+							value="#{staffImageBean.in.showCv}">
+							<p:ajax />
+						</p:selectBooleanCheckbox>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="showCv">
+							<h:outputText
+								value="#{stafflabels.staff_image_show_cv_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+					<p:message for="showCv" />
+				</ui:define>
+			</ui:decorate>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

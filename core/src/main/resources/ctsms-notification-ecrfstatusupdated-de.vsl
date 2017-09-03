@@ -1,0 +1,45 @@
+Liebes $ecrfstatusentry_listentry_trial_name Studienteammitglied oder Angehörige/r der Org.einheit $ecrfstatusentry_listentry_trial_department,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Studie:                $ecrfstatusentry_listentry_trial_name
+   • Studie Org.einheit:    $ecrfstatusentry_listentry_trial_department
+   • Proband ID:            $ecrfstatusentry_listentry_proband_id
+   • eCRF:                  ${ecrfstatusentry_ecrf_position}. $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.ecrf.group)
+   • eCRF Probandengr.:     $notification.ecrfStatusEntry.ecrf.group.title
+#end
+#if($notification.ecrfStatusEntry.ecrf.visit)
+   • eCRF Visite:           $notification.ecrfStatusEntry.ecrf.visit.title
+#end
+
+   • eCRF Status:           $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Eingabe-Validierung:   $ecrfstatusentry_validationresponsemsg
+   • Validierung Zeitpunkt: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+   • $ecrfstatusentry_validationresponsemsg
+   • Zeitpunkt:             $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Eingabe-Validierung anstehend.
+#end
+
+   • Bearbeitet:            #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+Bitte zu den nächsten Schritten für den Abschluss der eCRF Dateneingabe übergehen.
+#else
+Die eCRF Dateneingabe ist abgeschlossen.
+#end
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name

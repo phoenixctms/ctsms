@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>proband status entries</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="probandstatus_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeProbandStatus"
+				actionListener="#{probandStatusBean.change(probandBean.in.id)}"
+				update="probandstatus_list,probandstatus_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{statusEntry.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="statusEntry"
+					value="#{probandStatusBean.statusEntryModel}"
+					id="probandstatus_list"
+					selectionMode="single"
+					selection="#{probandStatusBean.selectedProbandStatusEntry}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:probandstatus_form:probandstatus_input" />
+					<f:facet name="header">
+						<h:outputText value="#{probandStatusBean.statusEntryModel.rowCount} #{probandlabels.proband_status_probandstatus_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.id}" />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.type}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_status_type_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.type.name}" />
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.start}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_start_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.start}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.stop}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_stop_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.stop}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.type.probandActive}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_proband_active_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{statusEntry.vo.type.probandActive}" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_colliding_inventory_booking_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{probandStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.proband_status_probandstatus_list_colliding_visit_schedule_item_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{probandStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>
+					<p:rowExpansion>
+						<p:tabView styleClass="ctsms-rowexpansion-tabview">
+							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param
+									name="collidingInventoryBookingModel"
+									value="#{probandStatusBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
+								<ui:param
+									name="showInventory"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingVisitScheduleTableTab.xhtml">
+								<ui:param
+									name="collidingVisitScheduleItemModel"
+									value="#{probandStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo)}" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+						</p:tabView>
+					</p:rowExpansion>
+				</p:dataTable>
+				<p:panel id="probandstatus_input">
+					<f:facet name="header">
+						<h:outputText value="#{probandStatusBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{probandStatusBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="probandStatusType"
+								value="#{probandlabels.proband_status_type_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="probandStatusType"
+									value="#{probandStatusBean.in.typeId}"
+									required="true"
+									label="#{probandlabels.proband_status_type}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{probandStatusBean.statusTypes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										update="proband_inactive_message"
+										listener="#{probandStatusBean.handleTypeChange}" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="probandStatusType">
+									<h:outputText
+										value="#{probandlabels.proband_status_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="probandStatusType" />
+							<h:outputLabel />
+							<h:outputText
+								value="#{probandStatusBean.showProbandInActiveMessage ? probandlabels.proband_status_proband_inactive_message_label : ''}"
+								id="proband_inactive_message" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="statusstart"
+								value="#{probandlabels.proband_status_start_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstart"
+									value="#{probandStatusBean.in.start}"
+									required="true"
+									label="#{probandlabels.proband_status_start}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstart">
+									<h:outputText
+										value="#{probandlabels.proband_status_start_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstart" />
+							<h:outputLabel
+								for="statusstop"
+								value="#{probandlabels.proband_status_stop_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="statusstop"
+									value="#{probandStatusBean.in.stop}"
+									required="false"
+									label="#{probandlabels.proband_status_stop}"
+									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-datetime" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statusstop">
+									<h:outputText
+										value="#{probandlabels.proband_status_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="statusstop" />
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{probandStatusBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="statuscomment"
+								value="#{probandlabels.proband_status_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="statuscomment"
+									value="#{probandStatusBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{probandlabels.proband_status_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="statuscomment">
+									<h:outputText
+										value="#{probandlabels.proband_status_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!probandStatusBean.inputVisible}" />
+						<h:outputLabel rendered="#{!probandStatusBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{probandStatusBean.created ? probandStatusBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{probandStatusBean.reset}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="probandstatus_list,probandstatus_input" />
+								<p:commandButton
+									process="@this,probandstatus_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{probandStatusBean.add}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!probandStatusBean.createable}"
+									update="probandstatus_list,probandstatus_input" />
+								<p:commandButton
+									process="@this,probandstatus_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{probandStatusBean.update}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!probandStatusBean.editable}"
+									update="probandstatus_list,probandstatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{probandStatusBean.delete}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!probandStatusBean.removable}"
+									update="probandstatus_list,probandstatus_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{probandStatusBean.load}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!probandStatusBean.created}"
+									update="probandstatus_list,probandstatus_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,711 @@
+#if ($umlUtils.shouldOutput($class))
+// license-header java merge-point
+//
+/**
+ * @author Generated on $javaUtils.date Do not modify by hand!
+ *
+ * TEMPLATE:     ValueObject.vsl in andromda-java-cartridge.
+ * MODEL CLASS:  $class.validationName
+#foreach ($stereotype in $class.stereotypes)
+ * STEREOTYPE:   $stereotype.name
+#end
+ */
+#if ($stringUtils.isNotBlank($class.packageName))
+package $class.packageName;
+#end
+
+#if ($serializable && !$class.generalization)
+import java.io.Serializable;
+#end
+#set ($XMLOutput=$XMLBindingAnnotations && !$class.hasStereotype("NoXml"))
+#if ($XMLOutput)
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+#end
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+/**
+#if ($stringUtils.isBlank($class.getDocumentation("", 9999, false)))
+ * $toDoTag: Model Documentation for class $class.name
+#else
+$class.getDocumentation(" * ")
+#end
+#set ($templating=false)
+#set ($genericTemplate="")
+#if($enableTemplating && !$class.templateParameters.empty)
+#set ($templating=true)
+#set ($genericTemplate=$umlUtils.getGenericTemplate($class, $enableTemplating))
+ * Class template parameters<type1, type2, etc>
+#foreach ($param in $class.templateParameters)
+ * @param <$param.parameter.name> $param.parameter.getterSetterTypeName
+#end
+#end
+ */
+## Use a different name for VO Fault than for Exception, if needed
+##set ($className = ${class.getName(true)})
+#if ($class.hasStereotype("WebFault") && ($type.hasStereotype("Exception") || $type.hasStereotype("ApplicationException") || $type.hasStereotype("UnexpectedException")))
+#if ($class.name.contains("Exception"))
+#set ($className = $class.name.replace("Exception", "Fault"))
+#else
+#set ($className = "${class.name}Fault")
+#end
+#else
+#set ($className = "$class.name")
+#end
+#if ($XMLOutput)
+@XmlRootElement(name = "$className")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "$className", // namespace="http://$javaUtils.reversePackage($class.packageName)#if($addNamespaceBackslash)/#end",
+#set ($size = $class.attributes.size() + $class.navigableConnectingEnds.size())
+#set ($count = 1)
+  propOrder = {
+#foreach ($attribute in $class.attributes)
+    "$attribute.name"#if ($count<$size),#end
+
+#set ($count = $count+1)
+#end
+#foreach ($connectingEnd in $class.navigableConnectingEnds)
+#set ($namespaceName="$javaUtils.reversePackage($connectingEnd.packageName)#if($addNamespaceBackslash)/#end")
+    "$connectingEnd.name"#if ($count<$size),#end
+
+#set ($count = $count+1)
+#end
+})
+#if (!$cxfVersion.startsWith("2.0"))
+#set ($specializations = $class.typeSpecializations)
+#if (!$specializations.empty)
+// Referenced subclasses of $className
+@javax.xml.bind.annotation.XmlSeeAlso({
+#foreach ($specialization in $specializations)
+    ${specialization.fullyQualifiedName}.class#if ($velocityHasNext), #end
+
+#end
+})
+#end
+#end
+#end
+public#if($class.leaf) final#end#if($class.abstract) abstract#end class $umlUtils.getClassDeclaration($class, $className, $enableTemplating)
+#if($class.generalization)
+## Class should only extend another ValueObject, which already declares Serializable and Comparable
+    extends $class.generalization.fullyQualifiedName
+#elseif ($serializable)
+    implements Serializable, Comparable#if($enableTemplating)<$className>#end
+
+#else
+    implements Comparable#if($enableTemplating)<$className>#end
+
+#end
+{
+#if ($serializable)
+    /** The serial version UID of this class. Needed for serialization. */
+    private static final long serialVersionUID = ${class.serialVersionUID}L;
+
+#if($templating)
+#if (!$class.templateParameters.empty)
+    // Class template parameters
+
+#end
+#foreach ($param in $class.templateParameters)
+#set ($parameter = $param.parameter)
+## UML2 type hierarchy for TemplateParameter changed, null values returned. Default to String for now.
+#if ($stringUtils.isBlank($parameter.getterSetterTypeName))
+#set ($returnType = "${param.type.fullyQualifiedName}")
+#set ($getterName = "get$stringUtils.capitalize($param.name)")
+#set ($setterName = "set$stringUtils.capitalize($param.name)")
+#else
+#set ($returnType = $parameter.getterSetterTypeName)
+#set ($getterName = "${parameter.getterName}")
+#set ($setterName = "${parameter.setterName}")
+#end
+    protected $returnType $parameter.name#if (!$parameter.many && $parameter.defaultValuePresent) = ${parameter.defaultValue}#end;
+
+    /**
+     * Get the $parameter.name Template Parameter
+     * @return $parameter.name $returnType
+     */
+    public $returnType ${getterName}()
+    {
+#if ($parameter.many && !$parameter.type.arrayType)
+        if (this.${parameter.name} == null)
+        {
+## TODO: this.${parameter.name} = new $umlUtils.getImplCollection($returnType)();
+            this.${parameter.name} = new java.util.ArrayList#if($enableTemplating)<#if(${parameter.type.primitive})${parameter.type.wrapperName}#else${parameter.type.fullyQualifiedName}#end>#end();
+        }
+#elseif ($returnType.equals("java.util.Map"))
+		if (this.${parameter.name} == null)
+        {
+            this.${parameter.name} = new java.util.HashMap();
+        }
+#end
+        return this.$parameter.name;
+    }
+
+    /**
+     * Set the $parameter.name Template Parameter
+     * @param value $returnType
+     */
+    public void ${setterName}($returnType value)
+    {
+        this.${parameter.name} = value;
+    }
+
+#end
+#end
+#end
+#if (!$class.attributes.empty)
+    // Class attributes
+#foreach ($attribute in $class.attributes)
+#if ($stringUtils.isBlank($attribute.getDocumentation("", 9999, false)))
+    /** $toDoTag: Model Documentation for attribute $attribute.name */
+#else
+    /**
+$attribute.getDocumentation("     * ")
+     */
+#end
+#if ($XMLOutput)
+#set ($type=$stringUtils.substring($attribute.type.fullyQualifiedName, 0, 9))
+## Primitive types and type wrappers will have empty package name
+#set ($useAttributes = $xmlAttributes && !$attribute.many && $attribute.type.name!='Object' && ($stringUtils.isBlank($attribute.type.packageName) || $attribute.type.packageName.equals("java.lang") || $type.equals("java.util") || $type.equals("java.math") || $attribute.type.packageName.equals("PrimitiveTypes")))
+#set ($namespaceName="$javaUtils.reversePackage($attribute.packageName)#if($addNamespaceBackslash)/#end")
+#set ($type=$attribute.type.name)
+#if ($useAttributes)
+## defaultValue not supported in @XmlAttribute annotation - annoying
+    @javax.xml.bind.annotation.XmlAttribute(name = "$attribute.name"#if ($attribute.required), required=true#end)
+#else
+## Custom JAXB binding to use Date instead of XMLGregorianCalendar. Custom DateParser/printer class wraps CXF bindings
+#if (($type.equals("DateTime") && $stringUtils.isNotBlank($XMLDateTimeAdapter)) || ($type.equals("Time") && $stringUtils.isNotBlank($XMLTimeAdapter))|| ($type.equals("Date") && $stringUtils.isNotBlank($XMLDateAdapter))|| ($type.equals("Integer") && $stringUtils.isNotBlank($XMLIntegerAdapter))|| ($type.equals("Decimal") && $stringUtils.isNotBlank($XMLDecimalAdapter)))
+#set ($elementType=", type=${attribute.type.fullyQualifiedName}.class")
+#else
+#set ($elementType="")
+#end
+    @javax.xml.bind.annotation.XmlElement(name = "$attribute.name"##No newline
+#if ($type.equals("String"))
+#if (!$attribute.many && $stringUtils.isNotBlank($attribute.defaultValue)), defaultValue=$attribute.defaultValue#end$elementType)
+#elseif ($type.equals("Character") || $type.equals("char"))
+#set ($default=$stringUtils.replace($attribute.defaultValue, "'", "\""))
+#if (!$attribute.many && $stringUtils.isNotBlank($attribute.defaultValue)), defaultValue=$attribute.defaultValue#end$elementType)
+#else
+#if (!$attribute.many && $stringUtils.isNotBlank($attribute.defaultValue)), defaultValue="$attribute.defaultValue"#end$elementType)
+#end
+#end
+## The default class generated by CXF wsdl2java
+#if ($type.equals("DateTime") && $stringUtils.isNotBlank($XMLDateTimeAdapter))
+    @javax.xml.bind.annotation.XmlSchemaType(name = "dateTime")
+    @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(${XMLDateTimeAdapter}.class)
+#elseif ($type.equals("Time") && $stringUtils.isNotBlank($XMLTimeAdapter))
+    @javax.xml.bind.annotation.XmlSchemaType(name = "time")
+    @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(${XMLTimeAdapter}.class)
+#elseif ($type.equals("Date") && $stringUtils.isNotBlank($XMLDateAdapter))
+    @javax.xml.bind.annotation.XmlSchemaType(name = "date")
+    @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(${XMLDateAdapter}.class)
+#elseif ($type.equals("Integer") && $stringUtils.isNotBlank($XMLIntegerAdapter))
+    @javax.xml.bind.annotation.XmlSchemaType(name = "integer")
+    @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(${XMLIntegerAdapter}.class)
+#elseif ($type.equals("Decimal") && $stringUtils.isNotBlank($XMLDecimalAdapter))
+    @javax.xml.bind.annotation.XmlSchemaType(name = "decimal")
+    @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(${XMLDecimalAdapter}.class)
+#end
+#end
+#set ($returnType = $attribute.getterSetterTypeName)
+    protected $returnType $attribute.name#if (!$attribute.many && $attribute.defaultValuePresent) = ${attribute.defaultValue}#end;
+#if ($attribute.type.primitive)
+    /**
+     * boolean setter for primitive attribute, so we can tell if it's initialized
+     */
+#if ($XMLOutput)
+    @javax.xml.bind.annotation.XmlTransient
+#end
+    protected boolean set$stringUtils.capitalize($attribute.name) = false;
+#end
+#end
+
+#end
+#if (!$class.navigableConnectingEnds.empty)
+    // Class associationEnds
+#foreach ($connectingEnd in $class.navigableConnectingEnds)
+#if ($XMLOutput)
+    @javax.xml.bind.annotation.XmlElement(name="$connectingEnd.name"#if ($connectingEnd.required), required=true#end)
+#end
+    protected $connectingEnd.getterSetterTypeName $connectingEnd.name;
+#if ($connectingEnd.type.primitive)
+    /**
+     * boolean setter for primitive attribute, so we can tell if it's initialized
+     */
+#if ($XMLOutput)
+    @javax.xml.bind.annotation.XmlTransient
+#end
+    protected boolean set$stringUtils.capitalize($connectingEnd.name) = false;
+#end
+#end
+
+#end
+##
+##  default constructor
+##
+#if (!$class.requiredConstructorParameters.empty || $class.allRequiredConstructorParameters.size() > $class.requiredConstructorParameters.size())
+    /** Default Constructor with no properties */
+    public ${className}()
+    {
+#if($class.generalization)
+        super();
+#else
+        // Documented empty block - avoid compiler warning - no super constructor
+#end
+    }
+
+#end
+##
+##  constructor taking only required properties
+##
+#if ($class.allProperties.size() > $class.allRequiredConstructorParameters.size() && ($class.allRequiredConstructorParameters.size() != 1 || !$class.allRequiredConstructorParameters.get(0).getterSetterTypeName.equals($class.fullyQualifiedName)))
+    /**
+     * Constructor taking only required properties
+#foreach ($property in $class.allRequiredConstructorParameters)
+     * @param ${property.name}In $property.getterSetterTypeName#if ($stringUtils.isNotBlank(${property.getDocumentation("")})) ${property.getDocumentation("")}#end
+
+#end
+     */
+    public ${className}(## no newline
+#foreach ($property in $class.allRequiredConstructorParameters)
+final ${property.getterSetterTypeName} ${property.name}In#if(${velocityHasNext}), #end## no newline
+#end
+)
+    {
+#if($class.generalization)
+        super(## no newline
+#foreach ($property in $class.generalization.allRequiredConstructorParameters)
+${property.name}In#if(${velocityHasNext}), #end## no newline
+#end
+);
+#elseif($class.allRequiredConstructorParameters.empty)
+        // Documented empty block - avoid compiler warning - no super constructor
+#end
+#foreach ($property in $class.requiredConstructorParameters)
+        this.${property.name} = ${property.name}In;
+#if ($property.type.primitive)
+        this.set$stringUtils.capitalize($property.name) = true;
+#end
+#end
+    }
+
+#end
+##
+##  constructor taking all properties
+##
+#if ($class.allProperties.size() != 1 || !$class.allProperties.get(0).getterSetterTypeName.equals($class.fullyQualifiedName))
+    /**
+     * Constructor with all properties
+#foreach ($property in $class.allProperties)
+     * @param ${property.name}In $property.getterSetterTypeName
+#end
+     */
+    public ${className}(## no newline
+#foreach ($property in $class.allProperties)
+#set ($propertyType = $property.getterSetterTypeName)
+final $propertyType ${property.name}In#if(${velocityHasNext}), #end## no newline
+#end
+)
+    {
+#if($class.generalization)
+        super(## no newline
+#foreach ($property in $class.generalization.allProperties)
+${property.name}In#if(${velocityHasNext}), #end## no newline
+#end
+);
+#end
+#foreach ($property in $class.properties)
+        this.${property.name} = ${property.name}In;
+#if ($property.type.primitive)
+        this.set$stringUtils.capitalize($property.name) = true;
+#end
+#end
+#if ($class.allProperties.empty)
+        // documented empty block - avoid compiler warning
+#end
+    }
+
+#end
+    /**
+     * Copies constructor from other $className
+     *
+     * @param otherBean Cannot be <code>null</code>
+     * @throws NullPointerException if the argument is <code>null</code>
+     */
+    public ${className}(final $className${genericTemplate} otherBean)
+    {
+#if($class.generalization)
+        super(otherBean);
+#end
+#foreach ($property in $class.properties)
+        this.${property.name} = otherBean.${property.getterName}();
+#if ($property.type.primitive)
+        this.set$stringUtils.capitalize($property.name) = true;
+#end
+#end
+#if ($class.allProperties.empty)
+        // documented empty block - avoid compiler warning
+#end
+    }
+
+    /**
+     * Copies all properties from the argument value object into this value object.
+     * @param otherBean Cannot be <code>null</code>
+#if($generateChainedSetters)
+     * @return this
+#end
+     */
+    public#if($generateChainedSetters) $className${genericTemplate}#else void#end copy(final $className${genericTemplate} otherBean)
+    {
+#if ($class.allProperties.empty)
+        // No attributes to copy...
+#else
+        if (null != otherBean)
+        {
+#if($class.generalization)
+            super.copy(otherBean);
+#end
+#foreach ($property in $class.properties)
+            this.${property.setterName}(otherBean.${property.getterName}());
+#if ($property.type.primitive)
+            this.set$stringUtils.capitalize($property.name) = true;
+#end
+#end
+        }
+#end
+#if($generateChainedSetters)
+        return otherBean;
+#end
+    }
+
+#foreach ($attribute in $class.attributes)
+#set ($returnType = $attribute.getterSetterTypeName)
+    /**
+#if ($stringUtils.isBlank($attribute.getDocumentation("", 9999, false)))
+     * $toDoTag: Model Documentation for attribute $attribute.name
+#else
+$attribute.getDocumentation("     * ")
+#end
+     * Get the $attribute.name Attribute
+     * @return $attribute.name $returnType
+     */
+    public $returnType ${attribute.getterName}()
+    {
+#if ($attribute.many && !$attribute.type.arrayType)
+        if (this.${attribute.name} == null)
+        {
+## Todo: this.${attribute.name} = new $umlUtils.getImplCollection($returnType)();
+            this.${attribute.name} = new java.util.ArrayList#if($enableTemplating)<#if(${attribute.type.primitive})${attribute.type.wrapperName}#else${attribute.type.fullyQualifiedName}#end>#end();
+        }
+#elseif ($returnType.equals("java.util.Map"))
+		if (this.${attribute.name} == null)
+        {
+            this.${attribute.name} = new java.util.HashMap();
+        }
+#end
+        return this.$attribute.name;
+    }
+
+#if ($attribute.type.booleanType && $generateIsBooleanGetters)
+    /**
+$attribute.getDocumentation("     * ")
+     * Duplicates#if ($attribute.type.primitive) isBoolean#else getBoolean#end method, for use as Jaxb2 compatible object
+     * Get the $attribute.name Attribute
+     * @return $attribute.name $returnType
+     */
+    @Deprecated
+    public $returnType#if ($attribute.type.primitive) get#else is#end$stringUtils.capitalize(${attribute.name})()
+    {
+        return this.$attribute.name;
+    }
+
+#end
+#if (!$attribute.readOnly)
+## - always have as public, having read-only causes too many issues when attempting to
+##   use in other cartridges
+    /**
+$attribute.getDocumentation("     * ")
+     * @param value $returnType
+#if($generateChainedSetters&&!$XMLOutput)
+     * @return this ${className}
+#end
+     */
+## XMLOutput does not allow return values from the setter method
+    public#if($generateChainedSetters&&!$XMLOutput) ${className}#else void#end ${attribute.setterName}(final $returnType value)
+    {
+        this.${attribute.name} = value;
+#if ($attribute.type.primitive)
+        this.set$stringUtils.capitalize($attribute.name) = true;
+#end
+#if($generateChainedSetters&&!$XMLOutput)
+        return this;
+#end
+    }
+
+#if ($attribute.type.primitive)
+    /**
+     * Return true if the primitive attribute $attribute.name is set, through the setter or constructor
+     * @return true if the attribute value has been set
+     */
+    public boolean isSet$stringUtils.capitalize($attribute.name)()
+    {
+        return this.set$stringUtils.capitalize($attribute.name);
+    }
+
+#end
+#end
+#end
+## Generate the relation methods.
+#foreach ($connectingEnd in $class.navigableConnectingEnds)
+    /**
+#if ($stringUtils.isBlank($connectingEnd.getDocumentation("", 9999, false)))
+     * $toDoTag: Model Documentation for association $connectingEnd.name
+#else
+$connectingEnd.getDocumentation("     * ")
+#end
+     * Get the $connectingEnd.name Association
+#if ($connectingEnd.many)
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the object.
+#end
+     * @return this.${connectingEnd.name} $connectingEnd.getterSetterTypeName
+     */
+    public $connectingEnd.getterSetterTypeName ${connectingEnd.getterName}()
+    {
+## XMLBindings assume nillable is never declared, List must be empty instead of null
+#if ($connectingEnd.many && !$connectingEnd.getterSetterTypeName.endsWith("[]"))
+        if (this.${connectingEnd.name} == null)
+        {
+##TODO      this.${connectingEnd.name} = new $umlUtils.getImplCollection($connectingEnd.getterSetterTypeName)();
+            this.${connectingEnd.name} = new java.util.ArrayList#if($enableTemplating)<${connectingEnd.type.fullyQualifiedName}>#end();
+        }
+#end
+        return this.${connectingEnd.name};
+    }
+
+## - always have as public, having read-only causes too many issues when attempting to
+##   use in other cartridges
+    /**
+     * Sets the $connectingEnd.name
+     * @param value $connectingEnd.getterSetterTypeName
+#if($generateChainedSetters)
+     * @return this ${className}
+#end
+     */
+    public#if($generateChainedSetters) $umlUtils.getClassDeclaration($class, $enableTemplating)#else void#end ${connectingEnd.setterName}($connectingEnd.getterSetterTypeName value)
+    {
+        this.${connectingEnd.name} = value;
+#if($generateChainedSetters)
+        return this;
+#end
+    }
+
+#end
+    /**
+     * @param object to compare this object against
+     * @return boolean if equal
+     * @see Object${esc.hash}equals(Object)
+     */
+#if ($enableAnnotations)
+##if ($enableTemplating)
+##    @SuppressWarnings("unchecked")
+##end
+    @Override
+#end
+    public boolean equals(final Object object)
+    {
+        if (object==null || !(object instanceof $umlUtils.getFQNameWithoutTemplate($class)))
+        {
+             return false;
+        }
+#if (!$class.properties.empty)
+        $class.fullyQualifiedName rhs = ($class.fullyQualifiedName) object;
+#end
+        return new EqualsBuilder()
+#if($class.generalization)
+            .appendSuper(super.equals(object))
+#end
+#foreach($attr in $class.properties)
+            .append(this.${attr.getterName}(), rhs.${attr.getterName}())
+#end
+            .isEquals();
+    }
+
+    /**
+     * @param object to compare this object against
+     * @return int if equal
+     * @see Comparable${esc.hash}compareTo(Object)
+     */
+#if ($enableAnnotations)
+##if ($enableTemplating)
+##    @SuppressWarnings("unchecked")
+#if (!$enableTemplating && $class.generalization)
+    @Override
+#end
+#end
+    public int compareTo(final#if($enableTemplating) ${className}#else Object#end object)
+    {
+        if (object==null#if(!$enableTemplating) || !(object instanceof $umlUtils.getFQNameWithoutTemplate($class))#end)
+        {
+            return -1;
+        }
+#if (!$enableTemplating && !$class.properties.empty)
+        $className myClass = ($class.fullyQualifiedName)object;
+#end
+        return new CompareToBuilder()
+#if($class.generalization)
+            .appendSuper(super.compareTo(object))
+#end
+#foreach($attr in $class.properties)
+            .append(this.${attr.getterName}(),#if($enableTemplating) object#else myClass#end.${attr.getterName}())
+#end
+            .toComparison();
+    }
+
+    /**
+     * @return int hashCode value
+     * @see Object${esc.hash}hashCode()
+     */
+#if ($enableAnnotations)
+    @Override
+#end
+    public int hashCode()
+    {
+        return new HashCodeBuilder(1249046965, -82296885)
+#if($class.generalization)
+            .appendSuper(super.hashCode())
+#end
+#foreach($attr in $class.attributes)
+            .append(this.${attr.getterName}())
+#end
+#foreach($associationEnd in $class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+## Do not append one of the two ends if bidirectional navigation. Comment out 1 end of 1:*, or end with lower alphabetical name.
+#if (($associationEnd.many.compareTo($target.many)<0) || ($associationEnd.many.equals($target.many)) && $associationEnd.type.fullyQualifiedName.compareTo($target.type.fullyQualifiedName)<1)
+            //Commented out to avoid commons-lang-2.4 recursion StackOverflowError: https://issues.apache.org/jira/browse/LANG-456
+            //.append(this.${target.getterName}())
+#else
+			//Potentially causing a graph-cycle. Commented out to avoid commons-lang-2.4 recursion StackOverflowError: https://issues.apache.org/jira/browse/LANG-456
+            //.append(this.${target.getterName}())
+#end
+#end
+#end
+            .toHashCode();
+    }
+
+    /**
+     * @return String representation of object
+     * @see Object${esc.hash}toString()
+     */
+#if ($enableAnnotations)
+    @Override
+#end
+    public String toString()
+    {
+        return new ToStringBuilder(this)
+#foreach($attr in $class.allProperties)
+            .append("${attr.name}", this.${attr.getterName}())
+#end
+            .toString();
+    }
+
+##
+##      equality methods
+##
+## only render the macro in case there are properties to include
+#if (!$class.properties.empty && $generateEqualPropertiesMethod)
+    /**
+     * Compares the properties of this instance to the properties of the argument. This method will return
+     * {@code false} as soon as it detects that the argument is {@code null} or not of the same type as
+     * (or a sub-type of) this instance's type.
+     *
+     * <p/>For array, collection or map properties the comparison will be done one level deep, in other words:
+     * the elements will be compared using the {@code equals()} operation.
+     *
+     * <p/>Note that two properties will be considered equal when both values are {@code null}.
+     *
+     * @param thatObject the object containing the properties to compare against this instance
+     * @return this method will return {@code true} in case the argument has the same type as this class, or is a
+     *      sub-type of this class and all properties as found on this class have equal values when queried on that
+     *      argument instance; in all other cases this method will return {@code false}
+     */
+#if ($enableAnnotations)
+##if ($enableTemplating)
+##    @SuppressWarnings("unchecked")
+##end
+#if ($class.generalization)
+    @Override
+#end
+#end
+    public boolean equalProperties(final Object thatObject)
+    {
+        if (thatObject == null || !this.getClass().isAssignableFrom(thatObject.getClass()))
+        {
+            return false;
+        }
+
+        final ${class.fullyQualifiedName} that = (${class.fullyQualifiedName})thatObject;
+
+#if ($class.generalization)
+        return super.equalProperties(that)
+#set ($operator = "&& ")
+#elseif ($class.properties.empty)
+        return true
+#else
+        return
+#set ($operator = "")
+#end
+#foreach ($property in $class.properties)
+## no identifiers and constants, the 'constant' feature is defined in NmsEntity (= read-only and static)
+#if (!$property.constant && !$property.identifier)
+            ${operator}equal(this.${property.getterName}(), that.${property.getterName}())
+#set ($operator = "&& ")
+#end
+#end
+        ;
+    }
+
+#end
+#if (!$class.generalization)
+    /**
+     * This is a convenient helper method which is able to detect whether or not two values are equal. Two values
+     * are equal when they are both {@code null}, are arrays of the same length with equal elements or are
+     * equal objects (this includes {@link java.util.Collection} and {@link java.util.Map} instances).
+     *
+     * <p/>Note that for array, collection or map instances the comparison runs one level deep.
+     *
+     * @param first the first object to compare, may be {@code null}
+     * @param second the second object to compare, may be {@code null}
+     * @return this method will return {@code true} in case both objects are equal as explained above;
+     *      in all other cases this method will return {@code false}
+     */
+    protected static boolean equal(final Object first, final Object second)
+    {
+        final boolean equal;
+
+        if (first == null)
+        {
+            equal = second == null;
+        }
+        else if (first.getClass().isArray() && (second != null) && second.getClass().isArray())
+        {
+            equal = java.util.Arrays.equals((Object[])first, (Object[])second);
+        }
+        else // note that the following also covers java.util.Collection and java.util.Map
+        {
+            equal = first.equals(second);
+        }
+
+        return equal;
+    }
+
+#end
+    // ${class.fullyQualifiedName} value-object java merge-point
+}
+#end

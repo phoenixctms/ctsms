@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>signature</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			id="#{id}"
+			columns="2"
+			cellpadding="0"
+			styleClass="ctsms-input-panelgrid"
+			columnClasses="ctsms-signatureicon-column,ctsms-signaturedescription-column">
+			<h:panelGroup
+				id="#{id}_icon"
+				rendered="#{signature != null}">
+				<div
+					class="#{signature.verified ? (signature.valid ? 'ctsms-signature-icon ctsms-largeicon-signaturevalid' : 'ctsms-signature-icon ctsms-largeicon-signatureinvalid') : 'ctsms-signature-icon ctsms-largeicon-signatureavailable'}"></div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{signature != null}">
+				<pre class="ui-widget ctsms-multilinetext"><h:outputText value="#{signature.description}" /></pre>
+			</h:panelGroup>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="#{id}_icon">
+				<h:outputText
+					value="#{tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

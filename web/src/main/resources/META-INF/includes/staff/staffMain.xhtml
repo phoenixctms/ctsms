@@ -1,0 +1,972 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>staff main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="staffmain_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffTag"
+				actionListener="#{staffTagBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:stafftag_form:stafftag_list,:tabView:stafftag_form:stafftag_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffImage"
+				actionListener="#{staffImageBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffimage_form:photo,:tabView:staffimage_form:photo_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffStatus"
+				actionListener="#{staffStatusBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffstatus_form:staffstatus_list,:tabView:staffstatus_form:staffstatus_input" />		
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffContactDetail"
+				actionListener="#{staffContactDetailBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffcontactdetail_form:staffcontactdetail_list,:tabView:staffcontactdetail_form:staffcontactdetail_input" />				
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffDutyRosterTurn"
+				actionListener="#{staffDutyRosterTurnBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffdutyrosterturn_form:dutyrosterturn_list,:tabView:staffdutyrosterturn_form:dutyrosterturn_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffAddress"
+				actionListener="#{staffAddressBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffaddress_form:staffaddress_list,:tabView:staffaddress_form:staffaddress_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeCvPosition"
+				actionListener="#{cvPositionBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:cvposition_form:cvposition_list,:tabView:cvposition_form:cvposition_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeCourseParticipationStatus"
+				actionListener="#{courseParticipationStatusBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:courseparticipationstatus_form:courseparticipationstatus_list,:tabView:courseparticipationstatus_form:courseparticipationstatus_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffAssociation"
+				actionListener="#{staffAssociationBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffassociation_form:association_lists" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffFile"
+				actionListener="#{fileBean.changeStaff(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:stafffile_form" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffHyperlink"
+				actionListener="#{hyperlinkBean.changeStaff(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffhyperlink_form:hyperlink_list,:tabView:staffhyperlink_form:hyperlink_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffJournalEntry"
+				actionListener="#{journalBean.changeStaff(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffjournal_form:journal_list,:tabView:staffjournal_form:journal_input" />		
+		
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByTag"
+				actionListener="#{staffBean.change(staffTagBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByImage"
+				actionListener="#{staffBean.change(staffImageBean.in.id)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByContactDetail"
+				actionListener="#{staffBean.change(staffContactDetailBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByAddress"
+				actionListener="#{staffBean.change(staffAddressBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByStatus"
+				actionListener="#{staffBean.change(staffStatusBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByDutyRosterTurn"
+				actionListener="#{staffBean.change(staffDutyRosterTurnBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByCvPosition"
+				actionListener="#{staffBean.change(cvPositionBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByCourseParticipationStatus"
+				actionListener="#{staffBean.change(courseParticipationStatusBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByHyperlink"
+				actionListener="#{staffBean.change(hyperlinkBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByJournalEntry"
+				actionListener="#{staffBean.change(journalBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByFile"
+				actionListener="#{staffBean.change(fileBean.in.staffId)}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStaffByTreeNode"
+				actionListener="#{staffBean.changeByNode()}"
+				oncomplete="handleStaffChanged(xhr, status, args)"
+				update="staff_tree,staff_input" />
+			<h:panelGrid
+				columns="2"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
+				columnClasses="ctsms-staff-tree-column,ctsms-staff-input-column">
+				<p:panel styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{staffBean.staffTreeLabel}" />
+					</f:facet>
+					<p:tree
+						id="staff_tree"
+						value="#{staffBean.staffRoot}"
+						styleClass="ctsms-staff-tree"
+						var="staff"
+						dynamic="false"
+						expanded="true">
+						<p:treeNode type="#{applicationScopeBean.parentNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-staffcategory-unkown #{staff.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{staff.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-staff-tree-node-parent"
+								onclick="changeStaffByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(staff.name)} (#{applicationScopeBean.getListSize(staff.children)})" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.leafNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="ctsms-staffcategory-unkown #{staff.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{staff.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-staff-tree-node-leaf"
+								onclick="changeStaffByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(staff.name)}" />
+							</span>
+						</p:treeNode>
+					</p:tree>
+				</p:panel>
+				<p:panel
+					id="staff_input"
+					styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{staffBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-staff-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="person"
+								value="#{stafflabels.staff_person_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="person"
+									disabled="#{staffBean.created}"
+									value="#{staffBean.in.person}">
+									<p:ajax
+										listener="#{staffBean.handlePersonChange}"
+										update=":tabView:staffmain_form:staff_input" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="person">
+									<h:outputText
+										value="#{stafflabels.staff_person_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="person" />
+							<h:outputLabel
+								for="organisationName"
+								rendered="#{!staffBean.in.person}"
+								value="#{stafflabels.organisation_name_label}" />
+							<h:panelGroup rendered="#{!staffBean.in.person}">
+								<p:inputText
+									id="organisationName"
+									value="#{staffBean.in.organisationName}"
+									required="#{!staffBean.in.person}"
+									label="#{stafflabels.organisation_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="organisationName">
+									<h:outputText
+										value="#{stafflabels.organisation_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="organisationName"
+								rendered="#{!staffBean.in.person}" />
+							<h:outputLabel
+								for="cvOrganisationName"
+								rendered="#{!staffBean.in.person}"
+								value="#{stafflabels.cv_organisation_name_label}" />
+							<h:panelGroup rendered="#{!staffBean.in.person}">
+								<p:inputText
+									id="cvOrganisationName"
+									value="#{staffBean.in.cvOrganisationName}"
+									required="false"
+									label="#{stafflabels.cv_organisation_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvOrganisationName">
+									<h:outputText
+										value="#{stafflabels.cv_organisation_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="cvOrganisationName"
+								rendered="#{!staffBean.in.person}" />
+							<h:outputLabel
+								for="prefixedTitle1"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.prefixed_titles_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								rendered="#{staffBean.in.person}">
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle1"
+										value="#{staffBean.in.prefixedTitle1}"
+										required="false"
+										label="#{stafflabels.prefixed_title1}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePrefixedTitle1}">
+										<p:ajax
+											listener="#{staffBean.handlePrefixedTitle1Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle1">
+										<h:outputText
+											value="#{stafflabels.prefixed_title1_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle2"
+										value="#{staffBean.in.prefixedTitle2}"
+										required="false"
+										label="#{stafflabels.prefixed_title2}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePrefixedTitle2}">
+										<p:ajax
+											listener="#{staffBean.handlePrefixedTitle2Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle2">
+										<h:outputText
+											value="#{stafflabels.prefixed_title2_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="prefixedTitle3"
+										value="#{staffBean.in.prefixedTitle3}"
+										required="false"
+										label="#{stafflabels.prefixed_title3}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePrefixedTitle3}">
+										<p:ajax
+											listener="#{staffBean.handlePrefixedTitle3Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="prefixedTitle3">
+										<h:outputText
+											value="#{stafflabels.prefixed_title3_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<p:message
+								for="prefixedTitle1"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="firstName"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.first_name_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:inputText
+									id="firstName"
+									value="#{staffBean.in.firstName}"
+									required="#{staffBean.in.person}"
+									label="#{stafflabels.first_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="firstName">
+									<h:outputText
+										value="#{stafflabels.first_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="firstName"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="lastName"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.last_name_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:inputText
+									id="lastName"
+									value="#{staffBean.in.lastName}"
+									required="#{staffBean.in.person}"
+									label="#{stafflabels.last_name}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="lastName">
+									<h:outputText
+										value="#{stafflabels.last_name_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="lastName"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="postpositionedTitle1"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.postpositioned_titles_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0"
+								rendered="#{staffBean.in.person}">
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle1"
+										value="#{staffBean.in.postpositionedTitle1}"
+										required="false"
+										label="#{stafflabels.postpositioned_title1}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePostpositionedTitle1}">
+										<p:ajax
+											listener="#{staffBean.handlePostpositionedTitle1Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle1">
+										<h:outputText
+											value="#{stafflabels.postpositioned_title1_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle2"
+										value="#{staffBean.in.postpositionedTitle2}"
+										required="false"
+										label="#{stafflabels.postpositioned_title2}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePostpositionedTitle2}">
+										<p:ajax
+											listener="#{staffBean.handlePostpositionedTitle2Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle2">
+										<h:outputText
+											value="#{stafflabels.postpositioned_title2_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:panelGroup>
+									<p:autoComplete
+										id="postpositionedTitle3"
+										value="#{staffBean.in.postpositionedTitle3}"
+										required="false"
+										label="#{stafflabels.postpositioned_title3}"
+										styleClass="ctsms-control-smaller"
+										minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+										maxResults="#{autoCompleteMaxResultsTitle}"
+										queryDelay="#{autoCompleteQueryDelayTitle}"
+										dropdown="#{autoCompleteDropdownTitle}"
+										global="#{autoCompleteGlobalTitle}"
+										scrollHeight="#{autoCompleteScrollHeightTitle}"
+										completeMethod="#{staffBean.completePostpositionedTitle3}">
+										<p:ajax
+											listener="#{staffBean.handlePostpositionedTitle3Select}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											event="blur"
+											process="@this" />
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="postpositionedTitle3">
+										<h:outputText
+											value="#{stafflabels.postpositioned_title3_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
+							<p:message
+								rendered="#{staffBean.in.person}"
+								for="postpositionedTitle1" />
+							<h:outputLabel
+								for="cvAcademicTitle"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.cv_academic_title_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:autoComplete
+									id="cvAcademicTitle"
+									value="#{staffBean.in.cvAcademicTitle}"
+									required="false"
+									label="#{stafflabels.cv_academic_title}"
+									styleClass="ctsms-control-smaller"
+									minQueryLength="#{autoCompleteMinQueryLengthTitle}"
+									maxResults="#{autoCompleteMaxResultsTitle}"
+									queryDelay="#{autoCompleteQueryDelayTitle}"
+									dropdown="#{autoCompleteDropdownTitle}"
+									global="#{autoCompleteGlobalTitle}"
+									scrollHeight="#{autoCompleteScrollHeightTitle}"
+									completeMethod="#{staffBean.completeCvAcademicTitle}">
+									<p:ajax
+										listener="#{staffBean.handleCvAcademicTitleSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="cvAcademicTitle">
+									<h:outputText
+										value="#{stafflabels.cv_academic_title_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{staffBean.in.person}"
+								for="cvAcademicTitle" />
+							<h:outputLabel
+								for="dateOfBirth"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.date_of_birth_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:calendar
+									id="dateOfBirth"
+									value="#{staffBean.in.dateOfBirth}"
+									required="false"
+									label="#{stafflabels.date_of_birth}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date">
+									<p:ajax
+										event="blur"
+										process="@this" />
+									<p:ajax
+										event="dateSelect"
+										process="@this" />
+								</p:calendar>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dateOfBirth">
+									<h:outputText
+										value="#{stafflabels.date_of_birth_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="dateOfBirth"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="gender"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.gender_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:selectOneMenu
+									id="gender"
+									value="#{staffBean.gender.sex}"
+									required="#{staffBean.in.person}"
+									label="#{stafflabels.gender}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{staffBean.gender.sexes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="gender">
+									<h:outputText
+										value="#{stafflabels.gender_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="gender"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="citizenship"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.citizenship_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:autoComplete
+									id="citizenship"
+									value="#{staffBean.in.citizenship}"
+									required="false"
+									label="#{stafflabels.citizenship}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCountry}"
+									maxResults="#{autoCompleteMaxResultsCountry}"
+									queryDelay="#{autoCompleteQueryDelayCountry}"
+									dropdown="#{autoCompleteDropdownCountry}"
+									global="#{autoCompleteGlobalCountry}"
+									scrollHeight="#{autoCompleteScrollHeightCountry}"
+									completeMethod="#{staffBean.completeCitizenship}">
+									<p:ajax
+										listener="#{staffBean.handleCitizenshipSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="citizenship">
+									<h:outputText
+										value="#{stafflabels.citizenship_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="citizenship"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="department"
+								value="#{stafflabels.staff_department_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="department"
+									value="#{staffBean.in.departmentId}"
+									required="true"
+									label="#{stafflabels.staff_department}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{staffBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="department">
+									<h:outputText
+										value="#{stafflabels.staff_department_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="department" />
+							<h:outputLabel
+								for="category"
+								value="#{stafflabels.staff_category_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="category"
+									value="#{staffBean.in.categoryId}"
+									required="true"
+									label="#{stafflabels.staff_category}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{staffBean.categories}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="category">
+									<h:outputText
+										value="#{stafflabels.staff_category_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="category" />
+							<h:outputLabel
+								for="employee"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.staff_employee_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:selectBooleanCheckbox
+									id="employee"
+									value="#{staffBean.in.employee}">
+									<p:ajax
+										listener="#{staffBean.handleEmployeeChange}"
+										update="allocatable" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="employee">
+									<h:outputText
+										value="#{stafflabels.staff_employee_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="employee"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="allocatable"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.staff_allocatable_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:selectBooleanCheckbox
+									id="allocatable"
+									disabled="#{!staffBean.in.employee}"
+									value="#{staffBean.in.allocatable}">
+									<p:ajax
+										listener="#{staffBean.handleAllocatableChange}"
+										update="maxOverlappingShifts" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="allocatable">
+									<h:outputText
+										value="#{stafflabels.staff_allocatable_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="allocatable"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="maxOverlappingShifts"
+								rendered="#{staffBean.in.person}"
+								value="#{stafflabels.staff_max_overlapping_shifts_label}" />
+							<h:panelGroup rendered="#{staffBean.in.person}">
+								<p:spinner
+									id="maxOverlappingShifts"
+									value="#{staffBean.in.maxOverlappingShifts}"
+									styleClass="ctsms-spinner"
+									required="true"
+									disabled="#{!staffBean.in.allocatable}"
+									label="#{stafflabels.staff_max_overlapping_shifts}">
+									<p:ajax />
+									<p:ajax event="keyup" />
+								</p:spinner>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="maxOverlappingShifts">
+									<h:outputText
+										value="#{stafflabels.staff_max_overlapping_shifts_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="maxOverlappingShifts"
+								rendered="#{staffBean.in.person}" />
+							<h:outputLabel
+								for="parent"
+								value="#{stafflabels.staff_parent_label}" />
+							<h:panelGrid
+								columns="4"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="parent"
+										required="false"
+										value="#{staffBean.in.parentId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="parentName"
+										value="#{applicationScopeBean.clipStringPicker(staffBean.parentName)}"
+										title="#{stafflabels.staff_parent_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff(':tabView:staffmain_form:parent')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_active_identity_staff_button_label}"
+									icon="ui-icon ui-icon-person"
+									type="button"
+									disabled="#{!sessionScopeBean.hasUserIdentity}"
+									onclick="setID(':tabView:staffmain_form:parent',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':tabView:staffmain_form:parentName','#{sessionScopeBean.userIdentityName}')" />
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax(':tabView:staffmain_form:parent',':tabView:staffmain_form:parentName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax(':tabView:staffmain_form:parent',':tabView:staffmain_form:parentName','#{applicationScopeBean.noStaffPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="parent" />
+						</h:panelGrid>
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{staffBean.created ? staffBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{staffBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleStaffChanged(xhr, status, args)"
+									disabled="false"
+									update="staff_tree,staff_input" />
+								<p:commandButton
+									rendered="#{!staffBean.created}"
+									process="@this,staff_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{staffBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleStaffChanged(xhr, status, args)"
+									disabled="#{!staffBean.createable}"
+									update="staff_tree,staff_input" />
+								<p:commandButton
+									rendered="#{staffBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="staffAddConfirmation.show()"
+									disabled="#{!staffBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,staff_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{staffBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleStaffChanged(xhr, status, args)"
+									disabled="#{!staffBean.editable}"
+									update="staff_tree,staff_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="staffDeleteConfirmation.show()"
+									disabled="#{!staffBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{staffBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleStaffChanged(xhr, status, args)"
+									disabled="#{!staffBean.created}"
+									update="staff_tree,staff_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="staffDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{stafflabels.staff_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{staffBean.delete}"
+					onclick="staffDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleStaffChanged(xhr, status, args)"
+					update="staff_tree,staff_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="staffDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="staffAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{stafflabels.staff_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,staff_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{staffBean.add}"
+					onclick="staffAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleStaffChanged(xhr, status, args)"
+					update="staff_tree,staff_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="staffAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

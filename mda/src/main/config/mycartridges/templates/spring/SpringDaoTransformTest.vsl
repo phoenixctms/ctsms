@@ -1,0 +1,43 @@
+#if (!$entity.valueObjectReferences.empty)
+#set ($testCaseClassName = "${entity.daoName}TransformTest")
+#set ($generatedFile = "${entity.packagePath}/test/${testCaseClassName}.java")
+// license-header java merge-point
+//
+package ${entity.packageName}.test;
+
+import org.phoenixctms.ctsms.domain.DaoTransformTestBase;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+/**
+ * @see $entity.fullyQualifiedEntityName
+*/
+@Test(groups={"$baseDaoTransformTestngGroup","${entity.daoName}"})
+public class $testCaseClassName extends DaoTransformTestBase {
+
+#foreach ($valueObjectRef in $entity.valueObjectReferences)
+  #set ($testOperationName = "test${stringUtils.capitalise($valueObjectRef.transformationMethodName)}")
+  /**
+   * Test for method ${entity.daoName}.${valueObjectRef.transformationMethodName}
+   *
+   * @see $entity.packageName.${entity.daoName}#${valueObjectRef.transformationMethodName}($entity.fullyQualifiedEntityName source, $valueObjectRef.targetElement.fullyQualifiedName target)
+   */
+  @Test
+  public void ${testOperationName}() {
+    Assert.fail("Test '${testCaseClassName}.${testOperationName}' not implemented!");
+  }
+
+  #set ($testOperationName = "test${stringUtils.capitalise($valueObjectRef.transformationToEntityMethodName)}")
+  /**
+   * Test for method ${valueObjectRef.transformationToEntityMethodName}
+   *
+   * @see $entity.packageName.${entity.daoName}#${valueObjectRef.transformationToEntityMethodName}($valueObjectRef.targetElement.fullyQualifiedName source, $entity.fullyQualifiedEntityName target, boolean copyIfNull)
+   */
+  @Test
+  public void ${testOperationName}() {
+    Assert.fail("Test '${testCaseClassName}.${testOperationName}' not implemented!");
+  }
+
+#end
+}
+#end

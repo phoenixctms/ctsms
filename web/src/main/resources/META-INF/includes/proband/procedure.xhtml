@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>procedures</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="procedure_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeProcedure"
+				actionListener="#{procedureBean.change(probandBean.in.id)}"
+				update="procedure_list,procedure_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{procedure.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="procedure"
+					value="#{procedureBean.procedureModel}"
+					id="procedure_list"
+					selectionMode="single"
+					selection="#{procedureBean.selectedProcedure}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:procedure_form:procedure_input" />
+					<f:facet name="header">
+						<h:outputText value="#{procedureBean.procedureModel.rowCount} #{probandlabels.procedure_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{procedure.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{procedure.vo.id}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_code_code_column}" />
+						</f:facet>
+						<h:outputText value="#{procedure.vo.code.code}" />
+					</p:column>
+					<p:column
+						sortBy="#{procedure.vo.code.text}"
+						filterBy="#{procedure.vo.code.text}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_code_text_column}" />
+						</f:facet>
+						<h:outputText value="#{applicationScopeBean.clipStringTrailing(procedure.vo.code.text,48)}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_code_last_category_column}" />
+						</f:facet>
+						<h:outputText value="#{applicationScopeBean.clipStringTrailing(procedureBean.getLastCategoryLabel(procedure.vo.code),48)}" />
+					</p:column>
+					<p:column sortBy="#{procedure.vo.start}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_start_column}" />
+						</f:facet>
+						<h:outputText value="#{procedure.vo.start}">
+							<f:converter converterId="ctsms.Date" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{procedure.vo.stop}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_stop_column}" />
+						</f:facet>
+						<h:outputText value="#{procedure.vo.stop}">
+							<f:converter converterId="ctsms.Date" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.procedure_list_medication_count_column}" />
+						</f:facet>
+						<h:outputText value="#{procedureBean.getMedicationCount(procedure.vo)}" />
+					</p:column>						
+				</p:dataTable>
+				<p:panel id="procedure_input">
+					<f:facet name="header">
+						<h:outputText value="#{procedureBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{procedureBean.inputVisible}"
+							columns="6"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="code"
+								value="#{probandlabels.procedure_code_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="code"
+									required="false"
+									value="#{procedureBean.code}"
+									label="#{probandlabels.procedure_code}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthCoding}"
+									maxResults="#{autoCompleteMaxResultsCoding}"
+									queryDelay="#{autoCompleteQueryDelayCoding}"
+									dropdown="#{autoCompleteDropdownCoding}"
+									global="#{autoCompleteGlobalCoding}"
+									scrollHeight="#{autoCompleteScrollHeightCoding}"
+									completeMethod="#{procedureBean.completeOpsCode}"
+									forceSelection="true"
+									var="opsCode"
+									itemValue="#{opsCode}"
+									itemLabel="#{opsCode.vo.text}"
+									converter="ctsms.OpsCode">
+									<p:ajax
+									    process="@this"
+										event="itemSelect"
+										listener="#{procedureBean.handleCodeSelect}" />
+									<p:ajax
+									    process="@this"
+										event="itemUnselect"
+										listener="#{procedureBean.handleCodeUnselect}" />									
+									<p:column>
+										<h:outputText value="#{opsCode.vo.code}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{applicationScopeBean.clipStringTrailing(opsCode.vo.text,128)}" />
+									</p:column>
+									<f:facet name="itemtip">
+										<h:panelGrid
+											columns="1"
+											cellpadding="0"
+											styleClass="ctsms-code-itemtip-panelgrid">
+											<h:outputText value="#{probandlabels.procedure_code_chapter_label} #{opsCode.vo.systematics.chapterCode}" />
+											<h:outputText
+												styleClass="ctsms-code-itemtip-em"
+												value="#{applicationScopeBean.clipStringTrailing(opsCode.vo.systematics.chapterPreferredRubricLabel,96)}" />
+											<h:panelGroup>
+												<ul>
+													<ui:repeat
+														value="#{opsCode.vo.systematics.blocks}"
+														var="block">
+														<li><h:outputText value="#{probandlabels.procedure_code_block_label} #{block.code}" /><br /> <h:outputText
+																styleClass="ctsms-code-itemtip-em"
+																value="#{applicationScopeBean.clipStringTrailing(block.preferredRubricLabel,96)}" /></li>
+													</ui:repeat>
+												</ul>
+											</h:panelGroup>
+											<h:panelGroup>
+												<ul>
+													<ui:repeat
+														value="#{opsCode.vo.systematics.categories}"
+														var="category">
+														<li><h:outputText value="#{probandlabels.procedure_code_category_label} #{category.code}" /><br /> <h:outputText
+																styleClass="ctsms-code-itemtip-em"
+																value="#{applicationScopeBean.clipStringTrailing(category.preferredRubricLabel,96)}" />
+															<ul>
+																<ui:repeat
+																	value="#{category.modifiers}"
+																	var="modifier">
+																	<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(modifier.preferredRubricLabel,96)}" /></li>
+																</ui:repeat>
+															</ul></li>
+													</ui:repeat>
+												</ul>
+											</h:panelGroup>
+										</h:panelGrid>
+									</f:facet>
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="code">
+									<h:outputText
+										value="#{probandlabels.procedure_code_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="code" />
+							<h:outputLabel />
+							<h:outputText />
+							<h:outputLabel />
+							<h:outputLabel
+								for="start"
+								value="#{probandlabels.procedure_start_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="start"
+									value="#{procedureBean.in.start}"
+									required="false"
+									label="#{probandlabels.procedure_start}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="start">
+									<h:outputText
+										value="#{probandlabels.procedure_start_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="start" />
+							<h:outputLabel
+								for="stop"
+								value="#{probandlabels.procedure_stop_label}" />
+							<h:panelGroup>
+								<p:calendar
+									id="stop"
+									value="#{procedureBean.in.stop}"
+									required="false"
+									label="#{probandlabels.procedure_stop}"
+									pattern="#{applicationScopeBean.inputDatePattern}"
+									yearRange="#{applicationScopeBean.calendarYearRange}"
+									showWeek="true"
+									navigator="true"
+									locale="#{sessionScopeBean.locale}"
+									timeZone="#{sessionScopeBean.timeZone}"
+									styleClass="ctsms-calendar-date" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="stop">
+									<h:outputText
+										value="#{probandlabels.procedure_stop_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="stop" />
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{procedureBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								for="comment"
+								value="#{probandlabels.procedure_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="comment"
+									value="#{procedureBean.in.comment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{probandlabels.procedure_comment}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="comment">
+									<h:outputText
+										value="#{probandlabels.procedure_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!procedureBean.inputVisible}" />
+						<h:outputLabel rendered="#{!procedureBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{procedureBean.created ? procedureBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{procedureBean.reset}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="procedure_list,procedure_input" />
+								<p:commandButton
+									process="@this,procedure_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{procedureBean.add}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!procedureBean.createable}"
+									update="procedure_list,procedure_input" />
+								<p:commandButton
+									process="@this,procedure_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{procedureBean.update}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!procedureBean.editable}"
+									update="procedure_list,procedure_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{procedureBean.delete}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!procedureBean.removable}"
+									update="procedure_list,procedure_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{procedureBean.load}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!procedureBean.created}"
+									update="procedure_list,procedure_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>
