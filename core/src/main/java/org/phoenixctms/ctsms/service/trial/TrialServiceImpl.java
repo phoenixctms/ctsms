@@ -2124,15 +2124,19 @@ extends TrialServiceBase
 								this.getECRFFieldStatusEntryDao().findByListEntryEcrf(listEntry.getId(), ecrf.getId(), true, null), now, user);
 						break;
 					case CREATE_PROBAND_LIST_STATUS_ENTRY:
-						ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
-								this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
-								L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
-						}, now, probandListStatusTypeId, ecrf, newState, now, user,
-						this.getProbandDao(),
-						this.getProbandListEntryDao(),
-						this.getProbandListStatusEntryDao(),
-						this.getProbandListStatusTypeDao(),
-						this.getJournalEntryDao());
+						try {
+							ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
+									this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
+									L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
+							}, now, probandListStatusTypeId, ecrf, newState, now, user,
+							this.getProbandDao(),
+							this.getProbandListEntryDao(),
+							this.getProbandListStatusEntryDao(),
+							this.getProbandListStatusTypeDao(),
+							this.getJournalEntryDao());
+						} catch (ServiceException e) {
+							// already end state
+						}
 						break;
 					case SCHEDULE_EXPORT_VALUES:
 					case EXPORT_VALUES:
@@ -3374,7 +3378,11 @@ extends TrialServiceBase
 		while (probandListEntriesIt.hasNext()) {
 			ProbandListEntry probandListEntry = probandListEntriesIt.next();
 			ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
-			addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, now, user);
+			try {
+				addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, now, user);
+			} catch (ServiceException e) {
+				// already end state
+			}
 			probandListEntry.setGroup(null);
 			ServiceUtil.modifyVersion(probandListEntry, probandListEntry.getVersion(), now, user);
 			probandListEntryDao.update(probandListEntry);
