@@ -367,7 +367,8 @@ public final class Settings {
 	}
 
 	public static String getEmailExecFromName() {
-		return MessageFormat.format(Settings.getString(SettingCodes.EMAIL_EXEC_FROM_NAME, Bundle.SETTINGS, DefaultSettings.EMAIL_EXEC_FROM_NAME), getInstanceName());
+		return MessageFormat.format(Settings.getString(SettingCodes.EMAIL_EXEC_FROM_NAME, Bundle.SETTINGS, DefaultSettings.EMAIL_EXEC_FROM_NAME),
+				Settings.getString(SettingCodes.APPLICATION_ABBREVIATION, Bundle.SETTINGS, null), getInstanceName());
 	}
 
 	public static String getEmailNotificationFromAddress() {
@@ -377,7 +378,8 @@ public final class Settings {
 
 	public static String getEmailNotificationFromName() {
 		return MessageFormat
-				.format(Settings.getString(SettingCodes.EMAIL_NOTIFICATION_FROM_NAME, Bundle.SETTINGS, DefaultSettings.EMAIL_NOTIFICATION_FROM_NAME), getInstanceName());
+				.format(Settings.getString(SettingCodes.EMAIL_NOTIFICATION_FROM_NAME, Bundle.SETTINGS, DefaultSettings.EMAIL_NOTIFICATION_FROM_NAME),
+						Settings.getString(SettingCodes.APPLICATION_ABBREVIATION, Bundle.SETTINGS, null), getInstanceName());
 	}
 
 	public static ExcelCellFormat getExcelCellFormat(String key, Bundle bundle, ExcelCellFormat defaultValue) {

@@ -136,6 +136,14 @@ public final class DBToolOptions {
 	public static final String IMPORT_ECRFS_OPT = "ie";
 	public static final String IMPORT_ASPS_OPT = "ia";
 	public static final String VALIDATE_PENDING_ECRFS_OPT = "vpe";
+	public static final String EXPORT_INVENTORY_JOURNAL_OPT = "eij";
+	public static final String EXPORT_STAFF_JOURNAL_OPT = "esj";
+	public static final String EXPORT_COURSE_JOURNAL_OPT = "ecj";
+	public static final String EXPORT_TRIAL_JOURNAL_OPT = "etj";
+	public static final String EXPORT_PROBAND_JOURNAL_OPT = "epj";
+	public static final String EXPORT_INPUT_FIELD_JOURNAL_OPT = "eifj";
+	public static final String EXPORT_USER_JOURNAL_OPT = "euj";
+	public static final String EXPORT_CRITERIA_JOURNAL_OPT = "escj";
 	private final static HashMap<String, Option> taskOptionMap = new HashMap<String, Option>();
 	private final static HashMap<String, Option> optionalOptionMap = new HashMap<String, Option>();
 	public final static Options options = new Options();
@@ -261,6 +269,22 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(IMPORT_ASPS_OPT, "import_asps",
 				"import asp and substances", 1));
 		tasks.addOption(registerTaskOption(VALIDATE_PENDING_ECRFS_OPT, "validate_pending_ecrfs", "validate pending ecrfs", 0));
+		tasks.addOption(registerTaskOption(EXPORT_INVENTORY_JOURNAL_OPT, "export_inventory_journal",
+				"export inventory journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_STAFF_JOURNAL_OPT, "export_staff_journal",
+				"export staff journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_COURSE_JOURNAL_OPT, "export_course_journal",
+				"export course journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_TRIAL_JOURNAL_OPT, "export_trial_journal",
+				"export trial journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_PROBAND_JOURNAL_OPT, "export_proband_journal",
+				"export proband journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_INPUT_FIELD_JOURNAL_OPT, "export_input_field_journal",
+				"export input field journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_USER_JOURNAL_OPT, "export_user_journal",
+				"export user journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_JOURNAL_OPT, "export_criteria_journal",
+				"export criteria journal", 1));
 		tasks.setRequired(true);
 		options.addOptionGroup(tasks);
 		options.addOption(registerOptionalOption(FORCE_OPT, "force", "skip confirmation promt", 0));

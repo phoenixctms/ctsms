@@ -784,6 +784,70 @@ public class DBTool {
 						sendEmail = dbTool.getServiceMethodExecutor().exportAuditTrail(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
 								line.getOptionValue(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportInventoryJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportStaffJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportCourseJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportTrialJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportProbandJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportInputFieldJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_USER_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_USER_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportUserJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportCriteriaJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) > 0l;
+					}
 				}
 
 				// } catch (IllegalArgumentException e) {

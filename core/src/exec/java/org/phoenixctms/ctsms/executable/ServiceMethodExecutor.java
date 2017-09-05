@@ -24,11 +24,13 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
+import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
 import org.phoenixctms.ctsms.service.proband.ProbandService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
+import org.phoenixctms.ctsms.service.shared.JournalService;
 import org.phoenixctms.ctsms.service.shared.SearchService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.service.staff.StaffService;
@@ -56,6 +58,7 @@ import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
+import org.phoenixctms.ctsms.vo.JournalExcelVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
@@ -169,6 +172,8 @@ public class ServiceMethodExecutor {
 	private UserDao userDao;
 	@Autowired
 	private CriteriaDao criteriaDao;
+	@Autowired
+	private JournalService journalService;
 
 	private JobOutput jobOutput;
 
@@ -271,6 +276,28 @@ public class ServiceMethodExecutor {
 		}
 	}
 
+	public long exportCourseJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.COURSE_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("course ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportCriteriaJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.CRITERIA_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("criteria ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
 	public long exportCriteriaResults(AuthenticationVO auth, Long id, String fileName) throws Exception {
 		CriteriaInVO criteria = new CriteriaInVO();
 		HashSet<CriterionInVO> criterions = new HashSet<CriterionInVO>();
@@ -323,12 +350,78 @@ public class ServiceMethodExecutor {
 		}
 	}
 
+	public long exportInputFieldJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INPUT_FIELD_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("input field ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportInventoryJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INVENTORY_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("inventory ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportProbandJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.PROBAND_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("proband ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
 	public long exportProbandList(AuthenticationVO auth, Long id, ProbandListStatusLogLevel logLevel, String fileName) throws Exception {
 		// trialService.getEcrfFieldValueLog(auth, id, null, null, null);
 		ProbandListExcelVO result = trialService.exportProbandList(auth, id, logLevel);
 		if (result != null) {
 			jobOutput.println(result.getTrial().getName() + " " + (result.getLogLevel() != null ? result.getLogLevel().name() : "[full subject list]") + ": "
 					+ result.getRowCount() + " probands");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportStaffJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.STAFF_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("staff ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportTrialJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.TRIAL_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportUserJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.USER_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("user ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
 			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
 			return result.getRowCount();
 		} else {
