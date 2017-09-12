@@ -844,6 +844,9 @@ extends TrialServiceBase
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
 		ProbandListEntryOutVO listEntryVO = this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry);
+		if (listEntryVO.getProband().getDecrypted()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		}
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		Collection visitScheduleItems = null;
 		if (listEntry.getGroup() != null) {
@@ -7667,6 +7670,9 @@ extends TrialServiceBase
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			ECRFStatusEntryVO original = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+			if (!original.getListEntry().getProband().getDecrypted()) {
+				continue; // prevent unexpected validationcheck ecrf issues, when subject PII fields
+			}
 			// ServiceUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 			boolean noMissingValues = false;
 			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES)) {
