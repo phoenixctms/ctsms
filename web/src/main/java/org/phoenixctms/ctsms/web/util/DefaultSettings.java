@@ -534,6 +534,13 @@ public final class DefaultSettings {
 	public static final float ADD_REIMBURSEMENT_TRAVEL_EXPENSES_FACTOR = 0.5f;
 	public static final String ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN = "yyyy-MM-dd";
 	public static final int ADD_REIMBURSEMENT_COMMENT_CLIP_MAX_LENGTH = 30;
+	public static final boolean ENABLE_INVENTORY_MODULE = false;
+	public static final boolean ENABLE_STAFF_MODULE = false;
+	public static final boolean ENABLE_COURSE_MODULE = false;
+	public static final boolean ENABLE_TRIAL_MODULE = false;
+	public static final boolean ENABLE_PROBAND_MODULE = false;
+	public static final boolean ENABLE_INPUT_FIELD_MODULE = false;
+	public static final boolean ENABLE_USER_MODULE = false;
 
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
 

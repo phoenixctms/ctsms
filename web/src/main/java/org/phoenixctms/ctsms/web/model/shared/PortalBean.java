@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -267,69 +268,83 @@ public class PortalBean extends ManagedBeanBase {
 	private void initSets() {
 		if (portalModuleItems == null) {
 			portalModuleItems = new ArrayList<PortalModuleItem>();
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.INVENTORY_PORTAL_ITEM_LABEL), "ctsms-largeicon-inventoryhome", Messages
-					.getString(MessageCodes.INVENTORY_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+			if (WebUtil.getModuleEnabled(DBModule.INVENTORY_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.INVENTORY_PORTAL_ITEM_LABEL), "ctsms-largeicon-inventoryhome", Messages
+						.getString(MessageCodes.INVENTORY_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getInventoryHomeMenu());
-					add(DynamicEntityMenu.getInventoryEntityMenu());
-				}
-			}, "openInventoryHome()", JournalModule.INVENTORY_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.STAFF_PORTAL_ITEM_LABEL), "ctsms-largeicon-staffhome", Messages
-					.getString(MessageCodes.STAFF_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getInventoryHomeMenu());
+								add(DynamicEntityMenu.getInventoryEntityMenu());
+							}
+						}, "openInventoryHome()", JournalModule.INVENTORY_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.STAFF_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.STAFF_PORTAL_ITEM_LABEL), "ctsms-largeicon-staffhome", Messages
+						.getString(MessageCodes.STAFF_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getStaffHomeMenu());
-					add(DynamicEntityMenu.getStaffEntityMenu());
-				}
-			}, "openStaffHome()", JournalModule.STAFF_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.COURSE_PORTAL_ITEM_LABEL), "ctsms-largeicon-coursehome", Messages
-					.getString(MessageCodes.COURSE_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getStaffHomeMenu());
+								add(DynamicEntityMenu.getStaffEntityMenu());
+							}
+						}, "openStaffHome()", JournalModule.STAFF_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.COURSE_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.COURSE_PORTAL_ITEM_LABEL), "ctsms-largeicon-coursehome", Messages
+						.getString(MessageCodes.COURSE_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getCourseHomeMenu());
-					add(DynamicEntityMenu.getCourseEntityMenu());
-				}
-			}, "openCourseHome()", JournalModule.COURSE_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.TRIAL_PORTAL_ITEM_LABEL), "ctsms-largeicon-trialhome", Messages
-					.getString(MessageCodes.TRIAL_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getCourseHomeMenu());
+								add(DynamicEntityMenu.getCourseEntityMenu());
+							}
+						}, "openCourseHome()", JournalModule.COURSE_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.TRIAL_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.TRIAL_PORTAL_ITEM_LABEL), "ctsms-largeicon-trialhome", Messages
+						.getString(MessageCodes.TRIAL_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getTrialHomeMenu());
-					add(DynamicEntityMenu.getTrialEntityMenu());
-				}
-			}, "openTrialHome()", JournalModule.TRIAL_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.PROBAND_PORTAL_ITEM_LABEL), "ctsms-largeicon-probandhome", Messages
-					.getString(MessageCodes.PROBAND_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getTrialHomeMenu());
+								add(DynamicEntityMenu.getTrialEntityMenu());
+							}
+						}, "openTrialHome()", JournalModule.TRIAL_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.PROBAND_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.PROBAND_PORTAL_ITEM_LABEL), "ctsms-largeicon-probandhome", Messages
+						.getString(MessageCodes.PROBAND_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getProbandHomeMenu());
-					add(DynamicEntityMenu.getProbandEntityMenu());
-				}
-			}, "openProbandHome()", JournalModule.PROBAND_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.INPUT_FIELD_PORTAL_ITEM_LABEL), "ctsms-largeicon-inputfieldhome", Messages
-					.getString(MessageCodes.INPUT_FIELD_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getProbandHomeMenu());
+								add(DynamicEntityMenu.getProbandEntityMenu());
+							}
+						}, "openProbandHome()", JournalModule.PROBAND_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.INPUT_FIELD_PORTAL_ITEM_LABEL), "ctsms-largeicon-inputfieldhome", Messages
+						.getString(MessageCodes.INPUT_FIELD_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getInputFieldHomeMenu());
-					add(DynamicEntityMenu.getInputFieldEntityMenu());
-				}
-			}, "openInputFieldHome()", JournalModule.INPUT_FIELD_JOURNAL));
-			portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.USER_PORTAL_ITEM_LABEL), "ctsms-largeicon-userhome", Messages
-					.getString(MessageCodes.USER_PORTAL_ITEM_DESCRIPTION),
-					new ArrayList<RecentEntityMenuBase>() {
+							{
+								add(DynamicHomeMenu.getInputFieldHomeMenu());
+								add(DynamicEntityMenu.getInputFieldEntityMenu());
+							}
+						}, "openInputFieldHome()", JournalModule.INPUT_FIELD_JOURNAL));
+			}
+			if (WebUtil.getModuleEnabled(DBModule.USER_DB)) {
+				portalModuleItems.add(new PortalModuleItem(Messages.getString(MessageCodes.USER_PORTAL_ITEM_LABEL), "ctsms-largeicon-userhome", Messages
+						.getString(MessageCodes.USER_PORTAL_ITEM_DESCRIPTION),
+						new ArrayList<RecentEntityMenuBase>() {
 
-				{
-					add(DynamicHomeMenu.getUserHomeMenu());
-					add(DynamicEntityMenu.getUserEntityMenu());
-				}
-			}, "openUserHome()", JournalModule.USER_JOURNAL));
+							{
+								add(DynamicHomeMenu.getUserHomeMenu());
+								add(DynamicEntityMenu.getUserEntityMenu());
+							}
+						}, "openUserHome()", JournalModule.USER_JOURNAL));
+			}
 		}
 		Iterator<PortalModuleItem> moduleItemIt = portalModuleItems.iterator();
 		while (moduleItemIt.hasNext()) {

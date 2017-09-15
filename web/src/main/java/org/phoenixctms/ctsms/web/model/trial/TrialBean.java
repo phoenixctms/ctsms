@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -573,12 +574,20 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB);
 	}
 
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isEditable() {
+		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB) && super.isEditable();
+	}
+
+	public boolean isRemovable() {
+		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB) && super.isRemovable();
 	}
 
 	public boolean isTabEmphasized(String tab) {

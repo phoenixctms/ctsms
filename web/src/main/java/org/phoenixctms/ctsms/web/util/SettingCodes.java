@@ -423,5 +423,11 @@ public interface SettingCodes {
 	public static final String SHOW_ECRF_STATUS_ECRF_LOG = "show_ecrf_status_ecrf_log";
 	public static final String SHOW_LAST_UNRESOLVED_FIELD_STATUS = "show_last_unresolved_field_status";
 	public static final String ECRF_CLONE_ADD_OTHER_TRIAL_ENABLED = "ecrf_clone_add_other_trial_enabled";
-
+	public static final String ENABLE_INVENTORY_MODULE = "enable_inventory_module";
+	public static final String ENABLE_STAFF_MODULE = "enable_staff_module";
+	public static final String ENABLE_COURSE_MODULE = "enable_course_module";
+	public static final String ENABLE_TRIAL_MODULE = "enable_trial_module";
+	public static final String ENABLE_PROBAND_MODULE = "enable_proband_module";
+	public static final String ENABLE_INPUT_FIELD_MODULE = "enable_input_field_module";
+	public static final String ENABLE_USER_MODULE = "enable_user_module";
 }

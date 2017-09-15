@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.Sex;
@@ -763,7 +764,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(DBModule.PROBAND_DB);
 	}
 
 	@Override
@@ -771,11 +772,19 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		return out != null;
 	}
 
+	public boolean isEditable() {
+		return WebUtil.getModuleEnabled(DBModule.PROBAND_DB) && super.isEditable();
+	}
+
 	public boolean isProbandLocked() {
 		if (category != null) {
 			return category.getLocked();
 		}
 		return false;
+	}
+
+	public boolean isRemovable() {
+		return WebUtil.getModuleEnabled(DBModule.PROBAND_DB) && super.isRemovable();
 	}
 
 	public boolean isTabEmphasized(String tab) {

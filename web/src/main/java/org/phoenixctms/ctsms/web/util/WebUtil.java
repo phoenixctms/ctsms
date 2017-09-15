@@ -2891,6 +2891,29 @@ public final class WebUtil {
 		}
 	}
 
+	public static boolean getModuleEnabled(DBModule module) {
+		if (module != null) {
+			switch (module) {
+				case INVENTORY_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_INVENTORY_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INVENTORY_MODULE);
+				case STAFF_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_STAFF_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_STAFF_MODULE);
+				case COURSE_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_COURSE_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_COURSE_MODULE);
+				case TRIAL_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_MODULE);
+				case PROBAND_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_MODULE);
+				case INPUT_FIELD_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE);
+				case USER_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE);
+				default:
+			}
+		}
+		return false;
+	}
+
 	public static Long getMoneyTransferCount(Long probandId, Long bankAccountId) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -3478,6 +3501,7 @@ public final class WebUtil {
 		return trials;
 	}
 
+
 	public static String getRemoteHost() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
@@ -3486,13 +3510,20 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static String getRemoteHost(HttpServletRequest request) {
 		if (request != null) {
 			return request.getRemoteHost();
 		}
 		return null;
 	}
+
+	// public static Object getSelectionSetServiceCache(Class type, Object key) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
+	// }
+	// return null;
+	// }
 
 	public static Long getSelectionSetValueCount(Long inputFieldId) {
 		// PSFVO psf = new PSFVO();
@@ -3511,14 +3542,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
 
 	public static String getSeriesColors(ArrayList<Color> colors) {
 		if (colors != null && colors.size() > 0) {
@@ -3870,6 +3893,17 @@ public final class WebUtil {
 		return timeZones;
 	}
 
+	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getTotal();
+	// }
+	// }
+	// return result;
+	// }
+
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -3883,17 +3917,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getTotal();
-	// }
-	// }
-	// return result;
-	// }
 
 	public static Long getTrialDutyRosterCount(Long trialId) {
 		if (trialId != null) {
@@ -4040,14 +4063,6 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static UserOutVO getUser() {
-		SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		if (sessionScopeBean != null) {
-			return sessionScopeBean.getUser();
-		}
-		return null;
-	}
-
 	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;
 	// if (counts != null) {
@@ -4058,6 +4073,14 @@ public final class WebUtil {
 	// }
 	// return result;
 	// }
+
+	public static UserOutVO getUser() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			return sessionScopeBean.getUser();
+		}
+		return null;
+	}
 
 	public static UserOutVO getUser(Long userId, Integer maxInstances) {
 		if (userId != null) {
@@ -4226,6 +4249,7 @@ public final class WebUtil {
 		return categories;
 	}
 
+
 	public static ArrayList<SelectItem> getVisibleSponsoringTypes(Long typeId) {
 		ArrayList<SelectItem> sponsoringTypes;
 		Collection<SponsoringTypeVO> sponsoringTypeVOs = null;
@@ -4250,7 +4274,6 @@ public final class WebUtil {
 		}
 		return sponsoringTypes;
 	}
-
 
 	public static ArrayList<SelectItem> getVisibleStaffCategories(Boolean person, Boolean organisation, Long categoryId) {
 		ArrayList<SelectItem> categories;
@@ -4413,6 +4436,8 @@ public final class WebUtil {
 		return null;
 	}
 
+
+
 	public static VisitTypeVO getVisitType(Long visitTypeId) {
 		// VisitTypeVO visitType = null; // (VisitTypeVO) getSelectionSetServiceCache(VisitTypeVO.class, id);
 		// if (visitType == null) {
@@ -4431,8 +4456,6 @@ public final class WebUtil {
 		// }
 		// return visitType;
 	}
-
-
 
 	public static String getWindowNameUniqueToken() {
 		return "_" + Long.toString((new Date()).getTime());
@@ -4463,6 +4486,10 @@ public final class WebUtil {
 		}
 	}
 
+	// public static String inputFieldVariableValueToJson(Object src) {
+	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
+	// }
+
 	public static String inventoryIdToName(Long id) {
 		if (id == null) {
 			return getNoInventoryPickedMessage();
@@ -4478,10 +4505,6 @@ public final class WebUtil {
 		}
 		return Messages.getString(MessageCodes.INVALID_INVENTORY_PICKED);
 	}
-
-	// public static String inputFieldVariableValueToJson(Object src) {
-	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-	// }
 
 	public static String inventoryOutVOToString(InventoryOutVO inventory) {
 		String result = CommonUtil.inventoryOutVOToString(inventory);
@@ -4688,6 +4711,12 @@ public final class WebUtil {
 		}
 	}
 
+	// public static long perfDebug(String label, long t1) {
+	// long t2 = System.currentTimeMillis();
+	// System.out.println(label + (t2 - t1) + " ms");
+	// return t2;
+	// }
+
 	public static String probandIdToName(Long id) {
 		if (id == null) {
 			return getNoProbandPickedMessage();
@@ -4704,10 +4733,11 @@ public final class WebUtil {
 		return Messages.getString(MessageCodes.INVALID_PROBAND_PICKED);
 	}
 
-	// public static long perfDebug(String label, long t1) {
-	// long t2 = System.currentTimeMillis();
-	// System.out.println(label + (t2 - t1) + " ms");
-	// return t2;
+	// private static void putSelectionSetServiceCache(Object key, Object value) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// sessionScopeBean.putSelectionSetServiceCache(key, value);
+	// }
 	// }
 
 	public static String probandOutVOToString(ProbandOutVO proband) {
@@ -4719,19 +4749,21 @@ public final class WebUtil {
 		}
 	}
 
-	// private static void putSelectionSetServiceCache(Object key, Object value) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// sessionScopeBean.putSelectionSetServiceCache(key, value);
-	// }
-	// }
-
 	public static void publishException(Exception e) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(context, e);
 		eventContext.getAttributes().put(EVENT_CONTEXT_VIEW_ID, context.getViewRoot().getViewId());
 		context.getApplication().publishEvent(context, ExceptionQueuedEvent.class, eventContext);
 	}
+
+	// public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {
+	// Iterator<Entry<Class, JsonSerializer>> it = serialisations.entrySet().iterator();
+	// while (it.hasNext()) {
+	// Entry<Class, JsonSerializer> shortcut = it.next();
+	// builder.registerTypeAdapter(shortcut.getKey(), shortcut.getValue());
+	// }
+	// return builder;
+	// }
 
 	public static String quoteJSString(String value, boolean quotes) {
 		StringBuilder sb;
@@ -4746,15 +4778,6 @@ public final class WebUtil {
 		}
 		return sb.toString();
 	}
-
-	// public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {
-	// Iterator<Entry<Class, JsonSerializer>> it = serialisations.entrySet().iterator();
-	// while (it.hasNext()) {
-	// Entry<Class, JsonSerializer> shortcut = it.next();
-	// builder.registerTypeAdapter(shortcut.getKey(), shortcut.getValue());
-	// }
-	// return builder;
-	// }
 
 	public static boolean resourceExists(String fileName) {
 		// https://stackoverflow.com/questions/19354297/a-uiinclude-that-doesnt-throw-an-error-if-file-not-found
@@ -4793,6 +4816,8 @@ public final class WebUtil {
 		}
 	}
 
+
+
 	public static String staffIdToName(Long id) {
 		if (id == null) {
 			return getNoStaffPickedMessage();
@@ -4819,8 +4844,6 @@ public final class WebUtil {
 			return getNoStaffPickedMessage();
 		}
 	}
-
-
 
 	public static Boolean stringToBoolean(String bool) {
 		if (!(bool == null || bool.trim().equals(CommonUtil.NO_SELECTION_VALUE))) {
@@ -4959,6 +4982,10 @@ public final class WebUtil {
 		}
 	}
 
+	// public static String voToJson(Object src) {
+	// return VO_JSON_SERIALIZER.toJson(src);
+	// }
+
 	public static String variablePeriodToString(VariablePeriodVO periodVO, Long days) {
 		if (periodVO != null) {
 			if (VariablePeriod.EXPLICIT.equals(periodVO.getPeriod())) {
@@ -4969,10 +4996,6 @@ public final class WebUtil {
 		}
 		return "";
 	}
-
-	// public static String voToJson(Object src) {
-	// return VO_JSON_SERIALIZER.toJson(src);
-	// }
 
 	private WebUtil() {
 	}

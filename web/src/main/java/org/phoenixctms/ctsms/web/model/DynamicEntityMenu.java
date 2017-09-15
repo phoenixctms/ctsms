@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
@@ -15,6 +16,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 
 	public static DynamicEntityMenu getCourseEntityMenu() {
 		return (new DynamicEntityMenu() {
+
+			@Override
+			protected DBModule getDbModule() {
+				return DBModule.COURSE_DB;
+			}
 
 			@Override
 			protected String getEntityHomeMenuItemLabel() {
@@ -42,7 +48,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.COURSE_JOURNAL;
 			}
 
@@ -77,6 +83,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		return (new DynamicEntityMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.INPUT_FIELD_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.INPUT_FIELD_HOME_MENU_ITEM_LABEL);
 			}
@@ -102,7 +113,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.INPUT_FIELD_JOURNAL;
 			}
 
@@ -137,6 +148,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		return (new DynamicEntityMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.INVENTORY_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.INVENTORY_HOME_MENU_ITEM_LABEL);
 			}
@@ -162,7 +178,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.INVENTORY_JOURNAL;
 			}
 
@@ -197,6 +213,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		return (new DynamicEntityMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.PROBAND_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.PROBAND_HOME_MENU_ITEM_LABEL);
 			}
@@ -222,7 +243,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.PROBAND_JOURNAL;
 			}
 
@@ -288,6 +309,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.STAFF_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.STAFF_HOME_MENU_ITEM_LABEL);
 			}
@@ -313,7 +339,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.STAFF_JOURNAL;
 			}
 
@@ -348,6 +374,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		return (new DynamicEntityMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.TRIAL_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.TRIAL_HOME_MENU_ITEM_LABEL);
 			}
@@ -373,7 +404,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.TRIAL_JOURNAL;
 			}
 
@@ -408,6 +439,11 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		return (new DynamicEntityMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.USER_DB;
+			}
+
+			@Override
 			protected String getEntityHomeMenuItemLabel() {
 				return Messages.getString(MessageCodes.USER_HOME_MENU_ITEM_LABEL);
 			}
@@ -433,7 +469,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.USER_JOURNAL;
 			}
 
@@ -471,21 +507,32 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 	@Override
 	public MenuModel createMenuModel(SessionScopeBean sessionScopeBean, int maxRecentEntities) {
 		MenuModel entityModel = new DefaultMenuModel();
-		String moduleValue = getModule().getValue();
-		addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
-		addMenuItems(sessionScopeBean, entityModel);
-		addNewEntityMenuItem(entityModel);
-		MenuItem entityHomeMenuItem = new MenuItem();
-		entityHomeMenuItem.setValue(getEntityHomeMenuItemLabel());
-		entityHomeMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " " + getHomeIcon());
-		entityHomeMenuItem.setOnclick(getEntityHomeMenuItemOnClick());
-		entityHomeMenuItem.setUrl("#");
-		entityHomeMenuItem.setId(ENTITY_HOME_MENU_ITEM_PREFIX + moduleValue);
-		entityModel.addMenuItem(entityHomeMenuItem);
+		String moduleValue = getDbModule().getValue();
+		if (WebUtil.getModuleEnabled(getDbModule())) {
+			addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
+			addMenuItems(sessionScopeBean, entityModel);
+			addNewEntityMenuItem(entityModel);
+			MenuItem entityHomeMenuItem = new MenuItem();
+			entityHomeMenuItem.setValue(getEntityHomeMenuItemLabel());
+			entityHomeMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " " + getHomeIcon());
+			entityHomeMenuItem.setOnclick(getEntityHomeMenuItemOnClick());
+			entityHomeMenuItem.setUrl("#");
+			entityHomeMenuItem.setId(ENTITY_HOME_MENU_ITEM_PREFIX + moduleValue);
+			entityModel.addMenuItem(entityHomeMenuItem);
+		} else {
+			MenuItem portalMenuItem = new MenuItem();
+			portalMenuItem.setValue(Messages.getString(MessageCodes.PORTAL_MENU_ITEM_LABEL));
+			portalMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-home");
+			portalMenuItem.setOnclick("openPortal()");
+			portalMenuItem.setUrl("#");
+			portalMenuItem.setId(RecentEntityMenuBase.PORTAL_MENU_ITEM_ID_PREFIX + moduleValue);
+			entityModel.addMenuItem(portalMenuItem);
+		}
 		return entityModel;
 	}
 
 	protected abstract String getEntityHomeMenuItemLabel();
 
 	protected abstract String getEntityHomeMenuItemOnClick();
+
 }

@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -568,12 +569,16 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB);
 	}
 
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isEditable() {
+		return WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB) && super.isEditable();
 	}
 
 	public boolean isHasImage() {
@@ -582,6 +587,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			return true;
 		}
 		return false;
+	}
+
+	public boolean isRemovable() {
+		return WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB) && super.isRemovable();
 	}
 
 	public boolean isTabEmphasized(String tab) {

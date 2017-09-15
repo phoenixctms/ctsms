@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.faces.component.UIComponent;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -77,7 +78,7 @@ public abstract class RecentEntityMenuBase {
 
 	protected final void addNewEntityMenuItem(MenuModel entityModel) {
 		if (entityModel != null) {
-			String moduleValue = getModule().getValue();
+			String moduleValue = getDbModule().getValue();
 			MenuItem newEntityMenuItem = new MenuItem();
 			newEntityMenuItem.setValue(getOpenNewEntityMenuItemLabel()); // .getDisplayName(true,TimeZone.LONG,userLocale));
 			newEntityMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-new");
@@ -90,12 +91,12 @@ public abstract class RecentEntityMenuBase {
 
 	protected final void addRecentEntityMenu(MenuModel entityModel, UserOutVO user, int maxRecentEntities) {
 		if (entityModel != null && user != null && maxRecentEntities > 0) {
-			String moduleValue = getModule().getValue();
+			String moduleValue = getDbModule().getValue();
 			Collection<JournalEntryOutVO> journalEntryVOs = null;
 			if (Settings.getBoolean(SettingCodes.ENABLE_RECENT_ENTITIES_MENU, Bundle.SETTINGS, DefaultSettings.ENABLE_RECENT_ENTITIES_MENU)) {
 				try {
 					journalEntryVOs = WebUtil.getServiceLocator().getJournalService()
-							.getRecent(WebUtil.getAuthentication(), getModule(), user.getId(), null, null, maxRecentEntities,
+							.getRecent(WebUtil.getAuthentication(), getJournalModule(), user.getId(), null, null, maxRecentEntities,
 									Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_RECENT, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_RECENT));
 				} catch (ServiceException e) {
 				} catch (AuthenticationException e) {
@@ -135,7 +136,7 @@ public abstract class RecentEntityMenuBase {
 	}
 
 	protected Submenu addSubMenu(SessionScopeBean sessionScopeBean, MenuModel entityModel) {
-		String moduleValue = getModule().getValue();
+		String moduleValue = getDbModule().getValue();
 		Submenu subMenu = new Submenu();
 		subMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " " + getHomeIcon());
 		subMenu.setLabel(Messages.getString(MessageCodes.HOME_SUBMENU_LABEL));
@@ -146,13 +147,15 @@ public abstract class RecentEntityMenuBase {
 
 	public abstract MenuModel createMenuModel(SessionScopeBean sessionScopeBean, int maxRecentEntities);
 
+	protected abstract DBModule getDbModule();
+
 	protected abstract String getEntityIcon(JournalEntryOutVO journalEntry);
 
 	protected abstract long getEntityId(JournalEntryOutVO journalEntry);
 
 	protected abstract String getHomeIcon();
 
-	protected abstract JournalModule getModule();
+	protected abstract JournalModule getJournalModule();
 
 	protected abstract String getOpenEntityJsName();
 

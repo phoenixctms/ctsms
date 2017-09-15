@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -611,7 +612,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(DBModule.STAFF_DB);
 	}
 
 	@Override
@@ -619,9 +620,14 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		return out != null;
 	}
 
+
+	public boolean isEditable() {
+		return WebUtil.getModuleEnabled(DBModule.STAFF_DB) && super.isEditable();
+	}
+
 	@Override
 	public boolean isRemovable() {
-		return isCreated() && !WebUtil.isUserIdentityIdLoggedIn(in.getId());
+		return WebUtil.getModuleEnabled(DBModule.STAFF_DB) && isCreated() && !WebUtil.isUserIdentityIdLoggedIn(in.getId());
 	}
 
 	public boolean isTabEmphasized(String tab) {

@@ -16,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -480,12 +481,17 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(DBModule.USER_DB);
 	}
 
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+
+	public boolean isEditable() {
+		return WebUtil.getModuleEnabled(DBModule.USER_DB) && super.isEditable();
 	}
 
 	public boolean isLdap1() {
@@ -498,7 +504,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	@Override
 	public boolean isRemovable() {
-		return isCreated() && !WebUtil.isUserIdLoggedIn(in.getId());
+		return WebUtil.getModuleEnabled(DBModule.USER_DB) && isCreated() && !WebUtil.isUserIdLoggedIn(in.getId());
 	}
 
 	public boolean isTabEmphasized(String tab) {

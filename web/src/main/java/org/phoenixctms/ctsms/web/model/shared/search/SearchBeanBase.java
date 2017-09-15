@@ -915,7 +915,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	@Override
 	public boolean isCreateable() {
-		return true;
+		return WebUtil.getModuleEnabled(getDBModule());
 	}
 
 	@Override
@@ -923,7 +923,15 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return out != null;
 	}
 
+	public boolean isEditable() {
+		return  WebUtil.getModuleEnabled(getDBModule()) && super.isEditable();
+	}
+
 	public abstract boolean isMarkUnEncrypted();
+
+	public boolean isRemovable() {
+		return  WebUtil.getModuleEnabled(getDBModule()) && super.isRemovable();
+	}
 
 	public boolean isTabEmphasized(String tab) {
 		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));

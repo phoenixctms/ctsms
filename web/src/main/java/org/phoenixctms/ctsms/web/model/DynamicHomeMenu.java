@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model;
 
+import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
@@ -45,6 +46,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.COURSE_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return journalEntry.getCourse().getCategory().getNodeStyleClass();
 			}
@@ -60,7 +66,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.COURSE_JOURNAL;
 			}
 
@@ -100,6 +106,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		return (new DynamicHomeMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.INPUT_FIELD_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return WebUtil.getInputFieldIcon(journalEntry.getInputField());
 			}
@@ -115,7 +126,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.INPUT_FIELD_JOURNAL;
 			}
 
@@ -190,6 +201,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.INVENTORY_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return journalEntry.getInventory().getCategory().getNodeStyleClass();
 			}
@@ -205,7 +221,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.INVENTORY_JOURNAL;
 			}
 
@@ -266,6 +282,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.PROBAND_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return journalEntry.getProband().getCategory().getNodeStyleClass();
 			}
@@ -281,7 +302,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.PROBAND_JOURNAL;
 			}
 
@@ -342,6 +363,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.STAFF_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return journalEntry.getStaff().getCategory().getNodeStyleClass();
 			}
@@ -357,7 +383,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.STAFF_JOURNAL;
 			}
 
@@ -438,6 +464,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.TRIAL_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return journalEntry.getTrial().getStatus().getNodeStyleClass();
 			}
@@ -453,7 +484,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.TRIAL_JOURNAL;
 			}
 
@@ -493,6 +524,11 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		return (new DynamicHomeMenu() {
 
 			@Override
+			protected DBModule getDbModule() {
+				return DBModule.USER_DB;
+			}
+
+			@Override
 			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
 				return null;
 			}
@@ -508,7 +544,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 
 			@Override
-			protected JournalModule getModule() {
+			protected JournalModule getJournalModule() {
 				return JournalModule.USER_JOURNAL;
 			}
 
@@ -551,17 +587,19 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 	@Override
 	public MenuModel createMenuModel(SessionScopeBean sessionScopeBean, int maxRecentEntities) {
 		MenuModel entityModel = new DefaultMenuModel();
-		String moduleValue = getModule().getValue();
-		addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
-		addMenuItems(sessionScopeBean, entityModel);
-		MenuItem searchMenuItem = new MenuItem();
-		searchMenuItem.setValue(Messages.getString(MessageCodes.SEARCH_MENU_ITEM_LABEL));
-		searchMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-search");
-		searchMenuItem.setOnclick(getSearchMenuItemOnClick());
-		searchMenuItem.setUrl("#");
-		searchMenuItem.setId("searchMenuItem_" + moduleValue);
-		entityModel.addMenuItem(searchMenuItem);
-		addNewEntityMenuItem(entityModel);
+		String moduleValue = getDbModule().getValue();
+		if (WebUtil.getModuleEnabled(getDbModule())) {
+			addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
+			addMenuItems(sessionScopeBean, entityModel);
+			MenuItem searchMenuItem = new MenuItem();
+			searchMenuItem.setValue(Messages.getString(MessageCodes.SEARCH_MENU_ITEM_LABEL));
+			searchMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-search");
+			searchMenuItem.setOnclick(getSearchMenuItemOnClick());
+			searchMenuItem.setUrl("#");
+			searchMenuItem.setId("searchMenuItem_" + moduleValue);
+			entityModel.addMenuItem(searchMenuItem);
+			addNewEntityMenuItem(entityModel);
+		}
 		MenuItem portalMenuItem = new MenuItem();
 		portalMenuItem.setValue(Messages.getString(MessageCodes.PORTAL_MENU_ITEM_LABEL));
 		portalMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-home");
@@ -571,6 +609,8 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		entityModel.addMenuItem(portalMenuItem);
 		return entityModel;
 	}
+
+
 
 	protected abstract String getSearchMenuItemOnClick();
 }
