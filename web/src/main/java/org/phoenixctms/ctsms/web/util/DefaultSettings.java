@@ -542,6 +542,10 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_INPUT_FIELD_MODULE = false;
 	public static final boolean ENABLE_USER_MODULE = false;
 
+	public static final Long PROBAND_RATING_PRESET = 3l;
+	public static final Long PROBAND_RATING_MAX_PRESET = 5l;
+	public static final boolean SHOW_PROBAND_RATING = false;
+
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
 
 	private DefaultSettings() {

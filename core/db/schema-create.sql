@@ -1030,6 +1030,8 @@
         VERSION BIGINT not null,
         AUTO_DELETE_DEADLINE DATE,
         DEFERRED_DELETE BOOLEAN not null,
+        RATING BIGINT,
+        RATING_MAX BIGINT,
         PERSON_PARTICULARS_FK BIGINT unique,
         MODIFIED_USER_FK BIGINT not null,
         DEPARTMENT_FK BIGINT not null,

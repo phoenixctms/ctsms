@@ -91,6 +91,7 @@ extends InventoryBookingDaoBase
 					throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
+		boolean distinctRoot = false;
 		Criteria courseCriteria = null;
 		if (courseCategoryId != null || courseDepartmentId != null || staffId != null) {
 			courseCriteria = bookingCriteria.createCriteria("course", CriteriaSpecification.INNER_JOIN);
@@ -103,7 +104,8 @@ extends InventoryBookingDaoBase
 			if (staffId != null) {
 				Criteria participationCriteria = courseCriteria.createCriteria("participations", CriteriaSpecification.LEFT_JOIN);
 				participationCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
-				bookingCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+				// bookingCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+				distinctRoot = true;
 			}
 		} else {
 			bookingCriteria.add(Restrictions.isNotNull("course"));
@@ -112,7 +114,11 @@ extends InventoryBookingDaoBase
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
 			.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
 		}
-		return bookingCriteria.list();
+		if (distinctRoot) {
+			return CriteriaUtil.listDistinctRoot(bookingCriteria, this);
+		} else {
+			return bookingCriteria.list();
+		}
 	}
 
 	@Override

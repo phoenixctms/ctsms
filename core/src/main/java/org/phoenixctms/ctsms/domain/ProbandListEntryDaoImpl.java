@@ -135,6 +135,7 @@ extends ProbandListEntryDaoBase
 		// http://stackoverflow.com/questions/1648426/hibernate-detached-queries-as-a-part-of-the-criteria-query
 		// https://forum.hibernate.org/viewtopic.php?p=2317841#2317841
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
+		boolean distinctRoot = false;
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
@@ -154,12 +155,17 @@ extends ProbandListEntryDaoBase
 				subQuery.setProjection(Projections.max("id"));
 				statusEntryCriteria.add(Subqueries.propertyEq("id", subQuery));
 			} else {
-				listEntryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+				// listEntryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+				distinctRoot = true;
 			}
 		}
 		listEntryCriteria.addOrder(Order.asc("trial"));
 		listEntryCriteria.addOrder(Order.asc("position"));
-		return listEntryCriteria.list();
+		if (distinctRoot) {
+			return CriteriaUtil.listDistinctRoot(listEntryCriteria, this, "trial.id", "position");
+		} else {
+			return listEntryCriteria.list();
+		}
 	}
 
 	@Override

@@ -305,6 +305,11 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_GENDER_NOT_NULL = "proband_gender_not_null";
 	public final static String PROBAND_CITIZENSHIP_NOT_NULL = "proband_citizenship_not_null";
 	// public final static String PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE = "proband_date_of_birth_in_the_future";
+	public final static String PROBAND_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO = "proband_rating_less_than_zero";
+	public final static String PROBAND_RATING_REQUIRED = "proband_rating_required";
+	public final static String PROBAND_RATING_LESS_THAN_ZERO = "proband_rating_less_than_zero";
+	public final static String PROBAND_RATING_GREATER_THAN_RATING_MAX = "proband_rating_greater_than_rating_max";
+	public final static String PROBAND_RATING_NOT_NULL = "proband_rating_not_null";
 	public final static String CANNOT_DECRYPT_PROBAND_TAG_VALUE = "cannot_decrypt_proband_tag_value";
 	public final static String ADDRESS_TYPE_NOT_FOR_ANIMAL_ENTRIES = "address_type_not_for_animal_entries";
 	public final static String ADDRESS_TYPE_NOT_FOR_PERSON_ENTRIES = "address_type_not_for_person_entries";

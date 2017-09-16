@@ -753,6 +753,21 @@ extends ProbandServiceBase
 			}
 		}
 
+		if (probandIn.getRatingMax() != null) {
+			if (probandIn.getRatingMax() <= 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO);
+			} else if (probandIn.getRating() == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_REQUIRED);
+			} else {
+				if (probandIn.getRating() < 0l) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_LESS_THAN_ZERO);
+				} else if (probandIn.getRating() > probandIn.getRatingMax()) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_GREATER_THAN_RATING_MAX);
+				}
+			}
+		} else if (probandIn.getRating() != null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_NOT_NULL);
+		}
 		//		if (DateCalc.getStartOfDay(probandIn.getDateOfBirth()).compareTo(new Date()) > 0) {
 		//			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE);
 		//		}

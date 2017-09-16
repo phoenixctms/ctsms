@@ -522,6 +522,28 @@ public final class CriteriaUtil {
 		}
 	}
 
+	public static List listDistinctRoot(Criteria criteria,Object dao,String... fields) throws Exception {
+		if (dao != null && criteria != null) {
+			criteria.setProjection(null);
+			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+			Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
+			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
+			if (fields != null) {
+				for (int i = 0; i< fields.length; i++) {
+					projectionList.add(Projections.property(fields[i]));
+				}
+			}
+			List items = criteria.setProjection(Projections.distinct(projectionList)).list();
+			Iterator it = items.iterator();
+			ArrayList result = new ArrayList(items.size());
+			while (it.hasNext()) {
+				result.add(loadMethod.invoke(dao, ((Object[]) it.next())[0]));
+			}
+			return result;
+		}
+		return null;
+	}
+
 	public static List listDistinctRootPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, Object dao) throws Exception {
 		Criteria criteria;
 		if (dao != null && criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
@@ -584,9 +606,13 @@ public final class CriteriaUtil {
 	}
 
 	public static <T> ArrayList<T> listEvents(Criteria reminderItemCriteria, Date from, Date to, Boolean notify) {
+		return listEvents(reminderItemCriteria != null ? reminderItemCriteria.list() : null, from, to, notify);
+	}
+
+	public static <T> ArrayList<T> listEvents(List reminderItems, Date from, Date to, Boolean notify) {
 		ArrayList<T> resultSet = new ArrayList<T>();
-		if (reminderItemCriteria != null) {
-			Iterator<T> it = reminderItemCriteria.list().iterator();
+		if (reminderItems != null) {
+			Iterator<T> it = reminderItems.iterator();
 			while (it.hasNext()) {
 				ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(it.next());
 				if (reminderItem.isActive()) {

@@ -417,12 +417,13 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	@Override
-	protected void initSpecificSets(boolean deleted, boolean select) {
+	protected void initSpecificSets(boolean reset, boolean deleted, boolean select) {
 		clearCaches(select);
 		probandGroups = WebUtil.getProbandGroups(in.getTrialId());
 		filterProbandGroups = new ArrayList<SelectItem>(probandGroups);
 		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		probandListEntryModel.setTrialId(in.getTrialId());
+		probandListEntryModel.initSets(reset);
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);
 		if (isTrialLocked()) {

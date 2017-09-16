@@ -51,8 +51,9 @@ extends ProbandGroupDaoBase
 		}
 		probandGroupCriteria.addOrder(Order.asc("trial"));
 		probandGroupCriteria.addOrder(Order.asc("title"));
-		probandGroupCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		return probandGroupCriteria.list();
+		// probandGroupCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return probandGroupCriteria.list();
+		return CriteriaUtil.listDistinctRoot(probandGroupCriteria, this, "trial.id", "title");
 	}
 
 	@Override

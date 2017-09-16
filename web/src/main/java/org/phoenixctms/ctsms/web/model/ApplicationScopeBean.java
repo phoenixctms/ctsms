@@ -530,6 +530,10 @@ public class ApplicationScopeBean {
 		return CommonUtil.HTML_SYSTEM_MESSAGES_COMMENTS;
 	}
 
+	public boolean isShowProbandRating() {
+		return Settings.getBoolean(SettingCodes.SHOW_PROBAND_RATING, Bundle.SETTINGS, DefaultSettings.SHOW_PROBAND_RATING);
+	}
+
 	public boolean isTrustedHost() {
 		return WebUtil.isTrustedHost();
 	}

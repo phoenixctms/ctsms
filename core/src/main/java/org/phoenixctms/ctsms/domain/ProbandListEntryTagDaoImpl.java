@@ -119,8 +119,9 @@ extends ProbandListEntryTagDaoBase
 			.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		applySortOrders(listEntryTagCriteria);
-		listEntryTagCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		return listEntryTagCriteria.list();
+		// listEntryTagCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return listEntryTagCriteria.list();
+		return CriteriaUtil.listDistinctRoot(listEntryTagCriteria, this, "trial.id", "position");
 	}
 
 	@Override

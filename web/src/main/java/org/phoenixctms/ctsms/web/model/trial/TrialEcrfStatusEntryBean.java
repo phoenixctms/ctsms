@@ -60,6 +60,7 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		// limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
 		this.trialId = id;
 		probandListEntryModel.setTrialId(id);
+		probandListEntryModel.initSets(true);
 		filterProbandGroups = WebUtil.getProbandGroups(id);
 		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 	}

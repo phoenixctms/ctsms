@@ -81,6 +81,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setPrefixedTitle1(out.getPrefixedTitle1());
 			in.setPrefixedTitle2(out.getPrefixedTitle2());
 			in.setPrefixedTitle3(out.getPrefixedTitle3());
+			in.setRating(out.getRating());
+			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax() :
+				Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
 			// in.setRecruitmentForOtherTrialsAllowed(out.getRecruitmentForOtherTrialsAllowed());
 			ArrayList<Long> childIds = new ArrayList<Long>(childrenVOs.size());
 			Iterator<ProbandOutVO> it = childrenVOs.iterator();
@@ -144,6 +147,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			result.setPrefixedTitle1(in.getPrefixedTitle1());
 			result.setPrefixedTitle2(in.getPrefixedTitle2());
 			result.setPrefixedTitle3(in.getPrefixedTitle3());
+			result.setRating(in.getRating());
+			result.setRatingMax(in.getRatingMax() != null ? in.getRatingMax() :
+				Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
 			// result.setPrivacyConsentStatus(value)
 			// result.setRecruitmentForOtherTrialsAllowed(in.isRecruitmentForOtherTrialsAllowed());
 			// result.setVersion(value);
@@ -196,6 +202,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setPrefixedTitle1(Messages.getString(MessageCodes.PROBAND_PREFIXED_TITLE1_PRESET));
 			in.setPrefixedTitle2(Messages.getString(MessageCodes.PROBAND_PREFIXED_TITLE2_PRESET));
 			in.setPrefixedTitle3(Messages.getString(MessageCodes.PROBAND_PREFIXED_TITLE3_PRESET));
+			in.setRating(Settings.getLongNullable(SettingCodes.PROBAND_RATING_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_PRESET));
+			in.setRatingMax(Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
 			// in.setRecruitmentForOtherTrialsAllowed(Settings.getBoolean(SettingCodes.PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET, Bundle.SETTINGS,
 			// DefaultSettings.PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET));
 			in.setChildIds(new ArrayList<Long>());
@@ -966,6 +974,13 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setPrefixedTitle1(null);
 			in.setPrefixedTitle2(null);
 			in.setPrefixedTitle3(null);
+		}
+		if (in.getRatingMax() != null) {
+			if (in.getRating() == null) {
+				in.setRating(0l);
+			}
+		} else {
+			in.setRating(null);
 		}
 		in.setChildIds(new ArrayList<Long>(childrenMultiPicker.getSelectionIds()));
 	}

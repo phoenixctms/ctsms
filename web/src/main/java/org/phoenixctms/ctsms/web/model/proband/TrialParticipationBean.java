@@ -172,8 +172,9 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 
 
 	@Override
-	protected void initSpecificSets(boolean deleted, boolean select) {
+	protected void initSpecificSets(boolean reset, boolean deleted, boolean select) {
 		probandListEntryModel.setProbandId(in.getProbandId());
+		probandListEntryModel.initSets(reset);
 		proband = WebUtil.getProband(in.getProbandId(), null, null, null);
 		onTrialChanged();
 	}

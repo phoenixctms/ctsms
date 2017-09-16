@@ -65,26 +65,6 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		return model;
 	}
 
-	private static Collection<InquiryValueOutVO> getInquiryInputFieldValues(ProbandListEntryOutVO listEntry, Long trialId, Long columnInquiryInputFieldId) {
-		ProbandOutVO proband;
-		if (columnInquiryInputFieldId != null && listEntry != null && (proband = listEntry.getProband()) != null) {
-			try {
-				return WebUtil
-						.getServiceLocator()
-						.getProbandService()
-						.getInquiryInputFieldValues(WebUtil.getAuthentication(), trialId,
-								Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null, proband.getId(),
-								columnInquiryInputFieldId);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return new ArrayList<InquiryValueOutVO>();
-	}
-
 	private static String getInquiryLabel(InquiryOutVO inquiry, boolean withFieldName) {
 		if (inquiry != null) {
 			String category = inquiry.getCategory();
@@ -105,38 +85,6 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		return "";
 	}
 
-	private static InquiryValueOutVO getInquiryValue(ProbandListEntryOutVO listEntry, Long columnInquiryId) {
-		ProbandOutVO proband;
-		if (columnInquiryId != null && listEntry != null && (proband = listEntry.getProband()) != null) {
-			try {
-				return WebUtil.getServiceLocator().getProbandService().getInquiryValue(WebUtil.getAuthentication(), proband.getId(), columnInquiryId).getPageValues().iterator()
-						.next();
-			} catch (NoSuchElementException e) {
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return null;
-	}
-
-	private static Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldValues(ProbandListEntryOutVO listEntry, Long columnProbandListEntryTagInputFieldId) {
-		if (listEntry != null && columnProbandListEntryTagInputFieldId != null) {
-			try {
-				return WebUtil.getServiceLocator().getTrialService()
-						.getProbandListEntryTagInputFieldValues(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagInputFieldId);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return new ArrayList<ProbandListEntryTagValueOutVO>();
-	}
-
 	private static String getProbandListEntryTagLabel(ProbandListEntryTagOutVO listEntryTag, boolean withFieldName) {
 		if (listEntryTag != null) {
 			if (withFieldName) {
@@ -148,22 +96,6 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		return "";
 	}
 
-	private static ProbandListEntryTagValueOutVO getProbandListEntryTagValue(ProbandListEntryOutVO listEntry, Long columnProbandListEntryTagId) {
-		if (listEntry != null && columnProbandListEntryTagId != null) {
-			try {
-				return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValue(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagId)
-						.getPageValues().iterator().next();
-			} catch (NoSuchElementException e) {
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return null;
-	}
-
 	private static boolean isFieldTypeBoolean(InputFieldTypeVO fieldType) {
 		if (fieldType != null) {
 			return InputFieldType.CHECKBOX.equals(fieldType.getType());
@@ -172,9 +104,13 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	}
 
 	private Long trialId;
+
 	private ProbandGroupOutVO probandGroup;
+
 	private Long probandId;
+
 	private ArrayList<SelectItem> probandListEntryTags;
+
 	private ArrayList<SelectItem> inquiries;
 	private ArrayList<SelectItem> probandListEntryTagInputFields;
 	private ArrayList<SelectItem> inquiryInputFields;
@@ -192,6 +128,10 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	private boolean showProbandListEntryTagColumn;
 	private boolean showInquiryColumn;
 	private boolean total;
+	private HashMap<Long, HashMap<Long,HashMap<Long,Collection<InquiryValueOutVO>>>> inquiryValuesCache;
+	private HashMap<Long,HashMap<Long,InquiryValueOutVO>> inquiryValueCache;
+	private HashMap<Long,HashMap<Long,Collection<ProbandListEntryTagValueOutVO>>> probandListEntryTagValuesCache;
+	private HashMap<Long, HashMap<Long,ProbandListEntryTagValueOutVO>> probandListEntryTagValueCache;
 
 	public ProbandListEntryModel(boolean showProbandListEntryTagColumn, boolean showInquiryColumn, boolean total) {
 		super();
@@ -199,8 +139,12 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		this.showInquiryColumn = showInquiryColumn;
 		this.total = total;
 		payOffSummaryCache = new HashMap<Long, MoneyTransferSummaryVO>();
+		inquiryValuesCache = new HashMap<Long, HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>>();
+		inquiryValueCache = new HashMap<Long, HashMap<Long, InquiryValueOutVO>>();
+		probandListEntryTagValuesCache = new HashMap<Long, HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>>();
+		probandListEntryTagValueCache = new HashMap<Long, HashMap<Long, ProbandListEntryTagValueOutVO>>();
 		resetRows();
-		initSets();
+		initSets(true);
 	}
 
 	public ProbandListEntryModel(ProbandGroupOutVO probandGroup, boolean showProbandListEntryTagColumn, boolean showInquiryColumn, boolean total) {
@@ -209,8 +153,13 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		this.showInquiryColumn = showInquiryColumn;
 		this.total = total;
 		payOffSummaryCache = new HashMap<Long, MoneyTransferSummaryVO>();
+		inquiryValuesCache = new HashMap<Long, HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>>();
+		inquiryValueCache = new HashMap<Long, HashMap<Long, InquiryValueOutVO>>();
+		probandListEntryTagValuesCache = new HashMap<Long, HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>>();
+		probandListEntryTagValueCache = new HashMap<Long, HashMap<Long, ProbandListEntryTagValueOutVO>>();
 		resetRows();
 		setProbandGroup(probandGroup);
+		initSets(true);
 	}
 
 	public void clearSelectedColumns() {
@@ -239,7 +188,7 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	}
 
 	public Collection<InquiryValueOutVO> getAllTrialsInquiryInputFieldValues(ProbandListEntryOutVO listEntry) {
-		return getInquiryInputFieldValues(listEntry, null, columnInquiryInputFieldId);
+		return getInquiryInputFieldValuesCached(listEntry, null, columnInquiryInputFieldId);
 	}
 
 	public String getAllTrialsInquiryValueLabel(InquiryValueOutVO inquiryValue, boolean allTrials) {
@@ -298,17 +247,95 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	public Collection<InquiryValueOutVO> getInquiryInputFieldValues(ProbandListEntryOutVO listEntry) {
 		TrialOutVO trial = listEntry.getTrial();
 		if (trial != null) {
-			return getInquiryInputFieldValues(listEntry, trial.getId(), columnInquiryInputFieldId);
+			return getInquiryInputFieldValuesCached(listEntry, trial.getId(), columnInquiryInputFieldId);
+		}
+		return new ArrayList<InquiryValueOutVO>();
+	}
+
+	private  Collection<InquiryValueOutVO> getInquiryInputFieldValuesCached(ProbandListEntryOutVO listEntry, Long trialId, Long columnInquiryInputFieldId) {
+		ProbandOutVO proband;
+		if (columnInquiryInputFieldId != null && listEntry != null && (proband = listEntry.getProband()) != null) {
+			HashMap<Long,HashMap<Long,Collection<InquiryValueOutVO>>> trialMap;
+			if (inquiryValuesCache.containsKey(trialId)) {
+				trialMap = inquiryValuesCache.get(trialId);
+			} else {
+				trialMap = new HashMap<Long,HashMap<Long,Collection<InquiryValueOutVO>>>();
+				inquiryValuesCache.put(trialId, trialMap);
+			}
+			HashMap<Long,Collection<InquiryValueOutVO>> probandMap;
+			if (trialMap.containsKey(proband.getId())) {
+				probandMap = trialMap.get(proband.getId());
+			} else {
+				probandMap = new HashMap<Long,Collection<InquiryValueOutVO>>();
+				trialMap.put(proband.getId(), probandMap);
+			}
+			if (probandMap.containsKey(columnInquiryInputFieldId)) {
+				return probandMap.get(columnInquiryInputFieldId);
+			} else {
+				Collection<InquiryValueOutVO> result = new ArrayList<InquiryValueOutVO>();
+				try {
+					// long t1 = System.currentTimeMillis();
+					result = WebUtil
+							.getServiceLocator()
+							.getProbandService()
+							.getInquiryInputFieldValues(WebUtil.getAuthentication(), trialId,
+									Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null, proband.getId(),
+									columnInquiryInputFieldId);
+					// WebUtil.perfDebug("getInquiryInputFieldValues", t1);
+				} catch (ServiceException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				} catch (AuthorisationException e) {
+				} catch (IllegalArgumentException e) {
+				}
+				probandMap.put(columnInquiryInputFieldId,result);
+				return result;
+			}
 		}
 		return new ArrayList<InquiryValueOutVO>();
 	}
 
 	public InquiryValueOutVO getInquiryValue(ProbandListEntryOutVO listEntry) {
-		return getInquiryValue(listEntry, columnInquiryId);
+		return getInquiryValueCached(listEntry, columnInquiryId);
+	}
+
+	private  InquiryValueOutVO getInquiryValueCached(ProbandListEntryOutVO listEntry, Long columnInquiryId) {
+		ProbandOutVO proband;
+		if (columnInquiryId != null && listEntry != null && (proband = listEntry.getProband()) != null) {
+			HashMap<Long, InquiryValueOutVO> inquiryMap;
+			if (inquiryValueCache.containsKey(proband.getId())) {
+				inquiryMap = inquiryValueCache.get(proband.getId());
+			} else {
+				inquiryMap = new HashMap<Long, InquiryValueOutVO>();
+				inquiryValueCache.put(proband.getId(), inquiryMap);
+			}
+			if (inquiryMap.containsKey(columnInquiryId)) {
+				return inquiryMap.get(columnInquiryId);
+			} else {
+				InquiryValueOutVO result = null;
+				try {
+					// long t1 = System.currentTimeMillis();
+					result = WebUtil.getServiceLocator().getProbandService().getInquiryValue(WebUtil.getAuthentication(), proband.getId(), columnInquiryId)
+							.getPageValues().iterator()
+							.next();
+					// WebUtil.perfDebug("getInquiryValue", t1);
+					// return result;
+				} catch (NoSuchElementException e) {
+				} catch (ServiceException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				} catch (AuthorisationException e) {
+				} catch (IllegalArgumentException e) {
+				}
+				inquiryMap.put(columnInquiryId,result);
+				return result;
+			}
+		}
+		return null;
 	}
 
 	public String getInquiryValueString(ProbandListEntryOutVO listEntry) {
-		return inquiryValueToString(getInquiryValue(listEntry, columnInquiryId));
+		return inquiryValueToString(getInquiryValueCached(listEntry, columnInquiryId));
 	}
 
 	@Override
@@ -353,35 +380,94 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	}
 
 	public ProbandListEntryTagValueOutVO getProbandListEntryTagAValue(ProbandListEntryOutVO listEntry) {
-		return getProbandListEntryTagValue(listEntry, columnProbandListEntryTagAId);
+		return getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagAId);
 	}
 
 	public String getProbandListEntryTagAValueString(ProbandListEntryOutVO listEntry) {
-		return probandListEntryTagValueToString(getProbandListEntryTagValue(listEntry, columnProbandListEntryTagAId));
+		return probandListEntryTagValueToString(getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagAId));
 	}
 
 	public ProbandListEntryTagValueOutVO getProbandListEntryTagBValue(ProbandListEntryOutVO listEntry) {
-		return getProbandListEntryTagValue(listEntry, columnProbandListEntryTagBId);
+		return getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagBId);
 	}
 
 	public String getProbandListEntryTagBValueString(ProbandListEntryOutVO listEntry) {
-		return probandListEntryTagValueToString(getProbandListEntryTagValue(listEntry, columnProbandListEntryTagBId));
+		return probandListEntryTagValueToString(getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagBId));
 	}
 
 	public Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldAValues(ProbandListEntryOutVO listEntry) {
-		return getProbandListEntryTagInputFieldValues(listEntry, columnProbandListEntryTagInputFieldAId);
+		return getProbandListEntryTagInputFieldValuesCached(listEntry, columnProbandListEntryTagInputFieldAId);
 	}
 
 	public Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldBValues(ProbandListEntryOutVO listEntry) {
-		return getProbandListEntryTagInputFieldValues(listEntry, columnProbandListEntryTagInputFieldBId);
+		return getProbandListEntryTagInputFieldValuesCached(listEntry, columnProbandListEntryTagInputFieldBId);
 	}
 
 	public ArrayList<SelectItem> getProbandListEntryTagInputFields() {
 		return probandListEntryTagInputFields;
 	}
 
+	private  Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldValuesCached(ProbandListEntryOutVO listEntry, Long columnProbandListEntryTagInputFieldId) {
+		if (listEntry != null && columnProbandListEntryTagInputFieldId != null) {
+			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryMap;
+			if (probandListEntryTagValuesCache.containsKey(listEntry.getId())) {
+				listEntryMap = probandListEntryTagValuesCache.get(listEntry.getId());
+			} else {
+				listEntryMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
+				probandListEntryTagValuesCache.put(listEntry.getId(),listEntryMap);
+			}
+			if (listEntryMap.containsKey(columnProbandListEntryTagInputFieldId)) {
+				return listEntryMap.get(columnProbandListEntryTagInputFieldId);
+			} else {
+				Collection<ProbandListEntryTagValueOutVO> result = new ArrayList<ProbandListEntryTagValueOutVO>();
+				try {
+					result = WebUtil.getServiceLocator().getTrialService()
+							.getProbandListEntryTagInputFieldValues(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagInputFieldId);
+				} catch (ServiceException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				} catch (AuthorisationException e) {
+				} catch (IllegalArgumentException e) {
+				}
+				listEntryMap.put(columnProbandListEntryTagInputFieldId, result);
+				return result;
+			}
+		}
+		return new ArrayList<ProbandListEntryTagValueOutVO>();
+	}
+
 	public ArrayList<SelectItem> getProbandListEntryTags() {
 		return probandListEntryTags;
+	}
+
+	private  ProbandListEntryTagValueOutVO getProbandListEntryTagValueCached(ProbandListEntryOutVO listEntry, Long columnProbandListEntryTagId) {
+		if (listEntry != null && columnProbandListEntryTagId != null) {
+			HashMap<Long, ProbandListEntryTagValueOutVO> listEntryMap;
+			if (probandListEntryTagValueCache.containsKey(listEntry.getId())) {
+				listEntryMap = probandListEntryTagValueCache.get(listEntry.getId());
+			} else {
+				listEntryMap = new HashMap<Long, ProbandListEntryTagValueOutVO>();
+				probandListEntryTagValueCache.put(listEntry.getId(),listEntryMap);
+			}
+			if (listEntryMap.containsKey(columnProbandListEntryTagId)) {
+				return listEntryMap.get(columnProbandListEntryTagId);
+			} else {
+				ProbandListEntryTagValueOutVO result = null;
+				try {
+					result = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValue(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagId)
+							.getPageValues().iterator().next();
+				} catch (NoSuchElementException e) {
+				} catch (ServiceException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				} catch (AuthorisationException e) {
+				} catch (IllegalArgumentException e) {
+				}
+				listEntryMap.put(columnProbandListEntryTagId,result);
+				return result;
+			}
+		}
+		return null;
 	}
 
 	public String getProbandListEntryTagValueLabel(ProbandListEntryTagValueOutVO listEntryTagValue) {
@@ -397,8 +483,10 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		return trialId;
 	}
 
-	private void initSets() {
+	public void initSets(boolean reset) {
 		payOffSummaryCache.clear();
+		probandListEntryTagValuesCache.clear();
+		probandListEntryTagValueCache.clear();
 		Collection<ProbandListEntryTagOutVO> probandListEntryTagVOs = null;
 		if (showProbandListEntryTagColumn && (trialId != null || probandId != null)) {
 			try {
@@ -426,51 +514,58 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 			probandListEntryTags = new ArrayList<SelectItem>();
 			probandListEntryTagInputFields = new ArrayList<SelectItem>();
 		}
-		Collection<InquiryOutVO> inquiryVOs = null;
-		if (showInquiryColumn) {
-			if (probandId != null) {
-				try {
-					inquiryVOs = WebUtil
-							.getServiceLocator()
-							.getTrialService()
-							.getInquiryList(WebUtil.getAuthentication(), trialId,
-									Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null, probandId);
-				} catch (ServiceException e) {
-				} catch (AuthenticationException e) {
-					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
-				}
-			} else if (trialId != null) {
-				try {
-					inquiryVOs = WebUtil
-							.getServiceLocator()
-							.getTrialService()
-							.getInquiryList(WebUtil.getAuthentication(), trialId,
-									Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null);
-				} catch (ServiceException e) {
-				} catch (AuthenticationException e) {
-					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
+		if (reset) {
+			inquiryValuesCache.clear();
+			inquiryValueCache.clear();
+			Collection<InquiryOutVO> inquiryVOs = null;
+			if (showInquiryColumn) {
+				// long t1 = System.currentTimeMillis();
+				if (probandId != null) {
+					try {
+						inquiryVOs = WebUtil
+								.getServiceLocator()
+								.getTrialService()
+								.getInquiryList(WebUtil.getAuthentication(), trialId,
+										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null, probandId);
+					} catch (ServiceException e) {
+					} catch (AuthenticationException e) {
+						WebUtil.publishException(e);
+					} catch (AuthorisationException e) {
+					} catch (IllegalArgumentException e) {
+					}
+					// WebUtil.perfDebug("getInquiryList", t1);
+				} else if (trialId != null) {
+					try {
+						inquiryVOs = WebUtil
+								.getServiceLocator()
+								.getTrialService()
+								.getInquiryList(WebUtil.getAuthentication(), trialId,
+										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null);
+					} catch (ServiceException e) {
+					} catch (AuthenticationException e) {
+						WebUtil.publishException(e);
+					} catch (AuthorisationException e) {
+					} catch (IllegalArgumentException e) {
+					}
+					// WebUtil.perfDebug("getInquiryList", t1);
 				}
 			}
-		}
-		if (inquiryVOs != null) {
-			inquiries = new ArrayList<SelectItem>(inquiryVOs.size());
-			inquiryInputFields = new ArrayList<SelectItem>(inquiryVOs.size());
-			HashSet<Long> dupeCheck = new HashSet<Long>(inquiryVOs.size());
-			Iterator<InquiryOutVO> it = inquiryVOs.iterator();
-			while (it.hasNext()) {
-				InquiryOutVO inquiryVO = it.next();
-				if (dupeCheck.add(inquiryVO.getField().getId())) {
-					inquiryInputFields.add(new SelectItem(Long.toString(inquiryVO.getField().getId()), inquiryVO.getField().getName()));
+			if (inquiryVOs != null) {
+				inquiries = new ArrayList<SelectItem>(inquiryVOs.size());
+				inquiryInputFields = new ArrayList<SelectItem>(inquiryVOs.size());
+				HashSet<Long> dupeCheck = new HashSet<Long>(inquiryVOs.size());
+				Iterator<InquiryOutVO> it = inquiryVOs.iterator();
+				while (it.hasNext()) {
+					InquiryOutVO inquiryVO = it.next();
+					if (dupeCheck.add(inquiryVO.getField().getId())) {
+						inquiryInputFields.add(new SelectItem(Long.toString(inquiryVO.getField().getId()), inquiryVO.getField().getName()));
+					}
+					inquiries.add(new SelectItem(Long.toString(inquiryVO.getId()), getInquiryLabel(inquiryVO, true)));
 				}
-				inquiries.add(new SelectItem(Long.toString(inquiryVO.getId()), getInquiryLabel(inquiryVO, true)));
+			} else {
+				inquiries = new ArrayList<SelectItem>();
+				inquiryInputFields = new ArrayList<SelectItem>();
 			}
-		} else {
-			inquiries = new ArrayList<SelectItem>();
-			inquiryInputFields = new ArrayList<SelectItem>();
 		}
 	}
 
@@ -570,20 +665,20 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		this.probandGroup = probandGroup;
 		this.trialId = (probandGroup == null ? null : probandGroup.getTrial().getId());
 		this.probandId = null;
-		initSets();
+		// initSets();
 	}
 
 	public void setProbandId(Long probandId) {
 		this.probandId = probandId;
 		this.trialId = null;
 		this.probandGroup = null;
-		initSets();
+		// initSets();
 	}
 
 	public void setTrialId(Long trialId) {
 		this.trialId = trialId;
 		this.probandId = null;
 		this.probandGroup = null;
-		initSets();
+		// initSets();
 	}
 }

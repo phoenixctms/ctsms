@@ -189,6 +189,20 @@
 								name="person"
 								value="#{probandListEntryBean.trial.type.person}" />								
 						</ui:include>
+						
+				<p:column sortBy="#{probandListEntry.vo.proband.rating}" rendered="#{applicationScopeBean.showProbandRating}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.proband_list_proband_list_rating_column}" />
+					</f:facet>
+								<p:rating
+									rendered="#{not empty probandListEntry.vo.proband.ratingMax}"
+									value="#{probandListEntry.vo.proband.rating}"
+									stars="#{probandListEntry.vo.proband.ratingMax}"
+									required="false"
+									cancel="false"
+									readonly="true"/>
+				</p:column>							
+						
 						<p:column sortBy="#{probandListEntry.vo.position}">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.proband_list_proband_list_position_column}" />

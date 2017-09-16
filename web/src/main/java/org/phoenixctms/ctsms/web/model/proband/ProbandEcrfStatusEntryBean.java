@@ -51,6 +51,7 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		// limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
 		this.probandId = id;
 		probandListEntryModel.setProbandId(id);
+		probandListEntryModel.initSets(true);
 		filterProbandGroups.clear();
 	}
 

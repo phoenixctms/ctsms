@@ -121,8 +121,9 @@ extends TrialDaoBase
 		}
 		CategoryCriterion.apply(payoffCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		trialCriteria.addOrder(Order.asc("name"));
-		trialCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		return trialCriteria.list();
+		// trialCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return trialCriteria.list();
+		return CriteriaUtil.listDistinctRoot(trialCriteria, this, "name");
 	}
 
 	@Override

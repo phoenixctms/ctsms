@@ -129,8 +129,9 @@ extends InquiryDaoBase
 			.createCriteria("trialParticipations", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		applySortOrders(inquiryCriteria);
-		inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		return inquiryCriteria.list();
+		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return inquiryCriteria.list();
+		return CriteriaUtil.listDistinctRoot(inquiryCriteria, this, "trial.id", "category", "position");
 	}
 
 	@Override
@@ -153,8 +154,9 @@ extends InquiryDaoBase
 			inquiryCriteria.createCriteria("inquiryValues", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		applySortOrders(inquiryCriteria);
-		inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		return inquiryCriteria.list();
+		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return inquiryCriteria.list();
+		return CriteriaUtil.listDistinctRoot(inquiryCriteria, this, "trial.id", "category", "position");
 	}
 
 	@Override

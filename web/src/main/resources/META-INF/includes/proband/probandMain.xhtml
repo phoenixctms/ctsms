@@ -848,6 +848,30 @@
 								value="#{probandBean.probandLockedMessage}"
 								id="proband_locked_message" />
 							<h:outputLabel />
+							
+							<h:outputLabel
+								rendered="#{applicationScopeBean.showProbandRating and not empty probandBean.in.ratingMax}"
+								for="rating"
+								value="#{probandlabels.proband_rating_label}" />
+							<h:panelGroup rendered="#{applicationScopeBean.showProbandRating and not empty probandBean.in.ratingMax}">
+								<p:rating
+									id="rating"
+									value="#{probandBean.in.rating}"
+									stars="#{probandBean.in.ratingMax}"
+									required="false"
+									cancel="false"
+									readonly="false"
+									label="#{probandlabels.proband_rating}"/>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="rating">
+									<h:outputText
+										value="#{probandlabels.proband_rating_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="rating" rendered="#{applicationScopeBean.showProbandRating and not empty probandBean.in.ratingMax}"/>							
+							
 							<!-- <h:outputLabel
 								for="available"
 								value="#{probandlabels.proband_available}" />

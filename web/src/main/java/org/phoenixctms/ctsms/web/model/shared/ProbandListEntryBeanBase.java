@@ -83,7 +83,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, in);
 			initIn();
-			initSets();
+			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
 		} catch (ServiceException e) {
@@ -110,7 +110,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		probandListEntryModel.clearSelectedColumns();
 		changeSpecific(id);
 		initIn();
-		initSets();
+		initSets(true, false, false);
 		return CHANGE_OUTCOME;
 	}
 
@@ -128,7 +128,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().deleteProbandListEntry(WebUtil.getAuthentication(), id);
 			initIn();
-			initSets(true, false);
+			initSets(false, true, false);
 			out = null;
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
@@ -197,18 +197,18 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	protected abstract void initIn();
 
 	protected void initSets() {
-		initSets(false, false);
+		initSets(false, false, false);
 	}
 
-	private void initSets(boolean deleted, boolean select) {
-		initSpecificSets(deleted, select);
+	private void initSets(boolean reset, boolean deleted, boolean select) {
+		initSpecificSets(reset, deleted, select);
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
 		probandListStatusEntryBean.changeRootEntity(deleted ? null : in.getId());
 		probandListEntryTagValueBean.changeRootEntity(deleted ? null : in.getId());
 	}
 
-	protected abstract void initSpecificSets(boolean deleted, boolean select);
+	protected abstract void initSpecificSets(boolean reset, boolean deleted, boolean select);
 
 	@Override
 	public boolean isCreated() {
@@ -259,7 +259,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
-			initSets();
+			initSets(false, false, false);
 		}
 		return ERROR_OUTCOME;
 	}
@@ -271,7 +271,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	public String resetAction() {
 		out = null;
 		initIn();
-		initSets();
+		initSets(true, false, false);
 		return RESET_OUTCOME;
 	}
 
@@ -279,7 +279,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		if (probandListEntry != null) {
 			this.out = (ProbandListEntryOutVO) probandListEntry.getVo();
 			this.initIn();
-			initSets(false, true);
+			initSets(false, false, true);
 			this.probandListEntryTagValueBean.appendRequestContextCallbackArgs(true);
 			RequestContext requestContext = RequestContext.getCurrentInstance();
 			if (requestContext != null) {
@@ -293,7 +293,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(WebUtil.getAuthentication(), in, null);
 			initIn();
-			initSets();
+			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException e) {

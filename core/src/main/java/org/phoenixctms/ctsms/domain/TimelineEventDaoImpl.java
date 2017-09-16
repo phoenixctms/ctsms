@@ -59,6 +59,7 @@ extends TimelineEventDaoBase
 					throws Exception {
 		Criteria timelineEventCriteria = createTimelineEventCriteria();
 		CriteriaUtil.applyStopOptionalIntervalCriterion(timelineEventCriteria, from, to, null, true);
+		boolean distinctRoot = false;
 		if (trialId != null || departmentId != null || teamMemberStaffId != null || ignoreTimelineEvents != null) {
 			Criteria trialCriteria = timelineEventCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 			if (trialId != null) {
@@ -76,11 +77,16 @@ extends TimelineEventDaoBase
 					membersCriteria.add(Restrictions.eq("notifyTimelineEvent", notify.booleanValue()));
 				}
 				membersCriteria.add(Restrictions.eq("staff.id", teamMemberStaffId.longValue()));
-				timelineEventCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+				// timelineEventCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+				distinctRoot = true;
 			}
 		}
 		timelineEventCriteria.add(Restrictions.eq("dismissed", false)); // performance only...
-		return CriteriaUtil.listEvents(timelineEventCriteria, from, to, notify);
+		if (distinctRoot) {
+			return CriteriaUtil.listEvents(CriteriaUtil.listDistinctRoot(timelineEventCriteria, this), from, to, notify);
+		} else {
+			return CriteriaUtil.listEvents(timelineEventCriteria, from, to, notify);
+		}
 	}
 
 	@Override

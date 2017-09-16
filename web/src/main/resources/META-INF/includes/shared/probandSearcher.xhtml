@@ -242,7 +242,19 @@
 							name="value"
 							value="#{proband.vo.category.locked}" />
 					</ui:include>
-				</p:column>				
+				</p:column>		
+				<p:column sortBy="#{proband.vo.rating}" rendered="#{applicationScopeBean.showProbandRating}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_rating_column}" />
+					</f:facet>
+								<p:rating
+									rendered="#{not empty proband.vo.ratingMax}"
+									value="#{proband.vo.rating}"
+									stars="#{proband.vo.ratingMax}"
+									required="false"
+									cancel="false"
+									readonly="true"/>
+				</p:column>						
 				<!-- <p:column sortBy="#{proband.vo.available}">
 					<f:facet name="header">
 						<h:outputText value="#{probandlabels.search_proband_result_list_available_column}" />
