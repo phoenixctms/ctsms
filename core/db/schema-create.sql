@@ -36,6 +36,7 @@
         FILE_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
         DATA BYTEA,
         COMMENT TEXT,
+        ALIAS CHARACTER VARYING(1024),
         CONTENT_TYPE_FK BIGINT,
         primary key (ID)
     );
@@ -1154,6 +1155,7 @@
         ENCRYPTED_COMMENT BYTEA not null unique,
         COMMENT_IV BYTEA not null unique,
         COMMENT_HASH BYTEA,
+        ALIAS CHARACTER VARYING(1024),
         CONTENT_TYPE_FK BIGINT,
         primary key (ID)
     );

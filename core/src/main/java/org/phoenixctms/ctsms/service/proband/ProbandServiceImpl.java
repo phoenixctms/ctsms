@@ -669,6 +669,9 @@ extends ProbandServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GENDER_REQUIRED);
 				}
 
+				if (probandIn.getAlias() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_ALIAS_NOT_NULL);
+				}
 			} else {
 				if (probandIn.getPrefixedTitle1() != null || probandIn.getPrefixedTitle2() != null || probandIn.getPrefixedTitle3() != null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_PREFIXED_TITLES_NOT_NULL);
@@ -720,6 +723,9 @@ extends ProbandServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GENDER_REQUIRED);
 				}
 
+				if (probandIn.getAlias() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_ALIAS_NOT_NULL);
+				}
 			} else {
 				if (probandIn.getAnimalName() != null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ANIMAL_NAME_NOT_NULL);
@@ -751,6 +757,7 @@ extends ProbandServiceBase
 			if (probandIn.getCitizenship() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CITIZENSHIP_NOT_NULL);
 			}
+
 		}
 
 		if (probandIn.getRatingMax() != null) {

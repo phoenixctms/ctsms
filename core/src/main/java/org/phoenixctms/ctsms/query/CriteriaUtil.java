@@ -597,9 +597,10 @@ public final class CriteriaUtil {
 				// criteria.setProjection(null);
 				// return new ArrayList(new LinkedHashSet(criteria.list()));
 				// sorting via psf mandatory...
-				criteria.setProjection(null);
-				criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-				return criteria.list();
+				// criteria.setProjection(null);
+				// criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+				// return criteria.list();
+				return listDistinctRoot(criteria, dao);
 			}
 		}
 		return null;

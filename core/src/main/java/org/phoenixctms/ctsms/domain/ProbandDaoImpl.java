@@ -488,6 +488,9 @@ extends ProbandDaoBase
 				personParticulars.setLastNameIndex(null);
 			}
 
+			if (copyIfNull || source.getAlias() != null) {
+				personParticulars.setAlias(source.getAlias());
+			}
 			try {
 				if (copyIfNull || source.getPrefixedTitle1() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getPrefixedTitle1());
@@ -576,6 +579,9 @@ extends ProbandDaoBase
 			}
 			if (copyIfNull || source.getComment() != null) {
 				animalParticulars.setComment(source.getComment());
+			}
+			if (copyIfNull || source.getAlias() != null) {
+				animalParticulars.setAlias(source.getAlias());
 			}
 		}
 
@@ -674,6 +680,9 @@ extends ProbandDaoBase
 			} else if (copyIfNull) {
 				personParticulars.setLastNameIndex(null);
 			}
+			if (copyIfNull || source.getAlias() != null) {
+				personParticulars.setAlias(source.getAlias());
+			}
 			try {
 				if (copyIfNull || source.getPrefixedTitle1() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getPrefixedTitle1());
@@ -761,6 +770,9 @@ extends ProbandDaoBase
 			}
 			if (copyIfNull || source.getComment() != null) {
 				animalParticulars.setComment(source.getComment());
+			}
+			if (copyIfNull || source.getAlias() != null) {
+				animalParticulars.setAlias(source.getAlias());
 			}
 		}
 	}
@@ -939,6 +951,7 @@ extends ProbandDaoBase
 			ProbandContactParticulars personParticulars = source.getPersonParticulars();
 			if (personParticulars != null) {
 				target.setGender(personParticulars.getGender());
+				target.setAlias(personParticulars.getAlias());
 				try {
 					target.setPrefixedTitle1((String) CryptoUtil.decryptValue(personParticulars.getPrefixedTitle1Iv(), personParticulars.getEncryptedPrefixedTitle1()));
 					target.setPrefixedTitle2((String) CryptoUtil.decryptValue(personParticulars.getPrefixedTitle2Iv(), personParticulars.getEncryptedPrefixedTitle2()));
@@ -962,6 +975,7 @@ extends ProbandDaoBase
 			AnimalContactParticulars animalParticulars = source.getAnimalParticulars();
 			if (animalParticulars != null) {
 				target.setAnimalName(animalParticulars.getAnimalName());
+				target.setAlias(animalParticulars.getAlias());
 				target.setDateOfBirth(animalParticulars.getDateOfBirth());
 				target.setGender(animalParticulars.getGender());
 				target.setComment(animalParticulars.getComment());

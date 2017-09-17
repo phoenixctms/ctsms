@@ -289,6 +289,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 					target.setDecrypted(false);
 				}
 				target.setGender(L10nUtil.createSexVO(Locales.USER, personParticulars.getGender()));
+				target.setAlias(personParticulars.getAlias());
 				target.setName(CommonUtil.getProbandName(target, false,
 						L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
@@ -313,6 +314,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 				target.setDateOfBirth(animalParticulars.getDateOfBirth());
 				target.setGender(L10nUtil.createSexVO(Locales.USER, animalParticulars.getGender()));
 				target.setComment(animalParticulars.getComment());
+				target.setAlias(animalParticulars.getAlias());
 				// target.setCitizenship(personParticulars.getCitizenship());
 				target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
 				target.setYearOfBirth(CommonUtil.getYearOfBirth(target.getDateOfBirth()));

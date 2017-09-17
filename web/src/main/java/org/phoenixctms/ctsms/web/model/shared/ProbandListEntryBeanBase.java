@@ -83,6 +83,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, in);
 			initIn();
+			// initSets(true, false, false);
 			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;

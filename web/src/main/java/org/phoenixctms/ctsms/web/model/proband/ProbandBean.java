@@ -73,6 +73,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setLastName(out.getLastName());
 			in.setAnimalName(out.getAnimalName());
 			in.setGender(genderVO == null ? null : genderVO.getSex());
+			in.setAlias(out.getAlias());
 			in.setId(out.getId());
 			in.setVersion(out.getVersion());
 			in.setPostpositionedTitle1(out.getPostpositionedTitle1());
@@ -133,6 +134,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			// result.setDepartment(value)
 			result.setFirstName(in.getFirstName());
 			result.setGender(genderVO);
+			result.setAlias(in.getAlias());
 			// result.setHasImage(value)
 			// result.setId(value)
 			result.setLastName(in.getLastName());
@@ -194,6 +196,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setLastName(Messages.getString(MessageCodes.PROBAND_LAST_NAME_PRESET));
 			in.setAnimalName(Messages.getString(MessageCodes.PROBAND_ANIMAL_NAME_PRESET));
 			in.setGender(Settings.getSex(SettingCodes.PROBAND_GENDER_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_GENDER_PRESET));
+			in.setAlias(Messages.getString(MessageCodes.PROBAND_ALIAS_PRESET));
 			in.setId(null);
 			in.setVersion(null);
 			in.setPostpositionedTitle1(Messages.getString(MessageCodes.PROBAND_POSTPOSITIONED_TITLE1_PRESET));
@@ -961,7 +964,11 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 				in.setPrefixedTitle3(null);
 				// in.setCvAcademicTitle(null);
 			}
+			in.setAlias(null);
 		} else {
+			// if (!in.getPerson()) {
+			// in.setAlias(null);
+			// }
 			in.setCitizenship(null);
 			// in.setDateOfBirth(null);
 			in.setFirstName(null);

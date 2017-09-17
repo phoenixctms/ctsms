@@ -666,6 +666,38 @@
 							</h:panelGrid>
 							<p:message for="postpositionedTitle1" 
 								rendered="#{probandBean.in.person and !probandBean.in.blinded}"/>
+								
+							
+								
+							<h:outputLabel
+								styleClass="#{probandBean.in.person ? 'ctsms-field-icon ctsms-icon-noencryption' : ''}"
+								for="alias"
+								rendered="#{probandBean.in.blinded}"
+								value="#{probandlabels.alias_label}" />
+							<h:panelGroup rendered="#{probandBean.in.blinded}">
+								<p:inputText
+									id="alias"
+									value="#{probandBean.in.alias}"
+									required="false"
+									label="#{probandlabels.alias}"
+									styleClass="ctsms-control" >
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="alias">
+									<h:outputText
+										value="#{probandlabels.alias_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="alias"
+								rendered="#{probandBean.in.blinded}" />
+								
+								
+								
+								
+								
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
 								for="dateOfBirth"
@@ -861,7 +893,9 @@
 									required="false"
 									cancel="false"
 									readonly="false"
-									label="#{probandlabels.proband_rating}"/>
+									label="#{probandlabels.proband_rating}">
+									<p:ajax/>
+								</p:rating>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="rating">

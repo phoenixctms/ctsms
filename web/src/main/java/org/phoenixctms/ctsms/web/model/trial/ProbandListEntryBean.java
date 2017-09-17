@@ -102,6 +102,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			} else {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.BULK_ADD_OPERATION_SUCCESSFUL, ids.size(), ids.size());
 			}
+			// probandListEntryModel.initSets(true)
 			probandListEntryModel.updateRowCount();
 			return BULK_ADD_OUTCOME;
 		} catch (ServiceException e) {

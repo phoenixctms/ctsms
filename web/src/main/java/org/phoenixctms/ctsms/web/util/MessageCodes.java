@@ -243,6 +243,7 @@ public interface MessageCodes {
 	public final static String PROBAND_PREFIXED_TITLE1_PRESET = "proband_prefixed_title1_preset";
 	public final static String PROBAND_PREFIXED_TITLE2_PRESET = "proband_prefixed_title2_preset";
 	public final static String PROBAND_PREFIXED_TITLE3_PRESET = "proband_prefixed_title3_preset";
+	public final static String PROBAND_ALIAS_PRESET = "proband_alias_preset";
 	public final static String PROBAND_STATUS_ENTRY_COMMENT_PRESET = "proband_status_entry_comment_preset";
 
 	public final static String PROBAND_TREE_LABEL = "proband_tree_label";

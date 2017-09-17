@@ -947,7 +947,10 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					if (proband.getId() > 0) {
+					String alias = proband.getAlias();
+					if (alias != null && alias.trim().length() > 0) {
+						sb.append(alias.trim());
+					} else if (proband.getId() > 0) {
 						sb.append(Long.toString(proband.getId()));
 					}
 				}
@@ -1006,7 +1009,10 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					if (proband.getId() > 0) {
+					String alias = proband.getAlias();
+					if (alias != null && alias.trim().length() > 0) {
+						sb.append(alias.trim());
+					} else if (proband.getId() > 0) {
 						sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
 					} else {
 						sb.append(newBlindedProbandNameLabel);
@@ -1044,7 +1050,10 @@ public final class CommonUtil {
 						CommonUtil.appendString(sb, proband.getAnimalName(), null, "?");
 					}
 				} else {
-					if (proband.getId() > 0) {
+					String alias = proband.getAlias();
+					if (alias != null && alias.trim().length() > 0) {
+						sb.append(alias.trim());
+					} else if (proband.getId() > 0) {
 						sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
 					} else {
 						sb.append(newBlindedProbandNameLabel);

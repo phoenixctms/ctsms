@@ -299,6 +299,7 @@ public interface ServiceExceptionCodes {
 	public final static String ANIMAL_NAME_REQUIRED = "animal_name_required";
 	public final static String PROBAND_PREFIXED_TITLES_NOT_NULL = "proband_prefixed_titles_not_null";
 	public final static String PROBAND_FIRST_NAME_NOT_NULL = "proband_first_name_not_null";
+	public final static String PROBAND_ALIAS_NOT_NULL = "proband_alias_not_null";
 	public final static String PROBAND_LAST_NAME_NOT_NULL = "proband_last_name_not_null";
 	public final static String PROBAND_POSTPOSITIONED_TITLES_NOT_NULL = "proband_postpositioned_titles_not_null";
 	public final static String PROBAND_DATE_OF_BIRTH_NOT_NULL = "proband_date_of_birth_not_null";
