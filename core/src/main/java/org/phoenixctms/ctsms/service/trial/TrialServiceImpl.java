@@ -1670,6 +1670,21 @@ extends TrialServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_POSITION_NOT_UNIQUE);
 			}
 		}
+		if (probandListEntryIn.getRatingMax() != null) {
+			if (probandListEntryIn.getRatingMax() <= 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO);
+			} else if (probandListEntryIn.getRating() == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RATING_REQUIRED);
+			} else {
+				if (probandListEntryIn.getRating() < 0l) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RATING_LESS_THAN_ZERO);
+				} else if (probandListEntryIn.getRating() > probandListEntryIn.getRatingMax()) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RATING_GREATER_THAN_RATING_MAX);
+				}
+			}
+		} else if (probandListEntryIn.getRating() != null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RATING_NOT_NULL);
+		}
 		if (now != null && (new ProbandListEntryStatusCollisionFinder(probandDao, trialDao, probandListEntryDao, now)).collides(probandListEntryIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
 		}
@@ -2612,7 +2627,7 @@ extends TrialServiceBase
 
 	@Override
 	protected Collection<ProbandListEntryOutVO> handleAddProbandListEntries(
-			AuthenticationVO auth, Long trialId, Long groupId, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
+			AuthenticationVO auth, Long trialId, Long groupId, Long rating, Long ratingMax, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		// ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(false).iterator().next();
@@ -2648,6 +2663,8 @@ extends TrialServiceBase
 				newProbandListEntry.setProbandId(probandId);
 				newProbandListEntry.setTrialId(trial.getId());
 				newProbandListEntry.setGroupId(groupId);
+				newProbandListEntry.setRating(rating);
+				newProbandListEntry.setRatingMax(ratingMax);
 				try {
 					result.add(addProbandListEntry(newProbandListEntry, false, now, user)); // statusType
 					shuffleInfo.getResultIds().add(probandId);

@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xmi:id="_12_0_12ab03bf_1166898799812_358986_99" name="messaging" metamodelReference="_12_0_12ab03bf_1166898799812_358986_99_packageImportcreatedOnLoad">
-  <eAnnotations xmi:id="_U0CpsZs4EeesgcDgoxHQvg" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_U0Cpsps4EeesgcDgoxHQvg" name="messaging" nsURI="http:///schemas/messaging/_Ub-vAZs4EeesgcDgoxHQvg/0" nsPrefix="messaging">
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_U0Cps5s4EeesgcDgoxHQvg" name="TernaryBoolean">
-        <eAnnotations xmi:id="_U0CptJs4EeesgcDgoxHQvg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_1_1_12ab03bf_1179436872546_813460_105"/>
-        <eLiterals xmi:id="_U0CptZs4EeesgcDgoxHQvg" name="default"/>
-        <eLiterals xmi:id="_U0Cptps4EeesgcDgoxHQvg" name="false" value="1"/>
-        <eLiterals xmi:id="_U0Cpt5s4EeesgcDgoxHQvg" name="true" value="2"/>
+  <eAnnotations xmi:id="_3Vzk3JxPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_3Vzk3ZxPEeeq3ZfPOGW2Dw" name="messaging" nsURI="http:///schemas/messaging/_zw2KUZxPEeeq3ZfPOGW2Dw/0" nsPrefix="messaging">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_3Vzk3pxPEeeq3ZfPOGW2Dw" name="Topic">
+        <eAnnotations xmi:id="_3Vzk35xPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_0_12ab03bf_1166898799812_780804_100"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_3Vzk4JxPEeeq3ZfPOGW2Dw" name="andromda_meta_generalization_precedence" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_3Vzk4ZxPEeeq3ZfPOGW2Dw" name="base_Node" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Node"/>
+        </eStructuralFeatures>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_U0CpuJs4EeesgcDgoxHQvg" name="SessionAcknowledgeMode">
-        <eAnnotations xmi:id="_U0CpuZs4EeesgcDgoxHQvg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_1_1_12ab03bf_1179437029625_916810_245"/>
-        <eLiterals xmi:id="_U0Cpups4EeesgcDgoxHQvg" name="AUTO_ACKNOWLEDGE"/>
-        <eLiterals xmi:id="_U0Cpu5s4EeesgcDgoxHQvg" name="CLIENT_ACKNOWLEDGE" value="1"/>
-        <eLiterals xmi:id="_U0CpvJs4EeesgcDgoxHQvg" name="DUPS_OK_ACKNOWLEDGE" value="2"/>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_3Vzk4pxPEeeq3ZfPOGW2Dw" name="Queue">
+        <eAnnotations xmi:id="_3Vzk45xPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_0_12ab03bf_1166898799828_976913_103"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_3Vzk5JxPEeeq3ZfPOGW2Dw" name="base_Node" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Node"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_3Vzk5ZxPEeeq3ZfPOGW2Dw" name="TernaryBoolean">
+        <eAnnotations xmi:id="_3Vzk5pxPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_1_1_12ab03bf_1179436872546_813460_105"/>
+        <eLiterals xmi:id="_3Vzk55xPEeeq3ZfPOGW2Dw" name="default"/>
+        <eLiterals xmi:id="_3Vzk6JxPEeeq3ZfPOGW2Dw" name="false" value="1"/>
+        <eLiterals xmi:id="_3Vzk6ZxPEeeq3ZfPOGW2Dw" name="true" value="2"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_3Vzk6pxPEeeq3ZfPOGW2Dw" name="SessionAcknowledgeMode">
+        <eAnnotations xmi:id="_3Vzk65xPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_1_1_12ab03bf_1179437029625_916810_245"/>
+        <eLiterals xmi:id="_3Vzk7JxPEeeq3ZfPOGW2Dw" name="AUTO_ACKNOWLEDGE"/>
+        <eLiterals xmi:id="_3Vzk7ZxPEeeq3ZfPOGW2Dw" name="CLIENT_ACKNOWLEDGE" value="1"/>
+        <eLiterals xmi:id="_3Vzk7pxPEeeq3ZfPOGW2Dw" name="DUPS_OK_ACKNOWLEDGE" value="2"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_3Vzk75xPEeeq3ZfPOGW2Dw" name="MessageReceiver">
+        <eAnnotations xmi:id="_3Vzk8JxPEeeq3ZfPOGW2Dw" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_12_1_1_12ab03bf_1179436680312_476795_98"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_3Vzk8ZxPEeeq3ZfPOGW2Dw" name="andromda_activemq_optimizeAcknowledge" ordered="false" lowerBound="1" eType="_3Vzk5ZxPEeeq3ZfPOGW2Dw"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_3Vzk8pxPEeeq3ZfPOGW2Dw" name="andromda_messaging_sessionAcknowledgeMode" ordered="false" lowerBound="1" eType="_3Vzk6pxPEeeq3ZfPOGW2Dw"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_3Vzk85xPEeeq3ZfPOGW2Dw" name="base_Operation" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Operation"/>
+        </eStructuralFeatures>
       </eClassifiers>
     </contents>
   </eAnnotations>
@@ -25,23 +48,33 @@
   <packageImport xmi:id="_0javaPrimitiveTypesmessaging">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
   </packageImport>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_12_0_12ab03bf_1166899171234_387231_261" name="" navigableOwnedEnd="_12_0_12ab03bf_1166899171234_806709_263">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_0_12ab03bf_1166899171234_806709_263" name="extension_Queue" visibility="private" aggregation="composite" association="_12_0_12ab03bf_1166899171234_387231_261">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_12_0_12ab03bf_1166898799828_976913_103"/>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_12_0_12ab03bf_1166898799812_780804_100" name="Topic">
+    <ownedAttribute xmi:id="_12_0_12ab03bf_1166898799828_784303_111" name="andromda_meta_generalization_precedence" visibility="private">
+      <ownedComment xmi:id="_12_0_12ab03bf_1166898799843_977916_121" body="Defines the precedences of a generalization when a metafacade generalizes more that one other metafacade." annotatedElement="_12_0_12ab03bf_1166898799828_784303_111"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_12_0_12ab03bf_1166899296750_952481_267" name="base_Node" visibility="private" association="_12_0_12ab03bf_1166899296750_300990_266">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Node"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_12_0_12ab03bf_1166898799828_976913_103" name="Queue">
+    <ownedComment xmi:id="_12_0_12ab03bf_1166898799828_403741_115" body="Denotes a metaclass which belongs to the PSM. Code for these classes will be generated by the Java cartridge in the form of value objects." annotatedElement="_12_0_12ab03bf_1166898799828_976913_103"/>
+    <ownedAttribute xmi:id="_12_0_12ab03bf_1166899171234_407863_262" name="base_Node" visibility="private" association="_12_0_12ab03bf_1166899171234_387231_261">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Node"/>
+    </ownedAttribute>
+    <icon xmi:id="_12_0_12ab03bf_1166898799828_334025_104" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_12_0_12ab03bf_1166899171234_387231_261" name="" memberEnd="_12_0_12ab03bf_1166899171234_806709_263 _12_0_12ab03bf_1166899171234_407863_262" navigableOwnedEnd="_12_0_12ab03bf_1166899171234_806709_263">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_0_12ab03bf_1166899171234_806709_263" name="extension_Queue" visibility="private" type="_12_0_12ab03bf_1166898799828_976913_103" aggregation="composite" association="_12_0_12ab03bf_1166899171234_387231_261">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_0_12ab03bf_1166899171234_97161_265" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_0_12ab03bf_1166899171234_590205_264" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_12_0_12ab03bf_1166899171234_806709_263"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_12_0_12ab03bf_1166899171234_407863_262"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_12_0_12ab03bf_1166899296750_300990_266" name="" navigableOwnedEnd="_12_0_12ab03bf_1166899296750_196267_268">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_0_12ab03bf_1166899296750_196267_268" name="extension_Topic" visibility="private" aggregation="composite" association="_12_0_12ab03bf_1166899296750_300990_266">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_12_0_12ab03bf_1166898799812_780804_100"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_12_0_12ab03bf_1166899296750_300990_266" name="" memberEnd="_12_0_12ab03bf_1166899296750_196267_268 _12_0_12ab03bf_1166899296750_952481_267" navigableOwnedEnd="_12_0_12ab03bf_1166899296750_196267_268">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_0_12ab03bf_1166899296750_196267_268" name="extension_Topic" visibility="private" type="_12_0_12ab03bf_1166898799812_780804_100" aggregation="composite" association="_12_0_12ab03bf_1166899296750_300990_266">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_0_12ab03bf_1166899296750_262861_270" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_0_12ab03bf_1166899296750_764582_269" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_12_0_12ab03bf_1166899296750_196267_268"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_12_0_12ab03bf_1166899296750_952481_267"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Enumeration" xmi:id="_12_1_1_12ab03bf_1179436872546_813460_105" name="TernaryBoolean">
     <ownedLiteral xmi:id="_12_1_1_12ab03bf_1179436934390_586083_241" name="default"/>
@@ -53,13 +86,21 @@
     <ownedLiteral xmi:id="_12_1_1_12ab03bf_1179437091750_225592_247" name="CLIENT_ACKNOWLEDGE"/>
     <ownedLiteral xmi:id="_12_1_1_12ab03bf_1179437115234_361428_248" name="DUPS_OK_ACKNOWLEDGE"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_12_1_1_12ab03bf_1179440913812_820334_103" name="" navigableOwnedEnd="_12_1_1_12ab03bf_1179440913812_663073_105">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_1_1_12ab03bf_1179440913812_663073_105" name="extension_MessageReceiver" visibility="private" aggregation="composite" association="_12_1_1_12ab03bf_1179440913812_820334_103">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_12_1_1_12ab03bf_1179436680312_476795_98"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_12_1_1_12ab03bf_1179440913812_820334_103" name="" memberEnd="_12_1_1_12ab03bf_1179440913812_284066_104 _12_1_1_12ab03bf_1179440913812_663073_105" navigableOwnedEnd="_12_1_1_12ab03bf_1179440913812_663073_105">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_1_1_12ab03bf_1179440913812_663073_105" name="extension_MessageReceiver" visibility="private" type="_12_1_1_12ab03bf_1179436680312_476795_98" aggregation="composite" association="_12_1_1_12ab03bf_1179440913812_820334_103">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_1_1_12ab03bf_1179440913812_134475_107" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_1_1_12ab03bf_1179440913812_680056_106" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_12_1_1_12ab03bf_1179440913812_663073_105"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_12_1_1_12ab03bf_1179440913812_284066_104"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_12_1_1_12ab03bf_1179436680312_476795_98" name="MessageReceiver">
+    <ownedAttribute xmi:id="_12_1_1_12ab03bf_1179436699062_582189_104" name="andromda_activemq_optimizeAcknowledge" visibility="public" type="_12_1_1_12ab03bf_1179436872546_813460_105">
+      <ownedComment xmi:id="_12_1_1_12ab03bf_1179440973984_725507_241" body="Allows you to set the &quot;optimizeAcknowledge&quot; flag when receiving a message using an ActiveMQ connection." annotatedElement="_12_1_1_12ab03bf_1179436699062_582189_104"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_12_1_1_12ab03bf_1179436988609_33695_244" name="andromda_messaging_sessionAcknowledgeMode" visibility="public" type="_12_1_1_12ab03bf_1179437029625_916810_245">
+      <ownedComment xmi:id="_12_1_1_12ab03bf_1179440995578_284848_242" body="The JMS session acknowlege mode for incoming messages." annotatedElement="_12_1_1_12ab03bf_1179436988609_33695_244"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_12_1_1_12ab03bf_1179440913812_284066_104" name="base_Operation" visibility="private" association="_12_1_1_12ab03bf_1179440913812_820334_103">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Operation"/>
+    </ownedAttribute>
   </packagedElement>
 </uml:Profile>

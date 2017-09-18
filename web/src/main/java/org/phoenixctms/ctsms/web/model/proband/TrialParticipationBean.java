@@ -42,6 +42,8 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 			in.setProbandId(probandId);
 			in.setTrialId(null);
 			in.setVersion(null);
+			in.setRating(Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_PRESET));
+			in.setRatingMax(Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET));
 		}
 	}
 

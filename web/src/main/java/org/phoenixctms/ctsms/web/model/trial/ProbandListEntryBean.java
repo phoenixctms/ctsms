@@ -56,12 +56,16 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			in.setProbandId(null);
 			in.setTrialId(trialId);
 			in.setVersion(null);
+			in.setRating(Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_PRESET));
+			in.setRatingMax(Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET));
 		}
 	}
 
 	private ArrayList<SelectItem> filterProbandGroups;
 	private Long trialId;
 	private Long bulkAddGroupId;
+	private Long bulkAddRating;
+	private Long bulkAddRatingMax;
 	private boolean shuffle;
 	private Long limit;
 	private ProbandMultiPickerModel probandMultiPicker;
@@ -92,7 +96,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		try {
 			Set<Long> ids = this.probandMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryOutVO> it = WebUtil.getServiceLocator().getTrialService()
-					.addProbandListEntries(WebUtil.getAuthentication(), trialId, bulkAddGroupId, ids, shuffle, limit).iterator();
+					.addProbandListEntries(WebUtil.getAuthentication(), trialId, bulkAddGroupId, bulkAddRating, bulkAddRatingMax, ids, shuffle, limit).iterator();
 			while (it.hasNext()) {
 				this.probandMultiPicker.removeId(it.next().getProband().getId());
 			}
@@ -137,6 +141,8 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		bulkAddGroupId = null;
 		shuffle = Settings.getBoolean(SettingCodes.PROBAND_LIST_BULK_ADD_SHUFFLE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_SHUFFLE);
 		limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
+		bulkAddRating = Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_PRESET);
+		bulkAddRatingMax = Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET);
 		this.trialId = id;
 	}
 
@@ -199,10 +205,19 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		return limit;
 	}
 
+	public Long getBulkAddRating() {
+		return bulkAddRating;
+	}
+
+	public Long getBulkAddRatingMax() {
+		return bulkAddRatingMax;
+	}
+
 	@Override
 	protected String getDataTableId() {
 		return "proband_list";
 	}
+
 
 	public boolean getEnableExports() {
 		return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_LIST_EXPORTS, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_LIST_EXPORTS);
@@ -211,7 +226,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	public ArrayList<SelectItem> getFilterProbandGroups() {
 		return filterProbandGroups;
 	}
-
 
 	@Override
 	public String getMainTabTitle() {
@@ -558,6 +572,10 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 
 	public void setBulkAddLimit(Long limit) {
 		this.limit = limit;
+	}
+
+	public void setBulkAddRating(Long bulkAddRating) {
+		this.bulkAddRating = bulkAddRating;
 	}
 
 	public void setBulkAddShuffle(boolean shuffle) {

@@ -534,6 +534,7 @@ public class ApplicationScopeBean {
 		return Settings.getBoolean(SettingCodes.SHOW_PROBAND_RATING, Bundle.SETTINGS, DefaultSettings.SHOW_PROBAND_RATING);
 	}
 
+
 	public boolean isTrustedHost() {
 		return WebUtil.isTrustedHost();
 	}

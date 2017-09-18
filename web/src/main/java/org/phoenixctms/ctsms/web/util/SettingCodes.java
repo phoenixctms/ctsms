@@ -419,6 +419,7 @@ public interface SettingCodes {
 	public static final String VISIT_SCHEDULE_ITEM_NOTIFY_PRESET = "visit_schedule_item_notify_preset";
 	public static final String PROBAND_PERSON_PRESET = "proband_person_preset";
 	public static final String PROBAND_BLINDED_PRESET = "proband_blinded_preset";
+	public static final String SHOW_PROBAND_RATING = "show_proband_rating";
 	public final static String PROBAND_RATING_PRESET = "proband_rating_preset";
 	public final static String PROBAND_RATING_MAX_PRESET = "proband_rating_max_preset";
 	public static final String ECRF_FIELD_STATUS_QUEUE = "ecrf_field_status_queue";
@@ -432,5 +433,7 @@ public interface SettingCodes {
 	public static final String ENABLE_PROBAND_MODULE = "enable_proband_module";
 	public static final String ENABLE_INPUT_FIELD_MODULE = "enable_input_field_module";
 	public static final String ENABLE_USER_MODULE = "enable_user_module";
-	public static final String SHOW_PROBAND_RATING = "show_proband_rating";
+	public static final String SHOW_PROBAND_LIST_ENTRY_RATING = "show_proband_list_entry_rating";
+	public final static String PROBAND_LIST_ENTRY_RATING_PRESET = "proband_list_entry_rating_preset";
+	public final static String PROBAND_LIST_ENTRY_RATING_MAX_PRESET = "proband_list_entry_rating_max_preset";
 }

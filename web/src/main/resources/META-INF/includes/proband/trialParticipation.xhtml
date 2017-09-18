@@ -84,6 +84,20 @@
 						</f:facet>
 						<h:outputText value="#{probandListEntry.vo.group.title}" />
 					</p:column>
+					
+				<p:column sortBy="#{probandListEntry.vo.rating}" rendered="#{trialParticipationBean.showProbandListEntryRating}" style="width:100px;">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_rating_column}" />
+					</f:facet>
+								<p:rating
+									rendered="#{not empty probandListEntry.vo.ratingMax}"
+									value="#{probandListEntry.vo.rating}"
+									stars="#{probandListEntry.vo.ratingMax}"
+									required="false"
+									cancel="false"
+									readonly="true"/>
+				</p:column>							
+					
 					<ui:include src="../shared/probandListEntryTableColumns.xhtml">
 						<ui:param
 							name="probandListEntryModel"

@@ -480,6 +480,11 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_LIST_ENTRY_POSITION_NOT_NULL = "proband_list_entry_position_not_null";
 	public final static String PROBAND_LIST_ENTRY_POSITION_REQUIRED = "proband_list_entry_position_required";
 	public final static String PROBAND_LIST_ENTRY_POSITION_NOT_UNIQUE = "proband_list_entry_position_not_unique";
+	public final static String PROBAND_LIST_ENTRY_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO = "proband_list_entry_rating_less_than_zero";
+	public final static String PROBAND_LIST_ENTRY_RATING_REQUIRED = "proband_list_entry_rating_required";
+	public final static String PROBAND_LIST_ENTRY_RATING_LESS_THAN_ZERO = "proband_list_entry_rating_less_than_zero";
+	public final static String PROBAND_LIST_ENTRY_RATING_GREATER_THAN_RATING_MAX = "proband_list_entry_rating_greater_than_rating_max";
+	public final static String PROBAND_LIST_ENTRY_RATING_NOT_NULL = "proband_list_entry_rating_not_null";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";

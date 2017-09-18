@@ -18,9 +18,13 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -37,6 +41,9 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			in.setProbandId(probandVO == null ? null : probandVO.getId());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setVersion(out.getVersion());
+			in.setRating(out.getRating());
+			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax() :
+				Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET));
 		}
 	}
 
@@ -56,6 +63,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	}
 
 	protected ProbandListEntryInVO in;
+
 	protected ProbandListEntryOutVO out;
 	protected ProbandListEntryModel probandListEntryModel;
 	protected TrialOutVO trial;
@@ -63,14 +71,13 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	protected ArrayList<SelectItem> probandGroups;
 	private ProbandListStatusEntryBean probandListStatusEntryBean;
 	private ProbandListEntryTagValueBean probandListEntryTagValueBean;
-
-
 	public ProbandListEntryBeanBase() {
 		super();
 		probandListEntryModel = createProbandListEntryModel();
 		probandListStatusEntryBean = new ProbandListStatusEntryBean();
 		probandListEntryTagValueBean = new ProbandListEntryTagValueBean();
 	}
+
 
 	@Override
 	public String addAction()
@@ -80,6 +87,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, in);
 			initIn();
@@ -234,6 +242,10 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return isCreated() && !isTrialLocked() && !isProbandLocked();
 	}
 
+	public boolean isShowProbandListEntryRating() {
+		return Settings.getBoolean(SettingCodes.SHOW_PROBAND_LIST_ENTRY_RATING, Bundle.SETTINGS, DefaultSettings.SHOW_PROBAND_LIST_ENTRY_RATING);
+	}
+
 	public boolean isTrialLocked() {
 		return WebUtil.isTrialLocked(trial);
 	}
@@ -265,15 +277,26 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	// public void onTabViewChange(TabChangeEvent event) {
-	// }
-
 	@Override
 	public String resetAction() {
 		out = null;
 		initIn();
 		initSets(true, false, false);
 		return RESET_OUTCOME;
+	}
+
+	// public void onTabViewChange(TabChangeEvent event) {
+	// }
+
+	private void sanitizeInVals() {
+		if (in.getRatingMax() != null) {
+			if (in.getRating() == null) {
+				in.setRating(0l);
+			}
+		} else {
+			in.setRating(null);
+		}
+
 	}
 
 	public void setSelectedProbandListEntry(IDVO probandListEntry) {
@@ -291,6 +314,8 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	@Override
 	public String updateAction() {
+		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(WebUtil.getAuthentication(), in, null);
 			initIn();
@@ -298,13 +323,17 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException e) {
+			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
+			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		} catch (AuthorisationException e) {
+			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (IllegalArgumentException e) {
+			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

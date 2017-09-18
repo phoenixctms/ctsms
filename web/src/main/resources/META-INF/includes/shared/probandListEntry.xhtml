@@ -100,6 +100,7 @@
 			<p:message
 				rendered="#{showTrialPicker}"
 				for="probandListEntryTrial" />
+				
 			<h:outputLabel
 				for="probandListEntryProbandGroup"
 				value="#{triallabels.proband_list_proband_group_label}" />
@@ -148,6 +149,35 @@
 				</p:tooltip>
 			</h:panelGroup>
 			<p:message for="probandListEntryPosition" />
+			
+			
+			
+			
+							<h:outputLabel
+								rendered="#{probandListBean.showProbandListEntryRating and not empty probandListBean.in.ratingMax}"
+								for="probandListEntryRating"
+								value="#{triallabels.proband_list_rating_label}" />
+							<h:panelGroup rendered="#{probandListBean.showProbandListEntryRating and not empty probandListBean.in.ratingMax}">
+								<p:rating
+									id="probandListEntryRating"
+									value="#{probandListBean.in.rating}"
+									stars="#{probandListBean.in.ratingMax}"
+									required="false"
+									cancel="false"
+									readonly="false"
+									label="#{triallabels.proband_list_rating}">
+					
+								</p:rating>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="probandListEntryRating">
+									<h:outputText
+										value="#{triallabels.proband_list_rating_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="probandListEntryRating" rendered="#{probandListBean.showProbandListEntryRating and not empty probandListBean.in.ratingMax}"/>				
+			
 		</h:panelGrid>
 		<h:outputLabel rendered="#{!probandListBean.inputVisible}" />
 	</ui:composition>

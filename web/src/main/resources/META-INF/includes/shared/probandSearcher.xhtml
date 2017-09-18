@@ -243,7 +243,7 @@
 							value="#{proband.vo.category.locked}" />
 					</ui:include>
 				</p:column>		
-				<p:column sortBy="#{proband.vo.rating}" rendered="#{applicationScopeBean.showProbandRating}">
+				<p:column sortBy="#{proband.vo.rating}" rendered="#{applicationScopeBean.showProbandRating}" style="width:100px;">
 					<f:facet name="header">
 						<h:outputText value="#{probandlabels.search_proband_result_list_rating_column}" />
 					</f:facet>
