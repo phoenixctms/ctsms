@@ -1,2 +1,2 @@
 #!/bin/bash
-$JRE_HOME/bin/java -DCTSMS_PROPERTIES="c:\ctsms\properties" -Dfile.encoding=Cp1252 $CATALINA_OPTS -classpath $CATALINA_HOME/webapps/ctsms-web/WEB-INF/lib/ctsms-core-1.6.0.jar:$CATALINA_HOME/webapps/ctsms-web/WEB-INF/lib/* org.phoenixctms.ctsms.executable.DBTool $*
+/opt/jdk1.6.0_45/jre/bin/java -DCTSMS_PROPERTIES="/ctms/properties" -Dfile.encoding=Cp1252 -Djava.awt.headless=true -Xms2048m -Xmx2048m -XX:MaxPermSize=512m -Xss256k -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=256m -classpath /opt/apache-tomcat-6.0.48/webapps/ROOT/WEB-INF/lib/ctsms-core-1.6.0.jar:/opt/apache-tomcat-6.0.48/webapps/ROOT/WEB-INF/lib/* org.phoenixctms.ctsms.executable.DBTool $*
