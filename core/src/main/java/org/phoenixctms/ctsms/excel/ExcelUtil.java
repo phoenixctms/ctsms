@@ -41,8 +41,8 @@ public final class ExcelUtil {
 	public final static String EXCEL_LINE_BREAK = "\n";
 	public final static String EXCEL_HEADER_FOOTER_LINE_BREAK = "\n";
 	public final static String EXCEL_DATE_PATTERN = "dd.MM.yyyy"; // "yyyy-MM-dd";
-	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm:ss"; // "yyyy-MM-dd HH:mm:ss";
-	public final static String EXCEL_TIME_PATTERN = "HH:mm";
+	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy hh:mm"; // HH:mm:ss"; // "yyyy-MM-dd HH:mm:ss";
+	public final static String EXCEL_TIME_PATTERN = "hh:mm"; // "HH:mm";
 	public final static String COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR = AssociationPath.ASSOCIATION_PATH_SEPARATOR;// ".";
 	public final static boolean COLUMN_NAME_LOWER_CASE_FIELD_NAMES = false;
 	// http://office.microsoft.com/en-us/excel-help/excel-specifications-and-limits-HP005199291.aspx

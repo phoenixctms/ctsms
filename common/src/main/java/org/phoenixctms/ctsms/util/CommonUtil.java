@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -817,6 +818,22 @@ public final class CommonUtil {
 					CommonUtil.appendString(sb, staff.getCvOrganisationName(), null);
 				}
 			}
+		}
+		return sb.toString();
+	}
+
+	public static String getDateStartStopString(Date start, Date stop,DateFormat dateFormat) {
+		StringBuilder sb = new StringBuilder();
+		if (start != null) {
+			sb.append(dateFormat.format(start));
+		} else {
+			sb.append("?");
+		}
+		sb.append(" - ");
+		if (stop != null) {
+			sb.append(dateFormat.format(stop));
+		} else {
+			sb.append("?");
 		}
 		return sb.toString();
 	}

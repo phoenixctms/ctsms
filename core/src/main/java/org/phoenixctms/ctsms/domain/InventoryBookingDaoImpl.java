@@ -41,6 +41,20 @@ public class InventoryBookingDaoImpl
 extends InventoryBookingDaoBase
 {
 
+	private static void applyIncludeAppointmentsCriterion(Criteria bookingCriteria,Boolean isAppointment,String idProperty,Boolean isRelevantForAppointments,String relevantForAppointmentsProperty) {
+		if (isAppointment != null) {
+			if (isAppointment) {
+				bookingCriteria.add(Restrictions.isNotNull(idProperty));
+			} else {
+				bookingCriteria.add(Restrictions.isNull(idProperty));
+			}
+		}
+		if (isRelevantForAppointments != null) {
+			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
+			.add(Restrictions.eq(relevantForAppointmentsProperty, isRelevantForAppointments.booleanValue()));
+		}
+	}
+
 	private void applyCourseIntervalCriterion(Criteria bookingCriteria, Long courseId, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments) {
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		if (courseId != null) {
@@ -56,6 +70,37 @@ extends InventoryBookingDaoBase
 		org.hibernate.Criteria bookingCriteria = this.getSession().createCriteria(InventoryBooking.class);
 		return bookingCriteria;
 	}
+
+	@Override
+	protected Collection<InventoryBooking> handleFindByAppointmentDepartmentsCalendarInterval(Long probandDepartmentId, Long courseDepartmentId, Long trialDepartmentId,
+			String calendar, Timestamp from, Timestamp to,
+			Boolean isProbandAppointment, Boolean isRelevantForProbandAppointments,
+			Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments,
+			Boolean isTrialAppointment, Boolean isRelevantForTrialAppointments) throws Exception
+			{
+		Criteria bookingCriteria = createBookingCriteria();
+		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
+
+		if (probandDepartmentId != null) {
+			bookingCriteria.createCriteria("proband", CriteriaSpecification.LEFT_JOIN).add(
+					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", probandDepartmentId.longValue())));
+		}
+		if (courseDepartmentId != null) {
+			bookingCriteria.createCriteria("course", CriteriaSpecification.LEFT_JOIN).add(
+					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", courseDepartmentId.longValue())));
+		}
+		if (trialDepartmentId != null) {
+			bookingCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN).add(
+					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+		}
+		applyIncludeAppointmentsCriterion(bookingCriteria,isProbandAppointment,"proband.id",isRelevantForProbandAppointments,"relevantForProbandAppointments");
+		applyIncludeAppointmentsCriterion(bookingCriteria,isCourseAppointment,"course.id",isRelevantForCourseAppointments,"relevantForCourseAppointments");
+		applyIncludeAppointmentsCriterion(bookingCriteria,isTrialAppointment,"trial.id",isRelevantForTrialAppointments,"relevantForTrialAppointments");
+
+		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+		bookingCriteria.addOrder(Order.asc("start"));
+		return bookingCriteria.list();
+			}
 
 	/**
 	 * @inheritDoc

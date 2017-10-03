@@ -144,6 +144,7 @@ public final class DBToolOptions {
 	public static final String EXPORT_INPUT_FIELD_JOURNAL_OPT = "eifj";
 	public static final String EXPORT_USER_JOURNAL_OPT = "euj";
 	public static final String EXPORT_CRITERIA_JOURNAL_OPT = "escj";
+	public static final String EXPORT_PROBAND_APPOINTMENTS_OPT = "epa";
 	private final static HashMap<String, Option> taskOptionMap = new HashMap<String, Option>();
 	private final static HashMap<String, Option> optionalOptionMap = new HashMap<String, Option>();
 	public final static Options options = new Options();
@@ -285,6 +286,8 @@ public final class DBToolOptions {
 				"export user journal", 1));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_JOURNAL_OPT, "export_criteria_journal",
 				"export criteria journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_PROBAND_APPOINTMENTS_OPT, "export_proband_appointments",
+				"export proband inventory bookings of trials", 1));
 		tasks.setRequired(true);
 		options.addOptionGroup(tasks);
 		options.addOption(registerOptionalOption(FORCE_OPT, "force", "skip confirmation promt", 0));

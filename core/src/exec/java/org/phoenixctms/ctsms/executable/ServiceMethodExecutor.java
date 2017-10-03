@@ -1,7 +1,9 @@
 package org.phoenixctms.ctsms.executable;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,8 +41,12 @@ import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.ExecDefaultSettings;
+import org.phoenixctms.ctsms.util.ExecSettingCodes;
+import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
+import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
@@ -57,6 +63,7 @@ import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
+import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -365,6 +372,29 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INVENTORY_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("inventory ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportProbandAppointments(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		Date now = new Date();
+		now.setDate(5);
+		Date from = DateCalc.getStartOfDay(now);
+		Date to = DateCalc.getEndOfDay(now);
+		jobOutput
+		.println("timespan: "
+				+ CommonUtil.getDateStartStopString(from, to,
+						new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
+		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, from, to, true, true,null, null, null, null);
+		if (result != null) {
+			if (id != null) {
+				jobOutput.println("department ID " + Long.toString(id) + ": " + result.getRowCount() + " inventory bookings");
+			} else {
+				jobOutput.println( result.getRowCount() + " inventory bookings");
+			}
 			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
 			return result.getRowCount();
 		} else {

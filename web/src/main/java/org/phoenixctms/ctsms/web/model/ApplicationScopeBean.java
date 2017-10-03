@@ -448,6 +448,10 @@ public class ApplicationScopeBean {
 		return WebUtil.getRemoteHost();
 	}
 
+	public String getScheduleRightHeaderTemplate() {
+		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
+	}
+
 	public String getScheduleTimePattern() {
 		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
 	}

@@ -54,6 +54,7 @@ public final class Settings {
 		INQUIRIES_PDF,
 		PROBAND_LIST_ENTRY_TAGS_PDF,
 		AUDIT_TRAIL_EXCEL,
+		INVENTORY_BOOKINGS_EXCEL,
 	}
 
 	private static String settingsBundleBasename;
@@ -73,6 +74,7 @@ public final class Settings {
 	private static String teamMembersExcelSettingsBundleBasename;
 	private static String reimbursementsExcelSettingsBundleBasename;
 	private static String auditTrailExcelSettingsBundleBasename;
+	private static String inventoryBookingsExcelSettingsBundleBasename;
 
 	// private final static ArrayList<String> CLASS_PATH_ELEMENTS = new ArrayList<String>();
 	// static {
@@ -290,6 +292,8 @@ public final class Settings {
 				return getBundle(visitScheduleExcelSettingsBundleBasename);
 			case AUDIT_TRAIL_EXCEL:
 				return getBundle(auditTrailExcelSettingsBundleBasename);
+			case INVENTORY_BOOKINGS_EXCEL:
+				return getBundle(inventoryBookingsExcelSettingsBundleBasename);
 			case TEAM_MEMBERS_EXCEL:
 				return getBundle(teamMembersExcelSettingsBundleBasename);
 			case REIMBURSEMENTS_EXCEL:
@@ -635,6 +639,13 @@ public final class Settings {
 			String inquiriesPdfSettingsBundleBasename) {
 		Settings.inquiriesPdfSettingsBundleBasename = inquiriesPdfSettingsBundleBasename;
 		getBundle(inquiriesPdfSettingsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setInventoryBookingsExcelSettingsBundleBasename(
+			String inventoryBookingsExcelSettingsBundleBasename) {
+		Settings.inventoryBookingsExcelSettingsBundleBasename = inventoryBookingsExcelSettingsBundleBasename;
+		getBundle(inventoryBookingsExcelSettingsBundleBasename);
 	}
 
 	@Autowired(required = true)

@@ -143,7 +143,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 					(new File(temp)).getName()));
 		}
 		footer.getLeft().clear();
-		footer.getLeft().append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
+		footer.getLeft().append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));
 		footer.getCentre().clear();
 		footer.getCentre().append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PAGE_NUMBER_HEADER_FOOTER_1, ExcelUtil.DEFAULT_LABEL));
 		footer.getCentre().appendPageNumber();

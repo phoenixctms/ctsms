@@ -144,19 +144,20 @@ public final class DateUtil {
 	}
 
 	public static String getDateStartStopString(Date start, Date stop) {
-		StringBuilder sb = new StringBuilder();
-		if (start != null) {
-			sb.append(getDateFormat().format(start));
-		} else {
-			sb.append("?");
-		}
-		sb.append(" - ");
-		if (stop != null) {
-			sb.append(getDateFormat().format(stop));
-		} else {
-			sb.append("?");
-		}
-		return sb.toString();
+		return CommonUtil.getDateStartStopString(start, stop, getDateFormat());
+		// StringBuilder sb = new StringBuilder();
+		// if (start != null) {
+		// sb.append(getDateFormat().format(start));
+		// } else {
+		// sb.append("?");
+		// }
+		// sb.append(" - ");
+		// if (stop != null) {
+		// sb.append(getDateFormat().format(stop));
+		// } else {
+		// sb.append("?");
+		// }
+		// return sb.toString();
 	}
 
 	public static DateFormat getDateTimeFormat() {

@@ -50,6 +50,7 @@ public interface SettingCodes {
 	public final static String CONVERTER_DATE_STYLE = "converter_date_style";
 	public final static String CONVERTER_TIME_STYLE = "converter_time_style";
 	public static final String SCHEDULE_TIME_PATTERN = "schedule_time_pattern";
+	public static final String SCHEDULE_RIGHT_HEADER_TEMPLATE = "schedule_right_header_template";
 	public final static String SHIFT_DURATION_SUMMARY_PERIOD_AFTER = "shift_duration_summary_period_after";
 	public final static String SHIFT_DURATION_SUMMARY_PERIOD_AFTER_DAYS = "shift_duration_summary_period_after_days";
 	public final static String SHIFT_DURATION_SUMMARY_PERIOD_BEFORE = "shift_duration_summary_period_before";
@@ -436,4 +437,5 @@ public interface SettingCodes {
 	public static final String SHOW_PROBAND_LIST_ENTRY_RATING = "show_proband_list_entry_rating";
 	public final static String PROBAND_LIST_ENTRY_RATING_PRESET = "proband_list_entry_rating_preset";
 	public final static String PROBAND_LIST_ENTRY_RATING_MAX_PRESET = "proband_list_entry_rating_max_preset";
+
 }

@@ -122,6 +122,7 @@ public interface SystemMessageCodes {
 	public final static String TEAM_MEMBERS_EXPORTED = "team_members_exported";
 	public final static String AUDIT_TRAIL_EXPORTED = "audit_trail_exported";
 	public final static String REIMBURSEMENTS_EXPORTED = "reimbursements_exported";
+	public final static String INVENTORY_BOOKINGS_EXPORTED = "inventory_bookings_exported";
 	public final static String PROBAND_LIST_ENTRY_TAG_CREATED = "proband_list_entry_tag_created";
 	public final static String PROBAND_LIST_ENTRY_TAG_UPDATED = "proband_list_entry_tag_updated";
 	public final static String PROBAND_LIST_ENTRY_TAG_DELETED = "proband_list_entry_tag_deleted";

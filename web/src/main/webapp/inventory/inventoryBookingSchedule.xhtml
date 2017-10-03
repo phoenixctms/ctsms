@@ -517,7 +517,7 @@
 						view="agendaDay"
 						leftHeaderTemplate="prev,today,next"
 						centerTemplate="title"
-						rightHeaderTemplate="agendaWeek,agendaDay">
+						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}">
 						<!-- rightHeaderTemplate="month,agendaWeek,agendaDay"> -->
 						<p:ajax
 							event="dateSelect"

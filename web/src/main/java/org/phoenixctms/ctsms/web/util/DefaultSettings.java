@@ -259,6 +259,7 @@ public final class DefaultSettings {
 	public final static int DATEFORMAT_DATE_STYLE = DateFormat.FULL;
 	public final static int DATEFORMAT_TIME_STYLE = DateFormat.FULL;
 	public static final String SCHEDULE_TIME_PATTERN = "HH:mm";
+	public static final String SCHEDULE_RIGHT_HEADER_TEMPLATE = "month,agendaWeek,agendaDay";
 	public final static int MAX_RECENT_ENTITIES = 10;
 	public static final int EXPIRATION_INFO_DAYS = 14;
 	public static final long EXPIRATION_INFO_LOGONS_LEFT = 3;

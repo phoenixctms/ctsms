@@ -90,6 +90,7 @@ public final class L10nUtil {
 	private static String probandListExcelLabelsBundleBasename;
 	private static String visitScheduleExcelLabelsBundleBasename;
 	private static String auditTrailExcelLabelsBundleBasename;
+	private static String inventoryBookingsExcelLabelsBundleBasename;
 	private static String teamMembersExcelLabelsBundleBasename;
 	private static String reimbursementsExcelLabelsBundleBasename;
 	private static String courseCategoriesBundleBasename;
@@ -412,6 +413,7 @@ public final class L10nUtil {
 		}
 		return l10nKey;
 	}
+
 	public static String getDepartmentL10nKey(String l10nKey, DepartmentVO department) {
 		StringBuilder result = new StringBuilder(l10nKey);
 		if (department != null) {
@@ -427,7 +429,6 @@ public final class L10nUtil {
 		}
 		return l10nKey;
 	}
-
 	//	public static String getDepartmentL10nKey(String l10nKey, InventoryOutVO inventory) {
 	//		if (inventory != null) {
 	//			return getDepartmentL10nKey(l10nKey,inventory.getDepartment());
@@ -526,6 +527,14 @@ public final class L10nUtil {
 
 	public static String getInquiriesPDFLabel(Locales locale, String l10nKey, String defaultName, Object... args) {
 		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, inquiriesPdfLabelsBundleBasename), defaultName);
+	}
+
+	public static ArrayList<String> getInventoryBookingsExcelColumns(Locales locale, String l10nKey, ArrayList<String> defaultValue) {
+		return CommonUtil.getValueStringList(l10nKey, getBundle(locale, inventoryBookingsExcelLabelsBundleBasename), defaultValue);
+	}
+
+	public static String getInventoryBookingsExcelLabel(Locales locale, String l10nKey, String defaultName, Object... args) {
+		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, inventoryBookingsExcelLabelsBundleBasename), defaultName);
 	}
 
 	public static String getInventoryCategoryName(Locales locale, String l10nKey) {
@@ -1137,6 +1146,13 @@ public final class L10nUtil {
 	public void setInquiriesPdfLocale(
 			String inquiriesPdfLocale) {
 		L10nUtil.inquiriesPdfLocale = getLocaleFromString(inquiriesPdfLocale);
+	}
+
+	@Autowired(required = true)
+	public void setInventoryBookingsExcelLabelsBundleBasename(
+			String inventoryBookingsExcelLabelsBundleBasename) {
+		L10nUtil.inventoryBookingsExcelLabelsBundleBasename = inventoryBookingsExcelLabelsBundleBasename;
+		getBundle(Locales.DEFAULT, inventoryBookingsExcelLabelsBundleBasename);
 	}
 
 	@Autowired(required = true)

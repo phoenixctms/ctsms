@@ -26,6 +26,7 @@ import org.phoenixctms.ctsms.compare.InventoryStatusEntryIntervalComparator;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntryDao;
+import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.DutyRosterTurnDao;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
@@ -56,6 +57,8 @@ import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.excel.ExcelExporter;
+import org.phoenixctms.ctsms.excel.InventoryBookingsExcelWriter;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -75,10 +78,12 @@ import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingDurationSummaryVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingInVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
+import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.InventoryInVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusEntryInVO;
@@ -764,6 +769,58 @@ extends InventoryServiceBase
 		if (responsiblePerson != null) {
 			logSystemMessage(responsiblePerson, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, result, null, journalEntryDao);
 		}
+		return result;
+	}
+
+	@Override
+	protected InventoryBookingsExcelVO handleExportInventoryBookings(AuthenticationVO auth, Long probandDepartmentId, Long courseDepartmentId, Long trialDepartmentId,
+			String calendar, Date from, Date to, Boolean isProbandAppointment,
+			Boolean isRelevantForProbandAppointments, Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments, Boolean isTrialAppointment,
+			Boolean isRelevantForTrialAppointments) throws Exception {
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		DepartmentVO probandDepartmentVO = null;
+		if (probandDepartmentId != null) {
+			probandDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(probandDepartmentId, departmentDao));
+		}
+		DepartmentVO courseDepartmentVO = null;
+		if (courseDepartmentId != null) {
+			courseDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(courseDepartmentId, departmentDao));
+		}
+		DepartmentVO trialDepartmentVO = null;
+		if (trialDepartmentId != null) {
+			trialDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(trialDepartmentId, departmentDao));
+		}
+		InventoryBookingsExcelWriter writer = new InventoryBookingsExcelWriter(!CoreUtil.isPassDecryption());
+		writer.setProbandDepartment(probandDepartmentVO);
+		writer.setCourseDepartment(courseDepartmentVO);
+		writer.setTrialDepartment(trialDepartmentVO);
+		writer.setCalendar(calendar);
+		writer.setFrom(from);
+		writer.setTo(to);
+		//writer.s
+
+		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
+		Collection VOs = inventoryBookingDao.findByAppointmentDepartmentsCalendarInterval(
+				probandDepartmentId,
+				courseDepartmentId,
+				trialDepartmentId,
+				calendar, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), isProbandAppointment, isRelevantForProbandAppointments, isCourseAppointment,
+				isRelevantForCourseAppointments, isTrialAppointment, isRelevantForTrialAppointments);
+		inventoryBookingDao.toInventoryBookingOutVOCollection(VOs);
+
+		writer.setVOs(VOs);
+		//writer.setDistinctColumnNames(distinctColumnNames);
+		//writer.setDistinctFieldRows(distinctFieldRows);
+		User user = CoreUtil.getUser();
+		// UserOutVO userVO = this.getUserDao().toUserOutVO(user);
+		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
+		(new ExcelExporter(writer, writer)).write();
+		InventoryBookingsExcelVO result = writer.getExcelVO();
+		// byte[] documentDataBackup = result.getDocumentDatas();
+		// result.setDocumentDatas(null);
+		ServiceUtil.logSystemMessage(user, null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INVENTORY_BOOKINGS_EXPORTED, result,
+				null, this.getJournalEntryDao());
+		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 

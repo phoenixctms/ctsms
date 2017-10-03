@@ -624,7 +624,6 @@ public class DBTool {
 					if (dbTool.testForced(line, "DB will be modified - criteria items will be deleted!")) {
 						sendEmail = dbTool.getServiceMethodExecutor().performCriteriaDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
-
 				} else if (line.hasOption(DBToolOptions.SCAN_ALL_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTask(DBToolOptions.SCAN_ALL_DEFERRED_DELETE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
@@ -848,7 +847,16 @@ public class DBTool {
 						sendEmail = dbTool.getServiceMethodExecutor().exportCriteriaJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportProbandAppointments(getAuthenticationOptionValue(line), getIdOptionValue(line, false),
+								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT)) > 0l;
+					}
 				}
+
 
 				// } catch (IllegalArgumentException e) {
 				// (new JobOutput()).println(e.getMessage());
