@@ -101,15 +101,31 @@ public abstract class EntitySignature extends GraphEnumerator {
 				if (proband.isPerson()) {
 					ProbandContactParticulars personParticulars = proband.getPersonParticulars();
 					if (personParticulars != null) {
-						return new Serializable[] { proband.getId(), personParticulars.getEncryptedFirstName(), personParticulars.getEncryptedLastName(),
-								personParticulars.getEncryptedDateOfBirth() };
+						if (proband.isBlinded()) {
+							// if (!CommonUtil.isEmptyString(personParticulars.getAlias())) {
+							return new Serializable[] { proband.getId(), personParticulars.getAlias() };
+							// } else {
+							// return new Serializable[] { proband.getId(), personParticulars.getGender(), personParticulars.getEncryptedDateOfBirth() };
+							// }
+						} else {
+							return new Serializable[] { proband.getId(), personParticulars.getEncryptedFirstName(), personParticulars.getEncryptedLastName(),
+									personParticulars.getEncryptedDateOfBirth() };
+						}
 					} else {
 						return new Serializable[] { proband.getId() };
 					}
 				} else {
 					AnimalContactParticulars animalParticulars = proband.getAnimalParticulars();
 					if (animalParticulars != null) {
-						return new Serializable[] { proband.getId(), animalParticulars.getAnimalName(), animalParticulars.getDateOfBirth() };
+						if (proband.isBlinded()) {
+							// if (!CommonUtil.isEmptyString(animalParticulars.getAlias())) {
+							return new Serializable[] { proband.getId(), animalParticulars.getAlias() };
+							// } else {
+							// return new Serializable[] { proband.getId(), animalParticulars.getGender(), animalParticulars.getDateOfBirth() };
+							// }
+						} else {
+							return new Serializable[] { proband.getId(), animalParticulars.getAnimalName(), animalParticulars.getDateOfBirth() };
+						}
 					} else {
 						return new Serializable[] { proband.getId() };
 					}
