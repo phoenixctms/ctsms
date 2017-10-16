@@ -136,7 +136,7 @@ public class FileSystemLoader {
 				psf.setSortField("id");
 				psf.setSortOrder(true);
 				if (pageNumber > 0 && pageSize > 0) {
-					psf.setFirst(pageNumber - 1);
+					psf.setFirst(pageNumber - 1); // always 1, isIncrementPageNumber = false
 					psf.setPageSize(pageSize);
 				}
 				return dao.findFiles(module, id, null, null, null, null, psf);

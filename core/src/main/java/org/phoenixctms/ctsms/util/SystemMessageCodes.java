@@ -260,6 +260,7 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_ADDRESS_WIRE_TRANSFER_UNSET = "proband_address_wire_transfer_unset";
 	public final static String PROBAND_ADDRESS_WIRE_TRANSFER_SET = "proband_address_wire_transfer_set";
 	public final static String PRIVACY_CONSENT_STATUS_TYPE_UPDATED = "privacy_consent_status_type_updated";
+	public final static String PROBAND_CATEGORY_UPDATED = "proband_category_updated";
 	public final static String PROBAND_AUTO_DELETE_DEADLINE_RESET = "proband_auto_delete_deadline_reset";
 	public final static String INQUIRY_VALUE_CREATED = "inquiry_value_created";
 	public final static String INQUIRY_VALUE_UPDATED = "inquiry_value_updated";

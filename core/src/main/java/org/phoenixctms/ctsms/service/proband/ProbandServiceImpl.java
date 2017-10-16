@@ -100,6 +100,8 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
+import org.phoenixctms.ctsms.security.CipherText;
+import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -2771,7 +2773,6 @@ extends ProbandServiceBase
 			ProbandOutVO parent = parentsIt.next();
 			ServiceUtil.logSystemMessage(probandDao.load(parent.getId()), result, now, user, SystemMessageCodes.PROBAND_UPDATED, result, original, journalEntryDao);
 		}
-
 		return result;
 	}
 
@@ -2794,6 +2795,52 @@ extends ProbandServiceBase
 		ProbandAddressOutVO result = addressDao.toProbandAddressOutVO(address);
 		ServiceUtil.logSystemMessage(address.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_ADDRESS_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
+	}
+
+	@Override
+	protected ProbandOutVO handleUpdateProbandCategory(
+			AuthenticationVO auth, Long probandId, Long version, Long categoryId, String comment) throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
+		ProbandOutVO original = probandDao.toProbandOutVO(proband);
+		if (!original.isDecrypted()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		}
+		ProbandCategory category = CheckIDUtil.checkProbandCategoryId(categoryId, this.getProbandCategoryDao());
+		if (proband.isPerson()) {
+			if (!category.isPerson()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CATEGORY_NOT_FOR_PERSON_ENTRIES,
+						L10nUtil.getProbandCategoryName(Locales.USER, category.getNameL10nKey()));
+			}
+		} else {
+			if (!category.isAnimal()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CATEGORY_NOT_FOR_ANIMAL_ENTRIES,
+						L10nUtil.getProbandCategoryName(Locales.USER, category.getNameL10nKey()));
+			}
+		}
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		ServiceUtil.modifyVersion(proband, version.longValue(), now, user);
+		proband.setCategory(category);
+		if (proband.isPerson()) {
+			ProbandContactParticulars personParticulars = proband.getPersonParticulars();
+			if (personParticulars != null) {
+				CipherText cipherText = CryptoUtil.encryptValue(comment);
+				personParticulars.setCommentIv(cipherText.getIv());
+				personParticulars.setEncryptedComment(cipherText.getCipherText());
+				personParticulars.setCommentHash(CryptoUtil.hashForSearch(comment));
+			}
+		} else {
+			AnimalContactParticulars animalParticulars = proband.getAnimalParticulars();
+			if (animalParticulars != null) {
+				animalParticulars.setComment(comment);
+			}
+		}
+
+		probandDao.update(proband);
+		ProbandOutVO result = probandDao.toProbandOutVO(proband);
+		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_CATEGORY_UPDATED, result, original, this.getJournalEntryDao());
+		return probandDao.toProbandOutVO(proband);
 	}
 
 	@Override

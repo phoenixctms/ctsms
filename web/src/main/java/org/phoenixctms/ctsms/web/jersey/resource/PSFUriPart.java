@@ -156,6 +156,10 @@ public class PSFUriPart extends PSFVO implements UriPart {
 	}
 
 	private void updateFirst() {
-		super.setFirst((pageNumber - 1) * pageSize);
+		if (pageNumber > 0 && pageSize > 0) {
+			super.setFirst((pageNumber - 1) * pageSize);
+		} else {
+			super.setFirst(0);
+		}
 	}
 }

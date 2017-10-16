@@ -47,6 +47,7 @@ import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.resource.ServiceResourceBase;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
+import org.phoenixctms.ctsms.web.jersey.wrapper.SetProbandCategoryWrapper;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -228,11 +229,11 @@ public class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Page<ProbandOutVO> getProbandList(@Context UriInfo uriInfo)
+	public Page<ProbandOutVO> getProbandList(@Context UriInfo uriInfo, @QueryParam("department_id") Long departmentId) // , @QueryParam("proband_id") Long probandId)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf;
+		PSFUriPart psf; // = new PSFUriPart(uriInfo,"department_id","proband_id");
 		return new Page<ProbandOutVO>(WebUtil.getServiceLocator().getProbandService()
-				.getProbandList(auth, null, null, ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
+				.getProbandList(auth, null, departmentId, ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo, "department_id")), psf);
 	}
 
 	@Override
@@ -358,5 +359,40 @@ public class ProbandResource extends ServiceResourceBase {
 				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
 				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
+	}
+
+	// @PATCH
+	// @Consumes({ MediaType.APPLICATION_JSON })
+	// @Produces({ MediaType.APPLICATION_JSON })
+	// public ProbandOutVO updateProband(ProbandInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
+	// return WebUtil.getServiceLocator().getProbandService().updateProband(auth, in,
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
+	// }
+	// @PATCH
+	// @Consumes({ MediaType.APPLICATION_JSON })
+	// @Produces({ MediaType.APPLICATION_JSON })
+	// @Path("{id}")
+	// public ProbandOutVO updateProband(PatchWrapper patch) throws AuthenticationException, AuthorisationException, ServiceException {
+	// ProbandInVO in = new ProbandInVO();
+	// Long out = WebUtil.getServiceLocator().getProbandService().getProband(auth, id,
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
+	// ProbandBean.copyProbandOutToIn(in, out);
+	// applypatch(in,patch);
+	// return WebUtil.getServiceLocator().getProbandService().updateProband(auth, in,
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
+	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
+	// }
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/category")
+	public ProbandOutVO updateProbandCategory(@PathParam("id") Long id, SetProbandCategoryWrapper in)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getProbandService().updateProbandCategory(auth, id, in.getVersion(), in.getCategoryId(), in.getComment());
 	}
 }
