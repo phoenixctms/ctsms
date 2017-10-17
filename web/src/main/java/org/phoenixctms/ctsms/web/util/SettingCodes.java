@@ -76,6 +76,7 @@ public interface SettingCodes {
 	public final static String INPUT_MODEL_LONG_TITLE_LENGTH = "input_model_long_title_length";
 	public final static String DUTY_ROSTER_SELF_ALLOCATABLE_PRESET = "duty_roster_self_allocatable_preset";
 	public final static String FILE_ACTIVE_PRESET = "file_active_preset";
+	public final static String FILE_PUBLIC_PRESET = "file_public_preset";
 	public final static String FILE_LOGICAL_PATH_PRESET = "file_logical_path_preset";
 	public final static String HYPERLINK_ACTIVE_PRESET = "hyperlink_active_preset";
 	public final static String HYPERLINK_URL_PRESET = "hyperlink_url_preset";

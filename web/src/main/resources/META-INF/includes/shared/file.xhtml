@@ -214,6 +214,16 @@
 									value="#{filefolder.active}" />
 							</ui:include>
 						</p:column>
+						<p:column style="width:32px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_public_column}" />
+							</f:facet>
+							<ui:include src="listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{filefolder.publicFile}" />
+							</ui:include>
+						</p:column>
 						<p:column style="width:66px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.file_treetable_size_column}" />
@@ -371,6 +381,26 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="fileactive" />
+							
+							<h:outputLabel
+								for="filepublic"
+								value="#{labels.file_public_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="filepublic"
+									value="#{fileBean.in.publicFile}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="filepublic">
+									<h:outputText
+										value="#{labels.file_public_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="filepublic" />
+							
 							<h:outputLabel
 								styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
 								rendered="#{fileBean.created}"

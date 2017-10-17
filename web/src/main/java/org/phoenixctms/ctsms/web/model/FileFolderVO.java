@@ -103,6 +103,10 @@ public class FileFolderVO {
 		return null;
 	}
 
+	public Boolean getPublicFile() {
+		return null;
+	}
+
 	public long getSize() {
 		return size;
 	}

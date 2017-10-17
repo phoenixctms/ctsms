@@ -67,6 +67,7 @@ public class FileBean extends ManagedBeanBase {
 			TrialOutVO trialVO = out.getTrial();
 			ProbandOutVO probandVO = out.getProband();
 			in.setActive(out.getActive());
+			in.setPublicFile(out.getPublicFile());
 			in.setComment(out.getComment());
 			in.setCourseId(courseVO == null ? null : courseVO.getId());
 			in.setId(out.getId());
@@ -91,6 +92,7 @@ public class FileBean extends ManagedBeanBase {
 	public static void initFileDefaultValues(FileInVO in, Long entityId, FileModule module) {
 		if (in != null) {
 			in.setActive(Settings.getBoolean(SettingCodes.FILE_ACTIVE_PRESET, Bundle.SETTINGS, DefaultSettings.FILE_ACTIVE_PRESET));
+			in.setPublicFile(Settings.getBoolean(SettingCodes.FILE_PUBLIC_PRESET, Bundle.SETTINGS, DefaultSettings.FILE_PUBLIC_PRESET));
 			in.setComment(Messages.getString(MessageCodes.FILE_COMMENT_PRESET));
 			in.setCourseId(FileModule.COURSE_DOCUMENT.equals(module) ? entityId : null);
 			in.setId(null);

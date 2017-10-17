@@ -252,6 +252,7 @@ public final class DefaultSettings {
 	public final static boolean HYPERLINK_ACTIVE_PRESET = true;
 	public final static String HYPERLINK_URL_PRESET = "http://";
 	public final static boolean FILE_ACTIVE_PRESET = true;
+	public final static boolean FILE_PUBLIC_PRESET = false;
 	public final static String FILE_LOGICAL_PATH_PRESET = "";
 	public final static String DATEFORMAT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public final static String DATEFORMAT_DATE_PATTERN = "yyyy-MM-dd";

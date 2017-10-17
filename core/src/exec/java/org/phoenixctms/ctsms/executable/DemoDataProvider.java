@@ -1100,6 +1100,7 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		FileInVO newFile = new FileInVO();
 		newFile.setActive(getRandomBoolean(50));
+		newFile.setPublicFile(true);
 		switch (module) {
 			case INVENTORY_DOCUMENT:
 				newFile.setInventoryId(id);

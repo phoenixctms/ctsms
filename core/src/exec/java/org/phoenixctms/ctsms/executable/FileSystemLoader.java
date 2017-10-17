@@ -41,6 +41,7 @@ public class FileSystemLoader {
 	@Autowired
 	private FileService fileService;
 	private final static boolean FILE_ACTIVE = true;
+	private final static boolean FILE_PUBLIC = false;
 	private final static boolean SORT_FILES = true;
 	private final static boolean SKIP_ERRORS = true;
 	private final static java.util.regex.Pattern PATH_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(java.io.File.separator));
@@ -206,6 +207,7 @@ public class FileSystemLoader {
 			java.io.File file = filesIt.next();
 			FileInVO newFile = new FileInVO();
 			newFile.setActive(FILE_ACTIVE);
+			newFile.setPublicFile(FILE_PUBLIC);
 			switch (module) {
 				case INVENTORY_DOCUMENT:
 					newFile.setInventoryId(id);

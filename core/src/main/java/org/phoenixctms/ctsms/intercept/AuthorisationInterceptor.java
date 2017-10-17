@@ -33,6 +33,7 @@ import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldValueDao;
+import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.HyperlinkDao;
 import org.phoenixctms.ctsms.domain.InputField;
@@ -531,6 +532,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		Staff staff;
 		Course course;
 		Trial trial;
+		File file;
 		DBModule dbModule;
 		CriteriaInVO criteria;
 		Set<CriterionInVO> criterions;
@@ -752,6 +754,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				checkCriteriaForModifications(criteria == null ? null : criteria.getId(), ServiceUtil.toInstant(criterions, criterionDao), true);
 				break;
 			case SAVED_CRITERIA_ID:
+				break;
+			case PUBLIC_FILE:
+				file = parameterValue == null ? null : CheckIDUtil.checkFileId((Long) parameterValue, fileDao);
+				if (!file.isPublicFile()) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), file == null ? null : Long.toString(file.getId()));
+				}
 				break;
 			default:
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_SERVICE_METHOD_PARAMETER_RESTRICTION,
