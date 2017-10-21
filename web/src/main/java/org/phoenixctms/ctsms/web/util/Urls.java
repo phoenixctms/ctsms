@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.util;
 import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 public enum Urls {
@@ -110,7 +111,11 @@ public enum Urls {
 	}
 
 	public static String getHomeViewName(HttpServletRequest request) {
-		String url = request.getRequestURL().toString();
+		// String url = request.getRequestURL().toString();
+		StringBuffer url = request.getRequestURL();
+		if (!CommonUtil.isEmptyString(request.getQueryString())) {
+			url.append('?').append(request.getQueryString());
+		}
 		int lastSlash = url.lastIndexOf("/");
 		int queryBegin = url.indexOf("?");
 		String name;
@@ -124,7 +129,7 @@ public enum Urls {
 			if (queryBegin >= 0) {
 				name = url.substring(0, queryBegin);
 			} else {
-				name = url;
+				name = url.toString();
 			}
 		}
 		int extBegin = name.indexOf(".");

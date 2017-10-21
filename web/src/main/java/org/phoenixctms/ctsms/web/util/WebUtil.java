@@ -3470,7 +3470,11 @@ public final class WebUtil {
 	public static String getRefererBase64(HttpServletRequest request) {
 		if (request != null) {
 			String headerValue = request.getHeader(REFERER_HEADER_NAME);
-			return JsUtil.encodeBase64(isTrustedReferer(headerValue, request) ? headerValue : request.getRequestURL().toString(), true);
+			StringBuffer url = request.getRequestURL();
+			if (!CommonUtil.isEmptyString(request.getQueryString())) {
+				url.append('?').append(request.getQueryString());
+			}
+			return JsUtil.encodeBase64(isTrustedReferer(headerValue, request) ? headerValue : url.toString(), true);
 		}
 		return "";
 	}
