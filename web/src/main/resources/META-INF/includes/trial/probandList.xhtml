@@ -249,23 +249,64 @@
 								cellpadding="0"
 								styleClass="ctsms-probandlist-rowexpansion-panelgrid"
 								columnClasses="ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column">
-								<h:outputText
-									rendered="#{empty probandListEntry.vo.proband.comment}"
-									value="#{probandlabels.no_proband_comment_label}" />
-								<ui:include src="../shared/rowExpansionOutputText.xhtml">
-									<ui:param
-										name="rowExpansionText"
+								
+								<h:panelGroup layout="block" class="ui-datalist-content ui-widget-content">
+									<dl class="ui-datalist-data">
+									
+									<dt class="ui-datalist-item">
+										#{triallabels.proband_comment_label}
+									</dt>
+									<dd>
+									<h:outputText
+										rendered="#{empty probandListEntry.vo.proband.comment}"
+										value="#{probandlabels.no_proband_comment_label}" />									
+									<h:outputText
+									    escape="true"
+									    rendered="#{not empty probandListEntry.vo.proband.comment}"
+									    styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
 										value="#{probandListEntry.vo.proband.comment}" />
-									<ui:param
-										name="rendered"
-										value="#{not empty probandListEntry.vo.proband.comment}" />
-									<ui:param
-										name="rowExpansionTextClass"
-										value="ctsms-probandlist-rowexpansion-datalist-descriptiontext" />
-									<ui:param
-										name="escapeHtml"
-										value="true" />
-								</ui:include>
+									</dd>
+									
+									<dt class="ui-datalist-item">
+										#{!probandListEntry.vo.proband.decrypted ? triallabels.proband_yearofbirth_label : triallabels.proband_dateofbirth_label}
+									</dt>
+									<dd>
+									<h:outputText
+									    rendered="#{!probandListEntry.vo.proband.decrypted}"
+										value="#{probandListEntry.vo.proband.yearOfBirth}" />
+									<h:outputText
+									    rendered="#{probandListEntry.vo.proband.decrypted}"
+									    styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
+										value="#{probandListEntry.vo.proband.dateOfBirth}" >
+										<f:converter converterId="ctsms.Date" />
+									</h:outputText>
+									</dd>
+									
+									<dt class="ui-datalist-item">
+										#{triallabels.proband_age_label}
+									</dt>
+									<dd>
+										<h:panelGroup styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext" rendered="#{probandListEntry.vo.proband.decrypted}">
+					       					#{probandListEntry.vo.proband.age}
+					       				</h:panelGroup>
+										<h:panelGroup rendered="#{!probandListEntry.vo.proband.decrypted}">
+											<table style="border: none; padding: 0pt;width: 0px !important;">
+												<tr>
+													<td
+														style="border: none;"
+														rowspan="2">#{probandListEntry.vo.proband.age}</td>
+													<td style="border: none; font-size: 0.7em;">+0</td>
+												</tr>
+												<tr>
+													<td style="border: none; font-size: 0.7em;">-1</td>
+												</tr>
+											</table>
+										</h:panelGroup>
+									</dd>
+									
+									</dl>
+								</h:panelGroup>
+								
 								<h:outputText
 									rendered="#{applicationScopeBean.getListSize(probandListEntryBean.getProbandContactDetailValues(probandListEntry.vo.proband)) == 0}"
 									value="#{probandlabels.no_proband_contact_detail_values_label}" />

@@ -11,7 +11,7 @@
 <h:body>
 	<ui:composition>
 		<h:outputLink
-			styleClass="styleClass"
+			styleClass="#{styleClass}"
 			rendered="#{decrypted and contactDetailValue.type.email}"
 			value="mailto:#{contactDetailValue.value}">
 			<h:outputText value="#{contactDetailValue.value}" />
@@ -23,11 +23,11 @@
 			<h:outputText value="#{contactDetailValue.value}" />
 		</h:outputLink>
 		<h:outputText
-			styleClass="styleClass"
+			styleClass="#{styleClass}"
 			rendered="#{decrypted and !(contactDetailValue.type.email or contactDetailValue.type.url)}"
 			value="#{contactDetailValue.value}" />
 		<h:outputText
-			styleClass="styleClass"
+			styleClass="#{styleClass}"
 			rendered="#{!decrypted}"
 			value="#{labels.encrypted_contact_detail_value_label}" />
 	</ui:composition>
