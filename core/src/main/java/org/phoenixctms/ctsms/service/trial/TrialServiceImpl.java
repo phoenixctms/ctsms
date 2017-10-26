@@ -413,7 +413,7 @@ extends TrialServiceBase
 		checkAddEcrfFieldInput(newEcrfField);
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		ECRFField ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(newEcrfField);
-		ServiceUtil.modifyVersion(ecrfField, now, user);
+		CoreUtil.modifyVersion(ecrfField, now, user);
 		ecrfField = ecrfFieldDao.create(ecrfField);
 		ECRFFieldOutVO result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 		ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_CREATED, result, null, this.getJournalEntryDao());
@@ -437,7 +437,7 @@ extends TrialServiceBase
 		ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntryDao.eCRFFieldStatusEntryInVOToEntity(newEcrfFieldStatusEntry);
 		fieldStatus.setQueue(queue);
 
-		ServiceUtil.modifyVersion(fieldStatus, now, user);
+		CoreUtil.modifyVersion(fieldStatus, now, user);
 		fieldStatus = ecrfFieldStatusEntryDao.create(fieldStatus);
 
 		notifyEcrfFieldStatus(lastStatus,fieldStatus,queue,now);
@@ -471,7 +471,7 @@ extends TrialServiceBase
 		ecrf.addEcrfStatusEntries(statusEntry);
 		statusEntry.setListEntry(listEntry);
 		listEntry.addEcrfStatusEntries(statusEntry);
-		ServiceUtil.modifyVersion(statusEntry, now, user);
+		CoreUtil.modifyVersion(statusEntry, now, user);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		statusEntry = ecrfStatusEntryDao.create(statusEntry);
@@ -488,7 +488,7 @@ extends TrialServiceBase
 		checkAddInquiryInput(newInquiry);
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Inquiry inquiry = inquiryDao.inquiryInVOToEntity(newInquiry);
-		ServiceUtil.modifyVersion(inquiry, now, user);
+		CoreUtil.modifyVersion(inquiry, now, user);
 		inquiry = inquiryDao.create(inquiry);
 		InquiryOutVO result = inquiryDao.toInquiryOutVO(inquiry);
 		ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.INQUIRY_CREATED, result, null, this.getJournalEntryDao());
@@ -515,7 +515,7 @@ extends TrialServiceBase
 			}
 			listEntry.setPosition(position);
 		}
-		ServiceUtil.modifyVersion(listEntry, now, user);
+		CoreUtil.modifyVersion(listEntry, now, user);
 		listEntry = probandListEntryDao.create(listEntry);
 		ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
 		if (statusType != null && statusType.isInitial()) { // && !statusType.isReasonRequired()) {
@@ -538,7 +538,7 @@ extends TrialServiceBase
 				statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
 				statusEntry.setRealTimestamp(now);
 				statusEntry.setStatus(statusType);
-				ServiceUtil.modifyVersion(statusEntry, now, user);
+				CoreUtil.modifyVersion(statusEntry, now, user);
 				ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 				statusEntry = probandListStatusEntryDao.create(statusEntry);
 				listEntry.setLastStatus(statusEntry);
@@ -565,7 +565,7 @@ extends TrialServiceBase
 		checkAddProbandListEntryTagInput(newProbandListEntryTag);
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag probandListEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(newProbandListEntryTag);
-		ServiceUtil.modifyVersion(probandListEntryTag, now, user);
+		CoreUtil.modifyVersion(probandListEntryTag, now, user);
 		probandListEntryTag = probandListEntryTagDao.create(probandListEntryTag);
 		ProbandListEntryTagOutVO result = probandListEntryTagDao.toProbandListEntryTagOutVO(probandListEntryTag);
 		ServiceUtil.logSystemMessage(probandListEntryTag.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_CREATED, result, null,
@@ -602,7 +602,7 @@ extends TrialServiceBase
 		checkTeamMemberInput(newTeamMember);
 		TeamMemberDao teamMemberDao = this.getTeamMemberDao();
 		TeamMember teamMember = teamMemberDao.teamMemberInVOToEntity(newTeamMember);
-		ServiceUtil.modifyVersion(teamMember, now, user);
+		CoreUtil.modifyVersion(teamMember, now, user);
 		teamMember = teamMemberDao.create(teamMember);
 		TeamMemberOutVO result = teamMemberDao.toTeamMemberOutVO(teamMember);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -639,7 +639,7 @@ extends TrialServiceBase
 			ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
 			ECRFFieldValue ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
-			ServiceUtil.modifyVersion(ecrfFieldValue, now, user);
+			CoreUtil.modifyVersion(ecrfFieldValue, now, user);
 			if (isAuditTrail) {
 				ecrfFieldValue.setChangeComment(CoreUtil.getAuditTrailChangeCommentContent(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue), null, true));
 			}
@@ -691,7 +691,7 @@ extends TrialServiceBase
 					ecrfFieldValueIn.setId(null); // arg must not be manipulated
 				}
 				ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
-				ServiceUtil.modifyVersion(originalEcrfFieldValue, ecrfFieldValue, now, user);
+				CoreUtil.modifyVersion(originalEcrfFieldValue, ecrfFieldValue, now, user);
 				if (isAuditTrail) {
 					ecrfFieldValue.setChangeComment(CoreUtil.getAuditTrailChangeCommentContent(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue), original, true));
 					InputFieldValue inputFieldValue = ecrfFieldValue.getValue();
@@ -768,7 +768,7 @@ extends TrialServiceBase
 			ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
 			ProbandListEntryTagValue listEntryTagValue = probandListEntryTagValueDao.probandListEntryTagValueInVOToEntity(probandListEntryTagValueIn);
-			ServiceUtil.modifyVersion(listEntryTagValue, now, user);
+			CoreUtil.modifyVersion(listEntryTagValue, now, user);
 			InputFieldValue inputFieldValue = listEntryTagValue.getValue();
 			this.getInputFieldValueDao().create(inputFieldValue);
 			listEntryTagValue = probandListEntryTagValueDao.create(listEntryTagValue);
@@ -802,7 +802,7 @@ extends TrialServiceBase
 				}
 				probandListEntryTagValueDao.evict(originalListEntryTagValue);
 				ProbandListEntryTagValue listEntryTagValue = probandListEntryTagValueDao.probandListEntryTagValueInVOToEntity(probandListEntryTagValueIn);
-				ServiceUtil.modifyVersion(originalListEntryTagValue, listEntryTagValue, now, user);
+				CoreUtil.modifyVersion(originalListEntryTagValue, listEntryTagValue, now, user);
 				probandListEntryTagValueDao.update(listEntryTagValue);
 				if (tagValues != null || logTrial || logProband) {
 					result = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(listEntryTagValue);
@@ -1915,7 +1915,7 @@ extends TrialServiceBase
 		ServiceUtil.checkTrialLocked(listEntry.getTrial());
 		ServiceUtil.checkProbandLocked(listEntry.getProband());
 		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
-		ServiceUtil.getNewVersionChecked(originalStatusEntry, version.longValue());
+		CoreUtil.getNewVersionChecked(originalStatusEntry, version.longValue());
 		boolean validState = false;
 		Iterator<ECRFStatusType> statesIt = ecrfStatusTypeDao.findTransitions(originalStatusEntry.getStatus().getId()).iterator();
 		while (statesIt.hasNext()) {
@@ -2500,7 +2500,7 @@ extends TrialServiceBase
 		ECRF ecrf = ecrfDao.eCRFInVOToEntity(newEcrf);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(ecrf, now, user);
+		CoreUtil.modifyVersion(ecrf, now, user);
 		ecrf = ecrfDao.create(ecrf);
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
 		ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_CREATED, result, null, this.getJournalEntryDao());
@@ -2618,7 +2618,7 @@ extends TrialServiceBase
 		ProbandGroup probandGroup = probandGroupDao.probandGroupInVOToEntity(newProbandGroup);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(probandGroup, now, user);
+		CoreUtil.modifyVersion(probandGroup, now, user);
 		probandGroup = probandGroupDao.create(probandGroup);
 		ProbandGroupOutVO result = probandGroupDao.toProbandGroupOutVO(probandGroup);
 		ServiceUtil.logSystemMessage(probandGroup.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_CREATED, result, null, this.getJournalEntryDao());
@@ -2794,7 +2794,7 @@ extends TrialServiceBase
 		TimelineEvent timelineEvent = timelineEventDao.timelineEventInVOToEntity(newTimelineEvent);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(timelineEvent, now, user);
+		CoreUtil.modifyVersion(timelineEvent, now, user);
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEvent = timelineEventDao.create(timelineEvent);
 		notifyTimelineEventReminder(timelineEvent, now);
@@ -2810,7 +2810,7 @@ extends TrialServiceBase
 		Trial trial = trialDao.trialInVOToEntity(newTrial);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(trial, now, user);
+		CoreUtil.modifyVersion(trial, now, user);
 		trial = trialDao.create(trial);
 		execTrialStatusActions(null, trial, now, user);
 		TrialOutVO result = trialDao.toTrialOutVO(trial);
@@ -2826,7 +2826,7 @@ extends TrialServiceBase
 		TrialTagValue tagValue = tagValueDao.trialTagValueInVOToEntity(newTrialTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(tagValue, now, user);
+		CoreUtil.modifyVersion(tagValue, now, user);
 		tagValue = tagValueDao.create(tagValue);
 		TrialTagValueOutVO result = tagValueDao.toTrialTagValueOutVO(tagValue);
 		ServiceUtil.logSystemMessage(tagValue.getTrial(), result.getTrial(), now, user, SystemMessageCodes.TRIAL_TAG_VALUE_CREATED, result, null, this.getJournalEntryDao());
@@ -2854,7 +2854,7 @@ extends TrialServiceBase
 			}
 			ecrfDao.evict(originalEcrf);
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
-			ServiceUtil.modifyVersion(originalEcrf, ecrf, now, user);
+			CoreUtil.modifyVersion(originalEcrf, ecrf, now, user);
 			ecrfDao.update(ecrf);
 			// Hibernate.initialize(inputField);
 			update = true;
@@ -2863,7 +2863,7 @@ extends TrialServiceBase
 			originalEcrfFieldIds = new HashSet<Long>();
 			original = null;
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
-			ServiceUtil.modifyVersion(ecrf, now, user);
+			CoreUtil.modifyVersion(ecrf, now, user);
 			// ecrf = ecrfDao.create(ecrf);
 			ecrf = ecrfDao.create(ecrf, LockMode.PESSIMISTIC_WRITE); // required here, as load(..,lockMode) will not work with created entities
 			// inputFieldDao.evict(inputField);
@@ -2923,15 +2923,18 @@ extends TrialServiceBase
 					ECRFFieldOutVO originalEcrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 					ecrfFieldDao.evict(originalEcrfField);
 					ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
-					ServiceUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
+					CoreUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
 					ecrfFieldDao.update(ecrfField);
 					ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
-					ServiceUtil.logSystemMessage(ecrfField.getTrial(), ecrfFieldVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, ecrfFieldVO, originalEcrfFieldVO,
-							this.getJournalEntryDao());
+					if (ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFFieldOutVO.equalsExcluding(originalEcrfFieldVO, ecrfFieldVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+						ServiceUtil.logSystemMessage(ecrfField.getTrial(), ecrfFieldVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, ecrfFieldVO,
+								originalEcrfFieldVO,
+								this.getJournalEntryDao());
+					}
 				} else {
 					checkAddEcrfFieldInput(modifiedEcrfField);
 					ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
-					ServiceUtil.modifyVersion(ecrfField, now, user);
+					CoreUtil.modifyVersion(ecrfField, now, user);
 					ecrfField = ecrfFieldDao.create(ecrfField);
 					ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 					ServiceUtil
@@ -2945,8 +2948,11 @@ extends TrialServiceBase
 			}
 		}
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
-		ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, update ? SystemMessageCodes.ECRF_UPDATED : SystemMessageCodes.ECRF_CREATED, result, original,
-				journalEntryDao);
+		if (!update || ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+			ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, update ? SystemMessageCodes.ECRF_UPDATED : SystemMessageCodes.ECRF_CREATED, result,
+					original,
+					journalEntryDao);
+		}
 		return result;
 	}
 
@@ -2957,7 +2963,7 @@ extends TrialServiceBase
 		Visit visit = visitDao.visitInVOToEntity(newVisit);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(visit, now, user);
+		CoreUtil.modifyVersion(visit, now, user);
 		visit = visitDao.create(visit);
 		VisitOutVO result = visitDao.toVisitOutVO(visit);
 		ServiceUtil.logSystemMessage(visit.getTrial(), result.getTrial(), now, user, SystemMessageCodes.VISIT_CREATED, result, null, this.getJournalEntryDao());
@@ -2972,7 +2978,7 @@ extends TrialServiceBase
 		VisitScheduleItem visitScheduleItem = visitScheduleItemDao.visitScheduleItemInVOToEntity(newVisitScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(visitScheduleItem, now, user);
+		CoreUtil.modifyVersion(visitScheduleItem, now, user);
 		visitScheduleItem = visitScheduleItemDao.create(visitScheduleItem);
 		notifyVisitScheduleItemReminder(visitScheduleItem, now);
 		VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
@@ -3107,7 +3113,7 @@ extends TrialServiceBase
 		newEcrf.setTitle(originalEcrf.getTitle());
 		newEcrf.setTrial(trial);
 		trial.addEcrfs(newEcrf);
-		ServiceUtil.modifyVersion(newEcrf, now, user);
+		CoreUtil.modifyVersion(newEcrf, now, user);
 		newEcrf = ecrfDao.create(newEcrf);
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -3136,7 +3142,7 @@ extends TrialServiceBase
 			field.addEcrfFields(newEcrfField);
 			newEcrfField.setTrial(trial);
 			trial.addEcrfFields(newEcrfField);
-			ServiceUtil.modifyVersion(newEcrfField, now, user);
+			CoreUtil.modifyVersion(newEcrfField, now, user);
 			newEcrfField = ecrfFieldDao.create(newEcrfField);
 			ECRFFieldOutVO newEcrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(newEcrfField);
 			ServiceUtil.logSystemMessage(newEcrfField.getTrial(), newEcrfFieldVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_CLONED, newEcrfFieldVO, originalEcrfFieldVO,
@@ -3164,7 +3170,7 @@ extends TrialServiceBase
 			ecrfDao.evict(originalEcrf);
 			ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
 			ecrf.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user); // no opt. locking
 			ecrfDao.update(ecrf);
 			result = ecrfDao.toECRFOutVO(ecrf);
 			ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -3235,7 +3241,7 @@ extends TrialServiceBase
 			ecrfFieldDao.evict(originalEcrfField);
 			ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, ecrfFieldDao);
 			ecrfField.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(ecrfField, ecrfField.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(ecrfField, ecrfField.getVersion(), now, user); // no opt. locking
 			ecrfFieldDao.update(ecrfField);
 			result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 			ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_MARKED_FOR_DELETION, result, original,
@@ -3312,7 +3318,7 @@ extends TrialServiceBase
 			inquiryDao.evict(originalInquiry);
 			Inquiry inquiry = CheckIDUtil.checkInquiryId(inquiryId, inquiryDao);
 			inquiry.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(inquiry, inquiry.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(inquiry, inquiry.getVersion(), now, user); // no opt. locking
 			inquiryDao.update(inquiry);
 			result = inquiryDao.toInquiryOutVO(inquiry);
 			ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.INQUIRY_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -3359,7 +3365,7 @@ extends TrialServiceBase
 			} else {
 				ECRFOutVO original = ecrfDao.toECRFOutVO(ecrf);
 				ecrf.setGroup(null);
-				ServiceUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
+				CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
 				ecrfDao.update(ecrf);
 				ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 				ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_ECRF_UPDATED, ecrfVO, original, journalEntryDao);
@@ -3382,7 +3388,7 @@ extends TrialServiceBase
 			while (dutyRosterTurnsIt.hasNext()) {
 				DutyRosterTurn dutyRosterTurn = dutyRosterTurnsIt.next();
 				dutyRosterTurn.setVisitScheduleItem(null);
-				ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+				CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 				dutyRosterTurnDao.update(dutyRosterTurn);
 			}
 			visitScheduleItem.getDutyRosterTurns().clear();
@@ -3404,7 +3410,7 @@ extends TrialServiceBase
 				// already end state
 			}
 			probandListEntry.setGroup(null);
-			ServiceUtil.modifyVersion(probandListEntry, probandListEntry.getVersion(), now, user);
+			CoreUtil.modifyVersion(probandListEntry, probandListEntry.getVersion(), now, user);
 			probandListEntryDao.update(probandListEntry);
 			ProbandListEntryOutVO probandListEntryVO = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
 			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_PROBAND_LIST_ENTRY_UPDATED, probandListEntryVO, original,
@@ -3599,7 +3605,7 @@ extends TrialServiceBase
 			trialDao.evict(originalTrial);
 			Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
 			trial.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(trial, originalTrial.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(trial, originalTrial.getVersion(), now, user); // no opt. locking
 			trialDao.update(trial);
 			result = trialDao.toTrialOutVO(trial);
 			ServiceUtil.logSystemMessage(trial, result, now, user, SystemMessageCodes.TRIAL_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -3647,7 +3653,7 @@ extends TrialServiceBase
 				InventoryBooking booking = bookingsIt.next();
 				InventoryBookingOutVO original = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				booking.setTrial(null);
-				ServiceUtil.modifyVersion(booking, booking.getVersion(), now, user);
+				CoreUtil.modifyVersion(booking, booking.getVersion(), now, user);
 				inventoryBookingDao.update(booking);
 				InventoryBookingOutVO bookingVO = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				logSystemMessage(booking.getInventory(), result, now, user, SystemMessageCodes.TRIAL_DELETED_BOOKING_UPDATED, bookingVO, original, journalEntryDao);
@@ -3745,7 +3751,7 @@ extends TrialServiceBase
 					visitScheduleItemTrial.removeDutyRosterTurns(dutyRosterTurn);
 					dutyRosterTurn.setTrial(null);
 					dutyRosterTurn.setVisitScheduleItem(null);
-					ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+					CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 					dutyRosterTurnDao.update(dutyRosterTurn);
 					if (staff != null) {
 						DutyRosterTurnOutVO dutyRosterTurnVO = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
@@ -3773,7 +3779,7 @@ extends TrialServiceBase
 					dutyRosterTurn.setVisitScheduleItem(null);
 				}
 				dutyRosterTurn.setTrial(null);
-				ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+				CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 				dutyRosterTurnDao.update(dutyRosterTurn);
 				if (staff != null) {
 					DutyRosterTurnOutVO dutyRosterTurnVO = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
@@ -3791,7 +3797,7 @@ extends TrialServiceBase
 				}
 				MoneyTransferOutVO original = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
 				moneyTransfer.setTrial(null);
-				ServiceUtil.modifyVersion(moneyTransfer, moneyTransfer.getVersion(), now, user);
+				CoreUtil.modifyVersion(moneyTransfer, moneyTransfer.getVersion(), now, user);
 				moneyTransferDao.update(moneyTransfer);
 				MoneyTransferOutVO moneyTransferVO = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
 				ServiceUtil.logSystemMessage(moneyTransfer.getProband(), result, now, user, SystemMessageCodes.TRIAL_DELETED_MONEY_TRANSFER_UPDATED, moneyTransferVO, original,
@@ -3851,7 +3857,7 @@ extends TrialServiceBase
 				Course course = coursesIt.next();
 				CourseOutVO original = courseDao.toCourseOutVO(course);
 				course.setTrial(null);
-				ServiceUtil.modifyVersion(course, course.getVersion(), now, user);
+				CoreUtil.modifyVersion(course, course.getVersion(), now, user);
 				courseDao.update(course);
 				CourseOutVO courseVO = courseDao.toCourseOutVO(course);
 				logSystemMessage(course, result, now, user, SystemMessageCodes.TRIAL_DELETED_COURSE_UPDATED, courseVO, original, journalEntryDao);
@@ -3898,7 +3904,7 @@ extends TrialServiceBase
 			ECRF ecrf = ecrfsIt.next();
 			ECRFOutVO original = ecrfDao.toECRFOutVO(ecrf);
 			ecrf.setVisit(null);
-			ServiceUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
+			CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
 			ecrfDao.update(ecrf);
 			ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.VISIT_DELETED_ECRF_UPDATED, ecrfVO, original, journalEntryDao);
@@ -3920,7 +3926,7 @@ extends TrialServiceBase
 			while (dutyRosterTurnsIt.hasNext()) {
 				DutyRosterTurn dutyRosterTurn = dutyRosterTurnsIt.next();
 				dutyRosterTurn.setVisitScheduleItem(null);
-				ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+				CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 				dutyRosterTurnDao.update(dutyRosterTurn);
 			}
 			visitScheduleItem.getDutyRosterTurns().clear();
@@ -3964,7 +3970,7 @@ extends TrialServiceBase
 		while (dutyRosterTurnsIt.hasNext()) {
 			DutyRosterTurn dutyRosterTurn = dutyRosterTurnsIt.next();
 			dutyRosterTurn.setVisitScheduleItem(null);
-			ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+			CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 			dutyRosterTurnDao.update(dutyRosterTurn);
 		}
 		visitScheduleItem.getDutyRosterTurns().clear();
@@ -7270,7 +7276,7 @@ extends TrialServiceBase
 		TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(timelineEvent);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(timelineEvent, version.longValue(), now, user);
+		CoreUtil.modifyVersion(timelineEvent, version.longValue(), now, user);
 		timelineEvent.setDismissed(dismissed);
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEventDao.update(timelineEvent);
@@ -7324,7 +7330,7 @@ extends TrialServiceBase
 		ECRF ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalEcrf, ecrf, now, user);
+		CoreUtil.modifyVersion(originalEcrf, ecrf, now, user);
 		ecrfDao.update(ecrf);
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
 		ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_UPDATED, result, original, this.getJournalEntryDao());
@@ -7346,7 +7352,7 @@ extends TrialServiceBase
 		ECRFField ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
+		CoreUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
 		ecrfFieldDao.update(ecrfField);
 		ECRFFieldOutVO result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 		ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, result, original, this.getJournalEntryDao());
@@ -7413,7 +7419,7 @@ extends TrialServiceBase
 					ecrfFieldDao.evict(originalEcrfField);
 					ECRFField ecrfField = ecrfFieldDao.load(originalEcrfField.getId());
 					ecrfField.setSection(newSection);
-					ServiceUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
+					CoreUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
 					ecrfFieldDao.update(ecrfField);
 					ECRFFieldOutVO modified = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 					ServiceUtil.logSystemMessage(ecrfField.getTrial(), modified.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, modified, original, journalEntryDao);
@@ -7437,7 +7443,7 @@ extends TrialServiceBase
 		Inquiry inquiry = inquiryDao.inquiryInVOToEntity(modifiedInquiry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalInquiry, inquiry, now, user);
+		CoreUtil.modifyVersion(originalInquiry, inquiry, now, user);
 		inquiryDao.update(inquiry);
 		InquiryOutVO result = inquiryDao.toInquiryOutVO(inquiry);
 		ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.INQUIRY_UPDATED, result, original, this.getJournalEntryDao());
@@ -7462,7 +7468,7 @@ extends TrialServiceBase
 		ProbandGroup probandGroup = probandGroupDao.probandGroupInVOToEntity(modifiedProbandGroup);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProbandGroup, probandGroup, now, user);
+		CoreUtil.modifyVersion(originalProbandGroup, probandGroup, now, user);
 		probandGroupDao.update(probandGroup);
 		ProbandGroupOutVO result = probandGroupDao.toProbandGroupOutVO(probandGroup);
 		ServiceUtil.logSystemMessage(probandGroup.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_UPDATED, result, original, this.getJournalEntryDao());
@@ -7496,7 +7502,7 @@ extends TrialServiceBase
 		ProbandListEntry probandListEntry = probandListEntryDao.probandListEntryInVOToEntity(modifiedProbandListEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProbandListEntry, probandListEntry, now, user);
+		CoreUtil.modifyVersion(originalProbandListEntry, probandListEntry, now, user);
 		probandListEntryDao.update(probandListEntry);
 		if (probandChanged || groupChanged) {
 			addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED, ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
@@ -7524,7 +7530,7 @@ extends TrialServiceBase
 		ProbandListEntryTag probandListEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(modifiedProbandListEntryTag);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProbandListEntryTag, probandListEntryTag, now, user);
+		CoreUtil.modifyVersion(originalProbandListEntryTag, probandListEntryTag, now, user);
 		probandListEntryTagDao.update(probandListEntryTag);
 		ProbandListEntryTagOutVO result = probandListEntryTagDao.toProbandListEntryTagOutVO(probandListEntryTag);
 		ServiceUtil.logSystemMessage(probandListEntryTag.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_UPDATED, result, original,
@@ -7546,7 +7552,7 @@ extends TrialServiceBase
 		TeamMember teamMember = teamMemberDao.teamMemberInVOToEntity(modifiedTeamMember);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTeamMember, teamMember, now, user);
+		CoreUtil.modifyVersion(originalTeamMember, teamMember, now, user);
 		TeamMemberOutVO result = teamMemberDao.toTeamMemberOutVO(teamMember);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(teamMember.getTrial(), result.getStaff(), now, user, SystemMessageCodes.TEAM_MEMBER_UPDATED, result, original, journalEntryDao);
@@ -7566,7 +7572,7 @@ extends TrialServiceBase
 		TimelineEvent timelineEvent = timelineEventDao.timelineEventInVOToEntity(modifiedTimelineEvent);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTimelineEvent, timelineEvent, now, user);
+		CoreUtil.modifyVersion(originalTimelineEvent, timelineEvent, now, user);
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEventDao.update(timelineEvent);
 		notifyTimelineEventReminder(timelineEvent, now);
@@ -7594,7 +7600,7 @@ extends TrialServiceBase
 		Trial trial = trialDao.trialInVOToEntity(modifiedTrial);
 		// Timestamp now = new Timestamp(System.currentTimeMillis());
 		// User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTrial, trial, now, user);
+		CoreUtil.modifyVersion(originalTrial, trial, now, user);
 		trialDao.update(trial);
 		execTrialStatusActions(originalTrialStatusType, trial, now, user);
 		TrialOutVO result = trialDao.toTrialOutVO(trial);
@@ -7613,7 +7619,7 @@ extends TrialServiceBase
 		TrialTagValue tagValue = tagValueDao.trialTagValueInVOToEntity(modifiedTrialTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTagValue, tagValue, now, user);
+		CoreUtil.modifyVersion(originalTagValue, tagValue, now, user);
 		tagValueDao.update(tagValue);
 		TrialTagValueOutVO result = tagValueDao.toTrialTagValueOutVO(tagValue);
 		ServiceUtil.logSystemMessage(tagValue.getTrial(), result.getTrial(), now, user, SystemMessageCodes.TRIAL_TAG_VALUE_UPDATED, result, original, this.getJournalEntryDao());
@@ -7634,7 +7640,7 @@ extends TrialServiceBase
 		Visit visit = visitDao.visitInVOToEntity(modifiedVisit);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalVisit, visit, now, user);
+		CoreUtil.modifyVersion(originalVisit, visit, now, user);
 		visitDao.update(visit);
 
 		VisitOutVO result = visitDao.toVisitOutVO(visit);
@@ -7656,7 +7662,7 @@ extends TrialServiceBase
 		VisitScheduleItem visitScheduleItem = visitScheduleItemDao.visitScheduleItemInVOToEntity(modifiedVisitScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalVisitScheduleItem, visitScheduleItem, now, user);
+		CoreUtil.modifyVersion(originalVisitScheduleItem, visitScheduleItem, now, user);
 		visitScheduleItemDao.update(visitScheduleItem);
 		notifyVisitScheduleItemReminder(visitScheduleItem, now);
 		VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
@@ -7690,7 +7696,7 @@ extends TrialServiceBase
 			if (!original.getListEntry().getProband().getDecrypted()) {
 				continue; // prevent unexpected validationcheck ecrf issues, when subject PII fields
 			}
-			// ServiceUtil.modifyVersion(statusEntry, version.longValue(), now, user);
+			// CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 			boolean noMissingValues = false;
 			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES)) {
 				try {
@@ -8238,7 +8244,7 @@ extends TrialServiceBase
 		ecrfStatusEntryDao.evict(originalStatusEntry);
 		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.load(originalStatusEntry.getId());
 		statusEntry.setStatus(statusType);
-		ServiceUtil.modifyVersion(statusEntry, version.longValue(), now, user);
+		CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 		ecrfStatusEntryDao.update(statusEntry);
 		execEcrfStatusActions(originalEcrfStatusType, statusEntry, probandListStatusTypeId, now, user);
 		result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);

@@ -79,7 +79,7 @@ public class DepartmentManager {
 			userPermissionProfile.setActive(true);
 			userPermissionProfile.setProfile(profile);
 			userPermissionProfile.setUser(user);
-			ServiceUtil.modifyVersion(userPermissionProfile, now, null);
+			CoreUtil.modifyVersion(userPermissionProfile, now, null);
 			result.add(userPermissionProfileDao.create(userPermissionProfile));
 			jobOutput.println("permission profile " + profile.toString() + " added");
 		}
@@ -270,7 +270,7 @@ public class DepartmentManager {
 		while (profileIt.hasNext()) {
 			PermissionProfileVO profileVO = profileIt.next();
 			System.out
-					.println(MessageFormat.format(PROFILE_NAME, profileVO.getProfile().toString(), profileVO.getProfileGroup().getProfileGroupName(), profileVO.getProfileName()));
+			.println(MessageFormat.format(PROFILE_NAME, profileVO.getProfile().toString(), profileVO.getProfileGroup().getProfileGroupName(), profileVO.getProfileName()));
 		}
 	}
 

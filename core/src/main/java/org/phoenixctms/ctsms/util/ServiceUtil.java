@@ -129,11 +129,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 public final class ServiceUtil {
 
-	private static final String ENTITY_VERSION_GETTER_METHOD_NAME = "getVersion";
-	private static final String ENTITY_VERSION_SETTER_METHOD_NAME = "setVersion";
-	private static final String ENTITY_MODIFIED_USER_GETTER_METHOD_NAME = "getModifiedUser";
-	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
-	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
+
 	private final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE = "{0}: {1}";
 	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = new AlphanumStringComparator(true);
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS = "ecrfField0";
@@ -143,6 +139,9 @@ public final class ServiceUtil {
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_ALIAS = "probandListEntryTag0";
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_VALUE_ALIAS = "tagValue0";
 
+
+	public final static boolean LOG_ADD_UPDATE_ECRF_NO_DIFF = false;
+	public final static boolean LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF = false;
 	public final static boolean LOG_ECRF_FIELD_VALUE_PROBAND = false;
 
 
@@ -171,7 +170,7 @@ public final class ServiceUtil {
 			selectionSetValue.setNameL10nKey(textValue);
 			selectionSetValue.setPreset(false);
 			selectionSetValue.setValue(textValue);
-			modifyVersion(selectionSetValue, now, user);
+			CoreUtil.modifyVersion(selectionSetValue, now, user);
 			selectionSetValue = selectionSetValueDao.create(selectionSetValue);
 			InputFieldSelectionSetValueOutVO result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 			logSystemMessage(selectionSetValue.getField(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_CREATED, result, null, journalEntryDao);
@@ -308,7 +307,7 @@ public final class ServiceUtil {
 		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao);
 		// ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.probandListStatusEntryInVOToEntity(newProbandListStatusEntry);
-		modifyVersion(probandListStatusEntry, now, user);
+		CoreUtil.modifyVersion(probandListStatusEntry, now, user);
 		probandListStatusEntry = probandListStatusEntryDao.create(probandListStatusEntry);
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();
 		listEntry.setLastStatus(probandListStatusEntry);
@@ -2190,21 +2189,7 @@ public final class ServiceUtil {
 		return DateCalc.addInterval(getPasswordDate(password), password.getValidityPeriod(), password.getValidityPeriodDays());
 	}
 
-	public static <E> long getNewVersionChecked(E original, long modifiedVersion) throws Exception {
-		if (original != null) {
-			long originalVersion = ((Long) original.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(original)).longValue();
-			if (modifiedVersion != originalVersion) {
-				User originalModifiedUser = (User) original.getClass().getMethod(ENTITY_MODIFIED_USER_GETTER_METHOD_NAME).invoke(original);
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, originalModifiedUser.getName());
-			}
-			return originalVersion + 1l;
-		} else {
-			if (modifiedVersion != 0l) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO); // or null");
-			}
-			return 0;
-		}
-	}
+
 
 	public static Date getPasswordDate(Password password) {
 		return DateCalc.getStartOfDay(password.getTimestamp());
@@ -2532,26 +2517,11 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
-	public static <E> void modifyVersion(E original, E modified, Timestamp now, User modifiedUser) throws Exception {
-		if (original == null) {
-			Long id = CommonUtil.getEntityId(modified);
-			if (id != null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_ID_NOT_NULL, id.toString());
-			}
-		}
-		long modifiedVersion = ((Long) modified.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(modified)).longValue();
-		long newVersion = getNewVersionChecked(original, modifiedVersion);
-		updateEntity(modified, newVersion, now, modifiedUser);
-	}
 
-	public static void modifyVersion(Object entity, long version, Timestamp now, User modifiedUser) throws Exception {
-		long newVersion = getNewVersionChecked(entity, version);
-		updateEntity(entity, newVersion, now, modifiedUser);
-	}
 
-	public static void modifyVersion(Object newEntity, Timestamp now, User modifiedUser) throws Exception {
-		modifyVersion(null, newEntity, now, modifiedUser);
-	}
+
+
+
 
 	public static void notifyParticipationStatusUpdated(CourseParticipationStatusType oldStatus, CourseParticipationStatusEntry courseParticipation, boolean toLecturers, Date now,
 			NotificationDao notificationDao) throws Exception {
@@ -3771,7 +3741,7 @@ public final class ServiceUtil {
 				InventoryBooking booking = bookingsIt.next();
 				InventoryBookingOutVO original = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				booking.setProband(null);
-				modifyVersion(booking, booking.getVersion(), now, user == null ? proband.getModifiedUser() : user); // if deleted by job...
+				CoreUtil.modifyVersion(booking, booking.getVersion(), now, user == null ? proband.getModifiedUser() : user); // if deleted by job...
 				inventoryBookingDao.update(booking);
 				InventoryBookingOutVO bookingVO = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				logSystemMessage(booking.getInventory(), result, now, user, SystemMessageCodes.PROBAND_DELETED_BOOKING_UPDATED, bookingVO, original, journalEntryDao);
@@ -3855,7 +3825,7 @@ public final class ServiceUtil {
 		while (childrenIt.hasNext()) {
 			Proband child = childrenIt.next();
 			child.removeParents(proband); // .setRenewal(null);
-			modifyVersion(child, child.getVersion(), now, user);
+			CoreUtil.modifyVersion(child, child.getVersion(), now, user);
 			probandDao.update(child);
 			// CourseOutVO precedingCourseVO = courseDao.toCourseOutVO(precedingCourse);
 			logSystemMessage(child, result, now, user, SystemMessageCodes.PROBAND_DELETED_PARENT_REMOVED, result, null, journalEntryDao);
@@ -4177,11 +4147,7 @@ public final class ServiceUtil {
 		return false;
 	}
 
-	private static <E> void updateEntity(E entity, long newVersion, Timestamp now, User modifiedUser) throws Exception {
-		entity.getClass().getMethod(ENTITY_VERSION_SETTER_METHOD_NAME, long.class).invoke(entity, newVersion);
-		entity.getClass().getMethod(ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME, Timestamp.class).invoke(entity, now);
-		entity.getClass().getMethod(ENTITY_MODIFIED_USER_SETTER_METHOD_NAME, User.class).invoke(entity, modifiedUser);
-	}
+
 
 	private ServiceUtil() {
 	}

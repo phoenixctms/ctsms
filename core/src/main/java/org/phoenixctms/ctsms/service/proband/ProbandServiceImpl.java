@@ -201,7 +201,7 @@ extends ProbandServiceBase
 			checkInquiryValueInput(inquiryValueIn, proband, inquiry);
 			ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(), journalEntryDao);
 			InquiryValue inquiryValue = inquiryValueDao.inquiryValueInVOToEntity(inquiryValueIn);
-			ServiceUtil.modifyVersion(inquiryValue, now, user);
+			CoreUtil.modifyVersion(inquiryValue, now, user);
 			InputFieldValue inputFieldValue = inquiryValue.getValue();
 			this.getInputFieldValueDao().create(inputFieldValue);
 			inquiryValue = inquiryValueDao.create(inquiryValue);
@@ -230,7 +230,7 @@ extends ProbandServiceBase
 				}
 				inquiryValueDao.evict(originalInquiryValue);
 				InquiryValue inquiryValue = inquiryValueDao.inquiryValueInVOToEntity(inquiryValueIn);
-				ServiceUtil.modifyVersion(originalInquiryValue, inquiryValue, now, user);
+				CoreUtil.modifyVersion(originalInquiryValue, inquiryValue, now, user);
 				inquiryValueDao.update(inquiryValue);
 				if (outInquiryValues != null || logTrial || logProband) {
 					result = inquiryValueDao.toInquiryValueOutVO(inquiryValue);
@@ -895,7 +895,7 @@ extends ProbandServiceBase
 		BankAccount bankAccount = bankAccountDao.bankAccountInVOToEntity(newBankAccount);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(bankAccount, now, user);
+		CoreUtil.modifyVersion(bankAccount, now, user);
 		bankAccount = bankAccountDao.create(bankAccount);
 		BankAccountOutVO result = bankAccountDao.toBankAccountOutVO(bankAccount);
 		ServiceUtil.logSystemMessage(bankAccount.getProband(), result.getProband(), now, user, SystemMessageCodes.BANK_ACCOUNT_CREATED, result, null, this.getJournalEntryDao());
@@ -910,7 +910,7 @@ extends ProbandServiceBase
 		Diagnosis diagnosis = diagnosisDao.diagnosisInVOToEntity(newDiagnosis);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(diagnosis, now, user);
+		CoreUtil.modifyVersion(diagnosis, now, user);
 		diagnosis = diagnosisDao.create(diagnosis);
 		DiagnosisOutVO result = diagnosisDao.toDiagnosisOutVO(diagnosis);
 		ServiceUtil.logSystemMessage(diagnosis.getProband(), result.getProband(), now, user, SystemMessageCodes.DIAGNOSIS_CREATED, result, null, this.getJournalEntryDao());
@@ -925,7 +925,7 @@ extends ProbandServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		//moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
-		ServiceUtil.modifyVersion(medication, now, user);
+		CoreUtil.modifyVersion(medication, now, user);
 		medication = medicationDao.create(medication);
 		MedicationOutVO result = medicationDao.toMedicationOutVO(medication);
 		ServiceUtil.logSystemMessage(medication.getProband(), result.getProband(), now, user, SystemMessageCodes.MEDICATION_CREATED, result, null, this.getJournalEntryDao());
@@ -941,7 +941,7 @@ extends ProbandServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
-		ServiceUtil.modifyVersion(moneyTransfer, now, user);
+		CoreUtil.modifyVersion(moneyTransfer, now, user);
 		moneyTransfer = moneyTransferDao.create(moneyTransfer);
 		Trial trial = moneyTransfer.getTrial();
 		MoneyTransferOutVO result = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
@@ -964,7 +964,7 @@ extends ProbandServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = probandDao.probandInVOToEntity(newProband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		ServiceUtil.modifyVersion(proband, now, user);
+		CoreUtil.modifyVersion(proband, now, user);
 		resetAutoDeleteDeadline(proband, now);
 		proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findInitialStates().iterator().next());
 		if (proband.isPerson()) {
@@ -1002,7 +1002,7 @@ extends ProbandServiceBase
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(address, now, user);
+		CoreUtil.modifyVersion(address, now, user);
 		address = addressDao.create(address);
 		ProbandAddressOutVO result = addressDao.toProbandAddressOutVO(address);
 		ServiceUtil.logSystemMessage(address.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_ADDRESS_CREATED, result, null, this.getJournalEntryDao());
@@ -1018,7 +1018,7 @@ extends ProbandServiceBase
 		ProbandContactDetailValue contactValue = contactValueDao.probandContactDetailValueInVOToEntity(newProbandContactDetailValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(contactValue, now, user);
+		CoreUtil.modifyVersion(contactValue, now, user);
 		contactValue = contactValueDao.create(contactValue);
 		ProbandContactDetailValueOutVO result = contactValueDao.toProbandContactDetailValueOutVO(contactValue);
 		ServiceUtil.logSystemMessage(contactValue.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_CONTACT_DETAIL_VALUE_CREATED, result, null,
@@ -1034,7 +1034,7 @@ extends ProbandServiceBase
 		ProbandStatusEntry statusEntry = statusEntryDao.probandStatusEntryInVOToEntity(newProbandStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(statusEntry, now, user);
+		CoreUtil.modifyVersion(statusEntry, now, user);
 		statusEntry = statusEntryDao.create(statusEntry);
 		notifyProbandInactive(statusEntry, now);
 		ProbandStatusEntryOutVO result = statusEntryDao.toProbandStatusEntryOutVO(statusEntry);
@@ -1051,7 +1051,7 @@ extends ProbandServiceBase
 		ProbandTagValue tagValue = tagValueDao.probandTagValueInVOToEntity(newProbandTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(tagValue, now, user);
+		CoreUtil.modifyVersion(tagValue, now, user);
 		tagValue = tagValueDao.create(tagValue);
 		ProbandTagValueOutVO result = tagValueDao.toProbandTagValueOutVO(tagValue);
 		ServiceUtil.logSystemMessage(tagValue.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_TAG_VALUE_CREATED, result, null, this.getJournalEntryDao());
@@ -1066,7 +1066,7 @@ extends ProbandServiceBase
 		Procedure procedure = procedureDao.procedureInVOToEntity(newProcedure);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(procedure, now, user);
+		CoreUtil.modifyVersion(procedure, now, user);
 		procedure = procedureDao.create(procedure);
 		ProcedureOutVO result = procedureDao.toProcedureOutVO(procedure);
 		ServiceUtil.logSystemMessage(procedure.getProband(), result.getProband(), now, user, SystemMessageCodes.PROCEDURE_CREATED, result, null, this.getJournalEntryDao());
@@ -1160,7 +1160,7 @@ extends ProbandServiceBase
 			Medication medication = medicationsIt.next();
 			MedicationOutVO originalMedicationVO = medicationDao.toMedicationOutVO(medication);
 			medication.setDiagnosis(null);
-			ServiceUtil.modifyVersion(medication, medication.getVersion(), now, user);
+			CoreUtil.modifyVersion(medication, medication.getVersion(), now, user);
 			medicationDao.update(medication);
 			MedicationOutVO medicationVO = medicationDao.toMedicationOutVO(medication);
 			ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.DIAGNOSIS_DELETED_MEDICATION_UPDATED, medicationVO, originalMedicationVO,
@@ -1252,7 +1252,7 @@ extends ProbandServiceBase
 			probandDao.evict(originalProband);
 			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
 			proband.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(proband, proband.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(proband, proband.getVersion(), now, user); // no opt. locking
 			probandDao.update(proband);
 			result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
 			ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -1417,7 +1417,7 @@ extends ProbandServiceBase
 			Medication medication = medicationsIt.next();
 			MedicationOutVO originalMedicationVO = medicationDao.toMedicationOutVO(medication);
 			medication.setProcedure(null);
-			ServiceUtil.modifyVersion(medication, medication.getVersion(), now, user);
+			CoreUtil.modifyVersion(medication, medication.getVersion(), now, user);
 			medicationDao.update(medication);
 			MedicationOutVO medicationVO = medicationDao.toMedicationOutVO(medication);
 			ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.PROCEDURE_DELETED_MEDICATION_UPDATED, medicationVO, originalMedicationVO,
@@ -2373,7 +2373,7 @@ extends ProbandServiceBase
 		ServiceUtil.checkProbandLocked(proband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(proband, version.longValue(), now, user);
+		CoreUtil.modifyVersion(proband, version.longValue(), now, user);
 		resetAutoDeleteDeadline(proband, now);
 		probandDao.update(proband);
 		notifyExpiringProbandAutoDelete(proband, now);
@@ -2422,7 +2422,7 @@ extends ProbandServiceBase
 				ServiceUtil.checkTrialLocked(moneyTransferTrial);
 			}
 			moneyTransfer.setPaid(paid);
-			ServiceUtil.modifyVersion(moneyTransfer, moneyTransfer, now, user);
+			CoreUtil.modifyVersion(moneyTransfer, moneyTransfer, now, user);
 			moneyTransferDao.update(moneyTransfer);
 			MoneyTransferOutVO result = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
 			if (moneyTransferTrial != null) {
@@ -2526,7 +2526,7 @@ extends ProbandServiceBase
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(moneyTransfer, version.longValue(), now, user);
+		CoreUtil.modifyVersion(moneyTransfer, version.longValue(), now, user);
 		moneyTransfer.setPaid(paid);
 		moneyTransferDao.update(moneyTransfer);
 		MoneyTransferOutVO result = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
@@ -2565,14 +2565,14 @@ extends ProbandServiceBase
 			ProbandAddress oldWireTransferAddress = addressesIt.next();
 			ProbandAddressOutVO oldWireTransferAddressOriginal = addressDao.toProbandAddressOutVO(address);
 			oldWireTransferAddress.setWireTransfer(false);
-			ServiceUtil.modifyVersion(oldWireTransferAddress, oldWireTransferAddress, now, user);
+			CoreUtil.modifyVersion(oldWireTransferAddress, oldWireTransferAddress, now, user);
 			addressDao.update(oldWireTransferAddress);
 			ProbandAddressOutVO oldWireTransferAddressResult = addressDao.toProbandAddressOutVO(address);
 			ServiceUtil.logSystemMessage(oldWireTransferAddress.getProband(), oldWireTransferAddressOriginal.getProband(), now, user,
 					SystemMessageCodes.PROBAND_ADDRESS_WIRE_TRANSFER_UNSET, oldWireTransferAddressResult, oldWireTransferAddressOriginal, journalEntryDao);
 		}
 		address.setWireTransfer(true);
-		ServiceUtil.modifyVersion(address, version.longValue(), now, user);
+		CoreUtil.modifyVersion(address, version.longValue(), now, user);
 		addressDao.update(address);
 		ProbandAddressOutVO result = addressDao.toProbandAddressOutVO(address);
 		ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.PROBAND_ADDRESS_WIRE_TRANSFER_SET, result, original, journalEntryDao);
@@ -2596,7 +2596,7 @@ extends ProbandServiceBase
 		Proband proband = probandDao.probandImageInVOToEntity(probandImage);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProband, proband, now, user);
+		CoreUtil.modifyVersion(originalProband, proband, now, user);
 		probandDao.update(proband);
 		ProbandImageOutVO result = probandDao.toProbandImageOutVO(proband);
 		ServiceUtil.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, cleared ? SystemMessageCodes.PROBAND_IMAGE_CLEARED
@@ -2621,7 +2621,7 @@ extends ProbandServiceBase
 		BankAccount bankAccount = bankAccountDao.bankAccountInVOToEntity(modifiedBankAccount);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalBankAccount, bankAccount, now, user);
+		CoreUtil.modifyVersion(originalBankAccount, bankAccount, now, user);
 		bankAccountDao.update(bankAccount);
 		BankAccountOutVO result = bankAccountDao.toBankAccountOutVO(bankAccount);
 		ServiceUtil
@@ -2643,7 +2643,7 @@ extends ProbandServiceBase
 		Diagnosis diagnosis = diagnosisDao.diagnosisInVOToEntity(modifiedDiagnosis);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalDiagnosis, diagnosis, now, user);
+		CoreUtil.modifyVersion(originalDiagnosis, diagnosis, now, user);
 		diagnosisDao.update(diagnosis);
 		DiagnosisOutVO result = diagnosisDao.toDiagnosisOutVO(diagnosis);
 		ServiceUtil.logSystemMessage(diagnosis.getProband(), result.getProband(), now, user, SystemMessageCodes.DIAGNOSIS_UPDATED, result, original, this.getJournalEntryDao());
@@ -2666,7 +2666,7 @@ extends ProbandServiceBase
 		Medication medication = medicationDao.medicationInVOToEntity(modifiedMedication);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalMedication, medication, now, user);
+		CoreUtil.modifyVersion(originalMedication, medication, now, user);
 		medicationDao.update(medication);
 		MedicationOutVO result = medicationDao.toMedicationOutVO(medication);
 		ServiceUtil.logSystemMessage(medication.getProband(), result.getProband(), now, user, SystemMessageCodes.MEDICATION_UPDATED, result, original,
@@ -2691,7 +2691,7 @@ extends ProbandServiceBase
 		MoneyTransfer moneyTransfer = moneyTransferDao.moneyTransferInVOToEntity(modifiedMoneyTransfer);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalMoneyTransfer, moneyTransfer, now, user);
+		CoreUtil.modifyVersion(originalMoneyTransfer, moneyTransfer, now, user);
 		moneyTransferDao.update(moneyTransfer);
 		Trial trial = moneyTransfer.getTrial();
 		MoneyTransferOutVO result = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
@@ -2726,7 +2726,7 @@ extends ProbandServiceBase
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(proband, version.longValue(), now, user);
+		CoreUtil.modifyVersion(proband, version.longValue(), now, user);
 		proband.setPrivacyConsentStatus(state);
 		probandDao.update(proband);
 		notifyExpiringProbandAutoDelete(proband, now);
@@ -2754,7 +2754,7 @@ extends ProbandServiceBase
 		checkProbandLoop(proband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProband, proband, now, user);
+		CoreUtil.modifyVersion(originalProband, proband, now, user);
 		if (!originalPrivacyConsentControl && proband.getCategory().isPrivacyConsentControl()) {
 			resetAutoDeleteDeadline(proband, now);
 			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findInitialStates().iterator().next());
@@ -2790,7 +2790,7 @@ extends ProbandServiceBase
 		ProbandAddress address = addressDao.probandAddressInVOToEntity(modifiedProbandAddress);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalAddress, address, now, user);
+		CoreUtil.modifyVersion(originalAddress, address, now, user);
 		addressDao.update(address);
 		ProbandAddressOutVO result = addressDao.toProbandAddressOutVO(address);
 		ServiceUtil.logSystemMessage(address.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_ADDRESS_UPDATED, result, original, this.getJournalEntryDao());
@@ -2820,7 +2820,7 @@ extends ProbandServiceBase
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(proband, version.longValue(), now, user);
+		CoreUtil.modifyVersion(proband, version.longValue(), now, user);
 		proband.setCategory(category);
 		if (proband.isPerson()) {
 			ProbandContactParticulars personParticulars = proband.getPersonParticulars();
@@ -2858,7 +2858,7 @@ extends ProbandServiceBase
 		ProbandContactDetailValue contactValue = contactValueDao.probandContactDetailValueInVOToEntity(modifiedProbandContactDetailValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalContactValue, contactValue, now, user);
+		CoreUtil.modifyVersion(originalContactValue, contactValue, now, user);
 		contactValueDao.update(contactValue);
 		ProbandContactDetailValueOutVO result = contactValueDao.toProbandContactDetailValueOutVO(contactValue);
 		ServiceUtil.logSystemMessage(contactValue.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_CONTACT_DETAIL_VALUE_UPDATED, result, original,
@@ -2880,7 +2880,7 @@ extends ProbandServiceBase
 		ProbandStatusEntry statusEntry = statusEntryDao.probandStatusEntryInVOToEntity(modifiedProbandStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
+		CoreUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
 		statusEntryDao.update(statusEntry);
 		notifyProbandInactive(statusEntry, now);
 		ProbandStatusEntryOutVO result = statusEntryDao.toProbandStatusEntryOutVO(statusEntry);
@@ -2903,7 +2903,7 @@ extends ProbandServiceBase
 		ProbandTagValue tagValue = tagValueDao.probandTagValueInVOToEntity(modifiedProbandTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTagValue, tagValue, now, user);
+		CoreUtil.modifyVersion(originalTagValue, tagValue, now, user);
 		tagValueDao.update(tagValue);
 		ProbandTagValueOutVO result = tagValueDao.toProbandTagValueOutVO(tagValue);
 		ServiceUtil.logSystemMessage(tagValue.getProband(), result.getProband(), now, user, SystemMessageCodes.PROBAND_TAG_VALUE_UPDATED, result, original,
@@ -2925,7 +2925,7 @@ extends ProbandServiceBase
 		Procedure procedure = procedureDao.procedureInVOToEntity(modifiedProcedure);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalProcedure, procedure, now, user);
+		CoreUtil.modifyVersion(originalProcedure, procedure, now, user);
 		procedureDao.update(procedure);
 		ProcedureOutVO result = procedureDao.toProcedureOutVO(procedure);
 		ServiceUtil.logSystemMessage(procedure.getProband(), result.getProband(), now, user, SystemMessageCodes.PROCEDURE_UPDATED, result, original, this.getJournalEntryDao());

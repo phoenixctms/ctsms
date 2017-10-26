@@ -114,7 +114,7 @@ extends UserServiceBase
 		if (id == null) {
 			checkUserPermissionProfileInput(userPermissionProfileIn);
 			userPermissionProfile = userPermissionProfileDao.userPermissionProfileInVOToEntity(userPermissionProfileIn);
-			ServiceUtil.modifyVersion(userPermissionProfile, now, user);
+			CoreUtil.modifyVersion(userPermissionProfile, now, user);
 			userPermissionProfile = userPermissionProfileDao.create(userPermissionProfile);
 			result = userPermissionProfileDao.toUserPermissionProfileOutVO(userPermissionProfile);
 			logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_CREATED, result, null, journalEntryDao);
@@ -127,7 +127,7 @@ extends UserServiceBase
 				UserPermissionProfileOutVO original = userPermissionProfileDao.toUserPermissionProfileOutVO(originalUserPermissionProfile);
 				userPermissionProfileDao.evict(originalUserPermissionProfile);
 				userPermissionProfile = userPermissionProfileDao.userPermissionProfileInVOToEntity(userPermissionProfileIn);
-				ServiceUtil.modifyVersion(originalUserPermissionProfile, userPermissionProfile, now, user);
+				CoreUtil.modifyVersion(originalUserPermissionProfile, userPermissionProfile, now, user);
 				userPermissionProfileDao.update(userPermissionProfile);
 				result = userPermissionProfileDao.toUserPermissionProfileOutVO(userPermissionProfile);
 				logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_UPDATED, result, original,
@@ -155,7 +155,7 @@ extends UserServiceBase
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(user, now, modified);
+		CoreUtil.modifyVersion(user, now, modified);
 		ServiceUtil.createKeyPair(user, getPlainDepartmentPassword(), this.getKeyPairDao());
 		user = userDao.create(user);
 		notifyUserAccount(user, null, now);
@@ -203,7 +203,7 @@ extends UserServiceBase
 			userDao.evict(originalUser);
 			User user = CheckIDUtil.checkUserId(userId, userDao, LockMode.PESSIMISTIC_WRITE);
 			user.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(user, user.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(user, user.getVersion(), now, user); // no opt. locking
 			userDao.update(user);
 			result = userDao.toUserOutVO(user, maxInstances);
 			logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -444,7 +444,7 @@ extends UserServiceBase
 		user.setLocale(newLocale);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = user;
-		ServiceUtil.modifyVersion(originalUser, user, now, modified);
+		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
 		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.LOCALE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
@@ -463,7 +463,7 @@ extends UserServiceBase
 		user.setShowTooltips(newShowTooltips);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = user;
-		ServiceUtil.modifyVersion(originalUser, user, now, modified);
+		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
 		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.SHOW_TOOLTIPS_UPDATED, result.getUser(), original, this.getJournalEntryDao());
@@ -482,7 +482,7 @@ extends UserServiceBase
 		user.setTheme(newTheme);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = user;
-		ServiceUtil.modifyVersion(originalUser, user, now, modified);
+		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
 		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.THEME_UPDATED, result.getUser(), original, this.getJournalEntryDao());
@@ -502,7 +502,7 @@ extends UserServiceBase
 		user.setTimeZone(newTimeZone);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = user;
-		ServiceUtil.modifyVersion(originalUser, user, now, modified);
+		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
 		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.TIME_ZONE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
@@ -522,7 +522,7 @@ extends UserServiceBase
 		User user = userDao.userInVOToEntity(modifiedUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalUser, user, now, modified);
+		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		notifyUserAccount(user, originalUser, now);
 		UserOutVO result = userDao.toUserOutVO(user, maxInstances);

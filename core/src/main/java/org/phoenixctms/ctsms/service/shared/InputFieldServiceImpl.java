@@ -625,7 +625,7 @@ extends InputFieldServiceBase
 							ServiceUtil.checkProbandLocked(inquiryValue.getProband());
 						}
 						logSystemMessage(inquiryValue.getProband(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null, journalEntryDao);
-						ServiceUtil.modifyVersion(inquiryValue, inquiryValue.getVersion(), now, user);
+						CoreUtil.modifyVersion(inquiryValue, inquiryValue.getVersion(), now, user);
 						inquiryValueDao.update(inquiryValue);
 						removed = true;
 					}
@@ -650,7 +650,7 @@ extends InputFieldServiceBase
 						}
 						logSystemMessage(tagValue.getListEntry().getProband(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null,
 								journalEntryDao);
-						ServiceUtil.modifyVersion(tagValue, tagValue.getVersion(), now, user);
+						CoreUtil.modifyVersion(tagValue, tagValue.getVersion(), now, user);
 						probandListEntryTagValueDao.update(tagValue);
 						removed = true;
 					}
@@ -675,7 +675,7 @@ extends InputFieldServiceBase
 						}
 						logSystemMessage(fieldValue.getListEntry().getProband(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null,
 								journalEntryDao);
-						ServiceUtil.modifyVersion(fieldValue, fieldValue.getVersion(), now, user);
+						CoreUtil.modifyVersion(fieldValue, fieldValue.getVersion(), now, user);
 						ecrfFieldValueDao.update(fieldValue);
 						removed = true;
 					}
@@ -701,7 +701,7 @@ extends InputFieldServiceBase
 		InputField inputField = inputFieldDao.inputFieldInVOToEntity(newInputField);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(inputField, now, user);
+		CoreUtil.modifyVersion(inputField, now, user);
 		inputField = inputFieldDao.create(inputField);// 2011-09-12//
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
 		ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_CREATED, result, null, this.getJournalEntryDao());
@@ -717,7 +717,7 @@ extends InputFieldServiceBase
 		InputFieldSelectionSetValue selectionSetValue = selectionSetValueDao.inputFieldSelectionSetValueInVOToEntity(newSelectionSetValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(selectionSetValue, now, user);
+		CoreUtil.modifyVersion(selectionSetValue, now, user);
 		selectionSetValue = selectionSetValueDao.create(selectionSetValue);
 		InputFieldSelectionSetValueOutVO result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 		ServiceUtil.logSystemMessage(selectionSetValue.getField(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_CREATED, result, null,
@@ -748,7 +748,7 @@ extends InputFieldServiceBase
 			}
 			inputFieldDao.evict(originalInputField);
 			inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);
-			ServiceUtil.modifyVersion(originalInputField, inputField, now, user);
+			CoreUtil.modifyVersion(originalInputField, inputField, now, user);
 			inputFieldDao.update(inputField);
 			// Hibernate.initialize(inputField);
 			update = true;
@@ -757,7 +757,7 @@ extends InputFieldServiceBase
 			originalSelectionSetValueIds = new HashSet<Long>();
 			original = null;
 			inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);
-			ServiceUtil.modifyVersion(inputField, now, user);
+			CoreUtil.modifyVersion(inputField, now, user);
 			// inputField = inputFieldDao.create(inputField);
 			inputField = inputFieldDao.create(inputField, LockMode.PESSIMISTIC_WRITE); // required here, as load(..,lockMode) will not work with created entities
 			// inputFieldDao.evict(inputField);
@@ -826,17 +826,21 @@ extends InputFieldServiceBase
 					InputFieldSelectionSetValueOutVO originalSelectionSetValueVO = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(originalSelectionSetValue);
 					selectionSetValueDao.evict(originalSelectionSetValue);
 					selectionSetValue = selectionSetValueDao.inputFieldSelectionSetValueInVOToEntity(modifiedSelectionSetValue);
-					ServiceUtil.modifyVersion(originalSelectionSetValue, selectionSetValue, now, user);
+					CoreUtil.modifyVersion(originalSelectionSetValue, selectionSetValue, now, user);
 					selectionSetValueDao.update(selectionSetValue);
 					selectionSetValueVO = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
-					ServiceUtil.logSystemMessage(selectionSetValue.getField(), selectionSetValueVO.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_UPDATED, selectionSetValueVO, originalSelectionSetValueVO,
-							journalEntryDao);
+					if (ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF
+							|| !InputFieldSelectionSetValueOutVO.equalsExcluding(originalSelectionSetValueVO, selectionSetValueVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+						ServiceUtil.logSystemMessage(selectionSetValue.getField(), selectionSetValueVO.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_UPDATED,
+								selectionSetValueVO, originalSelectionSetValueVO,
+								journalEntryDao);
+					}
 				} else {
 
 					checkAddSelectionSetValueInput(modifiedSelectionSetValue);
 					selectionSetValue = selectionSetValueDao.inputFieldSelectionSetValueInVOToEntity(modifiedSelectionSetValue);
 
-					ServiceUtil.modifyVersion(selectionSetValue, now, user);
+					CoreUtil.modifyVersion(selectionSetValue, now, user);
 					selectionSetValue = selectionSetValueDao.create(selectionSetValue);
 					selectionSetValueVO = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 					ServiceUtil.logSystemMessage(selectionSetValue.getField(), selectionSetValueVO.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_CREATED, selectionSetValueVO, null,
@@ -853,8 +857,10 @@ extends InputFieldServiceBase
 		}
 
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
-		ServiceUtil.logSystemMessage(inputField, result, now, user, update ? SystemMessageCodes.INPUT_FIELD_UPDATED : SystemMessageCodes.INPUT_FIELD_CREATED, result, original, journalEntryDao);
-
+		if (!update || ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF || !InputFieldOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+			ServiceUtil.logSystemMessage(inputField, result, now, user, update ? SystemMessageCodes.INPUT_FIELD_UPDATED : SystemMessageCodes.INPUT_FIELD_CREATED, result,
+					original, journalEntryDao);
+		}
 		return result;
 
 	}
@@ -931,7 +937,7 @@ extends InputFieldServiceBase
 		newInputField.setContentType(originalInputField.getContentType());
 		newInputField.setData(originalInputField.getData());
 		newInputField.setFileSize(originalInputField.getFileSize());
-		ServiceUtil.modifyVersion(newInputField, now, user);
+		CoreUtil.modifyVersion(newInputField, now, user);
 		newInputField = inputFieldDao.create(newInputField);
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		// HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>(); // avoid quadratic runtime with journal
@@ -952,7 +958,7 @@ extends InputFieldServiceBase
 			newInputFieldSelectionSetValue.setValue(originalInputFieldSelectionSetValue.getValue());
 			newInputFieldSelectionSetValue.setField(newInputField);
 			newInputField.addSelectionSetValues(newInputFieldSelectionSetValue);
-			ServiceUtil.modifyVersion(newInputFieldSelectionSetValue, now, user);
+			CoreUtil.modifyVersion(newInputFieldSelectionSetValue, now, user);
 			newInputFieldSelectionSetValue = inputFieldSelectionSetValueDao.create(newInputFieldSelectionSetValue);
 			// InputFieldSelectionSetValueOutVO newInputFieldSelectionSetValueVO = new InputFieldSelectionSetValueOutVO();
 			// inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(newInputFieldSelectionSetValue, newInputFieldSelectionSetValueVO, voMap);
@@ -988,7 +994,7 @@ extends InputFieldServiceBase
 			inputFieldDao.evict(originalInputField);
 			InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao, LockMode.PESSIMISTIC_WRITE);
 			inputField.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(inputField, inputField.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(inputField, inputField.getVersion(), now, user); // no opt. locking
 			inputFieldDao.update(inputField);
 			result = inputFieldDao.toInputFieldOutVO(inputField);
 			ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -1091,7 +1097,7 @@ extends InputFieldServiceBase
 			selectionSetValueDao.evict(originalSelectionSetValue);
 			InputFieldSelectionSetValue selectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, selectionSetValueDao);
 			selectionSetValue.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(selectionSetValue, selectionSetValue.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(selectionSetValue, selectionSetValue.getVersion(), now, user); // no opt. locking
 			selectionSetValueDao.update(selectionSetValue);
 			result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 			ServiceUtil.logSystemMessage(selectionSetValue.getField(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_MARKED_FOR_DELETION, result, original,
@@ -1229,7 +1235,7 @@ extends InputFieldServiceBase
 		InputField inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalInputField, inputField, now, user);
+		CoreUtil.modifyVersion(originalInputField, inputField, now, user);
 		inputFieldDao.update(inputField);
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
 		ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_UPDATED, result, original, this.getJournalEntryDao());
@@ -1250,7 +1256,7 @@ extends InputFieldServiceBase
 		InputFieldSelectionSetValue selectionSetValue = selectionSetValueDao.inputFieldSelectionSetValueInVOToEntity(modifiedSelectionSetValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalSelectionSetValue, selectionSetValue, now, user);
+		CoreUtil.modifyVersion(originalSelectionSetValue, selectionSetValue, now, user);
 		selectionSetValueDao.update(selectionSetValue);
 		InputFieldSelectionSetValueOutVO result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 		ServiceUtil.logSystemMessage(selectionSetValue.getField(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_UPDATED, result, original,

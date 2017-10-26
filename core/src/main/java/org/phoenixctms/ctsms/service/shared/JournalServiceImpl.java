@@ -226,7 +226,7 @@ extends JournalServiceBase
 		JournalEntry journalEntry = journalEntryDao.journalEntryInVOToEntity(newJournalEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(journalEntry, now, user);
+		CoreUtil.modifyVersion(journalEntry, now, user);
 		journalEntry = journalEntryDao.create(journalEntry);
 		return journalEntryDao.toJournalEntryOutVO(journalEntry);
 			}
@@ -512,7 +512,7 @@ extends JournalServiceBase
 		JournalEntry journalEntry = journalEntryDao.journalEntryInVOToEntity(modifiedJournalEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalJournalEntry, journalEntry, now, user);
+		CoreUtil.modifyVersion(originalJournalEntry, journalEntry, now, user);
 		journalEntryDao.update(journalEntry);
 		return journalEntryDao.toJournalEntryOutVO(journalEntry);
 			}

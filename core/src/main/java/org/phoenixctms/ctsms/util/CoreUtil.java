@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +99,7 @@ public final class CoreUtil {
 	private final static String VO_CLASS_SUFFIX = "VO";
 	private final static String DAO_CLASS_SUFFIX = "Dao";
 
+
 	private final static HashSet<String> PASS_DECRYPTION_REALMS = new HashSet<String>();
 	static {
 		// methods that return inserted data but suffer from CANNOT_DECRYPT_PROBAND when requested from untrusted hosts:
@@ -126,6 +128,30 @@ public final class CoreUtil {
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setMoneyTransferPaid");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid");
 	}
+
+	private final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
+	public final static HashSet<String> VO_VERSION_EQUALS_EXCLUDES = new HashSet<String>();
+	static {
+		VO_EQUALS_EXCLUDES.add("CourseOutVO.getPrecedingCourses");
+		VO_EQUALS_EXCLUDES.add("CriterionOutVO.getCriteria");
+		VO_EQUALS_EXCLUDES.add("InputFieldSelectionSetValueOutVO.getField");
+		VO_EQUALS_EXCLUDES.add("InventoryOutVO.getParent");
+		VO_EQUALS_EXCLUDES.add("ProbandListStatusEntryOutVO.getListEntry");
+		VO_EQUALS_EXCLUDES.add("ProbandOutVO.getParents");
+		VO_EQUALS_EXCLUDES.add("StaffOutVO.getParent");
+		VO_EQUALS_EXCLUDES.add("UserOutVO.getModifiedUser");
+		VO_EQUALS_EXCLUDES.add("UserOutVO.getIdentity");
+		VO_VERSION_EQUALS_EXCLUDES.addAll(VO_EQUALS_EXCLUDES);
+		VO_VERSION_EQUALS_EXCLUDES.add("*.getVersion");
+		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedUser");
+		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedTimestamp");
+	}
+
+	private static final String ENTITY_VERSION_GETTER_METHOD_NAME = "getVersion";
+	private static final String ENTITY_VERSION_SETTER_METHOD_NAME = "setVersion";
+	private static final String ENTITY_MODIFIED_USER_GETTER_METHOD_NAME = "getModifiedUser";
+	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
+	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
 
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
 		if (fieldMap.containsKey(vo)) {
@@ -582,18 +608,6 @@ public final class CoreUtil {
 		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
-	// public static String getHex(byte[] data) {
-	// if (data == null) {
-	// return null;
-	// }
-	// final StringBuilder hex = new StringBuilder(2 * data.length);
-	// for (final byte b : data) {
-	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
-	// HEX_DIGITS.charAt((b & 0x0F)));
-	// }
-	// return hex.toString();
-	// }
-
 	public static Dimension getImageDimension(byte[] imageData) {
 		if (imageData != null && imageData.length > 0) {
 			ImageInputStream in = null;
@@ -636,6 +650,34 @@ public final class CoreUtil {
 		// UserContext userContext = CoreUtil.getUserContext();
 		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
+
+	public static <E> long getNewVersionChecked(E original, long modifiedVersion) throws Exception {
+		if (original != null) {
+			long originalVersion = ((Long) original.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(original)).longValue();
+			if (modifiedVersion != originalVersion) {
+				User originalModifiedUser = (User) original.getClass().getMethod(ENTITY_MODIFIED_USER_GETTER_METHOD_NAME).invoke(original);
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, originalModifiedUser.getName());
+			}
+			return originalVersion + 1l;
+		} else {
+			if (modifiedVersion != 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO); // or null");
+			}
+			return 0;
+		}
+	}
+
+	// public static String getHex(byte[] data) {
+	// if (data == null) {
+	// return null;
+	// }
+	// final StringBuilder hex = new StringBuilder(2 * data.length);
+	// for (final byte b : data) {
+	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
+	// HEX_DIGITS.charAt((b & 0x0F)));
+	// }
+	// return hex.toString();
+	// }
 
 	public static String getOutVOClassNameFromEntityName(String entityName) {
 		return getValueObjectClassNameFromEntityName(entityName, OUT_VO_CLASS_SUFFIX);
@@ -890,6 +932,27 @@ public final class CoreUtil {
 		}
 	}
 
+	public static <E> void modifyVersion(E original, E modified, Timestamp now, User modifiedUser) throws Exception {
+		if (original == null) {
+			Long id = CommonUtil.getEntityId(modified);
+			if (id != null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_ID_NOT_NULL, id.toString());
+			}
+		}
+		long modifiedVersion = ((Long) modified.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(modified)).longValue();
+		long newVersion = getNewVersionChecked(original, modifiedVersion);
+		updateEntity(modified, newVersion, now, modifiedUser);
+	}
+
+	public static void modifyVersion(Object entity, long version, Timestamp now, User modifiedUser) throws Exception {
+		long newVersion = getNewVersionChecked(entity, version);
+		updateEntity(entity, newVersion, now, modifiedUser);
+	}
+
+	public static void modifyVersion(Object newEntity, Timestamp now, User modifiedUser) throws Exception {
+		modifyVersion(null, newEntity, now, modifiedUser);
+	}
+
 	public static void setUser(AuthenticationVO auth, UserDao userDao) {
 		User user = null;
 		if (auth != null) {
@@ -934,6 +997,12 @@ public final class CoreUtil {
 		}
 		xstream.setMode(XStream.ID_REFERENCES);
 		return xstream.toXML(obj);
+	}
+
+	private static <E> void updateEntity(E entity, long newVersion, Timestamp now, User modifiedUser) throws Exception {
+		entity.getClass().getMethod(ENTITY_VERSION_SETTER_METHOD_NAME, long.class).invoke(entity, newVersion);
+		entity.getClass().getMethod(ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME, Timestamp.class).invoke(entity, now);
+		entity.getClass().getMethod(ENTITY_MODIFIED_USER_SETTER_METHOD_NAME, User.class).invoke(entity, modifiedUser);
 	}
 
 	private CoreUtil() {

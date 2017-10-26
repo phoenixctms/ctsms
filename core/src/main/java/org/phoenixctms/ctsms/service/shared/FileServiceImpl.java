@@ -398,7 +398,7 @@ extends FileServiceBase
 		File file = fileDao.fileInVOToEntity(newFile);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(file, now, user);
+		CoreUtil.modifyVersion(file, now, user);
 		saveFileContent(file, newFileContent);
 		return createFile(file, now, user);
 			}
@@ -416,7 +416,7 @@ extends FileServiceBase
 		File file = fileDao.fileInVOToEntity(newFile);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(file, now, user);
+		CoreUtil.modifyVersion(file, now, user);
 		saveFileStream(file, newFileStream);
 		try {
 			return createFile(file, now, user);
@@ -579,7 +579,7 @@ extends FileServiceBase
 		File file = fileDao.fileInVOToEntity(modifiedFile);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalFile, file, now, user);
+		CoreUtil.modifyVersion(originalFile, file, now, user);
 		fileDao.update(file);
 		return addFileUpdatedJournalEntry(file, original, now, user);
 			}
@@ -602,7 +602,7 @@ extends FileServiceBase
 		File file = fileDao.fileInVOToEntity(modifiedFile);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalFile, file, now, user);
+		CoreUtil.modifyVersion(originalFile, file, now, user);
 		saveFileContent(file, modifiedFileContent);
 		fileDao.update(file);
 		return addFileUpdatedJournalEntry(file, original, now, user);
@@ -627,7 +627,7 @@ extends FileServiceBase
 		File file = fileDao.fileInVOToEntity(modifiedFile);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalFile, file, now, user);
+		CoreUtil.modifyVersion(originalFile, file, now, user);
 		saveFileStream(file, modifiedFileStream);
 		try {
 			fileDao.update(file);

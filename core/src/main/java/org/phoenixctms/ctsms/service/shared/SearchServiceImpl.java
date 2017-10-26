@@ -585,7 +585,7 @@ extends SearchServiceBase
 				if (!criteria.getId().equals(criteriaIn.getId())) {
 					CriteriaOutVO original = criteriaDao.toCriteriaOutVO(criteria);
 					criteria.setLoadByDefault(false);
-					ServiceUtil.modifyVersion(criteria, criteria.getVersion(), now, modifiedUser);
+					CoreUtil.modifyVersion(criteria, criteria.getVersion(), now, modifiedUser);
 					criteriaDao.update(criteria);
 					CriteriaOutVO result = criteriaDao.toCriteriaOutVO(criteria);
 					logSystemMessage(criteria, result, now, modifiedUser, SystemMessageCodes.CRITERIA_UPDATED, obfuscateCriterions(result), obfuscateCriterions(original),
@@ -683,7 +683,7 @@ extends SearchServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		clearLoadByDefault(newCriteria, now, user);
-		ServiceUtil.modifyVersion(criteria, now, user);
+		CoreUtil.modifyVersion(criteria, now, user);
 		criteria = criteriaDao.create(criteria);
 		if (newCriterions != null) {
 			CriterionDao criterionDao = this.getCriterionDao();
@@ -714,7 +714,7 @@ extends SearchServiceBase
 			criteriaDao.evict(originalCriteria);
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao, LockMode.PESSIMISTIC_WRITE);
 			criteria.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(criteria, criteria.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(criteria, criteria.getVersion(), now, user); // no opt. locking
 			criteriaDao.update(criteria);
 			result = criteriaDao.toCriteriaOutVO(criteria);
 			logSystemMessage(criteria, result, now, user, SystemMessageCodes.CRITERIA_MARKED_FOR_DELETION, obfuscateCriterions(result), obfuscateCriterions(original),
@@ -1067,7 +1067,7 @@ extends SearchServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		clearLoadByDefault(modifiedCriteria, now, user);
-		ServiceUtil.modifyVersion(originalCriteria, criteria, now, user);
+		CoreUtil.modifyVersion(originalCriteria, criteria, now, user);
 		Iterator<Criterion> oldCriterionsIt = criteria.getCriterions().iterator();
 		while (oldCriterionsIt.hasNext()) {
 			Criterion criterion = oldCriterionsIt.next();

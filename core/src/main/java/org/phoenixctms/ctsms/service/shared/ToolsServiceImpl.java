@@ -218,7 +218,7 @@ extends ToolsServiceBase
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = null;
-		ServiceUtil.modifyVersion(user, now, modified);
+		CoreUtil.modifyVersion(user, now, modified);
 		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
 		ServiceUtil.createPassword(passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,

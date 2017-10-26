@@ -517,7 +517,7 @@ extends StaffServiceBase
 					ServiceUtil.checkTrialLocked(visitScheduleItem.getTrial());
 				}
 				dutyRosterTurn.setStaff(null);
-				ServiceUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+				CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
 				dutyRosterTurnDao.update(dutyRosterTurn);
 				if (trial != null) {
 					DutyRosterTurnOutVO dutyRosterTurnVO = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
@@ -572,7 +572,7 @@ extends StaffServiceBase
 				MaintenanceScheduleItemOutVO original = maintenanceItemScheduleDao.toMaintenanceScheduleItemOutVO(responsiblePersonMaintenanceItem);
 				responsiblePersonMaintenanceItem.setResponsiblePerson(null);
 				responsiblePersonMaintenanceItem.setNotify(false);
-				ServiceUtil.modifyVersion(responsiblePersonMaintenanceItem, responsiblePersonMaintenanceItem.getVersion(), now, user);
+				CoreUtil.modifyVersion(responsiblePersonMaintenanceItem, responsiblePersonMaintenanceItem.getVersion(), now, user);
 				maintenanceItemScheduleDao.update(responsiblePersonMaintenanceItem);
 				MaintenanceScheduleItemOutVO responsiblePersonMaintenanceItemVO = maintenanceItemScheduleDao.toMaintenanceScheduleItemOutVO(responsiblePersonMaintenanceItem);
 				logSystemMessage(responsiblePersonMaintenanceItem.getInventory(), result, now, user, SystemMessageCodes.STAFF_DELETED_MAINTENANCE_ITEM_UPDATED,
@@ -584,7 +584,7 @@ extends StaffServiceBase
 				MaintenanceScheduleItem companyContactMaintenanceItem = companyContactMaintenanceItemsIt.next();
 				MaintenanceScheduleItemOutVO original = maintenanceItemScheduleDao.toMaintenanceScheduleItemOutVO(companyContactMaintenanceItem);
 				companyContactMaintenanceItem.setCompanyContact(null);
-				ServiceUtil.modifyVersion(companyContactMaintenanceItem, companyContactMaintenanceItem.getVersion(), now, user);
+				CoreUtil.modifyVersion(companyContactMaintenanceItem, companyContactMaintenanceItem.getVersion(), now, user);
 				maintenanceItemScheduleDao.update(companyContactMaintenanceItem);
 				MaintenanceScheduleItemOutVO companyContactMaintenanceItemVO = maintenanceItemScheduleDao.toMaintenanceScheduleItemOutVO(companyContactMaintenanceItem);
 				logSystemMessage(companyContactMaintenanceItem.getInventory(), result, now, user, SystemMessageCodes.STAFF_DELETED_MAINTENANCE_ITEM_UPDATED,
@@ -612,7 +612,7 @@ extends StaffServiceBase
 				} else {
 					InventoryStatusEntryOutVO original = inventoryStatusEntryDao.toInventoryStatusEntryOutVO(inventoryStatusEntry);
 					inventoryStatusEntry.setOriginator(null);
-					ServiceUtil.modifyVersion(inventoryStatusEntry, inventoryStatusEntry.getVersion(), now, user);
+					CoreUtil.modifyVersion(inventoryStatusEntry, inventoryStatusEntry.getVersion(), now, user);
 					inventoryStatusEntryDao.update(inventoryStatusEntry);
 					InventoryStatusEntryOutVO inventoryStatusEntryVO = inventoryStatusEntryDao.toInventoryStatusEntryOutVO(inventoryStatusEntry);
 					logSystemMessage(inventoryStatusEntry.getInventory(), result, now, user, SystemMessageCodes.STAFF_DELETED_INVENTORY_STATUS_UPDATED, inventoryStatusEntryVO,
@@ -640,7 +640,7 @@ extends StaffServiceBase
 				} else {
 					InventoryStatusEntryOutVO original = inventoryStatusEntryDao.toInventoryStatusEntryOutVO(inventoryStatusEntry);
 					inventoryStatusEntry.setAddressee(null);
-					ServiceUtil.modifyVersion(inventoryStatusEntry, inventoryStatusEntry.getVersion(), now, user);
+					CoreUtil.modifyVersion(inventoryStatusEntry, inventoryStatusEntry.getVersion(), now, user);
 					inventoryStatusEntryDao.update(inventoryStatusEntry);
 					InventoryStatusEntryOutVO inventoryStatusEntryVO = inventoryStatusEntryDao.toInventoryStatusEntryOutVO(inventoryStatusEntry);
 					logSystemMessage(inventoryStatusEntry.getInventory(), result, now, user, SystemMessageCodes.STAFF_DELETED_INVENTORY_STATUS_UPDATED, inventoryStatusEntryVO,
@@ -654,7 +654,7 @@ extends StaffServiceBase
 				Inventory inventory = inventoriesIt.next();
 				InventoryOutVO original = inventoryDao.toInventoryOutVO(inventory);
 				inventory.setOwner(null);
-				ServiceUtil.modifyVersion(inventory, inventory.getVersion(), now, user);
+				CoreUtil.modifyVersion(inventory, inventory.getVersion(), now, user);
 				inventoryDao.update(inventory);
 				InventoryOutVO inventoryVO = inventoryDao.toInventoryOutVO(inventory);
 				logSystemMessage(inventory, result, now, user, SystemMessageCodes.STAFF_DELETED_INVENTORY_UPDATED, inventoryVO, original, journalEntryDao);
@@ -666,7 +666,7 @@ extends StaffServiceBase
 				Course course = institutionCoursesIt.next();
 				CourseOutVO original = courseDao.toCourseOutVO(course);
 				course.setInstitution(null);
-				ServiceUtil.modifyVersion(course, course.getVersion(), now, user);
+				CoreUtil.modifyVersion(course, course.getVersion(), now, user);
 				courseDao.update(course);
 				CourseOutVO courseVO = courseDao.toCourseOutVO(course);
 				logSystemMessage(course, result, now, user, SystemMessageCodes.STAFF_DELETED_COURSE_UPDATED, courseVO, original, journalEntryDao);
@@ -678,7 +678,7 @@ extends StaffServiceBase
 				CvPositionOutVO original = cvPositionDao.toCvPositionOutVO(institutionCvPosition);
 				Staff cvPositionStaff = institutionCvPosition.getStaff();
 				institutionCvPosition.setInstitution(null);
-				ServiceUtil.modifyVersion(institutionCvPosition, institutionCvPosition.getVersion(), now, user);
+				CoreUtil.modifyVersion(institutionCvPosition, institutionCvPosition.getVersion(), now, user);
 				cvPositionDao.update(institutionCvPosition);
 				CvPositionOutVO institutionCvPositionVO = cvPositionDao.toCvPositionOutVO(institutionCvPosition);
 				logSystemMessage(cvPositionStaff, result, now, user, SystemMessageCodes.STAFF_DELETED_CV_POSITION_UPDATED, institutionCvPositionVO, original, journalEntryDao);
@@ -717,7 +717,7 @@ extends StaffServiceBase
 				User account = accountsIt.next();
 				UserOutVO original = userDao.toUserOutVO(account);
 				account.setIdentity(null);
-				ServiceUtil.modifyVersion(account, account.getVersion(), now, user);
+				CoreUtil.modifyVersion(account, account.getVersion(), now, user);
 				userDao.update(account);
 				UserOutVO accountVO = userDao.toUserOutVO(account);
 				logSystemMessage(account, result, now, user, SystemMessageCodes.STAFF_DELETED_USER_UPDATED, accountVO, original, journalEntryDao);
@@ -763,7 +763,7 @@ extends StaffServiceBase
 				Proband patient = patientsIt.next();
 				ProbandOutVO original = probandDao.toProbandOutVO(patient);
 				patient.setPhysician(null);
-				ServiceUtil.modifyVersion(patient, patient.getVersion(), now, user);
+				CoreUtil.modifyVersion(patient, patient.getVersion(), now, user);
 				probandDao.update(patient);
 				ProbandOutVO patientVO = probandDao.toProbandOutVO(patient);
 				logSystemMessage(patient, result, now, user, SystemMessageCodes.STAFF_DELETED_PROBAND_UPDATED, patientVO, original, journalEntryDao);
@@ -774,7 +774,7 @@ extends StaffServiceBase
 		while (childrenIt.hasNext()) {
 			Staff child = childrenIt.next();
 			child.setParent(null);
-			ServiceUtil.modifyVersion(child, child.getVersion(), now, user);
+			CoreUtil.modifyVersion(child, child.getVersion(), now, user);
 			staffDao.update(child);
 			// StaffOutVO childVO = staffDao.toStaffOutVO(child);
 		}
@@ -804,7 +804,7 @@ extends StaffServiceBase
 		CvPosition cvPosition = cvPositionDao.cvPositionInVOToEntity(newCvPosition);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(cvPosition, now, user);
+		CoreUtil.modifyVersion(cvPosition, now, user);
 		cvPosition = cvPositionDao.create(cvPosition);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		CvPositionOutVO result = cvPositionDao.toCvPositionOutVO(cvPosition);
@@ -824,7 +824,7 @@ extends StaffServiceBase
 		DutyRosterTurn dutyRosterTurn = dutyRosterTurnDao.dutyRosterTurnInVOToEntity(newDutyRosterTurn);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(dutyRosterTurn, now, user);
+		CoreUtil.modifyVersion(dutyRosterTurn, now, user);
 		dutyRosterTurn = dutyRosterTurnDao.create(dutyRosterTurn);
 		notifyDutyRosterTurn(null, dutyRosterTurn, now);
 		DutyRosterTurnOutVO result = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
@@ -872,7 +872,7 @@ extends StaffServiceBase
 		Staff staff = staffDao.staffInVOToEntity(newStaff);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(staff, now, user);
+		CoreUtil.modifyVersion(staff, now, user);
 		PersonContactParticulars personParticulars = staff.getPersonParticulars();
 		OrganisationContactParticulars organisationParticulars = staff.getOrganisationParticulars();
 		if (personParticulars != null) {
@@ -896,7 +896,7 @@ extends StaffServiceBase
 		StaffAddress address = addressDao.staffAddressInVOToEntity(newStaffAddress);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(address, now, user);
+		CoreUtil.modifyVersion(address, now, user);
 		address = addressDao.create(address);
 		StaffAddressOutVO result = addressDao.toStaffAddressOutVO(address);
 		logSystemMessage(address.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_ADDRESS_CREATED, result, null, this.getJournalEntryDao());
@@ -912,7 +912,7 @@ extends StaffServiceBase
 		StaffContactDetailValue contactValue = contactValueDao.staffContactDetailValueInVOToEntity(newStaffContactDetailValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(contactValue, now, user);
+		CoreUtil.modifyVersion(contactValue, now, user);
 		contactValue = contactValueDao.create(contactValue);
 		StaffContactDetailValueOutVO result = contactValueDao.toStaffContactDetailValueOutVO(contactValue);
 		logSystemMessage(contactValue.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_CONTACT_DETAIL_VALUE_CREATED, result, null, this.getJournalEntryDao());
@@ -927,7 +927,7 @@ extends StaffServiceBase
 		StaffStatusEntry statusEntry = statusEntryDao.staffStatusEntryInVOToEntity(newStaffStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(statusEntry, now, user);
+		CoreUtil.modifyVersion(statusEntry, now, user);
 		statusEntry = statusEntryDao.create(statusEntry);
 		notifyStaffInactive(statusEntry, now);
 		StaffStatusEntryOutVO result = statusEntryDao.toStaffStatusEntryOutVO(statusEntry);
@@ -943,7 +943,7 @@ extends StaffServiceBase
 		StaffTagValue tagValue = tagValueDao.staffTagValueInVOToEntity(newStaffTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(tagValue, now, user);
+		CoreUtil.modifyVersion(tagValue, now, user);
 		tagValue = tagValueDao.create(tagValue);
 		StaffTagValueOutVO result = tagValueDao.toStaffTagValueOutVO(tagValue);
 		logSystemMessage(tagValue.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_TAG_VALUE_CREATED, result, null, this.getJournalEntryDao());
@@ -1079,7 +1079,7 @@ extends StaffServiceBase
 			staffDao.evict(originalStaff);
 			Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao, LockMode.PESSIMISTIC_WRITE);
 			staff.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(staff, originalStaff.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(staff, originalStaff.getVersion(), now, user); // no opt. locking
 			staffDao.update(staff);
 			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
 			logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -1775,7 +1775,7 @@ extends StaffServiceBase
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(courseParticipation, now, user);
+		CoreUtil.modifyVersion(courseParticipation, now, user);
 		courseParticipation = courseParticipationStatusEntryDao.create(courseParticipation);
 		ServiceUtil.notifyParticipationStatusUpdated(null, courseParticipation, true, now, this.getNotificationDao());
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);
@@ -1868,7 +1868,7 @@ extends StaffServiceBase
 			}
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		ServiceUtil.modifyVersion(dutyRosterTurn, version.longValue(), now, user);
+		CoreUtil.modifyVersion(dutyRosterTurn, version.longValue(), now, user);
 		if (allocate) {
 			dutyRosterTurn.setStaff(identity);
 			identity.addDutyRosterTurns(dutyRosterTurn);
@@ -1919,7 +1919,7 @@ extends StaffServiceBase
 		Staff staff = staffDao.staffImageInVOToEntity(staffImage);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalStaff, staff, now, user);
+		CoreUtil.modifyVersion(originalStaff, staff, now, user);
 		staffDao.update(staff);
 		StaffImageOutVO result = staffDao.toStaffImageOutVO(staff);
 		logSystemMessage(staff, staffDao.toStaffOutVO(staff), now, user, cleared ? SystemMessageCodes.STAFF_IMAGE_CLEARED : hasImage ? SystemMessageCodes.STAFF_IMAGE_UPDATED
@@ -1938,7 +1938,7 @@ extends StaffServiceBase
 		CvPosition cvPosition = cvPositionDao.cvPositionInVOToEntity(modifiedCvPosition);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalCvPosition, cvPosition, now, user);
+		CoreUtil.modifyVersion(originalCvPosition, cvPosition, now, user);
 		cvPositionDao.update(cvPosition);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		CvPositionOutVO result = cvPositionDao.toCvPositionOutVO(cvPosition);
@@ -1962,7 +1962,7 @@ extends StaffServiceBase
 		DutyRosterTurn dutyRosterTurn = dutyRosterTurnDao.dutyRosterTurnInVOToEntity(modifiedDutyRosterTurn);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalDutyRosterTurn, dutyRosterTurn, now, user);
+		CoreUtil.modifyVersion(originalDutyRosterTurn, dutyRosterTurn, now, user);
 		dutyRosterTurnDao.update(dutyRosterTurn);
 		notifyDutyRosterTurn(oldStaff, dutyRosterTurn, now);
 		DutyRosterTurnOutVO result = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
@@ -2017,7 +2017,7 @@ extends StaffServiceBase
 		checkStaffLoop(staff);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalStaff, staff, now, user);
+		CoreUtil.modifyVersion(originalStaff, staff, now, user);
 		staffDao.update(staff);
 		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -2036,7 +2036,7 @@ extends StaffServiceBase
 		StaffAddress address = addressDao.staffAddressInVOToEntity(modifiedStaffAddress);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalAddress, address, now, user);
+		CoreUtil.modifyVersion(originalAddress, address, now, user);
 		addressDao.update(address);
 		StaffAddressOutVO result = addressDao.toStaffAddressOutVO(address);
 		logSystemMessage(address.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_ADDRESS_UPDATED, result, original, this.getJournalEntryDao());
@@ -2055,7 +2055,7 @@ extends StaffServiceBase
 		StaffContactDetailValue contactValue = contactValueDao.staffContactDetailValueInVOToEntity(modifiedStaffContactDetailValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalContactValue, contactValue, now, user);
+		CoreUtil.modifyVersion(originalContactValue, contactValue, now, user);
 		contactValueDao.update(contactValue);
 		StaffContactDetailValueOutVO result = contactValueDao.toStaffContactDetailValueOutVO(contactValue);
 		logSystemMessage(contactValue.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_CONTACT_DETAIL_VALUE_UPDATED, result, original, this.getJournalEntryDao());
@@ -2073,7 +2073,7 @@ extends StaffServiceBase
 		StaffStatusEntry statusEntry = statusEntryDao.staffStatusEntryInVOToEntity(modifiedStaffStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
+		CoreUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
 		statusEntryDao.update(statusEntry);
 		notifyStaffInactive(statusEntry, now);
 		StaffStatusEntryOutVO result = statusEntryDao.toStaffStatusEntryOutVO(statusEntry);
@@ -2093,7 +2093,7 @@ extends StaffServiceBase
 		StaffTagValue tagValue = tagValueDao.staffTagValueInVOToEntity(modifiedStaffTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTagValue, tagValue, now, user);
+		CoreUtil.modifyVersion(originalTagValue, tagValue, now, user);
 		tagValueDao.update(tagValue);
 		StaffTagValueOutVO result = tagValueDao.toStaffTagValueOutVO(tagValue);
 		logSystemMessage(tagValue.getStaff(), result.getStaff(), now, user, SystemMessageCodes.STAFF_TAG_VALUE_UPDATED, result, original, this.getJournalEntryDao());
@@ -2117,7 +2117,7 @@ extends StaffServiceBase
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(modifiedCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalCourseParticipation, courseParticipation, now, user);
+		CoreUtil.modifyVersion(originalCourseParticipation, courseParticipation, now, user);
 		courseParticipationStatusEntryDao.update(courseParticipation);
 		ServiceUtil.notifyParticipationStatusUpdated(originalCourseParticipationStatusType, courseParticipation, true, now, this.getNotificationDao());
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);

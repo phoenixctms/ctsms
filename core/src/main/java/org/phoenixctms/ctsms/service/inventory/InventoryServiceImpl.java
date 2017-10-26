@@ -477,7 +477,7 @@ extends InventoryServiceBase
 		while (childrenIt.hasNext()) {
 			Inventory child = childrenIt.next();
 			child.setParent(null);
-			ServiceUtil.modifyVersion(child, child.getVersion(), now, user);
+			CoreUtil.modifyVersion(child, child.getVersion(), now, user);
 			inventoryDao.update(child);
 			InventoryOutVO childVO = inventoryDao.toInventoryOutVO(child);
 		}
@@ -509,7 +509,7 @@ extends InventoryServiceBase
 		Inventory inventory = inventoryDao.inventoryInVOToEntity(newInventory);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(inventory, now, user);
+		CoreUtil.modifyVersion(inventory, now, user);
 		inventory = inventoryDao.create(inventory);
 		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -529,7 +529,7 @@ extends InventoryServiceBase
 		InventoryBooking inventoryBooking = inventoryBookingDao.inventoryBookingInVOToEntity(newInventoryBooking);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(inventoryBooking, now, user);
+		CoreUtil.modifyVersion(inventoryBooking, now, user);
 		inventoryBooking = inventoryBookingDao.create(inventoryBooking);
 		try {
 			addInventoryBookingProbandListStatusEntry(ProbandListStatusReasonCodes.BOOKING_CREATED, ProbandListStatusReasonCodes.BOOKING_CREATED_NO_CALENDAR, inventoryBooking,
@@ -563,7 +563,7 @@ extends InventoryServiceBase
 		InventoryStatusEntry statusEntry = statusEntryDao.inventoryStatusEntryInVOToEntity(newInventoryStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(statusEntry, now, user);
+		CoreUtil.modifyVersion(statusEntry, now, user);
 		statusEntry = statusEntryDao.create(statusEntry);
 		notifyInventoryInactive(statusEntry, now);
 		InventoryStatusEntryOutVO result = statusEntryDao.toInventoryStatusEntryOutVO(statusEntry);
@@ -578,7 +578,7 @@ extends InventoryServiceBase
 		InventoryTagValue tagValue = tagValueDao.inventoryTagValueInVOToEntity(newInventoryTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(tagValue, now, user);
+		CoreUtil.modifyVersion(tagValue, now, user);
 		tagValue = tagValueDao.create(tagValue);
 		InventoryTagValueOutVO result = tagValueDao.toInventoryTagValueOutVO(tagValue);
 		logSystemMessage(tagValue.getInventory(), result.getInventory(), now, user, SystemMessageCodes.INVENTORY_TAG_VALUE_CREATED, result, null, this.getJournalEntryDao());
@@ -593,7 +593,7 @@ extends InventoryServiceBase
 		MaintenanceScheduleItem maintenanceScheduleItem = maintenanceScheduleItemDao.maintenanceScheduleItemInVOToEntity(newMaintenanceScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(maintenanceScheduleItem, now, user);
+		CoreUtil.modifyVersion(maintenanceScheduleItem, now, user);
 		maintenanceScheduleItem.setDismissedTimestamp(now);
 		maintenanceScheduleItem = maintenanceScheduleItemDao.create(maintenanceScheduleItem);
 		notifyMaintenanceReminder(maintenanceScheduleItem, now);
@@ -626,7 +626,7 @@ extends InventoryServiceBase
 			inventoryDao.evict(originalInventory);
 			Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao, LockMode.PESSIMISTIC_WRITE);
 			inventory.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(inventory, originalInventory.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(inventory, originalInventory.getVersion(), now, user); // no opt. locking
 			inventoryDao.update(inventory);
 			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
 			logSystemMessage(inventory, result, now, user, SystemMessageCodes.INVENTORY_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -1276,7 +1276,7 @@ extends InventoryServiceBase
 		MaintenanceScheduleItemOutVO original = maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVO(maintenanceScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(maintenanceScheduleItem, version.longValue(), now, user);
+		CoreUtil.modifyVersion(maintenanceScheduleItem, version.longValue(), now, user);
 		maintenanceScheduleItem.setDismissed(dismissed);
 		maintenanceScheduleItem.setDismissedTimestamp(now);
 		maintenanceScheduleItemDao.update(maintenanceScheduleItem);
@@ -1309,7 +1309,7 @@ extends InventoryServiceBase
 		checkInventoryLoop(inventory);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalInventory, inventory, now, user);
+		CoreUtil.modifyVersion(originalInventory, inventory, now, user);
 		inventoryDao.update(inventory);
 		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -1332,7 +1332,7 @@ extends InventoryServiceBase
 		InventoryBooking inventoryBooking = inventoryBookingDao.inventoryBookingInVOToEntity(modifiedInventoryBooking);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalInventoryBooking, inventoryBooking, now, user);
+		CoreUtil.modifyVersion(originalInventoryBooking, inventoryBooking, now, user);
 		inventoryBookingDao.update(inventoryBooking);
 		try {
 			addInventoryBookingProbandListStatusEntry(ProbandListStatusReasonCodes.BOOKING_UPDATED, ProbandListStatusReasonCodes.BOOKING_UPDATED_NO_CALENDAR, inventoryBooking,
@@ -1370,7 +1370,7 @@ extends InventoryServiceBase
 		InventoryStatusEntry statusEntry = statusEntryDao.inventoryStatusEntryInVOToEntity(modifiedInventoryStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
+		CoreUtil.modifyVersion(originalStatusEntry, statusEntry, now, user);
 		statusEntryDao.update(statusEntry);
 		notifyInventoryInactive(statusEntry, now);
 		InventoryStatusEntryOutVO result = statusEntryDao.toInventoryStatusEntryOutVO(statusEntry);
@@ -1389,7 +1389,7 @@ extends InventoryServiceBase
 		InventoryTagValue tagValue = tagValueDao.inventoryTagValueInVOToEntity(modifiedInventoryTagValue);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalTagValue, tagValue, now, user);
+		CoreUtil.modifyVersion(originalTagValue, tagValue, now, user);
 		tagValueDao.update(tagValue);
 		InventoryTagValueOutVO result = tagValueDao.toInventoryTagValueOutVO(tagValue);
 		logSystemMessage(tagValue.getInventory(), result.getInventory(), now, user, SystemMessageCodes.INVENTORY_TAG_VALUE_UPDATED, result, original, this.getJournalEntryDao());
@@ -1407,7 +1407,7 @@ extends InventoryServiceBase
 		MaintenanceScheduleItem maintenanceScheduleItem = maintenanceScheduleItemDao.maintenanceScheduleItemInVOToEntity(modifiedMaintenanceScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalMaintenanceScheduleItem, maintenanceScheduleItem, now, user);
+		CoreUtil.modifyVersion(originalMaintenanceScheduleItem, maintenanceScheduleItem, now, user);
 		maintenanceScheduleItem.setDismissedTimestamp(now);
 		maintenanceScheduleItemDao.update(maintenanceScheduleItem);
 		notifyMaintenanceReminder(maintenanceScheduleItem, now);

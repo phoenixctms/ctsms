@@ -28,6 +28,9 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
 #if ($stringUtils.isBlank($class.getDocumentation("", 9999, false)))
@@ -534,6 +537,67 @@ $connectingEnd.getDocumentation("     * ")
             .append(this.${attr.getterName}(), rhs.${attr.getterName}())
 #end
             .isEquals();
+    }
+
+    /**
+     * @param object to compare this object against
+     * @param excludes getter method names
+     * @return boolean if equal
+     * @see Object${esc.hash}equals(Object)
+     */
+#if ($enableAnnotations)
+##if ($enableTemplating)
+##    @SuppressWarnings("unchecked")
+##end
+#end
+    public static boolean equalsExcluding(final Object a, final Object b, final HashSet<String> excludes)
+    {
+        if (a==null && b==null) {
+        	return true;
+        } else if (a==null && b!=null) {
+        	return false;
+        } else if (a!=null && b==null) {
+        	return false;
+        } else if (Collection.class.isAssignableFrom(a.getClass()) && Collection.class.isAssignableFrom(b.getClass())) {
+        	if (((Collection) a).size() == ((Collection) b).size()) {
+       			Iterator itA = ((Collection) a).iterator();
+       			Iterator itB = ((Collection) b).iterator();
+       			while (itA.hasNext() && itB.hasNext()) {
+       				if (!equalsExcluding(itA.next(), itB.next(), excludes)) {
+       					return false;
+       				}
+       			}
+       			return itA.hasNext() == itB.hasNext();
+        	} else {
+        		return false;
+        	}
+        } else if (!(a instanceof $umlUtils.getFQNameWithoutTemplate($class)) || !(b instanceof $umlUtils.getFQNameWithoutTemplate($class))) {
+            return false;
+        }
+#if (!$class.properties.empty)
+		$class.fullyQualifiedName lhs = ($class.fullyQualifiedName) a;
+        $class.fullyQualifiedName rhs = ($class.fullyQualifiedName) b;
+#end
+        EqualsBuilder eb = new EqualsBuilder();
+#foreach($attr in $class.attributes)
+		if (!excludes.contains("*.${attr.getterName}") && !excludes.contains("${class.name}.${attr.getterName}")) {
+        	eb.append(lhs.${attr.getterName}(), rhs.${attr.getterName}());
+        }
+#end
+		if (!eb.isEquals()) {
+			return false;
+		}
+		eb.reset();
+#foreach($associationEnd in $class.associationEnds)
+#set ($target = $associationEnd.otherEnd)
+#if ($target.navigable)
+		if (!excludes.contains("*.${target.getterName}") && !excludes.contains("${class.name}.${target.getterName}")
+			&& !${target.type.fullyQualifiedName}.equalsExcluding(lhs.${target.getterName}(), rhs.${target.getterName}(), excludes)) {
+			return false;
+		}
+#end
+#end
+        return true;
     }
 
     /**

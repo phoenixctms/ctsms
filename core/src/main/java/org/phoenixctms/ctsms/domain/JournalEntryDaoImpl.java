@@ -173,7 +173,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setCourse(course);
@@ -189,7 +189,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setCriteria(criteria);
@@ -205,7 +205,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setInputField(inputField);
@@ -221,7 +221,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setInventory(inventory);
@@ -237,7 +237,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setProband(proband);
@@ -253,7 +253,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setStaff(staff);
@@ -269,7 +269,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setTrial(trial);
@@ -285,7 +285,7 @@ extends JournalEntryDaoBase
 		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
 			return null;
 		}
-		ServiceUtil.modifyVersion(journalEntry, now, modifiedUser);
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
 		journalEntry.setUser(user);

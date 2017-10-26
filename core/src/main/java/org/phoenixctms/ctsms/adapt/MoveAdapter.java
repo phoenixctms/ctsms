@@ -84,11 +84,11 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 						swapItem = items.get(i);
 						checkItem(swapItem);
 						setPosition(swapItem, getPosition(items.get(i + 1)));
-						ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+						CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 						daoUpdate(swapItem);
 					}
 					setPosition(item, swapPosition);
-					ServiceUtil.modifyVersion(item, item, now, user);
+					CoreUtil.modifyVersion(item, item, now, user);
 					daoUpdate(item);
 					return logSystemMessage(item, originalItem, now, user, movement);
 				} else {
@@ -101,9 +101,9 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 					swapPosition = getPosition(swapItem);
 					setPosition(swapItem, getPosition(item));
 					setPosition(item, swapPosition);
-					ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+					CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 					daoUpdate(swapItem);
-					ServiceUtil.modifyVersion(item, item, now, user);
+					CoreUtil.modifyVersion(item, item, now, user);
 					daoUpdate(item);
 					return logSystemMessage(item, originalItem, now, user, movement);
 				} else {
@@ -116,9 +116,9 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 					swapPosition = getPosition(swapItem);
 					setPosition(swapItem, getPosition(item));
 					setPosition(item, swapPosition);
-					ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+					CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 					daoUpdate(swapItem);
-					ServiceUtil.modifyVersion(item, item, now, user);
+					CoreUtil.modifyVersion(item, item, now, user);
 					daoUpdate(item);
 					return logSystemMessage(item, originalItem, now, user, movement);
 				} else {
@@ -131,11 +131,11 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 						swapItem = items.get(i);
 						checkItem(swapItem);
 						setPosition(swapItem, getPosition(items.get(i - 1)));
-						ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+						CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 						daoUpdate(swapItem);
 					}
 					setPosition(item, swapPosition);
-					ServiceUtil.modifyVersion(item, item, now, user);
+					CoreUtil.modifyVersion(item, item, now, user);
 					daoUpdate(item);
 					return logSystemMessage(item, originalItem, now, user, movement);
 				} else {
@@ -199,7 +199,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 			if (sourceIndex == targetIndex) {
 				if (targetPosition != getPosition(item)) {
 					setPosition(item, targetPosition);
-					ServiceUtil.modifyVersion(item, item, now, user);
+					CoreUtil.modifyVersion(item, item, now, user);
 					daoUpdate(item);
 					PositionMovement movement = getPosition(item) > targetPosition ? PositionMovement.ROTATE_DOWN : PositionMovement.ROTATE_UP;
 					updated.add(logSystemMessage(item, originalItem, now, user, movement));
@@ -213,7 +213,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				if (sourceIndex > targetIndex) {
 					if (targetPosition < getPosition(items.get(0))) {
 						setPosition(item, targetPosition);
-						ServiceUtil.modifyVersion(item, item, now, user);
+						CoreUtil.modifyVersion(item, item, now, user);
 						daoUpdate(item);
 						updated.add(logSystemMessage(item, originalItem, now, user, PositionMovement.ROTATE_DOWN));
 						logUpdatedPositionsSystemMessage(root, PositionMovement.ROTATE_DOWN, updated, now, user);
@@ -225,12 +225,12 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 							swapPosition = getPosition(swapItem);
 							setPosition(swapItem, getPosition(item));
 							setPosition(item, swapPosition);
-							ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+							CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 							daoUpdate(swapItem);
 							updated.add(logSystemMessage(swapItem, originalSwapItem, now, user, PositionMovement.ROTATE_DOWN));
 						}
 						setPosition(item, targetPosition);
-						ServiceUtil.modifyVersion(item, item, now, user);
+						CoreUtil.modifyVersion(item, item, now, user);
 						daoUpdate(item);
 						updated.add(logSystemMessage(item, originalItem, now, user, PositionMovement.ROTATE_DOWN));
 						logUpdatedPositionsSystemMessage(root, PositionMovement.ROTATE_DOWN, updated, now, user);
@@ -238,7 +238,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				} else if (sourceIndex < targetIndex) {
 					if (targetPosition > getPosition(items.get(items.size() - 1))) {
 						setPosition(item, targetPosition);
-						ServiceUtil.modifyVersion(item, item, now, user);
+						CoreUtil.modifyVersion(item, item, now, user);
 						daoUpdate(item);
 						updated.add(logSystemMessage(item, originalItem, now, user, PositionMovement.ROTATE_UP));
 						logUpdatedPositionsSystemMessage(root, PositionMovement.ROTATE_UP, updated, now, user);
@@ -250,12 +250,12 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 							swapPosition = getPosition(swapItem);
 							setPosition(swapItem, getPosition(item));
 							setPosition(item, swapPosition);
-							ServiceUtil.modifyVersion(swapItem, swapItem, now, user);
+							CoreUtil.modifyVersion(swapItem, swapItem, now, user);
 							daoUpdate(swapItem);
 							updated.add(logSystemMessage(swapItem, originalSwapItem, now, user, PositionMovement.ROTATE_UP));
 						}
 						setPosition(item, targetPosition);
-						ServiceUtil.modifyVersion(item, item, now, user);
+						CoreUtil.modifyVersion(item, item, now, user);
 						daoUpdate(item);
 						updated.add(logSystemMessage(item, originalItem, now, user, PositionMovement.ROTATE_UP));
 						logUpdatedPositionsSystemMessage(root, PositionMovement.ROTATE_UP, updated, now, user);
@@ -281,7 +281,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				checkItem(item);
 				LISTITEMVO original = toVO(item);
 				setPosition(item, position);
-				ServiceUtil.modifyVersion(item, item, now, user);
+				CoreUtil.modifyVersion(item, item, now, user);
 				daoUpdate(item);
 				updated.add(logSystemMessage(item, original, now, user, PositionMovement.NORMALIZE));
 			}

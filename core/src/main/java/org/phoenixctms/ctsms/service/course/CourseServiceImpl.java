@@ -132,7 +132,7 @@ extends CourseServiceBase
 				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getCourseParticipationStatusTypeDao(), this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
-		ServiceUtil.modifyVersion(courseParticipation, now, user);
+		CoreUtil.modifyVersion(courseParticipation, now, user);
 		courseParticipation = courseParticipationStatusEntryDao.create(courseParticipation);
 		ServiceUtil.notifyParticipationStatusUpdated(null, courseParticipation, false, now, this.getNotificationDao());
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);
@@ -261,7 +261,7 @@ extends CourseServiceBase
 				InventoryBooking booking = bookingsIt.next();
 				InventoryBookingOutVO original = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				booking.setCourse(null);
-				ServiceUtil.modifyVersion(booking, booking.getVersion(), now, user);
+				CoreUtil.modifyVersion(booking, booking.getVersion(), now, user);
 				inventoryBookingDao.update(booking);
 				InventoryBookingOutVO bookingVO = inventoryBookingDao.toInventoryBookingOutVO(booking);
 				logSystemMessage(booking.getInventory(), result, now, user, SystemMessageCodes.COURSE_DELETED_BOOKING_UPDATED, bookingVO, original, journalEntryDao);
@@ -310,7 +310,7 @@ extends CourseServiceBase
 		while (precedingCoursesIt.hasNext()) {
 			Course precedingCourse = precedingCoursesIt.next();
 			precedingCourse.removeRenewals(course); // .setRenewal(null);
-			// ServiceUtil.modifyVersion(precedingCourse, precedingCourse.getVersion(), now, user);
+			// CoreUtil.modifyVersion(precedingCourse, precedingCourse.getVersion(), now, user);
 			courseDao.update(precedingCourse);
 			// CourseOutVO precedingCourseVO = courseDao.toCourseOutVO(precedingCourse);
 			// logSystemMessage(precedingCourse, result, now, user, SystemMessageCodes.COURSE_DELETED_RENEWAL_REMOVED, result, null, journalEntryDao);
@@ -320,7 +320,7 @@ extends CourseServiceBase
 		while (renewalsIt.hasNext()) {
 			Course renewal = renewalsIt.next();
 			renewal.removePrecedingCourses(course); // .setRenewal(null);
-			ServiceUtil.modifyVersion(renewal, renewal.getVersion(), now, user);
+			CoreUtil.modifyVersion(renewal, renewal.getVersion(), now, user);
 			courseDao.update(renewal);
 			logSystemMessage(renewal, result, now, user, SystemMessageCodes.COURSE_DELETED_PRECEDING_COURSE_REMOVED, result, null, journalEntryDao);
 		}
@@ -349,7 +349,7 @@ extends CourseServiceBase
 		Course course = courseDao.courseInVOToEntity(newCourse);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(course, now, user);
+		CoreUtil.modifyVersion(course, now, user);
 		course = courseDao.create(course);
 		notifyNewCourse(course, now);
 		notifyExpiringCourse(course, now);
@@ -415,7 +415,7 @@ extends CourseServiceBase
 		Lecturer lecturer = lecturerDao.lecturerInVOToEntity(newLecturer);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(lecturer, now, user);
+		CoreUtil.modifyVersion(lecturer, now, user);
 		lecturer = lecturerDao.create(lecturer);
 		LecturerOutVO result = lecturerDao.toLecturerOutVO(lecturer);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -441,7 +441,7 @@ extends CourseServiceBase
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(modifiedCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalCourseParticipation, courseParticipation, now, user);
+		CoreUtil.modifyVersion(originalCourseParticipation, courseParticipation, now, user);
 		courseParticipationStatusEntryDao.update(courseParticipation);
 		ServiceUtil.notifyParticipationStatusUpdated(originalCourseParticipationStatusType, courseParticipation, false, now, this.getNotificationDao());
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);
@@ -467,7 +467,7 @@ extends CourseServiceBase
 			courseDao.evict(originalCourse);
 			Course course = CheckIDUtil.checkCourseId(courseId, courseDao, LockMode.PESSIMISTIC_WRITE);
 			course.setDeferredDelete(true);
-			ServiceUtil.modifyVersion(course, originalCourse.getVersion(), now, user); // no opt. locking
+			CoreUtil.modifyVersion(course, originalCourse.getVersion(), now, user); // no opt. locking
 			courseDao.update(course);
 			result = courseDao.toCourseOutVO(course, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);
 			logSystemMessage(course, result, now, user, SystemMessageCodes.COURSE_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -915,7 +915,7 @@ extends CourseServiceBase
 		checkCourseLoop(course);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalCourse, course, now, user);
+		CoreUtil.modifyVersion(originalCourse, course, now, user);
 		courseDao.update(course);
 		notifyExpiringCourse(course, now);
 		CourseOutVO result = courseDao.toCourseOutVO(course, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);
@@ -948,7 +948,7 @@ extends CourseServiceBase
 		Lecturer lecturer = lecturerDao.lecturerInVOToEntity(modifiedLecturer);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalLecturer, lecturer, now, user);
+		CoreUtil.modifyVersion(originalLecturer, lecturer, now, user);
 		lecturerDao.update(lecturer);
 		LecturerOutVO result = lecturerDao.toLecturerOutVO(lecturer);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();

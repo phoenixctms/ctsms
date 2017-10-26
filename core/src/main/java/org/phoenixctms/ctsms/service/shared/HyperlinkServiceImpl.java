@@ -153,7 +153,7 @@ extends HyperlinkServiceBase
 		Hyperlink hyperlink = hyperlinkDao.hyperlinkInVOToEntity(newHyperlink);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(hyperlink, now, user);
+		CoreUtil.modifyVersion(hyperlink, now, user);
 		hyperlink = hyperlinkDao.create(hyperlink);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -279,7 +279,7 @@ extends HyperlinkServiceBase
 		Hyperlink hyperlink = hyperlinkDao.hyperlinkInVOToEntity(modifiedHyperlink);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		ServiceUtil.modifyVersion(originalHyperlink, hyperlink, now, user);
+		CoreUtil.modifyVersion(originalHyperlink, hyperlink, now, user);
 		hyperlinkDao.update(hyperlink);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();

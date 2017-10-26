@@ -628,7 +628,7 @@ public class DemoDataProvider {
 			userPermissionProfile.setActive(true);
 			userPermissionProfile.setProfile(profile);
 			userPermissionProfile.setUser(user);
-			ServiceUtil.modifyVersion(userPermissionProfile, now, null);
+			CoreUtil.modifyVersion(userPermissionProfile, now, null);
 			result.add(userPermissionProfileDao.create(userPermissionProfile));
 			jobOutput.println("permission profile " + profile.toString() + " added");
 		}
