@@ -8,13 +8,10 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
@@ -107,7 +104,7 @@ extends AspSubstanceDaoBase
 	}
 
 	@Override
-	protected Collection<AspSubstance> handleFindAspSubstances(String nameInfix, Integer limit)
+	protected Collection<AspSubstance> handleFindAspSubstances(String nameInfix, Integer limit) throws Exception
 	{
 		org.hibernate.Criteria aspSubstanceCriteria = createAspSubstanceCriteria(true);
 		applyAspSubstanceNameCriterions(aspSubstanceCriteria, nameInfix);
@@ -117,15 +114,16 @@ extends AspSubstanceDaoBase
 						DefaultSettings.ASP_SUBSTANCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
 						aspSubstanceCriteria);
 		if (MATCH_ASP_NAME || MATCH_ASP_REGISTRATION_NUMBER || MATCH_ATC_CODE_CODE) {
-			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-			projectionList.add(Projections.property("name"));
-			List aspSubstances = aspSubstanceCriteria.setProjection(Projections.distinct(projectionList)).list();
-			Iterator it = aspSubstances.iterator();
-			ArrayList result = new ArrayList(aspSubstances.size());
-			while (it.hasNext()) {
-				result.add(this.load((Long) ((Object[]) it.next())[0]));
-			}
-			return result;
+			// ProjectionList projectionList = Projections.projectionList().add(Projections.id());
+			// projectionList.add(Projections.property("name"));
+			// List aspSubstances = aspSubstanceCriteria.setProjection(Projections.distinct(projectionList)).list();
+			// Iterator it = aspSubstances.iterator();
+			// ArrayList result = new ArrayList(aspSubstances.size());
+			// while (it.hasNext()) {
+			// result.add(this.load((Long) ((Object[]) it.next())[0]));
+			// }
+			// return result;
+			return CriteriaUtil.listDistinctRoot(aspSubstanceCriteria, this, "name");
 		} else {
 			return aspSubstanceCriteria.list();
 		}

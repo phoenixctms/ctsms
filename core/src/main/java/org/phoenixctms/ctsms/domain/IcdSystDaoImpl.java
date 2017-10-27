@@ -44,7 +44,7 @@ extends IcdSystDaoBase
 		String code = CommonUtil.isEmptyString(primaryCode) ? optionalCode : primaryCode;
 		if (!CommonUtil.isEmptyString(code)) {
 			Matcher matcher = ICD_CODE_PATTERN_REGEXP.matcher(code);
-			if (matcher.matches()) {
+			if (matcher.find()) {
 				StringBuilder search = new StringBuilder(matcher.group(1));
 				search.append(matcher.group(2));
 				String detail = matcher.group(3);

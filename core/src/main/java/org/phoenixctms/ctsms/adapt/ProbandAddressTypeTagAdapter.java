@@ -52,7 +52,7 @@ public class ProbandAddressTypeTagAdapter extends TagAdapter<Proband, AddressTyp
 		}
 		ServiceUtil.checkProbandLocked(root);
 		Pattern zipCodeRegExp = Settings.getRegexp(SettingCodes.ZIP_CODE_REGEXP, Bundle.SETTINGS, DefaultSettings.ZIP_CODE_REGEXP);
-		if (zipCodeRegExp != null && !zipCodeRegExp.matcher(tagValueIn.getZipCode()).matches()) {
+		if (zipCodeRegExp != null && !zipCodeRegExp.matcher(tagValueIn.getZipCode()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ZIP_CODE, tagValueIn.getZipCode(), zipCodeRegExp.pattern());
 		}
 		if (root.isPerson() && !tag.isProband()) {

@@ -255,4 +255,5 @@ public interface SettingCodes {
 	public static final String NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = "new_ecrf_field_status_notification_queues";
 	public static final String ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = "ecrf_field_values_schedule_validation_limit";
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
+	public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
 }

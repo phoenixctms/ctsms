@@ -738,7 +738,7 @@ public final class ServiceUtil {
 								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_INVALID_REGEXP_PATTERN,
 										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), e.getMessage());
 							}
-							if (valuePattern != null && !valuePattern.matcher(textValue).matches()) {
+							if (valuePattern != null && !valuePattern.matcher(textValue).find()) {
 								throw L10nUtil.initServiceException(getValidationErrorMsg(inputFieldDao.toInputFieldOutVO(inputField)));
 							}
 						}

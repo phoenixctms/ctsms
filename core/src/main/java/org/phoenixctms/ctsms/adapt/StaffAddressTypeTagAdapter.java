@@ -50,7 +50,7 @@ public class StaffAddressTypeTagAdapter extends TagAdapter<Staff, AddressType, S
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ADDRESS_TYPE_NOT_FOR_STAFF_ENTRIES, L10nUtil.getAddressTypeName(Locales.USER, tag.getNameL10nKey()));
 		}
 		Pattern zipCodeRegExp = Settings.getRegexp(SettingCodes.ZIP_CODE_REGEXP, Bundle.SETTINGS, DefaultSettings.ZIP_CODE_REGEXP);
-		if (zipCodeRegExp != null && !zipCodeRegExp.matcher(tagValueIn.getZipCode()).matches()) {
+		if (zipCodeRegExp != null && !zipCodeRegExp.matcher(tagValueIn.getZipCode()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ZIP_CODE, tagValueIn.getZipCode(), zipCodeRegExp.pattern());
 		}
 		if (tagValueIn.getId() == null) {

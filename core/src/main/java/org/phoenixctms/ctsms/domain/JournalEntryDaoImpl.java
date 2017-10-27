@@ -33,7 +33,6 @@ import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
-import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -353,6 +352,30 @@ extends JournalEntryDaoBase
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return journalCriteria.list();
+	}
+
+	@Override
+	protected Collection<JournalEntry> handleFindEcrfJournal(Long trailId) throws Exception {
+		org.hibernate.Criteria journalCriteria = createJournalEntryCriteria(null);
+		journalCriteria.add(Restrictions.or(
+				Restrictions.eq("systemMessage", false),
+				Restrictions.or(Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.TRIAL_JOURNAL)),
+						Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.INPUT_FIELD_JOURNAL))) )
+				);
+		journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(
+				Restrictions.or(Restrictions.eq("module", JournalModule.TRIAL_JOURNAL),Restrictions.eq("module", JournalModule.INPUT_FIELD_JOURNAL)), Restrictions.isNull("module")));
+
+		journalCriteria.createCriteria("inputField", CriteriaSpecification.LEFT_JOIN).createCriteria("ecrfFields", "trialEcrfField", CriteriaSpecification.LEFT_JOIN);
+
+		journalCriteria.add(Restrictions.or(Restrictions.eq("trial.id", trailId.longValue()),
+				Restrictions.eq("trialEcrfField.trial.id", trailId.longValue())));
+
+		journalCriteria.addOrder(Order.asc("id"));
+
+		return CriteriaUtil.listDistinctRoot(journalCriteria, this);
+		//journalCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY); //loaded in memory anyway.
+
+		//return journalCriteria.list();
 	}
 
 	@Override

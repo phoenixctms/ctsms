@@ -49,7 +49,7 @@ public abstract class TagAdapter<ROOT, TAG, TAGVALUE, VO> {
 					} catch (PatternSyntaxException e) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.TAG_INVALID_REGEXP_PATTERN, getNameL10nKey(tag), e.getMessage());
 					}
-					if (tagValuePattern != null && !tagValuePattern.matcher(getValue(tagValueIn)).matches()) {
+					if (tagValuePattern != null && !tagValuePattern.matcher(getValue(tagValueIn)).find()) {
 						String mismatchMsgL10nKey = getMismatchL10nKey(tag);
 						if (mismatchMsgL10nKey != null && mismatchMsgL10nKey.length() > 0) {
 							throw L10nUtil.initServiceException(mismatchMsgL10nKey, getValue(tagValueIn), regExp);

@@ -815,6 +815,14 @@ public class DBTool {
 						sendEmail = dbTool.getServiceMethodExecutor().exportTrialJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
 								line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT))) {
+						sendEmail = dbTool.getServiceMethodExecutor().exportEcrfJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT)) > 0l;
+					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT)) {
 					job = DBToolOptions.getTask(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT);
 					dbTool.getJobOutput().printPrelude(job);

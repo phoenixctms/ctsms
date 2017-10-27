@@ -528,16 +528,18 @@ public final class CriteriaUtil {
 			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 			Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
 			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-			if (fields != null) {
+			boolean cast = false;
+			if (fields != null && fields.length > 0) {
 				for (int i = 0; i< fields.length; i++) {
 					projectionList.add(Projections.property(fields[i]));
 				}
+				cast = true;
 			}
 			List items = criteria.setProjection(Projections.distinct(projectionList)).list();
 			Iterator it = items.iterator();
 			ArrayList result = new ArrayList(items.size());
 			while (it.hasNext()) {
-				result.add(loadMethod.invoke(dao, ((Object[]) it.next())[0]));
+				result.add(loadMethod.invoke(dao, cast ? ((Object[]) it.next())[0] : it.next()));
 			}
 			return result;
 		}
@@ -581,16 +583,18 @@ public final class CriteriaUtil {
 				}
 				ProjectionList projectionList = Projections.projectionList().add(Projections.id());
 				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
+				boolean cast = false;
 				if (sortFieldAssociationPath.isValid()) {
 					Criteria subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
 					String sortProperty = sortFieldAssociationPath.getPropertyName();
 					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
 					projectionList.add(Projections.property(sortProperty));
+					cast = true;
 				}
 				Iterator it = criteria.setProjection(Projections.distinct(projectionList)).list().iterator();
 				ArrayList result = (count == null ? new ArrayList() : new ArrayList(CommonUtil.safeLongToInt(count)));
 				while (it.hasNext()) {
-					result.add(loadMethod.invoke(dao, ((Object[]) it.next())[0]));
+					result.add(loadMethod.invoke(dao, cast ? ((Object[]) it.next())[0] : it.next()));
 				}
 				return result;
 			} else {

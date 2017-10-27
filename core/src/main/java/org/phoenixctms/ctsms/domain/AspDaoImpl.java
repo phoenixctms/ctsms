@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.compare.VOIDComparator;
@@ -131,7 +129,7 @@ extends AspDaoBase
 	}
 
 	@Override
-	protected Collection<Asp> handleFindAsps(String nameInfix, Integer limit)
+	protected Collection<Asp> handleFindAsps(String nameInfix, Integer limit) throws Exception
 	{
 		org.hibernate.Criteria aspCriteria = createAspCriteria(true);
 		applyAspNameCriterions(aspCriteria, nameInfix);
@@ -140,15 +138,16 @@ extends AspDaoBase
 				Settings.getIntNullable(SettingCodes.ASP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.ASP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
 				aspCriteria);
 		if (MATCH_SUBSTANCE_NAME || MATCH_ATC_CODE_CODE) {
-			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-			projectionList.add(Projections.property("name"));
-			List asps = aspCriteria.setProjection(Projections.distinct(projectionList)).list();
-			Iterator it = asps.iterator();
-			ArrayList result = new ArrayList(asps.size());
-			while (it.hasNext()) {
-				result.add(this.load((Long) ((Object[]) it.next())[0]));
-			}
-			return result;
+			// ProjectionList projectionList = Projections.projectionList().add(Projections.id());
+			// projectionList.add(Projections.property("name"));
+			// List asps = aspCriteria.setProjection(Projections.distinct(projectionList)).list();
+			// Iterator it = asps.iterator();
+			// ArrayList result = new ArrayList(asps.size());
+			// while (it.hasNext()) {
+			// result.add(this.load((Long) ((Object[]) it.next())[0]));
+			// }
+			// return result;
+			return CriteriaUtil.listDistinctRoot(aspCriteria, this, "name");
 		} else {
 			return aspCriteria.list();
 		}

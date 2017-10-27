@@ -77,6 +77,9 @@ public class JournalExcelWriter extends WorkbookWriter {
 					scaleFactor = Settings.getIntNullable(JournalExcelSettingCodes.INPUT_FIELD_SCALE_FACTOR, Bundle.JOURNAL_EXCEL,
 							JournalExcelDefaultSettings.INPUT_FIELD_SCALE_FACTOR);
 					break;
+				case ECRF_JOURNAL:
+					scaleFactor = Settings.getIntNullable(JournalExcelSettingCodes.ECRF_SCALE_FACTOR, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_SCALE_FACTOR);
+					break;
 				default:
 			}
 		}
@@ -193,6 +196,18 @@ public class JournalExcelWriter extends WorkbookWriter {
 											Settings.getBoolean(JournalExcelSettingCodes.INPUT_FIELD_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INPUT_FIELD_ROW_COLORS),
 											Settings.getExcelCellFormat(JournalExcelSettingCodes.INPUT_FIELD_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INPUT_FIELD_HEAD_FORMAT),
 											Settings.getExcelCellFormat(JournalExcelSettingCodes.INPUT_FIELD_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INPUT_FIELD_ROW_FORMAT));
+				case ECRF_JOURNAL:
+					return new SpreadSheetWriter(this,
+							getColumnIndexMap(L10nUtil.getJournalExcelColumns(Locales.USER, JournalExcelLabelCodes.ECRF_VO_FIELD_COLUMNS,
+									JournalExcelDefaultSettings.ECRF_VO_FIELD_COLUMNS)),
+							Settings.getInt(JournalExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(JournalExcelSettingCodes.ECRF_AUTOSIZE, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_AUTOSIZE),
+							Settings.getBoolean(JournalExcelSettingCodes.ECRF_WRITEHEAD, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_WRITEHEAD),
+							Settings.getIntNullable(JournalExcelSettingCodes.ECRF_PAGE_BREAK_AT_ROW, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(JournalExcelSettingCodes.ECRF_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_COLORS),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_FORMAT));
 				default:
 			}
 		}
@@ -266,6 +281,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 							JournalExcelDefaultSettings.INPUT_FIELD_TEMPLATE_FILE_NAME);
 				case CRITERIA_JOURNAL:
 					return Settings.getString(JournalExcelSettingCodes.CRITERIA_TEMPLATE_FILE_NAME, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.CRITERIA_TEMPLATE_FILE_NAME);
+				case ECRF_JOURNAL:
+					return Settings.getString(JournalExcelSettingCodes.ECRF_TEMPLATE_FILE_NAME, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_TEMPLATE_FILE_NAME);
 				default:
 			}
 		}
@@ -354,6 +371,10 @@ public class JournalExcelWriter extends WorkbookWriter {
 				case CRITERIA_JOURNAL:
 					templateSpreadSheetName = Settings.getString(JournalExcelSettingCodes.CRITERIA_SPREADSHEET_NAME, Bundle.JOURNAL_EXCEL,
 							JournalExcelDefaultSettings.CRITERIA_SPREADSHEET_NAME);
+					break;
+				case ECRF_JOURNAL:
+					templateSpreadSheetName = Settings.getString(JournalExcelSettingCodes.ECRF_SPREADSHEET_NAME, Bundle.JOURNAL_EXCEL,
+							JournalExcelDefaultSettings.ECRF_SPREADSHEET_NAME);
 					break;
 				default:
 			}
@@ -456,6 +477,13 @@ public class JournalExcelWriter extends WorkbookWriter {
 					excelVO.setInputField(inputField);
 					if (inputField != null) {
 						fileName.append(inputField.getId());
+						fileName.append("_");
+					}
+					break;
+				case ECRF_JOURNAL:
+					excelVO.setTrial(trial);
+					if (trial != null) {
+						fileName.append(trial.getId());
 						fileName.append("_");
 					}
 					break;

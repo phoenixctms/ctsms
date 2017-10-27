@@ -67,14 +67,14 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 
 			@Override
 			public boolean include(Method method) {
-				return GET_LIST_METHOD_NAME_REGEXP.matcher(method.getName()).matches();
+				return GET_LIST_METHOD_NAME_REGEXP.matcher(method.getName()).find();
 			}
 
 			@Override
 			public String transform(String methodName) {
 				if (methodName != null && methodName.length() > 0) {
 					Matcher matcher = GET_LIST_METHOD_NAME_REGEXP.matcher(methodName);
-					if (matcher.matches()) {
+					if (matcher.find()) {
 						return matcher.group(1).toLowerCase();
 					}
 				}

@@ -311,6 +311,7 @@ public interface SystemMessageCodes {
 	public final static String HYPERLINK_UPDATED = "hyperlink_updated";
 	public final static String HYPERLINK_DELETED = "hyperlink_deleted";
 	public final static String JOURNAL_EXPORTED = "journal_exported";
+	public final static String ECRF_JOURNAL_EXPORTED = "ecrf_journal_exported";
 	public final static String DEPARTMENT_PASSWORD_CHANGED = "department_password_changed";
 	public final static String FAILED_LOGON = "failed_logon";
 	public final static String SUCCESSFUL_LOGON = "successful_logon";

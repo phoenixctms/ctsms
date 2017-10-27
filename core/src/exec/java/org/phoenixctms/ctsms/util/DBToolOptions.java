@@ -140,6 +140,7 @@ public final class DBToolOptions {
 	public static final String EXPORT_STAFF_JOURNAL_OPT = "esj";
 	public static final String EXPORT_COURSE_JOURNAL_OPT = "ecj";
 	public static final String EXPORT_TRIAL_JOURNAL_OPT = "etj";
+	public static final String EXPORT_ECRF_JOURNAL_OPT = "eej";
 	public static final String EXPORT_PROBAND_JOURNAL_OPT = "epj";
 	public static final String EXPORT_INPUT_FIELD_JOURNAL_OPT = "eifj";
 	public static final String EXPORT_USER_JOURNAL_OPT = "euj";
@@ -278,6 +279,8 @@ public final class DBToolOptions {
 				"export course journal", 1));
 		tasks.addOption(registerTaskOption(EXPORT_TRIAL_JOURNAL_OPT, "export_trial_journal",
 				"export trial journal", 1));
+		tasks.addOption(registerTaskOption(EXPORT_ECRF_JOURNAL_OPT, "export_ecrf_journal",
+				"export ecrf journal of a trial", 1));
 		tasks.addOption(registerTaskOption(EXPORT_PROBAND_JOURNAL_OPT, "export_proband_journal",
 				"export proband journal", 1));
 		tasks.addOption(registerTaskOption(EXPORT_INPUT_FIELD_JOURNAL_OPT, "export_input_field_journal",

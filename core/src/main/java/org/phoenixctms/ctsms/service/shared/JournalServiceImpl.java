@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.Criteria;
@@ -33,10 +34,14 @@ import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.ActivityTagVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -298,6 +303,36 @@ extends JournalServiceBase
 		journalEntryDao.remove(journalEntry);
 		return result;
 			}
+
+	@Override
+	protected JournalExcelVO handleExportEcrfJournal(AuthenticationVO auth, Long trialId) throws Exception {
+		JournalExcelWriter writer = new JournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		writer.setTrial(this.getTrialDao().toTrialOutVO(trial));
+
+		Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		Collection<JournalEntry> journalEntries = journalEntryDao.findEcrfJournal(trialId);
+		ArrayList<JournalEntryOutVO> journalEntryVOs = new ArrayList<JournalEntryOutVO>(journalEntries.size());
+		Iterator<JournalEntry> journalEntriesIt = journalEntries.iterator();
+		while (journalEntriesIt.hasNext()) {
+			JournalEntryOutVO journalEntryVO = journalEntryDao.toJournalEntryOutVO(journalEntriesIt.next());
+			if (journalEntryVO.isDecrypted()
+					&& (journalEntryVO.getInputField() != null
+					|| (journalEntryVO.getTrial() != null && ecrfJournalEntryTitleRegExp != null && ecrfJournalEntryTitleRegExp.matcher(journalEntryVO.getTitle()).find()))) {
+				journalEntryVOs.add(journalEntryVO);
+			}
+		}
+
+		writer.setVOs(journalEntryVOs);
+		User modified = CoreUtil.getUser();
+		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(modified));
+		(new ExcelExporter(writer, writer)).write();
+		JournalExcelVO result = writer.getExcelVO();
+		Timestamp now = CommonUtil.dateToTimestamp(result.getContentTimestamp());
+		logSystemMessage(trial, writer.getTrial(), now, modified, SystemMessageCodes.ECRF_JOURNAL_EXPORTED, result, null, journalEntryDao);
+		return result;
+	}
 
 	@Override
 	protected JournalExcelVO handleExportJournal(AuthenticationVO auth, JournalModule module, Long id) throws Exception {

@@ -357,6 +357,17 @@ public class ServiceMethodExecutor {
 		}
 	}
 
+	public long exportEcrfJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportEcrfJournal(auth, id);
+		if (result != null) {
+			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
 	public long exportInputFieldJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INPUT_FIELD_JOURNAL, id);
 		if (result != null) {

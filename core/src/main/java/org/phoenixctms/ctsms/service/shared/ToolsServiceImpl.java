@@ -703,7 +703,7 @@ extends ToolsServiceBase
 					for (int i = 0; i < fileNameExtensionsArray.length; i++) {
 						if (fileNameExtensionsArray[i].length() == 0) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_EXTENSION_ZERO_LENGTH);
-						} else if (!CommonUtil.FILE_EXTENSION_PATTERN_REGEXP.matcher(fileNameExtensionsArray[i]).matches()) {
+						} else if (!CommonUtil.FILE_EXTENSION_PATTERN_REGEXP.matcher(fileNameExtensionsArray[i]).find()) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_FILE_EXTENSION, fileNameExtensionsArray[i]);
 						} else if (dupeCheck.add(fileNameExtensionsArray[i])) {
 							if (first) {

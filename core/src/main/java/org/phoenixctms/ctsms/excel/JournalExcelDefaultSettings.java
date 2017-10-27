@@ -37,6 +37,10 @@ public final class JournalExcelDefaultSettings {
 	public static final boolean CRITERIA_AUTOSIZE = true;
 	public static final boolean CRITERIA_WRITEHEAD = true;
 	public static final Integer CRITERIA_PAGE_BREAK_AT_ROW = null;
+	public static final String ECRF_TEMPLATE_FILE_NAME = null;
+	public static final boolean ECRF_AUTOSIZE = true;
+	public static final boolean ECRF_WRITEHEAD = true;
+	public static final Integer ECRF_PAGE_BREAK_AT_ROW = null;
 	public static final String INVENTORY_SPREADSHEET_NAME = null;
 	public static final String STAFF_SPREADSHEET_NAME = null;
 	public static final String COURSE_SPREADSHEET_NAME = null;
@@ -45,6 +49,7 @@ public final class JournalExcelDefaultSettings {
 	public static final String USER_SPREADSHEET_NAME = null;
 	public static final String INPUT_FIELD_SPREADSHEET_NAME = null;
 	public static final String CRITERIA_SPREADSHEET_NAME = null;
+	public static final String ECRF_SPREADSHEET_NAME = null;
 	public static final Integer INVENTORY_SCALE_FACTOR = null;
 	public static final Integer STAFF_SCALE_FACTOR = null;
 	public static final Integer COURSE_SCALE_FACTOR = null;
@@ -53,6 +58,7 @@ public final class JournalExcelDefaultSettings {
 	public static final Integer USER_SCALE_FACTOR = null;
 	public static final Integer INPUT_FIELD_SCALE_FACTOR = null;
 	public static final Integer CRITERIA_SCALE_FACTOR = null;
+	public static final Integer ECRF_SCALE_FACTOR = null;
 	public static final ExcelCellFormat INVENTORY_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat STAFF_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat COURSE_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
@@ -61,6 +67,7 @@ public final class JournalExcelDefaultSettings {
 	public static final ExcelCellFormat USER_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat INPUT_FIELD_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat CRITERIA_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
+	public static final ExcelCellFormat ECRF_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat INVENTORY_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat STAFF_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat COURSE_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -69,6 +76,7 @@ public final class JournalExcelDefaultSettings {
 	public static final ExcelCellFormat USER_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat INPUT_FIELD_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat CRITERIA_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
+	public static final ExcelCellFormat ECRF_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final boolean INVENTORY_ROW_COLORS = true;
 	public static final boolean STAFF_ROW_COLORS = true;
 	public static final boolean COURSE_ROW_COLORS = true;
@@ -77,6 +85,7 @@ public final class JournalExcelDefaultSettings {
 	public static final boolean USER_ROW_COLORS = true;
 	public static final boolean INPUT_FIELD_ROW_COLORS = true;
 	public static final boolean CRITERIA_ROW_COLORS = true;
+	public static final boolean ECRF_ROW_COLORS = true;
 	public static final ArrayList<String> INVENTORY_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> STAFF_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> COURSE_VO_FIELD_COLUMNS = new ArrayList<String>();
@@ -85,6 +94,7 @@ public final class JournalExcelDefaultSettings {
 	public static final ArrayList<String> USER_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> CRITERIA_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> INPUT_FIELD_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public static final ArrayList<String> ECRF_VO_FIELD_COLUMNS = new ArrayList<String>();
 	static
 	{
 		INVENTORY_VO_FIELD_COLUMNS.add("id");
@@ -151,6 +161,15 @@ public final class JournalExcelDefaultSettings {
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("category" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("title");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("comment");
+		ECRF_VO_FIELD_COLUMNS.add("id");
+		ECRF_VO_FIELD_COLUMNS.add("systemMessage");
+		ECRF_VO_FIELD_COLUMNS.add("modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_VO_FIELD_COLUMNS.add("modifiedTimestamp");
+		ECRF_VO_FIELD_COLUMNS.add("realTimestamp");
+		ECRF_VO_FIELD_COLUMNS.add("inputField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_VO_FIELD_COLUMNS.add("category" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_VO_FIELD_COLUMNS.add("title");
+		ECRF_VO_FIELD_COLUMNS.add("comment");
 	}
 
 	private JournalExcelDefaultSettings() {

@@ -1147,7 +1147,13 @@ extends SelectionSetServiceBase
 		if (journalModules != null) {
 			result = new ArrayList<JournalModuleVO>(journalModules.length);
 			for (int i = 0; i < journalModules.length; i++) {
-				result.add(L10nUtil.createJournalModuleVO(Locales.USER, journalModules[i]));
+				switch (journalModules[i]) {
+					case ECRF_JOURNAL:
+						break;
+					default:
+						result.add(L10nUtil.createJournalModuleVO(Locales.USER, journalModules[i]));
+						break;
+				}
 			}
 		} else {
 			result = new ArrayList<JournalModuleVO>();

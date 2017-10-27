@@ -48,7 +48,7 @@ extends OpsSystDaoBase
 		String code = CommonUtil.isEmptyString(firstCode) ? secondCode : firstCode;
 		if (!CommonUtil.isEmptyString(code)) {
 			Matcher matcher = OPS_CODE_PATTERN_REGEXP.matcher(code);
-			if (matcher.matches()) {
+			if (matcher.find()) {
 				StringBuilder search = new StringBuilder(matcher.group(1));
 				search.append(matcher.group(2));
 				String detail = matcher.group(3);
@@ -74,7 +74,7 @@ extends OpsSystDaoBase
 		org.hibernate.Criteria opsSystCriteria = createOpsSystCriteria();
 		opsSystCriteria.add(Restrictions.eq("revision", revision));
 		opsSystCriteria.createCriteria("codes",CriteriaSpecification.INNER_JOIN)
-				.createCriteria("procedures", CriteriaSpecification.INNER_JOIN);
+		.createCriteria("procedures", CriteriaSpecification.INNER_JOIN);
 		return (Long) opsSystCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 

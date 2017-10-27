@@ -200,6 +200,7 @@ public final class DefaultSettings {
 	public static final ArrayList<String> NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = new ArrayList<String>();
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
+	public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
 
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");

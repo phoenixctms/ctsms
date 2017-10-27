@@ -113,7 +113,7 @@ extends HyperlinkServiceBase
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_HYPERLINK_MODULE, DefaultMessages.UNSUPPORTED_HYPERLINK_MODULE,
 						new Object[] { category.getModule().toString() }));
 		}
-		if (!URL_REGEXP.matcher(hyperlink.getUrl()).matches()) {
+		if (!URL_REGEXP.matcher(hyperlink.getUrl()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_URL, hyperlink.getUrl());
 		}
 	}

@@ -55,7 +55,7 @@ public class InputFieldResource extends ServiceResourceBase {
 	@Context
 	AuthenticationVO auth;
 	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
-	private final static JournalModule journalModule = JournalModule.TRIAL_JOURNAL;
+	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
 	private final static Class SERVICE_INTERFACE = InputFieldService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InputFieldOutVO.class);

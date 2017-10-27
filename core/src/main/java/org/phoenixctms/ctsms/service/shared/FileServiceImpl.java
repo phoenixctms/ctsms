@@ -243,7 +243,7 @@ extends FileServiceBase
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
 						.getModule().toString() }));
 		}
-		if (!FILE_PATH_REGEXP.matcher(file.getLogicalPath()).matches()) {
+		if (!FILE_PATH_REGEXP.matcher(file.getLogicalPath()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_LOGICAL_PATH, file.getLogicalPath());
 		}
 	}
@@ -409,7 +409,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleAddFile(AuthenticationVO auth, FileInVO newFile, FileStreamInVO newFileStream)
 			throws Exception
-	{
+			{
 		checkFileInput(newFile);
 		checkFileInput(newFileStream, newFile.getModule());
 		FileDao fileDao = this.getFileDao();
@@ -427,7 +427,7 @@ extends FileServiceBase
 			}
 			throw e;
 		}
-	}
+			}
 
 	@Override
 	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active, PSFVO psf) throws Exception {
@@ -477,7 +477,7 @@ extends FileServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return deleteFileHelper(fileId, now, user);
-	}
+			}
 
 	@Override
 	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active, PSFVO psf) throws Exception {

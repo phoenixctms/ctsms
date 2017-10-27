@@ -1261,7 +1261,7 @@ extends TrialServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
 			}
 		} else {
-			if (!JS_VARIABLE_NAME_REGEXP.matcher(ecrfFieldIn.getJsVariableName()).matches()) {
+			if (!JS_VARIABLE_NAME_REGEXP.matcher(ecrfFieldIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_INVALID, ecrfFieldIn.getJsVariableName());
 			}
 			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
@@ -1522,7 +1522,7 @@ extends TrialServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_REQUIRED);
 			}
 		} else {
-			if (!JS_VARIABLE_NAME_REGEXP.matcher(inquiryIn.getJsVariableName()).matches()) {
+			if (!JS_VARIABLE_NAME_REGEXP.matcher(inquiryIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_INVALID, inquiryIn.getJsVariableName());
 			}
 			if ((new InquiryJsVariableNameCollisionFinder(this.getTrialDao(), this.getInquiryDao())).collides(inquiryIn)) {
@@ -1699,7 +1699,7 @@ extends TrialServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED);
 			}
 		} else {
-			if (!JS_VARIABLE_NAME_REGEXP.matcher(listTagIn.getJsVariableName()).matches()) {
+			if (!JS_VARIABLE_NAME_REGEXP.matcher(listTagIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_INVALID, listTagIn.getJsVariableName());
 			}
 			if ((new ProbandListEntryTagJsVariableNameCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
