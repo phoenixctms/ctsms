@@ -230,6 +230,37 @@ public class diff_match_patch {
 		}
 		return result;
 	}
+
+	public final static String prettyHtmlToUnicode(String html) {
+		html = prettyHtmlToUnicode(html, "<span>(.*?)</span>", "$1");
+		html = prettyHtmlToUnicode(html, "<del.+?>(.*?)</del>", "$1\u0336");
+		html = prettyHtmlToUnicode(html,  "<ins.+?>(.*?)</ins>", "$1\u0332");
+		return html.replace("&para;<br>","\n").replace("<br>","\n").replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&");
+	}
+
+	private static String prettyHtmlToUnicode(String text, String regExp, String replacement) {
+		StringBuffer sb = new StringBuffer();
+		Pattern pattern = Pattern.compile(regExp);
+		Matcher matcher = pattern.matcher(text);
+		while (matcher.find()) {
+			//test =  matcher.group(1).replaceAll("(.))", "$1\u0336");
+			// try {
+			// String diff = matcher.group(1);
+			// if (diff != null && diff.length() > 0) {
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(matcher.group(1).replaceAll("(.)", replacement)));
+			// } else {
+			// matcher.appendReplacement(sb, "");
+			// }
+			// } catch (Exception e) {
+			// System.out.println(text);
+			// }
+			// System.out.println(matcher.group(1).replaceAll("(.)", repl));
+
+		}
+		matcher.appendTail(sb);
+		return sb.toString();
+	}
+
 	/**
 	 * Unescape selected chars for compatability with JavaScript's encodeURI.
 	 * In speed critical applications this could be dropped since the
@@ -252,6 +283,10 @@ public class diff_match_patch {
 				.replace("%2C", ",").replace("%23", "#");
 	}
 
+
+	//  DIFF FUNCTIONS
+
+
 	/**
 	 * Number of seconds to map a diff before giving up (0 for infinity).
 	 */
@@ -261,10 +296,6 @@ public class diff_match_patch {
 	 * Cost of an empty edit operation in terms of edit characters.
 	 */
 	public short Diff_EditCost = 4;
-
-
-	//  DIFF FUNCTIONS
-
 
 	/**
 	 * At what point is no match declared (0.0 = perfection, 1.0 = very loose).
@@ -1090,7 +1121,6 @@ public class diff_match_patch {
 		}
 		return n;
 	}
-
 	/**
 	 * Find the differences between two texts.  Assumes that the texts do not
 	 * have any common prefix or suffix.
@@ -1244,6 +1274,7 @@ public class diff_match_patch {
 		}
 		return diffs;
 	}
+
 	/**
 	 * Do the two texts share a substring which is at least half the length of
 	 * the longer text?
@@ -1543,7 +1574,6 @@ public class diff_match_patch {
 		if (text1 == null || text2 == null) {
 			throw new IllegalArgumentException("Null inputs. (diff_main)");
 		}
-
 		// Check for equality (speedup).
 		LinkedList<Diff> diffs;
 		if (text1.equals(text2)) {
@@ -1553,22 +1583,18 @@ public class diff_match_patch {
 			}
 			return diffs;
 		}
-
 		// Trim off common prefix (speedup).
 		int commonlength = diff_commonPrefix(text1, text2);
 		String commonprefix = text1.substring(0, commonlength);
 		text1 = text1.substring(commonlength);
 		text2 = text2.substring(commonlength);
-
 		// Trim off common suffix (speedup).
 		commonlength = diff_commonSuffix(text1, text2);
 		String commonsuffix = text1.substring(text1.length() - commonlength);
 		text1 = text1.substring(0, text1.length() - commonlength);
 		text2 = text2.substring(0, text2.length() - commonlength);
-
 		// Compute the diff on the middle block.
 		diffs = diff_compute(text1, text2, checklines, deadline);
-
 		// Restore the prefix and suffix.
 		if (commonprefix.length() != 0) {
 			diffs.addFirst(new Diff(Operation.EQUAL, commonprefix));
@@ -1576,7 +1602,6 @@ public class diff_match_patch {
 		if (commonsuffix.length() != 0) {
 			diffs.addLast(new Diff(Operation.EQUAL, commonsuffix));
 		}
-
 		diff_cleanupMerge(diffs);
 		return diffs;
 	}
@@ -1589,7 +1614,7 @@ public class diff_match_patch {
 	public String diff_prettyHtml(LinkedList<Diff> diffs, boolean para) {
 		StringBuilder html = new StringBuilder();
 		for (Diff aDiff : diffs) {
-			String text = escapeHtml(aDiff.text,para);
+			String text = escapeHtml(aDiff.text, para);
 			switch (aDiff.operation) {
 				case INSERT:
 					html.append("<ins style=\"background:#e6ffe6;\">").append(text)

@@ -39,6 +39,13 @@ abstract class ExceptionMapperBase {
 	private final static String EXCEPTION_ERROR_CODE_GETTER_METHOD_NAME = "getErrorCode";
 	private final static String EXCEPTION_DATA_GETTER_METHOD_NAME = "getData";
 
+	protected ResponseBuilder buildJsonResponse(int status, Throwable t) {
+		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(new ExceptionJs(t));
+		// } catch(Throwable gson) {
+		// return Response.status(Status.INTERNAL_SERVER_ERROR).entity(WebUtil.toJson(t)).type(MediaType.APPLICATION_JSON);
+		// }
+	}
+
 	protected ResponseBuilder buildJsonResponse(Status status, Throwable t) {
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(new ExceptionJs(t));
 		// } catch(Throwable gson) {

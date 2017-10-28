@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.domain.Course;
@@ -43,6 +44,7 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
+import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.vo.ActivityTagVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
@@ -109,6 +111,20 @@ extends JournalServiceBase
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) }, systemMessageCode,
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null))});
+	}
+
+	private static String x(String test, String regexp, String repl) {
+		StringBuffer stringBuffer = new StringBuffer();
+		Pattern pattern = Pattern.compile(regexp);
+		Matcher matcher = pattern.matcher(test);
+		while (matcher.find()) {
+			//test =  matcher.group(1).replaceAll("(.))", "$1\u0336");
+			matcher.appendReplacement(stringBuffer, matcher.group(1).replaceAll("(.)", repl));
+			//System.out.println(matcher.group(1).replaceAll("(.)", repl));
+
+		}
+		matcher.appendTail(stringBuffer);
+		return stringBuffer.toString();
 	}
 
 	private void checkJournalEntryInput(JournalEntryInVO journalEntry) throws ServiceException {
@@ -309,7 +325,6 @@ extends JournalServiceBase
 		JournalExcelWriter writer = new JournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		writer.setTrial(this.getTrialDao().toTrialOutVO(trial));
-
 		Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Collection<JournalEntry> journalEntries = journalEntryDao.findEcrfJournal(trialId);
@@ -320,10 +335,12 @@ extends JournalServiceBase
 			if (journalEntryVO.isDecrypted()
 					&& (journalEntryVO.getInputField() != null
 					|| (journalEntryVO.getTrial() != null && ecrfJournalEntryTitleRegExp != null && ecrfJournalEntryTitleRegExp.matcher(journalEntryVO.getTitle()).find()))) {
+				if (CommonUtil.HTML_SYSTEM_MESSAGES_COMMENTS) {
+					journalEntryVO.setComment(diff_match_patch.prettyHtmlToUnicode(journalEntryVO.getComment()));
+				}
 				journalEntryVOs.add(journalEntryVO);
 			}
 		}
-
 		writer.setVOs(journalEntryVOs);
 		User modified = CoreUtil.getUser();
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(modified));
@@ -385,7 +402,17 @@ extends JournalServiceBase
 							new Object[] { module.toString() }));
 			}
 		}
-		writer.setVOs(getJournalHelper(module, id, null));
+		Collection<JournalEntryOutVO> journalEntryVOs = getJournalHelper(module, id, null);
+		if (CommonUtil.HTML_SYSTEM_MESSAGES_COMMENTS) {
+			Iterator<JournalEntryOutVO> journalEntryVOsIt = journalEntryVOs.iterator();
+			while (journalEntryVOsIt.hasNext()) {
+				JournalEntryOutVO journalEntryVO = journalEntryVOsIt.next();
+				if (journalEntryVO.getDecrypted()) {
+					journalEntryVO.setComment(diff_match_patch.prettyHtmlToUnicode(journalEntryVO.getComment()));
+				}
+			}
+		}
+		writer.setVOs(journalEntryVOs);
 		User modified = CoreUtil.getUser();
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(modified));
 		(new ExcelExporter(writer, writer)).write();
