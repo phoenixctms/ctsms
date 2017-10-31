@@ -34,8 +34,9 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource.AuthenticationType;
+
 import org.apache.batik.anim.dom.SVGDOMImplementation;
-import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -1708,7 +1709,16 @@ public final class CommonUtil {
 
 	public static String localeToString(Locale locale) {
 		return locale == null ? null : locale.getLanguage();
+
 	}
+
+	// public static String normalizeLineEndings(String string) {
+	// return normalizeLineEndings(string, "\n");
+	// }
+	//
+	// public static String normalizeLineEndings(String string, String lineBreak) {
+	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
+	// }
 
 	public static Date parseDate(String date, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);

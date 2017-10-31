@@ -27,11 +27,13 @@ import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueNameCollisionFinde
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValuePresetCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueStrokesIdCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueValueCollisionFinder;
+import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFField;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldValue;
 import org.phoenixctms.ctsms.domain.ECRFFieldValueDao;
+import org.phoenixctms.ctsms.domain.ECRFStatusEntryDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
@@ -496,7 +498,9 @@ extends InputFieldServiceBase
 		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_UPDATE_LOCALIZED_INPUT_FIELD);
 		// }
 		checkInputFieldInputFieldTypeChanged(modifiedInputField.getId(), originalInputField.getFieldType(), modifiedInputField.getFieldType());
-		if (Settings.getBoolean(SettingCodes.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED, Bundle.SETTINGS, DefaultSettings.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED)) {
+		boolean checkProbandTrialLocked = Settings.getBoolean(SettingCodes.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED, Bundle.SETTINGS,
+				DefaultSettings.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED);
+		if (checkProbandTrialLocked) {
 			Iterator<Inquiry> inquiriesIt = originalInputField.getInquiries().iterator();
 			while (inquiriesIt.hasNext()) {
 				Inquiry inquiry = inquiriesIt.next();
@@ -517,9 +521,13 @@ extends InputFieldServiceBase
 					ServiceUtil.checkProbandLocked(tagValue.getListEntry().getProband());
 				}
 			}
-			Iterator<ECRFField> ecrfFieldsIt = originalInputField.getEcrfFields().iterator();
-			while (ecrfFieldsIt.hasNext()) {
-				ECRFField ecrfField = ecrfFieldsIt.next();
+		}
+		Iterator<ECRFField> ecrfFieldsIt = originalInputField.getEcrfFields().iterator();
+		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+		ECRFDao ecrfDao = this.getECRFDao();
+		while (ecrfFieldsIt.hasNext()) {
+			ECRFField ecrfField = ecrfFieldsIt.next();
+			if (checkProbandTrialLocked) {
 				ServiceUtil.checkTrialLocked(ecrfField.getTrial());
 				Iterator<ECRFFieldValue> fieldValuesIt = ecrfField.getFieldValues().iterator();
 				while (fieldValuesIt.hasNext()) {
@@ -527,7 +535,13 @@ extends InputFieldServiceBase
 					ServiceUtil.checkProbandLocked(fieldValue.getListEntry().getProband());
 				}
 			}
+			ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
+			// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
+			// if (valuesLockedEcrfCount > 0) {
+			// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(), valuesLockedEcrfCount);
+			// }
 		}
+
 	}
 
 	private void checkUpdateSelectionSetValueInput(InputFieldSelectionSetValue originalSelectionSetValue, InputFieldSelectionSetValueInVO selectionSetValueIn,
@@ -569,20 +583,31 @@ extends InputFieldServiceBase
 					}
 				}
 			}
-			Iterator<ECRFField> ecrfFieldsIt = inputField.getEcrfFields().iterator();
-			while (ecrfFieldsIt.hasNext()) {
-				ECRFField ecrfField = ecrfFieldsIt.next();
-				Iterator<ECRFFieldValue> fieldValuesIt = ecrfField.getFieldValues().iterator();
-				while (fieldValuesIt.hasNext()) {
-					ECRFFieldValue fieldValue = fieldValuesIt.next();
-					InputFieldValue value = fieldValue.getValue();
-					if (value.getSelectionValues().contains(originalSelectionSetValue)) {
+		}
+		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+		ECRFDao ecrfDao = this.getECRFDao();
+		Iterator<ECRFField> ecrfFieldsIt = inputField.getEcrfFields().iterator();
+		while (ecrfFieldsIt.hasNext()) {
+			ECRFField ecrfField = ecrfFieldsIt.next();
+			Iterator<ECRFFieldValue> fieldValuesIt = ecrfField.getFieldValues().iterator();
+			while (fieldValuesIt.hasNext()) {
+				ECRFFieldValue fieldValue = fieldValuesIt.next();
+				InputFieldValue value = fieldValue.getValue();
+				if (value.getSelectionValues().contains(originalSelectionSetValue)) {
+					if (checkProbandTrialLocked) {
 						ServiceUtil.checkTrialLocked(fieldValue.getListEntry().getTrial());
 						ServiceUtil.checkProbandLocked(fieldValue.getListEntry().getProband());
 					}
+					ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
+					// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
+					// if (valuesLockedEcrfCount > 0) {
+					// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
+					// valuesLockedEcrfCount);
+					// }
 				}
 			}
 		}
+
 	}
 
 	private void checkValidationErrorMsg(boolean required, String validationErrorMsg) throws ServiceException {
@@ -660,6 +685,8 @@ extends InputFieldServiceBase
 				}
 			}
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+			ECRFDao ecrfDao = this.getECRFDao();
 			Iterator<ECRFField> ecrfFieldsIt = inputField.getEcrfFields().iterator();
 			while (ecrfFieldsIt.hasNext()) {
 				ECRFField ecrfField = ecrfFieldsIt.next();
@@ -673,6 +700,12 @@ extends InputFieldServiceBase
 							ServiceUtil.checkTrialLocked(fieldValue.getListEntry().getTrial());
 							ServiceUtil.checkProbandLocked(fieldValue.getListEntry().getProband());
 						}
+						// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
+						// if (valuesLockedEcrfCount > 0) {
+						// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
+						// valuesLockedEcrfCount);
+						// }
+						ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
 						logSystemMessage(fieldValue.getListEntry().getProband(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null,
 								journalEntryDao);
 						CoreUtil.modifyVersion(fieldValue, fieldValue.getVersion(), now, user);
@@ -804,11 +837,11 @@ extends InputFieldServiceBase
 					}
 				}
 			}
+
 			originalSelectionSetValueIdsIt = originalSelectionSetValueIds.iterator();
 			while (originalSelectionSetValueIdsIt.hasNext()) {
 				deleteSelectionSetValueHelper(inputField, originalSelectionSetValueIdsIt.next(), true, false, now, user);
 			}
-
 			it = selectionSetValueIns.iterator();
 			while (it.hasNext()) {
 
@@ -830,7 +863,7 @@ extends InputFieldServiceBase
 					selectionSetValueDao.update(selectionSetValue);
 					selectionSetValueVO = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 					if (ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF
-							|| !InputFieldSelectionSetValueOutVO.equalsExcluding(originalSelectionSetValueVO, selectionSetValueVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+							|| !InputFieldSelectionSetValueOutVO.equalsExcluding(originalSelectionSetValueVO, selectionSetValueVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 						ServiceUtil.logSystemMessage(selectionSetValue.getField(), selectionSetValueVO.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_UPDATED,
 								selectionSetValueVO, originalSelectionSetValueVO,
 								journalEntryDao);
@@ -850,14 +883,16 @@ extends InputFieldServiceBase
 
 			}
 		} else {
-			originalSelectionSetValueIdsIt = originalSelectionSetValueIds.iterator();
-			while (originalSelectionSetValueIdsIt.hasNext()) {
-				deleteSelectionSetValueHelper(inputField, originalSelectionSetValueIdsIt.next(), true, false, now, user);
+			if (!InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType()) || !inputField.getLearn()) { // dont't drop learned values
+				originalSelectionSetValueIdsIt = originalSelectionSetValueIds.iterator();
+				while (originalSelectionSetValueIdsIt.hasNext()) {
+					deleteSelectionSetValueHelper(inputField, originalSelectionSetValueIdsIt.next(), true, false, now, user);
+				}
 			}
 		}
 
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
-		if (!update || ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF || !InputFieldOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+		if (!update || ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF || !InputFieldOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 			ServiceUtil.logSystemMessage(inputField, result, now, user, update ? SystemMessageCodes.INPUT_FIELD_UPDATED : SystemMessageCodes.INPUT_FIELD_CREATED, result,
 					original, journalEntryDao);
 		}
@@ -1043,6 +1078,8 @@ extends InputFieldServiceBase
 			NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+			ECRFDao ecrfDao = this.getECRFDao();
 			Iterator<ECRFField> ecrfFieldsIt = inputField.getEcrfFields().iterator();
 			while (ecrfFieldsIt.hasNext()) {
 				ECRFField ecrfField = ecrfFieldsIt.next();
@@ -1050,6 +1087,12 @@ extends InputFieldServiceBase
 				if (checkProbandTrialLocked) {
 					ServiceUtil.checkTrialLocked(trial);
 				}
+				// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
+				// if (valuesLockedEcrfCount > 0) {
+				// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
+				// valuesLockedEcrfCount);
+				// }
+				ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
 				trial.removeEcrfFields(ecrfField);
 				ecrfField.getEcrf().removeEcrfFields(ecrfField);
 				ServiceUtil.removeEcrfField(ecrfField, true, checkProbandTrialLocked, now, user, true, true, ecrfFieldValueDao, ecrfFieldStatusEntryDao, inputFieldValueDao,

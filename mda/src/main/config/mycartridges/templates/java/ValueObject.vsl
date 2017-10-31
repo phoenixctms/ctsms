@@ -550,7 +550,7 @@ $connectingEnd.getDocumentation("     * ")
 ##    @SuppressWarnings("unchecked")
 ##end
 #end
-    public static boolean equalsExcluding(final Object a, final Object b, final HashSet<String> excludes)
+    public static boolean equalsExcluding(final Object a, final Object b, final HashSet<String> excludes, boolean normalizeLineEndings, boolean normalizeNullStrings)
     {
         if (a==null && b==null) {
         	return true;
@@ -563,7 +563,7 @@ $connectingEnd.getDocumentation("     * ")
        			Iterator itA = ((Collection) a).iterator();
        			Iterator itB = ((Collection) b).iterator();
        			while (itA.hasNext() && itB.hasNext()) {
-       				if (!equalsExcluding(itA.next(), itB.next(), excludes)) {
+       				if (!equalsExcluding(itA.next(), itB.next(), excludes, normalizeLineEndings, normalizeNullStrings)) {
        					return false;
        				}
        			}
@@ -581,7 +581,18 @@ $connectingEnd.getDocumentation("     * ")
         EqualsBuilder eb = new EqualsBuilder();
 #foreach($attr in $class.attributes)
 		if (!excludes.contains("*.${attr.getterName}") && !excludes.contains("${class.name}.${attr.getterName}")) {
-        	eb.append(lhs.${attr.getterName}(), rhs.${attr.getterName}());
+#if ($attr.type.stringType && !$attr.many)
+			String lhsString = lhs.${attr.getterName}() == null ? (normalizeNullStrings ? "" : null) : lhs.${attr.getterName}();
+			String rhsString = rhs.${attr.getterName}() == null ? (normalizeNullStrings ? "" : null) : rhs.${attr.getterName}();
+			if (normalizeLineEndings) {
+				eb.append(lhsString == null ? null : lhsString.replaceAll("\\r\\n?", "\n"),
+					rhsString == null ? null : rhsString.replaceAll("\\r\\n?", "\n"));
+			} else {
+				eb.append(lhsString, rhsString);
+			}
+#else
+			eb.append(lhs.${attr.getterName}(), rhs.${attr.getterName}());
+#end
         }
 #end
 		if (!eb.isEquals()) {
@@ -592,7 +603,7 @@ $connectingEnd.getDocumentation("     * ")
 #set ($target = $associationEnd.otherEnd)
 #if ($target.navigable)
 		if (!excludes.contains("*.${target.getterName}") && !excludes.contains("${class.name}.${target.getterName}")
-			&& !${target.type.fullyQualifiedName}.equalsExcluding(lhs.${target.getterName}(), rhs.${target.getterName}(), excludes)) {
+			&& !${target.type.fullyQualifiedName}.equalsExcluding(lhs.${target.getterName}(), rhs.${target.getterName}(), excludes, normalizeLineEndings, normalizeNullStrings)) {
 			return false;
 		}
 #end

@@ -1278,10 +1278,12 @@ extends TrialServiceBase
 		if ((new EcrfFieldPositionCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
 		}
-		long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfFieldIn.getEcrfId(), null, true, null, null, null); // row lock order
-		if (valuesLockedEcrfCount > 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, valuesLockedEcrfCount);
-		}
+		ServiceUtil.checkLockedEcrfs(this.getECRFDao().load(ecrfFieldIn.getEcrfId()), this.getECRFStatusEntryDao(), this.getECRFDao());
+		// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfFieldIn.getEcrfId(), null, true, null, null, null); // row lock order
+		// if (valuesLockedEcrfCount > 0) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(this.getECRFDao().load(ecrfFieldIn.getEcrfId())).getName(),
+		// valuesLockedEcrfCount);
+		// }
 	}
 
 	// private void checkEcrfFieldValueInputIndex(ECRFFieldValueInVO ecrfFieldValueIn, ECRFField ecrfField) throws ServiceException { // , ECRFFieldOutVO ecrfFieldVO
@@ -2084,7 +2086,7 @@ extends TrialServiceBase
 		return result;
 	}
 
-	private ECRFFieldOutVO deleteEcrfFieldHelper(ECRF ecrf, Long ecrfFieldId, boolean deleteCascade, boolean checkTrialLocked,
+	private ECRFFieldOutVO deleteEcrfFieldHelper(ECRF ecrf, Long ecrfFieldId, boolean deleteCascade, boolean checkTrialLocked, boolean checkEcrfLocked,
 			Timestamp now, User user) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -2093,11 +2095,15 @@ extends TrialServiceBase
 		if (checkTrialLocked) {
 			ServiceUtil.checkTrialLocked(trial);
 		}
-		ECRFFieldOutVO result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
-		InputField field = ecrfField.getField();
 		if (ecrf == null) {
 			ecrf = ecrfField.getEcrf();
 		}
+		if (checkEcrfLocked) {
+			ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
+		}
+		ECRFFieldOutVO result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
+		InputField field = ecrfField.getField();
+
 		trial.removeEcrfFields(ecrfField);
 		ecrf.removeEcrfFields(ecrfField);
 		field.removeEcrfFields(ecrfField);
@@ -2910,7 +2916,7 @@ extends TrialServiceBase
 			}
 			originalEcrfFieldIdsIt = originalEcrfFieldIds.iterator();
 			while (originalEcrfFieldIdsIt.hasNext()) {
-				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, now, user);
+				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, false, now, user);
 			}
 			it = ecrfFieldIns.iterator();
 			while (it.hasNext()) {
@@ -2926,7 +2932,8 @@ extends TrialServiceBase
 					CoreUtil.modifyVersion(originalEcrfField, ecrfField, now, user);
 					ecrfFieldDao.update(ecrfField);
 					ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
-					if (ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFFieldOutVO.equalsExcluding(originalEcrfFieldVO, ecrfFieldVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+					if (ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF
+							|| !ECRFFieldOutVO.equalsExcluding(originalEcrfFieldVO, ecrfFieldVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 						ServiceUtil.logSystemMessage(ecrfField.getTrial(), ecrfFieldVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, ecrfFieldVO,
 								originalEcrfFieldVO,
 								this.getJournalEntryDao());
@@ -2944,11 +2951,11 @@ extends TrialServiceBase
 		} else {
 			originalEcrfFieldIdsIt = originalEcrfFieldIds.iterator();
 			while (originalEcrfFieldIdsIt.hasNext()) {
-				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, now, user);
+				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, false, now, user);
 			}
 		}
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
-		if (!update || ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES)) {
+		if (!update || ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 			ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, update ? SystemMessageCodes.ECRF_UPDATED : SystemMessageCodes.ECRF_CREATED, result,
 					original,
 					journalEntryDao);
@@ -3247,7 +3254,7 @@ extends TrialServiceBase
 			ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_MARKED_FOR_DELETION, result, original,
 					this.getJournalEntryDao());
 		} else {
-			result = deleteEcrfFieldHelper(null, ecrfFieldId, true, true, now, user);
+			result = deleteEcrfFieldHelper(null, ecrfFieldId, true, true, true, now, user);
 		}
 		return result;
 	}
@@ -7364,10 +7371,11 @@ extends TrialServiceBase
 		ECRFDao ecrfDao = this.getECRFDao();
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
-		long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfId, null, true, null, null, null); // row lock order
-		if (valuesLockedEcrfCount > 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, valuesLockedEcrfCount);
-		}
+		// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfId, null, true, null, null, null); // row lock order
+		// if (valuesLockedEcrfCount > 0) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, ecrfDao.toECRFOutVO(ecrf).getName(), valuesLockedEcrfCount);
+		// }
+		ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		Collection<ECRFField> ecrfFields = ecrfFieldDao.findByEcrfSectionPosition(ecrfId, oldSection, null);
 		ArrayList<ECRFFieldOutVO> result;

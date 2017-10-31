@@ -822,6 +822,13 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void checkLockedEcrfs(ECRF ecrf, ECRFStatusEntryDao ecrfStatusEntryDao, ECRFDao ecrfDao) throws ServiceException {
+		long valuesLockedEcrfCount = ecrfStatusEntryDao.getCount(null, ecrf.getId(), null, true, null, null, null); // row lock order
+		if (valuesLockedEcrfCount > 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, ecrfDao.toECRFOutVO(ecrf).getUniqueName(), valuesLockedEcrfCount);
+		}
+	}
+
 	public static void checkLogonLimitations(PasswordInVO password) throws ServiceException {
 		if (password.isExpires()) {
 			if (password.getValidityPeriod() == null) {
