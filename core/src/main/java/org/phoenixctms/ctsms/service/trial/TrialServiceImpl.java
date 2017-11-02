@@ -844,7 +844,7 @@ extends TrialServiceBase
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
 		ProbandListEntryOutVO listEntryVO = this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry);
-		if (listEntryVO.getProband().getDecrypted()) {
+		if (!listEntryVO.getProband().getDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
 		}
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
