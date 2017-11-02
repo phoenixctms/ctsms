@@ -392,7 +392,7 @@ public class ServiceMethodExecutor {
 
 	public long exportProbandAppointments(AuthenticationVO auth, Long id, String fileName) throws Exception {
 		Date now = new Date();
-		now.setDate(5);
+		// now.setDate(5);
 		Date from = DateCalc.getStartOfDay(now);
 		Date to = DateCalc.getEndOfDay(now);
 		jobOutput
