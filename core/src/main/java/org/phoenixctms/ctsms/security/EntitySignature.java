@@ -178,10 +178,10 @@ public abstract class EntitySignature extends GraphEnumerator {
 	}
 
 	public static String getDescription(SignatureVO signature) {
-		return getDescription(signature, Locales.USER, null);
+		return getDescription(signature, Locales.USER, null, true);
 	}
 
-	public static String getDescription(SignatureVO signature, Locales locale, Integer signatureDataBase64Length) {
+	public static String getDescription(SignatureVO signature, Locales locale, Integer signatureDataBase64Length, boolean showProbandName) {
 		if (signature != null) {
 			UserOutVO signee = signature.getSignee();
 			StaffOutVO signeeIdentity = signee.getIdentity();
@@ -218,18 +218,19 @@ public abstract class EntitySignature extends GraphEnumerator {
 						if (signature.getValid()) {
 							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_VALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_VALID_DESCRIPTION, signature
 									.getEcrfStatusEntry().getEcrf().getUniqueName(),
-									CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()), signeeString, dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()),
-									signatureDataBase64String);
+									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()), signeeString, dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()),
+											signatureDataBase64String);
 						} else {
 							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_INVALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_INVALID_DESCRIPTION, signature
 									.getEcrfStatusEntry().getEcrf().getUniqueName(),
-									CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()), signeeString,
-									dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()));
+									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()), signeeString,
+											dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()));
 						}
 					} else {
 						return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_AVAILABLE, DefaultMessages.ECRF_SIGNATURE_AVAILABLE, signature.getEcrfStatusEntry().getEcrf()
 								.getUniqueName(),
-								CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()), dateTimeFormat.format(signature.getTimestamp()));
+								showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature
+										.getEcrfStatusEntry().getListEntry().getProband().getId()), dateTimeFormat.format(signature.getTimestamp()));
 					}
 				default:
 			}

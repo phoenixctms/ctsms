@@ -838,7 +838,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						x += ximage.getWidthPoints();
 						y -= Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.SMALL, getTextColor(),
 								EntitySignature.getDescription(signature, Locales.ECRF_PDF,
-										Settings.getIntNullable(EcrfPDFSettingCodes.SIGNATURE_VALUE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_VALUE_LENGTH)),
+												Settings.getIntNullable(EcrfPDFSettingCodes.SIGNATURE_VALUE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_VALUE_LENGTH),
+												false),
 										x + getXFrameIndent(),
 										y,
 										Alignment.TOP_LEFT,
