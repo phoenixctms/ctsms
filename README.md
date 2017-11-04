@@ -1,7 +1,7 @@
 Phoenix CTMS
 =====
 
-Phoenix CTMS is a large-scale web application combining capabilities of database software used in clinical research in one modular system.
+Phoenix CTMS is a serious web application combining capabilities of database software used in clinical research in one modular system.
 
 * __PRS__ (Patient Recruitment System)
 * __CTMS__ (Clinical Trial Management System)
