@@ -83,6 +83,7 @@ public class IndexResource {
 	private final static String JS_TITLE_FIELD = "title";
 	private final static String JS_INSTANCE_FIELD = "instance";
 	private final static String JS_VERSION_FIELD = "version";
+	private final static String JS_JVM_FIELD = "jvm";
 	private final static String JS_REALM_FIELD = "realm";
 	private final static String JS_ANNOUNCEMENT_FIELD = "announcement";
 	private final static String JS_CLASSES_FIELD = "services";
@@ -467,6 +468,7 @@ public class IndexResource {
 		rootNode.addProperty(JS_TITLE_FIELD, Settings.getString(SettingCodes.API_TITLE, Bundle.SETTINGS, DefaultSettings.API_TITLE));
 		rootNode.addProperty(JS_INSTANCE_FIELD, WebUtil.getInstanceName());
 		rootNode.addProperty(JS_VERSION_FIELD, Settings.getString(SettingCodes.API_VERSION, Bundle.SETTINGS, DefaultSettings.API_VERSION));
+		rootNode.addProperty(JS_JVM_FIELD, System.getProperty("java.version"));
 		rootNode.addProperty(JS_REALM_FIELD, Settings.getString(SettingCodes.API_REALM, Bundle.SETTINGS, DefaultSettings.API_REALM));
 		AnnouncementVO announcement = WebUtil.getServiceLocator().getToolsService().getAnnouncement();
 		if (announcement != null) {

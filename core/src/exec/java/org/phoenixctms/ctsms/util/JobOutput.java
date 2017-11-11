@@ -172,6 +172,7 @@ public class JobOutput {
 		if (!CommonUtil.isEmptyString(instanceName)) {
 			println("instance: " + instanceName);
 		}
+		println("jvm: " + System.getProperty("java.version"));
 		if (task != null && !CommonUtil.isEmptyString(task.getDescription())) {
 			println(task.getDescription());
 		}

@@ -946,7 +946,7 @@ extends ECRFFieldValueDaoBase
 			for (int i = 0; i < queues.length; i++) {
 				ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(queues[i], listEntry.getId(), ecrfField.getId(), source.getIndex());
 				if (lastStatus != null) {
-					target.getLastFieldStatus().add(this.getECRFFieldStatusTypeDao().toECRFFieldStatusTypeVO(lastStatus.getStatus()));
+					target.getLastFieldStatuses().add(this.getECRFFieldStatusTypeDao().toECRFFieldStatusTypeVO(lastStatus.getStatus()));
 					if (!lastStatus.getStatus().isResolved()
 							&& (target.getLastUnresolvedFieldStatusEntry() == null || target.getLastUnresolvedFieldStatusEntry().getId() < lastStatus.getId())) {
 						target.setLastUnresolvedFieldStatusEntry(this.getECRFFieldStatusEntryDao().toECRFFieldStatusEntryOutVO(lastStatus));

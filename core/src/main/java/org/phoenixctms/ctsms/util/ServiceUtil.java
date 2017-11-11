@@ -1266,7 +1266,7 @@ public final class ServiceUtil {
 			for (int i = 0; i < queues.length; i++) {
 				ECRFFieldStatusEntry lastStatus = ecrfFieldStatusEntryDao.findLastStatus(queues[i], listEntryVO.getId(), ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex());
 				if (lastStatus != null) {
-					ecrfFieldValueVO.getLastFieldStatus().add(ecrfFieldStatusTypeDao.toECRFFieldStatusTypeVO(lastStatus.getStatus()));
+					ecrfFieldValueVO.getLastFieldStatuses().add(ecrfFieldStatusTypeDao.toECRFFieldStatusTypeVO(lastStatus.getStatus()));
 					if (!lastStatus.getStatus().isResolved()
 							&& (ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry() == null || ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry().getId() < lastStatus.getId())) {
 						ecrfFieldValueVO.setLastUnresolvedFieldStatusEntry(ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO(lastStatus));

@@ -240,7 +240,7 @@ public class EcrfFieldInputModel extends InputModel {
 	public String getStatusComment() {
 		return lastUnresolvedFieldStatusEntry != null && !CommonUtil.isEmptyString(lastUnresolvedFieldStatusEntry.getComment())
 				&& Settings.getBoolean(SettingCodes.SHOW_LAST_UNRESOLVED_FIELD_STATUS, Bundle.SETTINGS, DefaultSettings.SHOW_LAST_UNRESOLVED_FIELD_STATUS) ?
-				Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_STATUS_COMMENT, lastUnresolvedFieldStatusEntry.getStatus().getName(), lastUnresolvedFieldStatusEntry.getComment()) : null;
+						Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_STATUS_COMMENT, lastUnresolvedFieldStatusEntry.getStatus().getName(), lastUnresolvedFieldStatusEntry.getComment()) : null;
 	}
 
 	@Override
@@ -513,7 +513,7 @@ public class EcrfFieldInputModel extends InputModel {
 			Color updatedColor = null;
 			Color proposedColor = null;
 			Color resolvedColor = null;
-			Iterator<ECRFFieldStatusTypeVO> it = out.getLastFieldStatus().iterator();
+			Iterator<ECRFFieldStatusTypeVO> it = out.getLastFieldStatuses().iterator();
 			while (it.hasNext()) {
 				ECRFFieldStatusTypeVO lastStatus = it.next();
 				if (lastStatus.isInitial() && !lastStatus.isResolved()) {
