@@ -289,7 +289,7 @@
                     <jdbcPassword>${jdbc.password}</jdbcPassword>
                     <!-- set this to false if you don't want to execute
                          the generated SQL scripts (creates and saves DDL under app/target/schema*.sql -->
-                    <executeScripts>true</executeScripts>
+                    <executeScripts>false</executeScripts>
                     <properties>
                         <property>
                             <name>mappingsLocation</name>
