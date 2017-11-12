@@ -50,6 +50,8 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 	private Integer maxY;
 	private boolean stacked;
 
+	// protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA50;
+
 	public EnrollmentChartBean() {
 		super();
 		chartModel = new CartesianChartModel();
@@ -146,7 +148,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 	}
 
 	public String getSeriesColors() {
-		return WebUtil.getSeriesColors(seriesColors);
+		return WebUtil.getSeriesColors(seriesColors); // , COLOR_OPACITY);
 	}
 
 	public StreamedContent getSiclExcelStreamedContent() throws Exception {

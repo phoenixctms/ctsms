@@ -53,7 +53,7 @@
 						id="proband_list"
 						selectionMode="single"
 						selection="#{probandListEntryBean.selectedProbandListEntry}"
-						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}">
+						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
 						<p:ajax
 							event="rowSelect"
 							update=":tabView:probandlist_form:probandListTabView:probandlistentry_input,:tabView:probandlist_form:probandListTabView:probandliststatus_list,:tabView:probandlist_form:probandListTabView:probandliststatus_input,:tabView:probandlist_form:probandListTabView:tagvalue_input_grid"

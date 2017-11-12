@@ -40,7 +40,7 @@
 					id="visit_list"
 					selectionMode="single"
 					selection="#{visitBean.selectedVisit}"
-					rowStyleClass="#{applicationScopeBean.visitToColor(visit.vo)}">
+					rowStyleClass="#{applicationScopeBean.visitToColor(visit.vo)}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:visit_form:visit_input" />

@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil.ColorOpacity;
 import org.primefaces.model.ScheduleEvent;
 
 public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemInVO> {
@@ -26,6 +27,8 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String TOKEN_SEPARATOR_STRING = ":";
 	private final static String EVENT_TITLE_SEPARATOR = "\n";
+
+	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA25;
 
 	public VisitScheduleItemEvent() {
 		super();
@@ -81,7 +84,7 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 		// if (in.getVisitId() != null) {
 		VisitOutVO visit = WebUtil.getVisit(in.getVisitId());
 		if (visit != null) {
-			return WebUtil.colorToStyleClass(visit.getType().getColor());
+			return WebUtil.colorToStyleClass(visit.getType().getColor(), COLOR_OPACITY);
 		}
 		// }
 		return "";

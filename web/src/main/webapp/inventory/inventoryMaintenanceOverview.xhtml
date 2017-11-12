@@ -87,7 +87,7 @@
 							var="maintenanceItem"
 							value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel}"
 							id="inventorymaintenance_list"
-							rowStyleClass="#{maintenanceItem.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryMaintenanceOverviewBean.maintenanceItemToColor(maintenanceItem.vo)}">
+							rowStyleClass="#{maintenanceItem.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryMaintenanceOverviewBean.maintenanceItemToColor(maintenanceItem.vo)}#{rowBgColorAlpha}">
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

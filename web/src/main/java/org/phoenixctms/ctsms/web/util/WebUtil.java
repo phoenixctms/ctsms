@@ -147,6 +147,34 @@ import com.google.gson.JsonSyntaxException;
 
 public final class WebUtil {
 
+	public enum ColorOpacity {
+		ALPHA100(""),
+		ALPHA50("-50"),
+		ALPHA25("-25");
+
+		private final String suffix;
+
+		private ColorOpacity(final String suffix) {
+			this.suffix = suffix;
+		}
+
+		// public float alpha() {
+		// if (this.equals(ALPHA100)) {
+		// return 1.0f;
+		// }
+		// return Float.parseFloat(suffix.substring(1))/100.0f;
+		// }
+
+
+		@Override
+		public String toString() {
+			return suffix;
+		}
+
+		public String value() {
+			return suffix;
+		}
+	}
 	public static final String REST_API_PATH = "rest";
 	public static final int IMAGE_STORE_MAX_SIZE = 2;
 	private final static String COLOR_STYLECLASS_PREFIX = "ctsms-color-";
@@ -156,10 +184,10 @@ public final class WebUtil {
 	public static final String MENUBAR_ICON_STYLECLASS = "ctsms-menubar-icon";
 	public final static String ID_SEPARATOR_STRING = ",";
 	public final static Pattern ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ID_SEPARATOR_STRING));
+
+
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
 	// private final static String BASE64_CHARSET = "UTF8";
-
-
 	private final static String REFERER_HEADER_NAME = "Referer";
 	public final static String EVENT_CONTEXT_VIEW_ID = "viewId";
 	public final static String FILE_TITLE_PSF_PROPERTY_NAME = "title";
@@ -236,6 +264,7 @@ public final class WebUtil {
 	private final static Gson JSON_COMPRESSOR = new GsonBuilder().serializeNulls()
 			.setDateFormat(JsUtil.JSON_DATETIME_PATTERN)
 			.create();
+
 	private final static JsonParser JSON_PARSER = new JsonParser();
 
 	private final static String EL_ENUM_LIST_DEFAULT_SEPARATOR = ",";
@@ -295,10 +324,16 @@ public final class WebUtil {
 	}
 
 	public static String colorToStyleClass(Color color) {
+		return colorToStyleClass(color, null);
+	}
+	public static String colorToStyleClass(Color color, ColorOpacity alpha) {
 		StringBuilder result = new StringBuilder();
 		if (color != null) {
 			result.append(COLOR_STYLECLASS_PREFIX);
 			result.append(color.name().toLowerCase(Locale.ENGLISH));
+			if (alpha != null) {
+				result.append(alpha.value());
+			}
 		}
 		return result.toString();
 	}
@@ -3547,7 +3582,11 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static String getSeriesColors(ArrayList<Color> colors) {
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
+
+	public static String getSeriesColors(ArrayList<Color> colors) { // , ColorOpacity alpha) {
 		if (colors != null && colors.size() > 0) {
 			StringBuilder seriesColors = new StringBuilder();
 			Iterator<Color> colorsIt = colors.iterator();
@@ -3555,11 +3594,20 @@ public final class WebUtil {
 				if (seriesColors.length() > 0) {
 					seriesColors.append(",");
 				}
+				// if (alpha == null) {
 				seriesColors.append(colorsIt.next().getValue());
+				// } else {
+				// java.awt.Color rgb = CommonUtil.convertColor(colorsIt.next());
+				// seriesColors.append(String.format("rgba(%d,%d,%d,%f)", rgb.getRed(), rgb.getGreen(), rgb.getBlue(), alpha.alpha()));
+				// }
 			}
 			return seriesColors.toString();
 		}
+		// if (alpha == null) {
 		return Color.BLACK.getValue();
+		// } else {
+		// return String.format("rgba(0,0,0,%f)", alpha.alpha());
+		// }
 	}
 
 	public static ServiceLocator getServiceLocator() {

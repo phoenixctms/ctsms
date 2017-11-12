@@ -49,7 +49,7 @@
 						var="teamMember"
 						value="#{teamMemberPickerBean.teamMemberModel}"
 						id="team_member_list"
-						rowStyleClass="#{applicationScopeBean.staffToColor(teamMember.vo.staff)}">
+						rowStyleClass="#{applicationScopeBean.staffToColor(teamMember.vo.staff)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:outputText value="#{teamMemberPickerBean.teamMemberModel.rowCount} #{triallabels.team_member_picker_team_member_list_header}" />
 						</f:facet>

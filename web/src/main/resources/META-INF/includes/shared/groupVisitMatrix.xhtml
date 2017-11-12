@@ -37,7 +37,7 @@
 								var="visit"
 								varStatus="visitVarStatus">
 								<td><span
-									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}"
+									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}#{defaultColorOpacity}"
 									style="#{matrixBean.inputVisible ? 'cursor:crosshair;' : ''}"
 									onclick="#{matrixBean.inputVisible} &amp;&amp; #{selectRemoteCommand}(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty visit ? 'null' : visit.id},#{applicationScopeBean.parameterName('PROBAND_GROUP_ID')}:#{empty group ? 'null' : group.id}}));">
 										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ? (matrixBean.matrix.matrixVisitsCount > 5 ? matrixBean.matrix.getMatrixItemCount(visit,group) :
@@ -69,7 +69,7 @@
 								var="group"
 								varStatus="groupVarStatus">
 								<td><span
-									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}"
+									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}#{defaultColorOpacity}"
 									style="#{matrixBean.inputVisible ? 'cursor:crosshair;' : ''}"
 									onclick="#{matrixBean.inputVisible} &amp;&amp; #{selectRemoteCommand}(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty visit ? 'null' : visit.id},#{applicationScopeBean.parameterName('PROBAND_GROUP_ID')}:#{empty group ? 'null' : group.id}}));">
 										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ? (matrixBean.matrix.matrixVisitsCount > 5 ? matrixBean.matrix.getMatrixItemCount(visit,group) :

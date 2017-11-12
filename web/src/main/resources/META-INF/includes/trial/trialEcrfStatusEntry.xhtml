@@ -82,7 +82,7 @@
 						id="trialecrfstatus_proband_list"
 						selectionMode="single"
 						selection="#{trialEcrfStatusEntryBean.selectedProbandListEntry}"
-						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}">
+						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
 						<p:ajax
 							event="rowSelect"
 							update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"
@@ -356,7 +356,7 @@
 					id="trialecrfstatus_ecrf_list"
 					selectionMode="single"
 					selection="#{trialEcrfStatusEntryBean.selectedEcrf}"
-					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.ecrfStatusEntryToColor(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo))}">
+					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.ecrfStatusEntryToColor(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo))}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"

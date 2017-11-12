@@ -368,7 +368,7 @@
 						rendered="#{timelineEvent.vo['class'].simpleName == 'TimelineEventOutVO'}"
 						columns="1"
 						cellpadding="0"
-						styleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)} ctsms-timeline-event-datagrid">
+						styleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)}#{defaultColorOpacity} ctsms-timeline-event-datagrid">
 						<h:outputText
 							styleClass="ctsms-timeline-event-startstop"
 							rendered="#{timelineTrialTimelineEventBean.showStartStop}"
@@ -391,7 +391,7 @@
 						rendered="#{timelineEvent.vo['class'].simpleName == 'VisitScheduleItemOutVO'}"
 						columns="1"
 						cellpadding="0"
-						styleClass="#{applicationScopeBean.visitToColor(timelineEvent.vo.visit)} ctsms-timeline-event-datagrid">
+						styleClass="#{applicationScopeBean.visitToColor(timelineEvent.vo.visit)}#{rowBgColorAlpha} ctsms-timeline-event-datagrid">
 						<h:outputText
 							styleClass="ctsms-timeline-event-startstop"
 							rendered="#{timelineTrialTimelineEventBean.showStartStop}"

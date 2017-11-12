@@ -57,11 +57,20 @@ td .ui-selectonemenu {
 	z-index: 100000;
 }
 
+.ui-tooltip img {
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
 .ui-icon {
     -webkit-border-radius: 0px !important;
 	-moz-border-radius: 0px !important;
 	-o-border-radius: 0px !important;
 	border-radius: 0px !important;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+	font-size: inherit;
 }
 
 .ctsms-tabtitle a { /* background-color: blue; */
@@ -975,6 +984,18 @@ ctsms-ecrf-section {
 	background-color: #36c;
 }
 
+.fc-event-vert {
+	border-width: 0 1px;
+	background-position: left bottom ! important;
+	background-repeat: no-repeat ! important;
+}
+.fc-event-hori {
+	border-width: 1px 0;
+	margin-bottom: 1px;
+	background-position: right bottom ! important;
+	background-repeat: no-repeat ! important;
+}
+
 .fc-event-time {
 	font-size: 0.9em !important;
 	opacity: 0.6;
@@ -983,31 +1004,32 @@ ctsms-ecrf-section {
 .ctsms-schedule-holiday-event {
 	font-weight: bold;
 	font-style: italic;
-	background-color: #ff4500; /* orangered */
+	/* background-color: #ff4500; orangered */
+	background-color: rgba(255, 69, 0, 0.25);
 }
 
 .ctsms-schedule-holiday-event .fc-event-inner {
-	background-color: #ff4500; /* orangered */
+	background-color: rgba(255, 69, 0, 0.25); /* orangered */
 }
 
 .ctsms-schedule-no-holiday-event {
 	font-weight: bold;
 	font-style: italic;
-	background-color: #DCDCDC; /* gainsboro */
+	background-color: rgba(220, 220, 220, 0.25); /* gainsboro */
 }
 
 .ctsms-schedule-no-holiday-event .fc-event-inner {
-	background-color: #DCDCDC; /* gainsboro */
+	background-color: rgba(220, 220, 220, 0.25); /* gainsboro */
 }
 
 .ctsms-proband-schedule-status-event {
 	font-weight: bold;
 	font-style: italic;
-	background-color: #ff4500; /* orangered */
+	background-color: rgba(255, 69, 0, 0.25); /* orangered */
 }
 
 .ctsms-proband-schedule-status-event .fc-event-inner {
-	background-color: #ff4500; /* orangered */
+	background-color: rgba(255, 69, 0, 0.25); /* orangered */
 }
 
 .ctsms-rowexpansion-tabview {

@@ -130,7 +130,7 @@
 				var="proband"
 				value="#{probandSearchBean.probandResultModel}"
 				id="proband_result_list"
-				rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandSearchBean.probandToColor(proband.vo)}">
+				rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandSearchBean.probandToColor(proband.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{probandSearchBean.queryResultTitle}" />
 				</f:facet>
@@ -218,7 +218,7 @@
        					#{proband.vo.age}
        				</h:panelGroup>
 					<h:panelGroup rendered="#{!proband.vo.decrypted}">
-						<table style="border: none; padding: 0pt;">
+						<table style="border: none; padding: 0pt;width: 0px !important;">
 							<tr>
 								<td
 									style="border: none;"

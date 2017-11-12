@@ -65,7 +65,7 @@
 						var="statusEntry"
 						value="#{staffStatusOverviewBean.staffStatusModel}"
 						id="staffstatus_list"
-						rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{staffStatusOverviewBean.staffStatusToColor(statusEntry.vo)}">
+						rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{staffStatusOverviewBean.staffStatusToColor(statusEntry.vo)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

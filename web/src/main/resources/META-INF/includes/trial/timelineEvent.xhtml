@@ -40,7 +40,7 @@
 					id="timelineevent_list"
 					selectionMode="single"
 					selection="#{timelineEventBean.selectedTimelineEvent}"
-					rowStyleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)}">
+					rowStyleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:timelineevent_form:timelineevent_input" />

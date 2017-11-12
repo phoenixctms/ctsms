@@ -100,7 +100,7 @@
 						var="statusEntry"
 						value="#{adminExpiringParticipationOverviewBean.adminExpiringParticipationModel}"
 						id="expiringparticipation_list"
-						rowStyleClass="#{statusEntry.vo.course.deferredDelete or statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{adminExpiringParticipationOverviewBean.courseToColor(statusEntry.vo.course)}">
+						rowStyleClass="#{statusEntry.vo.course.deferredDelete or statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{adminExpiringParticipationOverviewBean.courseToColor(statusEntry.vo.course)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"
@@ -239,7 +239,7 @@
 									var="course"
 									value="#{adminExpiringParticipationOverviewBean.getCachedUpcomingRenewalCourseModel(statusEntry.vo).allRows}"
 									id="renewalcourse_list"
-									rowStyleClass="#{adminExpiringParticipationOverviewBean.renewalCourseToColor(statusEntry.vo.staff,course.vo)}">
+									rowStyleClass="#{adminExpiringParticipationOverviewBean.renewalCourseToColor(statusEntry.vo.staff,course.vo)}#{rowBgColorAlpha}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{adminExpiringParticipationOverviewBean.getCachedUpcomingRenewalCourseModel(statusEntry.vo).allRowCount} #{courselabels.admin_expiring_participation_overview_renewalcourse_list_header}" />

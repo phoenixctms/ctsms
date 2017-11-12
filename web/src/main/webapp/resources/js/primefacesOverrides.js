@@ -1395,6 +1395,9 @@ PrimeFaces.widget.LineChart = PrimeFaces.widget.BaseWidget.extend({
       this.jqpId = this.id.replace(/:/g, "\\:");
       this.cfg.seriesDefaults = {};
       var _self = this;
+      this.cfg.seriesColors = $.map(this.cfg.seriesColors,function(val, i) {
+    	  return $.jqplot.normalize2rgb(val,0.5); //  + ''
+      });
 
       //axes
       this.cfg.axes = this.cfg.axes || {};

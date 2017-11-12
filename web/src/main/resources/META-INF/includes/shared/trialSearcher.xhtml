@@ -130,7 +130,7 @@
 				var="trial"
 				value="#{trialSearchBean.trialResultModel}"
 				id="trial_result_list"
-				rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{trialSearchBean.trialToColor(trial.vo)}">
+				rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{trialSearchBean.trialToColor(trial.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{trialSearchBean.queryResultTitle}" />
 				</f:facet>

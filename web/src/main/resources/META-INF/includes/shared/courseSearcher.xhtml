@@ -130,7 +130,7 @@
 				var="course"
 				value="#{courseSearchBean.courseResultModel}"
 				id="course_result_list"
-				rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{courseSearchBean.courseToColor(course.vo)}">
+				rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{courseSearchBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{courseSearchBean.queryResultTitle}" />
 				</f:facet>

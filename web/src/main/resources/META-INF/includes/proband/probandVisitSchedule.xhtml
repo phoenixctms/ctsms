@@ -39,7 +39,7 @@
 					var="visitScheduleItem"
 					value="#{probandVisitScheduleBean.visitScheduleItemModel}"
 					id="probandvisitschedule_list"
-					rowStyleClass="#{probandVisitScheduleBean.visitScheduleItemToColor(visitScheduleItem.vo)}">
+					rowStyleClass="#{probandVisitScheduleBean.visitScheduleItemToColor(visitScheduleItem.vo)}#{rowBgColorAlpha}">
 					<f:facet name="header">
 						<h:outputText value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />
 					</f:facet>

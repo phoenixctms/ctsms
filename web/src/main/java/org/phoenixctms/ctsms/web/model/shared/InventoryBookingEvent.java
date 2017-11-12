@@ -89,9 +89,9 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
 			if (in.getTrialId() != null && trialColorMap != null && trialColorMap.size() > 0) {
-				sb.append(WebUtil.colorToStyleClass(trialColorMap.get(in.getTrialId())));
+				sb.append(WebUtil.colorToStyleClass(trialColorMap.get(in.getTrialId()), DEFAULT_COLOR_OPACITY));
 			} else {
-				sb.append(WebUtil.colorToStyleClass(inventory.getCategory().getColor()));
+				sb.append(WebUtil.colorToStyleClass(inventory.getCategory().getColor(), DEFAULT_COLOR_OPACITY));
 			}
 			sb.append(" ");
 			sb.append(WebUtil.SCHEDULE_EVENT_ICON_STYLECLASS);

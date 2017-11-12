@@ -42,7 +42,7 @@
 					id="trialparticipation_list"
 					selectionMode="single"
 					selection="#{trialParticipationBean.selectedProbandListEntry}"
-					rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}">
+					rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:trialparticipation_form:trialParticipationListTabView:probandlistentry_input,:tabView:trialparticipation_form:trialParticipationListTabView:probandliststatus_list,:tabView:trialparticipation_form:trialParticipationListTabView:probandliststatus_input,:tabView:trialparticipation_form:trialParticipationListTabView:tagvalue_input_grid"

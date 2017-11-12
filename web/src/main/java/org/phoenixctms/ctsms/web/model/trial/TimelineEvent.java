@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil.ColorOpacity;
 import org.primefaces.model.ScheduleEvent;
 
 public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
@@ -22,7 +23,7 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 	private TimelineEventOutVO out;
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String EVENT_TITLE_SEPARATOR = " | ";
-
+	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA25;
 	public TimelineEvent() {
 		super();
 	}
@@ -78,7 +79,7 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 		TimelineEventTypeVO eventType = WebUtil.getTimelineEventType(in.getTypeId());
 		if (eventType != null) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(WebUtil.colorToStyleClass(eventType.getColor()));
+			sb.append(WebUtil.colorToStyleClass(eventType.getColor(), COLOR_OPACITY));
 			sb.append(" ");
 			sb.append(WebUtil.SCHEDULE_EVENT_ICON_STYLECLASS);
 			if (Settings.getBoolean(SettingCodes.SHOW_TIMELINE_EVENT_SCHEDULE_EVENT_ICONS, Bundle.SETTINGS, DefaultSettings.SHOW_TIMELINE_EVENT_SCHEDULE_EVENT_ICONS)) {

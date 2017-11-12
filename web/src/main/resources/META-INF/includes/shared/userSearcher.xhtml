@@ -130,7 +130,7 @@
 				var="user"
 				value="#{userSearchBean.userResultModel}"
 				id="user_result_list"
-				rowStyleClass="#{user.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{userSearchBean.userToColor(user.vo)}">
+				rowStyleClass="#{user.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{userSearchBean.userToColor(user.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{userSearchBean.queryResultTitle}" />
 				</f:facet>

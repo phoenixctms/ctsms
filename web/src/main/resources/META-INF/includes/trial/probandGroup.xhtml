@@ -108,7 +108,7 @@
 								var="probandListEntry"
 								value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo).allRows}"
 								id="probandlistentry_list"
-								rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}">
+								rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
 								<f:facet name="header">
 									<h:outputText value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo).allRowCount} #{triallabels.proband_group_probandlistentry_list_header}" />
 								</f:facet>

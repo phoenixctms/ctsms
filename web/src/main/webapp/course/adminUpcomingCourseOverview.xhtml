@@ -37,7 +37,7 @@
 						var="course"
 						value="#{adminUpcomingCourseOverviewBean.adminUpcomingCourseModel}"
 						id="upcomingcourse_list"
-						rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{adminUpcomingCourseOverviewBean.courseToColor(course.vo)}">
+						rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{adminUpcomingCourseOverviewBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

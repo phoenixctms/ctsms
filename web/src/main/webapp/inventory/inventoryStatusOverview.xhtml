@@ -65,7 +65,7 @@
 						var="statusEntry"
 						value="#{inventoryStatusOverviewBean.inventoryStatusModel}"
 						id="inventorystatus_list"
-						rowStyleClass="#{statusEntry.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryStatusOverviewBean.inventoryStatusToColor(statusEntry.vo)}">
+						rowStyleClass="#{statusEntry.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryStatusOverviewBean.inventoryStatusToColor(statusEntry.vo)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

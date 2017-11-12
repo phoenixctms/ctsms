@@ -364,6 +364,7 @@
         TITLE CHARACTER VARYING(1024),
         COMMENT TEXT,
         ACTIVE BOOLEAN not null,
+        PUBLIC_FILE BOOLEAN not null,
         FILE_NAME CHARACTER VARYING(1024),
         SIZE BIGINT not null,
         EXTERNAL_FILE BOOLEAN not null,
@@ -1706,7 +1707,8 @@
 
     create table course_renewal (
         PRECEDING_COURSES_FK BIGINT not null,
-        RENEWALS_FK BIGINT not null
+        RENEWALS_FK BIGINT not null,
+        primary key (RENEWALS_FK, PRECEDING_COURSES_FK)
     );
 
     create table ecrf (
@@ -1872,7 +1874,8 @@
 
     create table proband_children (
         PARENTS_FK BIGINT not null,
-        CHILDREN_FK BIGINT not null
+        CHILDREN_FK BIGINT not null,
+        primary key (CHILDREN_FK, PARENTS_FK)
     );
 
     create table proband_list_status_transition (

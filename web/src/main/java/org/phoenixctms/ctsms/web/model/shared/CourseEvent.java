@@ -13,11 +13,13 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil.ColorOpacity;
 import org.primefaces.model.ScheduleEvent;
 
 public class CourseEvent extends ScheduleEventBase<CourseInVO> {
 
 	private CourseOutVO out;
+	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA25;
 
 	public CourseEvent() {
 		super();
@@ -74,7 +76,7 @@ public class CourseEvent extends ScheduleEventBase<CourseInVO> {
 		CourseCategoryVO category = WebUtil.getCourseCategory(in.getCategoryId());
 		if (category != null) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(WebUtil.colorToStyleClass(category.getColor()));
+			sb.append(WebUtil.colorToStyleClass(category.getColor(), COLOR_OPACITY));
 			sb.append(" ");
 			sb.append(WebUtil.SCHEDULE_EVENT_ICON_STYLECLASS);
 			if (Settings.getBoolean(SettingCodes.SHOW_COURSE_SCHEDULE_EVENT_ICONS, Bundle.SETTINGS, DefaultSettings.SHOW_COURSE_SCHEDULE_EVENT_ICONS)) {

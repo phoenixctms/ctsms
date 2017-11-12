@@ -91,9 +91,9 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 				StringBuilder sb = new StringBuilder();
 				if (isDutySelfAllocationLocked) {
 					sb.append(WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.DUTY_SELF_ALLOCATION_LOCKED_COLOR, Bundle.SETTINGS,
-							DefaultSettings.DUTY_SELF_ALLOCATION_LOCKED_COLOR)));
+							DefaultSettings.DUTY_SELF_ALLOCATION_LOCKED_COLOR), DEFAULT_COLOR_OPACITY));
 				} else {
-					sb.append(WebUtil.colorToStyleClass(staff.getCategory().getColor()));
+					sb.append(WebUtil.colorToStyleClass(staff.getCategory().getColor(), DEFAULT_COLOR_OPACITY));
 				}
 				sb.append(" ");
 				sb.append(WebUtil.SCHEDULE_EVENT_ICON_STYLECLASS);
@@ -108,7 +108,8 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 				return sb.toString();
 			}
 		} else if (isDutySelfAllocationLocked) {
-			return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.DUTY_SELF_ALLOCATION_LOCKED_COLOR, Bundle.SETTINGS, DefaultSettings.DUTY_SELF_ALLOCATION_LOCKED_COLOR));
+			return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.DUTY_SELF_ALLOCATION_LOCKED_COLOR, Bundle.SETTINGS, DefaultSettings.DUTY_SELF_ALLOCATION_LOCKED_COLOR),
+					DEFAULT_COLOR_OPACITY);
 		}
 		return "";
 	}

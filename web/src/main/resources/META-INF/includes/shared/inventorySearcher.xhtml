@@ -130,7 +130,7 @@
 				var="inventory"
 				value="#{inventorySearchBean.inventoryResultModel}"
 				id="inventory_result_list"
-				rowStyleClass="#{inventory.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventorySearchBean.inventoryToColor(inventory.vo)}">
+				rowStyleClass="#{inventory.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventorySearchBean.inventoryToColor(inventory.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{inventorySearchBean.queryResultTitle}" />
 				</f:facet>

@@ -45,7 +45,7 @@
 					id="courseparticipationstatus_list"
 					selectionMode="single"
 					selection="#{adminCourseParticipationStatusBean.selectedCourseParticipationStatusEntry}"
-					rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.courseParticipationToColor(statusEntry.vo)}">
+					rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.courseParticipationToColor(statusEntry.vo)}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_input" />

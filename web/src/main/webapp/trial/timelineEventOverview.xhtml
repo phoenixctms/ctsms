@@ -108,7 +108,7 @@
 							var="timelineEvent"
 							value="#{timelineEventOverviewBean.timelineScheduleModel}"
 							id="timelineevent_list"
-							rowStyleClass="#{timelineEvent.vo.trial.deferredDelete ? 'ctsms-strikethrough' : ''} #{timelineEventOverviewBean.timelineEventToColor(timelineEvent.vo)}">
+							rowStyleClass="#{timelineEvent.vo.trial.deferredDelete ? 'ctsms-strikethrough' : ''} #{timelineEventOverviewBean.timelineEventToColor(timelineEvent.vo)}#{rowBgColorAlpha}">
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

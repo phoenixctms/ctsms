@@ -31,7 +31,7 @@
 			id="probandliststatus_list"
 			selectionMode="single"
 			selection="#{probandListBean.probandListStatusEntryBean.selectedProbandListStatusEntry}"
-			rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListStatusEntry.vo)}">
+			rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListStatusEntry.vo)}#{rowBgColorAlpha}">
 			<p:ajax
 				event="rowSelect"
 				update="#{namingContainer}:probandliststatus_input" />

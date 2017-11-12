@@ -171,7 +171,7 @@
 						var="notification"
 						value="#{portalBean.notificationModel}"
 						id="notification_list"
-						rowStyleClass="#{portalBean.notificationToColor(notification.vo)}">
+						rowStyleClass="#{portalBean.notificationToColor(notification.vo)}#{defaultColorOpacity}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

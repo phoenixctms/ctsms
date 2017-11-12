@@ -113,7 +113,7 @@
 						var="summary"
 						value="#{reimbursementsBean.probandMoneyTransferSummaryModel}"
 						id="probandmoneytransfersummary_list"
-						rowStyleClass="#{summary.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(summary.vo.listEntry.lastStatus)}">
+						rowStyleClass="#{summary.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(summary.vo.listEntry.lastStatus)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:outputText value="#{reimbursementsBean.probandMoneyTransferSummaryModel.rowCount} #{triallabels.reimbursements_proband_money_transfer_summary_list_header}" />
 						</f:facet>

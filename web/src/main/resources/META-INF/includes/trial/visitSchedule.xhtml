@@ -46,7 +46,7 @@
 					id="visitschedule_list"
 					selectionMode="single"
 					selection="#{visitScheduleBean.selectedVisitScheduleItem}"
-					rowStyleClass="#{applicationScopeBean.visitToColor(visitScheduleItem.vo.visit)}">
+					rowStyleClass="#{applicationScopeBean.visitToColor(visitScheduleItem.vo.visit)}#{rowBgColorAlpha}">
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:visitschedule_form:visitschedule_input" />

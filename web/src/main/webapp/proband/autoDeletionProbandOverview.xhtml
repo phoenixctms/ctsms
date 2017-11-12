@@ -101,7 +101,7 @@
 							var="proband"
 							value="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel}"
 							id="autodeletionproband_list"
-							rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{autoDeletionProbandOverviewBean.probandToColor(proband.vo)}">
+							rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{autoDeletionProbandOverviewBean.probandToColor(proband.vo)}#{rowBgColorAlpha}">
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

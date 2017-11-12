@@ -39,7 +39,7 @@
 					var="journalEntry"
 					value="#{userActivityBean.userActivityModel}"
 					id="useractivity_list"
-					rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}">
+					rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}#{rowBgColorAlpha}">
 					<f:facet name="header">
 						<h:panelGrid
 							columns="3"

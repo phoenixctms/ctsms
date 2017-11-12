@@ -130,7 +130,7 @@
 				var="staff"
 				value="#{staffSearchBean.staffResultModel}"
 				id="staff_result_list"
-				rowStyleClass="#{staff.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.staffToColor(staff.vo)}">
+				rowStyleClass="#{staff.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.staffToColor(staff.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
 					<h:outputText value="#{staffSearchBean.queryResultTitle}" />
 				</f:facet>

@@ -65,7 +65,7 @@
 						var="statusEntry"
 						value="#{probandStatusOverviewBean.probandStatusModel}"
 						id="probandstatus_list"
-						rowStyleClass="#{statusEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandStatusOverviewBean.probandStatusToColor(statusEntry.vo)}">
+						rowStyleClass="#{statusEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandStatusOverviewBean.probandStatusToColor(statusEntry.vo)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

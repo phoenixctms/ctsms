@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model;
 import java.util.Date;
 
 import org.phoenixctms.ctsms.web.util.DateUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil.ColorOpacity;
 import org.primefaces.model.ScheduleEvent;
 
 public abstract class ScheduleEventBase<IN> implements ScheduleEvent {
@@ -17,6 +18,8 @@ public abstract class ScheduleEventBase<IN> implements ScheduleEvent {
 	protected IN in;
 	private ScheduleEvent event;
 	private String id;
+
+	protected final static ColorOpacity DEFAULT_COLOR_OPACITY = ColorOpacity.ALPHA50;
 
 	public ScheduleEventBase() {
 		initIn(InitSource.DEFAULT_VALUES);

@@ -100,7 +100,7 @@
 						var="course"
 						value="#{expiringCourseOverviewBean.expiringCourseModel}"
 						id="expiringcourse_list"
-						rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{expiringCourseOverviewBean.courseToColor(course.vo)}">
+						rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{expiringCourseOverviewBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"
