@@ -1695,6 +1695,15 @@ extends ProbandServiceBase
 	}
 
 	@Override
+	protected Collection<TrialOutVO> handleGetInquiryTrials(AuthenticationVO auth, Long probandId, Boolean active, Boolean activeSignup) throws Exception {
+		CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
+		TrialDao trialDao = this.getTrialDao();
+		Collection trials = trialDao.findByInquiryValuesProbandSorted(null, probandId, active, activeSignup);
+		trialDao.toTrialOutVOCollection(trials);
+		return trials;
+	}
+
+	@Override
 	protected InquiryValuesOutVO handleGetInquiryValue(AuthenticationVO auth, Long probandId,
 			Long inquiryId) throws Exception {
 		ProbandDao probandDao = this.getProbandDao();
@@ -2974,6 +2983,7 @@ extends ProbandServiceBase
 			}
 		}
 	}
+
 
 	private void populateInquiriesPDFVOMaps(
 			Proband proband,

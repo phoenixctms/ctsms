@@ -6501,6 +6501,7 @@ extends TrialServiceBase
 		return trials;
 	}
 
+
 	@Override
 	protected MoneyTransferSummaryVO handleGetTrialMoneyTransferSummary(
 			AuthenticationVO auth, Long trialId,

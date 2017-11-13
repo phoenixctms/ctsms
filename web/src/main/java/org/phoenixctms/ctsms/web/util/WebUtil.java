@@ -4012,7 +4012,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getTrialsFromInquiryValues(Long trialId, Long probandId, Boolean active, Boolean activeSignup, ArrayList<SelectItem> trials, Object... totalCounts) {
+	public static Long getTrialsFromInquiryValues(Long probandId, Boolean active, Boolean activeSignup, ArrayList<SelectItem> trials, Object... totalCounts) {
 		if (trials != null) {
 			trials.clear();
 		}
@@ -4020,11 +4020,13 @@ public final class WebUtil {
 		Long totalInquiryValueCount = 0L;
 		Long totalInquiryCount = 0L;
 		Long trialsWithoutInquiryValuesCount = null;
-		ProbandOutVO probandVO = getProband(probandId, null, null, null);
+		// ProbandOutVO probandVO = getProband(probandId, null, null, null);
 		Collection<TrialOutVO> trialVOs = null;
-		if (probandVO != null && probandVO.getDepartment() != null) {
+		// if (probandVO != null && probandVO.getDepartment() != null) {
+		if (probandId != null) {
 			try {
-				trialVOs = getServiceLocator().getTrialService().getTrialList(getAuthentication(), trialId, probandVO.getDepartment().getId(), null);
+				// trialVOs = getServiceLocator().getTrialService().getTrialList(getAuthentication(), trialId, probandVO.getDepartment().getId(), null);
+				trialVOs = getServiceLocator().getProbandService().getInquiryTrials(getAuthentication(), probandId, active, activeSignup);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);

@@ -99,6 +99,51 @@ extends TrialDaoBase
 	}
 
 	@Override
+	protected Collection<Trial> handleFindByInquiryValuesProbandSorted(Long departmentId, Long probandId, Boolean active, Boolean activeSignup) throws Exception {
+		org.hibernate.Criteria trialCriteria = createTrialCriteria("trial0");
+		if (departmentId != null) {
+			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		org.hibernate.Criteria statusCriteria = trialCriteria.createCriteria("status", "trialStatus", CriteriaSpecification.INNER_JOIN);
+		DetachedCriteria valuesSubQuery = DetachedCriteria.forClass(InquiryValueImpl.class, "inquiryValue"); // IMPL!!!!
+		valuesSubQuery.setProjection(Projections.rowCount());
+		valuesSubQuery.add(Restrictions.eq("proband.id", probandId.longValue()));
+		// if (active != null || activeSignup != null) {
+		DetachedCriteria inquiriesSubQuery = valuesSubQuery.createCriteria("inquiry", "inquiry0", CriteriaSpecification.INNER_JOIN);
+		inquiriesSubQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
+		if (active != null) {
+			inquiriesSubQuery.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiriesSubQuery.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		inquiriesSubQuery = DetachedCriteria.forClass(InquiryImpl.class, "inquiry1"); // IMPL!!!!
+		inquiriesSubQuery.setProjection(Projections.rowCount());
+		inquiriesSubQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
+		if (active != null) {
+			inquiriesSubQuery.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiriesSubQuery.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		// }
+		trialCriteria.add(
+				Restrictions.or(
+						Subqueries.lt(0l, valuesSubQuery),
+						Restrictions.and(
+								Subqueries.lt(0l, inquiriesSubQuery),
+								Restrictions.and(
+										Restrictions.eq("trialStatus.inquiryValueInputEnabled", true),
+										Restrictions.eq("trialStatus.lockdown", false)
+										)
+								)
+						)
+				);
+		trialCriteria.addOrder(Order.asc("name"));
+		return trialCriteria.list();
+	}
+
+	@Override
 	protected Collection<Trial> handleFindByParticipatingProbandSorted(
 			Long probandId) throws Exception {
 		org.hibernate.Criteria trialCriteria = createTrialCriteria(null);

@@ -256,7 +256,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	protected void initSpecificSets() {
 		loadProband();
 		probandAddresses = loadProbandAddresses();
-		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(trialId, probandId, true, null, trials, totalCounts);
+		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(probandId, true, null, trials, totalCounts); // trialId
 		if (WebUtil.isProbandLocked(proband)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
