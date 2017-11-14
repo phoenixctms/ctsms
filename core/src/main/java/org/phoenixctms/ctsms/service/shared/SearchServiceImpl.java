@@ -36,6 +36,9 @@ import org.phoenixctms.ctsms.domain.CriterionRestrictionDao;
 import org.phoenixctms.ctsms.domain.CriterionTie;
 import org.phoenixctms.ctsms.domain.CriterionTieDao;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
+import org.phoenixctms.ctsms.domain.InquiryDao;
+import org.phoenixctms.ctsms.domain.InquiryValue;
+import org.phoenixctms.ctsms.domain.InquiryValueDao;
 import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.InventoryTagDao;
@@ -70,6 +73,7 @@ import org.phoenixctms.ctsms.domain.TrialTagValueDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
@@ -107,6 +111,7 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
+import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
@@ -121,6 +126,9 @@ import org.phoenixctms.ctsms.vo.CriterionOutVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.CvPDFVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
+import org.phoenixctms.ctsms.vo.InquiryOutVO;
+import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetDetailVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
@@ -1425,20 +1433,38 @@ extends SearchServiceBase
 
 	private void prepareProbandDistinctColumns(SearchResultExcelWriter writer, Collection probandVOs, ArrayList<String> distinctColumnNames,
 			HashMap<Long, HashMap<String, Object>> distinctFieldRows) throws Exception {
-		boolean showTags = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_PROBAND_TAGS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.SHOW_PROBAND_TAGS);
+		Boolean person = Settings.getBooleanNullable(SearchResultExcelSettingCodes.SHOW_PROBAND_PERSON_COLUMNS, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_PROBAND_PERSON_COLUMNS);
+		Boolean animal = Settings.getBooleanNullable(SearchResultExcelSettingCodes.SHOW_PROBAND_ANIMAL_COLUMNS, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_PROBAND_ANIMAL_COLUMNS);
+		boolean showTags = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_PROBAND_TAGS, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_PROBAND_TAGS);
 		boolean showContactDetails = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_PROBAND_CONTACT_DETAILS, Bundle.SEARCH_RESULT_EXCEL,
 				SearchResultExcelDefaultSettings.SHOW_PROBAND_CONTACT_DETAILS);
 		boolean showAddresses = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_PROBAND_ADDRESSES, Bundle.SEARCH_RESULT_EXCEL,
 				SearchResultExcelDefaultSettings.SHOW_PROBAND_ADDRESSES);
+		boolean showInquiries = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_INQUIRIES, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_INQUIRIES);
+		boolean showAllInquiries = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_ALL_INQUIRIES, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_ALL_INQUIRIES);
+		boolean showAllInquiryDates = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_ALL_INQUIRY_DATES, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_ALL_INQUIRY_DATES);
+		boolean showEmptyInquiryColumns = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_EMPTY_INQUIRY_COLUMNS, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.SHOW_EMPTY_INQUIRY_COLUMNS);
 		ProbandTagDao probandTagDao = this.getProbandTagDao();
-		Collection probandTags = showTags ? probandTagDao.findByPersonAnimalIdExcel(null, null, null, true) : new ArrayList();
+		Collection probandTags = showTags ? probandTagDao.findByPersonAnimalIdExcel(person, animal, null, true) : new ArrayList();
 		probandTagDao.toProbandTagVOCollection(probandTags);
 		ContactDetailTypeDao contactDetailTypeDao = this.getContactDetailTypeDao();
-		Collection contactDetailTypes = showContactDetails ? contactDetailTypeDao.findByStaffProbandAnimalId(null, null, null, null) : new ArrayList();
+		Collection contactDetailTypes = showContactDetails ? contactDetailTypeDao.findByStaffProbandAnimalId(null, person, animal, null)
+				: new ArrayList();
 		contactDetailTypeDao.toContactDetailTypeVOCollection(contactDetailTypes);
 		AddressTypeDao addressTypeDao = this.getAddressTypeDao();
-		Collection addressTypes = showAddresses ? addressTypeDao.findByStaffProbandAnimalId(null, null, null, null) : new ArrayList();
+		Collection addressTypes = showAddresses ? addressTypeDao.findByStaffProbandAnimalId(null, person, animal, null) : new ArrayList();
 		addressTypeDao.toAddressTypeVOCollection(addressTypes);
+		InquiryDao inquiryDao = this.getInquiryDao();
+		Collection inquiries = showInquiries ? inquiryDao.findByDepartmentActiveExcelSorted(null, null, null, showAllInquiries || showAllInquiryDates ? null : true, true)
+				: new ArrayList();
+		inquiryDao.toInquiryOutVOCollection(inquiries);
 		if (CoreUtil.isPassDecryption()) {
 			distinctColumnNames.ensureCapacity(probandTags.size() + contactDetailTypes.size() + addressTypes.size());
 			Iterator<ProbandTagVO> probandTagsIt = probandTags.iterator();
@@ -1454,13 +1480,27 @@ extends SearchServiceBase
 				distinctColumnNames.add(addressTypesIt.next().getName());
 			}
 		}
+		Iterator<InquiryOutVO> inquiriesIt;
+		HashMap<Long, Long> inquiryValueCountMap = new HashMap<Long, Long>(inquiries.size());
+		// while (inquiriesIt.hasNext()) {
+		// InquiryOutVO inquiryVO = inquiriesIt.next();
+		// if (showAllInquiries || inquiryVO.isExcelValue()) {
+		// distinctColumnNames.add(writer.getInquiryColumnName(inquiryVO));
+		// }
+		// if (showAllInquiryDates || inquiryVO.isExcelDate()) {
+		// distinctColumnNames.add(writer.getInquiryDateColumnName(inquiryVO));
+		// }
+		// }
 		ProbandTagValueDao probandTagValueDao = this.getProbandTagValueDao();
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+
 		Iterator<ProbandOutVO> probandVOsIt = probandVOs.iterator();
 		while (probandVOsIt.hasNext()) {
 			ProbandOutVO probandVO = probandVOsIt.next();
 			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
+			String fieldKey;
 			Collection tagValues = showTags ? probandTagValueDao.findByProband(probandVO.getId(), null) : new ArrayList<ProbandTagValue>();
 			probandTagValueDao.toProbandTagValueOutVOCollection(tagValues);
 			Iterator<ProbandTagValueOutVO> tagValuesIt = tagValues.iterator();
@@ -1513,7 +1553,105 @@ extends SearchServiceBase
 				fieldValue.append(probandAddressOutVO.getName());
 				fieldRow.put(probandAddressOutVO.getType().getName(), fieldValue.toString());
 			}
+			HashMap<Long, InquiryValue> inquiryValueMap;
+			if (showInquiries) {
+				Collection<InquiryValue> inquiryValues = inquiryValueDao.findByTrialActiveProbandField(null, null, null, probandVO.getId(), null);
+				inquiryValueMap = new HashMap<Long, InquiryValue>(inquiryValues.size());
+				Iterator<InquiryValue> inquiryValuesIt = inquiryValues.iterator();
+				while (inquiryValuesIt.hasNext()) {
+					InquiryValue inquiryValue = inquiryValuesIt.next();
+					inquiryValueMap.put(inquiryValue.getInquiry().getId(), inquiryValue);
+					long count;
+					if (inquiryValueCountMap.containsKey(inquiryValue.getInquiry().getId())) {
+						count = inquiryValueCountMap.get(inquiryValue.getInquiry().getId());
+					} else {
+						count = 0l;
+					}
+					inquiryValueCountMap.put(inquiryValue.getInquiry().getId(), count + 1l);
+				}
+			} else {
+				inquiryValueMap = null;
+			}
+			inquiriesIt = inquiries.iterator();
+			while (inquiriesIt.hasNext()) {
+				InquiryOutVO inquiryVO = inquiriesIt.next();
+				InquiryValueOutVO inquiryValueVO;
+				if (inquiryValueMap.containsKey(inquiryVO.getId())) {
+					inquiryValueVO = inquiryValueDao.toInquiryValueOutVO(inquiryValueMap.get(inquiryVO.getId()));
+				} else {
+					inquiryValueVO = ServiceUtil.createPresetInquiryOutValue(probandVO, inquiryVO, null); // inputFieldSelectionSetValueDao
+				}
+				if (showAllInquiries || inquiryVO.isExcelValue()) {
+					Object fieldValue = null;
+					InputFieldTypeVO fieldTypeVO = inquiryVO.getField().getFieldType();
+					if (fieldTypeVO != null) {
+						InputFieldType fieldType = fieldTypeVO.getType();
+						if (fieldType != null) {
+							switch (fieldType) {
+								case SINGLE_LINE_TEXT:
+									fieldValue = inquiryValueVO.getTextValue();
+									break;
+								case MULTI_LINE_TEXT:
+									fieldValue = inquiryValueVO.getTextValue();
+									break;
+								case SELECT_ONE_DROPDOWN:
+								case SELECT_ONE_RADIO_H:
+								case SELECT_ONE_RADIO_V:
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									break;
+								case AUTOCOMPLETE:
+									fieldValue = inquiryValueVO.getTextValue();
+									break;
+								case SELECT_MANY_H:
+								case SELECT_MANY_V:
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									break;
+								case CHECKBOX:
+									fieldValue = inquiryValueVO.getBooleanValue();
+									break;
+								case INTEGER:
+									fieldValue = inquiryValueVO.getLongValue();
+									break;
+								case FLOAT:
+									fieldValue = inquiryValueVO.getFloatValue();
+									break;
+								case DATE:
+									fieldValue = inquiryValueVO.getDateValue();
+									break;
+								case TIME:
+									fieldValue = inquiryValueVO.getTimeValue();
+									break;
+								case TIMESTAMP:
+									fieldValue = inquiryValueVO.getTimestampValue();
+									break;
+								case SKETCH:
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									break;
+								default:
+							}
+						}
+					}
+					fieldKey = SearchResultExcelWriter.getInquiryColumnName(inquiryVO);
+					fieldRow.put(fieldKey, fieldValue);
+				}
+				if (showAllInquiryDates || inquiryVO.isExcelDate()) {
+					fieldKey = SearchResultExcelWriter.getInquiryDateColumnName(inquiryVO);
+					fieldRow.put(fieldKey, DateCalc.getStartOfDay(inquiryValueVO.getModifiedTimestamp()));
+				}
+			}
 			distinctFieldRows.put(probandVO.getId(), fieldRow);
+		}
+		inquiriesIt = inquiries.iterator();
+		while (inquiriesIt.hasNext()) {
+			InquiryOutVO inquiryVO = inquiriesIt.next();
+			if (showEmptyInquiryColumns || (inquiryValueCountMap.containsKey(inquiryVO.getId()) && inquiryValueCountMap.get(inquiryVO.getId()) > 0l)) {
+				if (showAllInquiries || inquiryVO.isExcelValue()) {
+					distinctColumnNames.add(writer.getInquiryColumnName(inquiryVO));
+				}
+				if (showAllInquiryDates || inquiryVO.isExcelDate()) {
+					distinctColumnNames.add(writer.getInquiryDateColumnName(inquiryVO));
+				}
+			}
 		}
 	}
 

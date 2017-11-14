@@ -266,6 +266,10 @@ public final class Settings {
 		return CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 	}
 
+	public static Boolean getBooleanNullable(String key, Bundle bundle, Boolean defaultValue) {
+		return CommonUtil.getValueNullable(key, getBundle(bundle), defaultValue);
+	}
+
 	private static ResourceBundle getBundle(Bundle bundle) {
 		switch (bundle) {
 			case SETTINGS:

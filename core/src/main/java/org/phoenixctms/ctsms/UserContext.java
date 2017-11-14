@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms;
 
-import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Locale;
@@ -14,7 +13,7 @@ import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 
-public class UserContext implements Principal {
+public class UserContext extends VOCacheContext {// implements Principal {
 
 	private static final long serialVersionUID = 1L;
 	private User user;
@@ -37,10 +36,12 @@ public class UserContext implements Principal {
 	private Boolean isTrustedHost;
 
 	public UserContext() {
+		super();
 		reset();
 	}
 
 	public UserContext(User user, Password lastPassword, String plainPassword, String host, String realm) {
+		super();
 		reset();
 		this.user = user;
 		this.lastPassword = lastPassword;
@@ -131,6 +132,7 @@ public class UserContext implements Principal {
 	}
 
 	public void reset() {
+		super.reset();
 		this.user = null;
 		this.lastPassword = null;
 		this.plainPassword = null;

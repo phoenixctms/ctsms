@@ -116,6 +116,35 @@ extends InquiryDaoBase
 	}
 
 	@Override
+	protected Collection<Inquiry> handleFindByDepartmentActiveExcelSorted(Long departmentId, Boolean active, Boolean activeSignup, Boolean excel, Boolean values) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
+		if (departmentId != null) {
+			inquiryCriteria.createCriteria("trial").add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		if (active != null) {
+			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiryCriteria.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		if (excel != null) {
+			inquiryCriteria.add(Restrictions.or(Restrictions.eq("excelValue", excel.booleanValue()),
+					Restrictions.eq("excelDate", excel.booleanValue())));
+		}
+		if (values != null) {
+			if (values) {
+				inquiryCriteria.add(Restrictions.sizeGt("inquiryValues", 0));
+			} else {
+				inquiryCriteria.add(Restrictions.sizeEq("inquiryValues", 0));
+			}
+		}
+		applySortOrders(inquiryCriteria);
+		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
+		// return inquiryCriteria.list();
+		return inquiryCriteria.list();
+	}
+
+	@Override
 	protected Collection<Inquiry> handleFindByParticipantsActiveSorted(Long trialId, Boolean active, Boolean activeSignup) throws Exception {
 		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
 		if (active != null) {

@@ -388,25 +388,7 @@ extends TrialServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
-	private static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
-		StringBuilder sb = new StringBuilder();
-		if (selectionSetValues != null && selectionSetValues.size() > 0) {
-			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
-			while (it.hasNext()) {
-				InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
-				if (sb.length() > 0) {
-					sb.append(ExcelUtil.EXCEL_LINE_BREAK);
-				}
-				if (selectionSetValue != null) {
-					String value = selectionSetValue.getValue();
-					if (value != null && value.length() > 0) {
-						sb.append(value);
-					}
-				}
-			}
-		}
-		return sb.toString();
-	}
+
 
 
 	private ECRFFieldOutVO addEcrfField(ECRFFieldInVO newEcrfField, Timestamp now, User user) throws Exception {
@@ -4471,14 +4453,14 @@ extends TrialServiceBase
 								case SELECT_ONE_DROPDOWN:
 								case SELECT_ONE_RADIO_H:
 								case SELECT_ONE_RADIO_V:
-									fieldValue = selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								case AUTOCOMPLETE:
 									fieldValue = listEntryTagValueVO.getTextValue();
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
-									fieldValue = selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:
 									fieldValue = listEntryTagValueVO.getBooleanValue();
@@ -4499,7 +4481,7 @@ extends TrialServiceBase
 									fieldValue = listEntryTagValueVO.getTimestampValue();
 									break;
 								case SKETCH:
-									fieldValue = selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								default:
 							}
@@ -4552,14 +4534,14 @@ extends TrialServiceBase
 								case SELECT_ONE_DROPDOWN:
 								case SELECT_ONE_RADIO_H:
 								case SELECT_ONE_RADIO_V:
-									fieldValue = selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case AUTOCOMPLETE:
 									fieldValue = inquiryValueVO.getTextValue();
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
-									fieldValue = selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:
 									fieldValue = inquiryValueVO.getBooleanValue();
@@ -4580,7 +4562,7 @@ extends TrialServiceBase
 									fieldValue = inquiryValueVO.getTimestampValue();
 									break;
 								case SKETCH:
-									fieldValue = selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								default:
 							}

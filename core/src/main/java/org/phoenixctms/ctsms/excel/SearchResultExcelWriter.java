@@ -18,13 +18,23 @@ import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
+import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 
 public class SearchResultExcelWriter extends WorkbookWriter {
 
+	public static String getInquiryColumnName(InquiryOutVO inquiry) {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.INQUIRY_HEAD, ExcelUtil.DEFAULT_LABEL, inquiry == null ? null : inquiry.getUniqueName(),
+				inquiry == null ? null : CommonUtil.inputFieldOutVOToString(inquiry.getField()));
+	}
+	public static String getInquiryDateColumnName(InquiryOutVO inquiry) {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.INQUIRY_DATE_HEAD, ExcelUtil.DEFAULT_LABEL,
+				inquiry == null ? null : inquiry.getUniqueName(), inquiry == null ? null : CommonUtil.inputFieldOutVOToString(inquiry.getField()));
+	}
 	private CriteriaInstantVO criteria;
 	private DBModule module;
+
 	private SearchResultExcelVO excelVO;
 	private static final String SEARCH_RESULT_EXCEL_FILENAME_PREFIX = "search_result_";
 

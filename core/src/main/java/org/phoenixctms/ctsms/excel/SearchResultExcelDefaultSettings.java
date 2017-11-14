@@ -85,11 +85,18 @@ public final class SearchResultExcelDefaultSettings {
 	public static final boolean SHOW_TRIAL_TAGS = true;
 	public static final boolean SHOW_TEAM_MEMBERS = true;
 	public static final boolean SHOW_TIMELINE_EVENTS = true;
+	public static final Boolean SHOW_PROBAND_PERSON_COLUMNS = null;
+	public static final Boolean SHOW_PROBAND_ANIMAL_COLUMNS = null;
 	public static final boolean SHOW_PROBAND_TAGS = false;
 	public static final boolean SHOW_PROBAND_CONTACT_DETAILS = true;
 	public static final boolean SHOW_PROBAND_ADDRESSES = true;
+	public static final boolean SHOW_INQUIRIES = false;
+	public static final boolean SHOW_ALL_INQUIRIES = false;
+	public static final boolean SHOW_ALL_INQUIRY_DATES = false;
+	public static final boolean SHOW_EMPTY_INQUIRY_COLUMNS = false;
 	static {
 		INVENTORY_VO_FIELD_COLUMNS.add("id");
+		INVENTORY_VO_FIELD_COLUMNS.add("deferredDelete");
 		INVENTORY_VO_FIELD_COLUMNS.add("name");
 		INVENTORY_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		INVENTORY_VO_FIELD_COLUMNS.add("bookable");
@@ -100,6 +107,7 @@ public final class SearchResultExcelDefaultSettings {
 		INVENTORY_VO_FIELD_COLUMNS.add("owner" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		INVENTORY_VO_FIELD_COLUMNS.add("owner" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		STAFF_VO_FIELD_COLUMNS.add("id");
+		STAFF_VO_FIELD_COLUMNS.add("deferredDelete");
 		STAFF_VO_FIELD_COLUMNS.add("person");
 		STAFF_VO_FIELD_COLUMNS.add("name");
 		STAFF_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
@@ -111,6 +119,7 @@ public final class SearchResultExcelDefaultSettings {
 		STAFF_VO_FIELD_COLUMNS.add("parent" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		STAFF_VO_FIELD_COLUMNS.add("parent" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		COURSE_VO_FIELD_COLUMNS.add("id");
+		COURSE_VO_FIELD_COLUMNS.add("deferredDelete");
 		COURSE_VO_FIELD_COLUMNS.add("name");
 		COURSE_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		COURSE_VO_FIELD_COLUMNS.add("cvTitle");
@@ -128,6 +137,7 @@ public final class SearchResultExcelDefaultSettings {
 		COURSE_VO_FIELD_COLUMNS.add("institution" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		COURSE_VO_FIELD_COLUMNS.add("institution" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		TRIAL_VO_FIELD_COLUMNS.add("id");
+		TRIAL_VO_FIELD_COLUMNS.add("deferredDelete");
 		TRIAL_VO_FIELD_COLUMNS.add("name");
 		TRIAL_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		TRIAL_VO_FIELD_COLUMNS.add("title");
@@ -143,6 +153,7 @@ public final class SearchResultExcelDefaultSettings {
 		TRIAL_VO_FIELD_COLUMNS.add("blockingPeriod" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		TRIAL_VO_FIELD_COLUMNS.add("blockingPeriodDays");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("id");
+		INPUT_FIELD_VO_FIELD_COLUMNS.add("deferredDelete");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("name");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("fieldType" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("title");
@@ -167,6 +178,7 @@ public final class SearchResultExcelDefaultSettings {
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("maxSelections");
 		INPUT_FIELD_VO_FIELD_COLUMNS.add("validationErrorMsg");
 		USER_VO_FIELD_COLUMNS.add("id");
+		USER_VO_FIELD_COLUMNS.add("deferredDelete");
 		USER_VO_FIELD_COLUMNS.add("name");
 		USER_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		USER_VO_FIELD_COLUMNS.add("locked");
@@ -177,6 +189,7 @@ public final class SearchResultExcelDefaultSettings {
 		USER_VO_FIELD_COLUMNS.add("identity" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		USER_VO_FIELD_COLUMNS.add("identity" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		PROBAND_VO_FIELD_COLUMNS.add("id");
+		PROBAND_VO_FIELD_COLUMNS.add("deferredDelete");
 		PROBAND_VO_FIELD_COLUMNS.add("firstName");
 		PROBAND_VO_FIELD_COLUMNS.add("lastName");
 		PROBAND_VO_FIELD_COLUMNS.add("animalName");

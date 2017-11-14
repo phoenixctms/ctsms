@@ -42,6 +42,7 @@ package $entity.packageName;
 #set($identifierTypeWrapperName = $entity.identifiers.iterator().next().type.wrapperName)
 #end
 
+import org.phoenixctms.ctsms.VOCacheContext;
 import org.hibernate.criterion.Order;
 import org.hibernate.LockMode;
 /**
@@ -291,6 +292,7 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
     //}
 
     public void evict($rootEntityType entity) {
+        ((VOCacheContext) getPrincipal()).voMapEvict(${rootEntityType}.class, entity.getId());
     	this.getHibernateTemplate().evict(entity);
     }
 
@@ -1422,8 +1424,18 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
 #if($valueObjectRef.targetElement.isEnumeration())
             // Object reference is an Enumeration, must be instantiated with a value in the Impl transformation
 #end
-            target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
-            this.${valueObjectRef.transformationMethodName}(entity, target);
+            //target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+            //this.${valueObjectRef.transformationMethodName}(entity, target);
+
+			VOCacheContext cache = (VOCacheContext) getPrincipal();
+			if (cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
+			} else {
+				target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+				this.${valueObjectRef.transformationMethodName}(entity, target);
+				cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				return target;
+			}
         }
         return target;
     }
@@ -1436,8 +1448,18 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
 #if($valueObjectRef.targetElement.isEnumeration())
             // Object reference is an Enumeration, must be instantiated with a value in the Impl transformation
 #end
-            target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
-            this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
+            //target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+            //this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
+
+			VOCacheContext cache = (VOCacheContext) getPrincipal();
+			if (cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
+			} else {
+				target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+				this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
+				cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				return target;
+			}
         }
         return target;
     }

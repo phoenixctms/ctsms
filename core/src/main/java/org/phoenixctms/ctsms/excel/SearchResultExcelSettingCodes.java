@@ -76,7 +76,13 @@ public interface SearchResultExcelSettingCodes {
 	public static final String SHOW_TRIAL_TAGS = "show_trial_tags";
 	public static final String SHOW_TEAM_MEMBERS = "show_team_members";
 	public static final String SHOW_TIMELINE_EVENTS = "show_timeline_events";
+	public static final String SHOW_PROBAND_PERSON_COLUMNS = "show_proband_person_columns";
+	public static final String SHOW_PROBAND_ANIMAL_COLUMNS = "show_proband_animal_columns";
 	public static final String SHOW_PROBAND_TAGS = "show_proband_tags";
 	public static final String SHOW_PROBAND_CONTACT_DETAILS = "show_proband_contact_details";
 	public static final String SHOW_PROBAND_ADDRESSES = "show_proband_addresses";
+	public static final String SHOW_INQUIRIES = "show_inquiries";
+	public static final String SHOW_ALL_INQUIRIES = "show_all_inquiries";
+	public static final String SHOW_ALL_INQUIRY_DATES = "show_all_inquiry_dates";
+	public static final String SHOW_EMPTY_INQUIRY_COLUMNS = "show_empty_inquiry_columns";
 }

@@ -4003,6 +4003,26 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
+		StringBuilder sb = new StringBuilder();
+		if (selectionSetValues != null && selectionSetValues.size() > 0) {
+			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
+			while (it.hasNext()) {
+				InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
+				if (sb.length() > 0) {
+					sb.append(ExcelUtil.EXCEL_LINE_BREAK);
+				}
+				if (selectionSetValue != null) {
+					String value = selectionSetValue.getValue();
+					if (value != null && value.length() > 0) {
+						sb.append(value);
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 	public static boolean testNotificationExists(Collection<Notification> notifications, org.phoenixctms.ctsms.enumeration.NotificationType notificationType, Boolean obsolete)
 			throws Exception {
 		Iterator<Notification> notificationsIt = notifications.iterator();
@@ -4153,8 +4173,6 @@ public final class ServiceUtil {
 		}
 		return false;
 	}
-
-
 
 	private ServiceUtil() {
 	}
