@@ -1411,6 +1411,7 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
 #*    *##end
 #* *##end
 #end
+        //((VOCacheContext) getPrincipal()).voMapPut(${entity.fullyQualifiedEntityName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, source.getId(), target);
     }
 
     /**
@@ -1427,15 +1428,19 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
             //target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
             //this.${valueObjectRef.transformationMethodName}(entity, target);
 
+#if($valueObjectRef.targetElement.isEnumeration())
+			target = null;
+#else
 			VOCacheContext cache = (VOCacheContext) getPrincipal();
-			if (cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+			if (cache != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
 				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
 			} else {
-				target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+				target = new ${valueObjectRef.targetElement.fullyQualifiedName}();
 				this.${valueObjectRef.transformationMethodName}(entity, target);
-				cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				if (cache != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
 				return target;
 			}
+#end
         }
         return target;
     }
@@ -1451,15 +1456,19 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
             //target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
             //this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
 
+#if($valueObjectRef.targetElement.isEnumeration())
+			target = null;
+#else
 			VOCacheContext cache = (VOCacheContext) getPrincipal();
-			if (cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+			if (cache != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
 				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
 			} else {
-				target = #if($valueObjectRef.targetElement.isEnumeration())null#else new ${valueObjectRef.targetElement.fullyQualifiedName}()#end;
+				target = new ${valueObjectRef.targetElement.fullyQualifiedName}();
 				this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
-				cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				if (cache != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
 				return target;
 			}
+#end
         }
         return target;
     }
