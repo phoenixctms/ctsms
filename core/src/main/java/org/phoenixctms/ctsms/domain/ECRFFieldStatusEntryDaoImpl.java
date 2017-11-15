@@ -73,6 +73,9 @@ extends ECRFFieldStatusEntryDaoBase
 		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("position"));
 		}
+		if (ecrfFieldStatusEntryCriteria != null) {
+			ecrfFieldStatusEntryCriteria.addOrder(Order.asc("id"));
+		}
 	}
 
 	private static DetachedCriteria createEcrfFieldStatusEntryDetachedCriteria(org.hibernate.Criteria ecrfFieldStatusEntryCriteria, org.hibernate.Criteria ecrfFieldCriteria,

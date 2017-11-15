@@ -90,6 +90,9 @@ extends ECRFFieldValueDaoBase
 		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("position"));
 		}
+		if (ecrfFieldValueCriteria != null) {
+			ecrfFieldValueCriteria.addOrder(Order.asc("id"));
+		}
 	}
 
 	private static DetachedCriteria createEcrfFieldValueDetachedCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
