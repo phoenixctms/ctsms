@@ -24,3 +24,15 @@ After years of collaborative development with trial sites at the Medical Univers
 * want a turn-key system that’s operational out-of-the-box, instead of integrating multiple systems
 
 This GitHub repository contains all tiers of the main JEE web application. Transient artifacts generated using AndroMDA are excluded.
+
+Build and Install
+-----
+1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.2.1-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.2.1-amd64-netinst.iso)):
+  * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
+  * Select basic packages only (no database or webserver)
+2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
+```bash
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/install.sh -O ~/install.sh
+chmod 777 ~/install.sh
+sudo ~/install.sh
+```

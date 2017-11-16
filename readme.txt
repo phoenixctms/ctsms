@@ -130,6 +130,15 @@
     Please note that you may use the '-o' flag at any time to avoid
     having Maven downloading any SNAPSHOT dependencies.
 
+        edit: summary of important mvn commands:
+        
+        mvn -Peclipse -Dmaven.test.skip=true
+        mvn dependency:tree
+        mvn -f core/pom.xml -Dmaven.test.skip=true
+        mvn -f common/pom.xml -Dmaven.test.skip=true
+        mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
+        mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
+
         %> mvn
 
             simply builds all modules
@@ -144,20 +153,7 @@
             Must be used after dependency changes.
 
         %> mvn -Peclipse -Dmaven.test.skip=true
-        mvn -Dmaven.test.skip=true
-        mvn dependency:tree
-        mvn -f core/pom.xml -Dmaven.test.skip=true
-        mvn -f common/pom.xml -Dmaven.test.skip=true
-        mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
-        mvn andromdapp:schema -Dcreate from <your project>/core
-        
-        "C:\Program Files\PostgreSQL\9.1\bin\pg_dump" -U ctsms ctsms > "D:\tmp\dump.sql"
-        "C:\Program Files\PostgreSQL\9.1\bin\psql" -U ctsms ctsms < "D:\tmp\dump.sql"
-
-				"C:\Program Files\PostgreSQL\9.1\bin\psql" -U ctsms ctsms < "D:\workspaces\ctsms\core\db\schema-create.sql"
-				"C:\Program Files\PostgreSQL\9.1\bin\psql" -U ctsms ctsms < "D:\workspaces\ctsms\core\db\schema-drop.sql"
-
-
+            
             builds all modules and skips all automatic tests (i.e. surefire expected/actual)
 
         %> mvn -Dmaven.test.failure.ignore=true
