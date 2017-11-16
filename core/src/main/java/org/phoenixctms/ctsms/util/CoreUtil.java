@@ -129,19 +129,9 @@ public final class CoreUtil {
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid");
 	}
 
-	private final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
 	public final static HashSet<String> VO_VERSION_EQUALS_EXCLUDES = new HashSet<String>();
 	static {
-		VO_EQUALS_EXCLUDES.add("CourseOutVO.getPrecedingCourses");
-		VO_EQUALS_EXCLUDES.add("CriterionOutVO.getCriteria");
-		VO_EQUALS_EXCLUDES.add("InputFieldSelectionSetValueOutVO.getField");
-		VO_EQUALS_EXCLUDES.add("InventoryOutVO.getParent");
-		VO_EQUALS_EXCLUDES.add("ProbandListStatusEntryOutVO.getListEntry");
-		VO_EQUALS_EXCLUDES.add("ProbandOutVO.getParents");
-		VO_EQUALS_EXCLUDES.add("StaffOutVO.getParent");
-		VO_EQUALS_EXCLUDES.add("UserOutVO.getModifiedUser");
-		VO_EQUALS_EXCLUDES.add("UserOutVO.getIdentity");
-		VO_VERSION_EQUALS_EXCLUDES.addAll(VO_EQUALS_EXCLUDES);
+		VO_VERSION_EQUALS_EXCLUDES.addAll(CommonUtil.VO_EQUALS_EXCLUDES);
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getVersion");
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedUser");
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedTimestamp");

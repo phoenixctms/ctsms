@@ -33,6 +33,12 @@ Build and Install
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
 ```bash
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/install.sh -O ~/install.sh
-chmod 777 ~/install.sh
+chmod 744 ~/install.sh
 sudo ~/install.sh
+```
+The procedure will require internet conenctivity to download from debian, maven, cpan mirros and github. It will take around 2 hours to complete.
+3. You can now open a browser and log into the system using the link and credentials printed at last.
+4. If desired, populate the system with demo data:
+```bash
+ sudo -u ctsms /ctsms/dbtool.sh --load_demo_data
 ```

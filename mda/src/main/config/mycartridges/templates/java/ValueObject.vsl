@@ -31,6 +31,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import java.util.HashSet;
 import java.util.Collection;
 import java.util.Iterator;
+import org.phoenixctms.ctsms.util.CommonUtil;
 
 /**
 #if ($stringUtils.isBlank($class.getDocumentation("", 9999, false)))
@@ -526,24 +527,14 @@ $connectingEnd.getDocumentation("     * ")
         {
              return false;
         }
-#if (!$class.properties.empty)
-        $class.fullyQualifiedName rhs = ($class.fullyQualifiedName) object;
-#end
-        return new EqualsBuilder()
-#if($class.generalization)
-            .appendSuper(super.equals(object))
-#end
-#foreach($attr in $class.properties)
-            .append(this.${attr.getterName}(), rhs.${attr.getterName}())
-#end
-            .isEquals();
+        return equalsExcluding(this, ($class.fullyQualifiedName) object, CommonUtil.VO_EQUALS_EXCLUDES, false, false);
+
     }
 
     /**
      * @param object to compare this object against
      * @param excludes getter method names
      * @return boolean if equal
-     * @see Object${esc.hash}equals(Object)
      */
 #if ($enableAnnotations)
 ##if ($enableTemplating)
@@ -636,7 +627,7 @@ $connectingEnd.getDocumentation("     * ")
 #if($class.generalization)
             .appendSuper(super.compareTo(object))
 #end
-#foreach($attr in $class.properties)
+#foreach($attr in $class.attributes)
             .append(this.${attr.getterName}(),#if($enableTemplating) object#else myClass#end.${attr.getterName}())
 #end
             .toComparison();

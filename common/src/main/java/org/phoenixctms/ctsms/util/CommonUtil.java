@@ -91,6 +91,18 @@ public final class CommonUtil {
 		TRAILING
 	}
 
+	public final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
+	static {
+		VO_EQUALS_EXCLUDES.add("CourseOutVO.getPrecedingCourses");
+		VO_EQUALS_EXCLUDES.add("CriterionOutVO.getCriteria");
+		VO_EQUALS_EXCLUDES.add("InputFieldSelectionSetValueOutVO.getField");
+		VO_EQUALS_EXCLUDES.add("InventoryOutVO.getParent");
+		VO_EQUALS_EXCLUDES.add("ProbandListStatusEntryOutVO.getListEntry");
+		VO_EQUALS_EXCLUDES.add("ProbandOutVO.getParents");
+		VO_EQUALS_EXCLUDES.add("StaffOutVO.getParent");
+		VO_EQUALS_EXCLUDES.add("UserOutVO.getModifiedUser");
+		VO_EQUALS_EXCLUDES.add("UserOutVO.getIdentity");
+	}
 	private final static String UNKNOWN_LOCAL_HOST_NAME = "localhost";
 	public final static String LOCAL_HOST_NAME = getLocalHostName();
 	public final static String TIME_SEPARATOR = ":";
