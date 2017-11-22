@@ -375,6 +375,104 @@ PrimeFaces.widget.Spinner.prototype.setValue = function(value) {
   this.input.val(value);
 }
 
+PrimeFaces.widget.InputTextarea = PrimeFaces.widget.BaseWidget.extend({
+
+    init: function(cfg) {
+        this._super(cfg);
+
+        this.cfg.rowsDefault = this.jq.attr('rows');
+        this.cfg.colsDefault = this.jq.attr('cols');
+
+        //Visuals
+        PrimeFaces.skinInput(this.jq);
+
+        //AutoResize
+        if(this.cfg.autoResize) {
+            this.setupAutoResize();
+        }
+
+        if($.browser.msie) {
+        	this.jq.css('width','720px');
+        	this.jq.resizable();
+        }
+
+        //max length
+        if(this.cfg.maxlength) {
+            this.applyMaxlength();
+        }
+
+        //Client behaviors
+        if(this.cfg.behaviors) {
+            PrimeFaces.attachBehaviors(this.jq, this.cfg.behaviors);
+        }
+
+        //Counter
+        if(this.cfg.counter) {
+            var _self = this;
+            $(function() {
+                _self.counter = _self.cfg.counter ? $(PrimeFaces.escapeClientId(_self.cfg.counter)) : null;
+                _self.cfg.counterTemplate = _self.cfg.counterTemplate||'{0}';
+
+                _self.updateCounter();
+            });
+        }
+    },
+
+    setupAutoResize: function() {
+        var _self = this;
+
+        this.jq.keyup(function() {
+            _self.resize();
+        }).focus(function() {
+            _self.resize();
+        }).blur(function() {
+            _self.resize();
+        });
+    },
+
+    resize: function() {
+        var linesCount = 0,
+        lines = this.jq.val().split('\n');
+
+        for(var i = lines.length-1; i >= 0 ; --i) {
+            linesCount += Math.floor((lines[i].length / this.cfg.colsDefault) + 1);
+        }
+
+        var newRows = (linesCount >= this.cfg.rowsDefault) ? (linesCount + 1) : this.cfg.rowsDefault;
+
+        this.jq.attr('rows', newRows);
+    },
+
+    applyMaxlength: function() {
+        var _self = this;
+
+        this.jq.keyup(function(e) {
+            var value = _self.jq.val(),
+            length = value.length;
+
+            if(length > _self.cfg.maxlength) {
+                _self.jq.val(value.substr(0, _self.cfg.maxlength));
+            }
+
+            if(_self.counter) {
+                _self.updateCounter();
+            }
+        });
+    },
+
+    updateCounter: function() {
+        var value = this.jq.val(),
+        length = value.length;
+
+        if(this.counter) {
+            var remaining = this.cfg.maxlength - length,
+            remainingText = this.cfg.counterTemplate.replace('{0}', remaining);
+
+            this.counter.html(remainingText);
+        }
+    }
+});
+
 PrimeFaces.widget.InputTextarea.prototype.getValue = function() {
   return this.jq.val();
 }
@@ -397,7 +495,8 @@ PrimeFaces.widget.InputText = PrimeFaces.widget.BaseWidget.extend({
     PrimeFaces.skinInput(this.jq);
 
     //setTimeout(_highlightText.bind(null,this.jq),highlightDelay);
-    setTimeout(_highlightText,highlightDelay,this.jq);
+    var jq = this.jq;
+    setTimeout(function(){_highlightText(jq);},highlightDelay);
   }
 });
 
@@ -810,7 +909,8 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
 
                   if (this.dropdown.length == 0) {
                     //setTimeout(_highlightText.bind(null,this.input),highlightDelay);
-                    setTimeout(_highlightText,highlightDelay,this.input);
+                	var jq = this.jq;
+                	setTimeout(function(){_highlightText(jq);},highlightDelay);
                   }
 
                   this.input.data('primefaces-overlay-target', true).find('*').data('primefaces-overlay-target', true);
