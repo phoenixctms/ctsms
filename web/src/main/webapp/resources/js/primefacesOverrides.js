@@ -909,7 +909,7 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
 
                   if (this.dropdown.length == 0) {
                     //setTimeout(_highlightText.bind(null,this.input),highlightDelay);
-                	var jq = this.jq;
+                	var jq = this.input;
                 	setTimeout(function(){_highlightText(jq);},highlightDelay);
                   }
 
