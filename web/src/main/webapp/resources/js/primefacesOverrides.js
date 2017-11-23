@@ -391,7 +391,7 @@ PrimeFaces.widget.InputTextarea = PrimeFaces.widget.BaseWidget.extend({
             this.setupAutoResize();
         }
 
-        if($.browser.msie) {
+        if($.browser.msie || /Edge/.test(navigator.userAgent)) {
         	this.jq.css('width','720px');
         	this.jq.resizable();
         }
