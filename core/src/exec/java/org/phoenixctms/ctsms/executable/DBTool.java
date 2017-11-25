@@ -310,7 +310,8 @@ public class DBTool {
 					}
 					dbTool.getDepartmentManager().createUser(getDepartmentL10nKeyOptionValue(line, true), getDepartmentPassword(line),
 							line.getOptionValue(DBToolOptions.USERNAME_OPT), line.getOptionValue(DBToolOptions.PASSWORD_OPT),
-							line.getOptionValue(DBToolOptions.PERMISSION_PROFILES_OPT));
+							line.getOptionValue(DBToolOptions.PERMISSION_PROFILES_OPT),
+							line.getOptionValue(DBToolOptions.USER_LANG_OPT));
 				} else if (line.hasOption(DBToolOptions.LOAD_DEMO_DATA_OPT)) {
 					// dbTool.getServiceMethodExecutor().test(getAuthenticationOptionValue(line));
 

@@ -34,6 +34,7 @@ public final class DBToolOptions {
 	public static final String SYSTEMATICS_LANG_OPT = "sl";
 	public static final String OPS_CODE_REVISION_OPT = "ocr";
 	public static final String OPS_SYSTEMATICS_REVISION_OPT = "osr";
+	public static final String USER_LANG_OPT = "ul";
 	public static final String IMPORT_MIME_INVENTORY_OPT = "imi";
 	public static final String IMPORT_MIME_STAFF_OPT = "ims";
 	public static final String IMPORT_MIME_COURSE_OPT = "imc";
@@ -321,6 +322,7 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(VARIABLE_PERIOD_EXPLICIT_DAYS_OPT, "period_explicit_days", "time period in days", 1));
 		options.addOption(registerOptionalOption(PROBAND_LIST_STATUS_LOG_LEVEL_OPT, "proband_list_status_log_level", "proband list status log level", 1));
 		options.addOption(registerOptionalOption(ASP_REVISION_OPT, "asp_revision", "asp and substances catalogue revision", 1));
+		options.addOption(registerOptionalOption(USER_LANG_OPT, "user_lang", "user language", 1));
 	}
 
 	public static Option getTask(String opt) {

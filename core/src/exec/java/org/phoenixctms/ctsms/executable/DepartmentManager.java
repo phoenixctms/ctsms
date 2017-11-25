@@ -45,6 +45,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DepartmentManager {
 
+	private static String getDefaultLocale() {
+		return CommonUtil.localeToString(Locale.getDefault());
+	}
 	@Autowired
 	private DepartmentDao departmentDao;
 	@Autowired
@@ -63,6 +66,7 @@ public class DepartmentManager {
 	private static final boolean DEFAULT_DEPARTMENT_VISIBLE = true;
 	private static final boolean USER_ONE_TIME_LOGON = true;
 	private static final Pattern PROFILE_SEPARATOR_REGEXP = Pattern.compile(" *, *");
+
 	private JobOutput jobOutput;
 
 	public DepartmentManager() {
@@ -144,11 +148,17 @@ public class DepartmentManager {
 		jobOutput.println("department created");
 	}
 
-	public void createUser(String departmentL10nKey, String plainDepartmentPassword, String username, String password, String profileList) throws Exception {
+
+
+	public void createUser(String departmentL10nKey, String plainDepartmentPassword, String username, String password, String locale, String profileList) throws Exception {
 		jobOutput.println("department l10n key: " + departmentL10nKey);
 		jobOutput.println("username: " + username);
+		if (CommonUtil.isEmptyString(locale)) {
+			locale = getDefaultLocale();
+		}
+		jobOutput.println("langauge: " + locale);
 		jobOutput.println("permission profiles: " + profileList);
-		UserInVO newUser = getNewUser(ExecUtil.departmentL10nKeyToId(departmentL10nKey, departmentDao, jobOutput), username);
+		UserInVO newUser = getNewUser(ExecUtil.departmentL10nKeyToId(departmentL10nKey, departmentDao, jobOutput), username, locale);
 		PasswordInVO newPassword = getNewPassword(password);
 		ArrayList<PermissionProfile> profiles = checkProfileList(profileList);
 		UserOutVO user = toolsService.addUser(newUser, newPassword, plainDepartmentPassword);
@@ -166,9 +176,9 @@ public class DepartmentManager {
 		return newPassword;
 	}
 
-	private UserInVO getNewUser(Long departmentId, String name) throws Exception {
+	private UserInVO getNewUser(Long departmentId, String name, String locale) throws Exception {
 		UserInVO newUser = new UserInVO();
-		newUser.setLocale(CommonUtil.localeToString(Locale.getDefault()));
+		newUser.setLocale(locale); // CommonUtil.localeToString(Locale.getDefault()));
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
 		newUser.setLocked(false);
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
@@ -225,7 +235,9 @@ public class DepartmentManager {
 			in.nextLine();
 			String plainDepartmentPassword = ExecUtil.readPassword(in, "enter department password:");
 			System.out.print("enter new username:");
-			UserInVO newUser = getNewUser(departmentId, in.nextLine());
+			String username = in.nextLine();
+			System.out.print("enter user language [" + getDefaultLocale() + "]:");
+			UserInVO newUser = getNewUser(departmentId, username, in.nextLine());
 			printPasswordPolicy();
 			PasswordInVO newPassword = getNewPassword(ExecUtil.readPassword(in, "enter desired user password:"));
 			printPermissionProfiles();
