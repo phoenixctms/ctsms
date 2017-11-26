@@ -31,18 +31,19 @@ Build and Install
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
-  
+
    ```bash
+   sudo apt-get -y install wget ca-certificates
    wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/install.sh -O ~/install.sh
    chmod 744 ~/install.sh
    sudo ~/install.sh
    ```
-   
+
    The procedure will require internet connectivity to download from debian, maven, cpan mirros and github. It will take around 1-2 hours to complete.
-   
+
 3. You can now open a browser and log into the system using the link and credentials printed at last.
 4. If desired, populate the system with demo data:
-  
+
    ```bash
    sudo -u ctsms /ctsms/dbtool.sh --load_demo_data
    ```
