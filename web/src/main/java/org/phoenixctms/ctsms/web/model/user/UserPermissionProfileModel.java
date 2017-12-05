@@ -63,7 +63,7 @@ public class UserPermissionProfileModel implements Map<String, String> {
 			Iterator<UserPermissionProfileOutVO> userPermissionProfilesIt = userPermissionProfiles.iterator();
 			while (userPermissionProfilesIt.hasNext()) {
 				UserPermissionProfileOutVO out = userPermissionProfilesIt.next();
-				if (userId == out.getUser().getId()) {
+				if (userId == out.getUser().getId()) { // unboxed, ok
 					PermissionProfile profile = out.getProfile().getProfile();
 					PermissionProfileGroup group = out.getProfile().getProfileGroup().getProfileGroup();
 					UserPermissionProfileInVO in = userPermissionProfileMap.get(profile);

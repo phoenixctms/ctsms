@@ -220,7 +220,7 @@ public class EcrfBean extends ManagedBeanBase {
 	{
 		try {
 			if (cloneAddTrialId != null) {
-				if (isCloneAddTrialEnabled() || cloneAddTrialId == trialId) {
+				if (isCloneAddTrialEnabled() || cloneAddTrialId.equals(trialId)) {
 					ECRFOutVO clone = WebUtil.getServiceLocator().getTrialService().cloneEcrf(WebUtil.getAuthentication(), in.getId(), cloneAddTrialId);
 					ecrfModel.updateRowCount();
 					Messages.addLocalizedMessageClientId("cloneEcrfMessages", FacesMessage.SEVERITY_INFO, MessageCodes.CLONE_ADD_OPERATION_SUCCESSFUL, clone.getUniqueName());

@@ -2530,7 +2530,7 @@ extends ProbandServiceBase
 		if (trial != null) {
 			ServiceUtil.checkTrialLocked(trial);
 		}
-		if (paid == original.getPaid()) {
+		if (paid == original.getPaid()) { // unboxed, ok
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MONEY_TRANSFER_PAID_NOT_CHANGED);
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
