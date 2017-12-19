@@ -1432,12 +1432,12 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
 			target = null;
 #else
 			VOCacheContext cache = (VOCacheContext) getPrincipal();
-			if (cache != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+			if (cache != null && entity.getId() != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
 				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
 			} else {
 				target = new ${valueObjectRef.targetElement.fullyQualifiedName}();
 				this.${valueObjectRef.transformationMethodName}(entity, target);
-				if (cache != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				if (cache != null && entity.getId() != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
 				return target;
 			}
 #end
@@ -1460,12 +1460,12 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
 			target = null;
 #else
 			VOCacheContext cache = (VOCacheContext) getPrincipal();
-			if (cache != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
+			if (cache != null && entity.getId() != null && cache.voMapContainsKey(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId())) {
 				return ($valueObjectRef.targetElement.fullyQualifiedName) cache.voMapGet(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId());
 			} else {
 				target = new ${valueObjectRef.targetElement.fullyQualifiedName}();
 				this.${valueObjectRef.transformationMethodName}(entity, target, maxInstances);
-				if (cache != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
+				if (cache != null && entity.getId() != null) cache.voMapPut(${entity.fullyQualifiedName}.class,${valueObjectRef.targetElement.fullyQualifiedName}.class, entity.getId(), target);
 				return target;
 			}
 #end
