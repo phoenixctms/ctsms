@@ -578,6 +578,20 @@ public final class WebUtil {
 		return context.getApplication().createConverter(converterId);
 	}
 
+	public static String createViewUrl(Urls view, boolean relative, GetParamNames param, Long value) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		StringBuffer url = new StringBuffer();
+		if (!relative) {
+			url.append(request.getScheme()).append("://").append(request.getServerName()).append(":").append(request.getServerPort());
+		}
+		url.append(view.toString(request));
+		if (param != null && value != null) {
+			url.append('?').append(param.toString()).append("=").append(Long.toString(value));
+		}
+		return url.toString();
+	}
+
 	public static String escapeHtml(String string) {
 		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(string);
 	}
@@ -1328,6 +1342,7 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static AspVO getAsp(Long aspId) {
 		if (aspId != null) {
 			try {
@@ -1341,7 +1356,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
 
 	public static AspAtcCodeVO getAspAtcCode(Long aspAtcCodeId) {
 		if (aspAtcCodeId != null) {
@@ -2162,6 +2176,8 @@ public final class WebUtil {
 		return null;
 	}
 
+
+
 	public static ECRFProgressVO getEcrfProgress(Long ecrfId, Long listEntryId, boolean sectionDetail) {
 		if (ecrfId != null && listEntryId != null) {
 			try {
@@ -2175,8 +2191,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-
 
 	public static ECRFProgressSummaryVO getEcrfProgressSummary(Long listEntryId, boolean ecrfDetail, boolean sectionDetail) {
 		if (listEntryId != null) {
@@ -2255,6 +2269,7 @@ public final class WebUtil {
 		return result;
 	}
 
+
 	public static ArrayList<SelectItem> getEventImportances() {
 		ArrayList<SelectItem> importances;
 		Collection<EventImportanceVO> importanceVOs = null;
@@ -2279,7 +2294,6 @@ public final class WebUtil {
 		}
 		return importances;
 	}
-
 
 	public static String getExpirationDueInString(Date today, Date expiration) {
 		Boolean expired = getExpired(today, expiration);
@@ -3514,6 +3528,7 @@ public final class WebUtil {
 		return "";
 	}
 
+
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
 		ArrayList<SelectItem> trials;
@@ -3540,18 +3555,10 @@ public final class WebUtil {
 		return trials;
 	}
 
-
 	public static String getRemoteHost() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
 			return getRemoteHost((HttpServletRequest) context.getExternalContext().getRequest());
-		}
-		return null;
-	}
-
-	public static String getRemoteHost(HttpServletRequest request) {
-		if (request != null) {
-			return request.getRemoteHost();
 		}
 		return null;
 	}
@@ -3562,6 +3569,17 @@ public final class WebUtil {
 	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
 	// }
 	// return null;
+	// }
+
+	public static String getRemoteHost(HttpServletRequest request) {
+		if (request != null) {
+			return request.getRemoteHost();
+		}
+		return null;
+	}
+
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
 	// }
 
 	public static Long getSelectionSetValueCount(Long inputFieldId) {
@@ -3581,10 +3599,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
-	// }
 
 	public static String getSeriesColors(ArrayList<Color> colors) { // , ColorOpacity alpha) {
 		if (colors != null && colors.size() > 0) {
@@ -3922,6 +3936,17 @@ public final class WebUtil {
 		return null;
 	}
 
+	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getTotal();
+	// }
+	// }
+	// return result;
+	// }
+
 	public static ArrayList<TimeZone> getTimeZones() {
 		Collection<String> timeZoneIDs = null;
 		ArrayList<TimeZone> timeZones;
@@ -3944,17 +3969,6 @@ public final class WebUtil {
 		}
 		return timeZones;
 	}
-
-	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getTotal();
-	// }
-	// }
-	// return result;
-	// }
 
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
@@ -4103,6 +4117,17 @@ public final class WebUtil {
 		// return statusType;
 	}
 
+	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getUnresolved();
+	// }
+	// }
+	// return result;
+	// }
+
 	public static Long getTrialTagValueCount(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -4116,17 +4141,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getUnresolved();
-	// }
-	// }
-	// return result;
-	// }
 
 	public static UserOutVO getUser() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
@@ -4278,6 +4292,7 @@ public final class WebUtil {
 		return categories;
 	}
 
+
 	public static ArrayList<SelectItem> getVisibleProbandCategories(Boolean person, Boolean animal, Long categoryId) {
 		ArrayList<SelectItem> categories;
 		Collection<ProbandCategoryVO> categoryVOs = null;
@@ -4302,7 +4317,6 @@ public final class WebUtil {
 		}
 		return categories;
 	}
-
 
 	public static ArrayList<SelectItem> getVisibleSponsoringTypes(Long typeId) {
 		ArrayList<SelectItem> sponsoringTypes;
@@ -4472,6 +4486,8 @@ public final class WebUtil {
 		return null;
 	}
 
+
+
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4489,8 +4505,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-
 
 	public static VisitTypeVO getVisitType(Long visitTypeId) {
 		// VisitTypeVO visitType = null; // (VisitTypeVO) getSelectionSetServiceCache(VisitTypeVO.class, id);
@@ -4531,6 +4545,10 @@ public final class WebUtil {
 		return Messages.getString(MessageCodes.INVALID_INPUT_FIELD_PICKED);
 	}
 
+	// public static String inputFieldVariableValueToJson(Object src) {
+	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
+	// }
+
 	public static String inputFieldOutVOToString(InputFieldOutVO inputField) {
 		String result = CommonUtil.inputFieldOutVOToString(inputField);
 		if (result != null) {
@@ -4539,10 +4557,6 @@ public final class WebUtil {
 			return getNoInputFieldPickedMessage();
 		}
 	}
-
-	// public static String inputFieldVariableValueToJson(Object src) {
-	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-	// }
 
 	public static String inventoryIdToName(Long id) {
 		if (id == null) {
@@ -4758,6 +4772,12 @@ public final class WebUtil {
 		return null;
 	}
 
+	// public static long perfDebug(String label, long t1) {
+	// long t2 = System.currentTimeMillis();
+	// System.out.println(label + (t2 - t1) + " ms");
+	// return t2;
+	// }
+
 	public static void logout() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null) {
@@ -4765,10 +4785,11 @@ public final class WebUtil {
 		}
 	}
 
-	// public static long perfDebug(String label, long t1) {
-	// long t2 = System.currentTimeMillis();
-	// System.out.println(label + (t2 - t1) + " ms");
-	// return t2;
+	// private static void putSelectionSetServiceCache(Object key, Object value) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// sessionScopeBean.putSelectionSetServiceCache(key, value);
+	// }
 	// }
 
 	public static String probandIdToName(Long id) {
@@ -4787,13 +4808,6 @@ public final class WebUtil {
 		return Messages.getString(MessageCodes.INVALID_PROBAND_PICKED);
 	}
 
-	// private static void putSelectionSetServiceCache(Object key, Object value) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// sessionScopeBean.putSelectionSetServiceCache(key, value);
-	// }
-	// }
-
 	public static String probandOutVOToString(ProbandOutVO proband) {
 		String result = CommonUtil.probandOutVOToString(proband);
 		if (result != null) {
@@ -4801,13 +4815,6 @@ public final class WebUtil {
 		} else {
 			return getNoProbandPickedMessage();
 		}
-	}
-
-	public static void publishException(Exception e) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(context, e);
-		eventContext.getAttributes().put(EVENT_CONTEXT_VIEW_ID, context.getViewRoot().getViewId());
-		context.getApplication().publishEvent(context, ExceptionQueuedEvent.class, eventContext);
 	}
 
 	// public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {
@@ -4818,6 +4825,13 @@ public final class WebUtil {
 	// }
 	// return builder;
 	// }
+
+	public static void publishException(Exception e) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(context, e);
+		eventContext.getAttributes().put(EVENT_CONTEXT_VIEW_ID, context.getViewRoot().getViewId());
+		context.getApplication().publishEvent(context, ExceptionQueuedEvent.class, eventContext);
+	}
 
 	public static String quoteJSString(String value, boolean quotes) {
 		StringBuilder sb;
@@ -4854,6 +4868,8 @@ public final class WebUtil {
 		setSessionTimeout(null);
 	}
 
+
+
 	public static void setSessionTimeout(HttpSession session) {
 		int maxInactiveInterval;
 		if (isTrustedHost()) {
@@ -4887,8 +4903,6 @@ public final class WebUtil {
 		}
 		return Messages.getString(MessageCodes.INVALID_STAFF_PICKED);
 	}
-
-
 
 	public static String staffOutVOToString(StaffOutVO staff) {
 		String result = CommonUtil.staffOutVOToString(staff);

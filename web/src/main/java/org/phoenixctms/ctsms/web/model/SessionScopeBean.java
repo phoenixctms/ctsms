@@ -171,7 +171,7 @@ public class SessionScopeBean {
 			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
 			auth.setPassword(newPassword);
 			initSets();
-			logout();
+			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getUser().getId()), true));
 		} catch (ServiceException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -1022,12 +1022,17 @@ public class SessionScopeBean {
 
 	public synchronized void logout() {
 		FacesContext context = FacesContext.getCurrentInstance();
+		logout(WebUtil.getRefererBase64((HttpServletRequest) context.getExternalContext().getRequest()));
+	}
+
+	private synchronized void logout(String redirectUrl) {
+		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().invalidateSession();
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
 			requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
-			requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), WebUtil.getRefererBase64((HttpServletRequest) context.getExternalContext().getRequest()));
+			requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
 		}
 	}
 
