@@ -182,6 +182,7 @@ public final class WebUtil {
 	public static final String SCHEDULE_EVENT_ICON_STYLECLASS = "ctsms-event-icon";
 	public static final String COLLISION_ICON_STYLECLASS = "ctsms-icon-warning";
 	public static final String MENUBAR_ICON_STYLECLASS = "ctsms-menubar-icon";
+	public static final String MENU_BOLD_STYLECLASS = "ctsms-menu-bold";
 	public final static String ID_SEPARATOR_STRING = ",";
 	public final static Pattern ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ID_SEPARATOR_STRING));
 

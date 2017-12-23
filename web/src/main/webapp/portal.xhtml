@@ -126,6 +126,7 @@
 												value=" | " />
 											<h:outputLink
 												value="#"
+												style="#{menuItem.icon.contains('ctsms-menu-bold') ? 'font-weight:bold;' : ''}"
 												onclick="#{menuItem.onclick}">
 												<h:outputText value="#{menuItem.value}" />
 											</h:outputLink>

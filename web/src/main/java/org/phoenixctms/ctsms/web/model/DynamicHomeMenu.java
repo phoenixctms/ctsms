@@ -185,7 +185,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 					subMenu.getChildren().add(maintenanceRemindersMenuItem);
 					MenuItem bookingScheduleMenuItem = new MenuItem();
 					bookingScheduleMenuItem.setValue(Messages.getString(MessageCodes.BOOKING_SCHEDULE_MENU_ITEM_LABEL));
-					bookingScheduleMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-calendar");
+					bookingScheduleMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-calendar " + WebUtil.MENU_BOLD_STYLECLASS);
 					bookingScheduleMenuItem.setOnclick("openInventoryBookingSchedule()");
 					bookingScheduleMenuItem.setUrl("#");
 					bookingScheduleMenuItem.setId("bookingScheduleMenuItem");
