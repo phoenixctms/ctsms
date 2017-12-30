@@ -30,6 +30,7 @@ import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -146,6 +147,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	private ECRFStatusEntryVO ecrfStatus;
 	// private Collection<ProbandAddressOutVO> probandAddresses;
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
+	private Collection<ProbandGroupOutVO> probandGroups;
 	private Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues;
 	private Paginator paginator;
 	private ArrayList<ECRFFieldValueInVO> ecrfFieldValuesIn;
@@ -264,6 +266,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				ProbandListEntryOutVO listEntry = null;
 				Collection<ProbandListEntryTagValueJsonVO> tagValues = null;
 				Collection<VisitScheduleItemOutVO> visitSchedule = null;
+				Collection<ProbandGroupOutVO> groups = null;
 				ArrayList<ECRFFieldValueJsonVO> out = new ArrayList<ECRFFieldValueJsonVO>(jsEcrfFieldValuesOut.size());
 				// prepare ecrfFieldVOsMap of js variables
 				HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap = new HashMap<Long, ECRFFieldOutVO>(ecrfFieldValuesOut.size());
@@ -316,15 +319,18 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 							// addresses = loadProbandAddresses(listEntry.getProband().getId());
 							tagValues = loadProbandListEntryTagValues(listEntry);
 							visitSchedule = loadVisitScheduleItems(listEntry);
+							groups = loadProbandGroups(probandListEntry);
 						} else {
 							// addresses = probandAddresses;
 							tagValues = probandListEntryTagValues;
 							visitSchedule = visitScheduleItems;
+							groups = probandGroups;
 						}
 					} else {
 						// addresses = loadProbandAddresses(listEntry.getProband().getId());
 						tagValues = loadProbandListEntryTagValues(listEntry);
 						visitSchedule = loadVisitScheduleItems(listEntry);
+						groups = loadProbandGroups(probandListEntry);
 					}
 				}
 				if (!CommonUtil.isEmptyString(deltaErrorMessageId)) {
@@ -341,6 +347,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
+				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
@@ -703,6 +710,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		// probandAddresses = loadProbandAddresses(probandListEntry == null ? null : probandListEntry.getProband().getId());
 		probandListEntryTagValues = loadProbandListEntryTagValues(probandListEntry);
 		visitScheduleItems = loadVisitScheduleItems(probandListEntry);
+		probandGroups = loadProbandGroups(probandListEntry);
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 	}
@@ -789,6 +797,22 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			initSets();
 		}
 		return ERROR_OUTCOME;
+	}
+
+	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
+		if (listEntry != null && listEntry.getGroup() == null) {
+			try {
+				return WebUtil
+						.getServiceLocator()
+						.getTrialService().getProbandGroupList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), null);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
 	}
 
 	private Collection<ProbandListEntryTagValueJsonVO> loadProbandListEntryTagValues(ProbandListEntryOutVO listEntry) {

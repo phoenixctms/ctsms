@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
@@ -131,6 +132,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private List<Object[]> paddedInputModels;
 
 	// private Collection<VisitScheduleItemOutVO> visitScheduleItems;
+	private Collection<ProbandGroupOutVO> probandGroups;
 
 	public ProbandListEntryTagValueBean() {
 		super();
@@ -197,6 +199,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
 			if (tagValuesIn != null && tagValuesOut != null && jsTagValuesOut != null && jsTagValuesOut.size() > 0) {
 				ProbandListEntryOutVO listEntry = null;
+				Collection<ProbandGroupOutVO> groups = null;
 				ArrayList<ProbandListEntryTagValueJsonVO> out = new ArrayList<ProbandListEntryTagValueJsonVO>(jsTagValuesOut.size());
 				HashMap<Long, ProbandListEntryTagOutVO> tagVOsMap = new HashMap<Long, ProbandListEntryTagOutVO>(tagValuesOut.size());
 				Iterator<ProbandListEntryTagValueOutVO> tagIt = tagValuesOut.iterator();
@@ -216,20 +219,23 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 						out.add(jsTagValue);
 					}
 				}
-				// if (listEntry != null) {
-				// if (probandListEntry != null) {
-				// if (listEntry.getProband().getId() != probandListEntry.getProband().getId()) {
-				// addresses = loadProbandAddresses(listEntry.getProband().getId());
-				// visitSchedule = loadVisitScheduleItems(listEntry);
-				// } else {
-				// addresses = probandAddresses;
-				// visitSchedule = visitScheduleItems;
-				// }
-				// } else {
-				// addresses = loadProbandAddresses(listEntry.getProband().getId());
-				// visitSchedule = loadVisitScheduleItems(listEntry);
-				// }
-				// }
+				if (listEntry != null) {
+					if (probandListEntry != null) {
+						if (listEntry.getProband().getId() != probandListEntry.getProband().getId()) {
+							// addresses = loadProbandAddresses(listEntry.getProband().getId());
+							// visitSchedule = loadVisitScheduleItems(listEntry);
+							groups = loadProbandGroups(probandListEntry);
+						} else {
+							// addresses = probandAddresses;
+							// visitSchedule = visitScheduleItems;
+							groups = probandGroups;
+						}
+					} else {
+						// addresses = loadProbandAddresses(listEntry.getProband().getId());
+						// visitSchedule = loadVisitScheduleItems(listEntry);
+						groups = loadProbandGroups(probandListEntry);
+					}
+				}
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
 				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_BASE64.toString(),
 				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getProband() : null), false));
@@ -239,6 +245,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
 				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
+				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
@@ -407,6 +414,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		probandListEntry = WebUtil.getProbandListEntry(probandListEntryId);
 		// probandAddresses = loadProbandAddresses(probandListEntry == null ? null : probandListEntry.getProband().getId());
 		// visitScheduleItems = loadVisitScheduleItems(probandListEntry);
+		probandGroups = loadProbandGroups(probandListEntry);
 		updateInputModelModifiedAnnotations();
 	}
 
@@ -493,6 +501,22 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	// }
 	// return null;
 	// }
+
+	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
+		if (listEntry != null && listEntry.getGroup() == null) {
+			try {
+				return WebUtil
+						.getServiceLocator()
+						.getTrialService().getProbandGroupList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), null);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
 
 	private void portionTagValues(ProbandListEntryTagValuesOutVO tagValues) {
 		if (tagValues != null) {

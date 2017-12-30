@@ -594,6 +594,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["$listEntry"] = inputFieldVars.probandListEntry;
 		//mask["$visitSchedule"] = _cloneJSON( inputFieldVars.visitScheduleItems);
 		mask["$visitSchedule"] = inputFieldVars.visitScheduleItems;
+		mask["$probandGroups"] = inputFieldVars.probandGroups;
 		//mask["$activeUser"] = _cloneJSON( inputFieldVars.activeUser);
 		mask["$activeUser"] = inputFieldVars.activeUser;
 		mask["$locale"] = inputFieldVars.locale;
@@ -1482,6 +1483,9 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64)) {
 			inputFieldVars.visitScheduleItems = _decode(args[AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64]);
+		}
+		if (_testPropertyExists(args, AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64)) {
+			inputFieldVars.probandGroups = _decode(args[AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64]);
 		}
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_ACTIVE_USER_BASE64)) {
 			inputFieldVars.activeUser = _decode(args[AJAX_INPUT_FIELD_ACTIVE_USER_BASE64]);

@@ -16,6 +16,7 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
@@ -47,6 +48,7 @@ public class FieldCalculation {
 
 	private final static String AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64 = "inputFieldProbandListEntryBase64";
 	private final static String AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64 = "inputFieldVisitScheduleItemsBase64";
+	private final static String AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64 = "inputFieldProbandGroupsBase64";
 	private final static String AJAX_INPUT_FIELD_ACTIVE_USER_BASE64 = "activeUserBase64";
 	private final static String AJAX_INPUT_FIELD_LOCALE = "inputFieldLocale";
 	private final static String AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64 = "inputFieldVariableValuesBase64";
@@ -232,6 +234,10 @@ public class FieldCalculation {
 
 	public void setProbandAddresses(Collection<ProbandAddressOutVO> addresses) {
 		args.put(AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64, encodeVO(addresses));
+	}
+
+	public void setProbandGroups(Collection<ProbandGroupOutVO> probandGroups) {
+		args.put(AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64, encodeVO(probandGroups));
 	}
 
 	public void setProbandListEntry(ProbandListEntryOutVO listEntry) {

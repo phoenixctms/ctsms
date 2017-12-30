@@ -154,6 +154,7 @@ var AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64 = 'inputFieldProbandAddressesBase6
 //var AJAX_INPUT_FIELD_LAST_PROBAND_LIST_STATUS_ENTRY_BASE64 = 'inputFieldLastProbandListStatusEntryBase64';
 var AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64 = 'inputFieldProbandListEntryBase64';
 var AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64 = 'inputFieldVisitScheduleItemsBase64';
+var AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64 = 'inputFieldProbandGroupsBase64';
 var AJAX_INPUT_FIELD_ACTIVE_USER_BASE64 = 'activeUserBase64';
 var AJAX_INPUT_FIELD_LOCALE = "inputFieldLocale";
 

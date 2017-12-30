@@ -831,10 +831,15 @@ extends TrialServiceBase
 		}
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		Collection visitScheduleItems = null;
+		Collection probandGroups = null;
 		if (listEntry.getGroup() != null) {
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(), null, null);
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		} else {
+			ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
+			probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
+			probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
 		}
 		// ProbandAddressDao addressDao = this.getProbandAddressDao();
 		// Collection probandAddresses = addressDao.findByProband(listEntry.getProband().getId(), null, null, null, null);
@@ -884,6 +889,7 @@ extends TrialServiceBase
 		// fieldCalculation.setProbandAddresses(probandAddresses);
 		fieldCalculation.setProbandListEntryTagValues(probandListEntryTagValues);
 		fieldCalculation.setVisitScheduleItems(visitScheduleItems);
+		fieldCalculation.setProbandGroups(probandGroups);
 		fieldCalculation.setECRFFieldInputFieldVariableValues(jsValues);
 
 		Exception scriptException = null;
