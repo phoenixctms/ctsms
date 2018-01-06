@@ -176,8 +176,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		selectionSetValueIn.setLocalized(Boolean.parseBoolean(getLocalized(values)));
 		selectionSetValueIn.setValue(value);
 		selectionSetValueIn.setPreset(Boolean.parseBoolean(getPreset(values)));
-		selectionSetValueIn.setInkRegions(CommonUtil.stringToInkValue(getInkRegions(values)));
-		selectionSetValueIn.setStrokesId(getStrokesId(values));
+		selectionSetValueIn.setInkRegions(CommonUtil.isEmptyString(getInkRegions(values)) ? null : CommonUtil.stringToInkValue(getInkRegions(values)));
+		selectionSetValueIn.setStrokesId(CommonUtil.isEmptyString(getStrokesId(values)) ? null : getStrokesId(values));
 		Set<InputFieldSelectionSetValueInVO> selectionSetValues;
 		if (selectionSetValueMap.containsKey(fieldName)) {
 			selectionSetValues = selectionSetValueMap.get(fieldName);
