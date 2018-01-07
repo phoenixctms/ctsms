@@ -447,7 +447,7 @@
 										itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
-										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,toolbar"
+										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,trialStatusType_ecrfValueInputEnabled_message,toolbar"
 										listener="#{trialBean.handleStatusTypeChange}" />
 								</p:selectOneMenu>
 								<p:tooltip
@@ -473,6 +473,9 @@
 								<h:outputText
 									value="#{trialBean.trialStatusType.inquiryValueInputEnabled ? triallabels.trial_status_inquiry_value_input_enabled_message : triallabels.trial_status_inquiry_value_input_disabled_message}"
 									id="trialStatusType_inquiryValueInputEnabled_message" />
+								<h:outputText
+									value="#{trialBean.trialStatusType.ecrfValueInputEnabled ? triallabels.trial_status_ecrf_value_input_enabled_message : triallabels.trial_status_ecrf_value_input_disabled_message}"
+									id="trialStatusType_ecrfValueInputEnabled_message" />
 							</h:panelGrid>
 							<h:outputLabel />
 							<h:outputLabel
