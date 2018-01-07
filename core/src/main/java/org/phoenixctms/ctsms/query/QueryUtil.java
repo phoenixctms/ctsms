@@ -95,8 +95,12 @@ public final class QueryUtil {
 		}
 	}
 
-	private final static HashMap<String, ArrayList<StaticCriterionTerm>> staticCriterionTermsMap = new HashMap<String, ArrayList<StaticCriterionTerm>>();
+	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
+	private final static HashMap<String, ArrayList<StaticCriterionTerm>> FIXED_CRITERION_TERMS_MAP = new HashMap<String, ArrayList<StaticCriterionTerm>>();
 	static {
+		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
+		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
+
 		// addPropertyCriterionTerms("proband.diagnoses.code",
 		// "proband.diagnoses.code.revision", "{0} = ?",
 		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
@@ -171,11 +175,11 @@ public final class QueryUtil {
 
 	private static void addPropertyCriterionTerms(String propertyPath, String termProperty, String termFormat, QueryParameterValue... bindParams) {
 		ArrayList<StaticCriterionTerm> propertyCriterionTerms;
-		if (staticCriterionTermsMap.containsKey(propertyPath)) {
-			propertyCriterionTerms = staticCriterionTermsMap.get(propertyPath);
+		if (FIXED_CRITERION_TERMS_MAP.containsKey(propertyPath)) {
+			propertyCriterionTerms = FIXED_CRITERION_TERMS_MAP.get(propertyPath);
 		} else {
 			propertyCriterionTerms = new ArrayList<StaticCriterionTerm>();
-			staticCriterionTermsMap.put(propertyPath, propertyCriterionTerms);
+			FIXED_CRITERION_TERMS_MAP.put(propertyPath, propertyCriterionTerms);
 		}
 		propertyCriterionTerms.add(new StaticCriterionTerm(termProperty, termFormat, new ArrayList<QueryParameterValue>(Arrays.asList(bindParams))));
 	}
@@ -248,11 +252,11 @@ public final class QueryUtil {
 			AssociationPath propertyNameAssociationPath, ArrayList<QueryParameterValue> queryValues, Class rootEntityClass, String rootEntityName,
 			HashMap<String, AssociationPath> explicitJoinsMap, HashMap<String, Class> propertyClassMap) {
 		String propertyPath = propertyNameAssociationPath.getPathString();
-		if (staticCriterionTermsMap.containsKey(propertyPath)) {
+		if (FIXED_CRITERION_TERMS_MAP.containsKey(propertyPath)) {
 			StringBuilder newTerm = new StringBuilder("((");
 			newTerm.append(hqlTerm);
 			newTerm.append(") and (");
-			Iterator<StaticCriterionTerm> it = staticCriterionTermsMap.get(propertyPath).iterator();
+			Iterator<StaticCriterionTerm> it = FIXED_CRITERION_TERMS_MAP.get(propertyPath).iterator();
 			while (it.hasNext()) {
 				StaticCriterionTerm term = it.next();
 				newTerm.append("(");
@@ -269,7 +273,11 @@ public final class QueryUtil {
 		return hqlTerm;
 	}
 
-	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value) {
+	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value,
+			String orPropertyName, Class orPropertyClass) {
+		if (!CommonUtil.isEmptyString(orPropertyName)) {
+			hqlWhereClause.append("(");
+		}
 		if (propertyClass.equals(String.class)) {
 			hqlWhereClause.append("lower(");
 			hqlWhereClause.append(propertyName);
@@ -388,6 +396,11 @@ public final class QueryUtil {
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
+		}
+		if (!CommonUtil.isEmptyString(orPropertyName)) {
+			hqlWhereClause.append(" or ");
+			applyFilter(hqlWhereClause, queryValues, orPropertyName, orPropertyClass, value, null, null);
+			hqlWhereClause.append(")");
 		}
 	}
 
@@ -944,18 +957,18 @@ public final class QueryUtil {
 							case TRUE:
 								hqlTerm.append("1 = 1"); // https://forum.hibernate.org/viewtopic.php?f=1&t=974534
 								break;
-							// case IS_ID_EQ_ENTITY_ID:
-							// hqlTerm.append(propertyName);
-							// hqlTerm.append(".id = ");
-							// hqlTerm.append(entityName);
-							// hqlTerm.append(".id");
-							// break;
-							// case IS_ID_NE_ENTITY_ID:
-							// hqlTerm.append(propertyName);
-							// hqlTerm.append(".id != ");
-							// hqlTerm.append(entityName);
-							// hqlTerm.append(".id");
-							// break;
+								// case IS_ID_EQ_ENTITY_ID:
+								// hqlTerm.append(propertyName);
+								// hqlTerm.append(".id = ");
+								// hqlTerm.append(entityName);
+								// hqlTerm.append(".id");
+								// break;
+								// case IS_ID_NE_ENTITY_ID:
+								// hqlTerm.append(propertyName);
+								// hqlTerm.append(".id != ");
+								// hqlTerm.append(entityName);
+								// hqlTerm.append(".id");
+								// break;
 							case HOUR_EQ:
 								hqlTerm.append("hour(");
 								hqlTerm.append(propertyName);
@@ -1041,6 +1054,17 @@ public final class QueryUtil {
 					Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
 					AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 					String filterField = aliasPropertyName(entityClass, filterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
+					AssociationPath altFilterFieldAssociationPath = null;
+					String altFilterField = null;
+					Class pathClass = propertyClassMap.get(filterFieldAssociationPath.getPathString());
+					if (pathClass != null) {
+						String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR
+								+ filterFieldAssociationPath.getPropertyName());
+						if (!CommonUtil.isEmptyString(altFilter)) {
+							altFilterFieldAssociationPath = new AssociationPath(filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+							altFilterField = aliasPropertyName(entityClass, altFilterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
+						}
+					}
 					if (firstFilter) {
 						if (whereAppended) {
 							hqlWhereClause.append(" and (");
@@ -1052,7 +1076,8 @@ public final class QueryUtil {
 					} else {
 						hqlWhereClause.append(" and ");
 					}
-					applyFilter(hqlWhereClause, queryValues, filterField, propertyClassMap.get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue());
+					applyFilter(hqlWhereClause, queryValues, filterField, propertyClassMap.get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
+							altFilterField, altFilterFieldAssociationPath != null ? propertyClassMap.get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()) : null);
 					if (!filterIt.hasNext()) {
 						hqlWhereClause.append(")");
 					}

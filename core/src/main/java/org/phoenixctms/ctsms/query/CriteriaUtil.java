@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -47,6 +48,13 @@ public final class CriteriaUtil {
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("logicalPath");
 	}
 
+	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
+
+	static {
+		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
+		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
+	}
+
 	private static <T> void addReminderItem(ArrayList<T> resultSet, ReminderEntityAdapter reminderItem, Date reminderStart, Boolean notify) { // , boolean checkDismissed) {
 		if (!reminderItem.isDismissable() || !reminderItem.isRecurrenceDismissed(reminderStart)) {// !(reminderItem.isDismissed() && reminderStart.compareTo(new
 			// Date(reminderItem.getDismissedTimestamp().getTime())) <= 0)) {
@@ -58,6 +66,21 @@ public final class CriteriaUtil {
 				resultSet.add((T) reminderItem.getItem());
 			}
 		}
+	}
+
+	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value) throws Exception {
+
+		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
+		if (pathClass != null) {
+			String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
+			if (!CommonUtil.isEmptyString(altFilter)) {
+				AssociationPath altFilterFieldAssociationPath = new AssociationPath(filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+				criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
+				return applyFilter(altFilterFieldAssociationPath.getPropertyName(),
+						criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, null);
+			}
+		}
+		return null;
 	}
 
 	public static void applyClosedIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
@@ -114,62 +137,62 @@ public final class CriteriaUtil {
 		}
 	}
 
-	private static void applyFilter(Criteria criteria, String propertyName, Class propertyClass, String value) throws Exception {
+	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or) throws Exception {
 		if (propertyClass.equals(String.class)) {
 			if (EXACT_STRING_FILTER_ENTITY_FIELDS.contains(propertyName)) {
-				criteria.add(Restrictions.eq(propertyName, new String(value)));
+				return applyOr(Restrictions.eq(propertyName, new String(value)),or);
 			} else {
-				criteria.add(Restrictions.ilike(propertyName, new String(value), MatchMode.ANYWHERE));
+				return applyOr(Restrictions.ilike(propertyName, new String(value), MatchMode.ANYWHERE),or);
 			}
 		} else if (propertyClass.equals(Long.class)) {
-			criteria.add(Restrictions.eq(propertyName, new Long(value)));
+			return applyOr(Restrictions.eq(propertyName, new Long(value)),or);
 		} else if (propertyClass.equals(java.lang.Long.TYPE)) {
-			criteria.add(Restrictions.eq(propertyName, Long.parseLong(value)));
+			return applyOr(Restrictions.eq(propertyName, Long.parseLong(value)),or);
 		} else if (propertyClass.equals(Integer.class)) {
-			criteria.add(Restrictions.eq(propertyName, new Integer(value)));
+			return applyOr(Restrictions.eq(propertyName, new Integer(value)),or);
 		} else if (propertyClass.equals(java.lang.Integer.TYPE)) {
-			criteria.add(Restrictions.eq(propertyName, Integer.parseInt(value)));
+			return applyOr(Restrictions.eq(propertyName, Integer.parseInt(value)),or);
 		} else if (propertyClass.equals(Boolean.class)) {
-			criteria.add(Restrictions.eq(propertyName, new Boolean(value)));
+			return applyOr(Restrictions.eq(propertyName, new Boolean(value)),or);
 		} else if (propertyClass.equals(java.lang.Boolean.TYPE)) {
-			criteria.add(Restrictions.eq(propertyName, Boolean.parseBoolean(value)));
+			return applyOr(Restrictions.eq(propertyName, Boolean.parseBoolean(value)),or);
 		} else if (propertyClass.equals(Float.class)) {
-			criteria.add(Restrictions.eq(propertyName, new Float(value)));
+			return applyOr(Restrictions.eq(propertyName, new Float(value)),or);
 		} else if (propertyClass.equals(java.lang.Float.TYPE)) {
-			criteria.add(Restrictions.eq(propertyName, Float.parseFloat(value)));
+			return applyOr(Restrictions.eq(propertyName, Float.parseFloat(value)),or);
 		} else if (propertyClass.equals(Double.class)) {
-			criteria.add(Restrictions.eq(propertyName, new Double(value)));
+			return applyOr(Restrictions.eq(propertyName, new Double(value)),or);
 		} else if (propertyClass.equals(java.lang.Double.TYPE)) {
-			criteria.add(Restrictions.eq(propertyName, Double.parseDouble(value)));
+			return applyOr(Restrictions.eq(propertyName, Double.parseDouble(value)),or);
 		} else if (propertyClass.equals(Date.class)) {
-			criteria.add(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN)));
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN)),or);
 		} else if (propertyClass.equals(Timestamp.class)) {
 			Date date = CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN);
-			criteria.add(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))));
+			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))),or);
 		} else if (propertyClass.equals(VariablePeriod.class)) {
-			criteria.add(Restrictions.eq(propertyName, VariablePeriod.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, VariablePeriod.fromString(value)),or);
 		} else if (propertyClass.equals(AuthenticationType.class)) {
-			criteria.add(Restrictions.eq(propertyName, AuthenticationType.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, AuthenticationType.fromString(value)),or);
 		} else if (propertyClass.equals(Sex.class)) {
-			criteria.add(Restrictions.eq(propertyName, Sex.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, Sex.fromString(value)),or);
 		} else if (propertyClass.equals(DBModule.class)) {
-			criteria.add(Restrictions.eq(propertyName, DBModule.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, DBModule.fromString(value)),or);
 		} else if (propertyClass.equals(HyperlinkModule.class)) {
-			criteria.add(Restrictions.eq(propertyName, HyperlinkModule.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, HyperlinkModule.fromString(value)),or);
 		} else if (propertyClass.equals(JournalModule.class)) {
-			criteria.add(Restrictions.eq(propertyName, JournalModule.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, JournalModule.fromString(value)),or);
 		} else if (propertyClass.equals(FileModule.class)) {
-			criteria.add(Restrictions.eq(propertyName, FileModule.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, FileModule.fromString(value)),or);
 		} else if (propertyClass.equals(Color.class)) {
-			criteria.add(Restrictions.eq(propertyName, Color.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, Color.fromString(value)),or);
 		} else if (propertyClass.equals(InputFieldType.class)) {
-			criteria.add(Restrictions.eq(propertyName, InputFieldType.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, InputFieldType.fromString(value)),or);
 		} else if (propertyClass.equals(EventImportance.class)) {
-			criteria.add(Restrictions.eq(propertyName, EventImportance.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, EventImportance.fromString(value)), or);
 		} else if (propertyClass.equals(ExportStatus.class)) {
-			criteria.add(Restrictions.eq(propertyName, ExportStatus.fromString(value)));
+			return applyOr(Restrictions.eq(propertyName, ExportStatus.fromString(value)),or);
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
-			criteria.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)));
+			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)),or);
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED, DefaultMessages.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED,
@@ -227,8 +250,10 @@ public final class CriteriaUtil {
 						Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
-						applyFilter(subCriteria, filterFieldAssociationPath.getPropertyName(),
-								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue());
+						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
+								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())
+								));
 					}
 				}
 				if (psf.getUpdateRowCount()) {
@@ -560,8 +585,10 @@ public final class CriteriaUtil {
 						Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
-						applyFilter(subCriteria, filterFieldAssociationPath.getPropertyName(),
-								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue());
+						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
+								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())
+								));
 					}
 				}
 				Long count = null;
