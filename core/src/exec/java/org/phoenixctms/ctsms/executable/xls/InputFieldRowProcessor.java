@@ -429,7 +429,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 		inputFieldIn.setValidationErrorMsg(CommonUtil.isEmptyString(getValidationErrorMsg(values)) ? null : getValidationErrorMsg(values));
 		InputFieldOutVO inputFieldVO = inputFieldService.addUpdateInputField(context.getAuth(), inputFieldIn,
 				context.getImporter().getSelectionSetValueRowProcessor().getSelectionSetValues(name));
-		jobOutput.println("input field '" + inputFieldVO.getName() + "' " + (inputFieldVO.getVersion() > 0 ? "updated" : "created"));
+		jobOutput.println("input field '" + inputFieldVO.getName() + "' " + (inputFieldVO.getVersion() > 0l ? "updated" : "created"));
 		context.getImporter().getSelectionSetValueRowProcessor().clearInputField(name);
 		return 1;
 	}

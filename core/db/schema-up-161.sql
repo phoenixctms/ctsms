@@ -1,3 +1,7 @@
 alter table FILE add column PUBLIC_FILE BOOLEAN;
 update FILE set PUBLIC_FILE = 'f';
 alter table FILE alter PUBLIC_FILE set not null;
+
+alter table TRIAL_STATUS_TYPE add column ECRF_VALUE_INPUT_ENABLED BOOLEAN;
+update TRIAL_STATUS_TYPE set ECRF_VALUE_INPUT_ENABLED = INQUIRY_VALUE_INPUT_ENABLED;
+alter table TRIAL_STATUS_TYPE alter ECRF_VALUE_INPUT_ENABLED set not null;

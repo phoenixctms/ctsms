@@ -232,7 +232,7 @@ public class EcrfRowProcessor extends RowProcessor {
 
 		ECRFOutVO ecrfVO = trialService.addUpdateEcrf(context.getAuth(), ecrfIn,
 				context.getImporter().getEcrfFieldRowProcessor().getEcrfFields(probandGroupToken, position));
-		jobOutput.println("ecrf '" + ecrfVO.getUniqueName() + "' " + (ecrfVO.getVersion() > 0 ? "updated" : "created"));
+		jobOutput.println("ecrf '" + ecrfVO.getUniqueName() + "' " + (ecrfVO.getVersion() > 0l ? "updated" : "created"));
 		context.getImporter().getEcrfFieldRowProcessor().clearEcrf(probandGroupToken, position);
 		return 1;
 	}

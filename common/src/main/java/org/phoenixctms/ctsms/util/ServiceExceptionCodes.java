@@ -116,6 +116,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_STATUS_ENTRY_NOT_LAST_ENTRY = "ecrf_field_status_entry_not_last_entry";
 	public final static String ECRF_FIELD_VALUES_FOR_DIFFERENT_ECRFS = "ecrf_field_values_for_different_ecrfs";
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF = "ecrf_field_value_input_disabled_for_ecrf";
+	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL = "ecrf_field_value_input_disabled_for_trial";
 	public final static String ECRF_FIELD_VALUES_FOR_DIFFERENT_PROBAND_LIST_ENTRIES = "ecrf_field_values_for_different_proband_list_entries";
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS = "ecrf_field_value_input_disabled_for_proband_list_status";
 	public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_value_input_locked_for_ecrf_status";
