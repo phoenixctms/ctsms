@@ -571,6 +571,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["$delta"] = inputFieldVariable.delta;
 		mask["$oldOutput"] = inputFieldVariable.oldOutput;
 		mask["$created"] = (inputFieldVariable.value.id != null);
+		mask["$disabled"] = inputFieldVariable.value.disabled;
 		if (inputFieldVariable.value.series) {
 			mask["$index"] = inputFieldVariable.value.index;
 //			if (index > 0 && inputFieldVariable.series[index - 1] != null) {
