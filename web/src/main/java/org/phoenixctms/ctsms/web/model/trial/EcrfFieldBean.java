@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -124,7 +123,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private boolean bulkAddOptional;
 	private boolean bulkAddSeries;
 	private boolean bulkAddAuditTrail;
-
 	private String oldSection;
 	private String newSection;
 
@@ -253,8 +251,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return getCompleteSectionList(query);
 	}
 
-
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -314,7 +310,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getEcrfFieldListHeader() {
 		if (trial != null) {
 			if (ecrf == null) {
-				return Messages.getString( MessageCodes.SELECT_ECRF);
+				return Messages.getString(MessageCodes.SELECT_ECRF);
 			} else {
 				return Messages.getMessage(MessageCodes.ECRF_FIELD_LIST_HEADER, ecrf.getName(), ecrfFieldModel.getRowCount());
 			}
@@ -333,8 +329,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getFieldName() {
 		return WebUtil.inputFieldIdToName(in.getFieldId());
 	}
-
-
 
 	public ArrayList<SelectItem> getFilterProbandGroups() {
 		return filterProbandGroups;
@@ -525,8 +519,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return out != null;
 	}
 
-
-
 	@Override
 	public boolean isEditable() {
 		return isCreated() && !WebUtil.isTrialLocked(trial);
@@ -713,8 +705,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public void setOldSection(String oldSection) {
 		this.oldSection = oldSection;
 	}
-
-
 
 	public void setSelectedEcrf(IDVO ecrf) {
 		if (ecrf != null) {

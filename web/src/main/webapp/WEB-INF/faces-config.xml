@@ -107,4 +107,17 @@
 		<converter-class>org.phoenixctms.ctsms.web.convert.DateTimeConverter</converter-class>
 	</converter> -->
 	<!-- <view-handler>org.phoenixctms.ctsms.web.LocaleViewHandler</view-handler> -->
+	
+    <render-kit>
+       <renderer>
+           <component-family>org.primefaces.component</component-family>
+           <renderer-type>org.primefaces.component.DataTableRenderer</renderer-type>
+           <renderer-class>org.phoenixctms.ctsms.web.component.datatable.DataTableRenderer</renderer-class>
+       </renderer>
+    </render-kit>	
+    <component>
+        <component-type>org.primefaces.component.DataTable</component-type>
+        <component-class>org.phoenixctms.ctsms.web.component.datatable.DataTable</component-class>
+    </component>
+	
 </faces-config>

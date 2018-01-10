@@ -144,6 +144,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.sun.faces.application.view.ViewScopeManager;
 
 public final class WebUtil {
 
@@ -3937,17 +3938,6 @@ public final class WebUtil {
 		return null;
 	}
 
-	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getTotal();
-	// }
-	// }
-	// return result;
-	// }
-
 	public static ArrayList<TimeZone> getTimeZones() {
 		Collection<String> timeZoneIDs = null;
 		ArrayList<TimeZone> timeZones;
@@ -3970,6 +3960,17 @@ public final class WebUtil {
 		}
 		return timeZones;
 	}
+
+	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getTotal();
+	// }
+	// }
+	// return result;
+	// }
 
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
@@ -4118,17 +4119,6 @@ public final class WebUtil {
 		// return statusType;
 	}
 
-	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getUnresolved();
-	// }
-	// }
-	// return result;
-	// }
-
 	public static Long getTrialTagValueCount(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -4142,6 +4132,17 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
+	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getUnresolved();
+	// }
+	// }
+	// return result;
+	// }
 
 	public static UserOutVO getUser() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
@@ -4216,6 +4217,10 @@ public final class WebUtil {
 			return context.getViewRoot().getViewId();
 		}
 		return null;
+	}
+
+	public static String getViewMapId() {
+		return (String) FacesContext.getCurrentInstance().getViewRoot().getTransientStateHelper().getTransient(ViewScopeManager.VIEW_MAP_ID);
 	}
 
 	public static ArrayList<SelectItem> getVisibleCourseCategories(Long categoryId) {

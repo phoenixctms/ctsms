@@ -6,6 +6,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -108,6 +109,7 @@ public class SessionScopeBean {
 		return viewId.toString();
 	}
 
+	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
 	private MaxSizeHashMap<Object, StreamedContent> imageStore;
 	// private HashMap<Class, HashMap<Object, Object>> selectionSetServiceCache;
 	private ArrayList<SelectItem> filterBooleans;
@@ -234,6 +236,21 @@ public class SessionScopeBean {
 		return filterBooleans;
 	}
 
+	private HashMap<String, Map<String, String>> getFilterComponentMap() {
+		if (filterMaps == null) {
+			filterMaps = new HashMap<String, HashMap<String, Map<String, String>>>();
+		}
+		String viewMapId = WebUtil.getViewMapId();
+		HashMap<String, Map<String, String>> componentMap;
+		if (filterMaps.containsKey(viewMapId)) {
+			componentMap = filterMaps.get(viewMapId);
+		} else {
+			componentMap = new HashMap<String, Map<String, String>>();
+			filterMaps.put(viewMapId, componentMap);
+		}
+		return componentMap;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterContactDetailTypes() {
 		if (filterContactDetailTypes == null) {
 			filterContactDetailTypes = WebUtil.getAllContactDetailTypes();
@@ -336,6 +353,18 @@ public class SessionScopeBean {
 			filterMaintenanceTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterMaintenanceTypes;
+	}
+
+	public synchronized Map<String, String> getFilterMap(String id) {
+		HashMap<String, Map<String, String>> componentMap = getFilterComponentMap();
+		Map<String, String> filterMap;
+		if (componentMap.containsKey(id)) {
+			filterMap = componentMap.get(id);
+		} else {
+			filterMap = new HashMap<String, String>();
+			componentMap.put(id, filterMap);
+		}
+		return filterMap;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterPaymentMethods() {
@@ -567,6 +596,11 @@ public class SessionScopeBean {
 		return context.getExternalContext().getSessionMaxInactiveInterval();
 	}
 
+	public synchronized MenuModel getStaffEntityMenuModel() {
+		return DynamicEntityMenu.getStaffEntityMenu()
+				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
+	}
+
 	// public Object getSelectionSetServiceCache(Class type, Object key) {
 	// if (selectionSetServiceCache != null && type != null) {
 	// if (selectionSetServiceCache.containsKey(type)) {
@@ -578,12 +612,6 @@ public class SessionScopeBean {
 	// }
 	// return null;
 	// }
-
-	public synchronized MenuModel getStaffEntityMenuModel() {
-		return DynamicEntityMenu.getStaffEntityMenu()
-				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
-	}
-
 	public synchronized MenuModel getStaffHomeMenuModel() {
 		return DynamicHomeMenu.getStaffHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
@@ -1049,6 +1077,18 @@ public class SessionScopeBean {
 		oldPassword = null;
 	}
 
+	public synchronized String resetLoginInputs() {
+		auth.setUsername(null);
+		auth.setPassword(null);
+		auth.setLocalPassword(null);
+		clearauthenticationFailedMessage();
+		return getLoginOutcome(false);
+	}
+
+	public synchronized void setFilterMap(String id, Map<String, String> filterMap) {
+		getFilterComponentMap().put(id, filterMap);
+	}
+
 	// public void putSelectionSetServiceCache(Object key, Object value) {
 	// if (selectionSetServiceCache != null && value != null) {
 	// Class type = value.getClass();
@@ -1062,15 +1102,6 @@ public class SessionScopeBean {
 	// cache.put(key, value);
 	// }
 	// }
-
-	public synchronized String resetLoginInputs() {
-		auth.setUsername(null);
-		auth.setPassword(null);
-		auth.setLocalPassword(null);
-		clearauthenticationFailedMessage();
-		return getLoginOutcome(false);
-	}
-
 	public synchronized void setLocalPassword(String localPassword) {
 		auth.setLocalPassword(localPassword);
 	}
