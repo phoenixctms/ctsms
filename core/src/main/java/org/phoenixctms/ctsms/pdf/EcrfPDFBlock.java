@@ -15,8 +15,10 @@ import org.phoenixctms.ctsms.pdf.PDFUtil.LineStyle;
 import org.phoenixctms.ctsms.pdf.PDFUtil.TextDecoration;
 import org.phoenixctms.ctsms.security.EntitySignature;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
@@ -642,13 +644,16 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT) - getXFrameIndent());
 				x += Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
-						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PROBAND_NAME, PDFUtil.DEFAULT_LABEL, Long.toString(listEntry.getProband().getId()), listEntry
-								.getProband()
-								.getInitials(), listEntry.getProband().getName()),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height2);
+						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PROBAND_NAME, PDFUtil.DEFAULT_LABEL, Long.toString(listEntry.getProband().getId()),
+								CommonUtil.getProbandAlias(listEntry.getProband(),
+										L10nUtil.getString(Locales.ECRF_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
+										L10nUtil.getString(Locales.ECRF_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
+										),
+										listEntry.getProband().getInitials(), listEntry.getProband().getName()),
+										x + getXFrameIndent(),
+										y,
+										Alignment.TOP_LEFT,
+										width - getXFrameIndent()), height2);
 				x += width;
 				height3 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -838,8 +843,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						x += ximage.getWidthPoints();
 						y -= Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.SMALL, getTextColor(),
 								EntitySignature.getDescription(signature, Locales.ECRF_PDF,
-												Settings.getIntNullable(EcrfPDFSettingCodes.SIGNATURE_VALUE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_VALUE_LENGTH),
-												false),
+										Settings.getIntNullable(EcrfPDFSettingCodes.SIGNATURE_VALUE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_VALUE_LENGTH),
+										false),
 										x + getXFrameIndent(),
 										y,
 										Alignment.TOP_LEFT,

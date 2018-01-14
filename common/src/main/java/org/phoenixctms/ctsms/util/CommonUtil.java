@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource.AuthenticationType;
 
 import org.apache.batik.anim.dom.SVGDOMImplementation;
-import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
@@ -229,6 +228,21 @@ public final class CommonUtil {
 	private final static StringSplitter LINE_BREAK_KEEP_SEPARATORS_SPLITTER = new StringSplitter(LINE_BREAK_SPLIT_REGEXP, true);
 
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
+
+	private static void appendProbandAlias(StringBuilder sb,ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
+		String alias = proband.getAlias();
+		if (alias != null && alias.trim().length() > 0) {
+			sb.append(alias.trim());
+		} else if (proband.getId() > 0) {
+			if (blindedProbandNameLabel != null) {
+				sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
+			} else {
+				sb.append( Long.toString(proband.getId()));
+			}
+		} else if (newBlindedProbandNameLabel != null) {
+			sb.append(newBlindedProbandNameLabel);
+		}
+	}
 
 	public static boolean appendString(StringBuilder sb, String string, String separator) {
 		return appendString(sb, string, separator, null);
@@ -508,11 +522,11 @@ public final class CommonUtil {
 		return null;
 	}
 
+
+
 	public static long dateDeltaSecs(Date start, Date stop) {
 		return (stop.getTime() - start.getTime()) / 1000;
 	}
-
-
 
 	public static Timestamp dateToTimestamp(Date date) {
 		if (date != null) {
@@ -977,12 +991,13 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					String alias = proband.getAlias();
-					if (alias != null && alias.trim().length() > 0) {
-						sb.append(alias.trim());
-					} else if (proband.getId() > 0) {
-						sb.append(Long.toString(proband.getId()));
-					}
+					appendProbandAlias(sb,proband,null,null);
+					//					String alias = proband.getAlias();
+					//					if (alias != null && alias.trim().length() > 0) {
+					//						sb.append(alias.trim());
+					//					} else if (proband.getId() > 0) {
+					//						sb.append(Long.toString(proband.getId()));
+					//					}
 				}
 			} else {
 				if (proband.getId() > 0) {
@@ -1018,6 +1033,18 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
+	public static String getProbandAlias(ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
+		StringBuilder sb = new StringBuilder();
+		if (proband != null) {
+			// if (proband.isDecrypted()) {
+			// if (proband.isBlinded()) {
+			appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
+			// }
+			// }
+		}
+		return sb.toString();
+	}
+
 	public static final String getProbandInitials(ProbandOutVO proband, String ecryptedProbandNameLabel, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
@@ -1039,14 +1066,7 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					String alias = proband.getAlias();
-					if (alias != null && alias.trim().length() > 0) {
-						sb.append(alias.trim());
-					} else if (proband.getId() > 0) {
-						sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
-					} else {
-						sb.append(newBlindedProbandNameLabel);
-					}
+					appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 				}
 			} else {
 				sb.append(ecryptedProbandNameLabel);
@@ -1080,14 +1100,7 @@ public final class CommonUtil {
 						CommonUtil.appendString(sb, proband.getAnimalName(), null, "?");
 					}
 				} else {
-					String alias = proband.getAlias();
-					if (alias != null && alias.trim().length() > 0) {
-						sb.append(alias.trim());
-					} else if (proband.getId() > 0) {
-						sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
-					} else {
-						sb.append(newBlindedProbandNameLabel);
-					}
+					appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 				}
 			} else {
 				sb.append(ecryptedProbandNameLabel);
@@ -1665,8 +1678,8 @@ public final class CommonUtil {
 			return ((JournalModule) value).name();
 		} else if (valueClass.equals(FileModule.class)) {
 			return ((FileModule) value).name();
-		} else if (valueClass.equals(Color.class)) {
-			return ((Color) value).name();
+		} else if (valueClass.equals(org.phoenixctms.ctsms.enumeration.Color.class)) {
+			return ((org.phoenixctms.ctsms.enumeration.Color) value).name();
 		} else if (valueClass.equals(InputFieldType.class)) {
 			return ((InputFieldType) value).name();
 		} else if (valueClass.equals(EventImportance.class)) {

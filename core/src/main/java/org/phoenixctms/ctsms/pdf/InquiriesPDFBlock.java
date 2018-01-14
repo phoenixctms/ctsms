@@ -10,8 +10,10 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.pdf.PDFUtil.Alignment;
 import org.phoenixctms.ctsms.pdf.PDFUtil.FontSize;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -535,11 +537,16 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								FontSize.MEDIUM,
 								getTextColor(),
 								L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_NAME, PDFUtil.DEFAULT_LABEL,
-										Long.toString(proband.getId()), proband.getInitials(), proband.getName()),
-										x + getXFrameIndent(),
-										y,
-										Alignment.TOP_LEFT,
-										width - getXFrameIndent()), height1);
+										Long.toString(proband.getId()),
+										CommonUtil.getProbandAlias(proband,
+												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
+												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
+												),
+										proband.getInitials(), proband.getName()),
+												x + getXFrameIndent(),
+												y,
+												Alignment.TOP_LEFT,
+												width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL, PDFUtil.DEFAULT_LABEL),

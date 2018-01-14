@@ -11,8 +11,10 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.pdf.PDFUtil.Alignment;
 import org.phoenixctms.ctsms.pdf.PDFUtil.FontSize;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -568,11 +570,17 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 								getTextColor(),
 								L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.PROBAND_NAME,
 										PDFUtil.DEFAULT_LABEL,
-										Long.toString(listEntry.getProband().getId()), listEntry.getProband().getInitials(), listEntry.getProband().getName()),
-										x + getXFrameIndent(),
-										y,
-										Alignment.TOP_LEFT,
-										width - getXFrameIndent()), height1);
+										Long.toString(listEntry.getProband().getId()),
+										CommonUtil.getProbandAlias(listEntry.getProband(),
+												L10nUtil.getString(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME,
+														DefaultMessages.NEW_BLINDED_PROBAND_NAME),
+												L10nUtil.getString(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
+												),
+												listEntry.getProband().getInitials(), listEntry.getProband().getName()),
+												x + getXFrameIndent(),
+												y,
+												Alignment.TOP_LEFT,
+												width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL,
