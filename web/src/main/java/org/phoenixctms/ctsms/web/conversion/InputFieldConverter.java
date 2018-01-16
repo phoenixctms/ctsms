@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import javax.faces.convert.FacesConverter;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JSFVOConverterIDs;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
@@ -19,11 +20,14 @@ public class InputFieldConverter extends IDVOConverter {
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {
 		LinkedHashMap<String, String> details = new LinkedHashMap<String, String>();
-		Object vo = idvo.getVo();
+		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof InputFieldOutVO) {
 			InputFieldOutVO field = (InputFieldOutVO) vo;
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_TYPE, field.getFieldType().getName());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_CATEGORY, field.getCategory());
+			if (!CommonUtil.isEmptyString(field.getExternalId())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID, field.getExternalId());
+			}
 		}
 		return details;
 	}

@@ -19,7 +19,7 @@ public class AspConverter extends IDVOConverter {
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {
 		LinkedHashMap<String, String> details = new LinkedHashMap<String, String>();
-		Object vo = idvo.getVo();
+		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof AspVO) {
 			AspVO asp = (AspVO) vo;
 			details.put(MessageCodes.CRITERION_ITEM_TIP_ASP_REGISTRATION_NUMBER, asp.getRegistrationNumber());

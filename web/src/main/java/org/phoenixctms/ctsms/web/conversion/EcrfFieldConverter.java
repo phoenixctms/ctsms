@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 
 import javax.faces.convert.FacesConverter;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JSFVOConverterIDs;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
@@ -25,9 +26,18 @@ public class EcrfFieldConverter extends IDVOConverter {
 		if (ecrfField != null) {
 			details.put(MessageCodes.CRITERION_ITEM_TIP_TRIAL_NAME, ecrfField.getTrial().getName());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_ECRF_NAME, ecrfField.getEcrf().getUniqueName());
+			if (!CommonUtil.isEmptyString(ecrfField.getEcrf().getExternalId())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_ECRF_EXTERNAL_ID, ecrfField.getEcrf().getExternalId());
+			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_ECRF_FIELD_SECTION, ecrfField.getSection());
+			if (!CommonUtil.isEmptyString(ecrfField.getExternalId())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_ECRF_FIELD_EXTERNAL_ID, ecrfField.getExternalId());
+			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_NAME, ecrfField.getField().getName());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_TYPE, ecrfField.getField().getFieldType().getName());
+			if (!CommonUtil.isEmptyString(ecrfField.getField().getExternalId())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID, ecrfField.getField().getExternalId());
+			}
 		}
 		return details;
 	}

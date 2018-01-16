@@ -734,11 +734,14 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_ASP_ATC_CODE_REVISION = "criterion_item_tip_asp_atc_code_revision";
 	public static final String CRITERION_ITEM_TIP_TRIAL_NAME = "criterion_item_tip_trial_name";
 	public static final String CRITERION_ITEM_TIP_ECRF_NAME = "criterion_item_tip_ecrf_name";
+	public static final String CRITERION_ITEM_TIP_ECRF_EXTERNAL_ID = "criterion_item_tip_ecrf_external_id";
 	public static final String CRITERION_ITEM_TIP_ECRF_FIELD_SECTION = "criterion_item_tip_ecrf_field_section";
+	public static final String CRITERION_ITEM_TIP_ECRF_FIELD_EXTERNAL_ID = "criterion_item_tip_ecrf_field_external_id";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_TYPE = "criterion_item_tip_input_field_type";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_CATEGORY = "criterion_item_tip_input_field_category";
 	public static final String CRITERION_ITEM_TIP_INQUIRY_CATEGORY = "criterion_item_tip_inquiry_category";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_NAME = "criterion_item_tip_input_field_name";
+	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID = "criterion_item_tip_input_field_external_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_DIMDI_ID = "criterion_item_tip_ops_code_dimdi_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_FIRST_CODE = "criterion_item_tip_ops_code_first_code";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_REVISION = "criterion_item_tip_ops_code_revision";

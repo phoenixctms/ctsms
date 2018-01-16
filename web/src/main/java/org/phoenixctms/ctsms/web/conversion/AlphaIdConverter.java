@@ -18,7 +18,7 @@ public class AlphaIdConverter extends IDVOConverter {
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {
 		LinkedHashMap<String, String> details = new LinkedHashMap<String, String>();
-		Object vo = idvo.getVo();
+		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof AlphaIdVO) {
 			AlphaIdVO alphaId = (AlphaIdVO) vo;
 			details.put(MessageCodes.CRITERION_ITEM_TIP_ALPHA_ID_ALPHA_ID, alphaId.getAlphaId());

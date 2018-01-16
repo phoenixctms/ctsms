@@ -19,7 +19,7 @@ public class AspSubstanceConverter extends IDVOConverter {
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {
 		LinkedHashMap<String, String> details = new LinkedHashMap<String, String>();
-		Object vo = idvo.getVo();
+		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof AspSubstanceVO) {
 			AspSubstanceVO substance = (AspSubstanceVO) vo;
 			// details.put(MessageCodes.CRITERION_ITEM_TIP_ASP_NAME, asp.getName());

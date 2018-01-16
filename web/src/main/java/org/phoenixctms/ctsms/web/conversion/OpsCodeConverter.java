@@ -18,7 +18,7 @@ public class OpsCodeConverter extends IDVOConverter {
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {
 		LinkedHashMap<String, String> details = new LinkedHashMap<String, String>();
-		Object vo = idvo.getVo();
+		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof OpsCodeVO) {
 			OpsCodeVO opsCode = (OpsCodeVO) vo;
 			details.put(MessageCodes.CRITERION_ITEM_TIP_OPS_CODE_DIMDI_ID, opsCode.getDimdiId());

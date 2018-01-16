@@ -161,7 +161,15 @@
 					</f:facet>
 					<h:outputText value="#{inputField.vo.titleL10nKey}" />
 				</p:column>
-				<p:column sortBy="#{inputField.vo.localized}">
+				<p:column
+					sortBy="#{inputField.vo.externalId}"
+					filterBy="#{inputField.vo.externalId}">
+					<f:facet name="header">
+						<h:outputText value="#{inputfieldlabels.search_input_field_result_list_input_field_external_id_column}" />
+					</f:facet>
+					<h:outputText value="#{inputField.vo.externalId}" />
+				</p:column>	
+				<p:column sortBy="#{inputField.vo.localized}" rendered="#{!inputFieldSearchBean.picker}">
 					<f:facet name="header">
 						<h:outputText value="#{inputfieldlabels.search_input_field_result_list_input_field_localized_column}" />
 					</f:facet>

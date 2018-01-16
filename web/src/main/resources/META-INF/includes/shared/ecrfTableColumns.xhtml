@@ -68,6 +68,17 @@
 					value="#{!ecrf.vo.disabled}" />
 			</ui:include>
 		</p:column>
+		
+		<p:column
+		    rendered="#{showExternalId}"
+			sortBy="#{ecrf.vo.externalId}"
+			filterBy="#{ecrf.vo.externalId}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_external_id_column}" />
+			</f:facet>
+			<h:outputText value="#{ecrf.vo.externalId}" />
+		</p:column>		
+		
 		<p:column
 		    rendered="#{showEnableBrowserFieldCalculation}"
 			sortBy="#{ecrf.vo.enableBrowserFieldCalculation}">

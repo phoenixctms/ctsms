@@ -81,6 +81,9 @@
 							name="showActive"
 							value="true" />
 						<ui:param
+							name="showExternalId"
+							value="true" />							
+						<ui:param
 							name="showEnableBrowserFieldCalculation"
 							value="true" />								
 						<ui:param
@@ -209,6 +212,22 @@
 									value="#{ecrfField.vo.reasonForChangeRequired}" />
 							</ui:include>
 						</p:column>
+						<p:column
+							sortBy="#{ecrfField.vo.externalId}"
+							filterBy="#{ecrfField.vo.externalId}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_external_id_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfField.vo.externalId}" />
+						</p:column>
+						<p:column
+							sortBy="#{ecrfField.vo.field.externalId}"
+							filterBy="#{ecrfField.vo.field.externalId}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_field_external_id_column}" />
+							</f:facet>
+							<h:outputText value="#{ecrfField.vo.field.externalId}" />
+						</p:column>	
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_number_of_values_column}" />
