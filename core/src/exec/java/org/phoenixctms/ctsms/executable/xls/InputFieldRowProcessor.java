@@ -7,6 +7,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecDefaultSettings;
@@ -14,6 +15,7 @@ import org.phoenixctms.ctsms.util.ExecSettingCodes;
 import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.FilePathSplitter;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 	protected InputFieldDao inputFieldDao;
 	@Autowired
 	protected InputFieldService inputFieldService;
+	@Autowired
+	private FileService fileService;
 
 	public InputFieldRowProcessor() {
 		super();
@@ -338,11 +342,20 @@ public class InputFieldRowProcessor extends RowProcessor {
 
 	private void loadFile(InputFieldInVO inputFieldIn,String fileName) throws Throwable {
 
-		java.io.File file = new java.io.File(filePath.getDirectory(),	CommonUtil.sanitizeFilePath(fileName));
-		inputFieldIn.setFileName(file.getName());
-		FileInputStream stream=new FileInputStream(file);
-		inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
-		inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+		try {
+			long fileId = Long.parseLong(fileName);
+			FileContentOutVO file = fileService.getFileContent(context.getAuth(), fileId);
+			jobOutput.println("file ID " + fileName + " loaded (" + file.getFileName() + ")");
+			inputFieldIn.setFileName(file.getFileName());
+			inputFieldIn.setDatas(file.getDatas());
+			inputFieldIn.setMimeType(file.getContentType().getMimeType());
+		} catch (NumberFormatException e) {
+			java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
+			inputFieldIn.setFileName(file.getName());
+			FileInputStream stream = new FileInputStream(file);
+			inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
+			inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+		}
 
 		//		try {
 		//

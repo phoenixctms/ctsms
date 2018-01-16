@@ -1,7 +1,10 @@
 package org.phoenixctms.ctsms.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
+import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
+import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
 import org.phoenixctms.ctsms.service.proband.ProbandService;
@@ -36,6 +42,7 @@ import org.phoenixctms.ctsms.vo.CriterionOutVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 
 public final class ExecUtil {
 
@@ -140,6 +147,18 @@ public final class ExecUtil {
 			return new URI(downloadUrl.toString());
 		}
 		return null;
+	}
+
+	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
+			AuthorisationException, ServiceException, FileNotFoundException {
+		try {
+			long fileId = Long.parseLong(fileName);
+			FileStreamOutVO file = fileService.getFileStream(auth, fileId);
+			jobOutput.println("file ID " + fileName + " (" + file.getFileName() + ")");
+			return file.getStream();
+		} catch (NumberFormatException e) {
+			return new FileInputStream(fileName);
+		}
 	}
 
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {

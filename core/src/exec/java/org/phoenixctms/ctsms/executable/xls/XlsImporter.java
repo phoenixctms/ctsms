@@ -2,7 +2,7 @@ package org.phoenixctms.ctsms.executable.xls;
 
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,6 +16,7 @@ import org.phoenixctms.ctsms.Search;
 import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.AspDao;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
+import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
@@ -45,6 +46,8 @@ public class XlsImporter {
 	protected AspDao aspDao;
 	@Autowired
 	protected AspSubstanceDao aspSubstanceDao;
+	@Autowired
+	private FileService fileService;
 	private JobOutput jobOutput;
 
 	public XlsImporter() {
@@ -129,7 +132,7 @@ public class XlsImporter {
 		try {
 			// Create a workbook object from the file at specified location.
 			// Change the path of the file as per the location on your computer.
-			FileInputStream inputStream = new FileInputStream(context.getFileName());
+			InputStream inputStream = ExecUtil.getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput); // new FileInputStream(context.getFileName());
 			WorkbookSettings workbookSettings = processor.getWorkbookSettings();
 			if (workbookSettings != null) {
 				workbook = Workbook.getWorkbook(inputStream, workbookSettings);
