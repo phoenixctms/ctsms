@@ -1923,11 +1923,11 @@ extends TrialServiceBase
 				|| !originalEcrf.getName().equals(modifiedEcrf.getName())
 				|| !originalEcrf.getTitle().equals(modifiedEcrf.getTitle())
 				|| !((originalEcrf.getDescription() == null && modifiedEcrf.getDescription() == null) || (originalEcrf.getDescription() != null
-						&& modifiedEcrf.getDescription() != null && originalEcrf.getDescription().equals(modifiedEcrf.getDescription())))
+				&& modifiedEcrf.getDescription() != null && originalEcrf.getDescription().equals(modifiedEcrf.getDescription())))
 				|| !((modifiedEcrf.getVisitId() == null && originalEcrf.getVisit() == null) || (modifiedEcrf.getVisitId() != null && originalEcrf.getVisit() != null && modifiedEcrf
-						.getVisitId().equals(originalEcrf.getVisit().getId())))
+				.getVisitId().equals(originalEcrf.getVisit().getId())))
 				|| !((modifiedEcrf.getGroupId() == null && originalEcrf.getGroup() == null) || (modifiedEcrf.getGroupId() != null && originalEcrf.getGroup() != null && modifiedEcrf
-						.getGroupId().equals(originalEcrf.getGroup().getId())))) {
+				.getGroupId().equals(originalEcrf.getGroup().getId())))) {
 			ServiceUtil.checkLockedEcrfs(originalEcrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		}
 		if (!modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())) {
@@ -2358,13 +2358,15 @@ extends TrialServiceBase
 		return result;
 	}
 
-	private ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, String section, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues,
+	private ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, String section, Long index, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues,
+			boolean loadAllJsValues,
 			PSFVO psf) throws Exception {
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		if (listEntryVO != null && ecrf != null) {
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
-			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfSectionJs(listEntryVO.getId(), ecrf.getId(), section, true, null, psf);
+			index = limitEcrfFieldValueIndex(ecrf.getId(), section, index, listEntryVO.getId());
+			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfSectionIndexJs(listEntryVO.getId(), ecrf.getId(), section, index, true, null, psf);
 			HashMap<String, Long> maxSeriesIndexMap = null;
 			HashMap<String, Long> fieldMaxPositionMap = null;
 			HashMap<String, Long> fieldMinPositionMap = null;
@@ -5464,17 +5466,18 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId) throws Exception {
-		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
-		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
-		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId, section);
-	}
-
-	@Override
 	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId, boolean excludeAuditTrail) throws Exception {
 		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId, section, excludeAuditTrail, null);
+	}
+
+	@Override
+	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId) throws Exception {
+		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
+		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
+		index = limitEcrfFieldValueIndex(ecrfId, section, index, probandListEntryId);
+		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId, section, index);
 	}
 
 	@Override
@@ -5531,13 +5534,13 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId, boolean addSeries,
+	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId, boolean addSeries,
 			boolean loadAllJsValues, PSFVO psf)
 					throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao));
-		return getEcrfFieldValues(ecrf, section, listEntryVO, addSeries,
+		return getEcrfFieldValues(ecrf, section, index, listEntryVO, addSeries,
 				ecrf.isEnableBrowserFieldCalculation() && Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION), loadAllJsValues, psf);
 	}
@@ -6537,7 +6540,6 @@ extends TrialServiceBase
 		return trials;
 	}
 
-
 	@Override
 	protected MoneyTransferSummaryVO handleGetTrialMoneyTransferSummary(
 			AuthenticationVO auth, Long trialId,
@@ -6557,6 +6559,7 @@ extends TrialServiceBase
 		summary.setId(trialVO.getId());
 		return summary;
 	}
+
 
 	@Override
 	protected Collection<MoneyTransferSummaryVO> handleGetTrialMoneyTransferSummaryList(
@@ -6873,7 +6876,7 @@ extends TrialServiceBase
 		HashSet<Long> ecrfIds=new HashSet<Long>();
 
 		populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-				getEcrfFieldValues(ecrf, section, listEntryVO, blank, false, false, null).getPageValues(),
+				getEcrfFieldValues(ecrf, section, null, listEntryVO, blank, false, false, null).getPageValues(),
 				listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds);
 
 
@@ -7216,13 +7219,14 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Boolean addSeries, PSFVO psf)
-			throws Exception {
+	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index, Boolean addSeries,
+			PSFVO psf)
+					throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
 		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult);
 		ECRFFieldValuesOutVO result;
 		if (loadPageResult) {
-			result = getEcrfFieldValues((ECRF) resultItems[1], section, (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, psf);
+			result = getEcrfFieldValues((ECRF) resultItems[1], section, index, (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, psf);
 			result.setJsValues(((ECRFFieldValuesOutVO) resultItems[0]).getJsValues());
 		} else {
 			return (ECRFFieldValuesOutVO) resultItems[0];
@@ -7381,11 +7385,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
-
-
-
-
 	@Override
 	protected ECRFFieldOutVO handleUpdateEcrfField(AuthenticationVO auth, ECRFFieldInVO modifiedEcrfField) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -7402,6 +7401,11 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
+
+
+
+
+
 
 	@Override
 	protected Collection<ECRFFieldOutVO> handleUpdateEcrfFieldSections(AuthenticationVO auth, Long ecrfId, String oldSection, String newSection) throws Exception {
@@ -7495,10 +7499,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
-
-
-
 	@Override
 	protected ProbandGroupOutVO handleUpdateProbandGroup(
 			AuthenticationVO auth, ProbandGroupInVO modifiedProbandGroup) throws Exception {
@@ -7519,6 +7519,9 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(probandGroup.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
+
+
+
 
 
 	@Override
@@ -7563,6 +7566,7 @@ extends TrialServiceBase
 		return result;
 	}
 
+
 	@Override
 	protected ProbandListEntryTagOutVO handleUpdateProbandListEntryTag(
 			AuthenticationVO auth, ProbandListEntryTagInVO modifiedProbandListEntryTag)
@@ -7583,9 +7587,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
-
-
 	@Override
 	protected TeamMemberOutVO handleUpdateTeamMember(
 			AuthenticationVO auth, TeamMemberInVO modifiedTeamMember) throws Exception {
@@ -7604,6 +7605,8 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(teamMember.getStaff(), result.getTrial(), now, user, SystemMessageCodes.TEAM_MEMBER_UPDATED, result, original, journalEntryDao);
 		return result;
 	}
+
+
 
 
 	@Override
@@ -7628,8 +7631,6 @@ extends TrialServiceBase
 	}
 
 
-
-
 	@Override
 	protected TrialOutVO handleUpdateTrial(AuthenticationVO auth, TrialInVO modifiedTrial)
 			throws Exception {
@@ -7652,6 +7653,9 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(trial, result, now, user, SystemMessageCodes.TRIAL_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
+
+
+
 
 	@Override
 	protected TrialTagValueOutVO handleUpdateTrialTagValue(
@@ -7794,6 +7798,20 @@ extends TrialServiceBase
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_SIGNATURE);
 		}
 		return getVerifiedTrialSignatureVO(signature);
+	}
+
+	private Long limitEcrfFieldValueIndex(long ecrfId, String section, Long index, long listEntryId) throws Exception {
+		if (index != null) {
+			if (index < 0l) {
+				return 0l;
+			} else {
+				Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(listEntryId, ecrfId, section);
+				if (maxIndex != null && index > maxIndex) {
+					index = maxIndex;
+				}
+			}
+		}
+		return index;
 	}
 
 	private void logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User user, ShuffleInfoVO shuffleInfo, String systemMessageCode) throws Exception {

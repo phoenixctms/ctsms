@@ -245,7 +245,7 @@
 				</f:facet>
 				<h:outputText value="#{applicationScopeBean.getIdentityString(fieldStatusEntry.vo.modifiedUser)}" />
 			</p:column>
-			 <p:column sortBy="#{probandListStatusEntry.vo.modifiedTimestamp}">
+			 <p:column sortBy="#{fieldStatusEntry.vo.modifiedTimestamp}">
 				<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_modified_timestamp_column}" />
 				</f:facet>
@@ -254,6 +254,14 @@
 				</h:outputText>
 			</p:column>			
 			
+				<p:column
+					style="width:32px;">
+					<p:commandButton
+						type="button"
+						title="#{labels.open_ecrf_section_button_label}"
+						icon="ui-icon ui-icon-extlink"
+						onclick="openEcrfSection(#{fieldStatusEntry.vo.id},#{applicationScopeBean.getEcrfSectionHashCode(fieldStatusEntry.vo.id)})" />
+				</p:column>			
 			
 			<p:rowExpansion>
 						<ui:include src="../shared/auditTrailEcrfFieldLog.xhtml">

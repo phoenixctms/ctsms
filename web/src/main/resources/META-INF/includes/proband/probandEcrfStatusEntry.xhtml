@@ -483,10 +483,10 @@
 								styleClass="ctsms-content-panelgrid"
 								cellpadding="0">
 								<h:panelGrid
-									columns="9"
+									columns="3"
 									cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 									<h:outputLabel
 										for="section_filter"
 										value="#{probandlabels.ecrf_field_values_section_filter_label}" />
@@ -603,6 +603,9 @@
 						<ui:param
 							name="valueBean"
 							value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean}" />
+						<ui:param
+							name="showAjaxStatus"
+							value="true" />							
 						<ui:param
 							name="update"
 							value=":tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />

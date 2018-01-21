@@ -50,7 +50,7 @@ public enum GetParamNames {
 	ECRF_ID("ecrfid"),
 	ECRF_FIELD_ID("ecrffieldid"),
 	ECRF_STATUS_TYPE_ID("ecrfstatustypeid"),
-	// ECRF_SECTION("ecrfsection"),
+	ECRF_FIELD_STATUS_ENTRY_ID("issueid"), // short, to prevent url wordwrap
 	PROBAND_LIST_ENTRY_ID("probandlistentryid"),
 	PROBAND_STATUS_ENTRY_ID("probandstatusentryid"),
 	DIAGNOSIS_ID("diagnosisid"),

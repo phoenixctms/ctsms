@@ -4,7 +4,8 @@ dies ist die Benachrichtigung für folgendes Ereignis:
 
    $type
 
-   • Proband ID:          $proband_id
+   • Proband:             #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
    • Proband Org.einheit: $proband_department
    • Proband Kategorie:   $proband_category
 

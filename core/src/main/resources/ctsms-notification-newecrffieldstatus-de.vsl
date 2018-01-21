@@ -6,7 +6,8 @@ dies ist die Benachrichtigung für folgendes Ereignis:
 
    • Studie:             $ecrffieldstatusentry_listentry_trial_name
    • Studie Org.einheit: $ecrffieldstatusentry_listentry_trial_department
-   • Proband ID:         $ecrffieldstatusentry_listentry_proband_id
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
    • eCRF:               ${ecrffieldstatusentry_ecrffield_ecrf_position}. $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.group)
    • eCRF Probandengr.:  $notification.ecrfFieldStatusEntry.ecrfField.ecrf.group.title
@@ -35,12 +36,14 @@ $ecrffieldstatusentry_comment
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • Gespeichert (Version $log.version): $!log.reasonForChange
+   • Gespeichert (#if($string_utils.isEmpty($log.reasonForChange))Version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
 #end
 #end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Bitte die Eingaben überprüfen, um die eCRF Issue aufzulösen.
+Bitte die Eingaben überprüfen, um die eCRF Issue aufzulösen:
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #else
 Die eCRF Issue ist geschlossen.
 #end

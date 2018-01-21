@@ -25,6 +25,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
@@ -78,7 +79,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF,
 					value ? EcrfPDFLabelCodes.INPUT_FIELD_VALUE_CHECKBOX_CHECKED : EcrfPDFLabelCodes.INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED, PDFUtil.DEFAULT_LABEL);
 		}
-
 		@Override
 		protected DateFormat getDateFormat() {
 			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF);
@@ -97,6 +97,11 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		@Override
 		protected Float getFloatValue(ECRFFieldValueOutVO value) {
 			return value.getFloatValue();
+		}
+
+		@Override
+		protected InputFieldOutVO getInputField(ECRFFieldValueOutVO value) {
+			return value != null ? value.getEcrfField().getField() : null;
 		}
 
 		@Override
@@ -962,7 +967,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								cursor.getFontA(),
 								PDFUtil.FontSize.SMALL,
 								getTextColor(),
-								INPUT_FIELD_VALUE_ADAPTER.toString(auditTrailValue.getEcrfField().getField(), auditTrailValue),
+								INPUT_FIELD_VALUE_ADAPTER.toString(auditTrailValue),
 								x + getXFieldColumnIndent() + getXFrameIndent(),
 								y,
 								PDFUtil.Alignment.TOP_LEFT,

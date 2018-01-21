@@ -572,7 +572,7 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	public String inquiryValueToString(InquiryValueOutVO inquiryValue) {
 		if (inquiryValue != null) {
 			return (new InquiryValueOutVOStringAdapter(Settings.getInt(SettingCodes.PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
-					DefaultSettings.PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH))).toString(inquiryValue.getInquiry().getField(), inquiryValue);
+					DefaultSettings.PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH))).toString(inquiryValue);
 		}
 		return null;
 	}
@@ -623,7 +623,7 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	public String probandListEntryTagValueToString(ProbandListEntryTagValueOutVO listEntryTagValue) {
 		if (listEntryTagValue != null) {
 			return (new ProbandListEntryTagValueOutVOStringAdapter(Settings.getInt(SettingCodes.PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
-					DefaultSettings.PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH))).toString(listEntryTagValue.getTag().getField(), listEntryTagValue);
+					DefaultSettings.PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH))).toString(listEntryTagValue);
 		}
 		return null;
 	}

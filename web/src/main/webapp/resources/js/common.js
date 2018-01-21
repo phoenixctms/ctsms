@@ -13,6 +13,10 @@ function blink() {
 	window.setTimeout(blink, 1000);
 }
 
+function noop() {
+
+}
+
 function zeroFill(integer,digits) {
     var result;
     var numberOfZeroes;
@@ -1268,6 +1272,58 @@ function _openPortalCallback() {
 function openPortal() {
 
 	keepAliveExec('_openPortalCallback');
+
+}
+
+function _openEcrfSectionCallback(args) {
+
+	var openerWindow = window.open(decodeBase64(args.url), args.window,
+			'dependent=yes,location=0,menubar=0,resizable=1,status=1,toolbar=0,titlebar=1,scrollbars=1,height=' + args.height + ',width=' + args.width);
+	openerWindow.focus();
+
+}
+
+function openEcrfSection(ecrfFieldStatusEntryId, ecrfSectionHashCode) {
+
+	if (typeof ecrfFieldStatusEntryId !== 'undefined' && ecrfFieldStatusEntryId) {
+		if (ecrfSectionHashCode == null) {
+			ecrfSectionHashCode = ecrfFieldStatusEntryId;
+		}
+		keepAliveExec('_openEcrfSectionCallback', {
+			'url' : encodeBase64(ECRF_SECTION_URL + '?' + ECRF_FIELD_STATUS_ENTRY_ID + '=' + encodeURIComponent(ecrfFieldStatusEntryId), false),
+		    'window' : sprintf(ECRF_SECTION_WINDOW_NAME, ecrfSectionHashCode, getWindowNameUniqueToken()),
+		    'width' : Math.min(screen.availWidth, 1280),
+		    'height' : Math.min(screen.availHeight, 768)
+		});
+	}
+
+}
+
+function handleUpdateAuditTrailTabTitles(xhr, status, args) {
+
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
+		auditTrailTabView.setTabTitle(1, decodeBase64(args[AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
+		auditTrailTabView.emphasizeTab(1, args[AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
+	}
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
+		auditTrailTabView.setTabTitle(2, decodeBase64(args[AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
+		auditTrailTabView.emphasizeTab(2, args[AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
+	}
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
+		auditTrailTabView.setTabTitle(3, decodeBase64(args[AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
+		auditTrailTabView.emphasizeTab(3, args[AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
+	}
+
+}
+
+function handleUpdateEcrfSection(xhr, status, args) {
+
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_WINDOW_TITLE_BASE64)
+	        && _testPropertyExists(args, AJAX_WINDOW_NAME)) {
+		window.name = args[AJAX_WINDOW_NAME];
+		var title = decodeBase64(args[AJAX_WINDOW_TITLE_BASE64]);
+		document.title = title;
+	}
 
 }
 

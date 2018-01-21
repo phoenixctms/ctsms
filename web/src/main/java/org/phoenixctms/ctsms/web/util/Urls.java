@@ -15,6 +15,7 @@ public enum Urls {
 	PROBAND_PICKER("/shared/probandPicker.jsf"),
 	INPUT_FIELD_PICKER("/shared/inputFieldPicker.jsf"),
 	TEAM_MEMBER_PICKER("/shared/teamMemberPicker.jsf"),
+	ECRF_SECTION("/shared/ecrfSection.jsf"),
 	INVENTORY("/inventory/inventory.jsf"),
 	STAFF("/staff/staff.jsf"),
 	COURSE("/course/course.jsf"),

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
 public class EcrfFieldValueOutVOStringAdapter extends InputFieldValueStringAdapter<ECRFFieldValueOutVO> {
@@ -30,6 +31,11 @@ public class EcrfFieldValueOutVOStringAdapter extends InputFieldValueStringAdapt
 	@Override
 	protected Float getFloatValue(ECRFFieldValueOutVO value) {
 		return value.getFloatValue();
+	}
+
+	@Override
+	protected InputFieldOutVO getInputField(ECRFFieldValueOutVO value) {
+		return value != null ? value.getEcrfField().getField() : null;
 	}
 
 	@Override

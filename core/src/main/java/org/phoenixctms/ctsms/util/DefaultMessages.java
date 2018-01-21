@@ -179,4 +179,7 @@ public interface DefaultMessages {
 	public static final String ECRF_VALIDATION_FAILED_RESPONSE = "error executing field validation: {0}";
 	public static final String ECRF_VALIDATION_OK_ERRORS_RESPONSE = "validation successful - {0} error(s)";
 	public static final String ECRF_VALIDATION_OK_NO_ERROR_RESPONSE = "validation successful - no errors";
+	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
+	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
+	// public static final String NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR = ", ";
 }

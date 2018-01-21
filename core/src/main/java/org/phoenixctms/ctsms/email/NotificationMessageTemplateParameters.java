@@ -17,4 +17,6 @@ public interface NotificationMessageTemplateParameters {
 	public static final String HTTP_BASE_URL = "http_base_url";
 	public static final String HTTP_DOMAIN_NAME = "http_domain_name";
 	public static final String INDEX_FIELD_LOG = "index_field_log";
+	public static final String ECRF_INPUT_FIELD_VALUE_ADAPTER = "ecrf_input_field_value_adapter";
+	public static final String STRING_UTILS = "string_utils";
 }

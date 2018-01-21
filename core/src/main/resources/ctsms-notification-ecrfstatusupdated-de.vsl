@@ -6,7 +6,8 @@ dies ist die Benachrichtigung für folgendes Ereignis:
 
    • Studie:                $ecrfstatusentry_listentry_trial_name
    • Studie Org.einheit:    $ecrfstatusentry_listentry_trial_department
-   • Proband ID:            $ecrfstatusentry_listentry_proband_id
+   • Proband:               #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
    • eCRF:                  ${ecrfstatusentry_ecrf_position}. $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.ecrf.group)
    • eCRF Probandengr.:     $notification.ecrfStatusEntry.ecrf.group.title

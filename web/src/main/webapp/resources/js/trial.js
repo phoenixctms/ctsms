@@ -198,24 +198,6 @@ function handleUpdateProbandListTabTitles(xhr, status, args) {
 	}
 }
 
-function handleUpdateAuditTrailTabTitles(xhr, status, args) {
-
-	//console.log(args);
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
-		auditTrailTabView.setTabTitle(1, decodeBase64(args[AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
-		auditTrailTabView.emphasizeTab(1, args[AJAX_VALIDATION_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
-	}
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
-		auditTrailTabView.setTabTitle(2, decodeBase64(args[AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
-		auditTrailTabView.emphasizeTab(2, args[AJAX_QUERY_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
-	}
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_COUNT)) {
-		auditTrailTabView.setTabTitle(3, decodeBase64(args[AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64]));
-		auditTrailTabView.emphasizeTab(3, args[AJAX_ANNOTATION_ECRF_FIELD_STATUS_ENTRY_COUNT] == 0);
-	}
-
-}
-
 function handleUpdateTrialTabTitles(xhr, status, args) {
 
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {

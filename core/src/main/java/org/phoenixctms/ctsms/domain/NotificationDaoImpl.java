@@ -6,7 +6,14 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,25 +22,34 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
 import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.BundleControl;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.KeyValueString;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.util.VelocityStringUtils;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.NotificationRecipientVO;
 import org.phoenixctms.ctsms.vo.NotificationVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -48,6 +64,95 @@ extends NotificationDaoBase
 
 	private final static VOIDComparator RECIPIENT_VO_ID_COMPARATOR = new VOIDComparator<NotificationRecipientVO>(false);
 	private VelocityEngine velocityEngine;
+	private final static String TEMPLATE_ENCODING = "UTF-8";
+
+	private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
+	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
+
+		private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
+
+		@Override
+		protected boolean getBooleanValue(ECRFFieldValueOutVO value) {
+			return value.getBooleanValue();
+		}
+
+		@Override
+		protected String getCheckboxString(boolean value) {
+			return L10nUtil.getString(Locales.NOTIFICATION,
+					value ? MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED,
+							value ? DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
+		}
+
+		@Override
+		protected DateFormat getDateFormat() {
+			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN,
+					Locales.NOTIFICATION);
+		}
+
+		@Override
+		protected DateFormat getDateTimeFormat() {
+			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
+					DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Locales.NOTIFICATION);
+		}
+
+		@Override
+		protected Date getDateValue(ECRFFieldValueOutVO value) {
+			return value.getDateValue();
+		}
+
+		@Override
+		protected Float getFloatValue(ECRFFieldValueOutVO value) {
+			return value.getFloatValue();
+		}
+
+		@Override
+		protected InputFieldOutVO getInputField(ECRFFieldValueOutVO value) {
+			return value != null ? value.getEcrfField().getField() : null;
+		}
+
+		@Override
+		protected Long getLongValue(ECRFFieldValueOutVO value) {
+			return value.getLongValue();
+		}
+
+		@Override
+		protected Collection<InputFieldSelectionSetValueOutVO> getSelectionSetValues(ECRFFieldValueOutVO value) {
+			return value.getSelectionValues();
+		}
+
+		@Override
+		protected String getSelectionSetValuesSeparator() {
+			return SELECTION_SET_VALUES_SEPARATOR;
+			// return L10nUtil.getString(Locales.NOTIFICATION, MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR,
+			// DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR);
+		}
+
+		@Override
+		protected Integer getTextClipMaxLength() {
+			return null;
+		}
+
+		@Override
+		protected String getTextValue(ECRFFieldValueOutVO value) {
+			return value.getTextValue();
+		}
+
+		@Override
+		protected DateFormat getTimeFormat() {
+			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN,
+					Locales.NOTIFICATION);
+		}
+
+		@Override
+		protected Date getTimestampValue(ECRFFieldValueOutVO value) {
+			return value.getTimestampValue();
+		}
+
+		@Override
+		protected Date getTimeValue(ECRFFieldValueOutVO value) {
+			return value.getTimeValue();
+		}
+	};
 
 	private void addDepartmentRecipients(Notification newNotification, Department department, org.phoenixctms.ctsms.enumeration.NotificationType notificationType)
 			throws Exception {
@@ -161,9 +266,9 @@ extends NotificationDaoBase
 						enumerateEntities,
 						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES, Bundle.SETTINGS,
 								DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES),
-						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
-								DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
-						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS),
+								Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
+										DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
+										Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS),
 										NotificationMessageTemplateParameters.TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR,
 										NotificationMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES
 						).iterator();
@@ -171,6 +276,7 @@ extends NotificationDaoBase
 				DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN);
 		String datePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN);
 		String timePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN);
+
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
 			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(preliminaryNotificationVO).iterator();
@@ -192,6 +298,7 @@ extends NotificationDaoBase
 				NotificationMessageTemplateParameters.HTTP_BASE_URL, Settings.getHttpBaseUrl());
 		model.put(
 				NotificationMessageTemplateParameters.HTTP_DOMAIN_NAME, Settings.getHttpDomainName());
+		model.put(NotificationMessageTemplateParameters.STRING_UTILS, STRING_UTILS);
 		if (messageParameters != null && messageParameters.size() > 0) {
 			model.putAll(messageParameters);
 		}
@@ -200,8 +307,29 @@ extends NotificationDaoBase
 
 	private String getMessage(Notification notification, Map messageParameters) throws Exception {
 		String messageVslFileName = L10nUtil.getNotificationMessageTemplate(Locales.NOTIFICATION, notification.getType().getMessageTemplateL10nKey());
+
 		if (messageVslFileName != null && messageVslFileName.length() > 0) {
-			return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, messageVslFileName, messageParameters);
+			Iterator<String> it = BundleControl.PROPERTIES_SEARCH_PATHS.iterator();
+			while (it.hasNext()) {
+				try {
+					File messageVslFile = new java.io.File(it.next(), messageVslFileName);
+					FileInputStream stream = new FileInputStream(messageVslFile);
+					try {
+						StringWriter result = new StringWriter();
+						velocityEngine.evaluate(new VelocityContext(messageParameters), result, messageVslFile.getName(), new InputStreamReader(stream, TEMPLATE_ENCODING));
+						return result.toString();
+					} catch (IOException e) {
+						// e.printStackTrace();
+					} finally {
+						stream.close();
+					}
+				} catch (FileNotFoundException e) {
+					// e.printStackTrace();
+				} catch (SecurityException e) {
+					// e.printStackTrace();
+				}
+			}
+			return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, messageVslFileName, TEMPLATE_ENCODING, messageParameters);
 		} else {
 			return null;
 		}
@@ -500,6 +628,10 @@ extends NotificationDaoBase
 		}
 		notification.setEcrfFieldStatusEntry(ecrfFieldStatusEntry);
 		ecrfFieldStatusEntry.addNotifications(notification);
+		if (messageParameters == null) {
+			messageParameters = CoreUtil.createEmptyTemplateModel();
+		}
+		messageParameters.put(NotificationMessageTemplateParameters.ECRF_INPUT_FIELD_VALUE_ADAPTER, ECRF_INPUT_FIELD_VALUE_ADAPTER);
 		setRemainingFields(notification, today, notificationType, messageParameters);
 		notification = this.create(notification);
 		// if (trialMembers.size() == 0) {

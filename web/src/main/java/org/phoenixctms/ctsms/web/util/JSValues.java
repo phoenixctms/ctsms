@@ -34,6 +34,7 @@ public enum JSValues {
 	PROBAND_ID(GetParamNames.PROBAND_ID.toString()),
 	INPUT_FIELD_ID(GetParamNames.INPUT_FIELD_ID.toString()),
 	CRITERIA_ID(GetParamNames.CRITERIA_ID.toString()),
+	ECRF_FIELD_STATUS_ENTRY_ID(GetParamNames.ECRF_FIELD_STATUS_ENTRY_ID.toString()),
 	SOURCE_INDEX(GetParamNames.SOURCE_INDEX.toString()),
 	TARGET_INDEX(GetParamNames.TARGET_INDEX.toString()),
 	NO_SELECTION_VALUE(CommonUtil.NO_SELECTION_VALUE),
@@ -221,6 +222,7 @@ public enum JSValues {
 	PROBAND_PICKER_URL(Urls.PROBAND_PICKER.value()),
 	INPUT_FIELD_PICKER_URL(Urls.INPUT_FIELD_PICKER.value()),
 	TEAM_MEMBER_PICKER_URL(Urls.TEAM_MEMBER_PICKER.value()),
+	ECRF_SECTION_URL(Urls.ECRF_SECTION.value()),
 	INVENTORY_URL(Urls.INVENTORY.value()),
 	STAFF_URL(Urls.STAFF.value()),
 	COURSE_URL(Urls.COURSE.value()),
@@ -281,6 +283,7 @@ public enum JSValues {
 	PROBAND_HOME_WINDOW_NAME("proband_home"),
 	INPUT_FIELD_HOME_WINDOW_NAME("inputfield_home"),
 	PORTAL_WINDOW_NAME("portal"),
+	ECRF_SECTION_WINDOW_NAME("ecrf_issue"),
 	TRUSTED_REFERER_HOSTS(""),
 	HEADLINE_ID("headline"),
 	CONTEXT_PATH(""),
@@ -346,6 +349,7 @@ public enum JSValues {
 			case PROBAND_PICKER_URL:
 			case INPUT_FIELD_PICKER_URL:
 			case TEAM_MEMBER_PICKER_URL:
+			case ECRF_SECTION_URL:
 			case INVENTORY_URL:
 			case STAFF_URL:
 			case COURSE_URL:
@@ -407,6 +411,7 @@ public enum JSValues {
 			case INPUT_FIELD_HOME_WINDOW_NAME:
 			case NEW_ENTITY_WINDOW_NAME_SUFFIX:
 			case PORTAL_WINDOW_NAME:
+			case ECRF_SECTION_WINDOW_NAME:
 				return getWindowNamePattern(name());
 			case ENABLE_GEOLOCATION_SERVICES:
 				return Boolean.toString(Settings.getBoolean(SettingCodes.ENABLE_GEOLOCATION_SERVICES, Bundle.SETTINGS, DefaultSettings.ENABLE_GEOLOCATION_SERVICES));

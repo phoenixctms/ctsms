@@ -11,11 +11,11 @@
 <h:body>
 	<ui:composition>
 		<h:panelGrid
-			columns="#{valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)}"
+			columns="#{(valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)) + (showAjaxStatus ? 1 : 0)}"
 			cellpadding="0"
 			rendered="#{valueBean.paginator.psf.rowCount gt 0}"
 			styleClass="ui-widget-header ui-corner-all ctsms-pages-panelgrid"
-			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}ctsms-pages-message-column,ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
+			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}ctsms-pages-message-column,#{showAjaxStatus ? 'ctsms-ajaxstatus-column,' : ''}ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
 			
 			
 			<p:selectOneMenu
@@ -44,6 +44,8 @@
 			</p:selectOneMenu>
 
 			<h:outputText value="#{valueBean.paginator.showPagesMessage ? labels.pages_save_before_change_message : ''}" />
+			
+			<ui:include src="ajaxStatus.xhtml" />
 			
 			<p:selectOneMenu
 				value="#{valueBean.paginator.pageSize}"

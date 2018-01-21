@@ -105,14 +105,14 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	@PostConstruct
 	private void init() {
-		initIn();
+		// initIn();
 		initSets(false);
 	}
 
-	@Override
-	protected void initIn() {
-		// TODO Auto-generated method stub
-	}
+	// @Override
+	// protected void initIn() {
+	// // TODO Auto-generated method stub
+	// }
 
 	@Override
 	protected void initSpecificSets() {

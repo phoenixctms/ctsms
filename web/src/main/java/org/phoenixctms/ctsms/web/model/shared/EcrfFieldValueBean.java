@@ -162,6 +162,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	private String deltaErrorMessageId;
 	private String filterSection;
 	private ECRFSectionProgressVO filterSectionProgress;
+	private Long filterIndex;
 
 	public EcrfFieldValueBean() {
 		super();
@@ -178,6 +179,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		paddedInputModelsMap = new HashMap<EcrfFieldSection, List<Object[]>>();
 		filterSection = null;
 		filterSectionProgress = null;
+		filterIndex = null;
 		deltaErrorMessageId = null;
 		paginator = new Paginator(this) {
 
@@ -196,7 +198,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					} else {
 						try {
 							return WebUtil.getServiceLocator().getTrialService()
-									.getEcrfFieldValueCount(WebUtil.getAuthentication(), ids[0], ((EcrfFieldValueBean) bean).getFilterSection(), ids[1]);
+									.getEcrfFieldValueCount(WebUtil.getAuthentication(), ids[0], ((EcrfFieldValueBean) bean).getFilterSection(), ((EcrfFieldValueBean) bean).getFilterIndex(), ids[1]);
 						} catch (AuthenticationException e) {
 							WebUtil.publishException(e);
 						} catch (AuthorisationException e) {
@@ -544,6 +546,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		return true;
 	}
 
+	public Long getFilterIndex() {
+		return filterIndex;
+	}
+
 	public String getFilterSection() {
 		return filterSection;
 	}
@@ -686,7 +692,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				} else {
 					try {
 						portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfFieldValues(WebUtil.getAuthentication(), ecrf.getId(), filterSection, probandListEntry.getId(), true,
+								.getEcrfFieldValues(WebUtil.getAuthentication(), ecrf.getId(), filterSection,filterIndex, probandListEntry.getId(), true,
 										loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), paginator.getPsf()));
 					} catch (ServiceException e) {
 					} catch (AuthenticationException e) {
@@ -780,7 +786,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						.getEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, listEntryId, true, true, psf));
 			} else {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, filterSection, listEntryId, true, true,
+						.getEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, filterSection,filterIndex, listEntryId, true, true,
 								psf));
 			}
 			paginator.initPages(psf, false);
@@ -893,6 +899,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		this.ecrfStatus = ecrfStatus;
 	}
 
+	public void setFilterIndex(Long filterIndex) {
+		this.filterIndex = filterIndex;
+	}
+
 	public void setFilterSection(String filterSection) {
 		this.filterSection = filterSection;
 		// this.filterSectionProgress = (filterSection != null ? new ECRFSectionProgressVO() : null);
@@ -948,7 +958,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, true, psf));
 				} else {
 					portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, filterSection, true, psf));
+							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, filterSection, filterIndex, true, psf));
 				}
 				paginator.initPages(psf, false);
 				initIn(false, false);
@@ -1110,7 +1120,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), true, psf));
 			} else {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection, true, psf));
+						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection,filterIndex, true, psf));
 			}
 			paginator.initPages(psf, false);
 			ecrfFieldValuesIn = clearFromEcrfFieldValuesIn(section);

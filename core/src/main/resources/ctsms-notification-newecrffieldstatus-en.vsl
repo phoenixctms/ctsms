@@ -6,7 +6,8 @@ this is a notification for the following event:
 
    • Trial:              $ecrffieldstatusentry_listentry_trial_name
    • Trial department:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband ID:         $ecrffieldstatusentry_listentry_proband_id
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
    • eCRF:               ${ecrffieldstatusentry_ecrffield_ecrf_position}. $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.group)
    • eCRF proband group: $notification.ecrfFieldStatusEntry.ecrfField.ecrf.group.title
@@ -35,12 +36,14 @@ $ecrffieldstatusentry_comment
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • Saved (version $log.version): $!log.reasonForChange
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
 #end
 #end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Please check the data entry to resolve the eCRF issue.
+Please check the data entry to resolve the eCRF issue:
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #else
 The eCRF issue is closed.
 #end

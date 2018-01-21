@@ -803,4 +803,6 @@ public interface MessageCodes {
 	public static final String ADD_REIMBURSEMENT_COMMENT = "add_reimbursement_comment";
 	public static final String ADD_ACCOMMODATION_EXPENSE_COMMENT = "add_accommodation_expense_comment";
 	public static final String ADD_TICKET_EXPENSE_COMMENT = "add_ticket_expense_comment";
+	public static final String ECRF_SECTION_TITLE = "ecrf_section_title";
+	public static final String BLANK_ECRF_SECTION_TITLE = "blank_ecrf_section_title";
 }

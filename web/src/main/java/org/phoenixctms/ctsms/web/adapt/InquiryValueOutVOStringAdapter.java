@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.adapt;
 import java.util.Collection;
 import java.util.Date;
 
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 
@@ -21,10 +22,14 @@ public class InquiryValueOutVOStringAdapter extends InputFieldValueStringAdapter
 	protected Date getDateValue(InquiryValueOutVO value) {
 		return value.getDateValue();
 	}
-
 	@Override
 	protected Float getFloatValue(InquiryValueOutVO value) {
 		return value.getFloatValue();
+	}
+
+	@Override
+	protected InputFieldOutVO getInputField(InquiryValueOutVO value) {
+		return value != null ? value.getInquiry().getField() : null;
 	}
 
 	@Override

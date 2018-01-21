@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.adapt;
 import java.util.Collection;
 import java.util.Date;
 
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 
@@ -25,6 +26,11 @@ public class ProbandListEntryTagValueOutVOStringAdapter extends InputFieldValueS
 	@Override
 	protected Float getFloatValue(ProbandListEntryTagValueOutVO value) {
 		return value.getFloatValue();
+	}
+
+	@Override
+	protected InputFieldOutVO getInputField(ProbandListEntryTagValueOutVO value) {
+		return value != null ? value.getTag().getField() : null;
 	}
 
 	@Override

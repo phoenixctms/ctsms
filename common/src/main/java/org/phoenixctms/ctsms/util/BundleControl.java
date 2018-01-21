@@ -22,7 +22,7 @@ public class BundleControl extends Control {
 	private static final String ENCODING = "UTF-8"; // "ISO-8859-1"
 	private final static Pattern PATH_ENVIRONMENT_VARIABLE_REGEXP = Pattern.compile("\\s*[,;]\\s*");
 	private final static String PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE = "CTSMS_PROPERTIES";
-	private final static LinkedHashSet<String> PROPERTIES_SEARCH_PATHS = getPropertiesSearchPaths();
+	public final static LinkedHashSet<String> PROPERTIES_SEARCH_PATHS = getPropertiesSearchPaths();
 
 	private static LinkedHashSet<String> getPropertiesSearchPaths() {
 		String[] searchPaths = null;

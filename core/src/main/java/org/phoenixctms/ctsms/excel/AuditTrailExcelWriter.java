@@ -28,6 +28,7 @@ import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -88,6 +89,11 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		@Override
 		protected Float getFloatValue(ECRFFieldValueOutVO value) {
 			return value.getFloatValue();
+		}
+
+		@Override
+		protected InputFieldOutVO getInputField(ECRFFieldValueOutVO value) {
+			return value != null ? value.getEcrfField().getField() : null;
 		}
 
 		@Override
@@ -431,7 +437,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		while (fieldValuesIt.hasNext()) {
 			ECRFFieldValueOutVO vo = fieldValuesIt.next();
 			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
-			fieldRow.put(fieldKey, INPUT_FIELD_VALUE_ADAPTER.toString(vo.getEcrfField().getField(), vo));
+			fieldRow.put(fieldKey, INPUT_FIELD_VALUE_ADAPTER.toString(vo));
 			distinctFieldRows.put(vo.getId(), fieldRow);
 		}
 		getSpreadSheetWriters().get(0).setDistinctColumnNames(distinctColumnNames);

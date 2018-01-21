@@ -109,4 +109,7 @@ public interface MessageCodes {
 	public static final String ECRF_VALIDATION_FAILED_RESPONSE = "ecrf_validation_failed_response";
 	public static final String ECRF_VALIDATION_OK_ERRORS_RESPONSE = "ecrf_validation_ok_errors_response";
 	public static final String ECRF_VALIDATION_OK_NO_ERROR_RESPONSE = "ecrf_validation_ok_no_error_response";
+	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "notification_input_field_value_checkbox_checked";
+	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "notification_input_field_value_checkbox_unchecked";
+	// public static final String NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR = "notification_input_field_value_selection_set_values_separator";
 }

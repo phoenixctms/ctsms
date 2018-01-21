@@ -26,6 +26,10 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract Float getFloatValue(VALUEVO value);
 
+	protected InputFieldOutVO getInputField(VALUEVO value) {
+		return null;
+	}
+
 	protected abstract Long getLongValue(VALUEVO value);
 
 	protected abstract Collection<InputFieldSelectionSetValueOutVO> getSelectionSetValues(VALUEVO value);
@@ -136,5 +140,9 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 			}
 		}
 		return "";
+	}
+
+	public String toString(VALUEVO value) {
+		return this.toString(this.getInputField(value), value);
 	}
 }

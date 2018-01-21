@@ -20,7 +20,8 @@ this is a notification for the following event:
 
    • For course:      $inventorybooking_course_name
    • For trial:       $inventorybooking_trial_name
-   • For proband ID:  $inventorybooking_proband_id
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
 
 Status comment:
 

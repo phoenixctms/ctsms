@@ -27,6 +27,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.ServiceLocator;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
@@ -2208,6 +2209,25 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static Integer getEcrfSectionHashCode(ECRFFieldStatusEntryOutVO ecrfFieldStatusEntry) {
+		if (ecrfFieldStatusEntry != null) {
+			return new HashCodeBuilder(1249046965, -82296885)
+			.append(ecrfFieldStatusEntry.getListEntry().getId())
+			.append(ecrfFieldStatusEntry.getEcrfField().getEcrf().getId())
+			.append(ecrfFieldStatusEntry.getEcrfField().getSection())
+			.append(ecrfFieldStatusEntry.getIndex())
+			.toHashCode();
+		}
+
+		return null;
+	}
+
+	public static Integer getEcrfSectionHashCode(Long ecrfFieldStatusEntryId) {
+
+		return getEcrfSectionHashCode(getEcrfFieldStatusEntry(ecrfFieldStatusEntryId));
+
+	}
+
 	public static ECRFStatusEntryVO getEcrfStatusEntry(Long ecrfId, Long listEntryId) {
 		if (ecrfId != null && listEntryId != null) {
 			try {
@@ -2253,6 +2273,7 @@ public final class WebUtil {
 		return "";
 	}
 
+
 	public static ArrayList<Enum> getEnumList(String value,Class enumeration) {
 
 		ArrayList<Enum> result;
@@ -2270,7 +2291,6 @@ public final class WebUtil {
 		}
 		return result;
 	}
-
 
 	public static ArrayList<SelectItem> getEventImportances() {
 		ArrayList<SelectItem> importances;
