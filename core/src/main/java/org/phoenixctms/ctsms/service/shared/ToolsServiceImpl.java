@@ -959,13 +959,15 @@ extends ToolsServiceBase
 			Collection<Notification> notifications = filterNotifications(maintenanceScheduleItem.getNotifications(),
 					org.phoenixctms.ctsms.enumeration.NotificationType.MAINTENANCE_REMINDER, false);
 			if (notifications.size() == 0) {
-				notificationDao.addNotification(maintenanceScheduleItem, today, null);
-				count++;
+				if (notificationDao.addNotification(maintenanceScheduleItem, today, null) != null) {
+					count++;
+				}
 			} else if (maintenanceScheduleItem.isRecurring()) {
 				if (ReminderEntityAdapter.getInstance(maintenanceScheduleItem).getReminderStart(today, false, null, null)
 						.compareTo(Collections.max(notifications, new EntityIDComparator<Notification>(false)).getDate()) > 0) {
-					notificationDao.addNotification(maintenanceScheduleItem, today, null);
-					count++;
+					if (notificationDao.addNotification(maintenanceScheduleItem, today, null) != null) {
+						count++;
+					}
 				}
 			}
 		}
@@ -974,8 +976,9 @@ extends ToolsServiceBase
 		while (inventoryStatusIt.hasNext()) {
 			InventoryStatusEntry inventoryStatusEntry = inventoryStatusIt.next();
 			if (!ServiceUtil.testNotificationExists(inventoryStatusEntry.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.INVENTORY_INACTIVE, false)) {
-				notificationDao.addNotification(inventoryStatusEntry, today, null);
-				count++;
+				if (notificationDao.addNotification(inventoryStatusEntry, today, null) != null) {
+					count++;
+				}
 			}
 		}
 		Iterator<StaffStatusEntry> staffStatusIt = this.getStaffStatusEntryDao().findStaffStatus(CommonUtil.dateToTimestamp(today), null, departmentId, null, false, null, null)
@@ -983,8 +986,9 @@ extends ToolsServiceBase
 		while (staffStatusIt.hasNext()) {
 			StaffStatusEntry staffStatusEntry = staffStatusIt.next();
 			if (!ServiceUtil.testNotificationExists(staffStatusEntry.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE, false)) {
-				notificationDao.addNotification(staffStatusEntry, today, null);
-				count++;
+				if (notificationDao.addNotification(staffStatusEntry, today, null) != null) {
+					count++;
+				}
 			}
 		}
 		Iterator<ProbandStatusEntry> probandStatusIt = this.getProbandStatusEntryDao()
@@ -992,8 +996,9 @@ extends ToolsServiceBase
 		while (probandStatusIt.hasNext()) {
 			ProbandStatusEntry probandStatusEntry = probandStatusIt.next();
 			if (!ServiceUtil.testNotificationExists(probandStatusEntry.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.PROBAND_INACTIVE, false)) {
-				notificationDao.addNotification(probandStatusEntry, today, null);
-				count++;
+				if (notificationDao.addNotification(probandStatusEntry, today, null) != null) {
+					count++;
+				}
 			}
 		}
 		VariablePeriod expiringCourseReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
@@ -1028,16 +1033,18 @@ extends ToolsServiceBase
 				Map messageParameters = CoreUtil.createEmptyTemplateModel();
 				messageParameters.put(NotificationMessageTemplateParameters.COURSE_EXPIRATION_DAYS_LEFT,
 						DateCalc.dateDeltaDays(today, DateCalc.addInterval(course.getStop(), course.getValidityPeriod(), course.getValidityPeriodDays())));
-				notificationDao.addNotification(courseParticipationStatusEntry, true, false, today, messageParameters);
-				count++;
+				if (notificationDao.addNotification(courseParticipationStatusEntry, true, false, today, messageParameters) != null) {
+					count++;
+				}
 			}
 		}
 		Iterator<TimelineEvent> timelineScheduleIt = this.getTimelineEventDao().findTimelineSchedule(today, null, departmentId, null, true, false, null).iterator();
 		while (timelineScheduleIt.hasNext()) {
 			TimelineEvent timelineEvent = timelineScheduleIt.next();
 			if (!ServiceUtil.testNotificationExists(timelineEvent.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.TIMELINE_EVENT_REMINDER, false)) {
-				notificationDao.addNotification(timelineEvent, today, null);
-				count++;
+				if (notificationDao.addNotification(timelineEvent, today, null) != null) {
+					count++;
+				}
 			}
 		}
 
@@ -1050,8 +1057,9 @@ extends ToolsServiceBase
 		while (visitScheduleItemScheduleIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemScheduleIt.next();
 			if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER, false)) {
-				notificationDao.addNotification(visitScheduleItem, today, null);
-				count++;
+				if (notificationDao.addNotification(visitScheduleItem, today, null) != null) {
+					count++;
+				}
 			}
 		}
 
@@ -1066,8 +1074,9 @@ extends ToolsServiceBase
 			if (!ServiceUtil.testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
 				Map messageParameters = CoreUtil.createEmptyTemplateModel();
 				messageParameters.put(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT, DateCalc.dateDeltaDays(today, proband.getAutoDeleteDeadline()));
-				notificationDao.addNotification(proband, today, messageParameters);
-				count++;
+				if (notificationDao.addNotification(proband, today, messageParameters) != null) {
+					count++;
+				}
 			}
 		}
 		VariablePeriod expiringPasswordReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_EXPIRING_PASSWORD_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
@@ -1082,8 +1091,9 @@ extends ToolsServiceBase
 				Map messageParameters = CoreUtil.createEmptyTemplateModel();
 				messageParameters.put(NotificationMessageTemplateParameters.PASSWORD_EXPIRATION_DAYS_LEFT,
 						DateCalc.dateDeltaDays(today, ServiceUtil.getLogonExpirationDate(password)));
-				notificationDao.addNotification(password, today, messageParameters);
-				count++;
+				if (notificationDao.addNotification(password, today, messageParameters) != null) {
+					count++;
+				}
 			}
 		}
 		return count;

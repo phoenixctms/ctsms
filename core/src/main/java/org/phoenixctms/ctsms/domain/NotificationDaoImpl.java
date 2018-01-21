@@ -34,6 +34,7 @@ import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.BundleControl;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -491,14 +492,18 @@ extends NotificationDaoBase
 		}
 		notification.setCourse(course);
 		course.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (lecturers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, lecturers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (lecturers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, lecturers);
+			// }
+			return notification;
+		} else {
+			course.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -511,10 +516,14 @@ extends NotificationDaoBase
 		notification.setDepartment(department);
 		notification.setCourse(course);
 		course.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		addDepartmentRecipients(notification, department, notificationType);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			addDepartmentRecipients(notification, department, notificationType);
+			return notification;
+		} else {
+			course.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -531,12 +540,16 @@ extends NotificationDaoBase
 		Notification notification = Notification.Factory.newInstance();
 		notification.setCourseParticipationStatusEntry(courseParticipationStatusEntry);
 		courseParticipationStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		if (!toLecturers || addLecturerRecipients(notification, courseParticipationStatusEntry.getCourse(), true).size() == 0) {
-			createNotificationRecipient(notification, courseParticipationStatusEntry.getStaff());
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			if (!toLecturers || addLecturerRecipients(notification, courseParticipationStatusEntry.getCourse(), true).size() == 0) {
+				createNotificationRecipient(notification, courseParticipationStatusEntry.getStaff());
+			}
+			return notification;
+		} else {
+			courseParticipationStatusEntry.removeNotifications(notification);
+			return null;
 		}
-		return notification;
 	}
 
 	@Override
@@ -545,10 +558,13 @@ extends NotificationDaoBase
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.PROBANDS_DELETED;
 		Notification notification = Notification.Factory.newInstance();
 		notification.setDepartment(department);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		addDepartmentRecipients(notification, department, notificationType);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			addDepartmentRecipients(notification, department, notificationType);
+			return notification;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -568,10 +584,15 @@ extends NotificationDaoBase
 		dutyRosterTurn.addNotifications(notification);
 		notification.setStaff(staff);
 		staff.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		createNotificationRecipient(notification, staff);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			createNotificationRecipient(notification, staff);
+			return notification;
+		} else {
+			dutyRosterTurn.removeNotifications(notification);
+			staff.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -584,13 +605,18 @@ extends NotificationDaoBase
 		dutyRosterTurn.addNotifications(notification);
 		notification.setStaffStatusEntry(staffStatusEntry);
 		staffStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		if (addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), true).size() == 0
-				&& addSuperVisorsRecipients(notification, dutyRosterTurn.getStaff().getParent(), true).size() == 0) {
-			createNotificationRecipient(notification, dutyRosterTurn.getStaff());
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			if (addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), true).size() == 0
+					&& addSuperVisorsRecipients(notification, dutyRosterTurn.getStaff().getParent(), true).size() == 0) {
+				createNotificationRecipient(notification, dutyRosterTurn.getStaff());
+			}
+			return notification;
+		} else {
+			dutyRosterTurn.removeNotifications(notification);
+			staffStatusEntry.removeNotifications(notification);
+			return null;
 		}
-		return notification;
 	}
 
 	@Override
@@ -605,13 +631,19 @@ extends NotificationDaoBase
 		dutyRosterTurn.addNotifications(notification);
 		notification.setStaff(staff);
 		staff.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification.setDutyRosterTurn(null);
-		dutyRosterTurn.removeNotifications(notification);
-		dutyRosterTurn.setModifiedUser(originalModifiedUser);
-		notification = this.create(notification);
-		createNotificationRecipient(notification, staff);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification.setDutyRosterTurn(null);
+			dutyRosterTurn.removeNotifications(notification);
+			dutyRosterTurn.setModifiedUser(originalModifiedUser);
+			notification = this.create(notification);
+			createNotificationRecipient(notification, staff);
+			return notification;
+		} else {
+			dutyRosterTurn.removeNotifications(notification);
+			staff.removeNotifications(notification);
+			dutyRosterTurn.setModifiedUser(originalModifiedUser);
+			return null;
+		}
 	}
 
 	@Override
@@ -632,14 +664,18 @@ extends NotificationDaoBase
 			messageParameters = CoreUtil.createEmptyTemplateModel();
 		}
 		messageParameters.put(NotificationMessageTemplateParameters.ECRF_INPUT_FIELD_VALUE_ADAPTER, ECRF_INPUT_FIELD_VALUE_ADAPTER);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			ecrfFieldStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -657,14 +693,18 @@ extends NotificationDaoBase
 		}
 		notification.setEcrfStatusEntry(ecrfStatusEntry);
 		ecrfStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			ecrfStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -677,10 +717,15 @@ extends NotificationDaoBase
 		inventoryBooking.addNotifications(notification);
 		notification.setInventoryStatusEntry(inventoryStatusEntry);
 		inventoryStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		createNotificationRecipient(notification, inventoryBooking.getOnBehalfOf());
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			createNotificationRecipient(notification, inventoryBooking.getOnBehalfOf());
+			return notification;
+		} else {
+			inventoryBooking.removeNotifications(notification);
+			inventoryStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -693,10 +738,14 @@ extends NotificationDaoBase
 		notification.setDepartment(department);
 		notification.setInventoryStatusEntry(inventoryStatusEntry);
 		inventoryStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		addDepartmentRecipients(notification, department, notificationType);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			addDepartmentRecipients(notification, department, notificationType);
+			return notification;
+		} else {
+			inventoryStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -707,10 +756,14 @@ extends NotificationDaoBase
 		Notification notification = Notification.Factory.newInstance();
 		notification.setMaintenanceScheduleItem(maintenanceScheduleItem);
 		maintenanceScheduleItem.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		createNotificationRecipient(notification, maintenanceScheduleItem.getResponsiblePerson());
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			createNotificationRecipient(notification, maintenanceScheduleItem.getResponsiblePerson());
+			return notification;
+		} else {
+			maintenanceScheduleItem.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -730,16 +783,20 @@ extends NotificationDaoBase
 		}
 		notification.setPassword(password);
 		password.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (identity == null) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		if (identity != null) {
-			createNotificationRecipient(notification, identity);
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (identity == null) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			if (identity != null) {
+				createNotificationRecipient(notification, identity);
+			}
+			// }
+			return notification;
+		} else {
+			password.removeNotifications(notification);
+			return null;
 		}
-		// }
-		return notification;
 	}
 
 	@Override
@@ -752,10 +809,14 @@ extends NotificationDaoBase
 		notification.setDepartment(department);
 		notification.setProband(proband);
 		proband.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		addDepartmentRecipients(notification, department, notificationType);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			addDepartmentRecipients(notification, department, notificationType);
+			return notification;
+		} else {
+			proband.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -768,10 +829,14 @@ extends NotificationDaoBase
 		notification.setDepartment(department);
 		notification.setProbandStatusEntry(probandStatusEntry);
 		probandStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		addDepartmentRecipients(notification, department, notificationType);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			addDepartmentRecipients(notification, department, notificationType);
+			return notification;
+		} else {
+			probandStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -782,12 +847,16 @@ extends NotificationDaoBase
 		Notification notification = Notification.Factory.newInstance();
 		notification.setStaffStatusEntry(staffStatusEntry);
 		staffStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		if (addSuperVisorsRecipients(notification, staffStatusEntry.getStaff().getParent(), true).size() == 0) {
-			createNotificationRecipient(notification, staffStatusEntry.getStaff());
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			if (addSuperVisorsRecipients(notification, staffStatusEntry.getStaff().getParent(), true).size() == 0) {
+				createNotificationRecipient(notification, staffStatusEntry.getStaff());
+			}
+			return notification;
+		} else {
+			staffStatusEntry.removeNotifications(notification);
+			return null;
 		}
-		return notification;
 	}
 
 	@Override
@@ -805,14 +874,18 @@ extends NotificationDaoBase
 		}
 		notification.setTimelineEvent(timelineEvent);
 		timelineEvent.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			timelineEvent.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -828,14 +901,18 @@ extends NotificationDaoBase
 		}
 		notification.setTrial(trial);
 		trial.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			trial.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -861,14 +938,18 @@ extends NotificationDaoBase
 		notification.setTrial(trial);
 		trial.addNotifications(notification);
 		notification.setTrialTag(trialTag);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			trial.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -880,10 +961,14 @@ extends NotificationDaoBase
 		Staff identity = user.getIdentity();
 		notification.setUser(user);
 		user.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		createNotificationRecipient(notification, identity);
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			createNotificationRecipient(notification, identity);
+			return notification;
+		} else {
+			user.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -901,14 +986,18 @@ extends NotificationDaoBase
 		}
 		notification.setVisitScheduleItem(visitScheduleItem);
 		visitScheduleItem.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			visitScheduleItem.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -931,14 +1020,20 @@ extends NotificationDaoBase
 		proband.addNotifications(notification);
 		notification.setProbandStatusEntry(probandStatusEntry);
 		probandStatusEntry.addNotifications(notification);
-		setRemainingFields(notification, today, notificationType, messageParameters);
-		notification = this.create(notification);
-		// if (trialMembers.size() == 0) {
-		// addDepartmentRecipients(notification, department, notificationType);
-		// } else {
-		createNotificationRecipients(notification, trialMembers);
-		// }
-		return notification;
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			// if (trialMembers.size() == 0) {
+			// addDepartmentRecipients(notification, department, notificationType);
+			// } else {
+			createNotificationRecipients(notification, trialMembers);
+			// }
+			return notification;
+		} else {
+			visitScheduleItem.removeNotifications(notification);
+			proband.removeNotifications(notification);
+			probandStatusEntry.removeNotifications(notification);
+			return null;
+		}
 	}
 
 	@Override
@@ -1065,12 +1160,13 @@ extends NotificationDaoBase
 		super.notificationVOToEntity(source, target, copyIfNull);
 	}
 
-	private void setRemainingFields(Notification newNotification, Date today, org.phoenixctms.ctsms.enumeration.NotificationType type, Map messageParameters) throws Exception {
+	private boolean setRemainingFields(Notification newNotification, Date today, org.phoenixctms.ctsms.enumeration.NotificationType type, Map messageParameters) throws Exception {
 		newNotification.setType(this.getNotificationTypeDao().searchUniqueType(type));
 		newNotification.setDate(DateCalc.getStartOfDay(today));
 		Map model = createTemplateModel(newNotification, today, messageParameters);
 		newNotification.setSubject(getSubject(newNotification, model));
 		newNotification.setMessage(getMessage(newNotification, model));
+		return !CommonUtil.isEmptyString(newNotification.getSubject()) && !CommonUtil.isEmptyString(newNotification.getMessage());
 	}
 
 	public void setVelocityEngine(VelocityEngine velocityEngine) {
