@@ -64,7 +64,7 @@ public class DepartmentManager {
 	private static final String DEPARTMENT_NAME = "ID {0}: {1} - {2}";
 	private static final String PROFILE_NAME = "{0}: {1} - {2}";
 	private static final boolean DEFAULT_DEPARTMENT_VISIBLE = true;
-	private static final boolean USER_ONE_TIME_LOGON = true;
+	private static final boolean USER_ONE_TIME_LOGON = false;
 	private static final Pattern PROFILE_SEPARATOR_REGEXP = Pattern.compile(" *, *");
 
 	private JobOutput jobOutput;
