@@ -168,7 +168,7 @@ function resetSessionTimers() {
 	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
 		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
 
-		} else { // (!jQuery.browser.safari) {
+		} else if (_isTrustedReferrer(document.referrer)) { // (!jQuery.browser.safari) {
 			window.open('javascript:if(window.resetSessionTimers){resetSessionTimers();}else{window.location.href=' + JSON.stringify(APPLICATION_URL + PORTAL_URL)
 		        + ';}', PORTAL_WINDOW_NAME);
 		//} else {
@@ -1222,13 +1222,17 @@ function openAutoDeletionProbandOverview() {
 }
 
 function _isTrustedReferrer(url) {
-	var referer = document.createElement('a');
-	referer.href = url;
+	if (!url) {
+		return false;
+	} else {
+		var referer = document.createElement('a');
+		referer.href = url;
 
-	if (referer && jQuery.inArray(referer.hostname, TRUSTED_REFERER_HOSTS) >= 0 && _prependSlash(referer.pathname).indexOf(CONTEXT_PATH) == 0) {
-		return true;
+		if (referer && jQuery.inArray(referer.hostname, TRUSTED_REFERER_HOSTS) >= 0 && _prependSlash(referer.pathname).indexOf(CONTEXT_PATH) == 0) {
+			return true;
+		}
+		return false;
 	}
-	return false;
 }
 
 function _prependSlash(pathname) { // IE ...
@@ -1277,6 +1281,8 @@ function openPortal() {
 
 function _openEcrfSectionCallback(args) {
 
+	//var openerWindow = window.open(decodeBase64(args.url), args.window);
+	//openerWindow.focus();
 	var openerWindow = window.open(decodeBase64(args.url), args.window,
 			'dependent=yes,location=0,menubar=0,resizable=1,status=1,toolbar=0,titlebar=1,scrollbars=1,height=' + args.height + ',width=' + args.width);
 	openerWindow.focus();

@@ -439,5 +439,6 @@ public interface SettingCodes {
 	public static final String SHOW_PROBAND_LIST_ENTRY_RATING = "show_proband_list_entry_rating";
 	public final static String PROBAND_LIST_ENTRY_RATING_PRESET = "proband_list_entry_rating_preset";
 	public final static String PROBAND_LIST_ENTRY_RATING_MAX_PRESET = "proband_list_entry_rating_max_preset";
+	public static final String DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT = "duty_roster_schedule_staff_na_count_limit";
 
 }

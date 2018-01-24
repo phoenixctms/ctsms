@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
@@ -81,7 +82,7 @@ extends StaffDaoBase
 	@Override
 	protected Collection<Staff> handleFindByDepartmentStatusInterval(Long departmentId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable,
 			Boolean hideAvailability, PSFVO psf)
-			throws Exception {
+					throws Exception {
 		org.hibernate.Criteria staffCriteria = createStaffCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Staff.class, staffCriteria);
 		if (departmentId != null) {
@@ -128,6 +129,30 @@ extends StaffDaoBase
 				this.getCriterionTieDao(),
 				this.getCriterionPropertyDao(),
 				this.getCriterionRestrictionDao());
+	}
+
+	@Override
+	protected long handleGetCountByDepartmentStatusInterval(Long departmentId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
+			throws Exception {
+		org.hibernate.Criteria staffCriteria = createStaffCriteria();
+		if (departmentId != null) {
+			staffCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		if (allocatable != null) {
+			staffCriteria.add(Restrictions.eq("allocatable", allocatable.booleanValue()));
+		}
+		org.hibernate.Criteria statusEntryCriteria = staffCriteria.createCriteria("statusEntries", CriteriaSpecification.INNER_JOIN);
+		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
+		if (staffActive != null || hideAvailability != null) {
+			Criteria statusTypeCriteria = statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN);
+			if (staffActive != null) {
+				statusTypeCriteria.add(Restrictions.eq("staffActive", staffActive.booleanValue()));
+			}
+			if (hideAvailability != null) {
+				statusTypeCriteria.add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
+			}
+		}
+		return (Long) staffCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
 	}
 
 	private void loadDeferredUserOutVOs(HashMap<Class, HashMap<Long, Object>> voMap) {
@@ -722,6 +747,5 @@ extends StaffDaoBase
 		(new StaffReflexionGraph(this, this.getStaffCategoryDao(), this.getDepartmentDao(), this.getUserDao(), maxInstances)).toVOHelper(source, target, voMap);
 		loadDeferredUserOutVOs(voMap);
 	}
-
 
 }

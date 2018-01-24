@@ -41,7 +41,7 @@ var defaults = {
 	ignoreTimezone: true,
 
 	// event ajax
-	lazyFetching: true,
+	lazyFetching: false, //true, fetch always to have collision caches refreshed when switching from month to eg. week
 	startParam: 'start',
 	endParam: 'end',
 

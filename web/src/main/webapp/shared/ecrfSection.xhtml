@@ -206,7 +206,7 @@
 												name="reasonForChangeRequired"
 												value="#{ecrfSectionBean.ecrfFieldValueBean.reasonForChangeRequired}" />
 										</ui:include>
-										<p:toolbar rendered="#{section.series and !ecrfSectionBean.ecrfFieldValueBean.editable}">
+										<p:toolbar rendered="#{section.series and (!ecrfSectionBean.ecrfFieldValueBean.editable or !ecrfSectionBean.ecrfFieldValueBean.sectionCreatedMap[section])}">
 											<p:toolbarGroup align="right">
 												<p:commandButton
 													process="@this,@([id^=\\'ecrfsection_form:ecrffield_inputs:#{section.rowIndex}:section_inputs:\\'][id*=\\'row\\'])"

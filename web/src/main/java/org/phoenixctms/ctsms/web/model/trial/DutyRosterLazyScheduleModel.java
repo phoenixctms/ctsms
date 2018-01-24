@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.DateCountVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
@@ -32,6 +33,7 @@ import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerMode
 import org.phoenixctms.ctsms.web.model.shared.CourseEvent;
 import org.phoenixctms.ctsms.web.model.shared.HolidayEvent;
 import org.phoenixctms.ctsms.web.model.shared.ProbandStatusEvent;
+import org.phoenixctms.ctsms.web.model.shared.StaffNaCountEvent;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -52,6 +54,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private boolean showCourses;
 	private boolean showProbandStatus;
 	private Long showCollisionsThresholdDays;
+	private Long staffNaCountLimit;
+	private boolean showStaffNaCount;
 	private Long departmentId;
 	private Long staffCategoryId;
 	private Long trialId;
@@ -87,6 +91,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_PROBAND_STATUS_PRESET);
 		showCollisionsThresholdDays = Settings.getLongNullable(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_COLLISIONS_THRESHOLD_DAYS, Bundle.SETTINGS,
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_COLLISIONS_THRESHOLD_DAYS);
+		staffNaCountLimit = Settings.getLongNullable(SettingCodes.DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT);
 		setShowNotifyOnly(Settings.getBoolean(SettingCodes.TIMELINE_SCHEDULE_SHOW_NOTIFY_ONLY_PRESET, Bundle.SETTINGS, DefaultSettings.TIMELINE_SCHEDULE_SHOW_NOTIFY_ONLY_PRESET));
 		setIgnoreObsoleteTimelineEvents(Settings.getBoolean(SettingCodes.TIMELINE_SCHEDULE_IGNORE_OBSOLETE_PRESET, Bundle.SETTINGS,
 				DefaultSettings.TIMELINE_SCHEDULE_IGNORE_OBSOLETE_PRESET));
@@ -155,6 +161,25 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				Iterator<HolidayVO> it = holidays.iterator();
 				while (it.hasNext()) {
 					addEvent(new HolidayEvent(it.next()));
+				}
+			}
+		}
+		if (staffNaCountLimit != null && (showCollisionsThresholdDays == null || to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
+				showCollisionsThresholdDays, 1)) <= 0)) {
+			Collection<DateCountVO> staffNaCounts = null;
+			try {
+				staffNaCounts = WebUtil.getServiceLocator().getStaffService()
+						.getCollidingStaffStatusIntervalDayCounts(auth, departmentId, from, to);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+			if (staffNaCounts != null) {
+				Iterator<DateCountVO> it = staffNaCounts.iterator();
+				while (it.hasNext()) {
+					addEvent(new StaffNaCountEvent(it.next()));
 				}
 			}
 		}

@@ -111,6 +111,7 @@ import org.phoenixctms.ctsms.vo.CvPDFVO;
 import org.phoenixctms.ctsms.vo.CvPositionInVO;
 import org.phoenixctms.ctsms.vo.CvPositionOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
+import org.phoenixctms.ctsms.vo.DateCountVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnInVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
@@ -1323,7 +1324,24 @@ extends StaffServiceBase
 		return collidingStaffStatusEntries;
 	}
 
-
+	@Override
+	protected Collection<DateCountVO> handleGetCollidingStaffStatusIntervalDayCounts(AuthenticationVO auth, Long departmentId, Date start, Date stop) throws Exception {
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		ArrayList<DateCountVO> result = new ArrayList<DateCountVO>();
+		Iterator<Date> datesIt = (new DateInterval(start, stop)).getEnumeratedDates().iterator();
+		StaffDao staffDao = this.getStaffDao();
+		while (datesIt.hasNext()) {
+			Date date = datesIt.next();
+			long count = staffDao.getCountByDepartmentStatusInterval(departmentId,
+					CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date)), false, true, false);
+			if (count > 0l) {
+				result.add(new DateCountVO(count, date));
+			}
+		}
+		return result;
+	}
 
 	@Override
 	protected Collection<VisitScheduleItemOutVO> handleGetCollidingVisitScheduleItems(
@@ -2215,7 +2233,8 @@ extends StaffServiceBase
 
 			Integer staffLimit = Settings.getIntNullable(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT, Bundle.SETTINGS,
 					DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
-			if (staffLimit != null && !statusEntry.getType().isHideAvailability() && !(new DateInterval(statusEntry.getStart(), statusEntry.getStop())).isOver(now)) {
+			if (staffLimit != null && staffLimit > 0 && !statusEntry.getType().isHideAvailability()
+					&& !(new DateInterval(statusEntry.getStart(), statusEntry.getStop())).isOver(now)) {
 				// Long departmentId = null;
 				boolean perDay = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY, Bundle.SETTINGS,
 						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY);
@@ -2265,4 +2284,5 @@ extends StaffServiceBase
 			}
 		}
 	}
+
 }

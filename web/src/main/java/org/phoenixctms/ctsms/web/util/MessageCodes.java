@@ -805,4 +805,5 @@ public interface MessageCodes {
 	public static final String ADD_TICKET_EXPENSE_COMMENT = "add_ticket_expense_comment";
 	public static final String ECRF_SECTION_TITLE = "ecrf_section_title";
 	public static final String BLANK_ECRF_SECTION_TITLE = "blank_ecrf_section_title";
+	public static final String STAFF_NA_COUNT_EVENT_TITLE = "staff_na_count_event_title";
 }

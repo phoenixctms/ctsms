@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.web.model.shared.CourseEvent;
 import org.phoenixctms.ctsms.web.model.shared.DutyRosterTurnBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.HolidayEvent;
 import org.phoenixctms.ctsms.web.model.shared.ProbandStatusEvent;
+import org.phoenixctms.ctsms.web.model.shared.StaffNaCountEvent;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -63,6 +64,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	private DutyRosterTurnEvent dutyRosterTurnEvent;
 	private StaffStatusEvent statusEntryEvent;
 	private HolidayEvent holidayEvent;
+	private StaffNaCountEvent staffNaCountEvent;
 	private VisitScheduleItemEvent visitScheduleItemEvent;
 	private CourseInventoryBookingEvent courseInventoryBookingEvent;
 	private CourseEvent courseEvent;
@@ -189,6 +191,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		if (dutyRosterTurnEvent != null ||
 				statusEntryEvent != null ||
 				holidayEvent != null ||
+				staffNaCountEvent != null ||
 				visitScheduleItemEvent != null ||
 				courseInventoryBookingEvent != null ||
 				courseEvent != null ||
@@ -198,6 +201,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			updateEventCollisionCounts();
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -225,6 +229,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = (DutyRosterTurnEvent) event;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -243,6 +248,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = (StaffStatusEvent) event;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -255,6 +261,20 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = (HolidayEvent) event;
+			staffNaCountEvent = null;
+			visitScheduleItemEvent = null;
+			courseInventoryBookingEvent = null;
+			courseEvent = null;
+			probandStatusEvent = null;
+			timelineEvent = null;
+			initIn();
+			initSets();
+			abortScheduleEvent();
+		} else if (event instanceof StaffNaCountEvent) {
+			dutyRosterTurnEvent = null;
+			statusEntryEvent = null;
+			holidayEvent = null;
+			staffNaCountEvent = (StaffNaCountEvent) event;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -267,6 +287,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = (VisitScheduleItemEvent) event;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -279,6 +300,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = (CourseInventoryBookingEvent) event;
 			courseEvent = null;
@@ -291,6 +313,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = (CourseEvent) event;
@@ -303,6 +326,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -315,6 +339,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -327,6 +352,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -348,6 +374,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		updateEventCollisionCounts();
 		statusEntryEvent = null;
 		holidayEvent = null;
+		staffNaCountEvent = null;
 		visitScheduleItemEvent = null;
 		courseInventoryBookingEvent = null;
 		courseEvent = null;
@@ -371,6 +398,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = (DutyRosterTurnEvent) event;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -383,6 +411,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = (StaffStatusEvent) event;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -395,6 +424,20 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = (HolidayEvent) event;
+			staffNaCountEvent = null;
+			visitScheduleItemEvent = null;
+			courseInventoryBookingEvent = null;
+			courseEvent = null;
+			probandStatusEvent = null;
+			timelineEvent = null;
+			initIn();
+			initSets();
+			abortScheduleEvent();
+		} else if (event instanceof StaffNaCountEvent) {
+			dutyRosterTurnEvent = null;
+			statusEntryEvent = null;
+			holidayEvent = null;
+			staffNaCountEvent = (StaffNaCountEvent) event;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -407,6 +450,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = (VisitScheduleItemEvent) event;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -419,6 +463,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = (CourseInventoryBookingEvent) event;
 			courseEvent = null;
@@ -431,6 +476,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = (CourseEvent) event;
@@ -443,6 +489,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -455,6 +502,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;
@@ -467,6 +515,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			dutyRosterTurnEvent = null;
 			statusEntryEvent = null;
 			holidayEvent = null;
+			staffNaCountEvent = null;
 			visitScheduleItemEvent = null;
 			courseInventoryBookingEvent = null;
 			courseEvent = null;

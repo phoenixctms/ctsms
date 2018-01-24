@@ -569,6 +569,7 @@ public final class DefaultSettings {
 	public static final Long PROBAND_LIST_ENTRY_RATING_PRESET = null; // 3l;
 	public static final Long PROBAND_LIST_ENTRY_RATING_MAX_PRESET = null; // 5l;
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_RATING = false;
+	public static final Long DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT = null;
 
 
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";

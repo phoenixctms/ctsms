@@ -7823,8 +7823,12 @@ extends TrialServiceBase
 				return 0l;
 			} else {
 				Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(listEntryId, ecrfId, section);
-				if (maxIndex != null && index > maxIndex) {
-					index = maxIndex;
+				if (maxIndex != null) {
+					if (index > maxIndex) {
+						index = maxIndex;
+					}
+				} else {
+					index = null;
 				}
 			}
 		}
