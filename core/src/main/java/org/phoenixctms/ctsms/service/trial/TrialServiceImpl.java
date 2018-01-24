@@ -140,6 +140,7 @@ import org.phoenixctms.ctsms.domain.StaffAddressDao;
 import org.phoenixctms.ctsms.domain.StaffContactDetailValue;
 import org.phoenixctms.ctsms.domain.StaffContactDetailValueDao;
 import org.phoenixctms.ctsms.domain.StaffDao;
+import org.phoenixctms.ctsms.domain.StaffStatusEntryDao;
 import org.phoenixctms.ctsms.domain.StaffTagDao;
 import org.phoenixctms.ctsms.domain.StaffTagValue;
 import org.phoenixctms.ctsms.domain.StaffTagValueDao;
@@ -280,6 +281,7 @@ import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberInVO;
@@ -5022,7 +5024,8 @@ extends TrialServiceBase
 			// probandGroup.getId(), null).iterator();
 			while (it.hasNext()) {
 				VisitScheduleItem visitScheduleItem = it.next();
-				collidingProbandStatusEntries.addAll(probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false));
+				collidingProbandStatusEntries
+				.addAll(probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, null));
 			}
 			probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 			return new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
@@ -5041,7 +5044,7 @@ extends TrialServiceBase
 		Collection collidingProbandStatusEntries;
 		ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
 		if (probandId != null) {
-			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false);
+			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, null);
 			probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 		} else {
 			ProbandGroup probandGroup = visitScheduleItem.getGroup();
@@ -5051,7 +5054,7 @@ extends TrialServiceBase
 				while (it.hasNext()) {
 					ProbandListEntry probandListEntry = it.next();
 					collidingProbandStatusEntries.addAll(probandStatusEntryDao.findByProbandInterval(probandListEntry.getProband().getId(), visitScheduleItem.getStart(),
-							visitScheduleItem.getStop(), false));
+							visitScheduleItem.getStop(), false, null));
 				}
 				probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 				collidingProbandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
@@ -5060,6 +5063,20 @@ extends TrialServiceBase
 			}
 		}
 		return collidingProbandStatusEntries;
+	}
+
+	@Override
+	protected Collection<StaffStatusEntryOutVO> handleGetCollidingStaffStatusEntries(AuthenticationVO auth, Long visitScheduleItemId, Long staffId) throws Exception {
+		VisitScheduleItem visitScheduleItem = CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemId, this.getVisitScheduleItemDao());
+		if (staffId != null) {
+			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
+		}
+		Collection collidingStaffStatusEntries;
+		StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
+		collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staffId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, true, false);
+		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
+		return collidingStaffStatusEntries;
+
 	}
 
 	@Override
@@ -6540,6 +6557,7 @@ extends TrialServiceBase
 		return trials;
 	}
 
+
 	@Override
 	protected MoneyTransferSummaryVO handleGetTrialMoneyTransferSummary(
 			AuthenticationVO auth, Long trialId,
@@ -6559,7 +6577,6 @@ extends TrialServiceBase
 		summary.setId(trialVO.getId());
 		return summary;
 	}
-
 
 	@Override
 	protected Collection<MoneyTransferSummaryVO> handleGetTrialMoneyTransferSummaryList(
@@ -7385,6 +7402,11 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
+
 	@Override
 	protected ECRFFieldOutVO handleUpdateEcrfField(AuthenticationVO auth, ECRFFieldInVO modifiedEcrfField) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -7401,11 +7423,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
-
-
-
-
-
 
 	@Override
 	protected Collection<ECRFFieldOutVO> handleUpdateEcrfFieldSections(AuthenticationVO auth, Long ecrfId, String oldSection, String newSection) throws Exception {
@@ -7499,6 +7516,10 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
 	@Override
 	protected ProbandGroupOutVO handleUpdateProbandGroup(
 			AuthenticationVO auth, ProbandGroupInVO modifiedProbandGroup) throws Exception {
@@ -7519,9 +7540,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(probandGroup.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
-
-
-
 
 
 	@Override
@@ -7566,7 +7584,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
 	@Override
 	protected ProbandListEntryTagOutVO handleUpdateProbandListEntryTag(
 			AuthenticationVO auth, ProbandListEntryTagInVO modifiedProbandListEntryTag)
@@ -7587,6 +7604,9 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
 	@Override
 	protected TeamMemberOutVO handleUpdateTeamMember(
 			AuthenticationVO auth, TeamMemberInVO modifiedTeamMember) throws Exception {
@@ -7605,8 +7625,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(teamMember.getStaff(), result.getTrial(), now, user, SystemMessageCodes.TEAM_MEMBER_UPDATED, result, original, journalEntryDao);
 		return result;
 	}
-
-
 
 
 	@Override
@@ -7631,6 +7649,8 @@ extends TrialServiceBase
 	}
 
 
+
+
 	@Override
 	protected TrialOutVO handleUpdateTrial(AuthenticationVO auth, TrialInVO modifiedTrial)
 			throws Exception {
@@ -7653,9 +7673,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(trial, result, now, user, SystemMessageCodes.TRIAL_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
-
-
-
 
 	@Override
 	protected TrialTagValueOutVO handleUpdateTrialTagValue(
@@ -8300,7 +8317,7 @@ extends TrialServiceBase
 	}
 
 	private ECRFStatusEntryVO updateEcrfStatusEntry(ECRFStatusEntry originalStatusEntry, ECRF ecrf, ProbandListEntry listEntry, ECRFStatusType statusType, Long version,
-			Long probandListStatusTypeId,Timestamp now, User user) throws Exception {
+			Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		ECRFStatusEntryVO result;
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -8321,5 +8338,4 @@ extends TrialServiceBase
 				journalEntryDao);
 		return result;
 	}
-
 }

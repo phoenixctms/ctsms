@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.DutyRosterTurnCollisionFinder;
@@ -77,6 +79,8 @@ import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
+import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -131,6 +135,7 @@ import org.phoenixctms.ctsms.vo.StaffTagValueInVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
 
 /**
@@ -190,6 +195,24 @@ extends StaffServiceBase
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
+	}
+
+	private final void addStaffInactiveVisitScheduleItemNotification(VisitScheduleItem visitScheduleItem, StaffStatusEntry statusEntry, Date now, Date date, Collection inactiveStaff) {
+		Integer staffLimit = Settings.getIntNullable(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
+		NotificationDao notificationDao = this.getNotificationDao();
+		Map messageParameters = CoreUtil.createEmptyTemplateModel();
+		messageParameters.put(NotificationMessageTemplateParameters.INACTIVE_STAFF, inactiveStaff);
+		messageParameters.put(NotificationMessageTemplateParameters.INACTIVE_STAFF_LIMIT, staffLimit);
+		if (date != null) {
+			messageParameters.put(NotificationMessageTemplateParameters.VISIT_SCHEDULE_ITEM_DAY_DATE,
+					Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS,
+							DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Locales.NOTIFICATION).format(
+									date));
+		} else {
+			messageParameters.put(NotificationMessageTemplateParameters.VISIT_SCHEDULE_ITEM_DAY_DATE, null);
+		}
+		notificationDao.addNotification(visitScheduleItem, statusEntry.getStaff(), now, messageParameters);
 	}
 
 	private void checkCvPositionInput(CvPositionInVO cvPositionIn) throws ServiceException
@@ -851,7 +874,7 @@ extends StaffServiceBase
 		} else if (visitScheduleItem != null) {
 			if (result.getStaff() != null) {
 				ServiceUtil
-						.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
+				.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
 			} else {
 				ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED,
 						result, null, journalEntryDao);
@@ -1025,7 +1048,7 @@ extends StaffServiceBase
 		} else if (visitScheduleItem != null) {
 			if (result.getStaff() != null) {
 				ServiceUtil
-						.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
+				.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
 			} else {
 				ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED,
 						result, null, journalEntryDao);
@@ -1272,6 +1295,7 @@ extends StaffServiceBase
 		return collidingDutyRosterTurns;
 	}
 
+
 	@Override
 	protected Collection<StaffStatusEntryOutVO> handleGetCollidingStaffStatusEntries(
 			AuthenticationVO auth, Long dutyRosterTurnId) throws Exception {
@@ -1280,7 +1304,7 @@ extends StaffServiceBase
 		Staff staff = dutyRosterTurn.getStaff();
 		if (staff != null) {
 			StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
-			collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staff.getId(), dutyRosterTurn.getStart(), dutyRosterTurn.getStop(), false);
+			collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staff.getId(), dutyRosterTurn.getStart(), dutyRosterTurn.getStop(), false, true, false);
 			staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		} else {
 			collidingStaffStatusEntries = new ArrayList<StaffStatusEntryOutVO>();
@@ -1293,9 +1317,30 @@ extends StaffServiceBase
 			AuthenticationVO auth, Long staffId, Date start, Date stop) throws Exception {
 		CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
-		Collection collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staffId, CommonUtil.dateToTimestamp(start), CommonUtil.dateToTimestamp(stop), false);
+		Collection collidingStaffStatusEntries = staffStatusEntryDao
+				.findByStaffInterval(staffId, CommonUtil.dateToTimestamp(start), CommonUtil.dateToTimestamp(stop), false, true, false);
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		return collidingStaffStatusEntries;
+	}
+
+
+
+	@Override
+	protected Collection<VisitScheduleItemOutVO> handleGetCollidingVisitScheduleItems(
+			AuthenticationVO auth, Long staffStatusEntryId, Long trialDepartmentId) throws Exception {
+		StaffStatusEntry staffStatusEntry = CheckIDUtil.checkStaffStatusEntryId(staffStatusEntryId, this.getStaffStatusEntryDao());
+		if (trialDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(trialDepartmentId, this.getDepartmentDao());
+		}
+		if (!staffStatusEntry.getType().isStaffActive()) {
+			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+			Collection collidingVisitScheduleItems = visitScheduleItemDao.findByDepartmentTravelInterval(trialDepartmentId, staffStatusEntry.getStart(),
+					staffStatusEntry.getStop(), null);
+			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(collidingVisitScheduleItems);
+			return collidingVisitScheduleItems;
+		} else {
+			return new ArrayList<VisitScheduleItemOutVO>();
+		}
 	}
 
 	@Override
@@ -2162,10 +2207,61 @@ extends StaffServiceBase
 			if ((new DateInterval(statusEntry.getStart(), statusEntry.getStop())).contains(now)) {
 				notificationDao.addNotification(statusEntry, now, null);
 			}
-			Iterator<DutyRosterTurn> it = this.getDutyRosterTurnDao()
+			Iterator<DutyRosterTurn> dutyRosterTurnsIt = this.getDutyRosterTurnDao()
 					.findByStaffTrialCalendarInterval(statusEntry.getStaff().getId(), null, null, statusEntry.getStart(), statusEntry.getStop()).iterator();
-			while (it.hasNext()) {
-				notificationDao.addNotification(it.next(), statusEntry, now, null);
+			while (dutyRosterTurnsIt.hasNext()) {
+				notificationDao.addNotification(dutyRosterTurnsIt.next(), statusEntry, now, null);
+			}
+
+			Integer staffLimit = Settings.getIntNullable(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT, Bundle.SETTINGS,
+					DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
+			if (staffLimit != null && !statusEntry.getType().isHideAvailability() && !(new DateInterval(statusEntry.getStart(), statusEntry.getStop())).isOver(now)) {
+				// Long departmentId = null;
+				boolean perDay = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY, Bundle.SETTINGS,
+						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY);
+				boolean allTrials = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS, Bundle.SETTINGS,
+						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS);
+				boolean allStaff = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF, Bundle.SETTINGS,
+						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF);
+				StaffDao staffDao = this.getStaffDao();
+				HashMap<Date, Collection> dateMap = new HashMap<Date, Collection>();
+				Iterator<VisitScheduleItem> visitScheduleItemsIt = this.getVisitScheduleItemDao().findByDepartmentTravelInterval(allTrials ? null : statusEntry.getStaff().getDepartment().getId(), statusEntry.getStart(), statusEntry.getStop(), null)
+						.iterator();
+				while (visitScheduleItemsIt.hasNext()) {
+					VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+					if (perDay) {
+						Iterator<Date> datesIt = (new DateInterval(visitScheduleItem.getStart(), visitScheduleItem.getStop())).getEnumeratedDates().iterator();
+						while (datesIt.hasNext()) {
+							Date date = datesIt.next();
+							Collection inactiveStaff;
+							if (dateMap.containsKey(date)) {
+								inactiveStaff = dateMap.get(date);
+								if (inactiveStaff != null) {
+									addStaffInactiveVisitScheduleItemNotification(visitScheduleItem, statusEntry, now, date, inactiveStaff);
+								}
+							} else {
+								inactiveStaff = staffDao.findByDepartmentStatusInterval(allStaff ? null : statusEntry.getStaff().getDepartment().getId(),
+										CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date)), false, true, false, null);
+								if (inactiveStaff.size() >= staffLimit) {
+									staffDao.toStaffOutVOCollection(inactiveStaff);
+									dateMap.put(date, inactiveStaff);
+									addStaffInactiveVisitScheduleItemNotification(visitScheduleItem, statusEntry, now, date, inactiveStaff);
+									break;
+								} else {
+									dateMap.put(date, null);
+								}
+							}
+						}
+					} else {
+						Collection inactiveStaff = staffDao.findByDepartmentStatusInterval(allStaff ? null : statusEntry.getStaff().getDepartment().getId(),
+								visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, true, false, null);
+						if (inactiveStaff.size() >= staffLimit) {
+							staffDao.toStaffOutVOCollection(inactiveStaff);
+							addStaffInactiveVisitScheduleItemNotification(visitScheduleItem, statusEntry, now, null, inactiveStaff);
+						}
+
+					}
+				}
 			}
 		}
 	}

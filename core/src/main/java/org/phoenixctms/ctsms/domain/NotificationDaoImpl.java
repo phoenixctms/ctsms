@@ -157,8 +157,8 @@ extends NotificationDaoBase
 
 	private void addDepartmentRecipients(Notification newNotification, Department department, org.phoenixctms.ctsms.enumeration.NotificationType notificationType)
 			throws Exception {
-		if (Settings.getBoolean(SettingCodes.NOTIFICY_ALL_DEPARTMENT_RECIPIENTS, Bundle.SETTINGS,
-				DefaultSettings.NOTIFICY_ALL_DEPARTMENT_RECIPIENTS)) {
+		if (Settings.getBoolean(SettingCodes.NOTIFY_ALL_DEPARTMENT_RECIPIENTS, Bundle.SETTINGS,
+				DefaultSettings.NOTIFY_ALL_DEPARTMENT_RECIPIENTS)) {
 			Iterator<Staff> staffIt = this.getStaffDao().findByDepartmentNotificationType(department == null ? null : department.getId(), notificationType).iterator();
 			while (staffIt.hasNext()) {
 				createNotificationRecipient(newNotification, staffIt.next());
@@ -166,13 +166,13 @@ extends NotificationDaoBase
 		}
 	}
 
-	private HashSet<Staff> addLecturerRecipients(Notification newNotification, Course course, boolean write) throws Exception {
+	private HashSet<Staff> addLecturerRecipients(Notification newNotification, Course course, boolean create) throws Exception {
 		HashSet<Staff> result = new HashSet<Staff>();
 		if (course != null) {
 			Iterator<Lecturer> lecturersIt = course.getLecturers().iterator();
 			while (lecturersIt.hasNext()) {
 				Staff lecturerStaff = lecturersIt.next().getStaff();
-				if (result.add(lecturerStaff) && write) {
+				if (result.add(lecturerStaff) && create) {
 					createNotificationRecipient(newNotification, lecturerStaff);
 				}
 			}
@@ -180,26 +180,42 @@ extends NotificationDaoBase
 		return result;
 	}
 
-	private ArrayList<Staff> addSuperVisorsRecipients(Notification newNotification, Staff parent, boolean write) throws Exception {
+	private ArrayList<Staff> addSuperVisorsRecipients(Notification newNotification, Staff staff, boolean create) throws Exception {
 		ArrayList<Staff> result = new ArrayList<Staff>();
-		Staff newParent = parent;
-		while (newParent != null) {
-			if (write) {
-				createNotificationRecipient(newNotification, newParent);
+		if (staff != null) {
+			Staff parent = staff.getParent();
+			if (parent != null) {
+				Iterator<Staff> it = parent.getChildren().iterator();
+				while (it.hasNext()) {
+					Staff colleague = it.next();
+					if (colleague.isSupervisor() && !colleague.equals(staff)) {
+						if (create) {
+							createNotificationRecipient(newNotification, colleague);
+						}
+						result.add(colleague);
+					}
+				}
+				while (parent != null) {
+					if (parent.isSupervisor()) {
+						if (create) {
+							createNotificationRecipient(newNotification, parent);
+						}
+						result.add(parent);
+					}
+					parent = parent.getParent();
+				}
 			}
-			result.add(newParent);
-			newParent = newParent.getParent();
 		}
 		return result;
 	}
 
-	private HashSet<Staff> addTrialTeamMemberOtherRecipients(Notification newNotification, Trial trial, boolean write) throws Exception {
-		return addTrialTeamMemberRecipients(newNotification, trial, false, true, false, false, false, false, write);
+	private HashSet<Staff> addTrialTeamMemberOtherRecipients(Notification newNotification, Trial trial, boolean create) throws Exception {
+		return addTrialTeamMemberRecipients(newNotification, trial, false, true, false, false, false, false, create);
 	}
 
 	private HashSet<Staff> addTrialTeamMemberRecipients(Notification newNotification, Trial trial, boolean filterTimelineEventRecipients, boolean filterOtherRecipients,
 			boolean filterEcrfValidatedStatusRecipients, boolean filterEcrfReviewStatusRecipients, boolean filterEcrfVerifiedStatusRecipients,
-			boolean filterEcrfFieldStatusRecipients, boolean write) throws Exception {
+			boolean filterEcrfFieldStatusRecipients, boolean create) throws Exception {
 		HashSet<Staff> result = new HashSet<Staff>();
 		if (trial != null) {
 			Iterator<TeamMember> membersIt = trial.getMembers().iterator();
@@ -212,7 +228,7 @@ extends NotificationDaoBase
 						&& (!filterEcrfVerifiedStatusRecipients || teamMember.isNotifyEcrfVerifiedStatus())
 						&& (!filterEcrfFieldStatusRecipients || teamMember.isNotifyEcrfFieldStatus())) {
 					Staff teamMemberStaff = teamMember.getStaff();
-					if (result.add(teamMemberStaff) && write) {
+					if (result.add(teamMemberStaff) && create) {
 						createNotificationRecipient(newNotification, teamMemberStaff);
 					}
 				}
@@ -380,6 +396,17 @@ extends NotificationDaoBase
 					messageParameters.get("probandstatusentry_proband_id"),
 					messageParameters.get("probandstatusentry_type")
 				});
+			case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
+				return L10nUtil.getNotificationSubject(
+						Locales.NOTIFICATION,
+						type.getSubjectL10nKey(),
+						new Object[] {
+							messageParameters.get("visitscheduleitem_trial_name"),
+							messageParameters.get("visitscheduleitem_name"),
+							messageParameters.get(NotificationMessageTemplateParameters.VISIT_SCHEDULE_ITEM_DAY_DATE),
+							((Collection) messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF)).size(),
+							messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF_LIMIT),
+						});
 			case EXPIRING_COURSE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
 					messageParameters.get("course_name"),
@@ -587,6 +614,10 @@ extends NotificationDaoBase
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
+			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES)) {
+				addSuperVisorsRecipients(notification, staff, true);
+			}
 			return notification;
 		} else {
 			dutyRosterTurn.removeNotifications(notification);
@@ -607,8 +638,8 @@ extends NotificationDaoBase
 		staffStatusEntry.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			if (addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), true).size() == 0
-					&& addSuperVisorsRecipients(notification, dutyRosterTurn.getStaff().getParent(), true).size() == 0) {
+			if (addSuperVisorsRecipients(notification, dutyRosterTurn.getStaff(), true).size() == 0
+					&& addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), true).size() == 0) {
 				createNotificationRecipient(notification, dutyRosterTurn.getStaff());
 			}
 			return notification;
@@ -637,6 +668,10 @@ extends NotificationDaoBase
 			dutyRosterTurn.setModifiedUser(originalModifiedUser);
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
+			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES)) {
+				addSuperVisorsRecipients(notification, staff, true);
+			}
 			return notification;
 		} else {
 			dutyRosterTurn.removeNotifications(notification);
@@ -849,7 +884,7 @@ extends NotificationDaoBase
 		staffStatusEntry.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			if (addSuperVisorsRecipients(notification, staffStatusEntry.getStaff().getParent(), true).size() == 0) {
+			if (addSuperVisorsRecipients(notification, staffStatusEntry.getStaff(), true).size() == 0) {
 				createNotificationRecipient(notification, staffStatusEntry.getStaff());
 			}
 			return notification;
@@ -1032,6 +1067,30 @@ extends NotificationDaoBase
 			visitScheduleItem.removeNotifications(notification);
 			proband.removeNotifications(notification);
 			probandStatusEntry.removeNotifications(notification);
+			return null;
+		}
+	}
+
+	@Override
+	protected Notification handleAddNotification(VisitScheduleItem visitScheduleItem, Staff staff, Date today, Map messageParameters)
+			throws Exception {
+		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM;
+		ServiceUtil.cancelNotifications(visitScheduleItem.getNotifications(), this, notificationType);
+		Notification notification = Notification.Factory.newInstance();
+		notification.setVisitScheduleItem(visitScheduleItem);
+		visitScheduleItem.addNotifications(notification);
+		notification.setStaff(staff);
+		staff.addNotifications(notification);
+		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
+			notification = this.create(notification);
+			if (addSuperVisorsRecipients(notification, staff, true).size() == 0
+					&& addTrialTeamMemberOtherRecipients(notification, visitScheduleItem.getTrial(), true).size() == 0) {
+				createNotificationRecipient(notification, staff);
+			}
+			return notification;
+		} else {
+			visitScheduleItem.removeNotifications(notification);
+			staff.removeNotifications(notification);
 			return null;
 		}
 	}

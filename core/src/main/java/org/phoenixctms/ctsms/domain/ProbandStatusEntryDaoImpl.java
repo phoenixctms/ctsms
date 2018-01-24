@@ -43,7 +43,7 @@ extends ProbandStatusEntryDaoBase
 	@Override
 	protected Collection<ProbandStatusEntry> handleFindByDepartmentCategoryInterval(Long departmentId, Long probandCategoryId, Timestamp from, Timestamp to, Boolean probandActive,
 			Boolean available, Boolean hideAvailability)
-	{
+			{
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (probandActive != null || hideAvailability != null) {
@@ -68,7 +68,7 @@ extends ProbandStatusEntryDaoBase
 			}
 		}
 		return statusEntryCriteria.list();
-	}
+			}
 
 	/**
 	 * @throws Exception
@@ -90,12 +90,18 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandStatusEntry> handleFindByProbandInterval(Long probandId, Timestamp from, Timestamp to, Boolean probandActive)
+	protected Collection<ProbandStatusEntry> handleFindByProbandInterval(Long probandId, Timestamp from, Timestamp to, Boolean probandActive, Boolean hideAvailability)
 	{
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
-		if (probandActive != null) {
-			statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("probandActive", probandActive.booleanValue()));
+		if (probandActive != null || hideAvailability != null) {
+			Criteria statusTypeCriteria = statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN);
+			if (probandActive != null) {
+				statusTypeCriteria.add(Restrictions.eq("probandActive", probandActive.booleanValue()));
+			}
+			if (hideAvailability != null) {
+				statusTypeCriteria.add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
+			}
 		}
 		if (probandId != null) {
 			statusEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));

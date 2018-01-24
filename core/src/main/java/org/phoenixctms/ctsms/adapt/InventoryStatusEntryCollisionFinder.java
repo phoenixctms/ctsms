@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.adapt;
 import java.util.Collection;
 
 import org.hibernate.LockMode;
-
 import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.InventoryStatusEntry;
@@ -37,7 +36,8 @@ public class InventoryStatusEntryCollisionFinder extends CollisionFinder<Invento
 	@Override
 	protected Collection<InventoryStatusEntry> getCollidingItems(
 			InventoryStatusEntryInVO in, Inventory root) {
-		return inventoryStatusEntryDao.findByInventoryInterval(in.getInventoryId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false);
+		return inventoryStatusEntryDao.findByInventoryInterval(in.getInventoryId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false,
+				null);
 	}
 
 	@Override

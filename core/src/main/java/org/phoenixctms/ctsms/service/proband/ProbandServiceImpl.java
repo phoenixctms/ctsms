@@ -2967,17 +2967,19 @@ extends ProbandServiceBase
 			if ((new DateInterval(statusEntry.getStart(), statusEntry.getStop())).contains(now)) {
 				notificationDao.addNotification(statusEntry, now, null);
 			}
-			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-			Proband proband = statusEntry.getProband();
-			Iterator<ProbandListEntry> trialParticipationsIt = proband.getTrialParticipations().iterator();
-			while (trialParticipationsIt.hasNext()) {
-				ProbandListEntry probandListEntry = trialParticipationsIt.next();
-				ProbandGroup probandGroup = probandListEntry.getGroup();
-				if (probandGroup != null) {
-					Iterator<VisitScheduleItem> it = visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), statusEntry.getStart(),
-							statusEntry.getStop()).iterator();
-					while (it.hasNext()) {
-						notificationDao.addNotification(it.next(), proband, statusEntry, now, null);
+			if (!(new DateInterval(statusEntry.getStart(), statusEntry.getStop())).isOver(now)) {
+				VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+				Proband proband = statusEntry.getProband();
+				Iterator<ProbandListEntry> trialParticipationsIt = proband.getTrialParticipations().iterator();
+				while (trialParticipationsIt.hasNext()) {
+					ProbandListEntry probandListEntry = trialParticipationsIt.next();
+					ProbandGroup probandGroup = probandListEntry.getGroup();
+					if (probandGroup != null) {
+						Iterator<VisitScheduleItem> it = visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), statusEntry.getStart(),
+								statusEntry.getStop()).iterator();
+						while (it.hasNext()) {
+							notificationDao.addNotification(it.next(), proband, statusEntry, now, null);
+						}
 					}
 				}
 			}

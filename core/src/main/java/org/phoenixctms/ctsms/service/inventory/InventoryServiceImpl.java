@@ -941,7 +941,7 @@ extends InventoryServiceBase
 		Collection collidingInventoryStatusEntries;
 		InventoryStatusEntryDao inventoryStatusEntryDao = this.getInventoryStatusEntryDao();
 		collidingInventoryStatusEntries = inventoryStatusEntryDao.findByInventoryInterval(inventoryBooking.getInventory().getId(), inventoryBooking.getStart(),
-				inventoryBooking.getStop(), false);
+				inventoryBooking.getStop(), false, false);
 		inventoryStatusEntryDao.toInventoryStatusEntryOutVOCollection(collidingInventoryStatusEntries);
 		return collidingInventoryStatusEntries;
 	}
@@ -957,7 +957,7 @@ extends InventoryServiceBase
 				.isRelevantForProbandAppointments())) {
 			ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
 			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(proband.getId(), probandInventoryBooking.getStart(), probandInventoryBooking.getStop(),
-					false);
+					false, null);
 			probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 		} else {
 			collidingProbandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>();
@@ -979,7 +979,7 @@ extends InventoryServiceBase
 			while (it.hasNext()) {
 				CourseParticipationStatusEntry courseParticipationStatusEntry = it.next();
 				collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(courseParticipationStatusEntry.getStaff().getId(), courseInventoryBooking.getStart(),
-						courseInventoryBooking.getStop(), false));
+						courseInventoryBooking.getStop(), false, null, false));
 			}
 			staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 			return new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);

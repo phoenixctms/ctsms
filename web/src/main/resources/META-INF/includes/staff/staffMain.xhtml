@@ -808,6 +808,27 @@
 							<p:message
 								for="maxOverlappingShifts"
 								rendered="#{staffBean.in.person}" />
+								
+								
+							<h:outputLabel
+								for="supervisor"
+								value="#{stafflabels.staff_supervisor_label}" />
+							<h:panelGroup >
+								<p:selectBooleanCheckbox
+									id="supervisor"
+									value="#{staffBean.in.supervisor}"/>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="supervisor">
+									<h:outputText
+										value="#{stafflabels.staff_supervisor_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="supervisor" />								
+								
+								
 							<h:outputLabel
 								for="parent"
 								value="#{stafflabels.staff_parent_label}" />

@@ -138,7 +138,12 @@ public interface SettingCodes {
 	public static final String AUDIT_TRAIL_CHANGE_COMMENT_SKIP_EMPTY_FIELDS = "audit_trail_change_comment_skip_empty_fields";
 	public static final String AUDIT_TRAIL_CHANGE_COMMENT_INDENT = "audit_trail_change_comment_indent";
 	public static final String AUDIT_TRAIL_CHANGE_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION = "audit_trail_change_comment_skip_fields_without_localization";
-	public static final String NOTIFICY_ALL_DEPARTMENT_RECIPIENTS = "notificy_all_department_recipients";
+	public static final String NOTIFY_ALL_DEPARTMENT_RECIPIENTS = "notify_all_department_recipients";
+	public static final String NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES = "notify_supervisor_duty_roster_turn_updates";
+	public static final String STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT = "staff_inactive_visit_schedule_item_notification_staff_limit";
+	public static final String STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY = "staff_inactive_visit_schedule_item_notification_per_day";
+	public static final String STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS = "staff_inactive_visit_schedule_item_notification_all_trials";
+	public static final String STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF = "staff_inactive_visit_schedule_item_notification_all_staff";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_VO_DEPTH = "notification_template_model_vo_depth";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_ENTITIES = "notification_template_model_enumerate_entities";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "notification_template_model_datetime_pattern";
@@ -256,4 +261,6 @@ public interface SettingCodes {
 	public static final String ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = "ecrf_field_values_schedule_validation_limit";
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
 	public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
+
+
 }

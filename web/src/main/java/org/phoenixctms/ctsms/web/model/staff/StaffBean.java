@@ -63,6 +63,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			in.setDateOfBirth(out.getDateOfBirth());
 			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
 			in.setEmployee(out.getEmployee());
+			in.setSupervisor(out.getSupervisor());
 			in.setFirstName(out.getFirstName());
 			in.setLastName(out.getLastName());
 			in.setGender(genderVO == null ? null : genderVO.getSex());
@@ -98,6 +99,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			result.setAllocatable(in.getAllocatable());
 			result.setCitizenship(in.getCitizenship());
 			result.setEmployee(in.getEmployee());
+			result.setSupervisor(in.getSupervisor());
 			result.setFirstName(in.getFirstName());
 			result.setLastName(in.getLastName());
 			result.setGender(genderVO);
@@ -129,6 +131,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			in.setDateOfBirth(null);
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
 			in.setEmployee(Settings.getBoolean(SettingCodes.STAFF_EMPLOYEE_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_EMPLOYEE_PRESET));
+			in.setSupervisor(Settings.getBoolean(SettingCodes.STAFF_SUPERVISOR_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_SUPERVISOR_PRESET));
 			in.setFirstName(Messages.getString(MessageCodes.STAFF_FIRST_NAME_PRESET));
 			in.setLastName(Messages.getString(MessageCodes.STAFF_LAST_NAME_PRESET));
 			in.setGender(Settings.getSex(SettingCodes.STAFF_GENDER_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_GENDER_PRESET));

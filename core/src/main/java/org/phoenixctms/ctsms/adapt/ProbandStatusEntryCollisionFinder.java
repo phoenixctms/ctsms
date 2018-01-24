@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.adapt;
 import java.util.Collection;
 
 import org.hibernate.LockMode;
-
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
@@ -36,7 +35,7 @@ public class ProbandStatusEntryCollisionFinder extends CollisionFinder<ProbandSt
 	@Override
 	protected Collection<ProbandStatusEntry> getCollidingItems(
 			ProbandStatusEntryInVO in, Proband root) {
-		return probandStatusEntryDao.findByProbandInterval(in.getProbandId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false);
+		return probandStatusEntryDao.findByProbandInterval(in.getProbandId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false, null);
 	}
 
 	@Override

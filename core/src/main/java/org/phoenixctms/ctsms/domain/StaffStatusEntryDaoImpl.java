@@ -79,15 +79,24 @@ extends StaffStatusEntryDaoBase
 
 	@Override
 	protected Collection<StaffStatusEntry> handleFindByStaffInterval(
-			Long staffId, Timestamp from, Timestamp to, Boolean staffActive)
+			Long staffId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
 					throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
-		if (staffActive != null) {
-			statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("staffActive", staffActive.booleanValue()));
+		if (staffActive != null || hideAvailability != null) {
+			Criteria statusTypeCriteria = statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN);
+			if (staffActive != null) {
+				statusTypeCriteria.add(Restrictions.eq("staffActive", staffActive.booleanValue()));
+			}
+			if (hideAvailability != null) {
+				statusTypeCriteria.add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
+			}
 		}
 		if (staffId != null) {
 			statusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
+		}
+		if (allocatable != null) {
+			statusEntryCriteria.createCriteria("staff", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("allocatable", allocatable.booleanValue()));
 		}
 		return statusEntryCriteria.list();
 	}

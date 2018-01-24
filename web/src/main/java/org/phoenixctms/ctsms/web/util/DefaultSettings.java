@@ -211,6 +211,7 @@ public final class DefaultSettings {
 	public static final Long COURSE_VALIDITY_PERIOD_DAYS_PRESET = null;
 	public static final boolean STAFF_ALLOCATABLE_PRESET = false;
 	public static final boolean STAFF_EMPLOYEE_PRESET = false;
+	public static final boolean STAFF_SUPERVISOR_PRESET = false;
 	public static final boolean STAFF_PERSON_PRESET = true;
 	public static final Sex STAFF_GENDER_PRESET = null;
 	public static final long STAFF_MAX_OVERLAPPING_PRESET = 1;
@@ -568,6 +569,7 @@ public final class DefaultSettings {
 	public static final Long PROBAND_LIST_ENTRY_RATING_PRESET = null; // 3l;
 	public static final Long PROBAND_LIST_ENTRY_RATING_MAX_PRESET = null; // 5l;
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_RATING = false;
+
 
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
 

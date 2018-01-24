@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.vo.StaffStatusTypeVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.proband.CollidingVisitScheduleItemEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -71,11 +72,13 @@ public class StaffStatusBean extends ManagedBeanBase {
 	private StaffStatusTypeVO statusType;
 	private HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
+	private HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache;
 
 	public StaffStatusBean() {
 		super();
 		collidingDutyRosterTurnModelCache = new HashMap<Long, CollidingDutyRosterTurnEagerModel>();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
+		collidingVisitScheduleItemModelCache = new HashMap<Long, CollidingVisitScheduleItemEagerModel>();
 		statusEntryModel = new StaffStatusEntryLazyModel();
 	}
 
@@ -166,6 +169,10 @@ public class StaffStatusBean extends ManagedBeanBase {
 		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
 	}
 
+	public CollidingVisitScheduleItemEagerModel getCollidingVisitScheduleItemModel(StaffStatusEntryOutVO statusEntry) {
+		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, collidingVisitScheduleItemModelCache);
+	}
+
 	public StaffStatusEntryInVO getIn() {
 		return in;
 	}
@@ -242,6 +249,7 @@ public class StaffStatusBean extends ManagedBeanBase {
 	private void initSets() {
 		collidingDutyRosterTurnModelCache.clear();
 		collidingInventoryBookingModelCache.clear();
+		collidingVisitScheduleItemModelCache.clear();
 		statusEntryModel.setStaffId(in.getStaffId());
 		statusEntryModel.updateRowCount();
 		Collection<StaffStatusTypeVO> statusTypeVOs = null;

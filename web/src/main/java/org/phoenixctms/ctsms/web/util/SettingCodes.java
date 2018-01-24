@@ -143,6 +143,7 @@ public interface SettingCodes {
 	public final static String STAFF_CONTACT_NA_PRESET = "staff_contact_na_preset";
 	public final static String STAFF_ALLOCATABLE_PRESET = "staff_allocatable_preset";
 	public final static String STAFF_EMPLOYEE_PRESET = "staff_employee_preset";
+	public final static String STAFF_SUPERVISOR_PRESET = "staff_supervisor_preset";
 	public final static String STAFF_PERSON_PRESET = "staff_person_preset";
 	public final static String STAFF_GENDER_PRESET = "staff_gender_preset";
 	public final static String STAFF_MAX_OVERLAPPING_PRESET = "staff_max_overlapping_preset";

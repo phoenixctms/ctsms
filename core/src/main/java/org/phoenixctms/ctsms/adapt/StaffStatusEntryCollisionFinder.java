@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.adapt;
 import java.util.Collection;
 
 import org.hibernate.LockMode;
-
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffDao;
 import org.phoenixctms.ctsms.domain.StaffStatusEntry;
@@ -37,7 +36,7 @@ public class StaffStatusEntryCollisionFinder extends CollisionFinder<StaffStatus
 	@Override
 	protected Collection<StaffStatusEntry> getCollidingItems(
 			StaffStatusEntryInVO in, Staff root) {
-		return staffStatusEntryDao.findByStaffInterval(in.getStaffId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false);
+		return staffStatusEntryDao.findByStaffInterval(in.getStaffId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false, null, null);
 	}
 
 	@Override

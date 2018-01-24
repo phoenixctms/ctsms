@@ -107,6 +107,16 @@
 								value="#{staffStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.staff_status_staffstatus_list_colliding_visit_schedule_item_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{staffStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo).allRowCount}" />
+						</ui:include>
+					</p:column>					
 					<p:rowExpansion>
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingDutyRosterTurnTableTab.xhtml">
@@ -188,6 +198,41 @@
 									name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
+							<ui:include src="../shared/collidingVisitScheduleTableTab.xhtml">
+								<ui:param
+									name="collidingVisitScheduleItemModel"
+									value="#{staffStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo)}" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>							
 						</p:tabView>
 					</p:rowExpansion>
 				</p:dataTable>

@@ -68,6 +68,21 @@ extends VisitScheduleItemDaoBase
 	}
 
 	@Override
+	protected Collection<VisitScheduleItem> handleFindByDepartmentTravelInterval(Long departmentId, Timestamp from, Timestamp to, Boolean travel) throws Exception {
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
+		CriteriaUtil.applyClosedIntervalCriterion(visitScheduleItemCriteria, from, to, null);
+		if (departmentId != null) {
+			visitScheduleItemCriteria.createCriteria("trial").add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		if (travel != null) {
+			visitScheduleItemCriteria.createCriteria("visit.type", CriteriaSpecification.LEFT_JOIN).add(
+					Restrictions.or(Restrictions.eq("travel", travel.booleanValue()),
+							Restrictions.isNull("visitScheduleItem.visit")));
+		}
+		return visitScheduleItemCriteria.list();
+	}
+
+	@Override
 	protected Collection<VisitScheduleItem> handleFindByInterval(Long trialId, Long groupId,
 			Timestamp from, Timestamp to) throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
@@ -183,6 +198,8 @@ extends VisitScheduleItemDaoBase
 		return visitScheduleItemCriteria.list();
 			}
 
+
+
 	@Override
 	protected Collection<VisitScheduleItem> handleFindCollidingTrialGroupVisit(Long trialId, Long groupId, Long visitId) throws Exception
 	{
@@ -202,8 +219,6 @@ extends VisitScheduleItemDaoBase
 		}
 		return visitScheduleItemCriteria.list();
 	}
-
-
 
 	@Override
 	protected Collection<VisitScheduleItem> handleFindVisitScheduleItemSchedule(
@@ -525,5 +540,4 @@ extends VisitScheduleItemDaoBase
 			target.setModifiedUser(null);
 		}
 	}
-
 }

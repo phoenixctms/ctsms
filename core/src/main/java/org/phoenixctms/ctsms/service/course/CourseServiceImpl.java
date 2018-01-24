@@ -572,7 +572,8 @@ extends CourseServiceBase
 				.findByCourseSorted(courseParticipationStatusEntry.getCourse().getId(), isRelevantForCourseAppointments, false).iterator();
 		while (it.hasNext()) {
 			InventoryBooking courseInventoryBooking = it.next();
-			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, courseInventoryBooking.getStart(), courseInventoryBooking.getStop(), false));
+			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, courseInventoryBooking.getStart(), courseInventoryBooking.getStop(), false, null,
+					false));
 		}
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		return new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);

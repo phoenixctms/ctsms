@@ -1872,6 +1872,11 @@ public class ProductionDataProvider {
 				"ctsms-icon-warning",
 				false, true,
 				allStaffCategories);
+		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM,
+				org.phoenixctms.ctsms.enumeration.Color.LIGHTPINK,
+				"ctsms-icon-warning",
+				true, true,
+				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE,
 				org.phoenixctms.ctsms.enumeration.Color.LIGHTYELLOW,
 				"ctsms-icon-courseexpiration",

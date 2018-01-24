@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -109,6 +110,29 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		return model;
 	}
 
+	public static CollidingStaffStatusEntryEagerModel getCachedCollidingStaffStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem, boolean load,
+			HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache) {
+		CollidingStaffStatusEntryEagerModel model;
+		if (visitScheduleItem != null && collidingStaffStatusEntryModelCache != null) {
+			long visitScheduleItemId = visitScheduleItem.getId();
+			if (collidingStaffStatusEntryModelCache.containsKey(visitScheduleItemId)) {
+				model = collidingStaffStatusEntryModelCache.get(visitScheduleItemId);
+			} else {
+				if (load) {
+					model = new CollidingStaffStatusEntryEagerModel();
+					model.setVisitScheduleItemId(visitScheduleItemId);
+					collidingStaffStatusEntryModelCache.put(visitScheduleItemId, model);
+				} else {
+					model = new CollidingStaffStatusEntryEagerModel();
+				}
+			}
+		} else {
+			model = new CollidingStaffStatusEntryEagerModel();
+		}
+		return model;
+	}
+
+	private Long visitScheduleItemId;
 	private Long dutyRosterTurnId;
 	private Long courseInventoryBookingId;
 	private Long courseParticipationStatusEntryId;
@@ -133,6 +157,7 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		return dutyRosterTurnId;
 	}
 
+
 	@Override
 	protected Collection<StaffStatusEntryOutVO> getEagerResult(PSFVO psf) {
 		if (dutyRosterTurnId != null) {
@@ -156,6 +181,15 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		} else if (courseParticipationStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getCourseService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), courseParticipationStatusEntryId, true);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		} else if (visitScheduleItemId != null) {
+			try {
+				return WebUtil.getServiceLocator().getTrialService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), visitScheduleItemId, staffId);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -192,6 +226,10 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		return stop;
 	}
 
+	public Long getVisitScheduleItemId() {
+		return visitScheduleItemId;
+	}
+
 	public void setCourseInventoryBookingId(Long courseInventoryBookingId) {
 		this.courseInventoryBookingId = courseInventoryBookingId;
 	}
@@ -215,5 +253,9 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 
 	public void setStop(Date stop) {
 		this.stop = stop;
+	}
+
+	public void setVisitScheduleItemId(Long visitScheduleItemId) {
+		this.visitScheduleItemId = visitScheduleItemId;
 	}
 }

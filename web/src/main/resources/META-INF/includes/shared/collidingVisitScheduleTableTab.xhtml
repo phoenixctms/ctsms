@@ -30,6 +30,7 @@
 				value="#{collidingVisitScheduleItemModel.allRows}"
 				id="collidingvisitscheduleitem_list">
 				<p:column
+					rendered="#{not empty collidingVisitScheduleItemModel.filterTrials}"
 					sortBy="#{visitScheduleItem.vo.trial.name}"
 					filterBy="#{visitScheduleItem.vo.trial.id}"
 					filterOptions="#{collidingVisitScheduleItemModel.filterTrials}">
@@ -48,6 +49,26 @@
 							value="true" />
 					</ui:include>
 				</p:column>
+				<p:column
+					rendered="#{empty collidingVisitScheduleItemModel.filterTrials}"
+					sortBy="#{visitScheduleItem.vo.trial.name}"
+					filterMatchMode="contains"
+					filterBy="#{visitScheduleItem.vo.trial.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.collidingvisitscheduleitem_list_trial_name_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{visitScheduleItem.vo.trial.name}" />
+						<ui:param
+							name="icon"
+							value="#{visitScheduleItem.vo.trial.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>				
 				<p:column sortBy="#{visitScheduleItem.vo.group.token}">
 					<f:facet name="header">
 						<h:outputText value="#{labels.collidingvisitscheduleitem_list_group_token_column}" />

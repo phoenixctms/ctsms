@@ -104,6 +104,16 @@
 								value="#{visitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
+<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_colliding_staff_status_entry_column}" />
+						</f:facet>
+						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{visitScheduleBean.getCollidingStaffStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
+						</ui:include>
+					</p:column>					
 					<p:rowExpansion>
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingProbandStatusTableTab.xhtml">
@@ -112,6 +122,44 @@
 									value="#{visitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo)}" />
 								<ui:param
 									name="showProband"
+									value="true" />
+								<ui:param
+									name="dataTableRows"
+									value="#{dataTablesRowsRowExpansion}" />
+								<ui:param
+									name="dataTablePaginator"
+									value="#{dataTablesPaginatorRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorTemplate"
+									value="#{dataTablesPaginatorTemplateRowExpansion}" />
+								<ui:param
+									name="dataTableRowsPerPageTemplate"
+									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorPosition"
+									value="#{dataTablesPaginatorPositionRowExpansion}" />
+								<ui:param
+									name="dataTablePageLinks"
+									value="#{dataTablesPageLinksRowExpansion}" />
+								<ui:param
+									name="dataTablePaginatorAlwaysVisible"
+									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
+								<ui:param
+									name="dataTableScrollable"
+									value="#{dataTablesScrollableRowExpansion}" />
+								<ui:param
+									name="dataTableScrollHeight"
+									value="#{dataTablesScrollHeightRowExpansion}" />
+								<ui:param
+									name="dataTableResizableColumns"
+									value="#{dataTablesResizableColumnsRowExpansion}" />
+							</ui:include>
+							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
+								<ui:param
+									name="collidingStaffStatusEntryModel"
+									value="#{visitScheduleBean.getCollidingStaffStatusEntryModel(visitScheduleItem.vo)}" />
+								<ui:param
+									name="showStaff"
 									value="true" />
 								<ui:param
 									name="dataTableRows"

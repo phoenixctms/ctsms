@@ -29,6 +29,7 @@ import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
+import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.VisitScheduleItemLazyModel;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -91,6 +92,7 @@ public class VisitScheduleBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> filterProbandGroups;
 	private VisitScheduleItemLazyModel visitScheduleItemModel;
 	private HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache;
+	private HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
 
 	private GroupVisitMatrix<VisitScheduleItemOutVO> matrix;
 
@@ -98,6 +100,7 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		super();
 
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
+		collidingStaffStatusEntryModelCache = new HashMap<Long, CollidingStaffStatusEntryEagerModel>();
 		visitScheduleItemModel = new VisitScheduleItemLazyModel();
 		matrix = new GroupVisitMatrix<VisitScheduleItemOutVO>() {
 
@@ -256,6 +259,13 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		return collidingProbandStatusEntryModel;
 	}
 
+	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem) {
+		CollidingStaffStatusEntryEagerModel collidingStaffStatusEntryModel = CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(visitScheduleItem,
+				true, collidingStaffStatusEntryModelCache);
+		collidingStaffStatusEntryModel.setStaffId(null);
+		return collidingStaffStatusEntryModel;
+	}
+
 	public ArrayList<SelectItem> getFilterProbandGroups() {
 		return filterProbandGroups;
 	}
@@ -370,6 +380,7 @@ public class VisitScheduleBean extends ManagedBeanBase {
 
 	private void initSets() {
 		collidingProbandStatusEntryModelCache.clear();
+		collidingStaffStatusEntryModelCache.clear();
 		visitScheduleItemModel.setTrialId(in.getTrialId());
 		visitScheduleItemModel.updateRowCount();
 		visits = WebUtil.getVisits(in.getTrialId());

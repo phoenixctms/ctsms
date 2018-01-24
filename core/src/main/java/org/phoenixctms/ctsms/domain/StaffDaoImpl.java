@@ -79,6 +79,29 @@ extends StaffDaoBase
 	}
 
 	@Override
+	protected Collection<Staff> handleFindByDepartmentStatusInterval(Long departmentId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable,
+			Boolean hideAvailability, PSFVO psf)
+			throws Exception {
+		org.hibernate.Criteria staffCriteria = createStaffCriteria();
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(Staff.class, staffCriteria);
+		if (departmentId != null) {
+			staffCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		if (allocatable != null) {
+			staffCriteria.add(Restrictions.eq("allocatable", allocatable.booleanValue()));
+		}
+		org.hibernate.Criteria statusEntryCriteria = criteriaMap.createCriteria("statusEntries");
+		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
+		if (staffActive != null) {
+			criteriaMap.createCriteria("statusEntries.type").add(Restrictions.eq("staffActive", staffActive.booleanValue()));
+		}
+		if (hideAvailability != null) {
+			criteriaMap.createCriteria("statusEntries.type").add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
+		}
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
+	}
+
+	@Override
 	protected Collection<Staff> handleFindByIdDepartment(Long staffId,
 			Long departmentId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria staffCriteria = createStaffCriteria();

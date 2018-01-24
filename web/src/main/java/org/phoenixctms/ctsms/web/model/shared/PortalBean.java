@@ -69,6 +69,8 @@ public class PortalBean extends ManagedBeanBase {
 						case PROBAND_INACTIVE_VISIT_SCHEDULE_ITEM:
 							return notification.getProbandStatusEntry().getProband().isDecrypted() ? notification.getProbandStatusEntry().getProband().getCategory()
 									.getNodeStyleClass() : "ctsms-icon-encrypted";
+						case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
+							return "";
 						case EXPIRING_COURSE:
 							return notification.getCourse().getCategory().getNodeStyleClass();
 						case EXPIRING_COURSE_PARTICIPATION:
@@ -207,6 +209,8 @@ public class PortalBean extends ManagedBeanBase {
 					return "openProband(" + Long.toString(notification.getProbandStatusEntry().getProband().getId()) + ")";
 				case PROBAND_INACTIVE_VISIT_SCHEDULE_ITEM:
 					return "openProband(" + Long.toString(notification.getProbandStatusEntry().getProband().getId()) + ")";
+				case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
+					return "";
 				case EXPIRING_COURSE:
 					return "openCourse(" + Long.toString(notification.getCourse().getId()) + ")";
 				case EXPIRING_COURSE_PARTICIPATION:
@@ -229,7 +233,7 @@ public class PortalBean extends ManagedBeanBase {
 				case NEW_ECRF_FIELD_STATUS:
 					// return "openTrial(" + Long.toString(notification.getEcrfFieldStatusEntry().getListEntry().getTrial().getId()) + ")";
 					return "openEcrfSection(" + Long.toString(notification.getEcrfFieldStatusEntry().getId()) + ","
-							+ Integer.toString(WebUtil.getEcrfSectionHashCode(notification.getEcrfFieldStatusEntry())) + ")";
+					+ Integer.toString(WebUtil.getEcrfSectionHashCode(notification.getEcrfFieldStatusEntry())) + ")";
 				case PROBANDS_DELETED:
 					return "";
 				case TRIAL_TAG_MISSING:
@@ -390,6 +394,7 @@ public class PortalBean extends ManagedBeanBase {
 					return notification.getProbandStatusEntry().getProband().isDecrypted();
 				case EXPIRING_PROBAND_AUTO_DELETE:
 					return notification.getProband().isDecrypted();
+				case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
 				case PROBANDS_DELETED:
 					return false;
 				default:
@@ -403,6 +408,7 @@ public class PortalBean extends ManagedBeanBase {
 		NotificationTypeVO type;
 		if (notification != null && (type = notification.getType()) != null) {
 			switch (type.getType()) {
+				case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
 				case PROBANDS_DELETED:
 					return false;
 				default:

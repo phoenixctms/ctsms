@@ -90,7 +90,12 @@ public final class DefaultSettings {
 	public static final boolean AUDIT_TRAIL_CHANGE_COMMENT_SKIP_EMPTY_FIELDS = true;
 	public static final String AUDIT_TRAIL_CHANGE_COMMENT_INDENT = "  "; // "\t";
 	public static final boolean AUDIT_TRAIL_CHANGE_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION = true;
-	public static final boolean NOTIFICY_ALL_DEPARTMENT_RECIPIENTS = true;
+	public static final boolean NOTIFY_ALL_DEPARTMENT_RECIPIENTS = true;
+	public static final Integer STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT = null;
+	public static final boolean STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY = true;
+	public static final boolean STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS = true;
+	public static final boolean STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF = true;
+	public static final boolean NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES = false;
 	public static final int NOTIFICATION_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
@@ -201,6 +206,7 @@ public final class DefaultSettings {
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
 	public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
+
 
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");

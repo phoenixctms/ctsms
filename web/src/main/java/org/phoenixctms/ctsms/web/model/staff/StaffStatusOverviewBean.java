@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.proband.CollidingVisitScheduleItemEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -24,11 +25,13 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 	private StaffStatusLazyModel staffStatusModel;
 	private HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
+	private HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache;
 
 	public StaffStatusOverviewBean() {
 		super();
 		collidingDutyRosterTurnModelCache = new HashMap<Long, CollidingDutyRosterTurnEagerModel>();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
+		collidingVisitScheduleItemModelCache = new HashMap<Long, CollidingVisitScheduleItemEagerModel>();
 		staffStatusModel = new StaffStatusLazyModel();
 	}
 
@@ -38,6 +41,10 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(StaffStatusEntryOutVO statusEntry) {
 		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+	}
+
+	public CollidingVisitScheduleItemEagerModel getCollidingVisitScheduleItemModel(StaffStatusEntryOutVO statusEntry) {
+		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, collidingVisitScheduleItemModelCache);
 	}
 
 	public StaffStatusLazyModel getStaffStatusModel() {
@@ -60,6 +67,7 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 	private void initSets() {
 		collidingDutyRosterTurnModelCache.clear();
 		collidingInventoryBookingModelCache.clear();
+		collidingVisitScheduleItemModelCache.clear();
 		staffStatusModel.updateRowCount();
 		LazyDataModelBase.clearFilters("staffstatus_list");
 	}

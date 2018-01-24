@@ -94,11 +94,17 @@ extends InventoryStatusEntryDaoBase
 
 	@Override
 	protected Collection<InventoryStatusEntry> handleFindByInventoryInterval(
-			Long inventoryId, Timestamp from, Timestamp to, Boolean inventoryActive) throws Exception {
+			Long inventoryId, Timestamp from, Timestamp to, Boolean inventoryActive, Boolean hideAvailability) throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
-		if (inventoryActive != null) {
-			statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("inventoryActive", inventoryActive.booleanValue()));
+		if (inventoryActive != null || hideAvailability != null) {
+			Criteria statusTypeCriteria = statusEntryCriteria.createCriteria("type", CriteriaSpecification.INNER_JOIN);
+			if (inventoryActive != null) {
+				statusTypeCriteria.add(Restrictions.eq("inventoryActive", inventoryActive.booleanValue()));
+			}
+			if (hideAvailability != null) {
+				statusTypeCriteria.add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
+			}
 		}
 		if (inventoryId != null) {
 			statusEntryCriteria.add(Restrictions.eq("inventory.id", inventoryId.longValue()));

@@ -19,4 +19,7 @@ public interface NotificationMessageTemplateParameters {
 	public static final String INDEX_FIELD_LOG = "index_field_log";
 	public static final String ECRF_INPUT_FIELD_VALUE_ADAPTER = "ecrf_input_field_value_adapter";
 	public static final String STRING_UTILS = "string_utils";
+	public static final String INACTIVE_STAFF = "inactive_staff";
+	public static final String VISIT_SCHEDULE_ITEM_DAY_DATE = "visit_schedule_item_day_date";
+	public static final String INACTIVE_STAFF_LIMIT = "inactive_staff_limit";
 }

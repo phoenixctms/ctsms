@@ -120,6 +120,7 @@
 								</p:column>
 								<p:column
 									sortBy="#{probandListEntry.vo.proband.nameSortable}"
+									filterMatchMode="contains"
 									filterBy="#{probandListEntry.vo.proband.nameSortable}">
 									<f:facet name="header">
 										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_name_column}" />

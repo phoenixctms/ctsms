@@ -386,6 +386,20 @@ public class DateInterval {
 		}
 	}
 
+	public ArrayList<Date> getEnumeratedDates() {
+		ArrayList<Date> result = new ArrayList<Date>();
+		if (start != null && stop != null && start.compareTo(stop) <= 0) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(start);
+			cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+			while (cal.getTime().compareTo(stop) <= 0) {
+				result.add(cal.getTime());
+				cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+			}
+		}
+		return result;
+	}
+
 	public long getIntervalOverlapSecs(ArrayList<DateInterval> intervals) throws Exception {
 		long secs = 0;
 		if (intervals != null && intervals.size() > 0) {
@@ -411,6 +425,18 @@ public class DateInterval {
 
 	public Date getStop() {
 		return stop;
+	}
+
+	public boolean isOver(Date now) {
+		if (start != null && stop != null) {
+			return (start.compareTo(now) <= 0 && stop.compareTo(now) <= 0);
+		} else if (start != null && stop == null) {
+			return false;
+		} else if (start == null && stop != null) {
+			return (stop.compareTo(now) <= 0);
+		} else {
+			return false;
+		}
 	}
 
 	public ArrayList<DateInterval> merge(DateInterval interval) throws Exception {

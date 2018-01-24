@@ -1,0 +1,33 @@
+Liebes $visitscheduleitem_trial_name Studienteammitglied oder Supervisor von $dutyrosterturn_staff_name,
+
+dies ist die Benachrichtigung für folgendes Ereignis:
+
+   $type
+
+   • Studie:     $visitscheduleitem_trial_name
+   • Visite:     $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Datum:      $visit_schedule_item_day_date
+#else
+   • Visite von: $visitscheduleitem_start
+   • Visite bis: $visitscheduleitem_stop
+#end
+
+   • Threshold:  $inactive_staff_limit
+
+$inactive_staff.size() Mitarbeiter N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
+
+Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
+
+Vielen Dank!
+
+Dies ist eine zum Zeitpunkt $generated_on vom System automatisch erzeugte Email, der Inhalt könnte nicht mehr aktuell sein. Nicht auf die Absenderadresse antworten.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instanz: $instance_name
