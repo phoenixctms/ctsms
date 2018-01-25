@@ -190,9 +190,11 @@ public final class SearchResultExcelDefaultSettings {
 		USER_VO_FIELD_COLUMNS.add("identity" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		PROBAND_VO_FIELD_COLUMNS.add("id");
 		PROBAND_VO_FIELD_COLUMNS.add("deferredDelete");
+		PROBAND_VO_FIELD_COLUMNS.add("blinded");
 		PROBAND_VO_FIELD_COLUMNS.add("firstName");
 		PROBAND_VO_FIELD_COLUMNS.add("lastName");
 		PROBAND_VO_FIELD_COLUMNS.add("animalName");
+		PROBAND_VO_FIELD_COLUMNS.add("alias");
 		PROBAND_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		// PROBAND_VO_FIELD_COLUMNS.add("available");
 		// PROBAND_VO_FIELD_COLUMNS.add("recruitmentForOtherTrialsAllowed");
