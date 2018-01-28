@@ -38,17 +38,17 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 	static {
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, "Wartungseintrag erstellt - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_UPDATED, "Wartungseintrag aktualisiert - {0}");
-		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, "Wartungseintrag gel�scht - {0}");
+		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, "Wartungseintrag gelöscht - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_SET, "Wartungserinnerung ignorieren - {0}");
 		// maintenance_schedule_item_dismissed_unset=Wartungserinnerung schlie\u00DFen zur\u00FCckgesetzt - {0}
 		addLegacyTitleRegexp("course_deleted_renewal_removed", "course {0} deleted - renewal course removed");
-		addLegacyTitleRegexp("course_deleted_renewal_removed", "Kurs {0} gel�scht - Auffrischungskurs entfernt");
+		addLegacyTitleRegexp("course_deleted_renewal_removed", "Kurs {0} gelöscht - Auffrischungskurs entfernt");
 		addLegacyTitleRegexp(SystemMessageCodes.VISIT_CREATED, "visite erstellt - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.VISIT_UPDATED, "visite aktualisiert - {0}");
-		addLegacyTitleRegexp(SystemMessageCodes.VISIT_DELETED, "visite gel�scht - {0}");
+		addLegacyTitleRegexp(SystemMessageCodes.VISIT_DELETED, "visite gelöscht - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.PROBAND_CREATED, "proband {0} erstellt");
 		addLegacyTitleRegexp(SystemMessageCodes.PROBAND_UPDATED, "proband {0} aktualisiert");
-		addLegacyTitleRegexp(SystemMessageCodes.PROBAND_AUTO_DELETE_DEADLINE_RESET, "Deadline f�r automatische L�schung ge�ndert - {0}");
+		addLegacyTitleRegexp(SystemMessageCodes.PROBAND_AUTO_DELETE_DEADLINE_RESET, "Deadline für automatische Löschung geändert - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, "aggregierte PDF Dateien exportiert - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.SELECTION_SET_VALUE_DELETED, "a selected inquiry selection set value was removed");
 	}
