@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.executable.migration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -67,16 +68,19 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 	private static ArrayList<Entry<String, Pattern>> createTitleRegexps(JobOutput jobOutput) throws Exception {
 		// if (titleRegexps == null) {
 		ArrayList<Entry<String, Pattern>> titleRegexps = new ArrayList<Entry<String, Pattern>>();
+		jobOutput.println(LEGACY_TITLE_REGEXP.size() + " legacy system message code patterns");
+		titleRegexps.addAll(LEGACY_TITLE_REGEXP);
 		LinkedHashMap<Locale, Locales> locales = new LinkedHashMap<Locale, Locales>();
-
 		locales.put(L10nUtil.getLocale(Locales.JOURNAL), Locales.JOURNAL);
 		locales.put(L10nUtil.getLocale(Locales.EN), Locales.EN);
 		locales.put(L10nUtil.getLocale(Locales.DE), Locales.DE);
 		Iterator<Locales> localesIt = locales.values().iterator();
+		ArrayList<String> codes = new ArrayList<String>(CoreUtil.SYSTEM_MESSAGE_CODES);
+		Collections.reverse(codes); // longer patterns first
 		while (localesIt.hasNext()) {
 			Locales locale = localesIt.next();
 			TreeMap<String, Pattern> titleRegexpMap = new TreeMap<String, Pattern>();
-			Iterator<String> codesIt = CoreUtil.SYSTEM_MESSAGE_CODES.iterator();
+			Iterator<String> codesIt = codes.iterator();
 			while (codesIt.hasNext()) {
 				String code = codesIt.next();
 				// if (!titleRegexpMap.containsKey(code)) {
@@ -90,8 +94,6 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 			jobOutput.println(locale.name() + ": " + titleRegexpMap.entrySet().size() + " system message code patterns");
 			titleRegexps.addAll(titleRegexpMap.entrySet());
 		}
-		jobOutput.println(LEGACY_TITLE_REGEXP.size() + " legacy system message code patterns");
-		titleRegexps.addAll(LEGACY_TITLE_REGEXP);
 		jobOutput.println(titleRegexps.size() + " system message code patterns overall");
 		// }
 		return titleRegexps;
