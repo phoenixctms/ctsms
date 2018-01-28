@@ -107,31 +107,31 @@ extends InventoryServiceBase
 
 	private static JournalEntry logSystemMessage(Course course, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(course, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(course, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.COURSE_JOURNAL, null)) });
 	}
 
 	private static JournalEntry logSystemMessage(Inventory inventory, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(inventory, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(inventory, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL, null)) });
 	}
 
 	private static JournalEntry logSystemMessage(Proband proband, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(proband, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(proband, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
 	}
 
 	private static JournalEntry logSystemMessage(Staff staff, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(staff, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(staff, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null)) });
 	}
 
 	private static JournalEntry logSystemMessage(Trial trial, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(trial, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(trial, now, user, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
@@ -140,7 +140,7 @@ extends InventoryServiceBase
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 

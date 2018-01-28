@@ -363,7 +363,7 @@ extends SearchServiceBase
 
 	private static JournalEntry logSystemMessage(Criteria criteria, CriteriaOutVO criteriaVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(criteria, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(criteria, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 	}
 
@@ -372,7 +372,7 @@ extends SearchServiceBase
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
@@ -1237,7 +1237,7 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getCourses().size()) },
-					systemMessageCode,
+
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1262,7 +1262,7 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getStafves().size()) },
-					systemMessageCode,
+
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1287,7 +1287,7 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), result.getRowCount() },
-					systemMessageCode,
+
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1312,7 +1312,7 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getProbands().size()) },
-					systemMessageCode,
+
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1347,7 +1347,7 @@ extends SearchServiceBase
 						systemMessageCode,
 						new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO),
 								psf == null ? Integer.toString(result.size()) : (psf.getRowCount() == null ? new Long(0) : psf.getRowCount()).toString() },
-								systemMessageCode,
+
 								new Object[] {
 								CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 										!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),

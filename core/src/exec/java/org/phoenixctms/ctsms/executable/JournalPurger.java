@@ -9,7 +9,7 @@ import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
-import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.TableSizes;
+import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
@@ -95,7 +95,7 @@ public class JournalPurger {
 		Date before = DateCalc.subIntervals(now, period, explicitDays, 1);
 		ChunkedRemoveAll journalRemover = new ChunkedRemoveAll(journalEntryDao, new Search(getSearchParameters(before, module, id, true)));
 		jobOutput.println("journal records to remove: " + journalRemover.getTotalCount());
-		long count = journalRemover.remove(TableSizes.BIG);
+		long count = journalRemover.remove(PageSizes.BIG);
 		jobOutput.println(count + " journal records removed");
 		return count;
 	}

@@ -2436,7 +2436,7 @@ public final class ServiceUtil {
 
 	public static JournalEntry logSystemMessage(InputField inputField, InputFieldOutVO inputFieldVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(inputField, now, modified, systemMessageCode, new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(inputField, now, modified, systemMessageCode, new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.INPUT_FIELD_JOURNAL, null)) });
 	}
 
@@ -2446,7 +2446,7 @@ public final class ServiceUtil {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Proband proband, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -2454,12 +2454,12 @@ public final class ServiceUtil {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Proband proband, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
 	}
 
@@ -2468,12 +2468,12 @@ public final class ServiceUtil {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Staff staff, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null)) });
 	}
 
@@ -2483,7 +2483,7 @@ public final class ServiceUtil {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	//	public static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -2493,13 +2493,13 @@ public final class ServiceUtil {
 	//	}
 	public static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
 	public static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
@@ -2512,7 +2512,7 @@ public final class ServiceUtil {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -2520,7 +2520,7 @@ public final class ServiceUtil {
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 

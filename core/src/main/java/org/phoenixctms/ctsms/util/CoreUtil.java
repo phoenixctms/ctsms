@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
@@ -21,7 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -143,6 +146,8 @@ public final class CoreUtil {
 	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
 	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
 
+	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
+
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
 		if (fieldMap.containsKey(vo)) {
 			fieldMap.get(vo).add(fieldName);
@@ -258,6 +263,22 @@ public final class CoreUtil {
 
 	public static FileInputStream createFileServiceFileInputStream(String fileName) throws FileNotFoundException, IllegalArgumentException, IOException {
 		return new FileInputStream(getFileServiceExternalFilename(fileName));
+	}
+
+	private final static Set<String> createSystemMessageCodeSet() {
+		Field[] fields = SystemMessageCodes.class.getDeclaredFields();
+		TreeSet<String> codes = new TreeSet<String>();
+		for (int i = 0; i < fields.length; i++) {
+			String code = null;
+			try {
+				code = (String) fields[i].get(null);
+			} catch (Exception e) {
+			}
+			if (!CommonUtil.isEmptyString(code)) {
+				codes.add(code);
+			}
+		}
+		return codes;
 	}
 
 	private static String dumpAuditTrailVo(ArrayList<KeyValueString> voFields, Object vo, boolean enumerateEntities, boolean omitFields) throws Exception {
@@ -994,6 +1015,7 @@ public final class CoreUtil {
 		entity.getClass().getMethod(ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME, Timestamp.class).invoke(entity, now);
 		entity.getClass().getMethod(ENTITY_MODIFIED_USER_SETTER_METHOD_NAME, User.class).invoke(entity, modifiedUser);
 	}
+
 
 	private CoreUtil() {
 	}

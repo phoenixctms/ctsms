@@ -55,7 +55,9 @@ public final class L10nUtil {
 		ECRF_PDF,
 		INQUIRIES_PDF,
 		PROBAND_LIST_ENTRY_TAGS_PDF,
-		DEFAULT
+		DEFAULT,
+		DE,
+		EN
 	}
 
 	private final static String CREATE_ENUMERATION_VO_METHOD_PREFIX = "create";
@@ -355,6 +357,7 @@ public final class L10nUtil {
 		return CommonUtil.getBundle(baseName, getLocale(locale));
 	}
 
+
 	public static String getContactDetailTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, contactDetailTypesBundleBasename), DefaultMessages.CONTACT_DETAIL_TYPE_NAME);
 	}
@@ -601,6 +604,10 @@ public final class L10nUtil {
 				return inquiriesPdfLocale;
 			case PROBAND_LIST_ENTRY_TAGS_PDF:
 				return probandListEntryTagsPdfLocale;
+			case DE:
+				return Locale.GERMAN;
+			case EN:
+				return Locale.ENGLISH;
 			case DEFAULT:
 			default:
 				return Locale.getDefault();
@@ -749,6 +756,10 @@ public final class L10nUtil {
 
 	public static String getSystemMessageTitle(Locales locale, String l10nKey, Object[] args) {
 		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, systemMessageTitlesBundleBasename), DefaultMessages.SYSTEM_MESSAGE_TITLE);
+	}
+
+	public static String getSystemMessageTitleFormat(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, systemMessageTitlesBundleBasename), null);
 	}
 
 	public static String getTeamMemberRoleName(Locales locale, String l10nKey) {

@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.VerifyMD5InputStream;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
-import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.TableSizes;
+import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -108,7 +108,7 @@ public class FileDecryptInitializer extends EncryptedFieldInitializer {
 		Map<String, Object> passThrough = new HashMap<String, Object>();
 		passThrough.put("updated", 0l);
 		passThrough.put("skipped", 0l);
-		fileProcessor.processEach(TableSizes.BIG, passThrough);
+		fileProcessor.processEach(PageSizes.BIG, passThrough);
 		long updated = (Long) passThrough.get("updated");
 		long skipped = (Long) passThrough.get("skipped");
 		jobOutput.println(updated + " rows updated, " + skipped + " skipped");

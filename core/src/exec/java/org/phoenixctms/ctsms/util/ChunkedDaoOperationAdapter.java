@@ -6,12 +6,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.andromda.spring.PaginationResult;
-
 import org.phoenixctms.ctsms.Search;
 
 public abstract class ChunkedDaoOperationAdapter<DAO, ENTITY> {
 
-	public enum TableSizes {
+	public enum PageSizes {
 		TINY(100),
 		DEFAULT(1000),
 		BIG(10000),
@@ -22,7 +21,7 @@ public abstract class ChunkedDaoOperationAdapter<DAO, ENTITY> {
 		/**
 		 * @param text
 		 */
-		private TableSizes(final int value) {
+		private PageSizes(final int value) {
 			this.value = value;
 		}
 	}
@@ -90,16 +89,17 @@ public abstract class ChunkedDaoOperationAdapter<DAO, ENTITY> {
 					return;
 				}
 			}
-			if (isIncrementPageNumber())
+			if (isIncrementPageNumber()) {
 				pageNumber++;
+			}
 		}
 	}
 
 	public final void processEach(Object passThrough) throws Exception {
-		processEach(TableSizes.DEFAULT, passThrough);
+		processEach(PageSizes.DEFAULT, passThrough);
 	}
 
-	public final void processEach(TableSizes pageSize, Object passThrough) throws Exception {
+	public final void processEach(PageSizes pageSize, Object passThrough) throws Exception {
 		processEach(pageSize.value, passThrough);
 	}
 
@@ -110,16 +110,17 @@ public abstract class ChunkedDaoOperationAdapter<DAO, ENTITY> {
 			if (!process(entities, passThrough)) {
 				return;
 			}
-			if (isIncrementPageNumber())
+			if (isIncrementPageNumber()) {
 				pageNumber++;
+			}
 		}
 	}
 
 	public final void processPages(Object passThrough) throws Exception {
-		processPages(TableSizes.DEFAULT, passThrough);
+		processPages(PageSizes.DEFAULT, passThrough);
 	}
 
-	public final void processPages(TableSizes pageSize, Object passThrough) throws Exception {
+	public final void processPages(PageSizes pageSize, Object passThrough) throws Exception {
 		processPages(pageSize.value, passThrough);
 	}
 }

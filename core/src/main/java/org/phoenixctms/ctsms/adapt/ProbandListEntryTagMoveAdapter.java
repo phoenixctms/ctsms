@@ -111,7 +111,7 @@ public class ProbandListEntryTagMoveAdapter extends MoveAdapter<Trial, ProbandLi
 				return result;
 		}
 		journalEntryDao.addSystemMessage(item.getTrial(), now, modifiedUser, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(result.getTrial()) },
-				systemMessageCode,
+
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 		return result;
 	}
@@ -136,7 +136,7 @@ public class ProbandListEntryTagMoveAdapter extends MoveAdapter<Trial, ProbandLi
 		journalEntryDao.addSystemMessage(root, now, modifiedUser,
 				systemMessageCode,
 				new Object[] { CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(root)), Integer.toString(updated.size()) },
-				systemMessageCode,
+
 				new Object[] {
 				CoreUtil.getSystemMessageCommentContent(createUpdatedInfo(updated), null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null))
 		});

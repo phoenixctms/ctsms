@@ -229,6 +229,10 @@ public final class CommonUtil {
 
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
 
+	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
+	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
+	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "%";
+	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	private static void appendProbandAlias(StringBuilder sb,ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
 		if (alias != null && alias.trim().length() > 0) {
@@ -243,6 +247,7 @@ public final class CommonUtil {
 			sb.append(newBlindedProbandNameLabel);
 		}
 	}
+
 
 	public static boolean appendString(StringBuilder sb, String string, String separator) {
 		return appendString(sb, string, separator, null);
@@ -515,14 +520,66 @@ public final class CommonUtil {
 		return null;
 	}
 
+	public static Pattern createMessageFormatRegexp(String messageFormat, boolean ignoreCase) throws Exception {
+		Matcher matcher = MESSAGE_FORMAT_PLACEHOLDER_REGEXP.matcher(messageFormat);
+		StringBuilder messageFormatPattern = new StringBuilder();
+		messageFormatPattern.append("^");
+		int lastMatch = 0;
+		while (matcher.find()) {
+			messageFormatPattern.append(Pattern.quote(messageFormat.substring(lastMatch, matcher.start())));
+			messageFormatPattern.append("(.*)");
+			lastMatch = matcher.end();
+		}
+		messageFormatPattern.append(Pattern.quote(messageFormat.substring(lastMatch)));
+		messageFormatPattern.append("$");
+		try {
+			if (ignoreCase) {
+				return Pattern.compile(messageFormatPattern.toString(), Pattern.CASE_INSENSITIVE);
+			} else {
+				return Pattern.compile(messageFormatPattern.toString());
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException("invalid message format pattern " + messageFormatPattern.toString());
+		}
+	}
+
+	public static Pattern createSqlLikeRegexp(String queryString, boolean ignoreCase) throws Exception {
+		Matcher matcher = SQL_LIKE_WILDCARD_REGEXP.matcher(queryString);
+		StringBuilder sqlLikePattern = new StringBuilder();
+		sqlLikePattern.append("^");
+		int lastMatch = 0;
+		while (matcher.find()) {
+			sqlLikePattern.append(Pattern.quote(queryString.substring(lastMatch, matcher.start())));
+			if (SQL_LIKE_PERCENT_WILDCARD.equals(matcher.group())) {
+				sqlLikePattern.append("(.*)");
+			} else if (SQL_LIKE_UNDERSCORE_WILDCARD.equals(matcher.group())) {
+				sqlLikePattern.append("(.)");
+				// } else {
+				// sqlLikePattern.append(matcher.group());
+			}
+			lastMatch = matcher.end();
+		}
+		sqlLikePattern.append(Pattern.quote(queryString.substring(lastMatch)));
+		sqlLikePattern.append("$");
+		try {
+			if (ignoreCase) {
+				return Pattern.compile(sqlLikePattern.toString(), Pattern.CASE_INSENSITIVE);
+			} else {
+				return Pattern.compile(sqlLikePattern.toString());
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException("invalid sql like pattern " + queryString.toString());
+		}
+	}
+
+
+
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
 		}
 		return null;
 	}
-
-
 
 	public static long dateDeltaSecs(Date start, Date stop) {
 		return (stop.getTime() - start.getTime()) / 1000;

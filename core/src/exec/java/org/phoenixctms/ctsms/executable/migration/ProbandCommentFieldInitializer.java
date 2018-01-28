@@ -10,7 +10,7 @@ import org.phoenixctms.ctsms.domain.ProbandContactParticularsDao;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
-import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.TableSizes;
+import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,7 +65,7 @@ public class ProbandCommentFieldInitializer extends EncryptedFieldInitializer {
 		Map<String, Object> passThrough = new HashMap<String, Object>();
 		passThrough.put("updated", 0l);
 		passThrough.put("skipped", 0l);
-		probandContactParticularsProcessor.processEach(TableSizes.TINY, passThrough);
+		probandContactParticularsProcessor.processEach(PageSizes.TINY, passThrough);
 		long updated = (Long) passThrough.get("updated");
 		long skipped = (Long) passThrough.get("skipped");
 		jobOutput.println(updated + " rows updated, " + skipped + " skipped");

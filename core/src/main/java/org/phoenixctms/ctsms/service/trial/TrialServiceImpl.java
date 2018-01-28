@@ -365,7 +365,7 @@ extends TrialServiceBase
 
 	private static JournalEntry logSystemMessage(Course course, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(course, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(course, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.COURSE_JOURNAL, null)) });
 	}
 
@@ -377,7 +377,7 @@ extends TrialServiceBase
 
 	private static JournalEntry logSystemMessage(Inventory inventory, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL, null)) });
 	}
 
@@ -386,7 +386,7 @@ extends TrialServiceBase
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
@@ -7839,7 +7839,7 @@ extends TrialServiceBase
 		this.getJournalEntryDao().addSystemMessage(trial, now, user, systemMessageCode,
 				new Object[] { CommonUtil.trialOutVOToString(trialVO), shuffleInfo != null ? Integer.toString(shuffleInfo.getResultIds().size()) : null,
 						shuffleInfo != null ? Integer.toString(shuffleInfo.getInputIds().size()) : null },
-						systemMessageCode,
+
 						new Object[] { CoreUtil.getSystemMessageCommentContent(shuffleInfo, null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 

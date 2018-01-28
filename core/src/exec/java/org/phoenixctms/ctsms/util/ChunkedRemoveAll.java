@@ -10,7 +10,7 @@ import org.phoenixctms.ctsms.Search;
 public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Object> {
 
 	public static <DAO> long remove(DAO dao) throws Exception {
-		return remove(dao, TableSizes.DEFAULT);
+		return remove(dao, PageSizes.DEFAULT);
 	}
 
 	public static <DAO> long remove(DAO dao, int pageSize) throws Exception {
@@ -18,18 +18,18 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 	}
 
 	public static <DAO> long remove(DAO dao, Search search) throws Exception {
-		return remove(dao, search, TableSizes.DEFAULT);
+		return remove(dao, search, PageSizes.DEFAULT);
 	}
 
 	public static <DAO> long remove(DAO dao, Search search, int pageSize) throws Exception {
 		return (new ChunkedRemoveAll(dao,search)).remove(pageSize);
 	}
 
-	public static <DAO> long remove(DAO dao, Search search, TableSizes pageSize) throws Exception {
+	public static <DAO> long remove(DAO dao, Search search, PageSizes pageSize) throws Exception {
 		return remove(dao,search, pageSize.value);
 	}
 
-	public static <DAO> long remove(DAO dao, TableSizes pageSize) throws Exception {
+	public static <DAO> long remove(DAO dao, PageSizes pageSize) throws Exception {
 		return remove(dao, pageSize.value);
 	}
 
@@ -89,7 +89,7 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 	}
 
 	public long remove() throws Exception {
-		return remove(TableSizes.DEFAULT);
+		return remove(PageSizes.DEFAULT);
 	}
 
 	public long remove(int pageSize)
@@ -100,7 +100,7 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 		return (Long) passThrough.get("count");
 	}
 
-	public long remove(TableSizes pageSize) throws Exception {
+	public long remove(PageSizes pageSize) throws Exception {
 		return remove(pageSize.value);
 	}
 

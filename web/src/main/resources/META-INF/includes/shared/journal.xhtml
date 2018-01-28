@@ -81,6 +81,16 @@
 					</ui:include>
 				</p:column>
 				<p:column
+					sortBy="#{journalEntry.vo.systemMessageCode}"
+					filterBy="#{journalEntry.vo.systemMessageCode}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.journal_journal_list_system_message_code_column}" />
+					</f:facet>
+					<h:outputText 
+						styleClass="ctsms-monospaced"
+						value="#{journalEntry.vo.systemMessageCode}" />
+				</p:column>				
+				<p:column
 					rendered="#{!journalBean.useJournalEncryption}"
 					sortBy="#{journalEntry.vo.title}"
 					filterBy="#{journalEntry.vo.title}">

@@ -17,7 +17,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.TimelineEventTitlePresetType;
 import org.phoenixctms.ctsms.enumeration.Weekday;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
-import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.TableSizes;
+import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
@@ -441,7 +441,7 @@ public class ProductionDataProvider {
 		ChunkedRemoveAll.remove(departmentDao);
 		jobOutput.println("shared db tables cleared");
 		ChunkedRemoveAll.remove(titleDao);
-		ChunkedRemoveAll.remove(streetDao, TableSizes.BIG);
+		ChunkedRemoveAll.remove(streetDao, PageSizes.BIG);
 		ChunkedRemoveAll.remove(zipDao);
 		ChunkedRemoveAll.remove(countryDao);
 		ChunkedRemoveAll.remove(bankIdentificationDao);

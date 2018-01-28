@@ -157,7 +157,7 @@ extends ToolsServiceBase
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) }, systemMessageCode,
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
@@ -578,6 +578,30 @@ extends ToolsServiceBase
 					throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getStreetDao().findStreetNames(countryName, zipCode, cityName, streetNameInfix, limit);
+	}
+
+
+	@Override
+	protected Collection<String> handleCompleteSystemMessageCode(AuthenticationVO auth, String systemMessageCodeInfix,
+			Integer limit) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		ArrayList<String> result = new ArrayList<String>();
+		if (limit == null) {
+			limit = Settings.getIntNullable(SettingCodes.SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+					DefaultSettings.SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT);
+		}
+		Pattern systemMessageCodeRegex = null;
+		if (!CommonUtil.isEmptyString(systemMessageCodeInfix)) {
+			systemMessageCodeRegex = CommonUtil.createSqlLikeRegexp(CommonUtil.SQL_LIKE_PERCENT_WILDCARD + systemMessageCodeInfix + CommonUtil.SQL_LIKE_PERCENT_WILDCARD, true);
+		}
+		Iterator<String> codesIt = CoreUtil.SYSTEM_MESSAGE_CODES.iterator();
+		while (codesIt.hasNext() && (limit == null || result.size() < limit)) { // no trie for searching 300 entries
+			String code = codesIt.next();
+			if (systemMessageCodeRegex == null || systemMessageCodeRegex.matcher(code).find()) {
+				result.add(code);
+			}
+		}
+		return result;
 	}
 
 	@Override

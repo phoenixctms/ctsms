@@ -165,128 +165,136 @@ extends JournalEntryDaoBase
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Course course, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Course course, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.COURSE_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setCourse(course);
 		course.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Criteria criteria, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Criteria criteria, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.CRITERIA_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setCriteria(criteria);
 		criteria.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(InputField inputField, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(InputField inputField, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.INPUT_FIELD_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setInputField(inputField);
 		inputField.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Inventory inventory, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Inventory inventory, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.INVENTORY_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setInventory(inventory);
 		inventory.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Proband proband, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Proband proband, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.PROBAND_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setProband(proband);
 		proband.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Staff staff, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Staff staff, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.STAFF_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setStaff(staff);
 		staff.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(Trial trial, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey,
+	protected JournalEntry handleAddSystemMessage(Trial trial, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
 			Object[] commentArgs) throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.TRIAL_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setTrial(trial);
 		trial.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
 	@Override
-	protected JournalEntry handleAddSystemMessage(User user, Timestamp now, User modifiedUser, String titleL10nKey, Object[] titleArgs, String commentL10nKey, Object[] commentArgs)
+	protected JournalEntry handleAddSystemMessage(User user, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs, Object[] commentArgs)
 			throws Exception {
 		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
 		journalEntry.setSystemMessageModule(JournalModule.USER_JOURNAL);
-		if (!setTitleComment(journalEntry, modifiedUser, titleL10nKey, titleArgs, commentL10nKey, commentArgs)) {
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(now);
 		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setUser(user);
 		user.addJournalEntries(journalEntry);
 		return this.create(journalEntry);

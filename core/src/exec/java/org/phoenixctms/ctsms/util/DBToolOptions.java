@@ -112,6 +112,7 @@ public final class DBToolOptions {
 	public final static String INITIALIZE_PROBAND_IMAGE_FIELDS_OPT = "ipif";
 	public final static String INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT = "ietdf";
 	public final static String INITIALIZE_PROBAND_COMMENT_FIELDS_OPT = "ipcf";
+	public final static String INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT = "ijsmc";
 	public static final String IMPORT_ALPHA_IDS_OPT = "iai";
 	public static final String IMPORT_ICD_SYSTEMATICS_OPT = "iis";
 	public static final String IMPORT_OPS_CODES_OPT = "ioc";
@@ -233,6 +234,8 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT, "initialize_encrypted_trial_documents_files",
 				"initialize encrypted trial documents and files", 0));
 		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "initialize proband comment fields", 0));
+		tasks.addOption(registerTaskOption(INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, "initialize_journal_system_message_codes", "initialize journal system message code fields",
+				0));
 		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1));
 		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1));
 		tasks.addOption(registerTaskOption(IMPORT_OPS_SYSTEMATICS_OPT, "import_ops_systematics", "import ops systematics", 1));

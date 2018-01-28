@@ -32,3 +32,12 @@ insert into SEND_DEPARTMENT_STAFF_CATEGORY values ((select ID from NOTIFICATION_
 alter table STAFF add column SUPERVISOR BOOLEAN;
 update STAFF set SUPERVISOR = 'f';
 alter table STAFF alter SUPERVISOR set not null;
+
+create index journal_entry_inventory_system_message_code ON JOURNAL_ENTRY (INVENTORY_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_staff_system_message_code ON JOURNAL_ENTRY (STAFF_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_course_system_message_code ON JOURNAL_ENTRY (COURSE_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_trial_system_message_code ON JOURNAL_ENTRY (TRIAL_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_proband_system_message_code ON JOURNAL_ENTRY (PROBAND_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_inputfield_system_message_code ON JOURNAL_ENTRY (INPUT_FIELD_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_user_system_message_code ON JOURNAL_ENTRY (USER_FK,SYSTEM_MESSAGE_CODE);
+create index journal_entry_criteria_system_message_code ON JOURNAL_ENTRY (CRITERIA_FK,SYSTEM_MESSAGE_CODE);

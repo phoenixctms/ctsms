@@ -40,6 +40,9 @@
   <bean id="fileDecryptInitializer" class="org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer">
     <property name="authenticator" ref="authenticator"/>
   </bean>
+  <bean id="journalSystemMessageCodeInitializer" class="org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitializer">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
   <bean id="alphaIdLineProcessor" class="org.phoenixctms.ctsms.executable.csv.AlphaIdLineProcessor"/>
   <bean id="opsCodeLineProcessor" class="org.phoenixctms.ctsms.executable.csv.OpsCodeLineProcessor"/>
   <bean id="clamlImporter" class="org.phoenixctms.ctsms.executable.claml.ClamlImporter"/>

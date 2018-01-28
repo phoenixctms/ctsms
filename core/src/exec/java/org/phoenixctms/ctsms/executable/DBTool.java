@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.executable.claml.ClamlImporter;
 import org.phoenixctms.ctsms.executable.csv.CsvExporter;
 import org.phoenixctms.ctsms.executable.csv.CsvImporter;
 import org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer;
+import org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandCommentFieldInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer;
 import org.phoenixctms.ctsms.executable.xls.XlsExporter;
@@ -659,6 +660,11 @@ public class DBTool {
 					job = DBToolOptions.getTask(DBToolOptions.INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getFileDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+					// sendEmail = dbTool.getProbandCommentFieldInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT)) {
+					job = DBToolOptions.getTask(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getJournalSystemMessageCodeInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.HELP_OPT)) {
 					dbTool.getJobOutput().printPrelude(DBToolOptions.getTask(DBToolOptions.HELP_OPT));
 					HelpFormatter formatter = new HelpFormatter();
@@ -941,6 +947,7 @@ public class DBTool {
 	private ProbandImageFieldInitializer probandImageFieldInitializer;
 	private ProbandCommentFieldInitializer probandCommentFieldInitializer;
 	private FileDecryptInitializer fileDecryptInitializer;
+	private JournalSystemMessageCodeInitializer journalSystemMessageCodeInitializer;
 	private JournalPurger journalPurger;
 	private JobOutput jobOutput;
 
@@ -1041,6 +1048,14 @@ public class DBTool {
 			journalPurger.setJobOutput(getJobOutput());
 		}
 		return journalPurger;
+	}
+
+	private JournalSystemMessageCodeInitializer getJournalSystemMessageCodeInitializer() {
+		if (journalSystemMessageCodeInitializer == null) {
+			journalSystemMessageCodeInitializer = context.getBean(JournalSystemMessageCodeInitializer.class);
+			journalSystemMessageCodeInitializer.setJobOutput(getJobOutput());
+		}
+		return journalSystemMessageCodeInitializer;
 	}
 
 	private NotificationSender getNotificationSender() {

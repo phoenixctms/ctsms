@@ -18,7 +18,7 @@ import org.phoenixctms.ctsms.domain.StreetDao;
 import org.phoenixctms.ctsms.domain.TitleDao;
 import org.phoenixctms.ctsms.domain.ZipDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
-import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.TableSizes;
+import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
@@ -186,7 +186,7 @@ public class CsvImporter {
 
 	public long loadStreets(String fileName, String encoding, boolean removeAllBeforeInsert) throws Exception {
 		if (removeAllBeforeInsert) {
-			ChunkedRemoveAll.remove(streetDao, TableSizes.BIG);
+			ChunkedRemoveAll.remove(streetDao, PageSizes.BIG);
 			jobOutput.println("street name autocomplete suggestions cleared");
 		}
 		streetProcessor.setJobOutput(jobOutput);

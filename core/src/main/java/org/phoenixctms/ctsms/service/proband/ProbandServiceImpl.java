@@ -166,7 +166,7 @@ extends ProbandServiceBase
 	private static JournalEntry logSystemMessage(Proband proband, ProbandAddressOutVO addressVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
-		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, journalEncrypted ? new Object[] { addressVO.getName() } : null, systemMessageCode,
+		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, journalEncrypted ? new Object[] { addressVO.getName() } : null,
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
@@ -175,7 +175,7 @@ extends ProbandServiceBase
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-		systemMessageCode, new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	private static void resetAutoDeleteDeadline(Proband proband, Timestamp now) {
