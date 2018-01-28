@@ -57,7 +57,7 @@ public class ResourceHandlerWrapper extends PrimeResourceHandler {
 				response.getOutputStream().flush();
 				context.responseComplete();
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error in streaming dynamic resource: " + e.getMessage());
+				logger.log(Level.SEVERE, "Error in streaming dynamic resource"); // : " + e.getMessage());
 			} finally {
 				session.remove(dynamicContentId);
 			}
