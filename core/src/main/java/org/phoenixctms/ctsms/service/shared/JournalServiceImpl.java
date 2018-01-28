@@ -11,6 +11,7 @@ package org.phoenixctms.ctsms.service.shared;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,14 +36,10 @@ import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
-import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
-import org.phoenixctms.ctsms.util.SettingCodes;
-import org.phoenixctms.ctsms.util.Settings;
-import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.vo.ActivityTagVO;
@@ -65,6 +62,71 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class JournalServiceImpl
 extends JournalServiceBase
 {
+
+	private final static HashSet<String> ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES = new HashSet<String>();
+	private final static HashSet<String> ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES = new HashSet<String>();
+	static {
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.PROBAND_GROUP_DELETED_ECRF_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.VISIT_DELETED_ECRF_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_CREATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_MARKED_FOR_DELETION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_CLONED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_CREATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_MARKED_FOR_DELETION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_CLONED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_STATUS_ENTRY_CREATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_STATUS_ENTRY_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_VALIDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_PDF_RENDERED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRFS_PDF_RENDERED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_MOVED_TO_FIRST_POSITION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_MOVED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_MOVED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_MOVED_TO_LAST_POSITION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITION_NORMALIZED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITION_ROTATED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITION_ROTATED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITIONS_NORMALIZED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITIONS_ROTATED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_POSITIONS_ROTATED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_MOVED_TO_FIRST_POSITION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_MOVED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_MOVED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_MOVED_TO_LAST_POSITION);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITION_NORMALIZED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITION_ROTATED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITION_ROTATED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITIONS_NORMALIZED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITIONS_ROTATED_DOWN);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_POSITIONS_ROTATED_UP);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUE_CREATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUE_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUE_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_CREATED);
+		// ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_JOURNAL_EXPORTED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.STAFF_DELETED_TEAM_MEMBER_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.TEAM_MEMBER_CREATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.TEAM_MEMBER_UPDATED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.TEAM_MEMBER_DELETED);
+		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.TEAM_MEMBERS_EXPORTED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.INPUT_FIELD_CREATED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.INPUT_FIELD_UPDATED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.INPUT_FIELD_DELETED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.INPUT_FIELD_MARKED_FOR_DELETION);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.INPUT_FIELD_CLONED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.SELECTION_SET_VALUE_CREATED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.SELECTION_SET_VALUE_UPDATED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.SELECTION_SET_VALUE_DELETED);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.SELECTION_SET_VALUE_MARKED_FOR_DELETION);
+		ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.SELECTION_SET_VALUE_CLONED);
+	}
 
 	private static JournalEntry logSystemMessage(Course course, CourseOutVO courseVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -325,16 +387,16 @@ extends JournalServiceBase
 		JournalExcelWriter writer = new JournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		writer.setTrial(this.getTrialDao().toTrialOutVO(trial));
-		Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
+		// Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		Collection<JournalEntry> journalEntries = journalEntryDao.findEcrfJournal(trialId);
+		Collection<JournalEntry> journalEntries = journalEntryDao.findEcrfJournal(trialId, true);
 		ArrayList<JournalEntryOutVO> journalEntryVOs = new ArrayList<JournalEntryOutVO>(journalEntries.size());
 		Iterator<JournalEntry> journalEntriesIt = journalEntries.iterator();
 		while (journalEntriesIt.hasNext()) {
-			JournalEntryOutVO journalEntryVO = journalEntryDao.toJournalEntryOutVO(journalEntriesIt.next());
-			if (journalEntryVO.isDecrypted()
-					&& (journalEntryVO.getInputField() != null
-					|| (journalEntryVO.getTrial() != null && ecrfJournalEntryTitleRegExp != null && ecrfJournalEntryTitleRegExp.matcher(journalEntryVO.getTitle()).find()))) {
+			JournalEntry journalEntry = journalEntriesIt.next();
+			if ((journalEntry.getInputField() != null && ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.contains(journalEntry.getSystemMessageCode()))
+					|| (journalEntry.getTrial() != null && ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.contains(journalEntry.getSystemMessageCode()))) {
+				JournalEntryOutVO journalEntryVO = journalEntryDao.toJournalEntryOutVO(journalEntry);
 				if (CommonUtil.HTML_SYSTEM_MESSAGES_COMMENTS) {
 					journalEntryVO.setComment(diff_match_patch.prettyHtmlToUnicode(journalEntryVO.getComment()));
 				}

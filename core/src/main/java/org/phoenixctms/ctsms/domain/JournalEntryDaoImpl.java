@@ -363,8 +363,11 @@ extends JournalEntryDaoBase
 	}
 
 	@Override
-	protected Collection<JournalEntry> handleFindEcrfJournal(Long trailId) throws Exception {
+	protected Collection<JournalEntry> handleFindEcrfJournal(Long trailId, Boolean systemMessage) throws Exception {
 		org.hibernate.Criteria journalCriteria = createJournalEntryCriteria(null);
+		if (systemMessage != null) {
+			journalCriteria.add(Restrictions.eq("systemMessage", systemMessage.booleanValue()));
+		}
 		journalCriteria.add(Restrictions.or(
 				Restrictions.eq("systemMessage", false),
 				Restrictions.or(Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.TRIAL_JOURNAL)),
