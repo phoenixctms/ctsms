@@ -41,3 +41,7 @@ create index journal_entry_proband_system_message_code ON JOURNAL_ENTRY (PROBAND
 create index journal_entry_inputfield_system_message_code ON JOURNAL_ENTRY (INPUT_FIELD_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_user_system_message_code ON JOURNAL_ENTRY (USER_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_criteria_system_message_code ON JOURNAL_ENTRY (CRITERIA_FK,SYSTEM_MESSAGE_CODE);
+
+insert into ECRF_STATUS_TRANSITION values ((select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='complete_signed'), (select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='complete_signed'));
+insert into ECRF_STATUS_TRANSITION values ((select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='incomplete_signed'), (select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='incomplete_signed'));
+insert into ECRF_STATUS_TRANSITION values ((select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='skipped_signed'), (select ID from ECRF_STATUS_TYPE where NAME_L10N_KEY='skipped_signed'));

@@ -45,7 +45,11 @@
 
 			<h:outputText value="#{valueBean.paginator.showPagesMessage ? labels.pages_save_before_change_message : ''}" />
 			
-			<ui:include src="ajaxStatus.xhtml" />
+			<ui:include src="ajaxStatus.xhtml" >
+				<ui:param
+					name="rendered"
+					value="#{showAjaxStatus ? 'true' : 'false'}" />			
+			</ui:include>
 			
 			<p:selectOneMenu
 				value="#{valueBean.paginator.pageSize}"

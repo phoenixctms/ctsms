@@ -10,7 +10,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:ajaxStatus>
+		<p:ajaxStatus rendered="#{empty rendered ? 'true' : rendered}">
 			<f:facet name="default">
 				<h:outputText value="" />
 			</f:facet>

@@ -459,7 +459,7 @@ extends TrialServiceBase
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		statusEntry = ecrfStatusEntryDao.create(statusEntry);
-		execEcrfStatusActions(null, statusEntry, probandListStatusTypeId, now, user);
+		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user); // null,
 		ECRFStatusEntryVO result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_STATUS_ENTRY_CREATED, result, null,
 				journalEntryDao);
@@ -1921,19 +1921,21 @@ extends TrialServiceBase
 
 	private void checkUpdateEcrfInput(ECRFInVO modifiedEcrf, ECRF originalEcrf) throws ServiceException {
 		checkEcrfInput(modifiedEcrf);
-		if (!modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())
-				|| !originalEcrf.getName().equals(modifiedEcrf.getName())
-				|| !originalEcrf.getTitle().equals(modifiedEcrf.getTitle())
-				|| !((originalEcrf.getDescription() == null && modifiedEcrf.getDescription() == null) || (originalEcrf.getDescription() != null
-				&& modifiedEcrf.getDescription() != null && originalEcrf.getDescription().equals(modifiedEcrf.getDescription())))
-				|| !((modifiedEcrf.getVisitId() == null && originalEcrf.getVisit() == null) || (modifiedEcrf.getVisitId() != null && originalEcrf.getVisit() != null && modifiedEcrf
-				.getVisitId().equals(originalEcrf.getVisit().getId())))
-				|| !((modifiedEcrf.getGroupId() == null && originalEcrf.getGroup() == null) || (modifiedEcrf.getGroupId() != null && originalEcrf.getGroup() != null && modifiedEcrf
-				.getGroupId().equals(originalEcrf.getGroup().getId())))) {
-			ServiceUtil.checkLockedEcrfs(originalEcrf, this.getECRFStatusEntryDao(), this.getECRFDao());
-		}
 		if (!modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_TRIAL_CHANGED);
+		}
+		if (// !modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())
+				// || !originalEcrf.getName().equals(modifiedEcrf.getName())
+				// ||
+				!originalEcrf.getTitle().equals(modifiedEcrf.getTitle())
+				// || !((originalEcrf.getDescription() == null && modifiedEcrf.getDescription() == null) || (originalEcrf.getDescription() != null
+				// && modifiedEcrf.getDescription() != null && originalEcrf.getDescription().equals(modifiedEcrf.getDescription())))
+				// || !((modifiedEcrf.getVisitId() == null && originalEcrf.getVisit() == null) || (modifiedEcrf.getVisitId() != null && originalEcrf.getVisit() != null && modifiedEcrf
+				// .getVisitId().equals(originalEcrf.getVisit().getId())))
+				// || !((modifiedEcrf.getGroupId() == null && originalEcrf.getGroup() == null) || (modifiedEcrf.getGroupId() != null && originalEcrf.getGroup() != null && modifiedEcrf
+				// .getGroupId().equals(originalEcrf.getGroup().getId())))
+				) {
+			ServiceUtil.checkLockedEcrfs(originalEcrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		}
 	}
 
@@ -2150,99 +2152,99 @@ extends TrialServiceBase
 		return result;
 	}
 
-	private void execEcrfStatusActions(ECRFStatusType oldStatus, ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
+	private void execEcrfStatusActions(ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception { // ECRFStatusType oldStatus,
 		ECRFStatusType newState = statusEntry.getStatus();
-		if (oldStatus == null || !oldStatus.equals(newState)) {
-			ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
-			Collections.sort(sortedActions, new EcrfStatusActionComparator());
-			Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
+		// if (oldStatus == null || !oldStatus.equals(newState)) {
+		ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
+		Collections.sort(sortedActions, new EcrfStatusActionComparator());
+		Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
 
-			ProbandListEntry listEntry = statusEntry.getListEntry();
-			ECRF ecrf = statusEntry.getEcrf();
+		ProbandListEntry listEntry = statusEntry.getListEntry();
+		ECRF ecrf = statusEntry.getEcrf();
 
-			Integer scheduleValidationLimit = Settings.getIntNullable(SettingCodes.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT, Bundle.SETTINGS,
-					DefaultSettings.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT);
-			// InputFieldDao inputFieldDao = this.getInputFieldDao();
-			// ECRFDao ecrfDao = this.getECRFDao();
+		Integer scheduleValidationLimit = Settings.getIntNullable(SettingCodes.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT);
+		// InputFieldDao inputFieldDao = this.getInputFieldDao();
+		// ECRFDao ecrfDao = this.getECRFDao();
 
 
 
-			// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-			while (sortedActionsIt.hasNext()) {
-				ECRFStatusAction ecrfStatusAction = sortedActionsIt.next();
-				switch (ecrfStatusAction.getAction()) {
-					case CLEAR_VALUES:
-						// defer?
-						clearEcrfFieldValues(listEntry,
-								this.getECRFFieldValueDao().findByListEntryEcrf(listEntry.getId(), ecrf.getId(), true, null),now,user);
-						break;
-					case CLEAR_STATUS_ENTRIES:
-						// defer?
-						clearEcrfFieldStatusEntries(listEntry,
-								this.getECRFFieldStatusEntryDao().findByListEntryEcrf(listEntry.getId(), ecrf.getId(), true, null), now, user);
-						break;
-					case CREATE_PROBAND_LIST_STATUS_ENTRY:
-						try {
-							ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
-									this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
-									L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
-							}, now, probandListStatusTypeId, ecrf, newState, now, user,
-							this.getProbandDao(),
-							this.getProbandListEntryDao(),
-							this.getProbandListStatusEntryDao(),
-							this.getProbandListStatusTypeDao(),
-							this.getJournalEntryDao());
-						} catch (ServiceException e) {
-							// already end state
-						}
-						break;
-					case SCHEDULE_EXPORT_VALUES:
-					case EXPORT_VALUES:
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
-					case SCHEDULE_VALIDATE_VALUES:
-						//throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
-						// statusEntry.setValidationTimestamp(now);
+		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		while (sortedActionsIt.hasNext()) {
+			ECRFStatusAction ecrfStatusAction = sortedActionsIt.next();
+			switch (ecrfStatusAction.getAction()) {
+				case CLEAR_VALUES:
+					// defer?
+					clearEcrfFieldValues(listEntry,
+							this.getECRFFieldValueDao().findByListEntryEcrf(listEntry.getId(), ecrf.getId(), true, null),now,user);
+					break;
+				case CLEAR_STATUS_ENTRIES:
+					// defer?
+					clearEcrfFieldStatusEntries(listEntry,
+							this.getECRFFieldStatusEntryDao().findByListEntryEcrf(listEntry.getId(), ecrf.getId(), true, null), now, user);
+					break;
+				case CREATE_PROBAND_LIST_STATUS_ENTRY:
+					try {
+						ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
+								this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
+								L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
+						}, now, probandListStatusTypeId, ecrf, newState, now, user,
+						this.getProbandDao(),
+						this.getProbandListEntryDao(),
+						this.getProbandListStatusEntryDao(),
+						this.getProbandListStatusTypeDao(),
+						this.getJournalEntryDao());
+					} catch (ServiceException e) {
+						// already end state
+					}
+					break;
+				case SCHEDULE_EXPORT_VALUES:
+				case EXPORT_VALUES:
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
+				case SCHEDULE_VALIDATE_VALUES:
+					//throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
+					// statusEntry.setValidationTimestamp(now);
+					statusEntry.setValidationStatus(ECRFValidationStatus.PENDING);
+					// statusEntry.setValidationResponseMsg(null);
+					this.getECRFStatusEntryDao().update(statusEntry);
+					break;
+				case VALIDATE_VALUES:
+					if (scheduleValidationLimit == null
+					|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
+						addValidationEcrfFieldStatusEntries(statusEntry, true, now, user);
+					} else {
 						statusEntry.setValidationStatus(ECRFValidationStatus.PENDING);
-						// statusEntry.setValidationResponseMsg(null);
 						this.getECRFStatusEntryDao().update(statusEntry);
-						break;
-					case VALIDATE_VALUES:
-						if (scheduleValidationLimit == null
-						|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
-							addValidationEcrfFieldStatusEntries(statusEntry, true, now, user);
-						} else {
-							statusEntry.setValidationStatus(ECRFValidationStatus.PENDING);
-							this.getECRFStatusEntryDao().update(statusEntry);
-						}
-						break;
-					case NOTIFY_ECRF_STATUS:
-						// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
-						this.getNotificationDao().addNotification(statusEntry, now, null);
-						break;
-					case CANCEL_NOTIFICATIONS:
-						ServiceUtil.cancelNotifications(statusEntry.getNotifications(), this.getNotificationDao(),
-								org.phoenixctms.ctsms.enumeration.NotificationType.ECRF_STATUS_UPDATED);
-						break;
-					case NO_MISSING_VALUES:
-						if (scheduleValidationLimit == null
-						|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
-							checkMissingEcrfFieldValuesDeeply(listEntry, ecrf);
-						} else {
-							checkMissingEcrfFieldValues(listEntry,ecrf);
-						}
-						break;
-					case NO_UNRESOLVED_FIELD_STATUS_ENTRIES:
-						checkUnresolvedEcrfFieldStatus(listEntry, ecrf);
-						break;
-					case SIGN_ECRF:
-						// checkTeamMemberSign(listEntry.getTrial(), user);
-						this.getSignatureDao().addEcrfSignature(statusEntry, now);
-						break;
-					default:
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
-				}
+					}
+					break;
+				case NOTIFY_ECRF_STATUS:
+					// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
+					this.getNotificationDao().addNotification(statusEntry, now, null);
+					break;
+				case CANCEL_NOTIFICATIONS:
+					ServiceUtil.cancelNotifications(statusEntry.getNotifications(), this.getNotificationDao(),
+							org.phoenixctms.ctsms.enumeration.NotificationType.ECRF_STATUS_UPDATED);
+					break;
+				case NO_MISSING_VALUES:
+					if (scheduleValidationLimit == null
+					|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
+						checkMissingEcrfFieldValuesDeeply(listEntry, ecrf);
+					} else {
+						checkMissingEcrfFieldValues(listEntry,ecrf);
+					}
+					break;
+				case NO_UNRESOLVED_FIELD_STATUS_ENTRIES:
+					checkUnresolvedEcrfFieldStatus(listEntry, ecrf);
+					break;
+				case SIGN_ECRF:
+					// checkTeamMemberSign(listEntry.getTrial(), user);
+					this.getSignatureDao().addEcrfSignature(statusEntry, now);
+					break;
+				default:
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
 			}
 		}
+		// }
 	}
 
 	private void execTrialStatusActions(TrialStatusType oldStatus, Trial trial, Date now, User user) throws Exception {
@@ -7371,7 +7373,7 @@ extends TrialServiceBase
 			ECRFStatusType newStatus = null;
 			while (it.hasNext()) {
 				ECRFStatusType status = it.next();
-				if (hasEcrfStatusAction(status, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF)) {
+				if (!statusEntry.getStatus().equals(status) && hasEcrfStatusAction(status, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF)) {
 					newStatus = status;
 					break;
 				}
@@ -7384,6 +7386,7 @@ extends TrialServiceBase
 		}
 		return results;
 	}
+
 
 	@Override
 	protected ECRFOutVO handleUpdateEcrf(AuthenticationVO auth, ECRFInVO modifiedEcrf) throws Exception {
@@ -8334,7 +8337,7 @@ extends TrialServiceBase
 		statusEntry.setStatus(statusType);
 		CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 		ecrfStatusEntryDao.update(statusEntry);
-		execEcrfStatusActions(originalEcrfStatusType, statusEntry, probandListStatusTypeId, now, user);
+		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user); // originalEcrfStatusType,
 		result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_STATUS_ENTRY_UPDATED, result, original,
 				journalEntryDao);

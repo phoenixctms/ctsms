@@ -1302,7 +1302,8 @@ public class ProductionDataProvider {
 						));
 		updateEcrfStatusType(skippedSignedEcrfStatusType,
 				getEcrfStatusTransitions(
-						inProgressEcrfStatusType
+						inProgressEcrfStatusType,
+						skippedSignedEcrfStatusType
 						));
 		updateEcrfStatusType(validatedEcrfStatusType,
 				getEcrfStatusTransitions(
@@ -1321,7 +1322,8 @@ public class ProductionDataProvider {
 						));
 		updateEcrfStatusType(completeSignedEcrfStatusType,
 				getEcrfStatusTransitions(
-						inProgressEcrfStatusType
+						inProgressEcrfStatusType,
+						completeSignedEcrfStatusType
 						));
 		updateEcrfStatusType(incompleteEcrfStatusType,
 				getEcrfStatusTransitions(
@@ -1335,7 +1337,8 @@ public class ProductionDataProvider {
 						));
 		updateEcrfStatusType(incompleteSignedEcrfStatusType,
 				getEcrfStatusTransitions(
-						inProgressEcrfStatusType
+						inProgressEcrfStatusType,
+						incompleteSignedEcrfStatusType
 						));
 
 		jobOutput.println("eCRF states created");
