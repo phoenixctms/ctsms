@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.RegexpEntryLengthComparator;
+import org.phoenixctms.ctsms.compare.KeyValueLengthComparator;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializer {
 
-	private final static RegexpEntryLengthComparator REGEXP_COMPARATOR = new RegexpEntryLengthComparator(true);
+	private final static KeyValueLengthComparator TITLE_FORMAT_COMPARATOR = new KeyValueLengthComparator(true);
 
 	private final static ArrayList<Entry<String, Pattern>> LEGACY_TITLE_REGEXP = new ArrayList<Map.Entry<String, Pattern>>();
 	static {
@@ -78,20 +78,30 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 		Iterator<Locales> localesIt = locales.values().iterator();
 		while (localesIt.hasNext()) {
 			Locales locale = localesIt.next();
-			ArrayList<Entry<String, Pattern>> titleRegexpList = new ArrayList<Entry<String, Pattern>>(CoreUtil.SYSTEM_MESSAGE_CODES.size());
+			LinkedHashMap<String, String> titleFormatMap = new LinkedHashMap<String, String>(CoreUtil.SYSTEM_MESSAGE_CODES.size());
 			Iterator<String> codesIt = CoreUtil.SYSTEM_MESSAGE_CODES.iterator();
 			while (codesIt.hasNext()) {
 				String code = codesIt.next();
 				String titleFormat = L10nUtil.getSystemMessageTitleFormat(locale, code);
 				if (!CommonUtil.isEmptyString(titleFormat)) {
-					titleRegexpList.add(new AbstractMap.SimpleEntry<String, Pattern>(code, CommonUtil.createMessageFormatRegexp(titleFormat, false)));
+					if (!titleFormatMap.containsKey(code)) {
+						titleFormatMap.put(code, titleFormat);
+					} else {
+						throw new Exception("duplicate " + locale.name() + " system message title format " + titleFormat);
+					}
 				} else {
 					throw new Exception("empty " + locale.name() + " system message title format for " + code);
 				}
 			}
-			jobOutput.println(locale.name() + ": " + titleRegexpList.size() + " system message code patterns");
-			Collections.sort(titleRegexpList, REGEXP_COMPARATOR);
-			titleRegexps.addAll(titleRegexpList);
+			ArrayList<Entry<String, String>> titleFormatList = new ArrayList<Entry<String, String>>(titleFormatMap.entrySet());
+			titleFormatMap.clear();
+			Collections.sort(titleFormatList, TITLE_FORMAT_COMPARATOR);
+			Iterator<Entry<String, String>> titleFormatIt = titleFormatList.iterator();
+			while (titleFormatIt.hasNext()) {
+				Entry<String, String> codeTitleFormat = titleFormatIt.next();
+				titleRegexps.add(new AbstractMap.SimpleEntry<String, Pattern>(codeTitleFormat.getKey(), CommonUtil.createMessageFormatRegexp(codeTitleFormat.getValue(), false)));
+			}
+			jobOutput.println(locale.name() + ": " + titleFormatList.size() + " system message code patterns");
 		}
 		jobOutput.println(titleRegexps.size() + " system message code patterns overall");
 		// }

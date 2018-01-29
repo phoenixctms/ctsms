@@ -526,11 +526,11 @@ public final class CommonUtil {
 		messageFormatPattern.append("^");
 		int lastMatch = 0;
 		while (matcher.find()) {
-			messageFormatPattern.append(Pattern.quote(messageFormat.substring(lastMatch, matcher.start())));
+			messageFormatPattern.append(messageFormat.substring(lastMatch, matcher.start()).length() > 0 ? Pattern.quote(messageFormat.substring(lastMatch, matcher.start())) : "");
 			messageFormatPattern.append("(.*)");
 			lastMatch = matcher.end();
 		}
-		messageFormatPattern.append(Pattern.quote(messageFormat.substring(lastMatch)));
+		messageFormatPattern.append(messageFormat.substring(lastMatch).length() > 0 ? Pattern.quote(messageFormat.substring(lastMatch)) : "");
 		messageFormatPattern.append("$");
 		try {
 			if (ignoreCase) {
@@ -549,7 +549,7 @@ public final class CommonUtil {
 		sqlLikePattern.append("^");
 		int lastMatch = 0;
 		while (matcher.find()) {
-			sqlLikePattern.append(Pattern.quote(queryString.substring(lastMatch, matcher.start())));
+			sqlLikePattern.append(queryString.substring(lastMatch, matcher.start()).length() > 0 ? Pattern.quote(queryString.substring(lastMatch, matcher.start())) : "");
 			if (SQL_LIKE_PERCENT_WILDCARD.equals(matcher.group())) {
 				sqlLikePattern.append("(.*)");
 			} else if (SQL_LIKE_UNDERSCORE_WILDCARD.equals(matcher.group())) {
@@ -559,7 +559,7 @@ public final class CommonUtil {
 			}
 			lastMatch = matcher.end();
 		}
-		sqlLikePattern.append(Pattern.quote(queryString.substring(lastMatch)));
+		sqlLikePattern.append(queryString.substring(lastMatch).length() > 0 ? Pattern.quote(queryString.substring(lastMatch)) : "");
 		sqlLikePattern.append("$");
 		try {
 			if (ignoreCase) {
