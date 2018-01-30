@@ -1251,23 +1251,25 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 						}
 						clearFromCache(updatedEcrfStatus.getEcrf(), updatedEcrfStatus.getListEntry());
 					}
-					statusTypes = loadEcrfStatusTypes();
-					ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
-					ecrf = ecrfStatus.getEcrf();
-					ecrfFieldValueBean.setEcrf(ecrf);
-					probandListEntry = ecrfStatus.getListEntry();
-					listEntryId = probandListEntry == null ? null : probandListEntry.getId();
-					ecrfId = ecrf == null ? null : ecrf.getId();
-					// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf,
-					// probandListEntry));
-					filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-					// setFirstFilterSection(false);
-					ecrfFieldValueBean.setProbandListEntry(probandListEntry);
-					ecrfFieldValueBean.getPaginator().setToFirstPage();
-					ecrfFieldValueBean.getPaginator().updatePSF();
-					ecrfFieldValueBean.load();
-					signature = loadSignature();
-					// resetAuditTrailModel();
+					if (ecrfStatus != null) {
+						statusTypes = loadEcrfStatusTypes();
+						ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
+						ecrf = ecrfStatus.getEcrf();
+						ecrfFieldValueBean.setEcrf(ecrf);
+						probandListEntry = ecrfStatus.getListEntry();
+						listEntryId = probandListEntry == null ? null : probandListEntry.getId();
+						ecrfId = ecrf == null ? null : ecrf.getId();
+						// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf,
+						// probandListEntry));
+						filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
+						// setFirstFilterSection(false);
+						ecrfFieldValueBean.setProbandListEntry(probandListEntry);
+						ecrfFieldValueBean.getPaginator().setToFirstPage();
+						ecrfFieldValueBean.getPaginator().updatePSF();
+						ecrfFieldValueBean.load();
+						signature = loadSignature();
+						// resetAuditTrailModel();
+					}
 					addMessages();
 				}
 			}

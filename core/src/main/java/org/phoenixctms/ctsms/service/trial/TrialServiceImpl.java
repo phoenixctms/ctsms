@@ -7368,7 +7368,7 @@ extends TrialServiceBase
 
 		ArrayList<ECRFStatusEntryVO> results = new ArrayList<ECRFStatusEntryVO>();
 		Iterator<ECRFStatusEntry> statusEntryIt = this.getECRFStatusEntryDao()
-				.findByTrialListEntryDoneValidatedReviewVerified(trialId, probandListEntryId, null, null, null, null, null).iterator();
+				.findByTrialListEntryDoneValidatedReviewVerified(trialId, probandListEntryId, null, null, null, signAll ? null : true, null).iterator();
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			Iterator<ECRFStatusType> it = statusEntry.getStatus().getTransitions().iterator();
