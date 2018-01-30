@@ -20,15 +20,21 @@
 				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,ecrf_header,ecrffield_input_grid" /> -->
 			<p:remoteCommand
-				process="@this,ecrfStatusPassword"
+				process="@this,signPassword"
 				name="updateEcrfStatus"
 				actionListener="#{probandEcrfStatusEntryBean.updateEcrfStatus()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand
-				process="@this,ecrfStatusPassword"
-				name="signEcrfs"
-				actionListener="#{probandEcrfStatusEntryBean.signEcrfs()}"
+				process="@this,signPassword"
+				name="signVerifiedEcrfs"
+				actionListener="#{probandEcrfStatusEntryBean.signVerifiedEcrfs()}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+			<p:remoteCommand
+				process="@this,signPassword"
+				name="signAllEcrfs"
+				actionListener="#{probandEcrfStatusEntryBean.signAllEcrfs()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />				
 			<p:remoteCommand
@@ -678,7 +684,7 @@
 						</p:column>
 					</p:dataGrid>
 					<h:inputHidden
-						id="ecrfStatusPassword"
+						id="signPassword"
 						required="false"
 						value="#{probandEcrfStatusEntryBean.password}">
 					</h:inputHidden>
@@ -769,12 +775,24 @@
 								ajax="true"
 								disabled="#{empty probandEcrfStatusEntryBean.signature}"
 								update="signature" />
-							<p:commandButton
-								type="button"
-								value="#{probandlabels.sign_ecrfs_button_label}"
-								icon="ui-icon ui-icon-pencil"
+								
+							<p:menuButton
 								rendered="#{probandEcrfStatusEntryBean.signEcrfsVisible}"
-								onclick="ecrfStatusPassword.setValue('');signEcrfsPassword.show();" />
+								value="#{probandlabels.sign_ecrfs_button_label}">
+								<p:menuitem
+									value="#{probandlabels.sign_verified_ecrfs_button_label}"
+									disabled="#{!probandEcrfStatusEntryBean.signVerifiedEcrfsEnabled}"
+									onclick="ecrfsVerifiedPassword.setValue('');signVerifiedEcrfsPassword.show();"
+									icon="ctsms-menubar-icon ui-icon-pencil"
+									url="#"
+									ajax="false" />
+								<p:menuitem
+									value="#{probandlabels.sign_all_ecrfs_button_label}"
+									onclick="ecrfsAllPassword.setValue('');signAllEcrfsPassword.show();"
+									icon="ctsms-menubar-icon ui-icon-pencil"
+									url="#"
+									ajax="false" />										
+							</p:menuButton>								
 								
 							<p:splitButton
 								immediate="true"
@@ -967,7 +985,7 @@
 					widgetVar="ecrfStatus#{statusType.id}Password">
 					<f:facet name="message">
 						<h:outputText
-							value="#{probandlabels.ecrf_password_prompt_dialog_message}"
+							value="#{probandlabels.ecrf_status_password_prompt_dialog_message}"
 							escape="false" />
 						<h:panelGrid
 							columns="1"
@@ -1004,7 +1022,7 @@
 					</f:facet>
 					<p:commandButton
 						value="#{labels.ok_button_label}"
-						onclick="setHiddenField('tabView:probandecrfstatusentry_form:ecrfStatusPassword',ecrfStatusPassword#{statusType.id}.getValue());ecrfStatus#{statusType.id}Password.hide();updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));"
+						onclick="setHiddenField('tabView:probandecrfstatusentry_form:signPassword',ecrfStatusPassword#{statusType.id}.getValue());ecrfStatus#{statusType.id}Password.hide();updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));"
 						type="button" />
 					<p:commandButton
 						value="#{labels.cancel_button_label}"
@@ -1015,10 +1033,10 @@
 				<p:confirmDialog
 					appendToBody="false"
 					severity="info"
-					widgetVar="signEcrfsPassword">
+					widgetVar="signVerifiedEcrfsPassword">
 					<f:facet name="message">
 						<h:outputText
-							value="#{probandlabels.ecrf_password_prompt_dialog_message}"
+							value="#{probandlabels.ecrfs_verified_password_prompt_dialog_message}"
 							escape="false" />
 						<h:panelGrid
 							columns="1"
@@ -1030,12 +1048,12 @@
 								cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 								<h:outputLabel
-									for="passwordEcrfStatus"
+									for="passwordVerifiedEcrfs"
 									value="#{probandlabels.ecrf_signing_password_label}" />
 								<h:panelGroup>
 									<p:password
-										id="passwordEcrfStatus"
-										widgetVar="ecrfStatusPassword"
+										id="passwordVerifiedEcrfs"
+										widgetVar="ecrfsVerifiedPassword"
 										required="false"
 										feedback="false"
 										redisplay="false"
@@ -1043,25 +1061,75 @@
 										styleClass="ctsms-password" />
 									<p:tooltip
 										rendered="#{enableTooltips}"
-										for="passwordEcrfStatus">
+										for="passwordVerifiedEcrfs">
 										<h:outputText
 											value="#{probandlabels.ecrf_signing_password_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="passwordEcrfStatus" />
+								<p:message for="passwordVerifiedEcrfs" />
 							</h:panelGrid>
 						</h:panelGrid>
 					</f:facet>
 					<p:commandButton
 						value="#{labels.ok_button_label}"
-						onclick="setHiddenField('tabView:probandecrfstatusentry_form:ecrfStatusPassword',ecrfStatusPassword.getValue());signEcrfsPassword.hide();signEcrfs();"
+						onclick="setHiddenField('tabView:probandecrfstatusentry_form:signPassword',ecrfsVerifiedPassword.getValue());signVerifiedEcrfsPassword.hide();signVerifiedEcrfs();"
 						type="button" />
 					<p:commandButton
 						value="#{labels.cancel_button_label}"
-						onclick="signEcrfsPassword.hide();ecrfStatusPassword.setValue('');"
+						onclick="signVerifiedEcrfsPassword.hide();ecrfsVerifiedPassword.setValue('');"
 						type="button" />
-				</p:confirmDialog>			
+				</p:confirmDialog>
+				<p:confirmDialog
+					appendToBody="false"
+					severity="info"
+					widgetVar="signAllEcrfsPassword">
+					<f:facet name="message">
+						<h:outputText
+							value="#{probandlabels.ecrfs_all_password_prompt_dialog_message}"
+							escape="false" />
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row">
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="passwordAllEcrfs"
+									value="#{probandlabels.ecrf_signing_password_label}" />
+								<h:panelGroup>
+									<p:password
+										id="passwordAllEcrfs"
+										widgetVar="ecrfsAllPassword"
+										required="false"
+										feedback="false"
+										redisplay="false"
+										label="#{probandlabels.ecrf_signing_password}"
+										styleClass="ctsms-password" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="passwordAllEcrfs">
+										<h:outputText
+											value="#{probandlabels.ecrf_signing_password_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="passwordAllEcrfs" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</f:facet>
+					<p:commandButton
+						value="#{labels.ok_button_label}"
+						onclick="setHiddenField('tabView:probandecrfstatusentry_form:signPassword',ecrfsAllPassword.getValue());signAllEcrfsPassword.hide();signAllEcrfs();"
+						type="button" />
+					<p:commandButton
+						value="#{labels.cancel_button_label}"
+						onclick="signAllEcrfsPassword.hide();ecrfsAllPassword.setValue('');"
+						type="button" />
+				</p:confirmDialog>	
 		</h:form>
 	</ui:composition>
 </h:body>

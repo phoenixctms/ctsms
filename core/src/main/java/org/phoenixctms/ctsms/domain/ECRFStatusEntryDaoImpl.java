@@ -91,6 +91,37 @@ extends ECRFStatusEntryDaoBase
 	}
 
 	@Override
+	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryDoneValidatedReviewVerified(Long trialId, Long probandListEntryId, Boolean done,
+			Boolean validated, Boolean review, Boolean verified, PSFVO psf) throws Exception {
+		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFStatusEntry.class, ecrfStatusEntryCriteria);
+		if (trialId != null) {
+			org.hibernate.Criteria trialCriteria = ecrfStatusEntryCriteria.createCriteria("listEntry");
+			trialCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandListEntryId != null) {
+			ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		}
+		if (done != null || validated != null || review != null || verified != null) {
+			org.hibernate.Criteria statusCriteria = ecrfStatusEntryCriteria.createCriteria("status");
+			if (done != null) {
+				statusCriteria.add(Restrictions.eq("done", done.booleanValue()));
+			}
+			if (validated != null) {
+				statusCriteria.add(Restrictions.eq("validated", validated.booleanValue()));
+			}
+			if (review != null) {
+				statusCriteria.add(Restrictions.eq("review", review.booleanValue()));
+			}
+			if (verified != null) {
+				statusCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
+			}
+		}
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return ecrfStatusEntryCriteria.list();
+	}
+
+	@Override
 	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryEcrfValidationStatusExportStatus(Long trialId, Long probandListEntryId, Long ecrfId,
 			ECRFValidationStatus validationStatus, ExportStatus exportStatus, PSFVO psf) throws Exception {
 
@@ -122,35 +153,7 @@ extends ECRFStatusEntryDaoBase
 	}
 
 	@Override
-	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryValidatedReviewVerified(Long trialId, Long probandListEntryId,
-			Boolean validated, Boolean review, Boolean verified, PSFVO psf) throws Exception {
-		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
-		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFStatusEntry.class, ecrfStatusEntryCriteria);
-		if (trialId != null) {
-			org.hibernate.Criteria trialCriteria = ecrfStatusEntryCriteria.createCriteria("listEntry");
-			trialCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		}
-		if (probandListEntryId != null) {
-			ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		}
-		if (validated != null || review != null || verified != null) {
-			org.hibernate.Criteria statusCriteria = ecrfStatusEntryCriteria.createCriteria("status");
-			if (validated != null) {
-				statusCriteria.add(Restrictions.eq("validated", validated.booleanValue()));
-			}
-			if (review != null) {
-				statusCriteria.add(Restrictions.eq("review", review.booleanValue()));
-			}
-			if (verified != null) {
-				statusCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
-			}
-		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		return ecrfStatusEntryCriteria.list();
-	}
-
-	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean validated,
+	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done, Boolean validated,
 			Boolean review, Boolean verified)
 					throws Exception {
 		// protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean lockDown) throws Exception {
@@ -162,7 +165,8 @@ extends ECRFStatusEntryDaoBase
 		if (ecrfId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		if (ecrfStatusTypeId != null || valueLockdown != null || validated != null || review != null || verified != null) {// || done != null || valueLockdown != null ||
+		if (ecrfStatusTypeId != null || valueLockdown != null || done != null || validated != null || review != null || verified != null) {// || done != null || valueLockdown !=
+																																			// null ||
 			// fieldStatusLockdown != null) {
 			org.hibernate.Criteria ecrfStatusTypeCriteria = ecrfStatusEntryCriteria.createCriteria("status");
 
@@ -171,6 +175,9 @@ extends ECRFStatusEntryDaoBase
 			}
 			if (valueLockdown != null) {
 				ecrfStatusTypeCriteria.add(Restrictions.eq("valueLockdown", valueLockdown.booleanValue()));
+			}
+			if (done != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("done", done.booleanValue()));
 			}
 			if (validated != null) {
 				ecrfStatusTypeCriteria.add(Restrictions.eq("validated", validated.booleanValue()));

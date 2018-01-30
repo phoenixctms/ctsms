@@ -3206,7 +3206,7 @@ extends TrialServiceBase
 		User user = CoreUtil.getUser();
 		ECRFOutVO result;
 		if (!force && (defer
-				|| this.getECRFStatusEntryDao().getCount(null, ecrfId, null, null, null, null, null) > 0)) {
+				|| this.getECRFStatusEntryDao().getCount(null, ecrfId, null, null, null, null, null, null) > 0)) {
 			// || this.getECRFFieldValueDao().getCount(ecrfId, section)) {
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
 			Trial trial = originalEcrf.getTrial();
@@ -5777,7 +5777,8 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected long handleGetEcrfStatusEntryCount(AuthenticationVO auth, Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean validated,
+	protected long handleGetEcrfStatusEntryCount(AuthenticationVO auth, Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done,
+			Boolean validated,
 			Boolean review, Boolean verified) throws Exception {
 		if (probandListEntryId != null) {
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
@@ -5788,7 +5789,7 @@ extends TrialServiceBase
 		if (ecrfStatusTypeId != null) {
 			CheckIDUtil.checkEcrfStatusTypeId(ecrfStatusTypeId, this.getECRFStatusTypeDao());
 		}
-		return this.getECRFStatusEntryDao().getCount(probandListEntryId, ecrfId, ecrfStatusTypeId, valueLockdown, validated,
+		return this.getECRFStatusEntryDao().getCount(probandListEntryId, ecrfId, ecrfStatusTypeId, valueLockdown, done, validated,
 				review, verified);
 	}
 
@@ -7355,7 +7356,7 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected Collection<ECRFStatusEntryVO> handleSignVerifiedEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId) throws Exception {
+	protected Collection<ECRFStatusEntryVO> handleSignVerifiedEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, boolean signAll) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao(),LockMode.PESSIMISTIC_WRITE);
 		}
@@ -7366,14 +7367,15 @@ extends TrialServiceBase
 		User user = CoreUtil.getUser();
 
 		ArrayList<ECRFStatusEntryVO> results = new ArrayList<ECRFStatusEntryVO>();
-		Iterator<ECRFStatusEntry> statusEntryIt = this.getECRFStatusEntryDao().findByTrialListEntryValidatedReviewVerified(trialId, probandListEntryId, null,null,true, null).iterator();
+		Iterator<ECRFStatusEntry> statusEntryIt = this.getECRFStatusEntryDao()
+				.findByTrialListEntryDoneValidatedReviewVerified(trialId, probandListEntryId, null, null, null, null, null).iterator();
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			Iterator<ECRFStatusType> it = statusEntry.getStatus().getTransitions().iterator();
 			ECRFStatusType newStatus = null;
 			while (it.hasNext()) {
 				ECRFStatusType status = it.next();
-				if (!statusEntry.getStatus().equals(status) && hasEcrfStatusAction(status, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF)) {
+				if ((signAll || !statusEntry.getStatus().equals(status)) && hasEcrfStatusAction(status, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF)) {
 					newStatus = status;
 					break;
 				}
