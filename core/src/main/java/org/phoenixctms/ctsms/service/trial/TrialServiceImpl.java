@@ -215,6 +215,7 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
+import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
@@ -4073,9 +4074,17 @@ extends TrialServiceBase
 
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		Collection fieldValues = ecrfFieldValueDao.getLog(trialId, probandListEntryId, ecrfId, true, null);
-		ecrfFieldValueDao.toECRFFieldValueOutVOCollection(fieldValues);
+		ArrayList<ECRFFieldValueOutVO> fieldValueVOs = new ArrayList<ECRFFieldValueOutVO>(fieldValues.size());
+		Iterator<ECRFFieldValue> fieldValuesIt = fieldValues.iterator();
+		while (fieldValuesIt.hasNext()) {
+			ECRFFieldValueOutVO fieldValueVO = ecrfFieldValueDao.toECRFFieldValueOutVO(fieldValuesIt.next());
+			if (CommonUtil.HTML_AUDIT_TRAIL_CHANGE_COMMENTS) {
+				fieldValueVO.setChangeComment(diff_match_patch.prettyHtmlToUnicode(fieldValueVO.getChangeComment()));
+			}
+			fieldValueVOs.add(fieldValueVO);
+		}
 		// Collections.sort(fieldValues, new XTeamMemberOutVOComparator());
-		writer.setVOs(fieldValues);
+		writer.setVOs(fieldValueVOs);
 
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		for (int i = 0; i < queues.length; i++) {

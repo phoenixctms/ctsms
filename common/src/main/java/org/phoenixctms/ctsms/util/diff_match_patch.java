@@ -232,10 +232,13 @@ public class diff_match_patch {
 	}
 
 	public final static String prettyHtmlToUnicode(String html) {
-		html = prettyHtmlToUnicode(html, "<span>(.*?)</span>", "$1");
-		html = prettyHtmlToUnicode(html, "<del.+?>(.*?)</del>", "$1\u0336");
-		html = prettyHtmlToUnicode(html,  "<ins.+?>(.*?)</ins>", "$1\u0332");
-		return html.replace("&para;<br>","\n").replace("<br>","\n").replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&");
+		if (!CommonUtil.isEmptyString(html)) {
+			html = prettyHtmlToUnicode(html, "<span>(.*?)</span>", "$1");
+			html = prettyHtmlToUnicode(html, "<del.+?>(.*?)</del>", "$1\u0336");
+			html = prettyHtmlToUnicode(html, "<ins.+?>(.*?)</ins>", "$1\u0332");
+			return html.replace("&para;<br>", "\n").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&");
+		}
+		return html;
 	}
 
 	private static String prettyHtmlToUnicode(String text, String regExp, String replacement) {

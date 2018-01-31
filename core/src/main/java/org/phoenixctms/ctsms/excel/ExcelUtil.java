@@ -50,6 +50,7 @@ public final class ExcelUtil {
 	private final static HashMap<Color, Colour> COLOR_MAPPING = new HashMap<Color, Colour>();
 	// private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 	static {
+		// http://jexcelapi.sourceforge.net/resources/javadocs/2_6_10/docs/jxl/format/Colour.html
 		COLOR_MAPPING.put(Color.LIGHTYELLOW, Colour.VERY_LIGHT_YELLOW);
 		COLOR_MAPPING.put(Color.ORANGE, Colour.GOLD);
 		COLOR_MAPPING.put(Color.DARKORANGE, Colour.LIGHT_ORANGE);
@@ -62,6 +63,9 @@ public final class ExcelUtil {
 		COLOR_MAPPING.put(Color.ORANGERED, Colour.ORANGE);
 		COLOR_MAPPING.put(Color.LIGHTGRAY, Colour.GREY_25_PERCENT);
 		COLOR_MAPPING.put(Color.GREEN, Colour.GREEN);
+		COLOR_MAPPING.put(Color.GAINSBORO, Colour.GREY_25_PERCENT);
+		COLOR_MAPPING.put(Color.SALMON, Colour.CORAL);
+		COLOR_MAPPING.put(Color.LIGHTSKYBLUE, Colour.SKY_BLUE);
 	}
 
 	// formatter to convert from current timezone
