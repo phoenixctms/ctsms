@@ -32,7 +32,7 @@ Build and Install
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
 
-  The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40).
+   The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40).
 
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
 
