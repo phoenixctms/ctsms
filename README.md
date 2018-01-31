@@ -1,7 +1,7 @@
 Phoenix CTMS
 =====
 
-Phoenix CTMS is a serious web application combining capabilities of database software used in clinical research in one modular system.
+Phoenix CTMS is a large web application combining capabilities of database software used in clinical research in one modular system.
 
 * __PRS__ (Patient Recruitment System)
 * __CTMS__ (Clinical Trial Management System)
@@ -18,6 +18,7 @@ After years of collaborative development with trial sites at the Medical Univers
 * want to operate a secure online _signup portal_ for subject candidates
 * want a CDMS that gives you unlimited _Javascript_ form scripting support (server- and browserside)
 * need to deal with _large_ eCRFs (electronic case report forms)
+* want to try a serious _OpenClinica_ alternative
 * need to formulate complex _ad-hoc_ database queries to list matching subject candidates using _set operations_
 * conduct several trials in parallel and need to organize site staff and resources
 * need a software to implement various processes for ICH GCP (good clinical practice) compliance
@@ -30,6 +31,7 @@ Build and Install
 1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.2.1-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.2.1-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
+  The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40).
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
 
    ```bash
