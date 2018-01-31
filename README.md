@@ -31,9 +31,7 @@ Build and Install
 1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.2.1-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.2.1-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
-
-   The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40).
-
+  * The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40)
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
 
    ```bash
