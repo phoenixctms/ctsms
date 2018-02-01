@@ -165,16 +165,19 @@ function resetSessionTimers() {
 		var sessionExpiry = (new Date()).addSeconds(sessionMaxInactiveInterval);
 		jQuery('#session_timer').countdown(sessionExpiry.toString('yyyy/MM/dd HH:mm:ss'));
 	}
-	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
-		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
-
-		} else if (_isTrustedReferrer(document.referrer)) { // (!jQuery.browser.safari) {
-			window.open('javascript:if(window.resetSessionTimers){resetSessionTimers();}else{window.location.href=' + JSON.stringify(APPLICATION_URL + PORTAL_URL)
-		        + ';}', PORTAL_WINDOW_NAME);
-		//} else {
-		//	//alert("safari");
-		}
+	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers) {
+		window.opener.resetSessionTimers();
 	}
+//	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
+//		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+//
+//		} else if (_isTrustedReferrer(document.referrer)) { // (!jQuery.browser.safari) {
+//			window.open('javascript:if(window.resetSessionTimers){resetSessionTimers();}else{window.location.href=' + JSON.stringify(APPLICATION_URL + PORTAL_URL)
+//		        + ';}', PORTAL_WINDOW_NAME);
+//		//} else {
+//		//	//alert("safari");
+//		}
+//	}
 }
 
 function enableTabs(tabView, firstIndex, enable) {
