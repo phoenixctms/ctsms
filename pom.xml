@@ -551,13 +551,18 @@
 
 
 
-            <dependency>
+            <!-- <dependency>
                 <groupId>postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <!-- <version>8.4-702.jdbc4</version> -->
                 <version>9.1-901.jdbc4</version>
-                <!--scope>test</scope-->
-            </dependency>
+            </dependency> -->
+            
+            <dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.2.2.jre7</version>
+</dependency>
+            
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -952,9 +957,12 @@
     <properties>
         <!-- <andromda.version>3.4.14978-JR</andromda.version> -->
         <andromda.version>3.4</andromda.version>
-        <java.version>1.6</java.version>
-        <java.home>C:/Program Files (x86)/Java/jdk1.6.0_31</java.home>
+        <!-- <java.version>1.6</java.version> -->
+        <java.version>1.7</java.version>
+        <!-- <java.home>C:/Program Files (x86)/Java/jdk1.6.0_31</java.home> -->
         <!-- <java.home>C:/Program Files (x86)/Java/jdk1.7.0_79/jre</java.home> -->
+        <!-- <java.home>C:/Program Files (x86)/Java/jdk1.7.0_79</java.home> -->
+        <java.home>C:/Program Files/Java/jdk1.7.0_80</java.home>
         <downloadSources>true</downloadSources>
         <createChecksum>true</createChecksum>
         <uniqueVersion>false</uniqueVersion>

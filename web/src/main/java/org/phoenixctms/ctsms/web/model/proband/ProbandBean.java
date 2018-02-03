@@ -53,6 +53,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class ProbandBean extends ManagedBeanBase implements SexSelectorListener {
 
+	private static final int GENDER_PROPERTY_ID = 1;
+
 	public static void copyProbandOutToIn(ProbandInVO in, ProbandOutVO out) {
 		if (in != null && out != null) {
 			DepartmentVO departmentVO = out.getDepartment();
@@ -94,18 +96,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setChildIds(childIds);
 		}
 	}
-
-	private ProbandInVO in;
-	private ProbandOutVO out;
-	private ArrayList<SelectItem> categories;
-	private ArrayList<SelectItem> departments;
-	private SexSelector gender;
-	private ProbandCategoryVO category;
-	private TreeNode childrenRoot;
-	private TreeNode parentsRoot;
-	private ProbandMultiPickerModel childrenMultiPicker;
-	private static final int GENDER_PROPERTY_ID = 1;
-
 	private static ProbandOutVO createProbandOutFromIn(ProbandInVO in) {
 		ProbandOutVO result = new ProbandOutVO();
 		if (in != null) {
@@ -159,15 +149,14 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			result.setDecrypted(true);
 			result.setInitials(CommonUtil.getProbandInitials(result, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
 					Messages.getString(MessageCodes.BLINDED_PROBAND_NAME)));
-			result.setName(CommonUtil.getProbandName(result, false, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
+			result.setName(CommonUtil.getProbandName(result, false, true, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
 					Messages.getString(MessageCodes.BLINDED_PROBAND_NAME)));
-			result.setNameWithTitles(CommonUtil.getProbandName(result, true, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
+			result.setNameWithTitles(CommonUtil.getProbandName(result, true, true, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
 					Messages.getString(MessageCodes.BLINDED_PROBAND_NAME)));
 			result.setNameSortable(CommonUtil.getNameSortable(result));
 		}
 		return result;
 	}
-
 	public static void initProbandDefaultValues(ProbandInVO in, UserOutVO user) {
 		if (in != null) {
 			ProbandCategoryVO categoryPreset = null;
@@ -212,16 +201,27 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setChildIds(new ArrayList<Long>());
 		}
 	}
+	private ProbandInVO in;
+	private ProbandOutVO out;
+	private ArrayList<SelectItem> categories;
+	private ArrayList<SelectItem> departments;
+	private SexSelector gender;
+	private ProbandCategoryVO category;
+	private TreeNode childrenRoot;
+
+	private TreeNode parentsRoot;
+
+	private ProbandMultiPickerModel childrenMultiPicker;
 
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-	private Object[] totalCounts;
+	private Object[] inquiryValuesTotalCounts;
 
 	public ProbandBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
 		tabTitleMap = new HashMap<String, String>();
-		totalCounts = new Object[3];
+		inquiryValuesTotalCounts = new Object[3];
 		DefaultTreeNode childrenRoot = new DefaultTreeNode("children_root", null);
 		childrenRoot.setExpanded(true);
 		childrenRoot.setType(WebUtil.PARENT_NODE_TYPE);
@@ -230,7 +230,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		parentsRoot.setExpanded(true);
 		parentsRoot.setType(WebUtil.PARENT_NODE_TYPE);
 		this.parentsRoot = parentsRoot;
-		childrenMultiPicker = new ProbandMultiPickerModel();
+		childrenMultiPicker = new ProbandMultiPickerModel(
+				Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES));
 		setGender(new SexSelector(this, GENDER_PROPERTY_ID));
 	}
 
@@ -289,6 +290,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64,
 					JSValues.AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT, MessageCodes.PROBAND_CONTACT_DETAILS_TAB_TITLE, MessageCodes.PROBAND_CONTACT_DETAILS_TAB_TITLE_WITH_COUNT,
 					tabCountMap.get(JSValues.AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT.toString()));
+			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64,
+					JSValues.AJAX_PROBAND_RECIPIENT_COUNT, MessageCodes.PROBAND_RECIPIENTS_TAB_TITLE, MessageCodes.PROBAND_RECIPIENTS_TAB_TITLE_WITH_COUNT,
+					tabCountMap.get(JSValues.AJAX_PROBAND_RECIPIENT_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_ADDRESS_COUNT,
 					MessageCodes.PROBAND_ADDRESSES_TAB_TITLE, MessageCodes.PROBAND_ADDRESSES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_PROBAND_ADDRESS_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_STATUS_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_STATUS_ENTRY_COUNT,
@@ -314,7 +318,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 					tabCountMap.get(JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64, JSValues.AJAX_INQUIRY_VALUE_COUNT,
 					MessageCodes.INQUIRY_VALUES_TAB_TITLE, MessageCodes.INQUIRY_VALUES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_INQUIRY_VALUE_COUNT.toString()),
-					totalCounts);
+					inquiryValuesTotalCounts);
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_FILE_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_FILE_COUNT,
 					MessageCodes.PROBAND_FILES_TAB_TITLE, MessageCodes.PROBAND_FILES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_PROBAND_FILE_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
@@ -677,6 +681,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_CONTACT_DETAILS_TAB_TITLE, MessageCodes.PROBAND_CONTACT_DETAILS_TAB_TITLE_WITH_COUNT, count));
+		count = (out == null ? null : WebUtil.getMassMailRecipientCount(null, in.getId(), false));
+		tabCountMap.put(JSValues.AJAX_PROBAND_RECIPIENT_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_PROBAND_RECIPIENT_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.PROBAND_RECIPIENTS_TAB_TITLE, MessageCodes.PROBAND_RECIPIENTS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getProbandAddressCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_ADDRESS_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_ADDRESS_COUNT.toString(),
@@ -716,11 +724,11 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT, count));
-		count = WebUtil.getTrialsFromInquiryValues(in.getId(), true, null, null, totalCounts);
+		count = WebUtil.getTrialsFromInquiryValues(in.getId(), true, null, null, inquiryValuesTotalCounts);
 		tabCountMap.put(JSValues.AJAX_INQUIRY_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INQUIRY_VALUE_COUNT.toString(),
-				WebUtil.getTabTitleString(MessageCodes.INQUIRY_VALUES_TAB_TITLE, MessageCodes.INQUIRY_VALUES_TAB_TITLE_WITH_COUNT, count, totalCounts));
-		count = (out == null ? null : WebUtil.getFileCount(FileModule.PROBAND_DOCUMENT, in.getId()));
+				WebUtil.getTabTitleString(MessageCodes.INQUIRY_VALUES_TAB_TITLE, MessageCodes.INQUIRY_VALUES_TAB_TITLE_WITH_COUNT, count, inquiryValuesTotalCounts));
+		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.PROBAND_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_FILES_TAB_TITLE, MessageCodes.PROBAND_FILES_TAB_TITLE_WITH_COUNT, count));

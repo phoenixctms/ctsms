@@ -48,6 +48,9 @@ import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.Lecturer;
 import org.phoenixctms.ctsms.domain.LecturerDao;
 import org.phoenixctms.ctsms.domain.MaintenanceScheduleItemDao;
+import org.phoenixctms.ctsms.domain.MassMail;
+import org.phoenixctms.ctsms.domain.MassMailDao;
+import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.MedicationDao;
 import org.phoenixctms.ctsms.domain.MoneyTransferDao;
 import org.phoenixctms.ctsms.domain.Permission;
@@ -114,6 +117,10 @@ import org.springframework.aop.MethodBeforeAdvice;
 
 public class AuthorisationInterceptor implements MethodBeforeAdvice {
 
+	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
+
+	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
+	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
 		if (index != null) {
@@ -121,7 +128,86 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return null;
 	}
-
+	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
+		String[] parameterGetters = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterGetter, -1);
+		for (int i = 0; i < parameterGetters.length; i++) {
+			AssociationPath getter = new AssociationPath(parameterGetters[i]);
+			if (getter.isValid() && argIndexMap.containsKey(getter.getRootEntityName())) {
+				Object rootParameterValue = getArgument(getter.getRootEntityName(), argIndexMap, args);
+				Object parameterValue = null;
+				if (getter.getPathDepth() > 0) {
+					getter.dropFirstPathElement();
+					parameterValue = getter.invoke(rootParameterValue, false);
+				} else {
+					parameterValue = rootParameterValue;
+				}
+				parameterValues.add(parameterValue);
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+	private static boolean isChild(Staff staff, Staff identity) {
+		if (staff == null) {
+			return false;
+		}
+		if (identity.equals(staff)) {
+			return true;
+		}
+		Iterator<Staff> childrenIt = identity.getChildren().iterator();
+		while (childrenIt.hasNext()) {
+			if (isChild(staff, childrenIt.next())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private static boolean isLecturer(Course course, Staff identity) {
+		if (course == null) {
+			return false;
+		}
+		Iterator<Lecturer> lecturersIt = course.getLecturers().iterator();
+		while (lecturersIt.hasNext()) {
+			if (identity.equals(lecturersIt.next().getStaff())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private static boolean isMember(Trial trial, Staff identity, Boolean access) {
+		if (trial == null) {
+			return false;
+		}
+		Iterator<TeamMember> membersIt = trial.getMembers().iterator();
+		while (membersIt.hasNext()) {
+			TeamMember member = membersIt.next();
+			if ((access == null || access == member.isAccess()) && identity.equals(member.getStaff())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private static void setArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args, Object value) {
+		Integer index = argumentIndexMap.get(parameterName);
+		if (index != null) {
+			args[index] = value;
+		}
+	}
+	private static String[] splitParameterSetter(String parameterSetter) {
+		String[] result = new String[2];
+		String[] headTail = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterSetter, -1);
+		StringBuilder head = new StringBuilder();
+		for (int i = 0; i < headTail.length - 1; i++) {
+			if (head.length() > 0) {
+				head.append(PARAMETER_GETTER_SETTER_SEPARATOR);
+			}
+			head.append(headTail[i]);
+		}
+		result[0] = head.toString();
+		result[1] = headTail[headTail.length - 1];
+		return result;
+	}
 	private PermissionDao permissionDao;
 	private InventoryTagValueDao inventoryTagValueDao;
 	private InventoryStatusEntryDao inventoryStatusEntryDao;
@@ -133,6 +219,8 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private CourseDao courseDao;
 	private TrialDao trialDao;
 	private ProbandDao probandDao;
+	private MassMailDao massMailDao;
+	private MassMailRecipientDao massMailRecipientDao;
 	private StaffTagValueDao staffTagValueDao;
 	private StaffStatusEntryDao staffStatusEntryDao;
 	private CriteriaDao criteriaDao;
@@ -169,103 +257,20 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private BankAccountDao bankAccountDao;
 	private MoneyTransferDao moneyTransferDao;
 	private UserPermissionProfileDao userPermissionProfileDao;
+
+
+
 	private DiagnosisDao diagnosisDao;
+
 	private MedicationDao medicationDao;
+
 	private ProcedureDao procedureDao;
+
 	private InquiryValueDao inquiryValueDao;
+
 	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
+
 	private ECRFFieldValueDao ecrfFieldValueDao;
-	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
-	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
-	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
-
-
-
-	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
-		String[] parameterGetters = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterGetter, -1);
-		for (int i = 0; i < parameterGetters.length; i++) {
-			AssociationPath getter = new AssociationPath(parameterGetters[i]);
-			if (getter.isValid() && argIndexMap.containsKey(getter.getRootEntityName())) {
-				Object rootParameterValue = getArgument(getter.getRootEntityName(), argIndexMap, args);
-				Object parameterValue = null;
-				if (getter.getPathDepth() > 0) {
-					getter.dropFirstPathElement();
-					parameterValue = getter.invoke(rootParameterValue, false);
-				} else {
-					parameterValue = rootParameterValue;
-				}
-				parameterValues.add(parameterValue);
-			} else {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private static boolean isChild(Staff staff, Staff identity) {
-		if (staff == null) {
-			return false;
-		}
-		if (identity.equals(staff)) {
-			return true;
-		}
-		Iterator<Staff> childrenIt = identity.getChildren().iterator();
-		while (childrenIt.hasNext()) {
-			if (isChild(staff, childrenIt.next())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static boolean isLecturer(Course course, Staff identity) {
-		if (course == null) {
-			return false;
-		}
-		Iterator<Lecturer> lecturersIt = course.getLecturers().iterator();
-		while (lecturersIt.hasNext()) {
-			if (identity.equals(lecturersIt.next().getStaff())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static boolean isMember(Trial trial, Staff identity, Boolean access) {
-		if (trial == null) {
-			return false;
-		}
-		Iterator<TeamMember> membersIt = trial.getMembers().iterator();
-		while (membersIt.hasNext()) {
-			TeamMember member = membersIt.next();
-			if ((access == null || access == member.isAccess()) && identity.equals(member.getStaff())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static void setArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args, Object value) {
-		Integer index = argumentIndexMap.get(parameterName);
-		if (index != null) {
-			args[index] = value;
-		}
-	}
-
-	private static String[] splitParameterSetter(String parameterSetter) {
-		String[] result = new String[2];
-		String[] headTail = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterSetter, -1);
-		StringBuilder head = new StringBuilder();
-		for (int i = 0; i < headTail.length - 1; i++) {
-			if (head.length() > 0) {
-				head.append(PARAMETER_GETTER_SETTER_SEPARATOR);
-			}
-			head.append(headTail[i]);
-		}
-		result[0] = head.toString();
-		result[1] = headTail[headTail.length - 1];
-		return result;
-	}
 
 	public AuthorisationInterceptor() {
 	}
@@ -459,6 +464,15 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									// write = false;
 									// }
 									// break;
+								case MASS_MAIL_DOCUMENT_ACTIVE:
+									if (FileModule.MASS_MAIL_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+										write = true;
+										parameterValues = new Object[1];
+										parameterValues[0] = true;
+									} else {
+										write = false;
+									}
+									break;
 								default:
 									throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_SERVICE_METHOD_PARAMETER_OVERRIDE,
 											DefaultMessages.UNSUPPORTED_SERVICE_METHOD_PARAMETER_OVERRIDE, new Object[] { override.name() }));
@@ -697,6 +711,15 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							permission.getParameterGetter(), parameterUser == null ? null : parameterUser.getName());
 				}
 				break;
+			case ANY_MASS_MAIL:
+				break;
+			case MASS_MAIL_USER_DEPARTMENT:
+				department = parameterValue == null ? null : CheckIDUtil.checkMassMailId((Long) parameterValue, massMailDao).getDepartment();
+				if (!user.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
 			case INVENTORY_DB_MODULE:
 				dbModule = (DBModule) parameterValue;
 				if (!DBModule.INVENTORY_DB.equals(dbModule)) {
@@ -742,6 +765,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			case INPUT_FIELD_DB_MODULE:
 				dbModule = (DBModule) parameterValue;
 				if (!DBModule.INPUT_FIELD_DB.equals(dbModule)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), dbModule == null ? null : L10nUtil.getDBModuleName(Locales.USER, dbModule.name()));
+				}
+				break;
+			case MASS_MAIL_DB_MODULE:
+				dbModule = (DBModule) parameterValue;
+				if (!DBModule.MASS_MAIL_DB.equals(dbModule)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), dbModule == null ? null : L10nUtil.getDBModuleName(Locales.USER, dbModule.name()));
 				}
@@ -873,6 +903,14 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 
 	public void setMaintenanceItemDao(MaintenanceScheduleItemDao maintenanceItemDao) {
 		this.maintenanceItemDao = maintenanceItemDao;
+	}
+
+	public void setMassMailDao(MassMailDao massMailDao) {
+		this.massMailDao = massMailDao;
+	}
+
+	public void setMassMailRecipientDao(MassMailRecipientDao massMailRecipientDao) {
+		this.massMailRecipientDao = massMailRecipientDao;
 	}
 
 	public void setMedicationDao(MedicationDao medicationDao) {
@@ -1117,6 +1155,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryId((Long) parameterValue, probandListEntryDao).getTrial().getId();
 				case PROBAND_LIST_ENTRY_ID_TO_PROBAND_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryId((Long) parameterValue, probandListEntryDao).getProband().getId();
+
 				case PROBAND_LIST_STATUS_ENTRY_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getTrial()
 							.getId();
@@ -1191,6 +1230,16 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return parameterValue == null ? null : CheckIDUtil.checkInquiryValueId((Long) parameterValue, inquiryValueDao).getProband().getId();
 				case INQUIRY_VALUE_IN_TO_PROBAND_ID:
 					return parameterValue == null ? null : ((InquiryValueInVO) parameterValue).getProbandId();
+				case MASS_MAIL_RECIPIENT_ID_TO_MASS_MAIL_ID:
+					return parameterValue == null ? null : CheckIDUtil.checkMassMailRecipientId((Long) parameterValue, massMailRecipientDao).getMassMail().getId();
+				case MASS_MAIL_RECIPIENT_ID_TO_PROBAND_ID:
+					if (parameterValue != null) {
+						Proband proband = CheckIDUtil.checkMassMailRecipientId((Long) parameterValue, massMailRecipientDao).getProband();
+						if (proband != null) {
+							return proband.getId();
+						}
+					}
+					return null;
 				case USER_PERMISSION_PROFILE_ID_TO_USER_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkUserPermissionProfileId((Long) parameterValue, userPermissionProfileDao).getUser().getId();
 				case JOURNAL_ENTRY_ID_TO_INVENTORY_ID:
@@ -1257,6 +1306,14 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						}
 					}
 					return null;
+				case JOURNAL_ENTRY_ID_TO_MASS_MAIL_ID:
+					if (parameterValue != null) {
+						MassMail massMail = CheckIDUtil.checkJournalEntryId((Long) parameterValue, journalEntryDao).getMassMail();
+						if (massMail != null) {
+							return massMail.getId();
+						}
+					}
+					return null;
 				case JOURNAL_MODULE_AND_ID_TO_INVENTORY_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.INVENTORY_JOURNAL.equals(journalModule)) {
@@ -1317,6 +1374,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						return CheckIDUtil.checkCriteriaId(id, criteriaDao).getModule();
 					}
 					return null;
+				case JOURNAL_MODULE_AND_ID_TO_MASS_MAIL_ID:
+					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
+					if (!JournalModule.MASS_MAIL_JOURNAL.equals(journalModule)) {
+						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
+					}
+					return (Long) ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_TO_DB_MODULE:
 					journalModule = (JournalModule) (parameterValue);
 					switch (journalModule) {
@@ -1334,6 +1398,8 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							return DBModule.USER_DB;
 						case INPUT_FIELD_JOURNAL:
 							return DBModule.INPUT_FIELD_DB;
+						case MASS_MAIL_JOURNAL:
+							return DBModule.MASS_MAIL_DB;
 						case CRITERIA_JOURNAL:
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 									permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
@@ -1430,11 +1496,20 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						}
 					}
 					return null;
+
 				case FILE_ID_TO_PROBAND_ID:
 					if (parameterValue != null) {
 						Proband proband = CheckIDUtil.checkFileId((Long) parameterValue, fileDao).getProband();
 						if (proband != null) {
 							return proband.getId();
+						}
+					}
+					return null;
+				case FILE_ID_TO_MASS_MAIL_ID:
+					if (parameterValue != null) {
+						MassMail massMail = CheckIDUtil.checkFileId((Long) parameterValue, fileDao).getMassMail();
+						if (massMail != null) {
+							return massMail.getId();
 						}
 					}
 					return null;
@@ -1469,6 +1544,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				case FILE_MODULE_AND_ID_TO_PROBAND_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.PROBAND_DOCUMENT.equals(fileModule)) {
+						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
+					}
+					return (Long) ((Object[]) parameterValue)[1];
+				case FILE_MODULE_AND_ID_TO_MASS_MAIL_ID:
+					fileModule = (FileModule) ((Object[]) parameterValue)[0];
+					if (!FileModule.MASS_MAIL_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}

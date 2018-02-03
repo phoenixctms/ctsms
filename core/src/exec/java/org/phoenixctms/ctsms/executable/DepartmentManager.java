@@ -45,6 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DepartmentManager {
 
+	private static final String DEPARTMENT_NAME = "ID {0}: {1} - {2}";
+	private static final String PROFILE_NAME = "{0}: {1} - {2}";
+	private static final boolean DEFAULT_DEPARTMENT_VISIBLE = true;
+	private static final boolean USER_ONE_TIME_LOGON = false;
+	private static final Pattern PROFILE_SEPARATOR_REGEXP = Pattern.compile(" *, *");
 	private static String getDefaultLocale() {
 		return CommonUtil.localeToString(Locale.getDefault());
 	}
@@ -61,11 +66,6 @@ public class DepartmentManager {
 	@Autowired
 	private ProfilePermissionDao profilePermissionDao;
 	private Authenticator authenticator;
-	private static final String DEPARTMENT_NAME = "ID {0}: {1} - {2}";
-	private static final String PROFILE_NAME = "{0}: {1} - {2}";
-	private static final boolean DEFAULT_DEPARTMENT_VISIBLE = true;
-	private static final boolean USER_ONE_TIME_LOGON = false;
-	private static final Pattern PROFILE_SEPARATOR_REGEXP = Pattern.compile(" *, *");
 
 	private JobOutput jobOutput;
 
@@ -119,14 +119,14 @@ public class DepartmentManager {
 					result.add(profile);
 				} else {
 					throw new IllegalArgumentException("exactly one profile of group " + L10nUtil.getPermissionProfileGroupName(Locales.USER, group.name())
-							+ " required - remove profile " + profile.toString() + " from list");
+					+ " required - remove profile " + profile.toString() + " from list");
 				}
 			}
 			PermissionProfileGroup[] profileGroups = PermissionProfileGroup.values();
 			for (int i = 0; i < profileGroups.length; i++) {
 				if (!groups.contains(profileGroups[i])) {
 					throw new IllegalArgumentException("exactly one profile of group " + L10nUtil.getPermissionProfileGroupName(Locales.USER, profileGroups[i].name())
-							+ " required");
+					+ " required");
 				}
 			}
 		}
@@ -181,6 +181,8 @@ public class DepartmentManager {
 		newUser.setLocale(locale); // CommonUtil.localeToString(Locale.getDefault()));
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
 		newUser.setLocked(false);
+		newUser.setShowTooltips(true);
+		newUser.setDecrypt(true);
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
 		newUser.setDepartmentId(departmentId);
 		newUser.setName(name);

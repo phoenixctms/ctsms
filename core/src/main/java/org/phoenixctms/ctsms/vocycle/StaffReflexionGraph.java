@@ -77,20 +77,20 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 	// return sb.toString();
 	// }
 
+	private static final boolean LIMIT_INSTANCES = true;
+	private static final boolean LIMIT_PARENTS_DEPTH = true;
+	private static final boolean LIMIT_CHILDREN_DEPTH = true;
+	public final static int DEFAULT_MAX_INSTANCES = 1;
+	private final static int DEFAULT_PARENT_DEPTH = Integer.MAX_VALUE >> 1;
+	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
 	private StaffDaoImpl staffDaoImpl;
 	private StaffDao staffDao;
 	private StaffCategoryDao staffCategoryDao;
 	private DepartmentDao departmentDao;
 	private UserDao userDao;
-	private static final boolean LIMIT_INSTANCES = true;
-	private static final boolean LIMIT_PARENTS_DEPTH = true;
-	private static final boolean LIMIT_CHILDREN_DEPTH = true;
 	private int maxInstances;
 	private int parentDepth;
 	private int childrenDepth;
-	public final static int DEFAULT_MAX_INSTANCES = 1;
-	private final static int DEFAULT_PARENT_DEPTH = Integer.MAX_VALUE >> 1;
-	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
 
 	public StaffReflexionGraph(StaffDao staffDao) {
 		this.staffDao = staffDao;
@@ -249,8 +249,8 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 			}
 		}
 		target.setInitials(CommonUtil.getStaffInitials(target));
-		target.setName(CommonUtil.getStaffName(target, false));
-		target.setNameWithTitles(CommonUtil.getStaffName(target, true));
+		target.setName(CommonUtil.getStaffName(target, false, true));
+		target.setNameWithTitles(CommonUtil.getStaffName(target, true, true));
 		target.setNameSortable(CommonUtil.getNameSortable(target));
 		target.setChildrenCount(staffDaoImpl.getChildrenCount(source.getId())); // source.getChildren().Xsize());
 	}

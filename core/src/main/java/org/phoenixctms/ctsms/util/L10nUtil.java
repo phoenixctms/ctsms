@@ -145,9 +145,11 @@ public final class L10nUtil {
 	private static String visitTypesBundleBasename;
 	private static String trialTagsBundleBasename;
 	private static String trialStatusTypesBundleBasename;
+	private static String massMailStatusTypesBundleBasename;
 	private static String ecrfStatusTypesBundleBasename;
 	private static String ecrfFieldStatusTypesBundleBasename;
 	private static String trialTypesBundleBasename;
+	private static String massMailTypesBundleBasename;
 	private static String sponsoringTypesBundleBasename;
 	private static String surveyStatusTypesBundleBasename;
 	private static String probandStatusTypesBundleBasename;
@@ -614,12 +616,37 @@ public final class L10nUtil {
 		}
 	}
 
+	public static Locales getLocales(Locale locale) {
+		if (Locale.GERMAN.equals(locale)) {
+			return Locales.DE;
+		} else if (Locale.ENGLISH.equals(locale)) {
+			return Locales.EN;
+		}
+		return Locales.DEFAULT;
+	}
+
+	public static Locales getLocales(String locale) {
+		try {
+			return getLocales( CommonUtil.localeFromString(locale));
+		} catch (Exception e) {
+			return Locales.DEFAULT;
+		}
+	}
+
 	public static String getMaintenanceTitlePreset(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, maintenanceTitlePresetsBundleBasename), DefaultMessages.MAINTENANCE_TITLE_PRESET);
 	}
 
 	public static String getMaintenanceTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, maintenanceTypesBundleBasename), DefaultMessages.MAINTENANCE_TYPE_NAME);
+	}
+
+	public static String getMassMailStatusTypeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, massMailStatusTypesBundleBasename), DefaultMessages.MASS_MAIL_STATUS_TYPE_NAME);
+	}
+
+	public static String getMassMailTypeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, massMailTypesBundleBasename), DefaultMessages.MASS_MAIL_TYPE_NAME);
 	}
 
 	public static String getMessage(Locales locale, String l10nKey, String defaultName, Object... args) {
@@ -1240,6 +1267,20 @@ public final class L10nUtil {
 			String maintenanceTypesBundleBasename) {
 		L10nUtil.maintenanceTypesBundleBasename = maintenanceTypesBundleBasename;
 		getBundle(Locales.DEFAULT, maintenanceTypesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setMassMailStatusTypesBundleBasename(
+			String massMailStatusTypesBundleBasename) {
+		L10nUtil.massMailStatusTypesBundleBasename = massMailStatusTypesBundleBasename;
+		getBundle(Locales.DEFAULT, massMailStatusTypesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setMassMailTypesBundleBasename(
+			String massMailTypesBundleBasename) {
+		L10nUtil.massMailTypesBundleBasename = massMailTypesBundleBasename;
+		getBundle(Locales.DEFAULT, massMailTypesBundleBasename);
 	}
 
 	@Autowired(required = true)

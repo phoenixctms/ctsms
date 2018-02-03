@@ -160,13 +160,17 @@ function createSessionTimer(duration) {
 	}
 }
 
-function resetSessionTimers() {
+function resetSessionTimers(depth) {
+	if (depth == null) {
+		depth = 0;
+	}
 	if (sessionMaxInactiveInterval != null) {
 		var sessionExpiry = (new Date()).addSeconds(sessionMaxInactiveInterval);
 		jQuery('#session_timer').countdown(sessionExpiry.toString('yyyy/MM/dd HH:mm:ss'));
 	}
-	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers) {
-		window.opener.resetSessionTimers();
+
+	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers && depth < 10) {
+		window.opener.resetSessionTimers(depth + 1);
 	}
 //	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
 //		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
@@ -178,6 +182,7 @@ function resetSessionTimers() {
 //		//	//alert("safari");
 //		}
 //	}
+	
 }
 
 function enableTabs(tabView, firstIndex, enable) {
@@ -232,18 +237,18 @@ function setHiddenField(targetField,value) {
 	}
 }
 
-function handleLogout(xhr, status, args) {
-
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testFlag(args, AJAX_LOGGED_OUT)) {
-
-		if (_testPropertyExists(args, AJAX_REFERER_BASE64)) {
-			_redirect(LOGIN_URL + '?' + REFERER + '=' + args[AJAX_REFERER_BASE64]);
-		} else {
-			_redirect(LOGIN_URL);
-		}
-	}
-
-}
+//function handleLogout(xhr, status, args) {
+//
+//	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testFlag(args, AJAX_LOGGED_OUT)) {
+//
+//		if (_testPropertyExists(args, AJAX_REFERER_BASE64)) {
+//			_redirect(LOGIN_URL + '?' + REFERER + '=' + args[AJAX_REFERER_BASE64]);
+//		} else {
+//			_redirect(LOGIN_URL);
+//		}
+//	}
+//
+//}
 
 function handleReload(xhr, status, args) {
 
@@ -570,6 +575,36 @@ function openInputFieldMultiPicker(pickTargetField, addRemoteCommand, onclick) {
 
 }
 
+
+function _getMassMailPickerUrl(pickTargetField, onclick) {
+
+	return _getPickerUrl(MASS_MAIL_PICKER_URL, pickTargetField, onclick);
+
+}
+function openMassMailPicker(pickTargetField, pickTargetLabel, onclick) {
+
+	_openSearchPickerWindow(_getMassMailPickerUrl(pickTargetField, onclick) + '&' + PICK_TARGET_LABEL + '=' + encodeURIComponent(pickTargetLabel));
+
+}
+function openMassMailPickerAjax(pickTargetField, pickTargetLabel, onclick) {
+
+	_openSearchPickerWindow(_getMassMailPickerUrl(pickTargetField, onclick) + '&' + PICK_TARGET_LABEL + '=' + encodeURIComponent(pickTargetLabel) + '&'
+	        + PICK_AJAX + '=true');
+
+}
+function openMassMailPickerAjaxUpdate(pickTargetField, pickTargetLabel, update, onclick) {
+
+	_openSearchPickerWindow(_getMassMailPickerUrl(pickTargetField, onclick) + '&' + PICK_TARGET_LABEL + '=' + encodeURIComponent(pickTargetLabel) + '&'
+	        + PICK_AJAX + '=true' + '&' + PICK_AJAX_UPDATE + '=' + encodeURIComponent(update));
+
+}
+function openMassMailMultiPicker(pickTargetField, addRemoteCommand, onclick) {
+
+	_openSearchPickerWindow(_getMassMailPickerUrl(pickTargetField, onclick) + '&' + PICK_ADD_REMOTE_COMMAND + '=' + encodeURIComponent(addRemoteCommand));
+
+}
+
+
 function _getTeamMemberPickerUrl(trialId, start, stop, pickTargetField, onclick) {
 
 	var uri = TEAM_MEMBER_PICKER_URL + '?' + TRIAL_ID + '=' + encodeURIComponent(trialId) + '&';
@@ -827,15 +862,15 @@ function _openEntity(url, window) {
 
 }
 
+function getWindowNameUniqueToken() {
+	return '_' + (new Date()).getTime();
+}
+
 function openPickedInventory(pickTargetField) {
 	var pickTargetFieldElement = _getElement(pickTargetField);
 	if (pickTargetFieldElement != null) {
 		openInventory(pickTargetFieldElement.val());
 	}
-}
-
-function getWindowNameUniqueToken() {
-	return '_' + (new Date()).getTime();
 }
 
 function openInventory(inventoryId) {
@@ -960,6 +995,27 @@ function openNewInputField() {
 
 }
 
+
+function openPickedMassMail(pickTargetField) {
+	var pickTargetFieldElement = _getElement(pickTargetField);
+	if (pickTargetFieldElement != null) {
+		openMassMail(pickTargetFieldElement.val());
+	}
+}
+function openMassMail(massMailId) {
+
+	if (typeof massMailId !== 'undefined' && massMailId) {
+		_openEntity(MASS_MAIL_URL + '?' + MASS_MAIL_ID + '=' + encodeURIComponent(massMailId), sprintf(MASS_MAIL_ENTITY_WINDOW_NAME, massMailId, getWindowNameUniqueToken()));
+	}
+
+}
+function openNewMassMail() {
+
+	_openEntity(MASS_MAIL_URL, sprintf(MASS_MAIL_ENTITY_WINDOW_NAME, NEW_ENTITY_WINDOW_NAME_SUFFIX, ""));
+
+}
+
+
 function _openHomeCallback(args) {
 
 	var homeWindow = window.open(decodeBase64(args.url), args.homeWindowName);
@@ -1047,6 +1103,12 @@ function openInputFieldHome() {
 
 }
 
+function openMassMailHome() {
+
+	_openHome(MASS_MAIL_START_URL, MASS_MAIL_HOME_WINDOW_NAME);
+
+}
+
 function openChangePassword() {
 
 	_openHome(CHANGE_PASSWORD_URL, USER_HOME_WINDOW_NAME);
@@ -1055,6 +1117,12 @@ function openChangePassword() {
 function openUpcomigCourseOverview() {
 
 	_openHome(UPCOMING_COURSE_OVERVIEW_URL, STAFF_HOME_WINDOW_NAME);
+
+}
+
+function openRecipientOverview() {
+
+	_openHome(RECIPIENT_OVERVIEW_URL, MASS_MAIL_HOME_WINDOW_NAME);
 
 }
 
@@ -1118,6 +1186,16 @@ function openInputFieldSearch(criteriaId) {
 		_openEntity(INPUT_FIELD_SEARCH_URL + '?' + CRITERIA_ID + '=' + encodeURIComponent(criteriaId), INPUT_FIELD_HOME_WINDOW_NAME);
 	} else {
 		_openHome(INPUT_FIELD_SEARCH_URL, INPUT_FIELD_HOME_WINDOW_NAME);
+	}
+
+}
+
+function openMassMailSearch(criteriaId) {
+
+	if (typeof criteriaId !== 'undefined' && criteriaId) {
+		_openEntity(MASS_MAIL_SEARCH_URL + '?' + CRITERIA_ID + '=' + encodeURIComponent(criteriaId), MASS_MAIL_HOME_WINDOW_NAME);
+	} else {
+		_openHome(MASS_MAIL_SEARCH_URL, MASS_MAIL_HOME_WINDOW_NAME);
 	}
 
 }

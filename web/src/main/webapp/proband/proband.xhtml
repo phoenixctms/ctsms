@@ -56,6 +56,13 @@
 						<ui:include src="/META-INF/includes/proband/probandContactDetail.xhtml" />
 					</p:tab>
 					<p:tab
+						id="probandrecipients"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_RECIPIENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_RECIPIENT_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandRecipient.xhtml" />
+					</p:tab>					
+					<p:tab
 						id="probandaddresses"
 						disabled="#{!probandBean.created}"
 						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_ADDRESS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

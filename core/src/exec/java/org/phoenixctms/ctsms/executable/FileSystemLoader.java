@@ -35,17 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileSystemLoader {
 
-	// http://www.javapractices.com/topic/TopicAction.do?Id=68
-	@Autowired
-	private FileDao fileDao;
-	@Autowired
-	private FileService fileService;
 	private final static boolean FILE_ACTIVE = true;
 	private final static boolean FILE_PUBLIC = false;
 	private final static boolean SORT_FILES = true;
 	private final static boolean SKIP_ERRORS = true;
 	private final static java.util.regex.Pattern PATH_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(java.io.File.separator));
-
 	private static List<java.io.File> getFileListing(java.io.File rootDir, boolean sort, JobOutput jobOutput) throws Exception {
 		validateDirectory(rootDir, false, jobOutput);
 		List<java.io.File> result = getFileListingNoSort(rootDir, jobOutput);
@@ -54,7 +48,6 @@ public class FileSystemLoader {
 		}
 		return result;
 	}
-
 	private static List<java.io.File> getFileListingNoSort(java.io.File dir, JobOutput jobOutput) throws Exception {
 		List<java.io.File> result = new ArrayList<java.io.File>();
 		java.io.File[] filesAndDirs = dir.listFiles();
@@ -115,6 +108,13 @@ public class FileSystemLoader {
 		return true;
 	}
 
+	// http://www.javapractices.com/topic/TopicAction.do?Id=68
+	@Autowired
+	private FileDao fileDao;
+
+	@Autowired
+	private FileService fileService;
+
 
 	private JobOutput jobOutput;
 
@@ -140,7 +140,7 @@ public class FileSystemLoader {
 					psf.setFirst(pageNumber - 1); // always 1, isIncrementPageNumber = false
 					psf.setPageSize(pageSize);
 				}
-				return dao.findFiles(module, id, null, null, null, null, psf);
+				return dao.findFiles(module, id, null, false, null, null, null, null, psf);
 			}
 
 			@Override
@@ -227,6 +227,9 @@ public class FileSystemLoader {
 					// case INPUT_FIELD_DOCUMENT:
 					// newFile.setInputFieldId(id);
 					// break;
+				case MASS_MAIL_DOCUMENT:
+					newFile.setMassMailId(id);
+					break;
 				default:
 			}
 			newFile.setModule(module);

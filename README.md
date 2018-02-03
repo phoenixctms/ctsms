@@ -9,7 +9,7 @@ Phoenix CTMS is a large web application combining capabilities of database softw
 
 This unmatched feature set is geared to support all operational and regulatory requirements of the clinical front end in academic research, at CROs (Contract Research Organisations) and hospitals conducting clinical studies of any phase.
 
-![alt text](http://phoenixctms.org/wp-content/uploads/2017/08/modules_en.png)
+![alt text](http://phoenixctms.org/wp-content/uploads/2018/04/modules_en.png)
 
 After years of collaborative development with trial sites at the Medical University of Graz, the Phoenix CTMS now becomes publicly available (LGPL 2.1). It could be the perfect choice if you e.g.
 
@@ -18,7 +18,7 @@ After years of collaborative development with trial sites at the Medical Univers
 * want to operate a secure online _signup portal_ for subject candidates
 * want a CDMS that gives you unlimited _Javascript_ form scripting support (server- and browserside)
 * need to deal with _large_ eCRFs (electronic case report forms)
-* want to try a serious _OpenClinica_ alternative
+* want to try a serious open source alternative for eCRFs
 * need to formulate complex _ad-hoc_ database queries to list matching subject candidates using _set operations_
 * conduct several trials in parallel and need to organize site staff and resources
 * need a software to implement various processes for ICH GCP (good clinical practice) compliance

@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.course;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
 
 import javax.ws.rs.Consumes;
@@ -45,12 +43,12 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/course")
 public class CourseResource extends ServiceResourceBase {
 
-	@Context
-	AuthenticationVO auth;
 	// private final static DBModule dbModule = DBModule.COURSE_DB;
 	private final static FileModule fileModule = FileModule.COURSE_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.COURSE_JOURNAL;
@@ -62,6 +60,8 @@ public class CourseResource extends ServiceResourceBase {
 			ResourceUtils.getMethodPath(CourseResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
 			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
+	@Context
+	AuthenticationVO auth;
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -76,7 +76,7 @@ public class CourseResource extends ServiceResourceBase {
 	@GET
 	@Path("{id}/files/pdf")
 	public Response aggregatePDFFiles(@PathParam("id") Long id, @Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException, ServiceException {
-		FilePDFVO vo = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, null, new PSFUriPart(uriInfo));
+		FilePDFVO vo = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, null, null, new PSFUriPart(uriInfo));
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -90,7 +90,7 @@ public class CourseResource extends ServiceResourceBase {
 	@Path("{id}/files/pdf/head")
 	public FilePDFVO aggregatePDFFilesHead(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		FilePDFVO result = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, null, new PSFUriPart(uriInfo));
+		FilePDFVO result = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, null, null, new PSFUriPart(uriInfo));
 		result.setDocumentDatas(null);
 		return result;
 	}
@@ -145,7 +145,7 @@ public class CourseResource extends ServiceResourceBase {
 	public Page<String> getFileFolders(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<String>(WebUtil.getServiceLocator().getFileService().getFileFolders(auth, fileModule, id, null, false, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<String>(WebUtil.getServiceLocator().getFileService().getFileFolders(auth, fileModule, id, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class CourseResource extends ServiceResourceBase {
 	public Page<FileOutVO> getFiles(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, fileModule, id, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, fileModule, id, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@Override

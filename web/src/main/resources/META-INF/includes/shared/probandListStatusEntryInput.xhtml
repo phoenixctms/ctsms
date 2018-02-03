@@ -34,7 +34,7 @@
 						var="selectItem"
 						itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
-					<p:ajax update="probandStatusType_terminal_state_message" />
+					<p:ajax update="probandStatusType_status_message" />
 				</p:selectOneMenu>
 				<p:tooltip
 					rendered="#{enableTooltips}"
@@ -45,12 +45,14 @@
 				</p:tooltip>
 			</h:panelGroup>
 			<p:message for="probandStatusType" />
+			
 			<h:outputLabel />
 			<h:outputText
 				styleClass="ctsms-text-red"
-				value="#{probandListBean.probandListStatusEntryBean.showTerminalStateMessage ? triallabels.proband_list_status_entry_input_terminal_state_message : ''}"
-				id="probandStatusType_terminal_state_message" />
+				value="#{probandListBean.probandListStatusEntryBean.showTerminalStateMessage ? triallabels.proband_list_status_entry_input_terminal_state_message : ''} #{probandListBean.probandListStatusEntryBean.getMassMailCount() > 0 ? triallabels.proband_list_status_entry_input_massmail_create_message : ''}"
+				id="probandStatusType_status_message" />
 			<h:outputLabel />
+			
 			<h:outputLabel
 				for="realTimestamp"
 				value="#{triallabels.proband_list_status_entry_input_real_timestamp_label}" />

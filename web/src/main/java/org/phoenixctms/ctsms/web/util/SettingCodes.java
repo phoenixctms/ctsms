@@ -37,7 +37,8 @@ public interface SettingCodes {
 	public final static String COURSE_FILE_FOLDER_TREE_DYNAMIC = "course_file_folder_tree_dynamic";
 	public final static String TRIAL_FILE_FOLDER_TREE_DYNAMIC = "trial_file_folder_tree_dynamic";
 	public final static String PROBAND_FILE_FOLDER_TREE_DYNAMIC = "proband_file_folder_tree_dynamic";
-	public final static String INPUT_FIELD_FILE_FOLDER_TREE_DYNAMIC = "input_field_file_folder_tree_dynamic";
+	// public final static String INPUT_FIELD_FILE_FOLDER_TREE_DYNAMIC = "input_field_file_folder_tree_dynamic";
+	public final static String MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC = "mass_mail_file_folder_tree_dynamic";
 	public final static String ENABLE_PRIMEFACES_SCHEDULE_DST_WORKAROUND = "enable_primefaces_schedule_dst_workaround";
 	public final static String DATEFORMAT_DATETIME_PATTERN = "dateformat_datetime_pattern";
 	public final static String DATEFORMAT_DATE_PATTERN = "dateformat_date_pattern";
@@ -170,6 +171,7 @@ public interface SettingCodes {
 	public final static String PROBAND_GENDER_PRESET = "proband_gender_preset";
 	// public final static String PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET = "proband_recruitment_for_other_trials_allowed_preset";
 	public final static String USER_LOCKED_PRESET = "user_locked_preset";
+	public final static String USER_DECRYPT_PRESET = "user_decrypt_preset";
 	public final static String USER_LOCALE_PRESET = "user_locale_preset";
 	public final static String USER_TIME_ZONE_PRESET = "user_time_zone_preset";
 	public final static String USER_THEME_PRESET = "user_theme_preset";
@@ -249,6 +251,7 @@ public interface SettingCodes {
 	public static final String TRIAL_START_URL = "trial_start_url";
 	public static final String PROBAND_START_URL = "proband_start_url";
 	public static final String INPUT_FIELD_START_URL = "input_field_start_url";
+	public static final String MASS_MAIL_START_URL = "mass_mail_start_url";
 	public static final String GRAPH_MAX_STAFF_INSTANCES = "graph_max_staff_instances";
 	public static final String GRAPH_STAFF_BREADTH_FIRST = "graph_staff_breadth_first";
 	public static final String GRAPH_MAX_STAFF_PARENT_DEPTH = "graph_max_staff_parent_depth";
@@ -285,6 +288,7 @@ public interface SettingCodes {
 	public static final String STAFF_DEFERRED_DELETE = "staff_deferred_delete";
 	public static final String TRIAL_DEFERRED_DELETE = "trial_deferred_delete";
 	public static final String USER_DEFERRED_DELETE = "user_deferred_delete";
+	public static final String MASS_MAIL_DEFERRED_DELETE = "mass_mail_deferred_delete";
 	public static final String TIMELINE_SHOW_ALL_PRESET = "timeline_show_all_preset";
 	public static final String TIMELINE_SHOW_DESCRIPTION_PRESET = "timeline_show_description_preset";
 	public static final String TIMELINE_SHOW_START_STOP_PRESET = "timeline_show_start_stop_preset";
@@ -373,6 +377,7 @@ public interface SettingCodes {
 	public static final String GOOGLE_API_URL = "google_api_url";
 	public static final String API_REALM = "api_realm";
 	public static final String API_TITLE = "api_title";
+	public static final String API_TRUSTED_HOSTS_ONLY = "api_trusted_hosts_only";
 	// public static final String API_INSTANCE = "api_instance";
 	public static final String API_VERSION = "api_version";
 	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
@@ -409,6 +414,7 @@ public interface SettingCodes {
 	public static final String ENABLE_PROBAND_SEARCH_EXPORTS = "enable_proband_search_exports";
 	public static final String ENABLE_STAFF_SEARCH_EXPORTS = "enable_staff_search_exports";
 	public static final String ENABLE_PROBAND_LIST_EXPORTS = "enable_proband_list_exports";
+	public static final String ENABLE_MASS_MAIL_SEARCH_EXPORTS = "enable_mass_mail_search_exports";
 	public static final String TIME_PICKER_INTERVAL_MINUTES = "time_picker_interval_minutes";
 	public static final String MEDICATION_DOSE_VALUE_PRESET = "medication_dose_value_preset";
 	// public static final String MEDICATION_DOSE_PERIOD_PRESET = "medication_dose_period_preset";
@@ -436,9 +442,36 @@ public interface SettingCodes {
 	public static final String ENABLE_PROBAND_MODULE = "enable_proband_module";
 	public static final String ENABLE_INPUT_FIELD_MODULE = "enable_input_field_module";
 	public static final String ENABLE_USER_MODULE = "enable_user_module";
+	public static final String ENABLE_MASS_MAIL_MODULE = "enable_mass_mail_module";
 	public static final String SHOW_PROBAND_LIST_ENTRY_RATING = "show_proband_list_entry_rating";
 	public final static String PROBAND_LIST_ENTRY_RATING_PRESET = "proband_list_entry_rating_preset";
 	public final static String PROBAND_LIST_ENTRY_RATING_MAX_PRESET = "proband_list_entry_rating_max_preset";
 	public static final String DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT = "duty_roster_schedule_staff_na_count_limit";
-
+	public static final String MASS_MAIL_LOCK_AFTER_SENDING_PRESET = "mass_mail_lock_after_sending_preset";
+	public static final String MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET = "mass_mail_proband_list_status_resend_preset";
+	public static final String MASS_MAIL_FROM_ADDRESS_PRESET = "mass_mail_from_address_preset";
+	public static final String MASS_MAIL_FROM_NAME_PRESET = "mass_mail_from_name_preset";
+	public static final String MASS_MAIL_REPLY_TO_ADDRESS_PRESET = "mass_mail_reply_to_address_preset";
+	public static final String MASS_MAIL_REPLY_TO_NAME_PRESET = "mass_mail_reply_to_name_preset";
+	public static final String MASS_MAIL_PROBAND_TO_PRESET = "mass_mail_proband_to_preset";
+	public static final String MASS_MAIL_PHYSICIAN_TO_PRESET = "mass_mail_physician_to_preset";
+	public static final String MASS_MAIL_OTHER_TO_PRESET = "mass_mail_other_to_preset";
+	public static final String MASS_MAIL_CC_PRESET = "mass_mail_cc_preset";
+	public static final String MASS_MAIL_BCC_PRESET = "mass_mail_bcc_preset";
+	public static final String MASS_MAIL_USE_BEACON_PRESET = "mass_mail_use_beacon_preset";
+	public static final String MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET = "mass_mail_attach_mass_mail_files_preset";
+	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_PRESET = "mass_mail_mass_mail_files_logical_path_preset";
+	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_PRESET = "mass_mail_attach_trial_files_preset";
+	public static final String MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_PRESET = "mass_mail_trial_files_logical_path_preset";
+	public static final String MASS_MAIL_ATTACH_PROBAND_FILES_PRESET = "mass_mail_attach_proband_files_preset";
+	public static final String MASS_MAIL_PROBAND_LOGICAL_PATH_PRESET = "mass_mail_proband_logical_path_preset";
+	public static final String MASS_MAIL_ATTACH_INQUIRIES_PRESET = "mass_mail_attach_inquiries_preset";
+	public static final String MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_PRESET = "mass_mail_attach_proband_list_entry_tags_preset";
+	public static final String MASS_MAIL_ATTACH_ECRFS_PRESET = "mass_mail_attach_ecrfs_preset";
+	public static final String MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET = "mass_mail_attach_proband_letter_preset";
+	public static final String MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET = "mass_mail_attach_reimbursements_preset";
+	public static final String MASS_MAIL_LOCALE_PRESET = "mass_mail_locale_preset";
+	public static final String PUBLIC_FILE_SIGNUP_URL = "public_file_signup_url";
+	public static final String RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = "recipient_overview_show_pending_preset";
+	public static final String RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = "recipient_overview_show_scheduled_preset";
 }

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +27,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
+import org.phoenixctms.ctsms.service.massmail.MassMailService;
 import org.phoenixctms.ctsms.service.proband.ProbandService;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.service.shared.HyperlinkService;
@@ -60,6 +64,7 @@ public final class ExecUtil {
 		AUTHORIZED_SERVICE_CLASSES.add(ProbandService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(UserService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(InputFieldService.class);
+		AUTHORIZED_SERVICE_CLASSES.add(MassMailService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(FileService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(HyperlinkService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(JournalService.class);
@@ -150,7 +155,7 @@ public final class ExecUtil {
 	}
 
 	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
-			AuthorisationException, ServiceException, FileNotFoundException {
+	AuthorisationException, ServiceException, FileNotFoundException {
 		try {
 			long fileId = Long.parseLong(fileName);
 			FileStreamOutVO file = fileService.getFileStream(auth, fileId);
@@ -202,6 +207,26 @@ public final class ExecUtil {
 	public static Scanner getScanner() {
 		return new Scanner(System.in);
 	}
+
+	public static void lockProcess(String lockFileName) {
+		if (!CommonUtil.isEmptyString(lockFileName)) {
+			// https://stackoverflow.com/questions/7036108/prevent-launching-multiple-instances-of-a-java-application
+			File file = new File(lockFileName);
+			try {
+				FileChannel fc = FileChannel.open(file.toPath(),
+						StandardOpenOption.CREATE,
+						StandardOpenOption.WRITE);
+				FileLock lock = fc.tryLock();
+				if (lock == null) {
+					throw new RuntimeException("another instance is running");
+					// System.out.println("another instance is running");
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 
 	public static String readPassword(Scanner in, String prompt) throws IOException {
 		System.out.print(prompt);

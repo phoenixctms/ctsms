@@ -2,12 +2,12 @@ package org.phoenixctms.ctsms.web.model.shared;
 
 import java.io.ByteArrayInputStream;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.Image;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
@@ -45,13 +45,13 @@ public abstract class PhotoBeanBase extends ManagedBeanBase {
 		}
 	}
 
-	private UUID uuid;
+	private String uuid;
 	private String allowTypes;
 	private Integer uploadSizeLimit;
 
 	public PhotoBeanBase() {
 		super();
-		uuid = UUID.randomUUID();
+		uuid = CommonUtil.generateUUID();
 	}
 
 	public void clearImage(ActionEvent e) {
@@ -96,7 +96,7 @@ public abstract class PhotoBeanBase extends ManagedBeanBase {
 	}
 
 	public String getUuid() {
-		return uuid.toString();
+		return uuid;
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {
@@ -148,6 +148,6 @@ public abstract class PhotoBeanBase extends ManagedBeanBase {
 	protected abstract void setTimestamp(Date now);
 
 	private void storeImage() {
-		WebUtil.getSessionScopeBean().putImage(uuid.toString(), scale(getData()), PREVIEW_MIME_TYPE);
+		WebUtil.getSessionScopeBean().putImage(uuid, scale(getData()), PREVIEW_MIME_TYPE);
 	}
 }

@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
@@ -288,13 +289,13 @@ public class ApplicationScopeBean {
 				Urls.getHomeViewName((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()), WebUtil.getWindowNameUniqueToken());
 	}
 
-	// public String getInputTimePattern() {
-	// return CommonUtil.INPUT_TIME_PATTERN;
-	// }
-
 	public String getIbanMask() {
 		return Settings.getString(SettingCodes.IBAN_MASK, Bundle.SETTINGS, DefaultSettings.IBAN_MASK);
 	}
+
+	// public String getInputTimePattern() {
+	// return CommonUtil.INPUT_TIME_PATTERN;
+	// }
 
 	public String getIdentityString(UserOutVO user) {
 		return WebUtil.getIdentityString(user);
@@ -368,6 +369,10 @@ public class ApplicationScopeBean {
 		return WebUtil.getNoInventoryPickedMessage();
 	}
 
+	public String getNoMassMailPickedMessage() {
+		return WebUtil.getNoMassMailPickedMessage();
+	}
+
 	public String getNoProbandPickedMessage() {
 		return WebUtil.getNoProbandPickedMessage();
 	}
@@ -384,21 +389,9 @@ public class ApplicationScopeBean {
 		return WebUtil.getNoTrialPickedMessage();
 	}
 
-
-
 	public String getNoUserPickedMessage() {
 		return WebUtil.getNoUserPickedMessage();
 	}
-
-	// public boolean getProbandGroupsShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	//
-	// public boolean getProbandGroupsShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
-	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
 
 	public String getNumberOfCourseParticipantsString(CourseOutVO course) {
 		StringBuilder sb = new StringBuilder();
@@ -413,6 +406,27 @@ public class ApplicationScopeBean {
 		return sb.toString();
 	}
 
+	public String getParentNodeType() {
+		return WebUtil.PARENT_NODE_TYPE;
+	}
+
+	// public boolean getProbandGroupsShowInquiryColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
+	// }
+	//
+	//
+	// public boolean getProbandGroupsShowProbandListEntryTagColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
+	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
+	// }
+
+	public String getPercentageString(Float value) {
+		if (value != null) {
+			return Messages.getMessage(MessageCodes.PERCENTAGE_LABEL, 100.0f * value);
+		}
+		return "";
+	}
+
 	// public boolean getProbandListShowInquiryColumn() {
 	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_INQUIRY_COLUMN);
 	// }
@@ -422,24 +436,9 @@ public class ApplicationScopeBean {
 	// }
 
 
-	public String getParentNodeType() {
-		return WebUtil.PARENT_NODE_TYPE;
-	}
-
-	public String getPercentageString(Float value) {
-		if (value != null) {
-			return Messages.getMessage(MessageCodes.PERCENTAGE_LABEL, 100.0f * value);
-		}
-		return "";
-	}
-
 	public Long getProbandListEntryTagValueCount(ProbandListEntryTagOutVO probandListEntryTag) {
 		return WebUtil.getProbandListEntryTagValueCount(probandListEntryTag);
 	}
-
-	// public String getSignatureDescription(SignatureVO signature) {
-	// x
-	// }
 
 	public String getProbandStatusEntryStartStopString(ProbandStatusEntryOutVO statusEntry) {
 		if (statusEntry != null) {
@@ -452,8 +451,20 @@ public class ApplicationScopeBean {
 		return WebUtil.getRemoteHost();
 	}
 
+	// public String getSignatureDescription(SignatureVO signature) {
+	// x
+	// }
+
 	public String getScheduleRightHeaderTemplate() {
 		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
+	}
+
+	public String getScheduleTimePattern() {
+		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
+	}
+
+	public String getShiftDurationString(long duration) {
+		return DateUtil.getShiftDurationString(duration);
 	}
 
 	// public boolean getTrialParticipationsShowInquiryColumn() {
@@ -464,14 +475,6 @@ public class ApplicationScopeBean {
 	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
 	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
-
-	public String getScheduleTimePattern() {
-		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
-	}
-
-	public String getShiftDurationString(long duration) {
-		return DateUtil.getShiftDurationString(duration);
-	}
 
 	public String getStringDigest(String string) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
@@ -538,7 +541,6 @@ public class ApplicationScopeBean {
 		return CommonUtil.HTML_SYSTEM_MESSAGES_COMMENTS;
 	}
 
-
 	public boolean isShowProbandRating() {
 		return Settings.getBoolean(SettingCodes.SHOW_PROBAND_RATING, Bundle.SETTINGS, DefaultSettings.SHOW_PROBAND_RATING);
 	}
@@ -546,6 +548,7 @@ public class ApplicationScopeBean {
 	public boolean isTrustedHost() {
 		return WebUtil.isTrustedHost();
 	}
+
 
 	public String journalEntryToColor(JournalEntryOutVO journalEntry) {
 		return ((journalEntry != null && !journalEntry.isSystemMessage()) ? WebUtil.colorToStyleClass(journalEntry.getCategory().getColor()) : "");
@@ -570,6 +573,11 @@ public class ApplicationScopeBean {
 		}
 	}
 
+	public String localeToDisplayString(String locale) {
+
+		return CommonUtil.localeToDisplayString(CommonUtil.localeFromString(locale), WebUtil.getLocale());
+	}
+
 	public String maintenanceScheduleItemRecurringPeriodToString(MaintenanceScheduleItemOutVO maintenanceItem) {
 		if (maintenanceItem != null && maintenanceItem.isRecurring()) {
 			return WebUtil.variablePeriodToString(maintenanceItem.getRecurrencePeriod(), maintenanceItem.getRecurrencePeriodDays());
@@ -586,6 +594,10 @@ public class ApplicationScopeBean {
 
 	public List<Map.Entry<?, ?>> mapToList(Map<?, ?> map) {
 		return (map != null ? new ArrayList<Map.Entry<?, ?>>(map.entrySet()) : null);
+	}
+
+	public String massMailToColor(MassMailOutVO massMail) {
+		return (massMail != null ? WebUtil.colorToStyleClass(massMail.getStatus().getColor()) : "");
 	}
 
 	public String parameterName(String name) {

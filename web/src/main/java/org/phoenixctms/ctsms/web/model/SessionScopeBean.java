@@ -1,10 +1,12 @@
 package org.phoenixctms.ctsms.web.model;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.faces.model.SelectItem;
@@ -31,9 +34,11 @@ import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.MaxSizeHashMap;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
@@ -59,6 +64,8 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class SessionScopeBean {
 
+	private static final String MENUITEM_CHECKED_STYLECLASS = "ui-icon ui-icon-check";
+
 	private static AnnouncementVO getAnnouncement() {
 		try {
 			return WebUtil.getServiceLocator().getToolsService().getAnnouncement();
@@ -71,6 +78,21 @@ public class SessionScopeBean {
 		return null;
 	}
 
+	private static Collection<LocaleVO> getLocales() {
+		Collection<LocaleVO> locales = null;
+		try {
+			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (locales == null) {
+			locales = new ArrayList<LocaleVO>();
+		}
+		return locales;
+	}
 	private static String getLoginOutcome(boolean success) {
 		String refererBase64 = WebUtil.getParamValue(GetParamNames.REFERER);
 		String referer = JsUtil.decodeBase64(refererBase64);
@@ -108,7 +130,21 @@ public class SessionScopeBean {
 		viewId.append("faces-redirect=true&includeViewParams=true");
 		return viewId.toString();
 	}
-
+	private static Collection<TimeZoneVO> getTimeZones() {
+		Collection<TimeZoneVO> timeZones = null;
+		try {
+			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (timeZones == null) {
+			timeZones = new ArrayList<TimeZoneVO>();
+		}
+		return timeZones;
+	}
 	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
 	private MaxSizeHashMap<Object, StreamedContent> imageStore;
 	// private HashMap<Class, HashMap<Object, Object>> selectionSetServiceCache;
@@ -140,10 +176,14 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterTimelineEventTypes;
 	private ArrayList<SelectItem> filterPersonProbandListStatusTypes;
 	private ArrayList<SelectItem> filterAnimalProbandListStatusTypes;
+	private ArrayList<SelectItem> filterProbandListStatusTypes;
 	private ArrayList<SelectItem> filterVisitTypes;
 	private ArrayList<SelectItem> filterPrivacyConsentStatusTypes;
 	private ArrayList<SelectItem> filterAuthenticationTypes;
 	private ArrayList<SelectItem> filterEcrfFieldStatusTypes;
+	private ArrayList<SelectItem> filterMassMailStatusTypes;
+	private ArrayList<SelectItem> filterMassMailTypes;
+	private ArrayList<SelectItem> filterLocales;
 	private PasswordPolicyVO policy;
 	// http://stackoverflow.com/questions/3841361/jsf-http-session-login
 	private AuthenticationVO auth;
@@ -153,9 +193,10 @@ public class SessionScopeBean {
 	private int failedAttempts;
 	private boolean authenticationFailed;
 	private boolean localPasswordRequired;
+
 	private String authenticationFailedMessage;
+
 	private MenuModel userMenuModel;
-	private static final String MENUITEM_CHECKED_STYLECLASS = "ui-icon ui-icon-check";
 
 	public SessionScopeBean() {
 		auth = new AuthenticationVO();
@@ -347,6 +388,14 @@ public class SessionScopeBean {
 		return filterLecturerCompetences;
 	}
 
+	public synchronized ArrayList<SelectItem> getFilterLocales() {
+		if (filterLocales == null) {
+			filterLocales = WebUtil.getLocales();
+			filterLocales.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterLocales;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterMaintenanceTypes() {
 		if (filterMaintenanceTypes == null) {
 			filterMaintenanceTypes = WebUtil.getAllMaintenanceTypes();
@@ -365,6 +414,22 @@ public class SessionScopeBean {
 			componentMap.put(id, filterMap);
 		}
 		return filterMap;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterMassMailStatusTypes() {
+		if (filterMassMailStatusTypes == null) {
+			filterMassMailStatusTypes = WebUtil.getAllMassMailStatusTypes();
+			filterMassMailStatusTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterMassMailStatusTypes;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterMassMailTypes() {
+		if (filterMassMailTypes == null) {
+			filterMassMailTypes = WebUtil.getAllMassMailTypes();
+			filterMassMailTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterMassMailTypes;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterPaymentMethods() {
@@ -397,6 +462,14 @@ public class SessionScopeBean {
 			filterProbandCategories.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterProbandCategories;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterProbandListStatusTypes() {
+		if (filterProbandListStatusTypes == null) {
+			filterProbandListStatusTypes = WebUtil.getAllProbandListStatusTypes(null);
+			filterProbandListStatusTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterProbandListStatusTypes;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterProbandStatusTypes() {
@@ -551,6 +624,16 @@ public class SessionScopeBean {
 
 	public synchronized PasswordOutVO getLogon() {
 		return logon;
+	}
+
+	public synchronized MenuModel getMassMailEntityMenuModel() {
+		return DynamicEntityMenu.getMassMailEntityMenu().createMenuModel(this,
+				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
+	}
+
+	public synchronized MenuModel getMassMailHomeMenuModel() {
+		return DynamicHomeMenu.getMassMailHomeMenu().createMenuModel(this,
+				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
 	public synchronized String getNewPassword() {
@@ -780,10 +863,14 @@ public class SessionScopeBean {
 		filterTimelineEventTypes = null;
 		filterPersonProbandListStatusTypes = null;
 		filterAnimalProbandListStatusTypes = null;
+		filterProbandListStatusTypes = null;
 		filterVisitTypes = null;
 		filterPrivacyConsentStatusTypes = null;
 		filterAuthenticationTypes = null;
 		filterEcrfFieldStatusTypes = null;
+		filterMassMailStatusTypes = null;
+		filterMassMailTypes = null;
+		filterLocales = null;
 		policy = null;
 		// selectionSetServiceCache.clear();
 	}
@@ -876,16 +963,16 @@ public class SessionScopeBean {
 			localesMenu.setId("localesMenu");
 			userMenu.getChildren().add(localesMenu);
 			int i = 0;
-			Iterator<Locale> localesIt = WebUtil.getSupportedLocales().iterator();
+			Iterator<LocaleVO> localesIt = getLocales().iterator();
 			while (localesIt.hasNext()) {
-				Locale locale = localesIt.next();
+				LocaleVO locale = localesIt.next();
 				MenuItem localeMenuItem = new MenuItem();
-				localeMenuItem.setValue(CommonUtil.clipString(CommonUtil.localeToDisplayString(locale, userLocale), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
+				localeMenuItem.setValue(CommonUtil.clipString(locale.getName(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
 						EllipsisPlacement.TRAILING));
-				localeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" + CommonUtil.localeToString(locale) + "')}"));
+				localeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" +locale.getLanguage() + "')}"));
 				localeMenuItem.setOncomplete("handleReload(xhr, status, args)");
 				localeMenuItem.setId("localeMenuItem_" + Integer.toString(i));
-				if (locale.equals(userLocale)) {
+				if (CommonUtil.localeFromString( locale.getLanguage()).equals(userLocale)) {
 					localeMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
 				}
 				localesMenu.getChildren().add(localeMenuItem);
@@ -906,7 +993,7 @@ public class SessionScopeBean {
 			eastTimeZonesMenu.setId("eastTimeZonesMenu");
 			timeZonesMenu.getChildren().add(eastTimeZonesMenu);
 			i = 0;
-			Map<Integer, ArrayList<TimeZone>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(WebUtil.getTimeZones());
+			Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(getTimeZones());
 			Iterator<Integer> it = timeZonesByOffset.keySet().iterator();
 			while (it.hasNext()) {
 				Integer timeZoneOffset = it.next();
@@ -916,17 +1003,17 @@ public class SessionScopeBean {
 				offsetTimeZonesMenu.setId("offsetTimeZonesMenu_" + Integer.toString(i));
 				int j = 0;
 				boolean timeZoneFound = false;
-				Iterator<TimeZone> timeZonesIt = timeZonesByOffset.get(timeZoneOffset).iterator();
+				Iterator<TimeZoneVO> timeZonesIt = timeZonesByOffset.get(timeZoneOffset).iterator();
 				while (timeZonesIt.hasNext()) {
-					TimeZone timeZone = timeZonesIt.next();
+					TimeZoneVO timeZone = timeZonesIt.next();
 					MenuItem timeZoneMenuItem = new MenuItem();
-					timeZoneMenuItem.setValue(CommonUtil.clipString(CommonUtil.timeZoneToDisplayString(timeZone, userLocale), menuItemLabelClipMaxLength,
+					timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
 							CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
-					timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + CommonUtil.timeZoneToString(timeZone)
-							+ "')}"));
+					timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
+					+ "')}"));
 					timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
 					timeZoneMenuItem.setId("timeZoneMenuItem_" + Integer.toString(i) + "_" + Integer.toString(j));
-					if (timeZone.equals(userTimeZone)) {
+					if (CommonUtil.timeZoneFromString(timeZone.getTimeZoneID()).equals(userTimeZone)) {
 						timeZoneMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
 						timeZoneFound = true;
 					}
@@ -993,7 +1080,7 @@ public class SessionScopeBean {
 			logoutMenuItem.setValue(CommonUtil.clipString(Messages.getMessage(MessageCodes.LOGOUT_LABEL, logon.getUser().getName()), menuItemLabelClipMaxLength,
 					CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.MID));
 			logoutMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.logout()}")); // empty brackets required here...
-			logoutMenuItem.setOncomplete("handleLogout(xhr, status, args)");
+			// logoutMenuItem.setOncomplete("handleLogout(xhr, status, args)");
 			logoutMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-exit");
 			logoutMenuItem.setId("logoutMenuItem");
 			userMenu.getChildren().add(logoutMenuItem);
@@ -1053,15 +1140,74 @@ public class SessionScopeBean {
 		logout(WebUtil.getRefererBase64((HttpServletRequest) context.getExternalContext().getRequest()));
 	}
 
-	private synchronized void logout(String redirectUrl) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		context.getExternalContext().invalidateSession();
-		RequestContext requestContext = RequestContext.getCurrentInstance();
-		if (requestContext != null) {
-			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
-			requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
-			requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
+
+
+	private synchronized void logout(String redirectUrlBase64) {
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+		StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
+		url.append("?");
+		url.append(GetParamNames.REFERER);
+		url.append("=");
+		url.append(redirectUrlBase64);
+		externalContext.invalidateSession();
+		try {
+			externalContext.redirect(url.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		// WebUtil.appendRefererParameter(url, request, "?");
+		//
+		//
+		//
+		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		// RequestContext requestContext = RequestContext.getCurrentInstance();
+		// if (requestContext != null) {
+		// requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
+		// requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
+		// requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
+		// }
+		// externalContext.invalidateSession();
+		//
+		//
+		//
+		// ajax = false;
+		// // final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		// // externalContext.invalidateSession();
+		// if (ajax) {
+		// RequestContext requestContext = RequestContext.getCurrentInstance();
+		// if (requestContext != null) {
+		// requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
+		// requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
+		// requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
+		// }
+		// // http://www.icesoft.org/JForum/posts/list/15/7658.page#sthash.XPD8yMMZ.dpbs
+		// new Thread() {
+		//
+		// public void run() {
+		// try {
+		// Thread.sleep(10000);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		// externalContext.invalidateSession();
+		// // HttpSession session = (HttpSession) externalContext.getSession(false);
+		// // session.invalidate();
+		// }
+		// }.start();
+		// } else {
+		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		// externalContext.invalidateSession();
+		// try {
+		// externalContext.redirect(redirectUrl);
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
 	}
 
 	public synchronized StreamedContent putImage(Object key, byte[] image, String mimeType) {

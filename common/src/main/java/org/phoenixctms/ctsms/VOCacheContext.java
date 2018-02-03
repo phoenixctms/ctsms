@@ -20,6 +20,10 @@ public abstract class VOCacheContext implements Principal {
 	}
 
 	protected void reset() {
+		voMapClear();
+	}
+
+	public void voMapClear() {
 		if (entityVoMap != null) {
 			entityVoMap.clear();
 		}

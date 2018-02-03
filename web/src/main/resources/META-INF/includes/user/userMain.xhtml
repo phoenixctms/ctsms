@@ -474,6 +474,27 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="locked" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="decrypt"
+								value="#{userlabels.user_decrypt_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="decrypt"
+									value="#{userBean.in.decrypt}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="decrypt">
+									<h:outputText
+										value="#{userlabels.user_decrypt_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="decrypt" />
 						</h:panelGrid>
 						<p:messages />
 						<p:toolbar>

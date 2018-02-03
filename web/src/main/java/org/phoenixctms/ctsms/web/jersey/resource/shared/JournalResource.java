@@ -97,6 +97,15 @@ public class JournalResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("massmail")
+	public Page<JournalEntryOutVO> getMassMailJournal(@Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, JournalModule.MASS_MAIL_JOURNAL, null, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("proband")
 	public Page<JournalEntryOutVO> getProbandJournal(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {

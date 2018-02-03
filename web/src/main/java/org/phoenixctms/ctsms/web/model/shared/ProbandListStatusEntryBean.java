@@ -137,6 +137,26 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 		return in;
 	}
 
+	public long getMassMailCount() {
+		if (probandListEntry != null && in.getStatusId() != null) {
+			try {
+				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(), false,
+						probandListEntry.getProband().getId());
+
+			} catch (ServiceException e) {
+
+			} catch (AuthenticationException e) {
+
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+
+			} catch (IllegalArgumentException e) {
+
+			}
+		}
+		return 0l;
+	}
+
 	@Override
 	public String getModifiedAnnotation() {
 		if (out != null) {

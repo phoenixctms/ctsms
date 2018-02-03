@@ -14,6 +14,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 public final class DateUtil {
@@ -113,20 +114,20 @@ public final class DateUtil {
 		return DateUtil.getDurationString(start, stop,
 				Settings.getDurationUnitOfTime(SettingCodes.BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static String getBookingDurationString(long duration) {
 		return DateUtil.getDurationString(duration,
 				Settings.getDurationUnitOfTime(SettingCodes.BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static DateFormat getDateFormat() {
@@ -201,10 +202,10 @@ public final class DateUtil {
 		return getDurationString(start, stop,
 				Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static String getDurationString(Date start, Date stop, DurationUnitOfTime mostSignificant, DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
@@ -218,10 +219,10 @@ public final class DateUtil {
 		return getDurationString(duration,
 				Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static String getDurationString(long duration, DurationUnitOfTime mostSignificant, DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
@@ -477,10 +478,10 @@ public final class DateUtil {
 		return getDurationString(start, stop,
 				Settings.getDurationUnitOfTime(SettingCodes.EXPIRATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.EXPIRATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.EXPIRATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static DateFormat getJqPlotJsDateFormat() {
@@ -506,20 +507,20 @@ public final class DateUtil {
 		return DateUtil.getDurationString(start, stop,
 				Settings.getDurationUnitOfTime(SettingCodes.SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static String getShiftDurationString(long duration) {
 		return DateUtil.getDurationString(duration,
 				Settings.getDurationUnitOfTime(SettingCodes.SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-						Settings.getDurationUnitOfTime(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
-								DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
-								Settings.getInt(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-										DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+				Settings.getDurationUnitOfTime(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
 	public static DateFormat getTimeFormat() {
@@ -536,16 +537,16 @@ public final class DateUtil {
 		return dateFormat;
 	}
 
-	public static Map<Integer, ArrayList<TimeZone>> getTimeZoneByOffsets(Collection<TimeZone> timeZones) {
-		TreeMap<Integer, ArrayList<TimeZone>> result = new TreeMap<Integer, ArrayList<TimeZone>>();
+	public static Map<Integer, ArrayList<TimeZoneVO>> getTimeZoneByOffsets(Collection<TimeZoneVO> timeZones) {
+		TreeMap<Integer, ArrayList<TimeZoneVO>> result = new TreeMap<Integer, ArrayList<TimeZoneVO>>();
 		if (timeZones != null) {
-			Iterator<TimeZone> it = timeZones.iterator();
+			Iterator<TimeZoneVO> it = timeZones.iterator();
 			while (it.hasNext()) {
-				TimeZone timeZone = it.next();
+				TimeZoneVO timeZone = it.next();
 				int timeZoneOffset = timeZone.getRawOffset();
-				ArrayList<TimeZone> offsetTimeZones;
+				ArrayList<TimeZoneVO> offsetTimeZones;
 				if (!result.containsKey(timeZoneOffset)) {
-					offsetTimeZones = new ArrayList<TimeZone>();
+					offsetTimeZones = new ArrayList<TimeZoneVO>();
 					result.put(timeZoneOffset, offsetTimeZones);
 				} else {
 					offsetTimeZones = result.get(timeZoneOffset);

@@ -627,7 +627,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public String getEcrfProgressLabel(ECRFOutVO ecrfVO) {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
-		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0) {
+		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0l) {
 			return Messages.getMessage(MessageCodes.ECRF_PROGRESS_LABEL, ecrfProgress.getSavedValueCount(), ecrfProgress.getFieldCount());
 		}
 		return null;
@@ -639,7 +639,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public String getEcrfProgressSummaryLabel(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
-		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0) {
+		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0l) {
 			return Messages.getMessage(MessageCodes.ECRF_PROGRESS_SUMMARY_LABEL, progressSummary.getEcrfDoneCount(), progressSummary.getEcrfTotalCount());
 		}
 		return null;
@@ -647,7 +647,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public int getEcrfProgressSummaryValue(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
-		if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0) {
+		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
+		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * progressSummary
 					.getEcrfDoneCount()) / ((float) progressSummary.getEcrfTotalCount()));
 		}
@@ -656,7 +657,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public int getEcrfProgressValue(ECRFOutVO ecrfVO) {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
-		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0) {
+		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * ecrfProgress
 					.getSavedValueCount()) / ((float) ecrfProgress.getFieldCount()));
 		}
@@ -667,7 +668,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		if (sectionProgress != null) {
 			if (sectionProgress.getSeries()) {
 				return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_SERIES_LABEL, sectionProgress.getIndex() != null ? sectionProgress.getIndex().longValue() : 0l);
-			} else if (sectionProgress.getFieldCount() > 0) {
+			} else if (sectionProgress.getFieldCount() > 0l) {
 				return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_LABEL, sectionProgress.getSavedValueCount(), sectionProgress.getFieldCount());
 			}
 		}
@@ -683,7 +684,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		if (sectionProgress != null) {
 			if (sectionProgress.getSeries()) {
 				return sectionProgress.getIndex() != null ? Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) : 0;
-			} else if (sectionProgress.getFieldCount() > 0) {
+			} else if (sectionProgress.getFieldCount() > 0l) {
 				return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * sectionProgress
 						.getSavedValueCount()) / ((float) sectionProgress.getFieldCount()));
 			}
@@ -905,7 +906,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public HashMap<Long, Long> getSummaryStatusCountMap(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
-		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0) {
+		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0l) {
 			Iterator<ECRFProgressVO> it = progressSummary.getEcrfs().iterator();
 			HashMap<Long,Long> countMap = new HashMap<Long,Long>();
 			while (it.hasNext()) {
@@ -1019,7 +1020,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public boolean isSignEcrfsVisible() {
-		return getVerfiedEcrfCount() > 0l || getDoneEcrfCount() > 0;
+		return getVerfiedEcrfCount() > 0l || getDoneEcrfCount() > 0l;
 	}
 
 	public boolean isSignVerifiedEcrfsEnabled() {

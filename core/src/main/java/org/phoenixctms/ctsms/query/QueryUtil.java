@@ -35,6 +35,7 @@ import org.phoenixctms.ctsms.domain.CriterionTie;
 import org.phoenixctms.ctsms.domain.CriterionTieDao;
 import org.phoenixctms.ctsms.domain.InputFieldImpl;
 import org.phoenixctms.ctsms.domain.InventoryImpl;
+import org.phoenixctms.ctsms.domain.MassMailImpl;
 import org.phoenixctms.ctsms.domain.ProbandImpl;
 import org.phoenixctms.ctsms.domain.StaffImpl;
 import org.phoenixctms.ctsms.domain.TrialImpl;
@@ -168,6 +169,7 @@ public final class QueryUtil {
 		ENTITY_NAMES.put(DBModule.TRIAL_DB, "trial");
 		ENTITY_NAMES.put(DBModule.PROBAND_DB, "proband");
 		ENTITY_NAMES.put(DBModule.INPUT_FIELD_DB, "inputField");
+		ENTITY_NAMES.put(DBModule.MASS_MAIL_DB, "massMail");
 	}
 	private final static String HQL_ALIAS_PREFIX = "_";
 	private final static String HQL_ASSOCIATION_PATH_SEPARATOR = ".";
@@ -1299,6 +1301,8 @@ public final class QueryUtil {
 				return ProbandImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
 			case INPUT_FIELD_DB:
 				return InputFieldImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+			case MASS_MAIL_DB:
+				return MassMailImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
 			default:
 				// unsupported root entity
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_DB_MODULE, DefaultMessages.UNSUPPORTED_DB_MODULE,

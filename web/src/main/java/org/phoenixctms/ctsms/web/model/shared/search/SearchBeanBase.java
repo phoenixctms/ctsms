@@ -510,6 +510,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.INVENTORY_DB);
 	}
 
+	public List<Boolean> getIsMassMailPicker() {
+		return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.MASS_MAIL_DB);
+	}
+
 	public List<Boolean> getIsMoveCriterionDownEnabled() {
 		return new CriterionIsMoveCriterionDownEnabledList(criterionsIn);
 	}
@@ -560,6 +564,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public List<Boolean> getIsVoAutocomplete() {
 		return new CriterionIsAutocompleteList(criterionsIn, propertyVOsMap, restrictionVOsMap, converterMap, true);
+	}
+
+	public List<String> getMassMailName() {
+		return new CriterionEntityNameList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.MASS_MAIL_DB);
 	}
 
 	@Override

@@ -34,6 +34,7 @@ public enum JSValues {
 	PROBAND_ID(GetParamNames.PROBAND_ID.toString()),
 	INPUT_FIELD_ID(GetParamNames.INPUT_FIELD_ID.toString()),
 	CRITERIA_ID(GetParamNames.CRITERIA_ID.toString()),
+	MASS_MAIL_ID(GetParamNames.MASS_MAIL_ID.toString()),
 	ECRF_FIELD_STATUS_ENTRY_ID(GetParamNames.ECRF_FIELD_STATUS_ENTRY_ID.toString()),
 	SOURCE_INDEX(GetParamNames.SOURCE_INDEX.toString()),
 	TARGET_INDEX(GetParamNames.TARGET_INDEX.toString()),
@@ -48,7 +49,7 @@ public enum JSValues {
 	PICK_ON_CLICK(GetParamNames.PICK_ON_CLICK.toString()),
 	PICK_CURRENT_PAGE_IDS("PICK_CURRENT_PAGE_IDS"),
 	AJAX_OPERATION_SUCCESS("operationSuccess"),
-	AJAX_LOGGED_OUT("loggedOut"),
+	// ("loggedOut"),
 	AJAX_WINDOW_TITLE_BASE64("windowTitleBase64"),
 	AJAX_WINDOW_NAME("windowName"),
 	AJAX_PICKER("picker"),
@@ -154,6 +155,7 @@ public enum JSValues {
 	AJAX_PROBAND_TAG_VALUE_COUNT("probandTagValueCount"),
 	AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64("probandContactDetailTabTitleBase64"),
 	AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT("probandContactDetailValueCount"),
+	AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64("probandRecipientTabTitleBase64"), AJAX_PROBAND_RECIPIENT_COUNT("probandRecipientCount"),
 	AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64("probandAddressTabTitleBase64"),
 	AJAX_PROBAND_ADDRESS_COUNT("probandAddressCount"),
 	AJAX_PROBAND_STATUS_TAB_TITLE_BASE64("probandStatusTabTitleBase64"),
@@ -180,6 +182,11 @@ public enum JSValues {
 	AJAX_PROBAND_FILE_COUNT("probandFileCount"),
 	AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64("probandJournalTabTitleBase64"),
 	AJAX_PROBAND_JOURNAL_ENTRY_COUNT("probandJournalEntryCount"),
+	AJAX_MASS_MAIL_RECIPIENT_TAB_TITLE_BASE64("massMailRecipientTabTitleBase64"), AJAX_MASS_MAIL_RECIPIENT_COUNT("massMailRecipientCount"),
+	AJAX_MASS_MAIL_FILE_TAB_TITLE_BASE64("massMailFileTabTitleBase64"),
+	AJAX_MASS_MAIL_FILE_COUNT("massMailFileCount"),
+	AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64("massMailJournalTabTitleBase64"),
+	AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT("massMailJournalEntryCount"),
 	AJAX_PASSWORD_TAB_TITLE_BASE64("passwordTabTitleBase64"),
 	AJAX_PASSWORD_COUNT("passwordCount"),
 	AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64("userPermissionProfileTabTitleBase64"),
@@ -222,6 +229,7 @@ public enum JSValues {
 	PROBAND_PICKER_URL(Urls.PROBAND_PICKER.value()),
 	INPUT_FIELD_PICKER_URL(Urls.INPUT_FIELD_PICKER.value()),
 	TEAM_MEMBER_PICKER_URL(Urls.TEAM_MEMBER_PICKER.value()),
+	MASS_MAIL_PICKER_URL(Urls.MASS_MAIL_PICKER.value()),
 	ECRF_SECTION_URL(Urls.ECRF_SECTION.value()),
 	INVENTORY_URL(Urls.INVENTORY.value()),
 	STAFF_URL(Urls.STAFF.value()),
@@ -230,6 +238,7 @@ public enum JSValues {
 	TRIAL_URL(Urls.TRIAL.value()),
 	PROBAND_URL(Urls.PROBAND.value()),
 	INPUT_FIELD_URL(Urls.INPUT_FIELD.value()),
+	MASS_MAIL_URL(Urls.MASS_MAIL.value()),
 	INVENTORY_SEARCH_URL(Urls.INVENTORY_SEARCH.value()),
 	STAFF_SEARCH_URL(Urls.STAFF_SEARCH.value()),
 	COURSE_SEARCH_URL(Urls.COURSE_SEARCH.value()),
@@ -237,6 +246,7 @@ public enum JSValues {
 	TRIAL_SEARCH_URL(Urls.TRIAL_SEARCH.value()),
 	PROBAND_SEARCH_URL(Urls.PROBAND_SEARCH.value()),
 	INPUT_FIELD_SEARCH_URL(Urls.INPUT_FIELD_SEARCH.value()),
+	MASS_MAIL_SEARCH_URL(Urls.MASS_MAIL_SEARCH.value()),
 	LOGIN_URL(Urls.LOGIN.value()),
 	PORTAL_URL(Urls.PORTAL.value()),
 	CHANGE_PASSWORD_URL(Urls.CHANGE_PASSWORD.value()),
@@ -256,6 +266,7 @@ public enum JSValues {
 	TIMELINE_EVENT_OVERVIEW_URL(Urls.TIMELINE_EVENT_OVERVIEW.value()),
 	MONEY_TRANSFER_OVERVIEW_URL(Urls.MONEY_TRANSFER_OVERVIEW.value()),
 	TRIAL_SHIFT_SUMMARY_OVERVIEW_URL(Urls.TRIAL_SHIFT_SUMMARY_OVERVIEW.value()),
+	RECIPIENT_OVERVIEW_URL(Urls.RECIPIENT_OVERVIEW.value()),
 	TRIAL_TIMELINE_URL(Urls.TRIAL_TIMELINE.value()),
 	DUTY_ROSTER_SCHEDULE_URL(Urls.DUTY_ROSTER_SCHEDULE.value()),
 	INVENTORY_START_URL(Urls.INVENTORY_START.value()),
@@ -265,6 +276,7 @@ public enum JSValues {
 	TRIAL_START_URL(Urls.TRIAL_START.value()),
 	PROBAND_START_URL(Urls.PROBAND_START.value()),
 	INPUT_FIELD_START_URL(Urls.INPUT_FIELD_START.value()),
+	MASS_MAIL_START_URL(Urls.MASS_MAIL_START.value()),
 	REST_API_URL(""),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
@@ -274,6 +286,7 @@ public enum JSValues {
 	TRIAL_ENTITY_WINDOW_NAME("trial"),
 	PROBAND_ENTITY_WINDOW_NAME("proband"),
 	INPUT_FIELD_ENTITY_WINDOW_NAME("inputfield"),
+	MASS_MAIL_ENTITY_WINDOW_NAME("massmail"),
 	NEW_ENTITY_WINDOW_NAME_SUFFIX(""),
 	INVENTORY_HOME_WINDOW_NAME("inventory_home"), // NO minus IN FRAME NAMES! -> IE8
 	STAFF_HOME_WINDOW_NAME("staff_home"),
@@ -282,6 +295,7 @@ public enum JSValues {
 	TRIAL_HOME_WINDOW_NAME("trial_home"),
 	PROBAND_HOME_WINDOW_NAME("proband_home"),
 	INPUT_FIELD_HOME_WINDOW_NAME("inputfield_home"),
+	MASS_MAIL_HOME_WINDOW_NAME("massmail_home"),
 	PORTAL_WINDOW_NAME("portal"),
 	ECRF_SECTION_WINDOW_NAME("ecrf_issue"),
 	TRUSTED_REFERER_HOSTS(""),
@@ -294,7 +308,7 @@ public enum JSValues {
 	AUTHENTICATION_FAILED(GetParamNames.AUTHENTICATION_FAILED.toString()),
 	AUTHENTICATION_FAILED_MESSAGE(GetParamNames.AUTHENTICATION_FAILED_MESSAGE.toString()),
 	REFERER(GetParamNames.REFERER.toString()),
-	AJAX_REFERER_BASE64("ajaxReferer"),
+	// AJAX_REFERER_BASE64("ajaxReferer"),
 	AJAX_KEEP_ALIVE_JS_CALLBACK("ajaxKeepAliveJsCallback"),
 	AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS("ajaxKeepAliveJsCallbackArgs"),
 	AJAX_TIMELINE_RANGE_START("timelineRangeStart"),
@@ -348,6 +362,7 @@ public enum JSValues {
 			case TRIAL_PICKER_URL:
 			case PROBAND_PICKER_URL:
 			case INPUT_FIELD_PICKER_URL:
+			case MASS_MAIL_PICKER_URL:
 			case TEAM_MEMBER_PICKER_URL:
 			case ECRF_SECTION_URL:
 			case INVENTORY_URL:
@@ -357,6 +372,7 @@ public enum JSValues {
 			case TRIAL_URL:
 			case PROBAND_URL:
 			case INPUT_FIELD_URL:
+			case MASS_MAIL_URL:
 			case INVENTORY_SEARCH_URL:
 			case STAFF_SEARCH_URL:
 			case COURSE_SEARCH_URL:
@@ -364,6 +380,7 @@ public enum JSValues {
 			case TRIAL_SEARCH_URL:
 			case PROBAND_SEARCH_URL:
 			case INPUT_FIELD_SEARCH_URL:
+			case MASS_MAIL_SEARCH_URL:
 			case ADMIN_UPCOMING_COURSE_OVERVIEW_URL:
 			case EXPIRING_COURSE_OVERVIEW_URL:
 			case ADMIN_EXPIRING_PARTICIPATION_OVERVIEW_URL:
@@ -380,6 +397,7 @@ public enum JSValues {
 			case TIMELINE_EVENT_OVERVIEW_URL:
 			case MONEY_TRANSFER_OVERVIEW_URL:
 			case TRIAL_SHIFT_SUMMARY_OVERVIEW_URL:
+			case RECIPIENT_OVERVIEW_URL:
 			case TRIAL_TIMELINE_URL:
 			case DUTY_ROSTER_SCHEDULE_URL:
 			case LOGIN_URL:
@@ -392,6 +410,7 @@ public enum JSValues {
 			case TRIAL_START_URL:
 			case PROBAND_START_URL:
 			case INPUT_FIELD_START_URL:
+			case MASS_MAIL_START_URL:
 				return Urls.viewIdToUrl((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(), value);
 			case REST_API_URL:
 				return ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getContextPath() + "/" + WebUtil.REST_API_PATH + "/";
@@ -402,6 +421,7 @@ public enum JSValues {
 			case TRIAL_ENTITY_WINDOW_NAME:
 			case PROBAND_ENTITY_WINDOW_NAME:
 			case INPUT_FIELD_ENTITY_WINDOW_NAME:
+			case MASS_MAIL_ENTITY_WINDOW_NAME:
 			case INVENTORY_HOME_WINDOW_NAME:
 			case STAFF_HOME_WINDOW_NAME:
 			case COURSE_HOME_WINDOW_NAME:
@@ -409,6 +429,7 @@ public enum JSValues {
 			case TRIAL_HOME_WINDOW_NAME:
 			case PROBAND_HOME_WINDOW_NAME:
 			case INPUT_FIELD_HOME_WINDOW_NAME:
+			case MASS_MAIL_HOME_WINDOW_NAME:
 			case NEW_ENTITY_WINDOW_NAME_SUFFIX:
 			case PORTAL_WINDOW_NAME:
 			case ECRF_SECTION_WINDOW_NAME:

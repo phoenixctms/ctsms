@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class InventoryMultiPickerModel extends MultiPickerModelBase<InventoryOutVO> {
 
 	public InventoryMultiPickerModel() {
-		super();
+		super(null);
 	}
 
 	@Override

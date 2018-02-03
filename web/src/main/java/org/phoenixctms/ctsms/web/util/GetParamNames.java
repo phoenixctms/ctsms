@@ -25,6 +25,8 @@ public enum GetParamNames {
 	TRIAL_ID("trialid"),
 	PROBAND_ID("probandid"),
 	INPUT_FIELD_ID("inputfieldid"),
+	MASS_MAIL_ID("massmailid"),
+	MASS_MAIL_RECIPIENT_ID("massmailrecipientid"),
 	HYPERLINK_ID("hyperlinkid"),
 	JOURNAL_ENTRY_ID("journalentryid"),
 	SERIES_INDEX("seriesindex"),
@@ -67,7 +69,7 @@ public enum GetParamNames {
 	AUTHENTICATION_FAILED_MESSAGE("authenticationfailedmessage"),
 	REFERER("referer"),
 	UUID("uuid"),
-	VALIDATE("validate");
+	VALIDATE("validate"), BEACON("beacon");
 
 	private final String value;
 

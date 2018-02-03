@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.util.Accessor;
 import org.phoenixctms.ctsms.util.GraphEnumerator;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.util.OmittedFields;
+
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableSheet;
 
 public class VOColumn extends GraphEnumerator {
 
@@ -60,7 +60,7 @@ public class VOColumn extends GraphEnumerator {
 
 	@Override
 	protected boolean isFieldOmitted(Class graph, String field) {
-		return OmittedFields.isOmitted(graph, field);
+		return OmittedFields.isOmitted(graph, field, ExcelUtil.COLUMN_NAME_LOWER_CASE_FIELD_NAMES);
 	}
 
 	@Override

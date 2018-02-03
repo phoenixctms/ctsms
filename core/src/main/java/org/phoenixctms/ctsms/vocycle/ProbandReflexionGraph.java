@@ -85,6 +85,9 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	// return sb.toString();
 	// }
 
+	private final static int DEFAULT_MAX_INSTANCES = 1;
+	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
+	private final static int DEFAULT_PARENTS_DEPTH = Integer.MAX_VALUE >> 1;
 	private int maxInstances;
 	private int childrenDepth;
 	private int parentsDepth;
@@ -95,9 +98,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	private DepartmentDao departmentDao;
 	private PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao;
 	private UserDao userDao;
-	private final static int DEFAULT_MAX_INSTANCES = 1;
-	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
-	private final static int DEFAULT_PARENTS_DEPTH = Integer.MAX_VALUE >> 1;
 
 	public ProbandReflexionGraph(ProbandDao probandDao) {
 		this.probandDao = probandDao;
@@ -290,11 +290,11 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 				}
 				target.setGender(L10nUtil.createSexVO(Locales.USER, personParticulars.getGender()));
 				target.setAlias(personParticulars.getAlias());
-				target.setName(CommonUtil.getProbandName(target, false,
+				target.setName(CommonUtil.getProbandName(target, false, true,
 						L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)));
-				target.setNameWithTitles(CommonUtil.getProbandName(target, true,
+				target.setNameWithTitles(CommonUtil.getProbandName(target, true, true,
 						L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)));
@@ -319,11 +319,11 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 				target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
 				target.setYearOfBirth(CommonUtil.getYearOfBirth(target.getDateOfBirth()));
 				target.setDecrypted(true);
-				target.setName(CommonUtil.getProbandName(target, false,
+				target.setName(CommonUtil.getProbandName(target, false, true,
 						L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)));
-				target.setNameWithTitles(CommonUtil.getProbandName(target, true,
+				target.setNameWithTitles(CommonUtil.getProbandName(target, true, true,
 						L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 						L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)));

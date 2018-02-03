@@ -46,6 +46,7 @@ import org.phoenixctms.ctsms.domain.InventoryTagValue;
 import org.phoenixctms.ctsms.domain.InventoryTagValueDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
+import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandAddress;
 import org.phoenixctms.ctsms.domain.ProbandAddressDao;
@@ -134,6 +135,7 @@ import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryTagVO;
 import org.phoenixctms.ctsms.vo.InventoryTagValueOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
@@ -576,6 +578,18 @@ extends SearchServiceBase
 						}
 					}
 					break;
+				case MASS_MAIL_DB:
+					if (checkValues && !isUnaryRestriction && id == null) {
+						throw initServiceExceptionWithPosition(ServiceExceptionCodes.CRITERION_NO_MASS_MAIL_SELECTED, logError, criterion);
+					}
+					if (checkValues && id != null) {
+						try {
+							CheckIDUtil.checkMassMailId(id, this.getMassMailDao());
+						} catch (ServiceException e) {
+							throw initServiceExceptionWithPosition(e.getErrorCode(), logError, criterion, id.toString());
+						}
+					}
+					break;
 				default:
 					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_PICKER_DB_MODULE, DefaultMessages.UNSUPPORTED_PICKER_DB_MODULE,
 							new Object[] { property.getPicker().toString() }));
@@ -666,6 +680,9 @@ extends SearchServiceBase
 				writer.setDistinctFieldRows(distinctFieldRows);
 				break;
 			case INPUT_FIELD_DB:
+				writer.setVOs(searchInputFieldHelper(criteria, psf));
+				break;
+			case MASS_MAIL_DB:
 				writer.setVOs(searchInputFieldHelper(criteria, psf));
 				break;
 			default:
@@ -776,6 +793,15 @@ extends SearchServiceBase
 			Set<CriterionInVO> criterions, PSFVO psf) throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
 		SearchResultExcelVO result = exportExcelHelper(instantCriteria, DBModule.INVENTORY_DB, criteria.getLabel(), psf);
+		logExcelExport(criteria.getId(), instantCriteria, result);
+		return result;
+	}
+
+	@Override
+	protected SearchResultExcelVO handleExportMassMail(AuthenticationVO auth, CriteriaInVO criteria,
+			Set<CriterionInVO> criterions, PSFVO psf) throws Exception {
+		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
+		SearchResultExcelVO result = exportExcelHelper(instantCriteria, DBModule.MASS_MAIL_DB, criteria.getLabel(), psf);
 		logExcelExport(criteria.getId(), instantCriteria, result);
 		return result;
 	}
@@ -970,13 +996,35 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InventoryOutVO> handleSearchInventoryByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<InventoryOutVO> result = searchInventoryHelper(instantCriteria, maxInstances, psf);
 		logSearch(criteria.getId(), instantCriteria, psf, result);
 		return result;
 	}
+
+	@Override
+	protected Collection<MassMailOutVO> handleSearchMassMail(
+			AuthenticationVO auth, CriteriaInVO criteria, Set<CriterionInVO> criterions, PSFVO psf)
+					throws Exception {
+		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
+		Collection<MassMailOutVO> result = searchMassMailHelper(instantCriteria, psf);
+		logSearch(criteria.getId(), instantCriteria, psf, result);
+		return result;
+	}
+
+	@Override
+	protected Collection<MassMailOutVO> handleSearchMassMailByCriteria(
+			AuthenticationVO auth, Long criteriaId, PSFVO psf)
+					throws Exception {
+		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
+		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
+		Collection<MassMailOutVO> result = searchMassMailHelper(instantCriteria, psf);
+		logSearch(criteria.getId(), instantCriteria, psf, result);
+		return result;
+	}
+
 
 	@Override
 	protected Collection<ProbandOutVO> handleSearchProband(
@@ -1210,6 +1258,18 @@ extends SearchServiceBase
 						setCriteria.setIntersectionCount(this.getInputFieldDao().getCountByCriteria(setCriteria.getIntersection(), psf));
 					}
 					setCriteria.setCriteriaCount(this.getInputFieldDao().getCountByCriteria(setCriteria.getCriteria(), psf));
+					break;
+				case MASS_MAIL_DB:
+					if (setCriteria.getA() != null) {
+						setCriteria.setACount(this.getMassMailDao().getCountByCriteria(setCriteria.getA(), psf));
+					}
+					if (setCriteria.getB() != null) {
+						setCriteria.setBCount(this.getMassMailDao().getCountByCriteria(setCriteria.getB(), psf));
+					}
+					if (setCriteria.getIntersection() != null) {
+						setCriteria.setIntersectionCount(this.getMassMailDao().getCountByCriteria(setCriteria.getIntersection(), psf));
+					}
+					setCriteria.setCriteriaCount(this.getMassMailDao().getCountByCriteria(setCriteria.getCriteria(), psf));
 					break;
 				default:
 					break;
@@ -1847,6 +1907,14 @@ extends SearchServiceBase
 			result.add(inventoryDao.toInventoryOutVO(inventoriesIt.next(), maxInstances));
 		}
 		return result;
+	}
+
+	private Collection<MassMailOutVO> searchMassMailHelper(CriteriaInstantVO criteria, PSFVO psf) throws Exception {
+		checkCriteriaInput(DBModule.MASS_MAIL_DB, criteria, true, true);
+		MassMailDao massMailDao = this.getMassMailDao();
+		Collection massMails = massMailDao.findByCriteria(criteria, psf);
+		massMailDao.toMassMailOutVOCollection(massMails);
+		return massMails;
 	}
 
 	private Collection<ProbandOutVO> searchProbandHelper(CriteriaInstantVO criteria, Integer maxInstances, PSFVO psf) throws Exception {

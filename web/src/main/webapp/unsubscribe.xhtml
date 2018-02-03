@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>unsubscribe page</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/baseTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{labels.unsubscribe_title}" />
+		<ui:param
+			name="showUserMenuBar"
+			value="false" />
+		<ui:param
+			name="favicon"
+			value="ctsms.ico" />
+		<ui:param
+			name="showStatusBar"
+			value="true" />
+		<ui:define name="content">
+			<p:dialog
+				closable="false"
+				visible="true"
+				header="#{labels.unsubscribe_title}"
+				width="620"
+				showEffect="#{effect}"
+				hideEffect="#{effect}">
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid">
+					<h:outputFormat value="#{labels.unsubscribe_prompt}">
+						<f:param value="#{unsubscribeBean.beacon}" />
+					</h:outputFormat>
+					<!-- <h:panelGroup>
+						<ul>
+							<li><h:outputText value="#{labels.error_page} #{requestScope['javax.servlet.forward.request_uri']}" /></li>
+							<li><h:outputText
+									value="#{labels.error_type} #{requestScope['javax.servlet.error.status_code'] == '404' ? labels.error_404 : (requestScope['javax.servlet.error.status_code'] == '500' ? labels.error_500 : '')}" /></li>
+						</ul>
+					</h:panelGroup> -->
+					<ui:include src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
+						<ui:param
+							name="rendered"
+							value="#{!empty unsubscribeBean.exceptionMessage}" />
+						<ui:param
+							name="value"
+							value="#{unsubscribeBean.exceptionMessage}" />
+						<ui:param
+							name="error_message_id"
+							value="error_msg" />
+					</ui:include>
+				</h:panelGrid>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

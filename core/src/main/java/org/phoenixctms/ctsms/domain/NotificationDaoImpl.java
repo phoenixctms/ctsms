@@ -46,7 +46,6 @@ import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
-import org.phoenixctms.ctsms.util.VelocityStringUtils;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
@@ -64,10 +63,9 @@ extends NotificationDaoBase
 {
 
 	private final static VOIDComparator RECIPIENT_VO_ID_COMPARATOR = new VOIDComparator<NotificationRecipientVO>(false);
-	private VelocityEngine velocityEngine;
 	private final static String TEMPLATE_ENCODING = "UTF-8";
+	// private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
 
-	private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
 	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
@@ -154,6 +152,7 @@ extends NotificationDaoBase
 			return value.getTimeValue();
 		}
 	};
+	private VelocityEngine velocityEngine;
 
 	private void addDepartmentRecipients(Notification newNotification, Department department, org.phoenixctms.ctsms.enumeration.NotificationType notificationType)
 			throws Exception {
@@ -274,6 +273,10 @@ extends NotificationDaoBase
 				DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_ENTITIES);
 		boolean excludeEncryptedFields = Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS, Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS);
+		String datetimePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
+				DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN);
+		String datePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN);
+		String timePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN);
 		Iterator<KeyValueString> voFieldIt = KeyValueString
 				.getKeyValuePairs(
 						NotificationVO.class,
@@ -283,16 +286,13 @@ extends NotificationDaoBase
 						enumerateEntities,
 						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES, Bundle.SETTINGS,
 								DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES),
-								Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
-										DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
-										Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS),
-										NotificationMessageTemplateParameters.TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR,
-										NotificationMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES
+						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
+								DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
+						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS),
+						NotificationMessageTemplateParameters.TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR,
+						NotificationMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES
 						).iterator();
-		String datetimePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
-				DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN);
-		String datePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN);
-		String timePattern = Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN);
+
 
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
@@ -315,7 +315,7 @@ extends NotificationDaoBase
 				NotificationMessageTemplateParameters.HTTP_BASE_URL, Settings.getHttpBaseUrl());
 		model.put(
 				NotificationMessageTemplateParameters.HTTP_DOMAIN_NAME, Settings.getHttpDomainName());
-		model.put(NotificationMessageTemplateParameters.STRING_UTILS, STRING_UTILS);
+		model.put(NotificationMessageTemplateParameters.STRING_UTILS, ServiceUtil.VELOCITY_STRING_UTILS);
 		if (messageParameters != null && messageParameters.size() > 0) {
 			model.putAll(messageParameters);
 		}
@@ -357,148 +357,148 @@ extends NotificationDaoBase
 		switch (type.getType()) {
 			case MAINTENANCE_REMINDER:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("maintenancescheduleitem_inventory_name"),
-					messageParameters.get("maintenancescheduleitem_title")
+						messageParameters.get("maintenancescheduleitem_inventory_name"),
+						messageParameters.get("maintenancescheduleitem_title")
 				});
 			case INVENTORY_INACTIVE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("inventorystatusentry_inventory_name"),
-					messageParameters.get("inventorystatusentry_type"),
+						messageParameters.get("inventorystatusentry_inventory_name"),
+						messageParameters.get("inventorystatusentry_type"),
 				});
 			case INVENTORY_INACTIVE_BOOKING:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("inventorybooking_start"),
-					messageParameters.get("inventorybooking_stop"),
-					messageParameters.get("inventorybooking_inventory_name"),
-					messageParameters.get("inventorystatusentry_type")
+						messageParameters.get("inventorybooking_start"),
+						messageParameters.get("inventorybooking_stop"),
+						messageParameters.get("inventorybooking_inventory_name"),
+						messageParameters.get("inventorystatusentry_type")
 				});
 			case STAFF_INACTIVE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("staffstatusentry_staff_name"),
-					messageParameters.get("staffstatusentry_type"),
+						messageParameters.get("staffstatusentry_staff_name"),
+						messageParameters.get("staffstatusentry_type"),
 				});
 			case STAFF_INACTIVE_DUTY_ROSTER_TURN:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("dutyrosterturn_start"),
-					messageParameters.get("dutyrosterturn_stop"),
-					messageParameters.get("dutyrosterturn_staff_name"),
-					messageParameters.get("staffstatusentry_type")
+						messageParameters.get("dutyrosterturn_start"),
+						messageParameters.get("dutyrosterturn_stop"),
+						messageParameters.get("dutyrosterturn_staff_name"),
+						messageParameters.get("staffstatusentry_type")
 				});
 			case PROBAND_INACTIVE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("probandstatusentry_proband_id"),
-					messageParameters.get("probandstatusentry_type")
+						messageParameters.get("probandstatusentry_proband_id"),
+						messageParameters.get("probandstatusentry_type")
 				});
 			case PROBAND_INACTIVE_VISIT_SCHEDULE_ITEM:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("visitscheduleitem_trial_name"),
-					messageParameters.get("visitscheduleitem_name"),
-					messageParameters.get("probandstatusentry_proband_id"),
-					messageParameters.get("probandstatusentry_type")
+						messageParameters.get("visitscheduleitem_trial_name"),
+						messageParameters.get("visitscheduleitem_name"),
+						messageParameters.get("probandstatusentry_proband_id"),
+						messageParameters.get("probandstatusentry_type")
 				});
 			case STAFF_INACTIVE_VISIT_SCHEDULE_ITEM:
 				return L10nUtil.getNotificationSubject(
 						Locales.NOTIFICATION,
 						type.getSubjectL10nKey(),
 						new Object[] {
-							messageParameters.get("visitscheduleitem_trial_name"),
-							messageParameters.get("visitscheduleitem_name"),
-							messageParameters.get(NotificationMessageTemplateParameters.VISIT_SCHEDULE_ITEM_DAY_DATE),
-							((Collection) messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF)).size(),
-							messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF_LIMIT),
+								messageParameters.get("visitscheduleitem_trial_name"),
+								messageParameters.get("visitscheduleitem_name"),
+								messageParameters.get(NotificationMessageTemplateParameters.VISIT_SCHEDULE_ITEM_DAY_DATE),
+								((Collection) messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF)).size(),
+								messageParameters.get(NotificationMessageTemplateParameters.INACTIVE_STAFF_LIMIT),
 						});
 			case EXPIRING_COURSE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("course_name"),
-					messageParameters.get(NotificationMessageTemplateParameters.COURSE_EXPIRATION_DAYS_LEFT)
+						messageParameters.get("course_name"),
+						messageParameters.get(NotificationMessageTemplateParameters.COURSE_EXPIRATION_DAYS_LEFT)
 				});
 			case EXPIRING_COURSE_PARTICIPATION:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("courseparticipationstatusentry_course_name"),
-					messageParameters.get(NotificationMessageTemplateParameters.COURSE_EXPIRATION_DAYS_LEFT)
+						messageParameters.get("courseparticipationstatusentry_course_name"),
+						messageParameters.get(NotificationMessageTemplateParameters.COURSE_EXPIRATION_DAYS_LEFT)
 				});
 			case COURSE_PARTICIPATION_STATUS_UPDATED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("courseparticipationstatusentry_course_name"),
-					messageParameters.get("courseparticipationstatusentry_staff_name"),
-					messageParameters.get("courseparticipationstatusentry_status")
+						messageParameters.get("courseparticipationstatusentry_course_name"),
+						messageParameters.get("courseparticipationstatusentry_staff_name"),
+						messageParameters.get("courseparticipationstatusentry_status")
 				});
 			case TIMELINE_EVENT_REMINDER:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("timelineevent_trial_name"),
-					messageParameters.get("timelineevent_type"),
-					messageParameters.get("timelineevent_title")
+						messageParameters.get("timelineevent_trial_name"),
+						messageParameters.get("timelineevent_type"),
+						messageParameters.get("timelineevent_title")
 				});
 			case VISIT_SCHEDULE_ITEM_REMINDER:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("visitscheduleitem_trial_name"),
-					messageParameters.get("visitscheduleitem_name")
+						messageParameters.get("visitscheduleitem_trial_name"),
+						messageParameters.get("visitscheduleitem_name")
 				});
 			case EXPIRING_PROBAND_AUTO_DELETE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("proband_id"),
-					messageParameters.get(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT)
+						messageParameters.get("proband_id"),
+						messageParameters.get(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT)
 				});
 			case EXPIRING_PASSWORD:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("password_user_name"),
-					messageParameters.get(NotificationMessageTemplateParameters.PASSWORD_EXPIRATION_DAYS_LEFT)
+						messageParameters.get("password_user_name"),
+						messageParameters.get(NotificationMessageTemplateParameters.PASSWORD_EXPIRATION_DAYS_LEFT)
 				});
 			case TRIAL_STATUS_UPDATED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("trial_name"),
-					messageParameters.get("trial_status")
+						messageParameters.get("trial_name"),
+						messageParameters.get("trial_status")
 				});
 			case ECRF_STATUS_UPDATED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("ecrfstatusentry_listentry_trial_name"),
-					messageParameters.get("ecrfstatusentry_listentry_proband_id"),
-					messageParameters.get("ecrfstatusentry_ecrf_name"),
-					messageParameters.get("ecrfstatusentry_status")
+						messageParameters.get("ecrfstatusentry_listentry_trial_name"),
+						messageParameters.get("ecrfstatusentry_listentry_proband_id"),
+						messageParameters.get("ecrfstatusentry_ecrf_name"),
+						messageParameters.get("ecrfstatusentry_status")
 				});
 			case NEW_ECRF_FIELD_STATUS:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("ecrffieldstatusentry_listentry_trial_name"),
-					messageParameters.get("ecrffieldstatusentry_listentry_proband_id"),
-					messageParameters.get("ecrffieldstatusentry_ecrffield_ecrf_name"),
-					messageParameters.get("ecrffieldstatusentry_status")
+						messageParameters.get("ecrffieldstatusentry_listentry_trial_name"),
+						messageParameters.get("ecrffieldstatusentry_listentry_proband_id"),
+						messageParameters.get("ecrffieldstatusentry_ecrffield_ecrf_name"),
+						messageParameters.get("ecrffieldstatusentry_status")
 				});
 			case PROBANDS_DELETED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get(NotificationMessageTemplateParameters.NUMBER_OF_PROBANDS_DELETED)
+						messageParameters.get(NotificationMessageTemplateParameters.NUMBER_OF_PROBANDS_DELETED)
 				});
 			case TRIAL_TAG_MISSING:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("trial_name"),
-					messageParameters.get("trialtag")
+						messageParameters.get("trial_name"),
+						messageParameters.get("trialtag")
 				});
 			case DUTY_ROSTER_TURN_UPDATED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("dutyrosterturn_start"),
-					messageParameters.get("dutyrosterturn_stop")
+						messageParameters.get("dutyrosterturn_start"),
+						messageParameters.get("dutyrosterturn_stop")
 				});
 			case DUTY_ROSTER_TURN_ASSIGNED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("dutyrosterturn_start"),
-					messageParameters.get("dutyrosterturn_stop")
+						messageParameters.get("dutyrosterturn_start"),
+						messageParameters.get("dutyrosterturn_stop")
 				});
 			case DUTY_ROSTER_TURN_UNASSIGNED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("dutyrosterturn_start"),
-					messageParameters.get("dutyrosterturn_stop")
+						messageParameters.get("dutyrosterturn_start"),
+						messageParameters.get("dutyrosterturn_stop")
 				});
 			case NEW_COURSE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("course_name")
+						messageParameters.get("course_name")
 				});
 			case USER_ACCOUNT:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("user_name")
+						messageParameters.get("user_name")
 				});
 			case DUTY_ROSTER_TURN_DELETED:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-					messageParameters.get("dutyrosterturn_start"),
-					messageParameters.get("dutyrosterturn_stop")
+						messageParameters.get("dutyrosterturn_start"),
+						messageParameters.get("dutyrosterturn_stop")
 				});
 			default:
 		}
@@ -615,7 +615,7 @@ extends NotificationDaoBase
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
 			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
-					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES)) {
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().equals(dutyRosterTurn.getModifiedUser())) {
 				addSuperVisorsRecipients(notification, staff, true);
 			}
 			return notification;
@@ -669,7 +669,7 @@ extends NotificationDaoBase
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
 			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
-					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES)) {
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().equals(modified)) {
 				addSuperVisorsRecipients(notification, staff, true);
 			}
 			return notification;
@@ -680,6 +680,7 @@ extends NotificationDaoBase
 			return null;
 		}
 	}
+
 
 	@Override
 	protected Notification handleAddNotification(ECRFFieldStatusEntry ecrfFieldStatusEntry, Date today, Map messageParameters) throws Exception {

@@ -62,7 +62,11 @@
   <filter-mapping>
     <filter-name>CharacterEncodingFilter</filter-name>
     <url-pattern>/error.jsf</url-pattern>
-  </filter-mapping>    
+  </filter-mapping>
+        <filter-mapping>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <url-pattern>/unsubscribe.jsf</url-pattern>
+  </filter-mapping>
   <filter-mapping>
     <filter-name>CharacterEncodingFilter</filter-name>
     <url-pattern>/login.jsf</url-pattern>
@@ -122,7 +126,7 @@
     <filter-mapping>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>10</load-on-startup>
     </filter-mapping>
 
 
@@ -130,7 +134,7 @@
    <servlet>
       <servlet-name>Faces Servlet</servlet-name>
       <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-      <load-on-startup>2</load-on-startup>
+      <load-on-startup>11</load-on-startup>
    </servlet>
 
     <servlet-mapping>
@@ -164,14 +168,43 @@
           
 <servlet>
     <servlet-name>inputFieldImageServlet</servlet-name>
-    <servlet-class>org.phoenixctms.ctsms.web.component.sketchpad.InputFieldImageServlet</servlet-class>
+    <servlet-class>org.phoenixctms.ctsms.web.servlet.InputFieldImageServlet</servlet-class>
     <load-on-startup>0</load-on-startup>
+</servlet>
+
+<servlet>
+    <servlet-name>publicFileServlet</servlet-name>
+    <servlet-class>org.phoenixctms.ctsms.web.servlet.PublicFileServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet>
+    <servlet-name>beaconServlet</servlet-name>
+    <servlet-class>org.phoenixctms.ctsms.web.servlet.BeaconServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
+</servlet>
+<servlet>
+    <servlet-name>unsubscribeServlet</servlet-name>
+    <servlet-class>org.phoenixctms.ctsms.web.servlet.UnsubscribeServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
 </servlet>
 <!--  overlapping mappings  -->
 <!-- http://www.roguewave.com/portals/0/products/hydraexpress/docs/3.5.0/html/rwsfservletug/4-3.html -->
 <servlet-mapping>
     <servlet-name>inputFieldImageServlet</servlet-name>
     <url-pattern>/inputfieldimage</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>publicFileServlet</servlet-name>
+    <url-pattern>/file</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>beaconServlet</servlet-name>
+    <url-pattern>/beacon/*</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>unsubscribeServlet</servlet-name>
+    <url-pattern>/unsubscribe/*</url-pattern>
 </servlet-mapping>
     
 
@@ -360,11 +393,15 @@
             <param-name>com.sun.jersey.config.feature.Trace</param-name>
             <param-value>true</param-value>
         </init-param> -->
-    <load-on-startup>98</load-on-startup>
+    <load-on-startup>20</load-on-startup>
     <init-param>
         <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
         <param-value>org.phoenixctms.ctsms.web.jersey.provider.CORSFilter</param-value>
     </init-param>    
+	<init-param>
+	  <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+	  <param-value>org.phoenixctms.ctsms.web.jersey.provider.TrustedHostFilter</param-value>
+	</init-param>    
   </servlet>
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
@@ -383,7 +420,7 @@
             <param-name>swagger.api.basepath</param-name>
             <param-value>http://localhost:8080/ctsms-web/rest</param-value>
         </init-param> -->
-        <load-on-startup>99</load-on-startup>
+        <load-on-startup>21</load-on-startup>
     </servlet>  
      
 </web-app>

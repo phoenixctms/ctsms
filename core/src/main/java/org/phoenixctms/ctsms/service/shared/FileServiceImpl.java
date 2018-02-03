@@ -29,6 +29,8 @@ import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
+import org.phoenixctms.ctsms.domain.MassMail;
+import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -37,7 +39,6 @@ import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.FileModule;
-import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.PDFMerger;
 import org.phoenixctms.ctsms.security.CipherStream;
@@ -68,7 +69,6 @@ import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 /**
  * @see org.phoenixctms.ctsms.service.shared.FileService
@@ -108,11 +108,11 @@ extends FileServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null))});
 	}
 
-	private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	}
+	// private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+	// JournalEntryDao journalEntryDao) throws Exception {
+	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
+	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
+	// }
 
 	private static boolean mkDir(java.io.File file) throws Exception {
 		return file.getParentFile().mkdirs();
@@ -147,7 +147,7 @@ extends FileServiceBase
 			case TRIAL_DOCUMENT:
 				TrialDao trialDao = this.getTrialDao();
 				Trial trial = trialDao.load(id);
-				logSystemMessage(trial, trialDao.toTrialOutVO(trial), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(trial, trialDao.toTrialOutVO(trial), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao);
 				break;
 			case PROBAND_DOCUMENT:
 				ProbandDao probandDao = this.getProbandDao();
@@ -156,6 +156,12 @@ extends FileServiceBase
 				.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao); // creates
 				// mixed
 				// encryptions!
+				break;
+			case MASS_MAIL_DOCUMENT:
+				MassMailDao massMailDao = this.getMassMailDao();
+				MassMail massMail = massMailDao.load(id);
+				ServiceUtil.logSystemMessage(massMail, massMailDao.toMassMailOutVO(massMail), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null,
+						journalEntryDao);
 				break;
 			default:
 				// not supported for now...
@@ -179,10 +185,13 @@ extends FileServiceBase
 				logSystemMessage(file.getCourse(), result.getCourse(), now, user, SystemMessageCodes.FILE_UPDATED, result, original, journalEntryDao);
 				break;
 			case TRIAL_DOCUMENT:
-				logSystemMessage(file.getTrial(), result.getTrial(), now, user, SystemMessageCodes.FILE_UPDATED, result, original, journalEntryDao);
+				ServiceUtil.logSystemMessage(file.getTrial(), result.getTrial(), now, user, SystemMessageCodes.FILE_UPDATED, result, original, journalEntryDao);
 				break;
 			case PROBAND_DOCUMENT:
 				ServiceUtil.logSystemMessage(file.getProband(), result.getProband(), now, user, SystemMessageCodes.FILE_UPDATED, result, original, journalEntryDao);
+				break;
+			case MASS_MAIL_DOCUMENT:
+				ServiceUtil.logSystemMessage(file.getMassMail(), result.getMassMail(), now, user, SystemMessageCodes.FILE_UPDATED, result, original, journalEntryDao);
 				break;
 			default:
 				// not supported for now...
@@ -238,6 +247,13 @@ extends FileServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_PROBAND_ONLY_ALLOWED);
 				}
 				break;
+			case MASS_MAIL_DOCUMENT:
+				ServiceUtil.checkMassMailLocked(CheckIDUtil.checkMassMailId(file.getMassMailId(), this.getMassMailDao()));
+				if (numIdsSet(file) > 1) {
+					// no other references must be set...
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_MASS_MAIL_ONLY_ALLOWED);
+				}
+				break;
 			default:
 				// not supported for now...
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
@@ -274,6 +290,9 @@ extends FileServiceBase
 				case PROBAND_DOCUMENT:
 					CheckIDUtil.checkProbandId(id, this.getProbandDao());
 					break;
+				case MASS_MAIL_DOCUMENT:
+					CheckIDUtil.checkMassMailId(id, this.getMassMailDao());
+					break;
 				default:
 					// not supported for now...
 					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE,
@@ -304,10 +323,13 @@ extends FileServiceBase
 				logSystemMessage(file.getCourse(), result.getCourse(), now, user, SystemMessageCodes.FILE_CREATED, result, null, journalEntryDao);
 				break;
 			case TRIAL_DOCUMENT:
-				logSystemMessage(file.getTrial(), result.getTrial(), now, user, SystemMessageCodes.FILE_CREATED, result, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(file.getTrial(), result.getTrial(), now, user, SystemMessageCodes.FILE_CREATED, result, null, journalEntryDao);
 				break;
 			case PROBAND_DOCUMENT:
 				ServiceUtil.logSystemMessage(file.getProband(), result.getProband(), now, user, SystemMessageCodes.FILE_CREATED, result, null, journalEntryDao);
+				break;
+			case MASS_MAIL_DOCUMENT:
+				ServiceUtil.logSystemMessage(file.getMassMail(), result.getMassMail(), now, user, SystemMessageCodes.FILE_CREATED, result, null, journalEntryDao);
 				break;
 			default:
 				// not supported for now...
@@ -354,7 +376,7 @@ extends FileServiceBase
 				trial.removeFiles(file);
 				file.setTrial(null);
 				fileDao.remove(file);
-				logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.FILE_DELETED, result, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.FILE_DELETED, result, null, journalEntryDao);
 				break;
 			case PROBAND_DOCUMENT:
 				Proband proband = file.getProband();
@@ -363,6 +385,14 @@ extends FileServiceBase
 				file.setProband(null);
 				fileDao.remove(file);
 				ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.FILE_DELETED, result, null, journalEntryDao);
+				break;
+			case MASS_MAIL_DOCUMENT:
+				MassMail massMail = file.getMassMail();
+				ServiceUtil.checkMassMailLocked(massMail);
+				massMail.removeFiles(file);
+				file.setMassMail(null);
+				fileDao.remove(file);
+				ServiceUtil.logSystemMessage(massMail, result.getMassMail(), now, user, SystemMessageCodes.FILE_DELETED, result, null, journalEntryDao);
 				break;
 			default:
 				// not supported for now...
@@ -391,7 +421,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleAddFile(AuthenticationVO auth, FileInVO newFile, FileContentInVO newFileContent)
 			throws Exception
-			{
+	{
 		checkFileInput(newFile);
 		checkFileInput(newFileContent, newFile.getModule());
 		FileDao fileDao = this.getFileDao();
@@ -401,7 +431,7 @@ extends FileServiceBase
 		CoreUtil.modifyVersion(file, now, user);
 		saveFileContent(file, newFileContent);
 		return createFile(file, now, user);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#addFile(FileInVO, FileStreamInVO)
@@ -409,7 +439,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleAddFile(AuthenticationVO auth, FileInVO newFile, FileStreamInVO newFileStream)
 			throws Exception
-			{
+	{
 		checkFileInput(newFile);
 		checkFileInput(newFileStream, newFile.getModule());
 		FileDao fileDao = this.getFileDao();
@@ -427,15 +457,17 @@ extends FileServiceBase
 			}
 			throw e;
 		}
-			}
+	}
 
 	@Override
-	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active, PSFVO psf) throws Exception {
+	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+			PSFVO psf)
+					throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Collection files = fileDao.findFiles(module, id, logicalPath, active, null, CoreUtil.PDF_MIMETYPE_STRING, psf);
+		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, CoreUtil.PDF_MIMETYPE_STRING, psf);
 		PDFMerger merger = new PDFMerger(fileDao);
 		merger.setFiles(files);
 		fileDao.toFileOutVOCollection(files);
@@ -473,19 +505,21 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleDeleteFile(AuthenticationVO auth, Long fileId)
 			throws Exception
-			{
+	{
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return deleteFileHelper(fileId, now, user);
-			}
+	}
 
 	@Override
-	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active, PSFVO psf) throws Exception {
+	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+			PSFVO psf)
+					throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Iterator<File> it = fileDao.findFiles(module, id, logicalPath, active, null, null, psf).iterator();
+		Iterator<File> it = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf).iterator();
 		ArrayList<FileOutVO> result = new ArrayList<FileOutVO>();
 		while (it.hasNext()) {
 			result.add(deleteFileHelper(it.next().getId(),now,user));
@@ -499,12 +533,12 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleGetFile(AuthenticationVO auth, Long fileId)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		FileOutVO result = fileDao.toFileOutVO(file);
 		return result;
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#getFileContent(Long)
@@ -512,41 +546,42 @@ extends FileServiceBase
 	@Override
 	protected FileContentOutVO handleGetFileContent(AuthenticationVO auth, Long fileId)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		checkContentSize(file);
 		FileContentOutVO result = fileDao.toFileContentOutVO(file);
 		return result;
-			}
+	}
 
 	@Override
-	protected long handleGetFileCount(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active)
+	protected long handleGetFileCount(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
 			throws Exception
-			{
+	{
 		checkFileModuleId(module, id);
-		return this.getFileDao().getCount(module, id, logicalPath, active, null, null);
-			}
+		return this.getFileDao().getCount(module, id, logicalPath, subTree, active, publicFile, null, null);
+	}
 
 	@Override
 	protected Collection<String> handleGetFileFolders(AuthenticationVO auth, FileModule module,
-			Long id, String parentLogicalPath, boolean complete, Boolean active, PSFVO psf) throws Exception {
-		return this.getFileDao().findFileFolders(module, id, parentLogicalPath, complete, active, null, psf);
+			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean publicFile, PSFVO psf) throws Exception {
+		return this.getFileDao().findFileFolders(module, id, parentLogicalPath, complete, active, publicFile, null, psf);
 	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#getFiles(FileModule, Long, String, Boolean, PSFVO)
 	 */
 	@Override
-	protected Collection<FileOutVO> handleGetFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, Boolean active, PSFVO psf)
-			throws Exception
-			{
+	protected Collection<FileOutVO> handleGetFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+			PSFVO psf)
+					throws Exception
+	{
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
-		Collection files = fileDao.findFiles(module, id, logicalPath, active, null, null, psf);
+		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf);
 		fileDao.toFileOutVOCollection(files);
 		return files;
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#getFileStream(Long)
@@ -554,12 +589,20 @@ extends FileServiceBase
 	@Override
 	protected FileStreamOutVO handleGetFileStream(AuthenticationVO auth, Long fileId)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
 		return result;
-			}
+	}
+
+	@Override
+	protected long handleGetFolderSize(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
+			throws Exception
+	{
+		checkFileModuleId(module, id);
+		return this.getFileDao().getFileSizeSum(module, id, logicalPath, subTree, active, publicFile, null, null);
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#updateFile(FileInVO)
@@ -567,7 +610,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);
@@ -582,7 +625,7 @@ extends FileServiceBase
 		CoreUtil.modifyVersion(originalFile, file, now, user);
 		fileDao.update(file);
 		return addFileUpdatedJournalEntry(file, original, now, user);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#updateFile(FileInVO, FileContentInVO)
@@ -590,7 +633,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile, FileContentInVO modifiedFileContent)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);
@@ -606,7 +649,7 @@ extends FileServiceBase
 		saveFileContent(file, modifiedFileContent);
 		fileDao.update(file);
 		return addFileUpdatedJournalEntry(file, original, now, user);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#updateFile(FileInVO, FileStreamInVO)
@@ -614,7 +657,7 @@ extends FileServiceBase
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile, FileStreamInVO modifiedFileStream)
 			throws Exception
-			{
+	{
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);
@@ -639,7 +682,7 @@ extends FileServiceBase
 			}
 			throw e;
 		}
-			}
+	}
 
 	private int numIdsSet(FileInVO file) {
 		int result = 0;
@@ -648,6 +691,7 @@ extends FileServiceBase
 		result += (file.getCourseId() != null) ? 1 : 0;
 		result += (file.getTrialId() != null) ? 1 : 0;
 		result += (file.getProbandId() != null) ? 1 : 0;
+		result += (file.getMassMailId() != null) ? 1 : 0;
 		return result;
 	}
 

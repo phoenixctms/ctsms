@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,6 +64,7 @@ import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
@@ -196,6 +198,7 @@ public final class CommonUtil {
 	{
 		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.PROBAND_JOURNAL);
 		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.TRIAL_JOURNAL);
+		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.MASS_MAIL_JOURNAL);
 	}
 	private static final Iterator<Object> EMPTY_ITERATOR = new Iterator<Object>() {
 
@@ -228,6 +231,11 @@ public final class CommonUtil {
 	private final static StringSplitter LINE_BREAK_KEEP_SEPARATORS_SPLITTER = new StringSplitter(LINE_BREAK_SPLIT_REGEXP, true);
 
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
+	public final static String GIF_FILENAME_EXTENSION = "gif";
+	public static final String GIF_MIMETYPE_STRING = "image/gif";
+	public static final String BEACON_PATH = "beacon";
+	public static final String BEACON_GET_PARAMETER_NAME = "beacon";
+	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
@@ -572,14 +580,14 @@ public final class CommonUtil {
 		}
 	}
 
-
-
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
 		}
 		return null;
 	}
+
+
 
 	public static long dateDeltaSecs(Date start, Date stop) {
 		return (stop.getTime() - start.getTime()) / 1000;
@@ -622,6 +630,11 @@ public final class CommonUtil {
 	public static String formatDate(Date date, String pattern, Locale locale) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
 		return sdf.format(date);
+	}
+
+	public static String generateUUID() {
+		return UUID.randomUUID().toString();
+
 	}
 
 	public static Integer getAge(Date dateOfBirth) {
@@ -930,6 +943,36 @@ public final class CommonUtil {
 		return (Long) entity.getClass().getMethod(ENTITY_POSITION_GETTER_METHOD_NAME).invoke(entity);
 	}
 
+	public final static String getGenderSpecificSalutation(ProbandOutVO proband, String maleSalutation, String femaleSalutation) {
+		if (proband != null && proband.getGender() != null) {
+			return getGenderSpecificSalutation(proband.getGender().getSex(), maleSalutation, femaleSalutation);
+		}
+		return "";
+	}
+
+	private final static String getGenderSpecificSalutation(Sex gender, String maleSalutation, String femaleSalutation) {
+		if (gender != null) {
+			switch (gender) {
+				case MALE:
+				case TRANSGENDER_MALE:
+					return maleSalutation;
+				case FEMALE:
+				case TRANSGENDER_FEMALE:
+					return femaleSalutation;
+				default:
+					break;
+			}
+		}
+		return "";
+	}
+
+	public final static String getGenderSpecificSalutation(StaffOutVO staff, String maleSalutation, String femaleSalutation) {
+		if (staff != null && staff.getGender() != null) {
+			return getGenderSpecificSalutation(staff.getGender().getSex(), maleSalutation, femaleSalutation);
+		}
+		return "";
+	}
+
 	public static String getHex(byte[] data) {
 		if (data == null) {
 			return null;
@@ -1133,7 +1176,7 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static final String getProbandName(ProbandOutVO proband, boolean withTitles, String ecryptedProbandNameLabel, String newBlindedProbandNameLabel,
+	public static final String getProbandName(ProbandOutVO proband, boolean withTitles, boolean withFirstName, String ecryptedProbandNameLabel, String newBlindedProbandNameLabel,
 			String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
@@ -1144,14 +1187,22 @@ public final class CommonUtil {
 							CommonUtil.appendString(sb, proband.getPrefixedTitle1(), null);
 							CommonUtil.appendString(sb, proband.getPrefixedTitle2(), " ");
 							CommonUtil.appendString(sb, proband.getPrefixedTitle3(), " ");
-							CommonUtil.appendString(sb, proband.getFirstName(), " ");
+							if (withFirstName) {
+								CommonUtil.appendString(sb, proband.getFirstName(), " ");
+							}
 							CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
 							CommonUtil.appendString(sb, proband.getPostpositionedTitle1(), ", ");
 							CommonUtil.appendString(sb, proband.getPostpositionedTitle2(), ", ");
 							CommonUtil.appendString(sb, proband.getPostpositionedTitle3(), ", ");
 						} else {
-							CommonUtil.appendString(sb, proband.getFirstName(), null);
-							CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
+							if (withFirstName) {
+								CommonUtil.appendString(sb, proband.getFirstName(), null);
+								CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
+							} else {
+								CommonUtil.appendString(sb, proband.getLastName(), null, "?");
+							}
+							// CommonUtil.appendString(sb, proband.getFirstName(), null);
+							// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
 						}
 					} else {
 						CommonUtil.appendString(sb, proband.getAnimalName(), null, "?");
@@ -1161,7 +1212,7 @@ public final class CommonUtil {
 				}
 			} else {
 				sb.append(ecryptedProbandNameLabel);
-				//sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
+				// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
 			}
 		}
 		return sb.toString();
@@ -1259,7 +1310,7 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static final String getStaffName(StaffOutVO staff, boolean withTitles) {
+	public static final String getStaffName(StaffOutVO staff, boolean withTitles, boolean withFirstName) {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null) {
 			if (staff.isPerson()) {
@@ -1267,14 +1318,20 @@ public final class CommonUtil {
 					appendString(sb, staff.getPrefixedTitle1(), null);
 					appendString(sb, staff.getPrefixedTitle2(), " ");
 					appendString(sb, staff.getPrefixedTitle3(), " ");
-					appendString(sb, staff.getFirstName(), " ");
+					if (withFirstName) {
+						appendString(sb, staff.getFirstName(), " ");
+					}
 					appendString(sb, staff.getLastName(), " ", "?");
 					appendString(sb, staff.getPostpositionedTitle1(), ", ");
 					appendString(sb, staff.getPostpositionedTitle2(), ", ");
 					appendString(sb, staff.getPostpositionedTitle3(), ", ");
 				} else {
-					appendString(sb, staff.getFirstName(), null);
-					appendString(sb, staff.getLastName(), " ", "?");
+					if (withFirstName) {
+						appendString(sb, staff.getFirstName(), null);
+						appendString(sb, staff.getLastName(), " ", "?");
+					} else {
+						CommonUtil.appendString(sb, staff.getLastName(), null, "?");
+					}
 				}
 			} else {
 				sb.append(staff.getOrganisationName());
@@ -1679,7 +1736,7 @@ public final class CommonUtil {
 			while ((nRead = inputStream.read(block, 0, block.length)) != -1) {
 				buffer.write(block, 0, nRead);
 			}
-			buffer.flush();
+			// buffer.flush();
 			return buffer.toByteArray();
 		} catch (Exception e) {
 			throw e;
@@ -1794,13 +1851,12 @@ public final class CommonUtil {
 
 	}
 
-	// public static String normalizeLineEndings(String string) {
-	// return normalizeLineEndings(string, "\n");
-	// }
-	//
-	// public static String normalizeLineEndings(String string, String lineBreak) {
-	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
-	// }
+	public static String massMailOutVOToString(MassMailOutVO massMail) {
+		if (massMail != null) {
+			return massMail.getName();
+		}
+		return null;
+	}
 
 	public static Date parseDate(String date, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -1811,6 +1867,14 @@ public final class CommonUtil {
 		}
 	}
 
+	// public static String normalizeLineEndings(String string) {
+	// return normalizeLineEndings(string, "\n");
+	// }
+	//
+	// public static String normalizeLineEndings(String string, String lineBreak) {
+	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
+	// }
+
 	public static Date parseDate(String date, String pattern, Locale locale) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
 		try {
@@ -1818,6 +1882,10 @@ public final class CommonUtil {
 		} catch (ParseException e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+
+	public static UUID parseUUID(String uuid) {
+		return UUID.fromString(uuid);
 	}
 
 	private static void populateOrganisationList(ArrayList<String> organisationList, StaffOutVO staff) {

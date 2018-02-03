@@ -458,15 +458,17 @@ function handleTrialAssociationTabChange(index) {
 //		}
 		changeTrialCourses();
 		break;
-
 	case 1:
+		changeTrialMassMails();
+		break;
+	case 2:
 		changeShiftDurationSummary();
 		break;
 
-	case 2:
+	case 3:
 		changeBookingDurationSummary();
 		break;
-	case 3:
+	case 4:
 		changeEnrollmentChart();
 		break;
 

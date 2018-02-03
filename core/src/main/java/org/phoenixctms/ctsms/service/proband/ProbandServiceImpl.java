@@ -90,14 +90,12 @@ import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
-import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.VisitScheduleExcelWriter;
 import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.security.CipherText;
@@ -121,8 +119,6 @@ import org.phoenixctms.ctsms.vo.BankAccountInVO;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.DiagnosisInVO;
 import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldImageVO;
-import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
@@ -175,7 +171,7 @@ extends ProbandServiceBase
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	private static void resetAutoDeleteDeadline(Proband proband, Timestamp now) {
@@ -841,27 +837,7 @@ extends ProbandServiceBase
 		}
 	}
 
-	private InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues, boolean sort,
-			PSFVO psf) throws Exception {
 
-		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
-		InquiryValuesOutVO result = new InquiryValuesOutVO();
-		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, null, psf);
-		result.setPageValues(ServiceUtil.getInquiryValues(probandVO, inquiryValues, null,
-				this.getInquiryDao(), inquiryValueDao)); // , this.getInputFieldSelectionSetValueDao()
-		if (jsValues) {
-			if (loadAllJsValues) {
-				result.setJsValues(ServiceUtil.getInquiryJsonValues(
-						inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null),
-						false, inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
-			} else {
-				result.setJsValues(ServiceUtil.getInquiryJsonValues(inquiryValues,
-						true, inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
-			}
-		}
-		return result;
-
-	}
 
 	private InquiryValuesOutVO getInquiryValues(Trial trial, String category, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues,
 			boolean loadAllJsValues, boolean sort, PSFVO psf) throws Exception {
@@ -963,6 +939,7 @@ extends ProbandServiceBase
 		}
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = probandDao.probandInVOToEntity(newProband);
+		proband.setBeacon(CommonUtil.generateUUID());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		CoreUtil.modifyVersion(proband, now, user);
 		resetAutoDeleteDeadline(proband, now);
@@ -1300,6 +1277,7 @@ extends ProbandServiceBase
 					this.getECRFFieldStatusEntryDao(),
 					this.getSignatureDao(),
 					this.getECRFStatusEntryDao(),
+					this.getMassMailRecipientDao(),
 					this.getFileDao());
 		}
 		return result;
@@ -1763,8 +1741,10 @@ extends ProbandServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao));
 
-		return getInquiryValues(trial, probandVO, active, activeSignup, Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
-				DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION), loadAllJsValues, sort, psf);
+		return ServiceUtil.getInquiryValues(trial, probandVO, active, activeSignup,
+				Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
+						DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
+				loadAllJsValues, sort, psf, this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao());
 	}
 
 	@Override
@@ -2149,76 +2129,97 @@ extends ProbandServiceBase
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = null;
 		TrialOutVO trialVO=null;
+		Collection<Trial> trials = new ArrayList<Trial>();
 		if (trialId != null) {
 			trial=CheckIDUtil.checkTrialId(trialId, trialDao);
 			trialVO = trialDao.toTrialOutVO(trial);
-		}
-
-
-
-		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
-		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
-		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long,Collection<InquiryValueOutVO>>>();
-
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
-		HashSet<Long> trialIds=new HashSet<Long>();
-
-
-		if (trial != null) {
-			populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
-					getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null).getPageValues(),
-					probandVOs,trialVOMap,valueVOMap,imageVOMap,trialIds);
-
-
+			trials.add(trial);
 		} else {
-			Iterator<Trial> trialIt = trialDao.findByIdDepartment(null, proband.getDepartment().getId(), null).iterator();
-			while (trialIt.hasNext()) {
-				trial = trialIt.next();
-				if (((!trial.getStatus().isLockdown() && trial.getStatus().isInquiryValueInputEnabled())
-						|| this.getInquiryValueDao().getCount(trial.getId(), active, activeSignup, proband.getId()) > 0)
-						&& this.getInquiryDao().getCount(trial.getId(), active, activeSignup) > 0) {
-					trialVO = trialDao.toTrialOutVO(trial);
-					populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
-							getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null).getPageValues(),
-							probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds);
-				}
-			}
-			trial = null;
-			trialVO = null;
+			trials = trialDao.findByInquiryValuesProbandSorted(null, probandId, active, activeSignup);
+			// Iterator<Trial> trialIt = trialDao.findByIdDepartment(null, proband.getDepartment().getId(), null).iterator();
+			// while (trialIt.hasNext()) {
+			// trial = trialIt.next();
+			// if (((!trial.getStatus().isLockdown() && trial.getStatus().isInquiryValueInputEnabled())
+			// || this.getInquiryValueDao().getCount(trial.getId(), active, activeSignup, proband.getId()) > 0)
+			// && this.getInquiryDao().getCount(trial.getId(), active, activeSignup) > 0) {
+			// trials.add(trial);
+			// }
+			// }
+			// trial = null;
 		}
+		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
+				trials, active,
+				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				this.getUserDao());
 
 
 
-
-
+		// ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
+		// HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
+		// HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long,Collection<InquiryValueOutVO>>>();
+		//
+		// HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		// HashSet<Long> trialIds=new HashSet<Long>();
+		//
+		//
+		// if (trial != null) {
+		// ServiceUtil.populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
+		// ServiceUtil.getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null,
+		// this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao()).getPageValues(),
+		// probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, this.getInputFieldDao());
+		//
+		//
+		// } else {
+		// Iterator<Trial> trialIt = trialDao.findByIdDepartment(null, proband.getDepartment().getId(), null).iterator();
+		// while (trialIt.hasNext()) {
+		// trial = trialIt.next();
+		// if (((!trial.getStatus().isLockdown() && trial.getStatus().isInquiryValueInputEnabled())
+		// || this.getInquiryValueDao().getCount(trial.getId(), active, activeSignup, proband.getId()) > 0)
+		// && this.getInquiryDao().getCount(trial.getId(), active, activeSignup) > 0) {
+		// trialVO = trialDao.toTrialOutVO(trial);
+		// ServiceUtil.populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
+		// ServiceUtil.getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null,
+		// this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao()).getPageValues(),
+		// probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, this.getInputFieldDao());
+		// }
+		// }
+		// trial = null;
+		// trialVO = null;
+		// }
+		//
+		//
+		//
+		//
+		//
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-
-		InquiriesPDFPainter painter = new InquiriesPDFPainter();
-
-
-
-		painter.setProbandVOs(probandVOs);
-		painter.setTrialVOMap(trialVOMap);
-		painter.setValueVOMap(valueVOMap);
-		painter.setImageVOMap(imageVOMap);
-		painter.setBlank(blank);
-
-		User user = CoreUtil.getUser();
-		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
-		(new PDFImprinter(painter, painter)).render();
-		InquiriesPDFVO result = painter.getPdfVO();
+		//
+		// InquiriesPDFPainter painter = new InquiriesPDFPainter();
+		//
+		//
+		//
+		// painter.setProbandVOs(probandVOs);
+		// painter.setTrialVOMap(trialVOMap);
+		// painter.setValueVOMap(valueVOMap);
+		// painter.setImageVOMap(imageVOMap);
+		// painter.setBlank(blank);
+		//
+		// User user = CoreUtil.getUser();
+		// painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
+		// (new PDFImprinter(painter, painter)).render();
+		// InquiriesPDFVO result = painter.getPdfVO();
 		// byte[] documentDataBackup = result.getDocumentDatas();
 		// result.setDocumentDatas(null);
 
 		if (trial != null) {
-			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INQUIRY_PDF_RENDERED,
+			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 					result, null, journalEntryDao);
 		}
 
-		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, trial != null ? SystemMessageCodes.INQUIRY_PDF_RENDERED
-				: SystemMessageCodes.INQUIRIES_PDF_RENDERED,
-				result, null,
-				journalEntryDao);
+		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+				trial != null ? SystemMessageCodes.INQUIRY_PDF_RENDERED
+						: SystemMessageCodes.INQUIRIES_PDF_RENDERED,
+						result, null,
+						journalEntryDao);
 
 
 		// result.setDocumentDatas(documentDataBackup);
@@ -2234,38 +2235,24 @@ extends ProbandServiceBase
 		if (departmentId != null) {
 			department = CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
-		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
-		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
-		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>();
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
-		HashSet<Long> trialIds = new HashSet<Long>();
-		TrialDao trialDao = this.getTrialDao();
-		Iterator<Trial> trialIt = trialDao.findBySignup(department != null ? department.getId() : null, true, null).iterator();
+		Collection<Trial> trials = new ArrayList<Trial>();
+		Iterator<Trial> trialIt = this.getTrialDao().findBySignup(department != null ? department.getId() : null, true, null).iterator();
 		while (trialIt.hasNext()) {
 			Trial trial = trialIt.next();
 			if (this.getInquiryValueDao().getCount(trial.getId(), null, activeSignup, proband.getId()) > 0) {
-				TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
-				populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
-						getInquiryValues(trial, probandVO, null, activeSignup, false, false, true, null).getPageValues(),
-						probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds);
+				trials.add(trial);
 			}
 		}
-		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		InquiriesPDFPainter painter = new InquiriesPDFPainter();
-		painter.setProbandVOs(probandVOs);
-		painter.setTrialVOMap(trialVOMap);
-		painter.setValueVOMap(valueVOMap);
-		painter.setImageVOMap(imageVOMap);
-		painter.setBlank(false);
-		User user = CoreUtil.getUser();
-		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
-		(new PDFImprinter(painter, painter)).render();
-		InquiriesPDFVO result = painter.getPdfVO();
+		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
+				trials,
+				null, activeSignup, false, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				this.getUserDao());
 		// byte[] documentDataBackup = result.getDocumentDatas();
 		// result.setDocumentDatas(null);
-		ServiceUtil.logSystemMessage(proband, (TrialOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INQUIRIES_SIGNUP_PDF_RENDERED,
+		ServiceUtil.logSystemMessage(proband, (TrialOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+				SystemMessageCodes.INQUIRIES_SIGNUP_PDF_RENDERED,
 				result, null,
-				journalEntryDao);
+				this.getJournalEntryDao());
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
@@ -2281,45 +2268,52 @@ extends ProbandServiceBase
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+		Collection<Trial> trials = new ArrayList<Trial>();
+		trials.add(trial);
 
-
-
-		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
-		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
-		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long,Collection<InquiryValueOutVO>>>();
-
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
-		HashSet<Long> trialIds=new HashSet<Long>();
-
-
-
-		populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
-				getInquiryValues(trial, category, probandVO, active, activeSignup, false, false, true, null).getPageValues(),
-				probandVOs,trialVOMap,valueVOMap,imageVOMap,trialIds);
-
-
+		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
+				trials, active,
+				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				this.getUserDao());
+		//
+		//
+		//
+		// ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
+		// HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
+		// HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long,Collection<InquiryValueOutVO>>>();
+		//
+		// HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		// HashSet<Long> trialIds=new HashSet<Long>();
+		//
+		//
+		//
+		// ServiceUtil.populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
+		// getInquiryValues(trial, category, probandVO, active, activeSignup, false, false, true, null).getPageValues(),
+		// probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, this.getInputFieldDao());
+		//
+		//
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-
-		InquiriesPDFPainter painter = new InquiriesPDFPainter();
-
-
-
-		painter.setProbandVOs(probandVOs);
-		painter.setTrialVOMap(trialVOMap);
-		painter.setValueVOMap(valueVOMap);
-		painter.setImageVOMap(imageVOMap);
-		painter.setBlank(blank);
-
-		User user = CoreUtil.getUser();
-		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
-		(new PDFImprinter(painter, painter)).render();
-		InquiriesPDFVO result = painter.getPdfVO();
+		//
+		// InquiriesPDFPainter painter = new InquiriesPDFPainter();
+		//
+		//
+		//
+		// painter.setProbandVOs(probandVOs);
+		// painter.setTrialVOMap(trialVOMap);
+		// painter.setValueVOMap(valueVOMap);
+		// painter.setImageVOMap(imageVOMap);
+		// painter.setBlank(blank);
+		//
+		// User user = CoreUtil.getUser();
+		// painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
+		// (new PDFImprinter(painter, painter)).render();
+		// InquiriesPDFVO result = painter.getPdfVO();
 		// byte[] documentDataBackup = result.getDocumentDatas();
 		// result.setDocumentDatas(null);
 
-		ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INQUIRY_PDF_RENDERED,
+		ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 				result, null, journalEntryDao);
-		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INQUIRY_PDF_RENDERED,
+		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 				result, null,
 				journalEntryDao);
 
@@ -2987,49 +2981,5 @@ extends ProbandServiceBase
 	}
 
 
-	private void populateInquiriesPDFVOMaps(
-			Proband proband,
-			ProbandOutVO probandVO,
-			Trial trial,
-			TrialOutVO trialVO,
-			Collection<InquiryValueOutVO> inquiryValues,
-			ArrayList<ProbandOutVO> probandVOs,
-			HashMap<Long, Collection<TrialOutVO>> trialVOMap,
-			HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap,
-			HashMap<Long, InputFieldImageVO> imageVOMap,
-			HashSet<Long> trialIds
-			) throws Exception {
-		if (inquiryValues.size() > 0) {
-			InputFieldDao inputFieldDao = this.getInputFieldDao();
-			Collection<TrialOutVO> trialVOs;
-			if (trialVOMap.containsKey(proband.getId())) {
-				trialVOs = trialVOMap.get(proband.getId());
-			} else {
-				trialVOs = new ArrayList<TrialOutVO>();
-				trialVOMap.put(proband.getId(), trialVOs);
-				probandVOs.add(probandVO);
-			}
-			trialVOs.add(trialVO);
-			HashMap<Long, Collection<InquiryValueOutVO>> inquiryValueVOMap;
-			if (valueVOMap.containsKey(proband.getId())) {
-				inquiryValueVOMap = valueVOMap.get(proband.getId());
-			} else {
-				inquiryValueVOMap = new HashMap<Long, Collection<InquiryValueOutVO>>();
-				valueVOMap.put(proband.getId(), inquiryValueVOMap);
-			}
-			// Collection<ECRFFieldValueOutVO> ecrfValues = getEcrfFieldValues(ecrf, listEntryVO, false, false, false, null).getPageValues();
-			inquiryValueVOMap.put(trial.getId(), inquiryValues);
-			if (trialIds.add(trial.getId())) {
-				Iterator<InquiryValueOutVO> inquiryValuesIt = inquiryValues.iterator();
-				while (inquiryValuesIt.hasNext()) {
-					InputFieldOutVO field = inquiryValuesIt.next().getInquiry().getField();
-					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
-						// if (field.getHasImage() ) {
-						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
-						// }
-					}
-				}
-			}
-		}
-	}
+
 }

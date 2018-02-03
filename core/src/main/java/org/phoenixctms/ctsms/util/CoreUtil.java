@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.UUID;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -40,6 +40,7 @@ import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.IPAddressValidation;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -69,6 +70,7 @@ public final class CoreUtil {
 	public static final String PDF_MIMETYPE_STRING = "application/pdf"; // public for demodataprovider
 	public static final String EXCEL_FILENAME_EXTENSION = "xls";
 	public static final String EXCEL_MIMETYPE_STRING = "application/vnd.ms-excel";
+
 	// private static final String HEX_DIGITS = "0123456789ABCDEF";
 	private static final String DAO_LOAD_METHOD_NAME = "load";
 	private static final String DAO_TRANSFORM_METHOD_PREFIX = "to";
@@ -102,8 +104,14 @@ public final class CoreUtil {
 	private final static String VO_CLASS_SUFFIX = "VO";
 	private final static String DAO_CLASS_SUFFIX = "Dao";
 
-
+	public final static String URL_PATTERN = "^([hH][tT][tT][pP][sS]?|[fF][tT][pP])://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].+)?$"; // http://answers.oreilly.com/topic/280-how-to-validate-urls-with-regular-expressions/
+	public final static String EMAIL_ADDRESS_PATTERN = "^[\\w-]+(\\.[\\w-]+)*@([a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*?\\.[a-zA-Z]{2,6}|(\\d{1,3}\\.){3}\\d{1,3})(:\\d{4})?$"; // http://regexlib.com/UserPatterns.aspx?authorId=2c58598d-b6ac-4952-9a6a-bf2e6ae7dddc
+	public final static String PHONE_NUMBER_PATTERN = "\\+(9[976]\\d|8[987530]\\d|6[987]\\d|5[90]\\d|42\\d|3[875]\\d|2[98654321]\\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\\d{1,14}$"; // http://stackoverflow.com/questions/2113908/what-regular-expression-will-match-valid-international-phone-numbers
+	// String phoneNumberRegExp =
+	// "^+(999|998|997|996|995|994|993|992|991|990|979|978|977|976|975|974|973|972|971|970|969|968|967|966|965|964|963|962|961|960|899|898|897|896|895|894|893|892|891|890|889|888|887|886|885|884|883|882|881|880|879|878|877|876|875|874|873|872|871|870|859|858|857|856|855|854|853|852|851|850|839|838|837|836|835|834|833|832|831|830|809|808|807|806|805|804|803|802|801|800|699|698|697|696|695|694|693|692|691|690|689|688|687|686|685|684|683|682|681|680|679|678|677|676|675|674|673|672|671|670|599|598|597|596|595|594|593|592|591|590|509|508|507|506|505|504|503|502|501|500|429|428|427|426|425|424|423|422|421|420|389|388|387|386|385|384|383|382|381|380|379|378|377|376|375|374|373|372|371|370|359|358|357|356|355|354|353|352|351|350|299|298|297|296|295|294|293|292|291|290|289|288|287|286|285|284|283|282|281|280|269|268|267|266|265|264|263|262|261|260|259|258|257|256|255|254|253|252|251|250|249|248|247|246|245|244|243|242|241|240|239|238|237|236|235|234|233|232|231|230|229|228|227|226|225|224|223|222|221|220|219|218|217|216|215|214|213|212|211|210|98|95|94|93|92|91|90|86|84|82|81|66|65|64|63|62|61|60|58|57|56|55|54|53|52|51|49|48|47|46|45|44|43|41|40|39|36|34|33|32|31|30|27|20|7|1)[0-9]{0,14}$";
+	private final static Pattern EMAIL_ADDRESS_REGEXP = Pattern.compile(EMAIL_ADDRESS_PATTERN);
 	private final static HashSet<String> PASS_DECRYPTION_REALMS = new HashSet<String>();
+
 	static {
 		// methods that return inserted data but suffer from CANNOT_DECRYPT_PROBAND when requested from untrusted hosts:
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.addProband");
@@ -131,21 +139,20 @@ public final class CoreUtil {
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setMoneyTransferPaid");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid");
 	}
-
 	public final static HashSet<String> VO_VERSION_EQUALS_EXCLUDES = new HashSet<String>();
+
 	static {
 		VO_VERSION_EQUALS_EXCLUDES.addAll(CommonUtil.VO_EQUALS_EXCLUDES);
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getVersion");
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedUser");
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedTimestamp");
 	}
-
 	private static final String ENTITY_VERSION_GETTER_METHOD_NAME = "getVersion";
+
 	private static final String ENTITY_VERSION_SETTER_METHOD_NAME = "setVersion";
 	private static final String ENTITY_MODIFIED_USER_GETTER_METHOD_NAME = "getModifiedUser";
 	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
 	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
-
 	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
 
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
@@ -165,6 +172,12 @@ public final class CoreUtil {
 		} catch (ClassNotFoundException e) {
 		}
 		return false;
+	}
+
+	public static void checkEmailAddress(String email) throws ServiceException {
+		if (!EMAIL_ADDRESS_REGEXP.matcher(email).find()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, email);
+		}
 	}
 
 	public static boolean checkHostIp(String host) {
@@ -252,7 +265,7 @@ public final class CoreUtil {
 		if (prefix != null && prefix.length() > 0) {
 			result.append(prefix);
 		}
-		result.append(UUID.randomUUID().toString());
+		result.append(CommonUtil.generateUUID());
 		String extension = filePath.getExtension();
 		if (extension != null && extension.length() > 0) {
 			result.append(".");
@@ -477,11 +490,11 @@ public final class CoreUtil {
 							enumerateEntities,
 							Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_REFERENCES, Bundle.SETTINGS,
 									DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_REFERENCES),
-									Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
-											DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_COLLECTIONS),
-											Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_MAPS),
-											AssociationPath.ASSOCIATION_PATH_SEPARATOR,
-											false);
+							Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
+									DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_COLLECTIONS),
+							Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_MAPS),
+							AssociationPath.ASSOCIATION_PATH_SEPARATOR,
+							false);
 			String voDump = dumpAuditTrailVo(voFields, vo, enumerateEntities, excludeEncryptedFields);
 			if (original != null) {
 				if (vo.getClass().equals(original.getClass())) {
@@ -934,14 +947,19 @@ public final class CoreUtil {
 	public static boolean isPassDecryption() {
 		// return false;
 		UserContext userContext = getUserContext();
-		if (CommonUtil.isEmptyString(userContext.getRealm())
-				|| (PASS_DECRYPTION_REALMS.contains(userContext.getRealm()) && Settings.getBoolean(SettingCodes.SIGNUP_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS,
-						DefaultSettings.SIGNUP_FROM_UNTRUSTED_HOSTS))) {
-			return true;
+		if (CommonUtil.isEmptyString(userContext.getRealm())) {
+			// skip trusted host check when using dbtool:
+			return userContext.getUser().isDecrypt();
+		} else if (PASS_DECRYPTION_REALMS.contains(userContext.getRealm())
+				&& Settings.getBoolean(SettingCodes.SIGNUP_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.SIGNUP_FROM_UNTRUSTED_HOSTS)) {
+			// skip trusted host check for method used by signup (if enabled):
+			return userContext.getUser().isDecrypt();
 		} else {
-			return userContext.isTrustedHost();
+			return userContext.getUser().isDecrypt() && userContext.isTrustedHost();
 		}
+
 	}
+
 
 	public static <E> void modifyVersion(E original, E modified, Timestamp now, User modifiedUser) throws Exception {
 		if (original == null) {

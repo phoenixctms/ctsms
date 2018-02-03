@@ -120,6 +120,15 @@ public class SearchResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("massmail")
+	public Page<CriteriaOutVO> getMassMailCriteriaList(@Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, DBModule.MASS_MAIL_DB, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("proband")
 	public Page<CriteriaOutVO> getProbandCriteriaList(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {

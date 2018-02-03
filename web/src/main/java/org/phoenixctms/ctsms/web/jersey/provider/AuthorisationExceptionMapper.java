@@ -9,10 +9,12 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 
 @Provider
 public class AuthorisationExceptionMapper extends ExceptionMapperBase implements
-		ExceptionMapper<AuthorisationException> {
+ExceptionMapper<AuthorisationException> {
+
+	public static Status STATUS = Status.FORBIDDEN;
 
 	@Override
 	public Response toResponse(AuthorisationException ex) {
-		return buildJsonResponse(Status.FORBIDDEN, ex).build();
+		return buildJsonResponse(STATUS, ex).build();
 	}
 }

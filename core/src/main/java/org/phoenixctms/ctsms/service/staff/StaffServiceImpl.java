@@ -139,6 +139,8 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
 
+
+
 /**
  * @see org.phoenixctms.ctsms.service.staff.StaffService
  */
@@ -754,6 +756,30 @@ extends StaffServiceBase
 				hyperlink.setStaff(null);
 				hyperlinkDao.remove(hyperlink);
 			}
+			ProbandDao probandDao = this.getProbandDao();
+			Iterator<Proband> patientsIt = staff.getPatients().iterator();
+			while (patientsIt.hasNext()) {
+				Proband patient = patientsIt.next();
+				ProbandOutVO original = probandDao.toProbandOutVO(patient);
+				patient.setPhysician(null);
+				CoreUtil.modifyVersion(patient, patient.getVersion(), now, user);
+				probandDao.update(patient);
+				ProbandOutVO patientVO = probandDao.toProbandOutVO(patient);
+				logSystemMessage(patient, result, now, user, SystemMessageCodes.STAFF_DELETED_PROBAND_UPDATED, patientVO, original, journalEntryDao);
+			}
+			staff.getPatients().clear();
+			// MassMailDao massMailDao = this.getMassMailDao();
+			// Iterator<MassMail> massMailsIt = trial.getMassMails().iterator();
+			// while (massMailsIt.hasNext()) {
+			// MassMail massMail = massMailsIt.next();
+			// MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+			// massMail.setTrial(null);
+			// CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+			// massMailDao.update(massMail);
+			// MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+			// logSystemMessage(massMail, result, now, user, SystemMessageCodes.STAFF_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
+			// }
+			// trial.getMassMails().clear();
 			staff.getHyperlinks().clear();
 			Iterator<JournalEntry> journalEntriesIt = staff.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
@@ -781,18 +807,7 @@ extends StaffServiceBase
 			}
 			staff.getNotificationReceipts().clear();
 			// staff.getNotifications().clear();
-			ProbandDao probandDao = this.getProbandDao();
-			Iterator<Proband> patientsIt = staff.getPatients().iterator();
-			while (patientsIt.hasNext()) {
-				Proband patient = patientsIt.next();
-				ProbandOutVO original = probandDao.toProbandOutVO(patient);
-				patient.setPhysician(null);
-				CoreUtil.modifyVersion(patient, patient.getVersion(), now, user);
-				probandDao.update(patient);
-				ProbandOutVO patientVO = probandDao.toProbandOutVO(patient);
-				logSystemMessage(patient, result, now, user, SystemMessageCodes.STAFF_DELETED_PROBAND_UPDATED, patientVO, original, journalEntryDao);
-			}
-			staff.getPatients().clear();
+
 		}
 		Iterator<Staff> childrenIt = staff.getChildren().iterator();
 		while (childrenIt.hasNext()) {
@@ -890,7 +905,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffOutVO handleAddStaff(AuthenticationVO auth, StaffInVO newStaff, Integer maxInstances, Integer maxParentDepth)
 			throws Exception
-			{
+	{
 		checkStaffInput(newStaff);
 		StaffDao staffDao = this.getStaffDao();
 		Staff staff = staffDao.staffInVOToEntity(newStaff);
@@ -910,7 +925,7 @@ extends StaffServiceBase
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_CREATED, result, null, journalEntryDao);
 		return result;
-			}
+	}
 
 	@Override
 	protected StaffAddressOutVO handleAddStaffAddress(
@@ -1087,7 +1102,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId,  boolean defer, boolean force,Integer maxInstances, Integer maxParentDepth)
 			throws Exception
-			{
+	{
 		StaffDao staffDao = this.getStaffDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		User user = CoreUtil.getUser();
@@ -1117,7 +1132,7 @@ extends StaffServiceBase
 			logSystemMessage(user, result, now, user, SystemMessageCodes.STAFF_DELETED, result, null, journalEntryDao);
 		}
 		return result;
-			}
+	}
 
 	@Override
 	protected StaffAddressOutVO handleDeleteStaffAddress(AuthenticationVO auth, Long staffAddressId)
@@ -1904,14 +1919,14 @@ extends StaffServiceBase
 						ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED_UNTIL,
 						Settings.getSimpleDateFormat(SettingCodes.EXCEPTION_DATE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.EXCEPTION_DATE_TIME_PATTERN, Locales.USER).format(
 								trial.getDutySelfAllocationLockedUntil()),
-								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
+						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
 						);
 			} else if (trial.getDutySelfAllocationLockedFrom() != null && trial.getDutySelfAllocationLockedFrom().compareTo(dutyRosterTurn.getStart()) <= 0) {
 				throw L10nUtil.initServiceException(
 						ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED_FROM,
 						Settings.getSimpleDateFormat(SettingCodes.EXCEPTION_DATE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.EXCEPTION_DATE_TIME_PATTERN, Locales.USER).format(
 								trial.getDutySelfAllocationLockedFrom()),
-								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
+						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
 						);
 			}
 		}
@@ -2067,7 +2082,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffOutVO handleUpdateStaff(AuthenticationVO auth, StaffInVO modifiedStaff, Integer maxInstances, Integer maxParentDepth)
 			throws Exception
-			{
+	{
 		StaffDao staffDao = this.getStaffDao();
 		Staff originalStaff = CheckIDUtil.checkStaffId(modifiedStaff.getId(), staffDao, LockMode.PESSIMISTIC_WRITE);
 		checkStaffInput(modifiedStaff);
@@ -2086,7 +2101,7 @@ extends StaffServiceBase
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_UPDATED, result, original, journalEntryDao);
 		return result;
-			}
+	}
 
 	@Override
 	protected StaffAddressOutVO handleUpdateStaffAddress(

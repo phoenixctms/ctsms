@@ -381,7 +381,7 @@ public final class CryptoUtil {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ObjectOutputStream objectStream = new ObjectOutputStream(buffer);
 		objectStream.writeObject(value);
-		buffer.flush();
+		// buffer.flush();
 		objectStream.close();
 		return buffer.toByteArray();
 	}

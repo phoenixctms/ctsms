@@ -385,19 +385,21 @@ public abstract class InputFieldPDFBlock {
 
 	private float renderComments(float x, float y, PDPageContentStream contentStream, InputFieldPDFBlockCursor cursor) throws Exception {
 		float y1 = y;
-		String validationErrorMessage = getInputFieldValidationErrorMessage();
-		if (!CommonUtil.isEmptyString(validationErrorMessage)) {
-			y1 -= PDFUtil.renderMultilineText(
-					contentStream,
-					cursor.getFontA(),
-					PDFUtil.FontSize.SMALL,
-					getValidationErrorMessageTextColor(),
-					validationErrorMessage,
-					x + cursor.getBlockIndentedWidth() - getXFrameIndent(),
-					y1,
-					PDFUtil.Alignment.TOP_RIGHT,
-					cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent());
-			y1 -= getYFrameIndent();
+		if (blank) {
+			String validationErrorMessage = getInputFieldValidationErrorMessage();
+			if (!CommonUtil.isEmptyString(validationErrorMessage)) {
+				y1 -= PDFUtil.renderMultilineText(
+						contentStream,
+						cursor.getFontA(),
+						PDFUtil.FontSize.SMALL,
+						getValidationErrorMessageTextColor(),
+						validationErrorMessage,
+						x + cursor.getBlockIndentedWidth() - getXFrameIndent(),
+						y1,
+						PDFUtil.Alignment.TOP_RIGHT,
+						cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent());
+				y1 -= getYFrameIndent();
+			}
 		}
 		String inputFieldComment = getInputFieldComment();
 		if (!CommonUtil.isEmptyString(inputFieldComment)) {

@@ -1,12 +1,11 @@
 package org.phoenixctms.ctsms.executable;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.vo.PSFVO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class NotificationSender {
 
@@ -37,7 +36,8 @@ public class NotificationSender {
 			jobOutput.println("limit: " + limit);
 		}
 		long emailSentCount = toolsService.processNotifications(ExecUtil.departmentL10nKeyToId(departmentL10nKey, departmentDao, jobOutput), psf);
-		jobOutput.println(emailSentCount + " of " + psf.getRowCount() + " pending notification emails sent");
+		// jobOutput.println(emailSentCount + " of " + psf.getRowCount() + " pending notification emails sent");
+		jobOutput.println("emails sent to " + emailSentCount + " recipients of " + psf.getRowCount() + " pending notifications");
 		return emailSentCount;
 	}
 

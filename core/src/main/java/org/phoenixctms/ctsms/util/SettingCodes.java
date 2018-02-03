@@ -262,6 +262,20 @@ public interface SettingCodes {
 	public static final String ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = "ecrf_field_values_schedule_validation_limit";
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
+	public static final String REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = "remove_mass_mail_check_proband_locked";
+	public static final String REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS = "remove_proband_keep_sent_mass_mail_recipients";
 
-
+	public static final String MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = "mass_mail_template_model_vo_depth";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES = "mass_mail_template_model_enumerate_entities";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "mass_mail_template_model_datetime_pattern";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "mass_mail_template_model_date_pattern";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "mass_mail_template_model_time_pattern";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "mass_mail_template_model_omit_encrypted_fields";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "mass_mail_template_model_enumerate_references";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "mass_mail_template_model_enumerate_collections";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_MAPS = "mass_mail_template_model_enumerate_maps";
+	public static final String SEND_MASS_MAILS = "send_mass_mails";
+	public static final String EMAIL_PROCESS_MASS_MAILS_DELAY_MILLIS = "email_process_mass_mails_delay_millis";
+	public static final String EMAIL_PROCESS_MASS_MAILS_MAX = "email_process_mass_mails_max";
+	public static final String MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = "mass_mail_mime_message_max_age_seconds";
 }

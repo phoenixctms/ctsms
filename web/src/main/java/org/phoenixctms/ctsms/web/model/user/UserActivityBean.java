@@ -70,6 +70,8 @@ public class UserActivityBean extends ManagedBeanBase {
 				return CommonUtil.probandOutVOToString(journalEntry.getProband());
 			} else if (journalEntry.getInputField() != null) {
 				return CommonUtil.inputFieldOutVOToString(journalEntry.getInputField());
+			} else if (journalEntry.getMassMail() != null) {
+				return CommonUtil.massMailOutVOToString(journalEntry.getMassMail());
 			}
 		}
 		return "";
@@ -91,6 +93,8 @@ public class UserActivityBean extends ManagedBeanBase {
 				return ""; // "ctsms-icon-search";
 			} else if (journalEntry.getInputField() != null) {
 				return WebUtil.getInputFieldIcon(journalEntry.getInputField());
+			} else if (journalEntry.getMassMail() != null) {
+				return journalEntry.getMassMail().getStatus().getNodeStyleClass();
 			}
 		}
 		return "";
@@ -146,6 +150,9 @@ public class UserActivityBean extends ManagedBeanBase {
 					case USER_DB:
 						sb.append("openUserSearch(");
 						break;
+					case MASS_MAIL_DB:
+						sb.append("openMassMailSearch(");
+						break;
 					default:
 						return "";
 				}
@@ -154,6 +161,8 @@ public class UserActivityBean extends ManagedBeanBase {
 				return sb.toString();
 			} else if (journalEntry.getInputField() != null) {
 				return "openInputField(" + Long.toString(journalEntry.getInputField().getId()) + ")";
+			} else if (journalEntry.getMassMail() != null) {
+				return "openMassMail(" + Long.toString(journalEntry.getMassMail().getId()) + ")";
 			}
 		}
 		return "";

@@ -51,6 +51,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
+	private static final int GENDER_PROPERTY_ID = 1;
+
 	public static void copyStaffOutToIn(StaffInVO in, StaffOutVO out) {
 		if (in != null && out != null) {
 			StaffCategoryVO staffCategoryVO = out.getCategory();
@@ -114,8 +116,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			result.setPrefixedTitle3(in.getPrefixedTitle3());
 			result.setCvAcademicTitle(in.getCvAcademicTitle());
 			result.setInitials(CommonUtil.getStaffInitials(result));
-			result.setName(CommonUtil.getStaffName(result, false));
-			result.setNameWithTitles(CommonUtil.getStaffName(result, true));
+			result.setName(CommonUtil.getStaffName(result, false, true));
+			result.setNameWithTitles(CommonUtil.getStaffName(result, true, true));
 			result.setNameSortable(CommonUtil.getNameSortable(result));
 			result.setAge(CommonUtil.getAge(in.getDateOfBirth()));
 			result.setMaxOverlappingShifts(in.getMaxOverlappingShifts());
@@ -151,7 +153,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			in.setMaxOverlappingShifts(Settings.getLongNullable(SettingCodes.STAFF_MAX_OVERLAPPING_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_MAX_OVERLAPPING_PRESET));
 		}
 	}
-
 	private StaffInVO in;
 	private StaffOutVO out;
 	private ArrayList<SelectItem> categories;
@@ -160,7 +161,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private SexSelector gender;
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-	private static final int GENDER_PROPERTY_ID = 1;
 
 	public StaffBean() {
 		super();
@@ -278,7 +278,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			this.out = null;
 			this.initIn();
 			initSets();
-			appendRequestContextCallbackArgs(true);
+			appendRequestContextCallbackArgs(true, CHANGE_OUTCOME);
 		}
 	}
 
@@ -585,7 +585,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		tabCountMap.put(JSValues.AJAX_STAFF_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_HYPERLINKS_TAB_TITLE, MessageCodes.STAFF_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getFileCount(FileModule.STAFF_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.STAFF_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_STAFF_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_FILES_TAB_TITLE, MessageCodes.STAFF_FILES_TAB_TITLE_WITH_COUNT, count));

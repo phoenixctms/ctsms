@@ -391,7 +391,7 @@ public class InventoryBean extends ManagedBeanBase {
 		tabCountMap.put(JSValues.AJAX_INVENTORY_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE, MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getFileCount(FileModule.INVENTORY_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.INVENTORY_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_INVENTORY_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_FILES_TAB_TITLE, MessageCodes.INVENTORY_FILES_TAB_TITLE_WITH_COUNT, count));

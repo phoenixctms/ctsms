@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.web.util;
 
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
+
 public interface MessageCodes {
 
 	public static final String NOT_IMPLEMENTED = "not_implemented";
@@ -48,6 +50,8 @@ public interface MessageCodes {
 	public static final String PROBAND_CRITERIA_COMMENT_PRESET = "proband_criteria_comment_preset";
 	public static final String INPUT_FIELD_CRITERIA_LABEL_PRESET = "input_field_criteria_label_preset";
 	public static final String INPUT_FIELD_CRITERIA_COMMENT_PRESET = "input_field_criteria_comment_preset";
+	public static final String MASS_MAIL_CRITERIA_LABEL_PRESET = "mass_mail_criteria_label_preset";
+	public static final String MASS_MAIL_CRITERIA_COMMENT_PRESET = "mass_mail_criteria_comment_preset";
 	public static final String TOO_MANY_CRITERIONS = "too_many_criterions";
 	public static final String ENCRYPTED_PROBAND = "encrypted_proband";
 	public static final String ENCRYPTED_FILE = "encrypted_file";
@@ -65,6 +69,7 @@ public interface MessageCodes {
 	public static final String TRIAL_LOCKED = "trial_locked";
 	public static final String INQUIRY_VALUE_INPUT_DISABLED = "inquiry_value_input_disabled";
 	public static final String PROBAND_LOCKED = "proband_locked";
+	public static final String MASS_MAIL_LOCKED = "mass_mail_locked";
 	public static final String ECRF_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_ENTRY = "ecrf_value_input_disabled_for_proband_list_entry";
 	public static final String ECRF_VALUE_INPUT_DISABLED_FOR_TRIAL = "ecrf_value_input_disabled_for_trial";
 	public static final String ECRF_FIELD_VALUES_LOCKED_STATUS = "ecrf_field_values_locked_status";
@@ -79,6 +84,7 @@ public interface MessageCodes {
 	public static final String NO_TRIAL_PICKED = "no_trial_picked";
 	public static final String NO_PROBAND_PICKED = "no_proband_picked";
 	public static final String NO_INPUT_FIELD_PICKED = "no_input_field_picked";
+	public static final String NO_MASS_MAIL_PICKED = "no_mass_mail_picked";
 	public static final String INVALID_INVENTORY_PICKED = "invalid_inventory_picked";
 	public static final String INVALID_STAFF_PICKED = "invalid_staff_picked";
 	public static final String INVALID_COURSE_PICKED = "invalid_course_picked";
@@ -86,6 +92,7 @@ public interface MessageCodes {
 	public static final String INVALID_TRIAL_PICKED = "invalid_trial_picked";
 	public static final String INVALID_PROBAND_PICKED = "invalid_proband_picked";
 	public static final String INVALID_INPUT_FIELD_PICKED = "invalid_input_field_picked";
+	public static final String INVALID_MASS_MAIL_PICKED = "invalid_mass_mail_picked";
 	public static final String PICKER_NOT_CONFIGURED = "picker_not_configured";
 	public static final String TEAM_MEMBER_PICKER_TITLE = "team_member_picker_title";
 	public final static String ADD_OPERATION_SUCCESSFUL = "add_operation_successful";
@@ -107,6 +114,7 @@ public interface MessageCodes {
 	public final static String DELETE_OPERATION_SUCCESSFUL = "delete_operation_successful";
 	public final static String ID_NOT_PICKED = "id_not_picked";
 	public final static String ID_ALREADY_PICKED = "id_already_picked";
+	public final static String IDS_PICKED_MAX_LIMIT = "ids_picked_max_limit";
 	public final static String CHECK_INPUT_OPERATION_SUCCESSFUL = "check_input_operation_successful";
 	public final static String DUMMY_INPUT_FIELD_INPUT_VALID = "dummy_input_field_input_valid";
 	public final static String DUMMY_INQUIRY_VALUE_INPUT_VALID = "dummy_inquiry_value_input_valid";
@@ -288,6 +296,7 @@ public interface MessageCodes {
 	public static final String ERROR_LOADING_PROBAND = "error_loading_proband";
 	public static final String ERROR_LOADING_CRITERIA = "error_loading_criteria";
 	public static final String ERROR_LOADING_INPUT_FIELD = "error_loading_input_field";
+	public static final String ERROR_LOADING_MASS_MAIL = "error_loading_mass_mail";
 	public static final String DELETED_TITLE = "deleted_title";
 	public static final String INVENTORY_TITLE = "inventory_title";
 	public static final String CREATE_NEW_INVENTORY = "create_new_inventory";
@@ -306,6 +315,8 @@ public interface MessageCodes {
 	public static final String CREATE_NEW_PROBAND = "create_new_proband";
 	public static final String INPUT_FIELD_TITLE = "input_field_title";
 	public static final String CREATE_NEW_INPUT_FIELD = "create_new_input_field";
+	public static final String MASS_MAIL_TITLE = "mass_mail_title";
+	public static final String CREATE_NEW_MASS_MAIL = "create_new_mass_mail";
 	public static final String INVENTORY_CRITERIA_TITLE = "inventory_criteria_title";
 	public static final String CREATE_NEW_INVENTORY_CRITERIA = "create_new_inventory_criteria";
 	public static final String STAFF_CRITERIA_TITLE = "staff_criteria_title";
@@ -320,6 +331,8 @@ public interface MessageCodes {
 	public static final String CREATE_NEW_PROBAND_CRITERIA = "create_new_proband_criteria";
 	public static final String INPUT_FIELD_CRITERIA_TITLE = "input_field_criteria_title";
 	public static final String CREATE_NEW_INPUT_FIELD_CRITERIA = "create_new_input_field_criteria";
+	public static final String MASS_MAIL_CRITERIA_TITLE = "mass_mail_criteria_title";
+	public static final String CREATE_NEW_MASS_MAIL_CRITERIA = "create_new_mass_mail_criteria";
 	public static final String JOURNAL_ENTRY_TITLE = "journal_entry_title";
 	public static final String SYSTEM_MESSAGE_TITLE = "system_message_title";
 	public static final String CREATE_NEW_JOURNAL_ENTRY = "create_new_journal_entry";
@@ -434,6 +447,8 @@ public interface MessageCodes {
 	public static final String MONEY_TRANSFER_COST_TYPE_TITLE = "money_transfer_cost_type_title";
 	public static final String MONEY_TRANSFER_TITLE = "money_transfer_title";
 	public static final String CREATE_NEW_MONEY_TRANSFER = "create_new_money_transfer";
+	public static final String MASS_MAIL_RECIPIENT_TITLE = "mass_mail_recipient_title";
+	public static final String CREATE_NEW_MASS_MAIL_RECIPIENT = "create_new_mass_recipient_mail";
 	public static final String USER_IDENTITY_LABEL = "user_identity_label";
 	public static final String IDENTITY_USER_LABEL = "identity_user_label";
 	public static final String LOGOUT_LABEL = "logout_label";
@@ -457,6 +472,7 @@ public interface MessageCodes {
 	public static final String PROBAND_HOME_MENU_ITEM_LABEL = "proband_home_menu_item_label";
 	public static final String USER_HOME_MENU_ITEM_LABEL = "user_home_menu_item_label";
 	public static final String INPUT_FIELD_HOME_MENU_ITEM_LABEL = "input_field_home_menu_item_label";
+	public static final String MASS_MAIL_HOME_MENU_ITEM_LABEL = "mass_mail_home_menu_item_label";
 	public static final String CHANGE_PASSWORD_MENU_ITEM_LABEL = "change_password_menu_item_label";
 	public static final String ANNOUNCEMENT_INFO_SEPARATOR = "announcement_info_separator";
 	public static final String PASSWORD_EXPIRATION_INFO = "password_expiration_info";
@@ -478,6 +494,7 @@ public interface MessageCodes {
 	public static final String PROBAND_OPEN_NEW_MENU_ITEM_LABEL = "proband_open_new_menu_item_label";
 	public static final String USER_OPEN_NEW_MENU_ITEM_LABEL = "user_open_new_menu_item_label";
 	public static final String INPUT_FIELD_OPEN_NEW_MENU_ITEM_LABEL = "input_field_open_new_menu_item_label";
+	public static final String MASS_MAIL_OPEN_NEW_MENU_ITEM_LABEL = "mass_mail_open_new_menu_item_label";
 	public static final String INVENTORY_PORTAL_ITEM_LABEL = "inventory_portal_item_label";
 	public static final String STAFF_PORTAL_ITEM_LABEL = "staff_portal_item_label";
 	public static final String COURSE_PORTAL_ITEM_LABEL = "course_portal_item_label";
@@ -485,6 +502,7 @@ public interface MessageCodes {
 	public static final String PROBAND_PORTAL_ITEM_LABEL = "proband_portal_item_label";
 	public static final String USER_PORTAL_ITEM_LABEL = "user_portal_item_label";
 	public static final String INPUT_FIELD_PORTAL_ITEM_LABEL = "input_field_portal_item_label";
+	public static final String MASS_MAIL_PORTAL_ITEM_LABEL = "mass_mail_portal_item_label";
 	public static final String INVENTORY_PORTAL_ITEM_DESCRIPTION = "inventory_portal_item_description";
 	public static final String STAFF_PORTAL_ITEM_DESCRIPTION = "staff_portal_item_description";
 	public static final String COURSE_PORTAL_ITEM_DESCRIPTION = "course_portal_item_description";
@@ -492,6 +510,7 @@ public interface MessageCodes {
 	public static final String PROBAND_PORTAL_ITEM_DESCRIPTION = "proband_portal_item_description";
 	public static final String USER_PORTAL_ITEM_DESCRIPTION = "user_portal_item_description";
 	public static final String INPUT_FIELD_PORTAL_ITEM_DESCRIPTION = "input_field_portal_item_description";
+	public static final String MASS_MAIL_PORTAL_ITEM_DESCRIPTION = "mass_mail_portal_item_description";
 	public static final String SEARCH_TITLE = "search_title";
 	public static final String CRITERIA_MODULE_MISMATCH = "criteria_module_mismatch";
 	public static final String FILE_STREAM_UPLOAD_MODE_UNDEFINED = "file_stream_upload_mode_undefined";
@@ -590,6 +609,8 @@ public interface MessageCodes {
 	public final static String PROBAND_TAGS_TAB_TITLE_WITH_COUNT = "proband_tags_tab_title_with_count";
 	public final static String PROBAND_CONTACT_DETAILS_TAB_TITLE = "proband_contact_details_tab_title";
 	public final static String PROBAND_CONTACT_DETAILS_TAB_TITLE_WITH_COUNT = "proband_contact_details_tab_title_with_count";
+	public final static String PROBAND_RECIPIENTS_TAB_TITLE = "proband_recipients_tab_title";
+	public final static String PROBAND_RECIPIENTS_TAB_TITLE_WITH_COUNT = "proband_recipients_tab_title_with_count";
 	public static final String PROBAND_ADDRESSES_TAB_TITLE = "proband_addresses_tab_title";
 	public static final String PROBAND_ADDRESSES_TAB_TITLE_WITH_COUNT = "proband_addresses_tab_title_with_count";
 	public static final String PROBAND_STATUS_TAB_TITLE = "proband_status_tab_title";
@@ -616,6 +637,12 @@ public interface MessageCodes {
 	public final static String PROBAND_FILES_TAB_TITLE_WITH_COUNT = "proband_files_tab_title_with_count";
 	public final static String PROBAND_JOURNAL_TAB_TITLE = "proband_journal_tab_title";
 	public final static String PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT = "proband_journal_tab_title_with_count";
+	public final static String MASS_MAIL_RECIPIENTS_TAB_TITLE = "mass_mail_recipients_tab_title";
+	public final static String MASS_MAIL_RECIPIENTS_TAB_TITLE_WITH_COUNT = "mass_mail_recipients_tab_title_with_count";
+	public final static String MASS_MAIL_FILES_TAB_TITLE = "mass_mail_files_tab_title";
+	public final static String MASS_MAIL_FILES_TAB_TITLE_WITH_COUNT = "mass_mail_files_tab_title_with_count";
+	public final static String MASS_MAIL_JOURNAL_TAB_TITLE = "mass_mail_journal_tab_title";
+	public final static String MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT = "mass_mail_journal_tab_title_with_count";
 	public final static String PASSWORD_TAB_TITLE = "password_tab_title";
 	public final static String PASSWORD_TAB_TITLE_WITH_COUNT = "password_tab_title_with_count";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE = "user_permission_profiles_tab_title";
@@ -667,6 +694,7 @@ public interface MessageCodes {
 	public static final String TRIAL_SHIFT_SUMMARY_OVERVIEW_MENU_ITEM_LABEL = "trial_shift_summary_overview_menu_item_label";
 	public static final String PROBAND_AVAILABILITY_STATUS_MENU_ITEM_LABEL = "proband_availability_status_menu_item_label";
 	public static final String AUTO_DELETE_REMINDERS_MENU_ITEM_LABEL = "auto_delete_reminders_menu_item_label";
+	public static final String RECIPIENT_OVERVIEW_MENU_ITEM_LABEL = "recipient_overview_menu_item_label";
 	public static final String TIMELINE_TRIAL_GROUP_TITLE = "timeline_trial_group_title";
 	public static final String TIMELINE_TRIAL_EVENT_START_LABEL = "timeline_trial_event_start_label";
 	public static final String TIMELINE_TRIAL_EVENT_START_STOP_LABEL = "timeline_trial_event_start_stop_label";
@@ -771,6 +799,7 @@ public interface MessageCodes {
 	public static final String SEARCH_RESULT_STAFF_ITEM_LABEL = "search_result_staff_item_label";
 	public static final String SEARCH_RESULT_TRIAL_ITEM_LABEL = "search_result_trial_item_label";
 	public static final String SEARCH_RESULT_USER_ITEM_LABEL = "search_result_user_item_label";
+	public static final String SEARCH_RESULT_MASS_MAIL_ITEM_LABEL = "search_result_mass_mail_item_label";
 	public static final String LOGIN_PROMPT_TITLE = "login_prompt_title";
 	public static final String APPLICATION_INSTANCE = "application_instance";
 	public static final String MEDICATION_COMMENT_PRESET = "medication_comment_preset";
@@ -806,7 +835,18 @@ public interface MessageCodes {
 	public static final String ECRF_SECTION_TITLE = "ecrf_section_title";
 	public static final String BLANK_ECRF_SECTION_TITLE = "blank_ecrf_section_title";
 	public static final String STAFF_NA_COUNT_EVENT_TITLE = "staff_na_count_event_title";
-	
+
 	public static final String CAPTCHA_ERROR_MESSAGE = "captcha_error_message";
-	public static final String CAPTCHA_NOT_VERIFIED_ERROR_MESSAGE = "captcha_not_verified_error_message";	
+	public static final String CAPTCHA_NOT_VERIFIED_ERROR_MESSAGE = "captcha_not_verified_error_message";
+
+	public static final String MASS_MAIL_NAME_PRESET = "mass_mail_name_preset";
+	public static final String MASS_MAIL_DESCRIPTION_PRESET = "mass_mail_description_preset";
+	public static final String MASS_MAIL_SUBJECT_FORMAT_PRESET = "mass_mail_subject_format_preset";
+	public static final String MASS_MAIL_TEXT_TEMPLATE_PRESET = "mass_mail_text_template_preset";
+	public static final String MASS_MAIL_MALE_SALUTATION_PRESET = "mass_mail_male_salutation_preset";
+	public static final String MASS_MAIL_FEMALE_SALUTATION_PRESET = "mass_mail_female_salutation_preset";
+	public static final String HOST_NOT_ALLOWED_OR_UNKNOWN_HOST = AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST;
+	public static final String REQUEST_FROM_TRUSTED_REFERER = "request_from_trusted_referer";
+	public static final String MASS_MAIL_PROGRESS_LABEL = "mass_mail_progress_label";
+
 }

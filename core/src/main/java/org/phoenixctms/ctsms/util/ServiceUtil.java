@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.util;
 
+import java.io.StringWriter;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,23 +20,32 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
+import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.BankAccountOutVOComparator;
 import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
+import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
+import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
+import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
@@ -51,8 +62,17 @@ import org.phoenixctms.ctsms.pdf.CourseCertificatePDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.CourseCertificatePDFPainter;
 import org.phoenixctms.ctsms.pdf.CourseCertificatePDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.CourseParticipantListPDFPainter;
+import org.phoenixctms.ctsms.pdf.EcrfPDFDefaultSettings;
+import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
+import org.phoenixctms.ctsms.pdf.EcrfPDFSettingCodes;
+import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
+import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
+import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFPainter;
+import org.phoenixctms.ctsms.pdf.ReimbursementsPDFPainter;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.EcrfSignature;
+import org.phoenixctms.ctsms.security.EntitySignature;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.date.BookingDuration;
@@ -74,6 +94,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
@@ -81,46 +102,66 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusQueueCountVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldValuesOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
+import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
+import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingDurationSummaryDetailVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingDurationSummaryVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
 import org.phoenixctms.ctsms.vo.LecturerOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
+import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
+import org.phoenixctms.ctsms.vo.MedicationOutVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferByBankAccountSummaryDetailVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferByCostTypeSummaryDetailVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferByPaymentMethodSummaryDetailVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferOutVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
+import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
+import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagValuesOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagsPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
+import org.phoenixctms.ctsms.vo.ProcedureOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
+import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.ShiftDurationSummaryDetailVO;
 import org.phoenixctms.ctsms.vo.ShiftDurationSummaryVO;
+import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffImageOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
@@ -158,6 +199,14 @@ public final class ServiceUtil {
 	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL = false;
 	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND = false;
 
+	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
+
+	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}?{2}={3}";
+
+	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
+
+	private final static String DUUMY_BEACON = "dummy";
+
 	public static InputFieldSelectionSetValueOutVO addAutocompleteSelectionSetValue(InputField inputField, String textValue, Timestamp now, User user,
 			InputFieldSelectionSetValueDao selectionSetValueDao, JournalEntryDao journalEntryDao) throws Exception {
 		if (textValue != null && textValue.length() > 0 && inputField != null &&
@@ -179,8 +228,7 @@ public final class ServiceUtil {
 		return null;
 	}
 
-	private static void addCostTypeDetailComment(MoneyTransfer mt,MoneyTransferByCostTypeSummaryDetailVO byCostTypeDetail) {
-
+	private static void addCostTypeDetailComment(MoneyTransfer mt, MoneyTransferByCostTypeSummaryDetailVO byCostTypeDetail) {
 		if (mt.isShowComment()) {
 			String comment;
 			try {
@@ -196,37 +244,37 @@ public final class ServiceUtil {
 				byCostTypeDetail.getComments().add(comment);
 			}
 		}
-		//		if () {
-		//			if (!CommonUtil.isEmptyString(mt.getReference())) {
-		//				mt.getReferences().add(mt.getReference());
-		//			}
-		//		}
-		//		if () {
-		//			if (!CommonUtil.isEmptyString(mt.getVoucherCode())) {
-		//				mt.getVoucherCodes().add(mt.getVoucherCode());
-		//			}
-		//		}
-
+		// if () {
+		// if (!CommonUtil.isEmptyString(mt.getReference())) {
+		// mt.getReferences().add(mt.getReference());
+		// }
+		// }
+		// if () {
+		// if (!CommonUtil.isEmptyString(mt.getVoucherCode())) {
+		// mt.getVoucherCodes().add(mt.getVoucherCode());
+		// }
+		// }
 	}
 
 	public static ArrayList<ECRFFieldStatusQueueCountVO> addEcrfFieldStatusEntryCounts(Collection<ECRFFieldStatusQueueCountVO> a, Collection<ECRFFieldStatusQueueCountVO> b) {
-
 		ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
-		HashMap<ECRFFieldStatusQueue,Long[]> aMap = new HashMap<ECRFFieldStatusQueue, Long[]>(queues.length);
-		HashMap<ECRFFieldStatusQueue,Long[]> bMap = new HashMap<ECRFFieldStatusQueue, Long[]>(queues.length);
+		HashMap<ECRFFieldStatusQueue, Long[]> aMap = new HashMap<ECRFFieldStatusQueue, Long[]>(queues.length);
+		HashMap<ECRFFieldStatusQueue, Long[]> bMap = new HashMap<ECRFFieldStatusQueue, Long[]>(queues.length);
 		ArrayList<ECRFFieldStatusQueueCountVO> result = new ArrayList<ECRFFieldStatusQueueCountVO>(queues.length);
 		if (a != null) {
 			Iterator<ECRFFieldStatusQueueCountVO> it = a.iterator();
 			while (it.hasNext()) {
 				ECRFFieldStatusQueueCountVO count = it.next();
-				aMap.put(count.getQueue(), new Long[] { count.getTotal(), count.getInitial(), count.getUpdated(), count.getProposed(), count.getResolved(), count.getUnresolved() });
+				aMap.put(count.getQueue(),
+						new Long[] { count.getTotal(), count.getInitial(), count.getUpdated(), count.getProposed(), count.getResolved(), count.getUnresolved() });
 			}
 		}
 		if (b != null) {
 			Iterator<ECRFFieldStatusQueueCountVO> it = b.iterator();
 			while (it.hasNext()) {
 				ECRFFieldStatusQueueCountVO count = it.next();
-				bMap.put(count.getQueue(), new Long[] { count.getTotal(), count.getInitial(), count.getUpdated(), count.getProposed(), count.getResolved(), count.getUnresolved() });
+				bMap.put(count.getQueue(),
+						new Long[] { count.getTotal(), count.getInitial(), count.getUpdated(), count.getProposed(), count.getResolved(), count.getUnresolved() });
 			}
 		}
 		for (int i = 0; i < queues.length; i++) {
@@ -247,13 +295,34 @@ public final class ServiceUtil {
 			result.add(count);
 		}
 		return result;
+	}
 
+	public static MassMailRecipientOutVO addMassMailRecipient(MassMailRecipientInVO newRecipient, Timestamp now, User user, MassMailDao massMailDao, ProbandDao probandDao,
+			TrialDao trialDao,
+			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao) throws Exception {
+		checkAddMassMailRecipientInput(newRecipient, massMailDao, probandDao, trialDao, massMailRecipientDao);
+		if ((new MassMailRecipientCollisionFinder(massMailDao, massMailRecipientDao)).collides(newRecipient)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_ALREADY_EXISTS, newRecipient.getProbandId().toString());
+			// xCommonUtil.probandOutVOToString(probandDao.toProbandOutVO(probandListEntry.getProband())));
+		}
+		MassMailRecipient recipient = massMailRecipientDao.massMailRecipientInVOToEntity(newRecipient);
+		recipient.setBeacon(CommonUtil.generateUUID());
+		Proband proband = recipient.getProband();
+		MassMail massMail = recipient.getMassMail();
+		CoreUtil.modifyVersion(recipient, now, user);
+		recipient = massMailRecipientDao.create(recipient);
+		MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+		logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
+		// logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+		logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
+		return result;
 	}
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListEntry listEntry, Boolean signup, String reasonL10nKey, Object[] args, Timestamp realTimestamp,
 			Long probandListStatusTypeId, ECRF ecrf, ECRFStatusType newState,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
+			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (L10nUtil.containsProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, reasonL10nKey)) {
 			ProbandListStatusType statusType = null;
@@ -277,7 +346,7 @@ public final class ServiceUtil {
 					newProbandListStatusEntry.setStatusId(statusType.getId());
 					return addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, false, false, probandDao, probandListEntryDao, probandListStatusEntryDao,
 							probandListStatusTypeDao,
-							journalEntryDao);
+							trialDao, massMailDao, massMailRecipientDao, journalEntryDao);
 				}
 			} else {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_TYPE_REQUIRED);
@@ -290,19 +359,16 @@ public final class ServiceUtil {
 			Long probandListStatusTypeId,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
+			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return addProbandListStatusEntry(listEntry, signup, reasonL10nKey, args, now, probandListStatusTypeId, null, null, now, user, probandDao, probandListEntryDao,
-				probandListStatusEntryDao, probandListStatusTypeDao, journalEntryDao);
+				probandListStatusEntryDao, probandListStatusTypeDao, trialDao, massMailDao, massMailRecipientDao, journalEntryDao);
 	}
-
-
-
-
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListStatusEntryInVO newProbandListStatusEntry, Boolean signup, Timestamp now, User user,
 			boolean logTrial,
 			boolean logProband,
-			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
+			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,TrialDao trialDao,MassMailDao massMailDao,MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao);
 		// ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
@@ -312,6 +378,11 @@ public final class ServiceUtil {
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();
 		listEntry.setLastStatus(probandListStatusEntry);
 		probandListEntryDao.update(listEntry);
+		Iterator<MassMail> massMailsIt = massMailDao.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(), false, null).iterator();
+		while (massMailsIt.hasNext()) {
+			ServiceUtil.addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
+					massMailRecipientDao, journalEntryDao);
+		}
 		// /JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandListStatusEntryOutVO result = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
 		if (logProband) {
@@ -323,6 +394,40 @@ public final class ServiceUtil {
 			// SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
 			logSystemMessage(probandListStatusEntry.getListEntry().getTrial(), result.getListEntry().getProband(), now, user,
 					SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
+		}
+		return result;
+	}
+
+	public static MassMailRecipientOutVO addResetMassMailRecipient(MassMail massMail, Proband proband, Timestamp now, User user, MassMailDao massMailDao, ProbandDao probandDao,
+			TrialDao trialDao,
+			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao) throws Exception {
+		CheckIDUtil.checkMassMailId(massMail.getId(), massMailDao, LockMode.PESSIMISTIC_WRITE);
+		MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), proband.getId());
+		MassMailRecipientOutVO result = null;
+		if (recipient == null) {
+			MassMailRecipientInVO recipientIn = new MassMailRecipientInVO();
+			recipientIn.setMassMailId(massMail.getId());
+			recipientIn.setProbandId(proband.getId());
+			checkAddMassMailRecipientInput(recipientIn, massMailDao, probandDao, trialDao, massMailRecipientDao);
+			recipient = massMailRecipientDao.massMailRecipientInVOToEntity(recipientIn);
+			recipient.setBeacon(CommonUtil.generateUUID());
+			// Proband proband = recipient.getProband();
+			// MassMail massMail = recipient.getMassMail();
+			CoreUtil.modifyVersion(recipient, now, user);
+			recipient = massMailRecipientDao.create(recipient);
+			result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+			logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
+			// logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+			logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
+		} else if (massMail.isProbandListStatusResend()) {
+			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+			MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+			resetMassMailRecipient(recipient, original);
+			CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
+			massMailRecipientDao.update(recipient);
+			result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+			logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
+			logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
 		}
 		return result;
 	}
@@ -401,6 +506,10 @@ public final class ServiceUtil {
 		}
 	}
 
+
+
+
+
 	public static void applyLogonLimitations(PasswordInVO password) {
 		password.setExpires(Settings.getBoolean(SettingCodes.LOGON_EXPIRES, Settings.Bundle.SETTINGS, false));
 		password.setValidityPeriod(password.isExpires() ? Settings.getVariablePeriod(SettingCodes.LOGON_VALIDITY_PERIOD, Settings.Bundle.SETTINGS, VariablePeriod.EXPLICIT) : null);
@@ -443,7 +552,7 @@ public final class ServiceUtil {
 	public static void checkAddCourseParticipationStatusEntryInput(CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin, Boolean selfRegistration,
 			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-			{
+	{
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(courseParticipationIn.getStaffId(), staffDao);
 		Course course = CheckIDUtil.checkCourseId(courseParticipationIn.getCourseId(), courseDao, LockMode.PESSIMISTIC_WRITE);
@@ -493,12 +602,24 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_INVALID_INITIAL_PARTICIPATION_STATUS_TYPE,
 					L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
-			}
+	}
+
+
+	private static void checkAddMassMailRecipientInput(MassMailRecipientInVO massMailRecipientIn, MassMailDao massMailDao, ProbandDao probandDao, TrialDao trialDao,
+			MassMailRecipientDao massMailRecipientDao) throws ServiceException {
+		MassMail massMail = CheckIDUtil.checkMassMailId(massMailRecipientIn.getMassMailId(), massMailDao);
+		checkMassMailLocked(massMail);
+		Proband proband = CheckIDUtil.checkProbandId(massMailRecipientIn.getProbandId(), probandDao);
+		checkProbandLocked(proband);
+		// if (massMailRecipientIn.getTrialId() != null) {
+		// CheckIDUtil.checkTrialId(massMailRecipientIn.getTrialId(), trialDao);
+		// }
+	}
 
 	private static void checkAddProbandListStatusEntryInput(ProbandListStatusEntryInVO probandListStatusEntryIn, Boolean signup,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao
 			) throws ServiceException
-			{
+	{
 		// referential checks
 		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListStatusEntryIn.getListEntryId(), probandListEntryDao);
@@ -548,7 +669,7 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, probandListEntry.getProband().getId().toString());
 			// xCommonUtil.probandOutVOToString(probandDao.toProbandOutVO(probandListEntry.getProband())));
 		}
-			}
+	}
 
 	public static void checkInputFieldBooleanValue(InputField inputField, boolean optional, boolean booleanValue, InputFieldDao inputFieldDao) throws ServiceException {
 		if (inputField != null) {
@@ -661,7 +782,6 @@ public final class ServiceUtil {
 		}
 	}
 
-
 	public static void checkInputFieldSelectionSetValues(InputField inputField, boolean optional, Collection<Long> selectionSetValueIds,
 			InputFieldDao inputFieldDao, InputFieldSelectionSetValueDao selectionSetValueDao) throws ServiceException {
 		if (inputField != null) {
@@ -762,6 +882,7 @@ public final class ServiceUtil {
 		}
 	}
 
+
 	public static void checkInputFieldTimestampValue(InputField inputField, boolean optional, Date timestampValue, InputFieldDao inputFieldDao) throws ServiceException {
 		if (inputField != null) {
 			InputFieldType fieldType = inputField.getFieldType();
@@ -829,6 +950,7 @@ public final class ServiceUtil {
 		}
 	}
 
+
 	public static void checkLogonLimitations(PasswordInVO password) throws ServiceException {
 		if (password.isExpires()) {
 			if (password.getValidityPeriod() == null) {
@@ -854,6 +976,13 @@ public final class ServiceUtil {
 			} else if (password.getMaxWrongPasswordAttemptsSinceLastSuccessfulLogon() < 1) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_NUMBER_OF_MAX_WRONG_PASSWORD_ATTEMPTS_LESS_THAN_ONE);
 			}
+		}
+	}
+
+	public static void checkMassMailLocked(MassMail massMail) throws ServiceException {
+		if (massMail != null && massMail.getStatus().isLocked()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_LOCKED, Long.toString(massMail.getId()),
+					L10nUtil.getMassMailStatusTypeName(Locales.USER, massMail.getStatus().getNameL10nKey()));
 		}
 	}
 
@@ -891,7 +1020,7 @@ public final class ServiceUtil {
 			CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin,
 			CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-			{
+	{
 		// referential checks
 		if (courseParticipationIn.getSectionId() != null) {
 			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
@@ -928,7 +1057,7 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_INVALID_NEW_PARTICIPATION_STATUS_TYPE,
 					L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
-			}
+	}
 
 	public static void checkUserInput(UserInVO userIn, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
 		Department department = CheckIDUtil.checkDepartmentId(userIn.getDepartmentId(), departmentDao);
@@ -988,6 +1117,8 @@ public final class ServiceUtil {
 		painter.setAllCompetenceVOs(allCompetences);
 		return painter;
 	}
+
+
 
 	public static CourseParticipantListPDFPainter createCourseParticipantListPDFPainter(Collection<CourseOutVO> courseVOs, boolean blank, LecturerDao lecturerDao,
 			LecturerCompetenceDao competenceDao, CourseParticipationStatusEntryDao courseParticipationDao, InventoryBookingDao bookingDao) throws Exception {
@@ -1071,6 +1202,454 @@ public final class ServiceUtil {
 		user.setKeyPair(keyPair);
 		keyPair.setUser(user);
 		keyPairDao.create(keyPair);
+	}
+
+	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, // TrialOutVO trial
+			TrialTagValueDao trialTagValueDao, ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			InventoryBookingDao inventoryBookingDao,
+			ProbandTagValueDao probandTagValueDao,
+			ProbandContactDetailValueDao probandContactDetailValueDao,
+			ProbandAddressDao probandAddressDao,
+			DiagnosisDao diagnosisDao,
+			ProcedureDao procedureDao,
+			MedicationDao medicationDao,
+			BankAccountDao bankAccountDao) throws Exception {
+		Map model = CoreUtil.createEmptyTemplateModel();
+
+		boolean enumerateEntities = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES, Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES);
+		boolean excludeEncryptedFields = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS, Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS);
+
+
+		String datetimePattern = Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN);
+		String datePattern = Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN);
+		String timePattern = Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN);
+		final Locales locale = L10nUtil.getLocales(massMail.getLocale());
+		InputFieldValueStringAdapterBase listEntryTagFieldValueAdapter = new InputFieldValueStringAdapterBase<ProbandListEntryTagValueOutVO>() {
+
+			private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
+
+			@Override
+			protected boolean getBooleanValue(ProbandListEntryTagValueOutVO value) {
+				return value.getBooleanValue();
+			}
+
+			@Override
+			protected String getCheckboxString(boolean value) {
+				return L10nUtil.getString(locale,
+						value ? MessageCodes.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : MessageCodes.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED,
+								value ? DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
+			}
+
+			@Override
+			protected DateFormat getDateFormat() {
+				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN,
+						locale);
+			}
+
+			@Override
+			protected DateFormat getDateTimeFormat() {
+				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
+						DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, locale);
+			}
+
+			@Override
+			protected Date getDateValue(ProbandListEntryTagValueOutVO value) {
+				return value.getDateValue();
+			}
+
+			@Override
+			protected Float getFloatValue(ProbandListEntryTagValueOutVO value) {
+				return value.getFloatValue();
+			}
+
+			@Override
+			protected InputFieldOutVO getInputField(ProbandListEntryTagValueOutVO value) {
+				return value != null ? value.getTag().getField() : null;
+			}
+
+			@Override
+			protected Long getLongValue(ProbandListEntryTagValueOutVO value) {
+				return value.getLongValue();
+			}
+
+			@Override
+			protected Collection<InputFieldSelectionSetValueOutVO> getSelectionSetValues(ProbandListEntryTagValueOutVO value) {
+				return value.getSelectionValues();
+			}
+
+			@Override
+			protected String getSelectionSetValuesSeparator() {
+				return SELECTION_SET_VALUES_SEPARATOR;
+				// return L10nUtil.getString(Locales.NOTIFICATION, MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR,
+				// DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR);
+			}
+
+			@Override
+			protected Integer getTextClipMaxLength() {
+				return null;
+			}
+
+			@Override
+			protected String getTextValue(ProbandListEntryTagValueOutVO value) {
+				return value.getTextValue();
+			}
+
+			@Override
+			protected DateFormat getTimeFormat() {
+				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN,
+						locale);
+			}
+
+			@Override
+			protected Date getTimestampValue(ProbandListEntryTagValueOutVO value) {
+				return value.getTimestampValue();
+			}
+
+			@Override
+			protected Date getTimeValue(ProbandListEntryTagValueOutVO value) {
+				return value.getTimeValue();
+			}
+		};
+
+		// if (trial == null) {
+		// trial = massMail.getTrial();
+		// }
+
+		Iterator<KeyValueString> voFieldIt = getMassMailTemplateModelKeyValueIterator(MassMailOutVO.class, enumerateEntities, excludeEncryptedFields);
+		while (voFieldIt.hasNext()) {
+			KeyValueString keyValuePair = voFieldIt.next();
+			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(massMail).iterator();
+			while (indexesKeysIt.hasNext()) {
+				ArrayList<Object> indexesKeys = indexesKeysIt.next();
+				model.put(MassMailMessageTemplateParameters.MASS_MAIL_PREFIX + keyValuePair.getKey(indexesKeys),
+						keyValuePair.getValue(locale, massMail, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+								excludeEncryptedFields));
+			}
+		}
+
+		voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandOutVO.class, enumerateEntities, excludeEncryptedFields);
+		while (voFieldIt.hasNext()) {
+			KeyValueString keyValuePair = voFieldIt.next();
+			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(proband).iterator();
+			while (indexesKeysIt.hasNext()) {
+				ArrayList<Object> indexesKeys = indexesKeysIt.next();
+				model.put(MassMailMessageTemplateParameters.PROBAND_PREFIX + keyValuePair.getKey(indexesKeys),
+						keyValuePair.getValue(locale, proband, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+								excludeEncryptedFields));
+			}
+		}
+		model.put(MassMailMessageTemplateParameters.PROBAND_TAG_VALUES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.PROBAND_CONTACT_DETAIL_VALUES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.PROBAND_ADDRESSES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.DIAGNOSES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.PROCEDURES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.MEDICATIONS, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.BANK_ACCOUNTS, new ArrayList());
+		if (proband != null) {
+			Collection models = new ArrayList();
+			Collection probandTagValues = probandTagValueDao.findByProband(proband.getId(), null);
+			probandTagValueDao.toProbandTagValueOutVOCollection(probandTagValues);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator probandTagValuesIt = probandTagValues.iterator();
+			while (probandTagValuesIt.hasNext()) {
+				ProbandTagValueOutVO probandTagValue = (ProbandTagValueOutVO) probandTagValuesIt.next();
+				Map probandTagValueModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandTagValue).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						probandTagValueModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, probandTagValue, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(probandTagValueModel);
+			}
+			model.put(MassMailMessageTemplateParameters.PROBAND_TAG_VALUES, models);
+			models = new ArrayList();
+			Collection probandContactDetailValues = probandContactDetailValueDao.findByProband(proband.getId(), null, null, null, null, null);
+			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(probandContactDetailValues);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandContactDetailValueOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator probandContactDetailValuesIt = probandContactDetailValues.iterator();
+			while (probandContactDetailValuesIt.hasNext()) {
+				ProbandContactDetailValueOutVO probandContactDetailValue = (ProbandContactDetailValueOutVO) probandContactDetailValuesIt.next();
+				Map probandContactDetailValueModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandContactDetailValue).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						probandContactDetailValueModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, probandContactDetailValue, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(probandContactDetailValueModel);
+			}
+			model.put(MassMailMessageTemplateParameters.PROBAND_CONTACT_DETAIL_VALUES, models);
+			models = new ArrayList();
+			Collection probandAddresses = probandAddressDao.findByProband(proband.getId(), null, null, null, null);
+			probandAddressDao.toProbandAddressOutVOCollection(probandAddresses);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandAddressOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator probandAddressesIt = probandAddresses.iterator();
+			while (probandAddressesIt.hasNext()) {
+				ProbandAddressOutVO probandAddress = (ProbandAddressOutVO) probandAddressesIt.next();
+				Map probandAddressModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandAddress).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						probandAddressModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, probandAddress, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(probandAddressModel);
+			}
+			model.put(MassMailMessageTemplateParameters.PROBAND_ADDRESSES, models);
+			models = new ArrayList();
+			Collection diagnoses = diagnosisDao.findByProband(proband.getId(), null);
+			diagnosisDao.toDiagnosisOutVOCollection(diagnoses);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(DiagnosisOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator diagnosesIt = diagnoses.iterator();
+			while (diagnosesIt.hasNext()) {
+				DiagnosisOutVO diagnosis = (DiagnosisOutVO) diagnosesIt.next();
+				Map diagnosesModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(diagnosis).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						diagnosesModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, diagnosis, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(diagnosesModel);
+			}
+			model.put(MassMailMessageTemplateParameters.DIAGNOSES, models);
+			models = new ArrayList();
+			Collection procedures = procedureDao.findByProband(proband.getId(), null);
+			procedureDao.toProcedureOutVOCollection(procedures);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProcedureOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator proceduresIt = procedures.iterator();
+			while (proceduresIt.hasNext()) {
+				ProcedureOutVO procedure = (ProcedureOutVO) proceduresIt.next();
+				Map proceduresModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(procedure).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						proceduresModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, procedure, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(proceduresModel);
+			}
+			model.put(MassMailMessageTemplateParameters.PROCEDURES, models);
+			models = new ArrayList();
+			Collection medications = medicationDao.findByProband(proband.getId(), null);
+			medicationDao.toMedicationOutVOCollection(medications);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(MedicationOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator medicationsIt = medications.iterator();
+			while (medicationsIt.hasNext()) {
+				MedicationOutVO medication = (MedicationOutVO) medicationsIt.next();
+				Map medicationsModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(medication).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						medicationsModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, medication, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(medicationsModel);
+			}
+			model.put(MassMailMessageTemplateParameters.MEDICATIONS, models);
+			models = new ArrayList();
+			Collection bankAccounts = bankAccountDao.findByProband(proband.getId(), null, null, null);
+			bankAccountDao.toBankAccountOutVOCollection(bankAccounts);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(BankAccountOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator bankAccountsIt = bankAccounts.iterator();
+			while (bankAccountsIt.hasNext()) {
+				BankAccountOutVO bankAccount = (BankAccountOutVO) bankAccountsIt.next();
+				Map bankAccountsModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(bankAccount).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						bankAccountsModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, bankAccount, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add(bankAccountsModel);
+			}
+			model.put(MassMailMessageTemplateParameters.BANK_ACCOUNTS, models);
+		}
+
+
+		//		model.put(MassMailMessageTemplateParameters.MASS_MAIL, massMail);
+		//		model.put(MassMailMessageTemplateParameters.PROBAND, proband);
+
+
+
+
+		voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialOutVO.class, enumerateEntities, excludeEncryptedFields);
+		while (voFieldIt.hasNext()) {
+			KeyValueString keyValuePair = voFieldIt.next();
+			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(massMail.getTrial()).iterator();
+			while (indexesKeysIt.hasNext()) {
+				ArrayList<Object> indexesKeys = indexesKeysIt.next();
+				model.put(MassMailMessageTemplateParameters.TRIAL_PREFIX + keyValuePair.getKey(indexesKeys),
+						keyValuePair.getValue(locale, massMail.getTrial(), indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+								excludeEncryptedFields));
+			}
+		}
+
+		model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.TRIAL_INVENTORY_BOOKINGS, new ArrayList());
+		model.put(MassMailMessageTemplateParameters.PROBAND_INVENTORY_BOOKINGS, new ArrayList());
+		ProbandListEntryOutVO probandListEntry = null;
+		if (massMail.getTrial() != null) {
+			Collection models = new ArrayList();
+			Collection trialTagValues = trialTagValueDao.findByTrial(massMail.getTrial().getId(), null);
+			trialTagValueDao.toTrialTagValueOutVOCollection(trialTagValues);
+			voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
+			Iterator trialTagValuesIt = trialTagValues.iterator();
+			while (trialTagValuesIt.hasNext()) {
+				TrialTagValueOutVO trialTagValue = (TrialTagValueOutVO) trialTagValuesIt.next();
+				Map trialTagValueModel = CoreUtil.createEmptyTemplateModel();
+				while (voFieldIt.hasNext()) {
+					KeyValueString keyValuePair = voFieldIt.next();
+					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(trialTagValue).iterator();
+					while (indexesKeysIt.hasNext()) {
+						ArrayList<Object> indexesKeys = indexesKeysIt.next();
+						trialTagValueModel.put(keyValuePair.getKey(indexesKeys),
+								keyValuePair.getValue(locale, trialTagValue, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+										excludeEncryptedFields));
+					}
+				}
+				models.add( trialTagValueModel);
+			}
+			model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES,models);
+
+			if (proband != null) {
+				probandListEntry = probandListEntryDao.toProbandListEntryOutVO(probandListEntryDao.findByTrialProband(massMail.getTrial().getId(), proband.getId()));
+				if (probandListEntry != null) {
+					models = new ArrayList();
+					Collection listEntryTagValues = probandListEntryTagValueDao.findByListEntryListEntryTag(probandListEntry.getId(), null);
+					probandListEntryTagValueDao.toProbandListEntryTagValueOutVOCollection(listEntryTagValues);
+					voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandListEntryTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
+					Iterator listEntryTagValuesIt = listEntryTagValues.iterator();
+					while (listEntryTagValuesIt.hasNext()) {
+						ProbandListEntryTagValueOutVO listEntryTagValue = (ProbandListEntryTagValueOutVO) listEntryTagValuesIt.next();
+						Map listEntryTagValueModel = CoreUtil.createEmptyTemplateModel();
+						while (voFieldIt.hasNext()) {
+							KeyValueString keyValuePair = voFieldIt.next();
+							Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(listEntryTagValue).iterator();
+							while (indexesKeysIt.hasNext()) {
+								ArrayList<Object> indexesKeys = indexesKeysIt.next();
+								listEntryTagValueModel.put(keyValuePair.getKey(indexesKeys),
+										keyValuePair.getValue(locale, listEntryTagValue, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+												excludeEncryptedFields));
+							}
+						}
+						listEntryTagValueModel.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES_VALUE,
+								listEntryTagFieldValueAdapter.toString(listEntryTagValue));
+						models.add( listEntryTagValueModel);
+					}
+					model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES,models);
+				}
+				models = new ArrayList();
+				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);
+				inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(InventoryBookingOutVO.class, enumerateEntities, excludeEncryptedFields);
+				Iterator inventoryBookingsIt = inventoryBookings.iterator();
+				while (inventoryBookingsIt.hasNext()) {
+					InventoryBookingOutVO inventoryBooking = (InventoryBookingOutVO) inventoryBookingsIt.next();
+					Map inventoryBookingModel = CoreUtil.createEmptyTemplateModel();
+					while (voFieldIt.hasNext()) {
+						KeyValueString keyValuePair = voFieldIt.next();
+						Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(inventoryBooking).iterator();
+						while (indexesKeysIt.hasNext()) {
+							ArrayList<Object> indexesKeys = indexesKeysIt.next();
+							inventoryBookingModel.put(keyValuePair.getKey(indexesKeys),
+									keyValuePair.getValue(locale, inventoryBooking, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+											excludeEncryptedFields));
+						}
+					}
+					models.add(inventoryBookingModel);
+				}
+				model.put(MassMailMessageTemplateParameters.TRIAL_INVENTORY_BOOKINGS, models);
+				model.put(MassMailMessageTemplateParameters.PROBAND_INVENTORY_BOOKINGS, models);
+			}
+
+		}
+
+		voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandListEntryOutVO.class, enumerateEntities, excludeEncryptedFields);
+		while (voFieldIt.hasNext()) {
+			KeyValueString keyValuePair = voFieldIt.next();
+			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandListEntry).iterator();
+			while (indexesKeysIt.hasNext()) {
+				ArrayList<Object> indexesKeys = indexesKeysIt.next();
+				model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_OUT_VO_PREFIX +keyValuePair.getKey(indexesKeys),
+						keyValuePair.getValue(locale, probandListEntry, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+								excludeEncryptedFields));
+			}
+		}
+
+
+		model.put(MassMailMessageTemplateParameters.SUBJECT,"");
+		model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,"");
+		model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION,"");
+		if (massMail != null) {
+			model.put(MassMailMessageTemplateParameters.SUBJECT,
+					getMassMailSubject(massMail.getSubjectFormat(), locale, massMail.getMaleSalutation(), massMail.getFemaleSalutation(), proband, massMail.getTrial(),
+							massMail.getProbandListStatus()));
+
+			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
+
+			if (proband != null) {
+				model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION,CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
+			}
+		}
+
+
+		model.put(
+				MassMailMessageTemplateParameters.MASS_MAIL_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
+						CommonUtil.UNSUBSCRIBE_PATH, CommonUtil.BEACON_GET_PARAMETER_NAME, beacon != null ? beacon : DUUMY_BEACON));
+		model.put(
+				MassMailMessageTemplateParameters.PROBAND_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
+						CommonUtil.UNSUBSCRIBE_PATH, CommonUtil.BEACON_GET_PARAMETER_NAME, proband != null ? proband.getBeacon() : DUUMY_BEACON));
+		model.put(
+				MassMailMessageTemplateParameters.GENERATED_ON,
+				Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
+						DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, locale).format(now));
+		model.put(
+				MassMailMessageTemplateParameters.INSTANCE_NAME, Settings.getInstanceName());
+		model.put(
+				MassMailMessageTemplateParameters.HTTP_BASE_URL, Settings.getHttpBaseUrl());
+		model.put(
+				MassMailMessageTemplateParameters.HTTP_DOMAIN_NAME, Settings.getHttpDomainName());
+		model.put(MassMailMessageTemplateParameters.STRING_UTILS, VELOCITY_STRING_UTILS);
+		if (messageParameters != null && messageParameters.size() > 0) {
+			model.putAll(messageParameters);
+		}
+
+		return model;
+
 	}
 
 	public static Password createPassword(Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword, String plainDepartmentPassword,
@@ -1422,7 +2001,6 @@ public final class ServiceUtil {
 
 	}
 
-
 	public static ProbandListEntryTagValueInVO createPresetProbandListEntryTagInValue(ProbandListEntryTag listEntryTag, long listEntryId,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ProbandListEntryTagValueInVO probandListEntryTagValueIn = new ProbandListEntryTagValueInVO();
@@ -1582,6 +2160,7 @@ public final class ServiceUtil {
 		return painter;
 	}
 
+
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(ProbandAddressOutVO probandAddress) throws Exception {
 		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
 		if (probandAddress != null) {
@@ -1740,6 +2319,7 @@ public final class ServiceUtil {
 		(new ExcelExporter(writer, writer)).write();
 		return writer.getExcelVO();
 	}
+
 
 	public static VisitScheduleExcelVO creatVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
 			TrialOutVO trialVO,
@@ -2070,6 +2650,84 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues, PSFVO psf,
+			ECRFFieldDao ecrfFieldDao,
+			ECRFFieldValueDao ecrfFieldValueDao,
+
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
+
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
+			ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao
+			)
+					throws Exception {
+		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
+		if (listEntryVO != null && ecrf != null) {
+			//ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+			//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, null, psf);
+			HashMap<String, Long> maxSeriesIndexMap = null;
+			HashMap<String, Long> fieldMaxPositionMap = null;
+			HashMap<String, Long> fieldMinPositionMap = null;
+			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
+			// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
+			if (addSeries) {
+				maxSeriesIndexMap = new HashMap<String, Long>();
+				fieldMaxPositionMap = new HashMap<String, Long>();
+				fieldMinPositionMap = new HashMap<String, Long>();
+				seriesEcrfFieldMap = new HashMap<String, Set<ECRFField>>();
+				// seriesEcrfFieldJsMap = new HashMap<String, Set<ECRFField>>();
+				initSeriesEcrfFieldMaps(
+						ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, null, null),
+						listEntryVO.getId(),
+						ecrf.getId(),
+						maxSeriesIndexMap,
+						fieldMaxPositionMap,
+						fieldMinPositionMap,
+						seriesEcrfFieldMap,
+						// seriesEcrfFieldJsMap,
+						ecrfFieldValueDao
+						);
+			}
+			result.setPageValues(getEcrfFieldValues(listEntryVO, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
+					null,
+					ecrfFieldDao,
+					ecrfFieldValueDao,
+					ecrfFieldStatusEntryDao,
+					ecrfFieldStatusTypeDao)); // this.getInputFieldSelectionSetValueDao()
+			if (jsValues) {
+				if (addSeries) {
+					maxSeriesIndexMap.clear();
+					fieldMaxPositionMap.clear();
+					fieldMinPositionMap.clear();
+					seriesEcrfFieldMap.clear();
+					// seriesEcrfFieldJsMap.clear();
+					initSeriesEcrfFieldMaps(
+							ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, true, null),
+							listEntryVO.getId(),
+							ecrf.getId(),
+							maxSeriesIndexMap,
+							fieldMaxPositionMap,
+							fieldMinPositionMap,
+							seriesEcrfFieldMap,
+							// seriesEcrfFieldJsMap,
+							ecrfFieldValueDao
+							);
+				}
+				if (loadAllJsValues) {
+					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, true, null),
+							maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
+							false, ecrfFieldValueDao,
+							inputFieldSelectionSetValueDao));
+				} else {
+					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
+							true, ecrfFieldValueDao,
+							inputFieldSelectionSetValueDao));
+				}
+			}
+		}
+		return result;
+	}
+
 	public static Collection<ECRFFieldValueOutVO> getEcrfFieldValues(ProbandListEntryOutVO listEntryVO, Collection<Map> ecrfFieldValues,
 			HashMap<String, Long> maxSeriesIndexMap,
 			HashMap<String, Long> fieldMaxPositionMap, HashMap<String, Long> fieldMinPositionMap,
@@ -2149,6 +2807,52 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static ArrayList getIndexFieldLog(long listEntryId, long ecrfFieldId, Long index, boolean blank, boolean auditTrail, boolean skipMostRecentValue,
+			boolean skipMostRecentStatus, ECRFFieldStatusQueue[] queues,
+			ECRFFieldValueDao ecrfFieldValueDao,
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao
+
+
+
+			) throws Exception {
+
+		//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+		//ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+		EcrfFieldValueStatusEntryOutVOComparator ecrfFieldValueStatusEntryOutVOComparator = new EcrfFieldValueStatusEntryOutVOComparator(true);
+
+		ArrayList indexFieldLog = new ArrayList();
+		Collection log;
+		if (!blank && auditTrail) { // x) {
+			log = ecrfFieldValueDao.findByListEntryEcrfFieldIndex(listEntryId, ecrfFieldId, index, true, true, null);
+			Iterator logIt = log.iterator();
+			if (skipMostRecentValue && logIt.hasNext()) {
+				logIt.next();
+			} // skip most actual element
+			while (logIt.hasNext()) {
+				indexFieldLog.add(ecrfFieldValueDao.toECRFFieldValueOutVO((ECRFFieldValue) logIt.next()));
+			}
+			// indexFieldLog.addAll(log);
+		}
+		if (!blank && queues != null) {
+			for (int i = 0; i < queues.length; i++) {
+				log = ecrfFieldStatusEntryDao.findByListEntryEcrfFieldIndex(queues[i], listEntryId, ecrfFieldId, index, false, true, // false,
+						null);
+				// ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(log);
+				// indexFieldLog.addAll(log);
+				Iterator logIt = log.iterator();
+				if (skipMostRecentStatus && logIt.hasNext()) {
+					logIt.next();
+				} // skip most actual element
+				while (logIt.hasNext()) {
+					indexFieldLog.add(ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO((ECRFFieldStatusEntry) logIt.next()));
+				}
+			}
+		}
+		Collections.sort(indexFieldLog, ecrfFieldValueStatusEntryOutVOComparator);
+
+		return indexFieldLog;
+	}
+
 	public static Collection<InquiryValueJsonVO> getInquiryJsonValues(Collection<Map> inquiryValues,
 			boolean filterJsValues, InquiryValueDao inquiryValueDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
@@ -2192,11 +2896,130 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues,
+			boolean sort,
+			PSFVO psf,InquiryDao inquiryDao,InquiryValueDao inquiryValueDao,InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
+
+		//InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		InquiryValuesOutVO result = new InquiryValuesOutVO();
+		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, null, psf);
+		result.setPageValues(getInquiryValues(probandVO, inquiryValues, null,
+				inquiryDao, inquiryValueDao)); // , this.getInputFieldSelectionSetValueDao()
+		if (jsValues) {
+			if (loadAllJsValues) {
+				result.setJsValues(getInquiryJsonValues(
+						inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null),
+						false, inquiryValueDao, inputFieldSelectionSetValueDao));
+			} else {
+				result.setJsValues(getInquiryJsonValues(inquiryValues,
+						true, inquiryValueDao, inputFieldSelectionSetValueDao));
+			}
+		}
+		return result;
+
+	}
+
 	public static Date getLogonExpirationDate(Password password) {
 		return DateCalc.addInterval(getPasswordDate(password), password.getValidityPeriod(), password.getValidityPeriodDays());
 	}
 
+	public static String getMassMailMessage(VelocityEngine velocityEngine, MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, // TrialOutVO
+			// trial
+			TrialTagValueDao trialTagValueDao, ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			InventoryBookingDao inventoryBookingDao,
+			ProbandTagValueDao probandTagValueDao,
+			ProbandContactDetailValueDao probandContactDetailValueDao,
+			ProbandAddressDao probandAddressDao,
+			DiagnosisDao diagnosisDao,
+			ProcedureDao procedureDao,
+			MedicationDao medicationDao,
+			BankAccountDao bankAccountDao)
+					throws ServiceException {
 
+		StringWriter result = new StringWriter();
+		try {
+			Map model = createMassMailTemplateModel(massMail, proband, beacon, now, messageParameters, trialTagValueDao, probandListEntryDao, probandListEntryTagValueDao, // trial
+					inventoryBookingDao,
+					probandTagValueDao,
+					probandContactDetailValueDao,
+					probandAddressDao,
+					diagnosisDao,
+					procedureDao,
+					medicationDao,
+					bankAccountDao);
+			velocityEngine.evaluate(new VelocityContext(model), result, massMail.getName(), massMail.getTextTemplate());
+		} catch (Exception e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_TEXT_TEMPLATE, massMail.getTextTemplate(), e.getMessage());
+		}
+		return result.toString();
+	}
+
+	public static String getMassMailSubject(String format, Locales locale, String maleSalutation, String femaleSalutation, ProbandOutVO proband, TrialOutVO trial,
+			ProbandListStatusTypeVO probandListStatusType) throws ServiceException {
+		// return MessageFormat.format(format, args)
+		Object[] args = new String[10];
+		args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
+		if (proband != null) {
+			args[1] = proband.getFirstName();
+			args[2] = proband.getLastName();
+		} else {
+			args[1] = "";
+			args[2] = "";
+		}
+		args[3] = CommonUtil.getProbandName(proband, true, false,
+				L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
+				L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
+				L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME));
+		if (proband != null) {
+			args[4] = CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), maleSalutation, femaleSalutation);
+			if (proband.getPhysician() != null) {
+				args[5] = proband.getPhysician().getFirstName();
+				args[6] = proband.getPhysician().getLastName();
+			} else {
+				args[5] = "";
+				args[6] = "";
+			}
+			args[7] = CommonUtil.getStaffName(proband.getPhysician(), true, false);
+		} else {
+			args[4] = "";
+			args[5] = "";
+			args[6] = "";
+			args[7] = "";
+		}
+		if (trial != null) {
+			args[8] = trial.getName();
+		} else {
+			args[8] = "";
+		}
+		if (probandListStatusType != null) {
+			args[9] = L10nUtil.getProbandListStatusTypeName(locale, probandListStatusType.getNameL10nKey());
+		} else {
+			args[9] = "";
+		}
+		try {
+			return MessageFormat.format(format, args);
+		} catch (Exception e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_SUBJECT_FORMAT, format, e.getMessage());
+		}
+	}
+
+	private static Iterator<KeyValueString> getMassMailTemplateModelKeyValueIterator(Class vo, boolean enumerateEntities, boolean excludeEncryptedFields) throws Exception {
+		return KeyValueString
+				.getKeyValuePairs(
+						vo,
+						Settings.getInt(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH),
+						excludeEncryptedFields,
+						null,
+						enumerateEntities,
+						Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES, Bundle.SETTINGS,
+								DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES),
+						Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS, Bundle.SETTINGS,
+								DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
+						Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_MAPS),
+						MassMailMessageTemplateParameters.TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR,
+						MassMailMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES)
+				.iterator();
+	}
 
 	public static Date getPasswordDate(Password password) {
 		return DateCalc.getStartOfDay(password.getTimestamp());
@@ -2219,6 +3042,8 @@ public final class ServiceUtil {
 		return result;
 	}
 
+
+
 	public static Collection<ProbandListEntryTagValueJsonVO> getProbandListEntryTagJsonValues(Collection<Map> probandListEntryTagValues, boolean filterJsValues,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
 		ArrayList<ProbandListEntryTagValueJsonVO> result = new ArrayList<ProbandListEntryTagValueJsonVO>(probandListEntryTagValues.size());
@@ -2238,6 +3063,27 @@ public final class ServiceUtil {
 			}
 		}
 		return result;
+	}
+
+	public static ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(ProbandListEntryOutVO listEntryVO, boolean jsValues, boolean loadAllJsValues, boolean sort, PSFVO psf,
+			ProbandListEntryTagDao probandListEntryTagDao,ProbandListEntryTagValueDao probandListEntryTagValueDao,InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
+
+		//ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+		ProbandListEntryTagValuesOutVO result = new ProbandListEntryTagValuesOutVO();
+		Collection<Map> tagValues = probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, null, psf);
+		result.setPageValues(getProbandListEntryTagValues(listEntryVO, tagValues, null,
+				probandListEntryTagDao, probandListEntryTagValueDao)); // this.getInputFieldSelectionSetValueDao()
+		if (jsValues) {
+			if (loadAllJsValues) {
+				result.setJsValues(getProbandListEntryTagJsonValues(probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, true, null),
+						false, probandListEntryTagValueDao,inputFieldSelectionSetValueDao));
+			} else {
+				result.setJsValues(getProbandListEntryTagJsonValues(tagValues,
+						true, probandListEntryTagValueDao, inputFieldSelectionSetValueDao));
+			}
+		}
+		return result;
+
 	}
 
 	public static Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagValues(ProbandListEntryOutVO probandListEntryVO, Collection<Map> probandListEntryTagValues,
@@ -2264,6 +3110,22 @@ public final class ServiceUtil {
 
 	private static String getValidationErrorMsg(InputFieldOutVO inputField) {
 		return MessageFormat.format(INPUT_FIELD_VALIDATION_ERROR_MESSAGE, CommonUtil.inputFieldOutVOToString(inputField), inputField.getValidationErrorMsg());
+	}
+
+	public static SignatureVO getVerifiedEcrfSignatureVO(Signature signature,
+			SignatureDao signatureDao,
+			ECRFFieldValueDao ecrfFieldValueDao,
+
+
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
+		SignatureVO result = signatureDao.toSignatureVO(signature);
+		StringBuilder comment = new StringBuilder();
+		result.setVerificationTimestamp(new Date());
+		result.setValid(EcrfSignature.verify(signature, comment, ecrfFieldValueDao, ecrfFieldStatusEntryDao));
+		result.setVerified(true);
+		result.setComment(comment.toString());
+		result.setDescription(EntitySignature.getDescription(result));
+		return result;
 	}
 
 	public static AuthorisationException initAuthorisationExceptionWithPosition(String errorCode, boolean logError, CriterionInstantVO criterion, Object... args)
@@ -2421,6 +3283,37 @@ public final class ServiceUtil {
 				|| InputFieldType.SKETCH.equals(fieldType);
 	}
 
+	public static boolean isMassMailRecipientPending(MassMailRecipient recipient) {
+		if (recipient != null) {
+			if (recipient.isSent() || recipient.isCancelled()) {
+				return false;
+			} else {
+				Long processMassMailsMax = Settings.getLongNullable(SettingCodes.EMAIL_PROCESS_MASS_MAILS_MAX, Bundle.SETTINGS, DefaultSettings.EMAIL_PROCESS_MASS_MAILS_MAX);
+				if (processMassMailsMax != null && recipient.getTimesProcessed() >= processMassMailsMax) {
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
+		// if (recipient != null) {
+		// //Proband proband = recipient.getProband();
+		// //if (proband == null || proband.isDeferredDelete() || proband.getCategory().isLocked()) {
+		// // return false;
+		// //} else
+		// if (recipient.isSent() || recipient.isCancelled()) {
+		// return false;
+		// } else {
+		// Long processMassMailsMax = Settings.getLongNullable(SettingCodes.EMAIL_PROCESS_MASS_MAILS_MAX, Bundle.SETTINGS, DefaultSettings.EMAIL_PROCESS_MASS_MAILS_MAX);
+		// if (processMassMailsMax == null || recipient.getTimesProcessed() >= processMassMailsMax) {
+		// return false;
+		// }
+		// }
+		// return true;
+		// }
+		// return false;
+	}
+
 	public static Collection<CvPositionPDFVO> loadCvPositions(Long staffId, Long sectionId, CvPositionDao cvPositionDao, CourseParticipationStatusEntryDao courseParticipationDao)
 			throws Exception {
 		Collection cvPositions = cvPositionDao.findByStaffSection(staffId, sectionId, true, null);
@@ -2447,6 +3340,28 @@ public final class ServiceUtil {
 		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
 		: new Object[] { Long.toString(probandVO.getId()) },
 		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+	}
+
+	public static JournalEntry logSystemMessage(MassMail massMail, MassMailOutVO massMailVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			JournalEntryDao journalEntryDao) throws Exception {
+		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null)) });
+	}
+
+
+	public static JournalEntry logSystemMessage(MassMail massMail, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			JournalEntryDao journalEntryDao) throws Exception {
+		// we don't print proband name etc...
+		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null);
+		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
+		: new Object[] { Long.toString(probandVO.getId()) },
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+	}
+
+	public static JournalEntry logSystemMessage(Proband proband, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
+			JournalEntryDao journalEntryDao) throws Exception {
+		return journalEntryDao.addSystemMessage(proband, now, user, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
 	}
 
 	public static JournalEntry logSystemMessage(Proband proband, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -2503,6 +3418,12 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
+
+
+
+
+
+
 	private static JournalEntry logSystemMessage(User user, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, ProbandOutVO result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -2523,12 +3444,6 @@ public final class ServiceUtil {
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
-
-
-
-
-
-
 
 	public static void notifyParticipationStatusUpdated(CourseParticipationStatusType oldStatus, CourseParticipationStatusEntry courseParticipation, boolean toLecturers, Date now,
 			NotificationDao notificationDao) throws Exception {
@@ -2778,6 +3693,186 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void populateEcrfPDFVOMaps(
+			ProbandListEntry listEntry,
+			ProbandListEntryOutVO listEntryVO,
+			ECRF ecrf,
+			ECRFOutVO ecrfVO,
+			boolean blank,
+			Collection<ECRFFieldValueOutVO> ecrfValues,
+			ArrayList<ProbandListEntryOutVO> listEntryVOs,
+			HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap,
+			HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap,
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap,
+			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap,
+			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap,
+			HashMap<Long, SignatureVO> signatureVOMap,
+			HashMap<Long, InputFieldImageVO> imageVOMap,
+			HashSet<Long> ecrfIds,
+
+			InputFieldDao inputFieldDao,
+			ECRFFieldValueDao ecrfFieldValueDao,
+
+			ECRFStatusEntryDao ecrfStatusEntryDao,
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
+
+
+			ProbandListEntryTagDao probandListEntryTagDao,
+			ProbandListEntryTagValueDao probandListEntryTagValueDao,
+
+			SignatureDao signatureDao
+			) throws Exception {
+		if (ecrfValues.size() > 0) {
+			boolean auditTrail = Settings.getBoolean(EcrfPDFSettingCodes.AUDIT_TRAIL, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.AUDIT_TRAIL);
+			ECRFFieldStatusQueue[] queues = Settings.getEcrfFieldStatusQueueList(EcrfPDFSettingCodes.ECRF_FIELD_STATUS_QUEUES, Bundle.ECRF_PDF,
+					EcrfPDFDefaultSettings.ECRF_FIELD_STATUS_QUEUES).toArray(new ECRFFieldStatusQueue[0]);
+			boolean showProbandListEntryTags = Settings.getBoolean(EcrfPDFSettingCodes.SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.ECRF_PDF,
+					EcrfPDFDefaultSettings.SHOW_PROBAND_LIST_ENTRY_TAGS);
+			boolean showAllProbandListEntryTags = Settings.getBoolean(EcrfPDFSettingCodes.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS, Bundle.ECRF_PDF,
+					EcrfPDFDefaultSettings.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS);
+			//ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+			//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			//ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+			//SignatureDao signatureDao = this.getSignatureDao();
+			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			// EcrfFieldValueStatusEntryOutVOComparator ecrfFieldValueStatusEntryOutVOComparator = new EcrfFieldValueStatusEntryOutVOComparator(true);
+			Collection<ECRFOutVO> ecrfVOs;
+			if (ecrfVOMap.containsKey(listEntry.getId())) {
+				ecrfVOs = ecrfVOMap.get(listEntry.getId());
+			} else {
+				ecrfVOs = new ArrayList<ECRFOutVO>();
+				ecrfVOMap.put(listEntry.getId(), ecrfVOs);
+				listEntryVOs.add(listEntryVO);
+			}
+			ecrfVOs.add(ecrfVO);
+			if (!listEntryTagValuesVOMap.containsKey(listEntry.getId())) {
+				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfProbandSorted(listEntry.getTrial().getId(),
+						null, showAllProbandListEntryTags
+						? null : true, null) : new ArrayList();
+				// probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listEntryTags);
+				Collection<ProbandListEntryTagValueOutVO> listEntryTagValueVOs = new ArrayList<ProbandListEntryTagValueOutVO>(listEntryTags.size());
+				listEntryTagValuesVOMap.put(listEntry.getId(), listEntryTagValueVOs);
+				//ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+				//ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
+				Iterator listEntryTagsIt = listEntryTags.iterator();
+				while (listEntryTagsIt.hasNext()) {
+					ProbandListEntryTag listEntryTag = (ProbandListEntryTag) listEntryTagsIt.next();
+					Iterator<ProbandListEntryTagValue> listEntryTagValueIt = probandListEntryTagValueDao.findByListEntryListEntryTag(listEntry.getId(), listEntryTag.getId())
+							.iterator();
+					ProbandListEntryTagValueOutVO listEntryTagValueVO;
+					if (listEntryTagValueIt.hasNext()) {
+						listEntryTagValueVO = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(listEntryTagValueIt.next());
+					} else {
+						listEntryTagValueVO = createPresetProbandListEntryTagOutValue(listEntryVO,
+								probandListEntryTagDao.toProbandListEntryTagOutVO(listEntryTag), Locales.ECRF_PDF);
+					}
+					listEntryTagValueVOs.add(listEntryTagValueVO);
+					InputFieldOutVO field = listEntryTagValueVO.getTag().getField();
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
+						// if (field.getHasImage() ) {
+						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+						// }
+					}
+				}
+			}
+			HashMap<Long, Collection<ECRFFieldValueOutVO>> ecrfValueVOMap;
+			if (valueVOMap.containsKey(listEntry.getId())) {
+				ecrfValueVOMap = valueVOMap.get(listEntry.getId());
+			} else {
+				ecrfValueVOMap = new HashMap<Long, Collection<ECRFFieldValueOutVO>>();
+				valueVOMap.put(listEntry.getId(), ecrfValueVOMap);
+			}
+			// Collection<ECRFFieldValueOutVO> ecrfValues = getEcrfFieldValues(ecrf, listEntryVO, false, false, false, null).getPageValues();
+			ecrfValueVOMap.put(ecrf.getId(), ecrfValues);
+			HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap;
+			if (logVOMap.containsKey(listEntry.getId())) {
+				ecrfLogVOMap = logVOMap.get(listEntry.getId());
+			} else {
+				ecrfLogVOMap = new HashMap<Long, HashMap<Long, Collection>>();
+				logVOMap.put(listEntry.getId(), ecrfLogVOMap);
+			}
+			Iterator<ECRFFieldValueOutVO> it = ecrfValues.iterator();
+			while (it.hasNext()) {
+				ECRFFieldValueOutVO value = it.next();
+				HashMap<Long, Collection> fieldLogVOMap;
+				if (ecrfLogVOMap.containsKey(value.getEcrfField().getId())) {
+					fieldLogVOMap = ecrfLogVOMap.get(value.getEcrfField().getId());
+				} else {
+					fieldLogVOMap = new HashMap<Long, Collection>();
+					ecrfLogVOMap.put(value.getEcrfField().getId(), fieldLogVOMap);
+				}
+				fieldLogVOMap.put(value.getIndex(), getIndexFieldLog(listEntry.getId(), value.getEcrfField().getId(), value.getIndex(), blank, auditTrail, true, false, queues,
+
+						ecrfFieldValueDao,
+						ecrfFieldStatusEntryDao
+
+						));
+				// ArrayList indexFieldLog = new ArrayList();
+				// Collection log;
+				// if (!blank && auditTrail) { // x) {
+				// log = ecrfFieldValueDao.findByListEntryEcrfFieldIndex(listEntry.getId(), value.getEcrfField().getId(), value.getIndex(), true, true, null);
+				// Iterator logIt = log.iterator();
+				// if (logIt.hasNext()) {
+				// logIt.next();
+				// } // skip most actual element
+				// while (logIt.hasNext()) {
+				// indexFieldLog.add(ecrfFieldValueDao.toECRFFieldValueOutVO((ECRFFieldValue) logIt.next()));
+				// }
+				// // indexFieldLog.addAll(log);
+				// }
+				// if (!blank && queues != null) {
+				// for (int i = 0; i < queues.length; i++) {
+				// log = ecrfFieldStatusEntryDao.findByListEntryEcrfFieldIndex(queues[i], listEntry.getId(), value.getEcrfField().getId(), value.getIndex(), false, false,
+				// null);
+				// ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(log);
+				// indexFieldLog.addAll(log);
+				// }
+				// }
+				// Collections.sort(indexFieldLog, ecrfFieldValueStatusEntryOutVOComparator);
+				// fieldLogVOMap.put(value.getIndex(), indexFieldLog);
+			}
+			HashMap<Long, ECRFStatusEntryVO> ecrfStatusEntryVOMap;
+			if (statusEntryVOMap.containsKey(listEntry.getId())) {
+				ecrfStatusEntryVOMap = statusEntryVOMap.get(listEntry.getId());
+			} else {
+				ecrfStatusEntryVOMap = new HashMap<Long, ECRFStatusEntryVO>();
+				statusEntryVOMap.put(listEntry.getId(), ecrfStatusEntryVOMap);
+			}
+			ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrf.getId(), listEntry.getId());
+			if (statusEntry != null) {
+				ecrfStatusEntryVOMap.put(ecrf.getId(), ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry));
+				Signature signature = signatureDao.findRecentSignature(SignatureModule.ECRF_SIGNATURE, statusEntry.getId());
+				if (!blank && signature != null) {
+					signatureVOMap.put(statusEntry.getId(), getVerifiedEcrfSignatureVO(signature,
+							signatureDao,
+							ecrfFieldValueDao,
+
+
+							ecrfFieldStatusEntryDao)); // result.setDescription(EntitySignature.getDescription(result));
+				} else {
+					signatureVOMap.put(statusEntry.getId(), null);
+				}
+			} else {
+				ecrfStatusEntryVOMap.put(ecrf.getId(), null);
+			}
+			// statusEntryVOMap.put(listEntry.getId(), ecrfStatusEntryVOMap);
+			if (ecrfIds.add(ecrf.getId())) {
+				Iterator<ECRFFieldValueOutVO> ecrfValuesIt = ecrfValues.iterator();
+				while (ecrfValuesIt.hasNext()) {
+					InputFieldOutVO field = ecrfValuesIt.next().getEcrfField().getField();
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
+						// if (field.getHasImage() ) {
+						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+						// }
+					}
+				}
+			}
+			// } else {
+			// int x = 5;
+			// x = x + 1;
+		}
+	}
+
 	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean sectionDetail,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
@@ -2926,6 +4021,52 @@ public final class ServiceUtil {
 			// sectionProgressMap.put(section, sectionProgress);
 			// result.getSections().add(sectionProgress);
 			// }
+		}
+	}
+
+	public static void populateInquiriesPDFVOMaps(
+			Proband proband,
+			ProbandOutVO probandVO,
+			Trial trial,
+			TrialOutVO trialVO,
+			Collection<InquiryValueOutVO> inquiryValues,
+			ArrayList<ProbandOutVO> probandVOs,
+			HashMap<Long, Collection<TrialOutVO>> trialVOMap,
+			HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap,
+			HashMap<Long, InputFieldImageVO> imageVOMap,
+			HashSet<Long> trialIds,InputFieldDao inputFieldDao
+			) throws Exception {
+		if (inquiryValues.size() > 0) {
+			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			Collection<TrialOutVO> trialVOs;
+			if (trialVOMap.containsKey(proband.getId())) {
+				trialVOs = trialVOMap.get(proband.getId());
+			} else {
+				trialVOs = new ArrayList<TrialOutVO>();
+				trialVOMap.put(proband.getId(), trialVOs);
+				probandVOs.add(probandVO);
+			}
+			trialVOs.add(trialVO);
+			HashMap<Long, Collection<InquiryValueOutVO>> inquiryValueVOMap;
+			if (valueVOMap.containsKey(proband.getId())) {
+				inquiryValueVOMap = valueVOMap.get(proband.getId());
+			} else {
+				inquiryValueVOMap = new HashMap<Long, Collection<InquiryValueOutVO>>();
+				valueVOMap.put(proband.getId(), inquiryValueVOMap);
+			}
+			// Collection<ECRFFieldValueOutVO> ecrfValues = getEcrfFieldValues(ecrf, listEntryVO, false, false, false, null).getPageValues();
+			inquiryValueVOMap.put(trial.getId(), inquiryValues);
+			if (trialIds.add(trial.getId())) {
+				Iterator<InquiryValueOutVO> inquiryValuesIt = inquiryValues.iterator();
+				while (inquiryValuesIt.hasNext()) {
+					InputFieldOutVO field = inquiryValuesIt.next().getInquiry().getField();
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
+						// if (field.getHasImage() ) {
+						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+						// }
+					}
+				}
+			}
 		}
 	}
 
@@ -3187,6 +4328,32 @@ public final class ServiceUtil {
 				}
 			}
 			summary.getTotalsByBankAccounts().add(totalsMap.getValue());
+		}
+	}
+
+	private static void populateProbandListEntryTagsPDFVOMaps(
+			ProbandListEntry listEntry,
+			ProbandListEntryOutVO listEntryVO,
+			Collection<ProbandListEntryTagValueOutVO> probandListEntryTagValues,
+			ArrayList<ProbandListEntryOutVO> listEntryVOs,
+			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap,
+			HashMap<Long, InputFieldImageVO> imageVOMap, InputFieldDao inputFieldDao
+			) throws Exception {
+		if (probandListEntryTagValues.size() > 0) {
+			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			listEntryVOs.add(listEntryVO);
+			if (!valueVOMap.containsKey(listEntry.getId())) {
+				valueVOMap.put(listEntry.getId(), probandListEntryTagValues);
+				Iterator<ProbandListEntryTagValueOutVO> probandListEntryTagValuesIt = probandListEntryTagValues.iterator();
+				while (probandListEntryTagValuesIt.hasNext()) {
+					InputFieldOutVO field = probandListEntryTagValuesIt.next().getTag().getField();
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
+						// if (field.getHasImage() ) {
+						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+						// }
+					}
+				}
+			}
 		}
 	}
 
@@ -3673,6 +4840,7 @@ public final class ServiceUtil {
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
 			SignatureDao signatureDao,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
+			MassMailRecipientDao massMailRecipientDao,
 			FileDao fileDao) throws Exception {
 		if (deleteCascade) {
 			boolean checkTrialLocked = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_CHECK_TRIAL_LOCKED, Bundle.SETTINGS,
@@ -3826,6 +4994,35 @@ public final class ServiceUtil {
 				fileDao.remove(file);
 			}
 			proband.getFiles().clear();
+			boolean keepSentMassMailRecipients = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS, Bundle.SETTINGS,
+					DefaultSettings.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS);
+			Iterator<MassMailRecipient> massMailReceiptsIt = proband.getMassMailReceipts().iterator();
+			while (massMailReceiptsIt.hasNext()) {
+				MassMailRecipient recipient = massMailReceiptsIt.next(); // massMailRecipientDao.load(massMailReceiptsIt.next().getId(),
+				// LockMode.PESSIMISTIC_WRITE);
+				massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
+				MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+				MassMail massMail = recipient.getMassMail();
+				if (recipient.isSent() && keepSentMassMailRecipients) {
+					recipient.setProband(null);
+					CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user == null ? proband.getModifiedUser() : user);
+					massMailRecipientDao.update(recipient);
+					MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+					logSystemMessage(massMail, result, now, user, SystemMessageCodes.PROBAND_DELETED_MASS_MAIL_RECIPIENT_UPDATED, recipientVO, original, journalEntryDao);
+				} else {
+					logSystemMessage(massMail, result, now, user, SystemMessageCodes.PROBAND_DELETED_MASS_MAIL_RECIPIENT_DELETED, original, null, journalEntryDao);
+					massMail.removeRecipients(recipient);
+					recipient.setMassMail(null);
+					recipient.setProband(null);
+					// Trial trial = recipient.getTrial();
+					// if (trial != null) {
+					// trial.removeMassMailReceipts(recipient);
+					// recipient.setTrial(null);
+					// }
+					massMailRecipientDao.remove(recipient);
+				}
+			}
+			proband.getMassMailReceipts().clear();
 			removeNotifications(proband.getNotifications(), notificationDao, notificationRecipientDao);
 		}
 		Iterator<Proband> childrenIt = proband.getChildren().iterator();
@@ -4001,6 +5198,330 @@ public final class ServiceUtil {
 					null,
 					journalEntryDao);
 		}
+	}
+
+	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, boolean blank, ArrayList<ProbandListEntryOutVO> listEntryVOs,
+			ProbandListEntryDao probandListEntryDao,
+			ECRFDao ecrfDao,
+			ECRFFieldDao ecrfFieldDao,
+			ECRFFieldValueDao ecrfFieldValueDao,
+			InputFieldDao inputFieldDao,
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
+			ECRFStatusEntryDao ecrfStatusEntryDao,
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
+			ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao,
+			ProbandListEntryTagDao probandListEntryTagDao,
+			ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			SignatureDao signatureDao,
+			UserDao userDao) throws Exception {
+		// ProbandListEntry listEntry;
+		ProbandListEntryOutVO listEntryVO;
+		ECRFOutVO ecrfVO = null;
+		if (listEntryVOs == null) {
+			listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
+		}
+		HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap = new HashMap<Long, Collection<ECRFOutVO>>();
+		HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>();
+		HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>();
+		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
+		HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
+		HashMap<Long, SignatureVO> signatureVOMap = new HashMap<Long, SignatureVO>();
+		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		HashSet<Long> ecrfIds = new HashSet<Long>();
+		if (listEntry != null) {
+			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
+			if (ecrf != null) {
+				ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+				populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+						getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, ecrfFieldDao,
+								ecrfFieldValueDao,
+								inputFieldSelectionSetValueDao,
+								ecrfFieldStatusEntryDao,
+								ecrfFieldStatusTypeDao).getPageValues(),
+						listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+						inputFieldDao,
+						ecrfFieldValueDao,
+						ecrfStatusEntryDao,
+						ecrfFieldStatusEntryDao,
+						probandListEntryTagDao,
+						probandListEntryTagValueDao,
+						signatureDao);
+			} else {
+				Iterator<ECRF> ecrfIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+				while (ecrfIt.hasNext()) {
+					ecrf = ecrfIt.next();
+					ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+									ecrfFieldDao,
+									ecrfFieldValueDao,
+									inputFieldSelectionSetValueDao,
+									ecrfFieldStatusEntryDao,
+									ecrfFieldStatusTypeDao).getPageValues(),
+							listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+							inputFieldDao,
+							ecrfFieldValueDao,
+							ecrfStatusEntryDao,
+							ecrfFieldStatusEntryDao,
+							probandListEntryTagDao,
+							probandListEntryTagValueDao,
+							signatureDao);
+				}
+			}
+		} else if (trial != null) {
+			Iterator<ProbandListEntry> listEntryIt = probandListEntryDao.findByTrialProbandSorted(trial.getId(), null).iterator();
+			if (ecrf != null) {
+				ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+			}
+			while (listEntryIt.hasNext()) {
+				listEntry = listEntryIt.next();
+				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
+				if (ecrf != null) {
+					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+									ecrfFieldDao,
+									ecrfFieldValueDao,
+									inputFieldSelectionSetValueDao,
+									ecrfFieldStatusEntryDao,
+									ecrfFieldStatusTypeDao).getPageValues(),
+							listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+							inputFieldDao,
+							ecrfFieldValueDao,
+							ecrfStatusEntryDao,
+							ecrfFieldStatusEntryDao,
+							probandListEntryTagDao,
+							probandListEntryTagValueDao,
+							signatureDao);
+				} else {
+					Iterator<ECRF> ecrfIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+					while (ecrfIt.hasNext()) {
+						ecrf = ecrfIt.next();
+						ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+						populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+								getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+										ecrfFieldDao,
+										ecrfFieldValueDao,
+										inputFieldSelectionSetValueDao,
+										ecrfFieldStatusEntryDao,
+										ecrfFieldStatusTypeDao).getPageValues(),
+								listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+								inputFieldDao,
+								ecrfFieldValueDao,
+								ecrfStatusEntryDao,
+								ecrfFieldStatusEntryDao,
+								probandListEntryTagDao,
+								probandListEntryTagValueDao,
+								signatureDao);
+					}
+					ecrf = null;
+				}
+			}
+			listEntry = null;
+			// } else {
+			// xxx
+		}
+		// if (ecrf != null) {
+		// populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+		// getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null).getPageValues(),
+		// listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds);
+		// } else {
+		// Iterator<ECRF> ecrfIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+		// while (ecrfIt.hasNext()) {
+		// ecrf = ecrfIt.next();
+		// ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+		// populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
+		// getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null).getPageValues(),
+		// listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds);
+		// }
+		// }
+		EcrfPDFPainter painter = new EcrfPDFPainter();
+		painter.setListEntryVOs(listEntryVOs);
+		painter.setEcrfVOMap(ecrfVOMap);
+		painter.setValueVOMap(valueVOMap);
+		painter.setLogVOMap(logVOMap);
+		painter.setListEntryTagValuesVOMap(listEntryTagValuesVOMap);
+		painter.setStatusEntryVOMap(statusEntryVOMap);
+		painter.setSignatureVOMap(signatureVOMap);
+		painter.setImageVOMap(imageVOMap);
+		painter.setBlank(blank);
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		return painter.getPdfVO();
+	}
+
+	public static InquiriesPDFVO renderInquiries(Proband proband, ProbandOutVO probandVO, Collection<Trial> trials, Boolean active, Boolean activeSignup, boolean blank,
+			TrialDao trialDao, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldDao inputFieldDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
+			UserDao userDao) throws Exception {
+		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
+		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
+		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>();
+		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		HashSet<Long> trialIds = new HashSet<Long>();
+		Iterator<Trial> trialIt = trials.iterator();
+		while (trialIt.hasNext()) {
+			Trial trial = trialIt.next();
+			// if (inquiryValueDao.getCount(trial.getId(), active, activeSignup, proband.getId()) > 0) {
+			TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+			populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
+					getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null, inquiryDao, inquiryValueDao, inputFieldSelectionSetValueDao)
+					.getPageValues(),
+					probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, inputFieldDao);
+			// }
+		}
+		InquiriesPDFPainter painter = new InquiriesPDFPainter();
+		painter.setProbandVOs(probandVOs);
+		painter.setTrialVOMap(trialVOMap);
+		painter.setValueVOMap(valueVOMap);
+		painter.setImageVOMap(imageVOMap);
+		painter.setBlank(blank);
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		return painter.getPdfVO();
+	}
+
+	public static ProbandListEntryTagsPDFVO renderProbandListEntryTags(Proband proband, Trial trial, boolean blank,
+			ProbandListEntryDao probandListEntryDao, ProbandListEntryTagDao probandListEntryTagDao,
+			ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldDao inputFieldDao,
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, UserDao userDao) throws Exception {
+		ProbandListEntry listEntry;
+		ProbandListEntryOutVO listEntryVO;
+		ArrayList<ProbandListEntryOutVO> listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
+		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
+		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		if (trial != null) {
+			listEntry = probandListEntryDao.findByTrialProband(trial.getId(), proband.getId());
+			if (listEntry != null) {
+				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
+				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
+						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
+						.getPageValues(),
+						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
+			}
+		} else {
+			Iterator<ProbandListEntry> listEntryIt = probandListEntryDao.findByTrialProbandSorted(null, proband.getId()).iterator();
+			while (listEntryIt.hasNext()) {
+				listEntry = listEntryIt.next();
+				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
+				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
+						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
+						.getPageValues(),
+						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
+			}
+		}
+		ProbandListEntryTagsPDFPainter painter = new ProbandListEntryTagsPDFPainter();
+		painter.setListEntryVOs(listEntryVOs);
+		painter.setValueVOMap(valueVOMap);
+		painter.setImageVOMap(imageVOMap);
+		painter.setBlank(blank);
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		return painter.getPdfVO();
+	}
+
+	public static ReimbursementsPDFVO renderReimbursements(Proband proband,Trial trial, PaymentMethod method, Boolean paid,
+
+			ProbandDao probandDao,
+			TrialDao trialDao,
+			MoneyTransferDao moneyTransferDao,
+			TrialTagValueDao trialTagValueDao,
+
+			BankAccountDao bankAccountDao,
+			ProbandAddressDao probandAddressDao,
+
+			UserDao userDao
+
+
+			) throws Exception {
+
+
+		TrialOutVO trialVO = null;
+		Collection trialTagValues = null;
+		Collection<String> costTypes = null;
+		Iterator<MoneyTransfer> moneyTransfersIt = null;
+		if (trial != null) {
+			trialVO = trialDao.toTrialOutVO(trial);
+			trialTagValues = trialTagValueDao.findByTrialExcelPayoffsSorted(trial.getId(), true, null);
+			trialTagValueDao.toTrialTagValueOutVOCollection(trialTagValues);
+			costTypes = moneyTransferDao.getCostTypes(null, trial.getId(), null, null, method);
+			moneyTransfersIt = moneyTransferDao.findByProbandTrialMethodCostTypePaidPerson(null, trialVO.getId(), null, proband == null ? null : proband.getId(), method, null,
+					paid,
+					true, null).iterator();
+		} else if (proband != null) {
+			costTypes = moneyTransferDao.getCostTypesNoTrial(proband.getId(), method);
+			moneyTransfersIt = moneyTransferDao.findByProbandNoTrialMethodCostTypePaid(proband.getId(), method, null, paid).iterator();
+		}
+
+		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(new ProbandOutVOComparator());
+		HashMap<Long, MoneyTransferSummaryVO> summaryMap = new HashMap<Long, MoneyTransferSummaryVO>();
+		HashMap<Long, ProbandAddressOutVO> addressVOMap = new HashMap<Long, ProbandAddressOutVO>();
+		if (moneyTransfersIt != null) {
+			while (moneyTransfersIt.hasNext()) {
+				MoneyTransfer moneyTransfer = moneyTransfersIt.next();
+				Proband moneyTransferProband = moneyTransfer.getProband();
+				if (moneyTransferProband.isPerson() && probandVOs.add(probandDao.toProbandOutVO(moneyTransferProband))) { // && !moneyTransferProband.isBlinded()
+					MoneyTransferOutVO moneyTransferVO = moneyTransferDao.toMoneyTransferOutVO(moneyTransfer);
+					MoneyTransferSummaryVO summary = new MoneyTransferSummaryVO();
+					Collection<MoneyTransfer> moneyTransfers;
+					if (trial != null) {
+						moneyTransfers = moneyTransferDao.findByProbandTrialMethodCostTypePaidPerson(null, trial.getId(), null, moneyTransferVO.getProband().getId(), method,
+								null,
+								paid, null, null);
+					} else {
+						moneyTransfers = moneyTransferDao.findByProbandNoTrialMethodCostTypePaid(moneyTransferVO.getProband().getId(), method, null, paid);
+					}
+					populateMoneyTransferSummary(summary, costTypes, moneyTransfers, true, true, true, true, bankAccountDao);
+					summary.setListEntry(null);
+					summary.setTrial(trialVO);
+					summary.setProband(moneyTransferVO.getProband());
+					summary.setId(moneyTransferVO.getProband().getId());
+					addressVOMap.put(moneyTransferVO.getProband().getId(),
+							probandAddressDao.toProbandAddressOutVO(probandAddressDao.findByProbandWireTransfer(moneyTransferVO.getProband().getId())));
+					summaryMap.put(moneyTransferVO.getProband().getId(), summary);
+				}
+			}
+		}
+		ReimbursementsPDFPainter painter = new ReimbursementsPDFPainter();
+		painter.setTrialVO(trialVO);
+		painter.setTrialTagValueVOs(trialTagValues);
+		painter.setProbandVOs(probandVOs);
+		painter.setSummaryMap(summaryMap);
+		painter.setAddressVOMap(addressVOMap);
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		return painter.getPdfVO();
+
+	}
+
+	public static void resetMassMailRecipient(MassMailRecipient recipient, MassMailRecipientOutVO original) throws ServiceException {
+		if (original.getPending()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_PENDING);
+		}
+		checkMassMailLocked(recipient.getMassMail());
+		Proband proband = recipient.getProband();
+		if (proband == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_PROBAND_NULL);
+		}
+		checkProbandLocked(proband);
+		// Trial trial = recipient.getTrial();
+		// if (trial != null) {
+		// checkTrialLocked(proband);
+		// }
+		//recipient.setBeacon(CommonUtil.generateUUID());
+		recipient.setCancelled(false);
+		recipient.setEncryptedMimeMessageData(null);
+		recipient.setMimeMessageDataIv(null);
+		recipient.setErrorMessage(null);
+		recipient.setMimeMessageSize(0l);
+		recipient.setMimeMessageTimestamp(null);
+		//recipient.setProcessedTimestamp(null);
+		//recipient.setRead(0l);
+		//recipient.setReadTimestamp(null);
+		recipient.setSent(false);
+		recipient.setTimesProcessed(0l);
 	}
 
 	public static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {

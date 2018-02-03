@@ -37,7 +37,12 @@
 				process="@this"
 				name="changeTrialCourses"
 				actionListener="#{trialAssociationBean.handleTrialCoursesChange}"
-				update=":tabView:trialassociation_form:association_lists:trialcourses_list" />					
+				update=":tabView:trialassociation_form:association_lists:trialcourses_list" />	
+<p:remoteCommand
+				process="@this"
+				name="changeTrialMassMails"
+				actionListener="#{trialAssociationBean.handleTrialMassMailsChange}"
+				update=":tabView:trialassociation_form:association_lists:trialmassmails_list" />								
 										
 			<h:panelGrid
 				columns="1"
@@ -146,6 +151,170 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
+					<p:tab title="#{triallabels.trial_association_mass_mails_tab_label}">
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<p:dataTable
+								styleClass="ctsms-datatable"
+								lazy="true"
+								rows="#{dataTablesRowsFullPageTab}"
+								paginator="#{dataTablesPaginatorFullPageTab}"
+								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
+								rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateFullPageTab}"
+								paginatorPosition="#{dataTablesPaginatorPositionFullPageTab}"
+								pageLinks="#{dataTablesPageLinksFullPageTab}"
+								paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleFullPageTab}"
+								scrollable="#{dataTablesScrollableFullPageTab}"
+								scrollHeight="#{dataTablesScrollHeightFullPageTab}"
+								resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
+								sortBy="#{massMail.vo.id}"
+								emptyMessage="#{labels.datatable_permission_empty_message}"
+								var="massMail"
+								value="#{trialAssociationBean.trialMassMailModel}"
+								id="trialmassmails_list">
+								<f:facet name="header">
+									<h:panelGrid
+										columns="3"
+										cellpadding="0"
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										<h:outputText value="#{trialAssociationBean.trialMassMailModel.rowCount} #{triallabels.trial_association_massmails_list_header}" />
+										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											process="@this"
+											actionListener="#{trialAssociationBean.refreshTrialMassMails}"
+											title="#{labels.update_datatable_button_title}"
+											icon="ui-icon-refresh"
+											styleClass="ctsms-list-header-button"
+											ajax="true"
+											update=":tabView:trialassociation_form:association_lists:trialmassmails_list" />
+									</h:panelGrid>
+								</f:facet>
+								<p:column sortBy="#{massMail.vo.id}">
+									<f:facet name="header">
+										<h:outputText value="#{labels.id_column}" />
+									</f:facet>
+									<h:outputText value="#{massMail.vo.id}" />
+								</p:column>
+
+				<p:column
+					sortBy="#{massMail.vo.name}"
+					filterBy="#{massMail.vo.name}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_mass_mail_name_column}" />
+					</f:facet>
+					<h:outputText value="#{massMail.vo.name}" />
+				</p:column>
+				<p:column
+					sortBy="#{massMail.vo.department}"
+					filterBy="#{massMail.vo.department.id}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_mass_mail_department_column}" />
+					</f:facet>
+					<h:outputText value="#{massMail.vo.department.name}" />
+				</p:column>
+				
+				<p:column
+					sortBy="#{massMail.vo.type}"
+					filterBy="#{massMail.vo.type.id}"
+					filterOptions="#{sessionScopeBean.filterMassMailTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_mass_mail_type_column}" />
+					</f:facet>
+					<h:outputText value="#{massMail.vo.type.name}" />
+				</p:column>
+				
+				<p:column
+							sortBy="#{massMail.vo.probandListStatus}"
+							filterBy="#{massMail.vo.probandListStatus.id}"
+							filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.trial_association_massmails_list_proband_list_status_column}" />
+							</f:facet>
+							<h:outputText value="#{massMail.vo.probandListStatus.name}" />
+						</p:column>
+						
+										<p:column sortBy="#{massMail.vo.probandTo}"
+					filterBy="#{massMail.vo.probandTo}"
+					filterOptions="#{sessionScopeBean.filterBooleans}" >
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_proband_to_column}" />
+					</f:facet>
+					<ui:include src="../shared/listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{massMail.vo.probandTo}" />
+					</ui:include>
+				</p:column>	
+				
+				<p:column sortBy="#{massMail.vo.physicianTo}"
+					filterBy="#{massMail.vo.physicianTo}"
+					filterOptions="#{sessionScopeBean.filterBooleans}" >
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_physician_to_column}" />
+					</f:facet>
+					<ui:include src="../shared/listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{massMail.vo.physicianTo}" />
+					</ui:include>
+				</p:column>
+				
+								<p:column >
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_attachment_column}" />
+					</f:facet>
+					<ui:include src="../shared/listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{massMail.vo.attachMassMailFiles or massMail.vo.attachTrialFiles or massMail.vo.attachProbandFiles or massMail.vo.attachInquiries or massMail.vo.attachProbandListEntryTags or massMail.vo.attachEcrfs or massMail.vo.attachProbandLetter or massMail.vo.attachReimbursementsPdf}" />
+					</ui:include>
+				</p:column>	
+
+				<p:column
+					sortBy="#{massMail.vo.status}"
+					filterBy="#{massMail.vo.status.id}"
+					filterOptions="#{sessionScopeBean.filterMassMailStatusTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.trial_association_massmails_list_status_type_column}" />
+					</f:facet>
+					<ui:include src="../shared/listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{massMail.vo.status.name}" />
+						<ui:param
+							name="icon"
+							value="#{massMail.vo.status.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>		
+				
+				<p:column >
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.trial_association_massmails_list_progress_column}" />
+							</f:facet>
+							<p:progressBar
+								widgetVar="progressBar_#{massMail.vo.id}"
+								ajax="false"
+								labelTemplate="#{massMailSearchBean.getMassMailProgressLabel(massMail.vo)}"
+								value="#{massMailSearchBean.getMassMailProgressValue(massMail.vo)}" />
+						</p:column>
+						
+						<p:column style="width:32px;">
+									<p:commandButton
+										type="button"
+										title="#{labels.open_mass_mail_button_label}"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openMassMail(#{massMail.vo.id})" />
+								</p:column>
+
+							</p:dataTable>
+						</h:panelGrid>
+					</p:tab>					
 					<p:tab title="#{triallabels.trial_association_shift_duration_summary_tab_label}">
 						<h:panelGrid
 							columns="1"

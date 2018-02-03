@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>mass mail entity template</title>
+</head>
+<body>
+	<ui:composition template="massMailTemplate.xhtml">
+		<ui:param
+			name="showUserMenuBar"
+			value="#{sessionScopeBean.loggedIn}" />
+		<ui:param
+			name="favicon"
+			value="mass_mail_entity.ico" />
+		<ui:define name="moduleMenu">
+			<h:panelGroup>
+				<p:remoteCommand
+					process="@this"
+					name="updateMassMailEntityMenuBar"
+					update="massMailEntityMenuBar" />
+				<p:menubar
+					id="massMailEntityMenuBar"
+					model="#{sessionScopeBean.massMailEntityMenuModel}" />
+			</h:panelGroup>
+		</ui:define>
+		<ui:define name="headline">
+			<ui:include src="../includes/shared/headline.xhtml">
+				<ui:param
+					name="label"
+					value="#{title}" />
+			</ui:include>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

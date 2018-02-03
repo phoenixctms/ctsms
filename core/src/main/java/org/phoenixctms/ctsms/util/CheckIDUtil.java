@@ -103,14 +103,14 @@ public final class CheckIDUtil {
 
 	public static CourseParticipationStatusEntry checkCourseParticipationStatusEntryId(Long courseParticipationId,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-			{
+	{
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.load(courseParticipationId);
 		if (courseParticipation == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_COURSE_PARTICIPATION_STATUS_ENTRY_ID,
 					courseParticipationId == null ? null : courseParticipationId.toString());
 		}
 		return courseParticipation;
-			}
+	}
 
 	public static CourseParticipationStatusType checkCourseParticipationStatusTypeId(Long courseParticipationStateId,
 			CourseParticipationStatusTypeDao courseParticipationStatusTypeDao) throws ServiceException {
@@ -301,13 +301,13 @@ public final class CheckIDUtil {
 
 	public static InputFieldSelectionSetValue checkInputFieldSelectionSetValueId(Long selectionSetValueId, InputFieldSelectionSetValueDao selectionSetValueDao)
 			throws ServiceException
-			{
+	{
 		InputFieldSelectionSetValue selectionSetValue = selectionSetValueDao.load(selectionSetValueId);
 		if (selectionSetValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_SELECTION_SET_VALUE_ID, selectionSetValueId == null ? null : selectionSetValueId.toString());
 		}
 		return selectionSetValue;
-			}
+	}
 
 	public static Inquiry checkInquiryId(Long inquiryId, InquiryDao inquiryDao) throws ServiceException
 	{
@@ -446,6 +446,55 @@ public final class CheckIDUtil {
 		return maintenanceType;
 	}
 
+	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao) throws ServiceException
+	{
+		MassMail massMail = massMailDao.load(massMailId);
+		if (massMail == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_ID, massMailId == null ? null : massMailId.toString());
+		}
+		return massMail;
+	}
+
+	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao, LockMode lockMode) throws ServiceException
+	{
+		MassMail massMail = massMailDao.load(massMailId, lockMode);
+		if (massMail == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_ID, massMailId == null ? null : massMailId.toString());
+		}
+		return massMail;
+	}
+
+	public static MassMailRecipient checkMassMailRecipientId(Long massMailRecipientId, MassMailRecipientDao massMailRecipientDao) throws ServiceException {
+		MassMailRecipient recipient = massMailRecipientDao.load(massMailRecipientId);
+		if (recipient == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_RECIPIENT_ID, massMailRecipientId == null ? null : massMailRecipientId.toString());
+		}
+		return recipient;
+	}
+	public static MassMailRecipient checkMassMailRecipientId(Long massMailRecipientId, MassMailRecipientDao massMailRecipientDao, LockMode lockMode) throws ServiceException {
+		MassMailRecipient recipient = massMailRecipientDao.load(massMailRecipientId, lockMode);
+		if (recipient == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_RECIPIENT_ID, massMailRecipientId == null ? null : massMailRecipientId.toString());
+		}
+		return recipient;
+	}
+
+	public static MassMailStatusType checkMassMailStatusTypeId(Long massMailStateId, MassMailStatusTypeDao massMailStatusTypeDao) throws ServiceException {
+		MassMailStatusType massMailState = massMailStatusTypeDao.load(massMailStateId);
+		if (massMailState == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_STATUS_TYPE_ID, massMailStateId == null ? null : massMailStateId.toString());
+		}
+		return massMailState;
+	}
+
+	public static MassMailType checkMassMailTypeId(Long typeId, MassMailTypeDao massMailTypeDao) throws ServiceException {
+		MassMailType type = massMailTypeDao.load(typeId);
+		if (type == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_TYPE_ID, typeId == null ? null : typeId.toString());
+		}
+		return type;
+	}
+
 	public static Medication checkMedicationId(Long medicationId, MedicationDao medicationDao) throws ServiceException
 	{
 		Medication medication = medicationDao.load(medicationId);
@@ -511,13 +560,13 @@ public final class CheckIDUtil {
 
 	public static ProbandContactDetailValue checkProbandContactDetailValueId(Long contactValueId, ProbandContactDetailValueDao probandContactDetailValueDao)
 			throws ServiceException
-			{
+	{
 		ProbandContactDetailValue contactValue = probandContactDetailValueDao.load(contactValueId);
 		if (contactValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_CONTACT_DETAIL_VALUE_ID, contactValueId == null ? null : contactValueId.toString());
 		}
 		return contactValue;
-			}
+	}
 
 	public static ProbandGroup checkProbandGroupId(Long probandGroupId, ProbandGroupDao probandGroupDao) throws ServiceException {
 		ProbandGroup probandGroup = probandGroupDao.load(probandGroupId);
@@ -574,14 +623,14 @@ public final class CheckIDUtil {
 
 	public static ProbandListEntryTagValue checkProbandListEntryTagValueId(Long probandListEntryTagValueId, ProbandListEntryTagValueDao probandListEntryTagValueDao)
 			throws ServiceException
-			{
+	{
 		ProbandListEntryTagValue probandListEntryTagValue = probandListEntryTagValueDao.load(probandListEntryTagValueId);
 		if (probandListEntryTagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_ENTRY_TAG_VALUE_ID, probandListEntryTagValueId == null ? null
 					: probandListEntryTagValueId.toString());
 		}
 		return probandListEntryTagValue;
-			}
+	}
 
 	public static ProbandListStatusEntry checkProbandListStatusEntryId(Long probandListStatusEntryId, ProbandListStatusEntryDao probandListStatusEntryDao) throws ServiceException
 	{

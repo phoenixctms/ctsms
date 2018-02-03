@@ -29,6 +29,7 @@
   <bean id="demoDataProvider" class="org.phoenixctms.ctsms.executable.DemoDataProvider"/>
   <bean id="fileSystemLoader" class="org.phoenixctms.ctsms.executable.FileSystemLoader"/>
   <bean id="notificationSender" class="org.phoenixctms.ctsms.executable.NotificationSender"/>
+  <bean id="massMailSender" class="org.phoenixctms.ctsms.executable.MassMailSender"/>
   <!-- <bean id="probandRemover" class="org.phoenixctms.ctsms.executable.ProbandRemover"/> -->
   <bean id="serviceMethodExecutor" class="org.phoenixctms.ctsms.executable.ServiceMethodExecutor"/>
   <bean id="probandImageFieldInitializer" class="org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer">

@@ -33,6 +33,10 @@ public final class SearchResultExcelDefaultSettings {
 	public static final boolean INPUT_FIELD_WRITEHEAD = true;
 	public static final boolean INPUT_FIELD_AUTOSIZE = true;
 	public static final Integer INPUT_FIELD_PAGE_BREAK_AT_ROW = null;
+	public static final String MASS_MAIL_TEMPLATE_FILE_NAME = null;
+	public static final boolean MASS_MAIL_WRITEHEAD = true;
+	public static final boolean MASS_MAIL_AUTOSIZE = true;
+	public static final Integer MASS_MAIL_PAGE_BREAK_AT_ROW = null;
 	public static final String INVENTORY_SPREADSHEET_NAME = null;
 	public static final String STAFF_SPREADSHEET_NAME = null;
 	public static final String COURSE_SPREADSHEET_NAME = null;
@@ -40,6 +44,7 @@ public final class SearchResultExcelDefaultSettings {
 	public static final String PROBAND_SPREADSHEET_NAME = null;
 	public static final String USER_SPREADSHEET_NAME = null;
 	public static final String INPUT_FIELD_SPREADSHEET_NAME = null;
+	public static final String MASS_MAIL_SPREADSHEET_NAME = null;
 	public static final Integer INVENTORY_SCALE_FACTOR = null;
 	public static final Integer STAFF_SCALE_FACTOR = null;
 	public static final Integer COURSE_SCALE_FACTOR = null;
@@ -47,12 +52,14 @@ public final class SearchResultExcelDefaultSettings {
 	public static final Integer PROBAND_SCALE_FACTOR = null;
 	public static final Integer USER_SCALE_FACTOR = null;
 	public static final Integer INPUT_FIELD_SCALE_FACTOR = null;
+	public static final Integer MASS_MAIL_SCALE_FACTOR = null;
 	public static final ExcelCellFormat INVENTORY_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat STAFF_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat COURSE_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat TRIAL_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat PROBAND_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat USER_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
+	public static final ExcelCellFormat MASS_MAIL_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat INPUT_FIELD_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat INVENTORY_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat STAFF_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -60,6 +67,7 @@ public final class SearchResultExcelDefaultSettings {
 	public static final ExcelCellFormat TRIAL_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat PROBAND_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat USER_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
+	public static final ExcelCellFormat MASS_MAIL_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final ExcelCellFormat INPUT_FIELD_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
 	public static final boolean INVENTORY_ROW_COLORS = true;
 	public static final boolean STAFF_ROW_COLORS = true;
@@ -68,6 +76,7 @@ public final class SearchResultExcelDefaultSettings {
 	public static final boolean PROBAND_ROW_COLORS = true;
 	public static final boolean USER_ROW_COLORS = true;
 	public static final boolean INPUT_FIELD_ROW_COLORS = true;
+	public static final boolean MASS_MAIL_ROW_COLORS = true;
 	public final static ArrayList<String> INVENTORY_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> STAFF_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> COURSE_VO_FIELD_COLUMNS = new ArrayList<String>();
@@ -75,6 +84,7 @@ public final class SearchResultExcelDefaultSettings {
 	public final static ArrayList<String> INPUT_FIELD_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> PROBAND_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> USER_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public final static ArrayList<String> MASS_MAIL_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static int GRAPH_MAX_COURSE_INSTANCES = 1;
 	public final static int GRAPH_MAX_STAFF_INSTANCES = 2;
 	public final static int GRAPH_MAX_INVENTORY_INSTANCES = 2;
@@ -206,6 +216,11 @@ public final class SearchResultExcelDefaultSettings {
 		PROBAND_VO_FIELD_COLUMNS.add("comment");
 		// PROBAND_VO_FIELD_COLUMNS.add("autoDelete");
 		// PROBAND_VO_FIELD_COLUMNS.add("autoDeleteDeadline");
+		MASS_MAIL_VO_FIELD_COLUMNS.add("id");
+		MASS_MAIL_VO_FIELD_COLUMNS.add("deferredDelete");
+		MASS_MAIL_VO_FIELD_COLUMNS.add("name");
+		MASS_MAIL_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		MASS_MAIL_VO_FIELD_COLUMNS.add("description");
 	}
 
 	private SearchResultExcelDefaultSettings() {

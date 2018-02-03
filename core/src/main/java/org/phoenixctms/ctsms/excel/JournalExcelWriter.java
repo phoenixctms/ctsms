@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -36,6 +37,7 @@ public class JournalExcelWriter extends WorkbookWriter {
 	private UserOutVO user;
 	private CriteriaOutVO criteria;
 	private InputFieldOutVO inputField;
+	private MassMailOutVO massMail;
 	private JournalExcelVO excelVO;
 	private static final String JOURNAL_EXCEL_FILENAME_PREFIX = "journal_";
 
@@ -79,6 +81,10 @@ public class JournalExcelWriter extends WorkbookWriter {
 					break;
 				case ECRF_JOURNAL:
 					scaleFactor = Settings.getIntNullable(JournalExcelSettingCodes.ECRF_SCALE_FACTOR, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_SCALE_FACTOR);
+					break;
+				case MASS_MAIL_JOURNAL:
+					scaleFactor = Settings
+							.getIntNullable(JournalExcelSettingCodes.MASS_MAIL_SCALE_FACTOR, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_SCALE_FACTOR);
 					break;
 				default:
 			}
@@ -200,14 +206,27 @@ public class JournalExcelWriter extends WorkbookWriter {
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(L10nUtil.getJournalExcelColumns(Locales.USER, JournalExcelLabelCodes.ECRF_VO_FIELD_COLUMNS,
 									JournalExcelDefaultSettings.ECRF_VO_FIELD_COLUMNS)),
+									Settings.getInt(JournalExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+									omitFields,
+									Settings.getBoolean(JournalExcelSettingCodes.ECRF_AUTOSIZE, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_AUTOSIZE),
+									Settings.getBoolean(JournalExcelSettingCodes.ECRF_WRITEHEAD, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_WRITEHEAD),
+									Settings.getIntNullable(JournalExcelSettingCodes.ECRF_PAGE_BREAK_AT_ROW, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_PAGE_BREAK_AT_ROW),
+									Settings.getBoolean(JournalExcelSettingCodes.ECRF_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_COLORS),
+									Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_HEAD_FORMAT),
+									Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_FORMAT));
+				case MASS_MAIL_JOURNAL:
+					return new SpreadSheetWriter(this,
+							getColumnIndexMap(L10nUtil.getJournalExcelColumns(Locales.USER, JournalExcelLabelCodes.MASS_MAIL_VO_FIELD_COLUMNS,
+									JournalExcelDefaultSettings.MASS_MAIL_VO_FIELD_COLUMNS)),
 							Settings.getInt(JournalExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
 							omitFields,
-							Settings.getBoolean(JournalExcelSettingCodes.ECRF_AUTOSIZE, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_AUTOSIZE),
-							Settings.getBoolean(JournalExcelSettingCodes.ECRF_WRITEHEAD, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_WRITEHEAD),
-							Settings.getIntNullable(JournalExcelSettingCodes.ECRF_PAGE_BREAK_AT_ROW, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_PAGE_BREAK_AT_ROW),
-							Settings.getBoolean(JournalExcelSettingCodes.ECRF_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_COLORS),
-							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_HEAD_FORMAT),
-							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_FORMAT));
+							Settings.getBoolean(JournalExcelSettingCodes.MASS_MAIL_AUTOSIZE, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_AUTOSIZE),
+							Settings.getBoolean(JournalExcelSettingCodes.MASS_MAIL_WRITEHEAD, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_WRITEHEAD),
+							Settings.getIntNullable(JournalExcelSettingCodes.MASS_MAIL_PAGE_BREAK_AT_ROW, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.MASS_MAIL_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(JournalExcelSettingCodes.MASS_MAIL_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_ROW_COLORS),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.MASS_MAIL_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.MASS_MAIL_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_ROW_FORMAT));
 				default:
 			}
 		}
@@ -251,6 +270,10 @@ public class JournalExcelWriter extends WorkbookWriter {
 		return inventory;
 	}
 
+	public MassMailOutVO getMassMail() {
+		return massMail;
+	}
+
 	public ProbandOutVO getProband() {
 		return proband;
 	}
@@ -283,6 +306,9 @@ public class JournalExcelWriter extends WorkbookWriter {
 					return Settings.getString(JournalExcelSettingCodes.CRITERIA_TEMPLATE_FILE_NAME, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.CRITERIA_TEMPLATE_FILE_NAME);
 				case ECRF_JOURNAL:
 					return Settings.getString(JournalExcelSettingCodes.ECRF_TEMPLATE_FILE_NAME, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_TEMPLATE_FILE_NAME);
+				case MASS_MAIL_JOURNAL:
+					return Settings
+							.getString(JournalExcelSettingCodes.MASS_MAIL_TEMPLATE_FILE_NAME, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_TEMPLATE_FILE_NAME);
 				default:
 			}
 		}
@@ -330,6 +356,11 @@ public class JournalExcelWriter extends WorkbookWriter {
 		setSpreadSheetName(CommonUtil.inventoryOutVOToString(inventory));
 	}
 
+	public void setMassMail(MassMailOutVO massMail) {
+		this.massMail = massMail;
+		setSpreadSheetName(CommonUtil.massMailOutVOToString(massMail));
+	}
+
 	public void setProband(ProbandOutVO proband) {
 		this.proband = proband;
 		setSpreadSheetName(CommonUtil.probandOutVOToString(proband));
@@ -375,6 +406,10 @@ public class JournalExcelWriter extends WorkbookWriter {
 				case ECRF_JOURNAL:
 					templateSpreadSheetName = Settings.getString(JournalExcelSettingCodes.ECRF_SPREADSHEET_NAME, Bundle.JOURNAL_EXCEL,
 							JournalExcelDefaultSettings.ECRF_SPREADSHEET_NAME);
+					break;
+				case MASS_MAIL_JOURNAL:
+					templateSpreadSheetName = Settings.getString(JournalExcelSettingCodes.MASS_MAIL_SPREADSHEET_NAME, Bundle.JOURNAL_EXCEL,
+							JournalExcelDefaultSettings.MASS_MAIL_SPREADSHEET_NAME);
 					break;
 				default:
 			}
@@ -484,6 +519,13 @@ public class JournalExcelWriter extends WorkbookWriter {
 					excelVO.setTrial(trial);
 					if (trial != null) {
 						fileName.append(trial.getId());
+						fileName.append("_");
+					}
+					break;
+				case MASS_MAIL_JOURNAL:
+					excelVO.setMassMail(massMail);
+					if (massMail != null) {
+						fileName.append(massMail.getId());
 						fileName.append("_");
 					}
 					break;

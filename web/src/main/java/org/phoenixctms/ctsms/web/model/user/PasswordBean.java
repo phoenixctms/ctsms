@@ -29,13 +29,7 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
-	private Date now;
-	private PasswordInVO in;
-	private PasswordOutVO out;
-	private Long userId;
-	private VariablePeriodSelector validity;
 	private static final int VALIDITY_PERIOD_PROPERTY_ID = 1;
-
 	public static void copyPasswordOutToIn(PasswordInVO in, PasswordOutVO out) {
 		if (in != null && out != null) {
 			VariablePeriodVO validityPeriodVO = out.getValidityPeriod();
@@ -49,7 +43,6 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setValidityPeriodDays(out.getValidityPeriodDays());
 		}
 	}
-
 	public static void initPasswordDefaultValues(PasswordInVO in) {
 		if (in != null) {
 			PasswordInVO newPassword = WebUtil.getNewPassword();
@@ -63,6 +56,13 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setValidityPeriodDays(newPassword.getValidityPeriodDays());
 		}
 	}
+	private Date now;
+	private PasswordInVO in;
+	private PasswordOutVO out;
+
+	private Long userId;
+
+	private VariablePeriodSelector validity;
 
 	public PasswordBean() {
 		super();

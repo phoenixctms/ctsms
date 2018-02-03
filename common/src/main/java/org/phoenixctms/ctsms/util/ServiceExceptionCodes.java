@@ -79,6 +79,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_VISIT_SCHEDULE_ITEM_ID = "invalid_visit_schedule_item_id";
 	public final static String TRIAL_LOCKED = "trial_locked";
 	public final static String PROBAND_LOCKED = "proband_locked";
+	public final static String MASS_MAIL_LOCKED = "mass_mail_locked";
 	public final static String INVALID_PROBAND_ID = "invalid_proband_id";
 	public final static String INVALID_PROBAND_CATEGORY_ID = "invalid_proband_category_id";
 	public final static String INVALID_PROBAND_STATUS_TYPE_ID = "invalid_proband_status_type_id";
@@ -96,6 +97,8 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_ALREADY_EXISTS = "ecrf_field_value_already_exists";
 	public final static String ECRF_FIELD_VALUE_INDEX_ALREADY_EXISTS = "ecrf_field_value_index_already_exists";
 
+	public final static String INVALID_MASS_MAIL_ID = "invalid_mass_mail_id";
+	public final static String INVALID_MASS_MAIL_RECIPIENT_ID = "invalid_mass_mail_recipient_id";
 	public final static String ECRF_FIELD_VALUE_INDEX_NOT_NULL = "ecrf_field_value_index_not_null";
 	public final static String ECRF_FIELD_VALUE_INDEX_NULL = "ecrf_field_value_index_null";
 	public final static String ECRF_FIELD_VALUE_INDEX_NOT_ZERO = "ecrf_field_value_index_not_zero";
@@ -513,6 +516,7 @@ public interface ServiceExceptionCodes {
 	public final static String FILE_TRIAL_ONLY_ALLOWED = "file_trial_only_allowed";
 	public final static String FILE_PROBAND_ONLY_ALLOWED = "file_proband_only_allowed";
 	// public final static String FILE_INPUT_FIELD_ONLY_ALLOWED = "file_input_field_only_allowed";
+	public final static String FILE_MASS_MAIL_ONLY_ALLOWED = "file_mass_mail_only_allowed";
 	public final static String INVALID_LOGICAL_PATH = "invalid_logical_path";
 	public final static String INVALID_HYPERLINK_ID = "invalid_hyperlink_id";
 	public final static String HYPERLINK_INVENTORY_ONLY_ALLOWED = "hyperlink_inventory_only_allowed";
@@ -535,6 +539,7 @@ public interface ServiceExceptionCodes {
 	public final static String JOURNAL_ENTRY_PROBAND_ONLY_ALLOWED = "journal_entry_proband_only_allowed";
 	public final static String JOURNAL_ENTRY_CRITERIA_ONLY_ALLOWED = "journal_entry_criteria_only_allowed";
 	public final static String JOURNAL_ENTRY_INPUT_FIELD_ONLY_ALLOWED = "journal_entry_input_field_only_allowed";
+	public final static String JOURNAL_ENTRY_MASS_MAIL_ONLY_ALLOWED = "journal_entry_mass_mail_only_allowed";
 	public final static String OLD_DEPARTMENT_PASSWORD_WRONG = "old_department_password_wrong";
 	public final static String INVALID_REGEXP_PATTERN_FROM_FILE_EXTENSION = "invalid_regexp_pattern_from_file_extension";
 	public final static String FILE_EXTENSION_ZERO_LENGTH = "file_extension_zero_length";
@@ -626,6 +631,7 @@ public interface ServiceExceptionCodes {
 	public final static String CRITERION_NO_TRIAL_SELECTED = "criterion_no_trial_selected";
 	public final static String CRITERION_NO_PROBAND_SELECTED = "criterion_no_proband_selected";
 	public final static String CRITERION_NO_INPUT_FIELD_SELECTED = "criterion_no_input_field_selected";
+	public final static String CRITERION_NO_MASS_MAIL_SELECTED = "criterion_no_mass_mail_selected";
 	// public final static String CRITERION_EMPTY_GROUP = "criterion_empty_group";
 	public final static String CRITERION_MISSING_LEFT_PARENTHESIS = "criterion_missing_left_parenthesis";
 	// public final static String CRITERION_MISSING_RIGHT_PARENTHESIS = "criterion_missing_right_parenthesis";
@@ -686,5 +692,33 @@ public interface ServiceExceptionCodes {
 
 	public static final String RESOLVER_NO_ACTIVE_IDENTITY = "resolver_no_active_identity";
 	public static final String RESOLVER_NO_RESOLVE_TEAM_MEMBER = "resolver_no_resolve_team_member";
+	public static final String INVALID_MASS_MAIL_STATUS_TYPE_ID = "invalid_mass_mail_status_type_id";
+	public static final String INVALID_MASS_MAIL_TYPE_ID = "invalid_mass_mail_type_id";
+	public static final String MASS_MAIL_TRIAL_REQUIRED = "mass_mail_trial_required";
+	public static final String MASS_MAIL_PROBAND_LIST_STATUS_TYPE_REQUIRED = "mass_mail_proband_list_status_type_required";
+	public static final String MASS_MAIL_PROBAND_LIST_STATUS_RESEND_NOT_FALSE = "mass_mail_proband_list_status_resend_not_false";
+	public static final String MASS_MAIL_WRONG_PROBAND_LIST_STATUS_TYPE = "mass_mail_wrong_proband_list_status_type";
+	public static final String MASS_MAIL_INVALID_SUBJECT_FORMAT = "mass_mail_invalid_subject_format";
+	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";
+	public static final String MASS_MAIL_INVALID_OTHER_TO = "mass_mail_invalid_other_to";
+	public static final String MASS_MAIL_OTHER_TO_REQUIRED = "mass_mail_other_to_required";
+	public static final String MASS_MAIL_INVALID_CC = "mass_mail_invalid_cc";
+	public static final String MASS_MAIL_INVALID_BCC = "mass_mail_invalid_bcc";
+	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_mass_mail_files_logical_path_not_null";
+	public static final String MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_trial_files_logical_path_not_null";
+	public static final String MASS_MAIL_PROBAND_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_proband_files_logical_path_not_null";
+	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE = "mass_mail_attach_trial_files_not_false";
+	// public static final String MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_NOT_FALSE = "mass_mail_attach_proband_list_entry_tags_not_false";
+	// public static final String MASS_MAIL_ATTACH_ECRFS_NOT_FALSE = "mass_mail_attach_ecrfs_not_false";
+	// public static final String MASS_MAIL_ATTACH_REIMBURSEMENTS_PDF_NOT_FALSE = "mass_mail_attach_reimbursements_pdf_not_false";
+	public static final String MASS_MAIL_RECIPIENT_ALREADY_EXISTS = "mass_mail_recipient_already_exists";
+	public static final String EMAIL_EMPTY_SUBJECT = "email_empty_subject";
+	public static final String EMAIL_EMPTY_MESSAGE = "email_empty_message";
+	public static final String SENDING_MASS_MAILS_DISABLED = "sending_mass_mails_disabled";
+	public static final String EMAIL_NOTIFICATIONS_DISABLED = "email_notifications_disabled";
+	public static final String MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND = "mass_mail_recipient_beacon_not_found";
+	public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
+	public static final String MASS_MAIL_RECIPIENT_PROBAND_NULL = "mass_mail_recipient_proband_null";
+
 
 }

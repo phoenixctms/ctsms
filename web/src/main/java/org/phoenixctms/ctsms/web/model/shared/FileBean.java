@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.model.shared;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -27,8 +30,8 @@ import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.FilePDFVO;
 import org.phoenixctms.ctsms.vo.FileStreamInVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
@@ -59,12 +62,15 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class FileBean extends ManagedBeanBase {
 
+	public static final String PUBLIC_FILE_PATH = "file";
+
 	public static void copyFileOutToIn(FileInVO in, FileOutVO out) {
 		if (in != null && out != null) {
 			InventoryOutVO inventoryVO = out.getInventory();
 			StaffOutVO staffVO = out.getStaff();
 			CourseOutVO courseVO = out.getCourse();
 			TrialOutVO trialVO = out.getTrial();
+			MassMailOutVO massMailVO = out.getMassMail();
 			ProbandOutVO probandVO = out.getProband();
 			in.setActive(out.getActive());
 			in.setPublicFile(out.getPublicFile());
@@ -79,6 +85,7 @@ public class FileBean extends ManagedBeanBase {
 			in.setStaffId(staffVO == null ? null : staffVO.getId());
 			in.setTitle(out.getTitle());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
+			in.setMassMailId(massMailVO == null ? null : massMailVO.getId());
 		}
 	}
 
@@ -104,15 +111,18 @@ public class FileBean extends ManagedBeanBase {
 			in.setStaffId(FileModule.STAFF_DOCUMENT.equals(module) ? entityId : null);
 			in.setTitle(Messages.getString(MessageCodes.FILE_TITLE_PRESET));
 			in.setTrialId(FileModule.TRIAL_DOCUMENT.equals(module) ? entityId : null);
+			in.setMassMailId(FileModule.MASS_MAIL_DOCUMENT.equals(module) ? entityId : null);
 		}
 	}
 
-	private static void loadFileFolderTree(TreeNode parent, FileOutVO selected, FileModule module, Long id, String parentLogicalPath, Boolean active, PSFVO psf, int depth,
+	private static void loadFileFolderTree(TreeNode parent, FileOutVO selected, boolean select, FileModule module, Long id, String parentLogicalPath, Boolean active,
+			Boolean publicFile, PSFVO psf,
+			int depth,
 			boolean selectable) {
 		if (module != null) {
 			Collection<String> folders = null;
 			try {
-				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, psf);
+				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -134,13 +144,13 @@ public class FileBean extends ManagedBeanBase {
 					folderNode.setType(WebUtil.FOLDER_NODE_TYPE);
 					folderNode.setSelectable(selectable);
 					if (depth != 0) {
-						loadFileFolderTree(folderNode, selected, module, id, folder, active, psf, depth - 1, selectable);
+						loadFileFolderTree(folderNode, selected, select, module, id, folder, active, publicFile, psf, depth - 1, selectable);
 					}
 				}
 			}
 			Collection<FileOutVO> fileVOs = null;
 			try {
-				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, active, psf);
+				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -159,7 +169,7 @@ public class FileBean extends ManagedBeanBase {
 						parentFolderVO.updateModifiedTimestamp(fileVO.getModifiedTimestamp());
 					}
 					if (selected != null && selected.getId() == fileVO.getId()) {
-						fileNode.setSelected(true);
+						fileNode.setSelected(select);
 						parent.setExpanded(true);
 					}
 					fileNode.setType(WebUtil.FILE_NODE_TYPE);
@@ -171,6 +181,7 @@ public class FileBean extends ManagedBeanBase {
 
 	private FileInVO in;
 	private FileOutVO out;
+	private FileOutVO lastUploadedOut;
 	private Long entityId;
 	private FileModule module;
 	private InventoryOutVO inventory;
@@ -178,7 +189,8 @@ public class FileBean extends ManagedBeanBase {
 	private CourseOutVO course;
 	private TrialOutVO trial;
 	private ProbandOutVO proband;
-	private InputFieldOutVO inputField;
+	// private InputFieldOutVO inputField;
+	private MassMailOutVO massMail;
 	private FileContentInVO contentIn;
 	private FileStreamInVO streamIn;
 	private TreeNode fileRoot;
@@ -192,6 +204,7 @@ public class FileBean extends ManagedBeanBase {
 	private String fileLogicalPathFilter;
 	private String titleFilter;
 	private Boolean activeFilter;
+	private Boolean publicFilter;
 
 	public FileBean() {
 		super();
@@ -222,6 +235,10 @@ public class FileBean extends ManagedBeanBase {
 	@Override
 	public String addAction()
 	{
+		return addAction(true);
+	}
+
+	private String addAction(boolean init) {
 		if (streamUploadEnabled == null) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_ERROR, MessageCodes.FILE_STREAM_UPLOAD_MODE_UNDEFINED);
 			return ERROR_OUTCOME;
@@ -238,8 +255,10 @@ public class FileBean extends ManagedBeanBase {
 			} else {
 				out = WebUtil.getServiceLocator().getFileService().addFile(WebUtil.getAuthentication(), in, contentIn);
 			}
-			initIn();
-			initSets();
+			if (init) {
+				initIn();
+				initSets();
+			}
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
 		} catch (ServiceException e) {
@@ -317,6 +336,16 @@ public class FileBean extends ManagedBeanBase {
 								WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
 					}
 					break;
+				case MASS_MAIL_DOCUMENT:
+					requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_MASS_MAIL_FILE_TAB_TITLE_BASE64, JSValues.AJAX_MASS_MAIL_FILE_COUNT,
+							MessageCodes.MASS_MAIL_FILES_TAB_TITLE, MessageCodes.MASS_MAIL_FILES_TAB_TITLE_WITH_COUNT, fileCount);
+					if (operationSuccess && in.getMassMailId() != null) {
+						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64,
+								JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT,
+								MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT,
+								WebUtil.getJournalCount(JournalModule.MASS_MAIL_JOURNAL, in.getMassMailId()));
+					}
+					break;
 				default:
 					break;
 			}
@@ -354,6 +383,7 @@ public class FileBean extends ManagedBeanBase {
 		fileLogicalPathFilter = null;
 		titleFilter = null;
 		activeFilter = null;
+		publicFilter = null;
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -373,6 +403,14 @@ public class FileBean extends ManagedBeanBase {
 
 	public String changeInventoryAction(String param) {
 		return changeAction(param, FileModule.INVENTORY_DOCUMENT);
+	}
+
+	public void changeMassMail(String param) {
+		changeMassMailAction(param);
+	}
+
+	public String changeMassMailAction(String param) {
+		return changeAction(param, FileModule.MASS_MAIL_DOCUMENT);
 	}
 
 	public void changeProband(String param) {
@@ -422,6 +460,9 @@ public class FileBean extends ManagedBeanBase {
 		}
 		if (activeFilter != null) {
 			fileFilters.put(WebUtil.FILE_ACTIVE_PSF_PROPERTY_NAME, activeFilter.toString());
+		}
+		if (publicFilter != null) {
+			fileFilters.put(WebUtil.FILE_PUBLIC_PSF_PROPERTY_NAME, publicFilter.toString());
 		}
 		PSFVO sf = new PSFVO();
 		if (!useFileEncryption) {
@@ -474,7 +515,7 @@ public class FileBean extends ManagedBeanBase {
 				throw new IllegalArgumentException(Messages.getString(MessageCodes.NO_FILE_FILTERS));
 			}
 			Collection<FileOutVO> files = WebUtil.getServiceLocator().getFileService()
-					.deleteFiles(WebUtil.getAuthentication(), module, entityId, null, null, sf);
+					.deleteFiles(WebUtil.getAuthentication(), module, entityId, null, false, null, null, sf);
 			long itemsLeft = sf.getRowCount() - files.size();
 			if (itemsLeft > 0) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.BULK_DELETE_OPERATION_INCOMPLETE, files.size(), sf.getRowCount());
@@ -502,12 +543,11 @@ public class FileBean extends ManagedBeanBase {
 		return activeFilter;
 	}
 
-
 	public StreamedContent getAggregatedPdfFilesStreamedContent() throws Exception {
 		if (entityId != null) {
 			try {
 				FilePDFVO aggregatedPDFFiles = WebUtil.getServiceLocator().getFileService()
-						.aggregatePDFFiles(WebUtil.getAuthentication(), module, entityId, null, null, createSFVO());
+						.aggregatePDFFiles(WebUtil.getAuthentication(), module, entityId, null, false, null, null, createSFVO());
 				return new DefaultStreamedContent(new ByteArrayInputStream(aggregatedPDFFiles.getDocumentDatas()), aggregatedPDFFiles.getContentType().getMimeType(),
 						aggregatedPDFFiles.getFileName());
 			} catch (AuthenticationException e) {
@@ -523,6 +563,7 @@ public class FileBean extends ManagedBeanBase {
 		}
 		return null;
 	}
+
 
 	public String getAllowTypes() {
 		return allowTypes;
@@ -597,7 +638,33 @@ public class FileBean extends ManagedBeanBase {
 		return out;
 	}
 
+	public String getPublicFileSignupUrl() {
+		if (out != null) {
+			String publicFileUrlFormat = Settings.getString(SettingCodes.PUBLIC_FILE_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.PUBLIC_FILE_SIGNUP_URL);
+			if (!CommonUtil.isEmptyString(publicFileUrlFormat)) {
+				return MessageFormat.format(publicFileUrlFormat, Long.toString(out.getId()));
+			}
+		}
+		return null;
+	}
+
+	public String getPublicFileUrl() {
+		if (out != null) {
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			StringBuffer url = new StringBuffer(WebUtil.getBaseUrl(request));
+			url.append(request.getContextPath()).append("/").append(PUBLIC_FILE_PATH);
+			url.append('?').append(GetParamNames.FILE_ID.toString()).append("=").append(Long.toString(out.getId()));
+			return url.toString();
+		}
+		return null;
+	}
+
+	public Boolean getPublicFilter() {
+		return publicFilter;
+	}
+
 	public TreeNode getSelectedFile() {
+		// System.out.println("getselectedfile");
 		return IDVOTreeNode.findNode(fileRoot, this.out);
 	}
 
@@ -658,13 +725,24 @@ public class FileBean extends ManagedBeanBase {
 			in.setTitle(uploadedFile.getFileName());
 			if (isCreateable()) {
 				String path = CommonUtil.fixLogicalPathFolderName(in.getLogicalPath());
-				if (ADD_OUTCOME.equals(addAction())) {
+				if (ADD_OUTCOME.equals(addAction(false))) {
+					// updateFileFolderTree(module, entityId, false);
+					// updateLogicalFileSystemStats();
+					lastUploadedOut = out;
 					out = null;
 					initIn();
+					// initSets();
 					in.setLogicalPath(path);
 				}
 			}
 		}
+	}
+
+	public void handleFileUploaded() {
+		updateFileFolderTree(module, entityId, lastUploadedOut, false);
+		lastUploadedOut = null;
+		updateLogicalFileSystemStats();
+		appendRequestContextCallbackArgs(true);
 	}
 
 	public void handleLogicalPathFilterSelect(SelectEvent event) {
@@ -674,6 +752,10 @@ public class FileBean extends ManagedBeanBase {
 
 	public void handleLogicalPathSelect(SelectEvent event) {
 		in.setLogicalPath((String) event.getObject());
+	}
+
+	public void handlePublicFilterChanged() {
+		updateFileFolderTree(this.module, this.entityId);
 	}
 
 	public void handleTitleFilterKeyUp() {
@@ -712,6 +794,9 @@ public class FileBean extends ManagedBeanBase {
 			} else if (in.getProbandId() != null) {
 				entityId = in.getProbandId();
 				module = FileModule.PROBAND_DOCUMENT;
+			} else if (in.getMassMailId() != null) {
+				entityId = in.getMassMailId();
+				module = FileModule.MASS_MAIL_DOCUMENT;
 			} else {
 				entityId = null;
 				module = null;
@@ -729,32 +814,11 @@ public class FileBean extends ManagedBeanBase {
 		course = (FileModule.COURSE_DOCUMENT.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
 		trial = (FileModule.TRIAL_DOCUMENT.equals(module) ? WebUtil.getTrial(entityId) : null);
 		proband = (FileModule.PROBAND_DOCUMENT.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);
+		massMail = (FileModule.MASS_MAIL_DOCUMENT.equals(module) ? WebUtil.getMassMail(entityId) : null);
 		useFileEncryption = CommonUtil.getUseFileEncryption(module);
+		lastUploadedOut = null;
 		updateFileFolderTree(module, entityId);
-		if (!isDynamic()) {
-			long totalSize = 0;
-			long totalFileCount = 0;
-			if (fileRoot != null) {
-				Iterator<TreeNode> rootChildrenIt = fileRoot.getChildren().iterator();
-				while (rootChildrenIt.hasNext()) {
-					Object data = rootChildrenIt.next().getData();
-					if (data instanceof FileFolderVO) {
-						FileFolderVO folderData = (FileFolderVO) data;
-						totalSize += folderData.getSize();
-						totalFileCount += folderData.getTotalFileCount();
-					} else if (data instanceof FileOutVO) {
-						FileOutVO fileData = (FileOutVO) data;
-						totalSize += fileData.getSize();
-						totalFileCount += 1;
-					}
-				}
-			}
-			fileCount = totalFileCount;
-			logicalFileSystemStats = Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
-		} else {
-			fileCount = null;
-			logicalFileSystemStats = null;
-		}
+		updateLogicalFileSystemStats();
 		allowTypes = WebUtil.getAllowedFileExtensionsPattern(module, null);
 		if (module != null) {
 			switch (module) {
@@ -772,6 +836,11 @@ public class FileBean extends ManagedBeanBase {
 				case PROBAND_DOCUMENT:
 					if (WebUtil.isProbandLocked(proband)) {
 						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
+					}
+					break;
+				case MASS_MAIL_DOCUMENT:
+					if (WebUtil.isMassMailLocked(massMail)) {
+						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MASS_MAIL_LOCKED);
 					}
 					break;
 				default:
@@ -796,6 +865,8 @@ public class FileBean extends ManagedBeanBase {
 					return !WebUtil.isTrialLocked(trial);
 				case PROBAND_DOCUMENT:
 					return !WebUtil.isProbandLocked(proband);
+				case MASS_MAIL_DOCUMENT:
+					return !WebUtil.isMassMailLocked(massMail);
 				default:
 					break;
 			}
@@ -818,6 +889,8 @@ public class FileBean extends ManagedBeanBase {
 					return (in.getTrialId() == null ? false : isFileUploaded() && !WebUtil.isTrialLocked(trial));
 				case PROBAND_DOCUMENT:
 					return (in.getProbandId() == null ? false : isFileUploaded() && !WebUtil.isProbandLocked(proband));
+				case MASS_MAIL_DOCUMENT:
+					return (in.getMassMailId() == null ? false : isFileUploaded() && !WebUtil.isMassMailLocked(massMail));
 				default:
 					break;
 			}
@@ -843,6 +916,8 @@ public class FileBean extends ManagedBeanBase {
 					return Settings.getBoolean(SettingCodes.TRIAL_FILE_FOLDER_TREE_DYNAMIC, Bundle.SETTINGS, DefaultSettings.TRIAL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT);
 				case PROBAND_DOCUMENT:
 					return Settings.getBoolean(SettingCodes.PROBAND_FILE_FOLDER_TREE_DYNAMIC, Bundle.SETTINGS, DefaultSettings.PROBAND_FILE_FOLDER_TREE_DYNAMIC_DEFAULT);
+				case MASS_MAIL_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT);
 				default:
 					break;
 			}
@@ -864,6 +939,8 @@ public class FileBean extends ManagedBeanBase {
 					return isCreated() && !WebUtil.isTrialLocked(trial);
 				case PROBAND_DOCUMENT:
 					return isCreated() && !WebUtil.isProbandLocked(proband);
+				case MASS_MAIL_DOCUMENT:
+					return isCreated() && !WebUtil.isMassMailLocked(massMail);
 				default:
 					break;
 			}
@@ -903,6 +980,8 @@ public class FileBean extends ManagedBeanBase {
 					return isCreated() || !WebUtil.isTrialLocked(trial);
 				case PROBAND_DOCUMENT:
 					return isCreated() || !WebUtil.isProbandLocked(proband);
+				case MASS_MAIL_DOCUMENT:
+					return isCreated() || !WebUtil.isMassMailLocked(massMail);
 				default:
 					return true;
 			}
@@ -924,6 +1003,8 @@ public class FileBean extends ManagedBeanBase {
 					return isCreated() && !WebUtil.isTrialLocked(trial);
 				case PROBAND_DOCUMENT:
 					return isCreated() && !WebUtil.isProbandLocked(proband);
+				case MASS_MAIL_DOCUMENT:
+					return isCreated() && !WebUtil.isMassMailLocked(massMail);
 				default:
 					break;
 			}
@@ -975,7 +1056,7 @@ public class FileBean extends ManagedBeanBase {
 				it.next().setParent(null);
 			}
 			treeNode.getChildren().clear();
-			loadFileFolderTree(treeNode, out, this.module, this.entityId, ((FileFolderVO) treeNode.getData()).getFolderPath(), null, createSFVO(), 1, true);
+			loadFileFolderTree(treeNode, out, true, this.module, this.entityId, ((FileFolderVO) treeNode.getData()).getFolderPath(), null, null, createSFVO(), 1, true);
 		}
 	}
 
@@ -1014,6 +1095,10 @@ public class FileBean extends ManagedBeanBase {
 
 	public void setFileNameFilter(String fileNameFilter) {
 		this.fileNameFilter = fileNameFilter;
+	}
+
+	public void setPublicFilter(Boolean publicFilter) {
+		this.publicFilter = publicFilter;
 	}
 
 	public void setSelectedFile(TreeNode node) { // treetable only
@@ -1087,8 +1172,38 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	private void updateFileFolderTree(FileModule module, Long id) {
+		updateFileFolderTree(module, id, out, true);
+	}
+
+	private void updateFileFolderTree(FileModule module, Long id, FileOutVO selectedOut, boolean select) {
 		fileRoot.getChildren().clear();
 		((FileFolderVO) fileRoot.getData()).resetCounts();
-		loadFileFolderTree(fileRoot, out, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, null, createSFVO(), isDynamic() ? 1 : -1, true);
+		loadFileFolderTree(fileRoot, selectedOut, select, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, null, null, createSFVO(), isDynamic() ? 1 : -1, true);
+	}
+	private void updateLogicalFileSystemStats() {
+		if (!isDynamic()) {
+			long totalSize = 0l;
+			long totalFileCount = 0l;
+			if (fileRoot != null) {
+				Iterator<TreeNode> rootChildrenIt = fileRoot.getChildren().iterator();
+				while (rootChildrenIt.hasNext()) {
+					Object data = rootChildrenIt.next().getData();
+					if (data instanceof FileFolderVO) {
+						FileFolderVO folderData = (FileFolderVO) data;
+						totalSize += folderData.getSize();
+						totalFileCount += folderData.getTotalFileCount();
+					} else if (data instanceof FileOutVO) {
+						FileOutVO fileData = (FileOutVO) data;
+						totalSize += fileData.getSize();
+						totalFileCount += 1;
+					}
+				}
+			}
+			fileCount = totalFileCount;
+			logicalFileSystemStats = Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
+		} else {
+			fileCount = null;
+			logicalFileSystemStats = null;
+		}
 	}
 }

@@ -39,6 +39,12 @@
 				update=":tabView:probandcontactdetail_form:probandcontactdetail_list,:tabView:probandcontactdetail_form:probandcontactdetail_input" />
 			<p:remoteCommand
 				process="@this"
+				name="changeProbandRecipient"
+				actionListener="#{probandRecipientBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:massmailrecipient_form:probandrecipient_list,:tabView:massmailrecipient_form:probandrecipient_input" />				
+			<p:remoteCommand
+				process="@this"
 				name="changeProbandTag"
 				actionListener="#{probandTagBean.change(probandBean.in.id)}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
@@ -143,6 +149,12 @@
 				actionListener="#{probandBean.change(probandContactDetailBean.in.probandId)}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
 				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByRecipient"
+				actionListener="#{probandBean.change(probandRecipientBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />				
 			<p:remoteCommand
 				process="@this"
 				name="changeProbandByAddress"
@@ -701,7 +713,7 @@
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
 								for="dateOfBirth"
-								value="#{probandlabels.date_of_birth_label}" />
+								value="#{probandBean.in.blinded ? probandlabels.date_of_birth_optional_label : probandlabels.date_of_birth_label}" />
 							<h:panelGroup >
 								<p:calendar
 									id="dateOfBirth"
@@ -742,7 +754,7 @@
 							<h:outputLabel
 								for="gender"
 								
-								value="#{probandlabels.gender_label}" />
+								value="#{probandBean.in.blinded ? probandlabels.gender_optional_label : probandlabels.gender_label}" />
 							<h:panelGroup >
 								<p:selectOneMenu
 									id="gender"

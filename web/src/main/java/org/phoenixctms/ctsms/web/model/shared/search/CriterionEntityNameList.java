@@ -41,6 +41,8 @@ public class CriterionEntityNameList extends CriterionListBase<String> {
 						return WebUtil.probandIdToName(id);
 					case INPUT_FIELD_DB:
 						return WebUtil.inputFieldIdToName(id);
+					case MASS_MAIL_DB:
+						return WebUtil.massMailIdToName(id);
 					default:
 						break;
 				}

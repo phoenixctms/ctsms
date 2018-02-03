@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.email;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.mail.internet.MimeMessage;
@@ -14,37 +16,55 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.EmailAttachmentVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 
+	private final static boolean HTML = false;
 	private StaffDao staffDao;
 
 	@Override
-	protected int prepare(MimeMessage mimeMessage, Notification notification, Staff recipient) throws Exception {
+	protected void addAttachments(Notification notification, Staff recipient, ArrayList<EmailAttachmentVO> attachments) throws Exception {
+	}
+
+	@Override
+	protected boolean isHtml() {
+		return HTML;
+	}
+
+	@Override
+	protected MimeMessage loadMessage(Notification entity, Staff recipient, Date now) throws Exception {
+		return null;
+	}
+
+	@Override
+	protected void prepareMessage(MimeMessage mimeMessage, Notification notification, Staff recipient, StringBuilder text, Date now) throws Exception {
 		if (!Settings.getBoolean(SettingCodes.EMAIL_NOTIFICATIONS_ENABLED, Bundle.SETTINGS, DefaultSettings.EMAIL_NOTIFICATIONS_ENABLED)) {
-			return 0;
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_NOTIFICATIONS_DISABLED);
 		}
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, EMAIL_ENCODING);
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEncoding());
 		String subject = notification.getSubject();
-		String text = notification.getMessage();
 		if (!CommonUtil.isEmptyString(subject)) {
 			mimeMessageHelper.setSubject(subject);
 		} else {
-			return 0;
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
 		}
-		if (!CommonUtil.isEmptyString(text)) {
-			mimeMessageHelper.setText(text);
+		String message = notification.getMessage();
+		if (!CommonUtil.isEmptyString(message)) {
+			mimeMessageHelper.setText(message, isHtml());
+			text.append(message);
 		} else {
-			return 0;
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_MESSAGE);
 		}
 		mimeMessageHelper.setFrom(Settings.getEmailNotificationFromAddress(), Settings.getEmailNotificationFromName());
 		StaffOutVO recipientVO = staffDao.toStaffOutVO(recipient);
-		int toCount = 0;
+		//int toCount = 0;
 		Iterator<StaffContactDetailValue> contactsIt = recipient.getContactDetailValues().iterator();
 		while (contactsIt.hasNext()) {
 			StaffContactDetailValue contact = contactsIt.next();
@@ -52,13 +72,17 @@ public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 			if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
 				mimeMessageHelper.addTo(contact.getValue(),
 						MessageFormat.format(EMAIL_TO_PERSONAL_NAME, recipientVO.getName(), L10nUtil.getContactDetailTypeName(Locales.NOTIFICATION, contactType.getNameL10nKey())));
-				toCount++;
+				//toCount++;
 			}
 		}
-		return toCount;
+		//return toCount;
 	}
 
 	public void setStaffDao(StaffDao staffDao) {
 		this.staffDao = staffDao;
+	}
+
+	@Override
+	protected void storeMessage(MimeMessage mimeMessage, Notification entity, Staff recipient, Date now) throws Exception {
 	}
 }

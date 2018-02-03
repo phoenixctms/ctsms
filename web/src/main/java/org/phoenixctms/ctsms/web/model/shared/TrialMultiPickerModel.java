@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class TrialMultiPickerModel extends MultiPickerModelBase<TrialOutVO> {
 
 	public TrialMultiPickerModel() {
-		super();
+		super(null);
 	}
 
 	@Override

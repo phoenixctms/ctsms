@@ -192,6 +192,7 @@ public interface $entity.daoName
     //public $rootEntityType loadEvicted($identifierTypeName $identifierName);
     public void evict($rootEntityType entity);
     public void lock($rootEntityType entity, final LockMode lockMode);
+    public void refresh($rootEntityType entity, final LockMode lockMode);
     //public void clearEhCache();
 
     /**
@@ -441,6 +442,8 @@ public interface $entity.daoName
      * @param entities
      */
     public void update($entityCollectionType entities);
+
+    public void commitAndResumeTransaction();
 
     /**
      * Removes the instance of $entity.fullyQualifiedEntityName from the persistent store.

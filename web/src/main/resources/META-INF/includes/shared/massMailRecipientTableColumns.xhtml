@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>mass mail recipient datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:column sortBy="#{massMailRecipient.vo.mimeMessageSize}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_message_size_column}" />
+			</f:facet>
+			<h:outputText
+				rendered="#{massMailRecipient.vo.mimeMessageSize > 0}"
+				value="#{applicationScopeBean.byteCountToString(massMailRecipient.vo.mimeMessageSize)}" />
+		</p:column>
+		<!-- <p:column>
+				<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_parent_column}" />
+					</f:facet>
+				
+				 <ui:include src="../shared/emailMessageRecipients.xhtml">
+						<ui:param
+							name="decrypted"
+							value="#{massMailRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).decrypted}" />
+						<ui:param
+							name="addresses"
+							value="#{massMailRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).toAddresses}" />
+					</ui:include>
+				
+				</p:column> -->
+		<p:column
+			filterBy="#{massMailRecipient.vo.sent}"
+			filterOptions="#{sessionScopeBean.filterBooleans}"
+			sortBy="#{massMailRecipient.vo.sent}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_sent_column}" />
+			</f:facet>
+			<h:outputText
+				rendered="#{massMailRecipient.vo.timesProcessed > 0}"
+				styleClass="#{massMailRecipient.vo.sent ? 'ctsms-list-icon ctsms-icon-check' : 'ctsms-list-icon ctsms-icon-warning'}"
+				value="(#{massMailRecipient.vo.timesProcessed})" />
+		</p:column>
+		<p:column
+			sortBy="#{massMailRecipient.vo.errorMessage}"
+			filterBy="#{massMailRecipient.vo.errorMessage}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_error_message_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.clipStringTrailing(massMailRecipient.vo.errorMessage,48)}" />
+		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.processedTimestamp}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_processed_timestamp_column}" />
+			</f:facet>
+			<h:outputText value="#{massMailRecipient.vo.processedTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.read}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_read_column}" />
+			</f:facet>
+			<h:outputText
+				rendered="#{massMailRecipient.vo.read > 0}"
+				styleClass="ctsms-list-icon ctsms-icon-check"
+				value="(#{massMailRecipient.vo.read})" />
+		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.unsubscribedTimestamp}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_unsubsribed_column}" />
+			</f:facet>
+			<h:outputText
+				rendered="#{massMailRecipient.vo.unsubscribed > 0}"
+				styleClass="ctsms-list-icon ctsms-icon-information"
+				value="#{massMailRecipient.vo.unsubscribedTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.modifiedUser.name}" rendered="#{showModified}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_modified_user_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.getIdentityString(massMailRecipient.vo.modifiedUser)} " />
+		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.modifiedTimestamp}" rendered="#{showModified}">
+			<f:facet name="header">
+				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_modified_timestamp_column}" />
+			</f:facet>
+			<h:outputText value="#{massMailRecipient.vo.modifiedTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+			</h:outputText>
+		</p:column>
+	</ui:composition>
+</h:body>
+</html>

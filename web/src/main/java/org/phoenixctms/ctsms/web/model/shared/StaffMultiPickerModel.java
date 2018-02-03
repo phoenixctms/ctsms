@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class StaffMultiPickerModel extends MultiPickerModelBase<StaffOutVO> {
 
 	public StaffMultiPickerModel() {
-		super();
+		super(null);
 	}
 
 	@Override

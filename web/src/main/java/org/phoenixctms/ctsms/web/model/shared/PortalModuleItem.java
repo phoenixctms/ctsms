@@ -179,6 +179,16 @@ public class PortalModuleItem {
 							tagCloudItem.setStrength(CommonUtil.safeLongToInt(count));
 						}
 						break;
+					case MASS_MAIL_JOURNAL:
+						if (count != null && count > 0) {
+							tagCloudItem.setLabel(CommonUtil.clipString(CommonUtil.massMailOutVOToString(journalEntry.getMassMail()), labelLength, CommonUtil.DEFAULT_ELLIPSIS,
+									EllipsisPlacement.TRAILING));
+							tagCloudItem.setOnclick(MessageFormat.format("openMassMail({0})", Long.toString(journalEntry.getMassMail().getId())));
+							tagModel.addTag(tagCloudItem);
+							maxCount = (maxCount == null ? activityTag.getCount() : Math.max(maxCount, count));
+							tagCloudItem.setStrength(CommonUtil.safeLongToInt(count));
+						}
+						break;
 					default:
 						break;
 				}

@@ -112,4 +112,7 @@ public interface MessageCodes {
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "notification_input_field_value_checkbox_checked";
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "notification_input_field_value_checkbox_unchecked";
 	// public static final String NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR = "notification_input_field_value_selection_set_values_separator";
+	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "mass_mail_input_field_value_checkbox_checked";
+	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "mail_mail_input_field_value_checkbox_unchecked";
+	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "mass_mail_cacnelled_no_recipients";
 }

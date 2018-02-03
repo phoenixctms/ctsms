@@ -70,6 +70,10 @@ import org.phoenixctms.ctsms.domain.LecturerCompetence;
 import org.phoenixctms.ctsms.domain.LecturerCompetenceDao;
 import org.phoenixctms.ctsms.domain.MaintenanceType;
 import org.phoenixctms.ctsms.domain.MaintenanceTypeDao;
+import org.phoenixctms.ctsms.domain.MassMailStatusType;
+import org.phoenixctms.ctsms.domain.MassMailStatusTypeDao;
+import org.phoenixctms.ctsms.domain.MassMailType;
+import org.phoenixctms.ctsms.domain.MassMailTypeDao;
 import org.phoenixctms.ctsms.domain.NotificationType;
 import org.phoenixctms.ctsms.domain.NotificationTypeDao;
 import org.phoenixctms.ctsms.domain.OpsCode;
@@ -168,7 +172,10 @@ import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightInputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.LightInquiryOutVO;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
@@ -186,6 +193,7 @@ import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StreetVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
@@ -305,12 +313,12 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<DepartmentVO> handleGetAllDepartments(AuthenticationVO auth)
 			throws Exception
-			{
+	{
 		DepartmentDao departmentDao = this.getDepartmentDao();
 		Collection departments = departmentDao.loadAllSorted(0, 0);
 		departmentDao.toDepartmentVOCollection(departments);
 		return departments;
-			}
+	}
 
 	@Override
 	protected Collection<InputFieldOutVO> handleGetAllEcrfFieldInputFields(AuthenticationVO auth) throws Exception {
@@ -389,12 +397,12 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<InventoryCategoryVO> handleGetAllInventoryCategories(AuthenticationVO auth)
 			throws Exception
-			{
+	{
 		InventoryCategoryDao inventoryCategoryDao = this.getInventoryCategoryDao();
 		Collection categories = inventoryCategoryDao.loadAllSorted(0, 0);
 		inventoryCategoryDao.toInventoryCategoryVOCollection(categories);
 		return categories;
-			}
+	}
 
 	@Override
 	protected Collection<InventoryStatusTypeVO> handleGetAllInventoryStatusTypes(AuthenticationVO auth) throws Exception {
@@ -427,6 +435,24 @@ extends SelectionSetServiceBase
 		Collection mainteanceTypes = maintenanceTypeDao.loadAllSorted(0, 0);
 		maintenanceTypeDao.toMaintenanceTypeVOCollection(mainteanceTypes);
 		return mainteanceTypes;
+	}
+
+	@Override
+	protected Collection<MassMailStatusTypeVO> handleGetAllMassMailStatusTypes(AuthenticationVO auth)
+			throws Exception {
+		MassMailStatusTypeDao massMailStatusTypeDao = this.getMassMailStatusTypeDao();
+		Collection massMailStates = massMailStatusTypeDao.loadAllSorted(0, 0);
+		massMailStatusTypeDao.toMassMailStatusTypeVOCollection(massMailStates);
+		return massMailStates;
+	}
+
+	@Override
+	protected Collection<MassMailTypeVO> handleGetAllMassMailTypes(
+			AuthenticationVO auth) throws Exception {
+		MassMailTypeDao massMailTypeDao = this.getMassMailTypeDao();
+		Collection massMailTypes = massMailTypeDao.loadAllSorted(0, 0);
+		massMailTypeDao.toMassMailTypeVOCollection(massMailTypes);
+		return massMailTypes;
 	}
 
 	@Override
@@ -869,7 +895,7 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<DepartmentVO> handleGetDepartments(AuthenticationVO auth, Long departmentId)
 			throws Exception
-			{
+	{
 		DepartmentDao departmentDao = this.getDepartmentDao();
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, departmentDao);
@@ -877,7 +903,7 @@ extends SelectionSetServiceBase
 		Collection departments = departmentDao.findByVisibleId(true, departmentId);
 		departmentDao.toDepartmentVOCollection(departments);
 		return departments;
-			}
+	}
 
 	@Override
 	protected ECRFFieldStatusTypeVO handleGetEcrfFieldStatusType(AuthenticationVO auth, Long typeId) throws Exception {
@@ -1003,6 +1029,15 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
+	protected Collection<MassMailStatusTypeVO> handleGetInitialMassMailStatusTypes(AuthenticationVO auth)
+			throws Exception {
+		MassMailStatusTypeDao massMailStatusTypeDao = this.getMassMailStatusTypeDao();
+		Collection massMailStates = massMailStatusTypeDao.findInitialStates();
+		massMailStatusTypeDao.toMassMailStatusTypeVOCollection(massMailStates);
+		return massMailStates;
+	}
+
+	@Override
 	protected Collection<PrivacyConsentStatusTypeVO> handleGetInitialPrivacyConsentStatusTypes(
 			AuthenticationVO auth) throws Exception {
 		PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao = this.getPrivacyConsentStatusTypeDao();
@@ -1061,7 +1096,7 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<InventoryCategoryVO> handleGetInventoryCategories(AuthenticationVO auth, Long categoryId)
 			throws Exception
-			{
+	{
 		InventoryCategoryDao inventoryCategoryDao = this.getInventoryCategoryDao();
 		if (categoryId != null) {
 			CheckIDUtil.checkInventoryCategoryId(categoryId, inventoryCategoryDao);
@@ -1069,7 +1104,7 @@ extends SelectionSetServiceBase
 		Collection categories = inventoryCategoryDao.findByVisibleId(true, categoryId);
 		inventoryCategoryDao.toInventoryCategoryVOCollection(categories);
 		return categories;
-			}
+	}
 
 	@Override
 	protected InventoryCategoryVO handleGetInventoryCategory(
@@ -1170,6 +1205,23 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
+	protected Collection<LocaleVO> handleGetLocales(AuthenticationVO auth)
+			throws Exception {
+		ArrayList<Locale> supportedLocales = CoreUtil.getSupportedLocales();
+		ArrayList<LocaleVO> result = new ArrayList<LocaleVO>(supportedLocales.size());
+		Iterator<Locale> it = supportedLocales.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext()) {
+			Locale locale = it.next();
+			LocaleVO localeVO = new LocaleVO();
+			localeVO.setLanguage(CommonUtil.localeToString(locale));
+			localeVO.setName(CommonUtil.localeToDisplayString(locale, userLocale));
+			result.add(localeVO);
+		}
+		return result;
+	}
+
+	@Override
 	protected MaintenanceTypeVO handleGetMaintenanceType(AuthenticationVO auth, Long typeId)
 			throws Exception {
 		MaintenanceTypeDao maintenanceTypeDao = this.getMaintenanceTypeDao();
@@ -1186,6 +1238,52 @@ extends SelectionSetServiceBase
 		Collection mainteanceTypes = maintenanceTypeDao.findByVisibleId(true, typeId);
 		maintenanceTypeDao.toMaintenanceTypeVOCollection(mainteanceTypes);
 		return mainteanceTypes;
+	}
+
+	@Override
+	protected Collection<JournalCategoryVO> handleGetMassMailJournalCategories(AuthenticationVO auth)
+			throws Exception {
+		return getJournalCategoriesHelper(JournalModule.MASS_MAIL_JOURNAL, null);
+	}
+
+	@Override
+	protected MassMailStatusTypeVO handleGetMassMailStatusType(AuthenticationVO auth, Long typeId)
+			throws Exception {
+		MassMailStatusTypeDao massMailStatusTypeDao = this.getMassMailStatusTypeDao();
+		MassMailStatusType statusType = CheckIDUtil.checkMassMailStatusTypeId(typeId, massMailStatusTypeDao);
+		return massMailStatusTypeDao.toMassMailStatusTypeVO(statusType);
+	}
+
+	@Override
+	protected Collection<MassMailStatusTypeVO> handleGetMassMailStatusTypeTransitions(
+			AuthenticationVO auth, Long typeId) throws Exception {
+		MassMailStatusTypeDao massMailStatusTypeDao = this.getMassMailStatusTypeDao();
+		if (typeId != null) {
+			CheckIDUtil.checkMassMailStatusTypeId(typeId, massMailStatusTypeDao);
+		}
+		Collection massMailStates = massMailStatusTypeDao.findTransitions(typeId);
+		massMailStatusTypeDao.toMassMailStatusTypeVOCollection(massMailStates);
+		return massMailStates;
+	}
+
+	@Override
+	protected MassMailTypeVO handleGetMassMailType(AuthenticationVO auth, Long typeId)
+			throws Exception {
+		MassMailTypeDao massMailTypeDao = this.getMassMailTypeDao();
+		MassMailType massMailType = CheckIDUtil.checkMassMailTypeId(typeId, massMailTypeDao);
+		return massMailTypeDao.toMassMailTypeVO(massMailType);
+	}
+
+	@Override
+	protected Collection<MassMailTypeVO> handleGetMassMailTypes(
+			AuthenticationVO auth, Long typeId) throws Exception {
+		MassMailTypeDao massMailTypeDao = this.getMassMailTypeDao();
+		if (typeId != null) {
+			CheckIDUtil.checkMassMailTypeId(typeId, massMailTypeDao);
+		}
+		Collection massMailTypes = massMailTypeDao.findByVisibleId(true, typeId);
+		massMailTypeDao.toMassMailTypeVOCollection(massMailTypes);
+		return massMailTypes;
 	}
 
 	@Override
@@ -1431,18 +1529,6 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
-	protected Collection<String> handleGetSupportedLocales(AuthenticationVO auth)
-			throws Exception {
-		ArrayList<Locale> supportedLocales = CoreUtil.getSupportedLocales();
-		ArrayList<String> result = new ArrayList<String>(supportedLocales.size());
-		Iterator<Locale> it = supportedLocales.iterator();
-		while (it.hasNext()) {
-			result.add(CommonUtil.localeToString(it.next()));
-		}
-		return result;
-	}
-
-	@Override
 	protected SurveyStatusTypeVO handleGetSurveyStatusType(
 			AuthenticationVO auth, Long typeId) throws Exception {
 		SurveyStatusTypeDao surveyStatusTypeDao = this.getSurveyStatusTypeDao();
@@ -1479,13 +1565,19 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
-	protected Collection<String> handleGetTimeZones(AuthenticationVO auth)
+	protected Collection<TimeZoneVO> handleGetTimeZones(AuthenticationVO auth)
 			throws Exception {
 		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
-		ArrayList<String> result = new ArrayList<String>(timeZones.size());
+		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>(timeZones.size());
 		Iterator<TimeZone> it = timeZones.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
 		while (it.hasNext()) {
-			result.add(CommonUtil.timeZoneToString(it.next()));
+			TimeZone timeZone = it.next();
+			TimeZoneVO timeZoneVO = new TimeZoneVO();
+			timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+			timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, userLocale));
+			timeZoneVO.setRawOffset(timeZone.getRawOffset());
+			result.add(timeZoneVO);
 		}
 		return result;
 	}

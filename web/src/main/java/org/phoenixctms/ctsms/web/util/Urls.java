@@ -15,6 +15,7 @@ public enum Urls {
 	PROBAND_PICKER("/shared/probandPicker.jsf"),
 	INPUT_FIELD_PICKER("/shared/inputFieldPicker.jsf"),
 	TEAM_MEMBER_PICKER("/shared/teamMemberPicker.jsf"),
+	MASS_MAIL_PICKER("/shared/massMailPicker.jsf"),
 	ECRF_SECTION("/shared/ecrfSection.jsf"),
 	INVENTORY("/inventory/inventory.jsf"),
 	STAFF("/staff/staff.jsf"),
@@ -23,8 +24,10 @@ public enum Urls {
 	TRIAL("/trial/trial.jsf"),
 	PROBAND("/proband/proband.jsf"),
 	INPUT_FIELD("/inputfield/inputField.jsf"),
+	MASS_MAIL("/massmail/massMail.jsf"),
 	LOGIN("/login.jsf"),
 	PORTAL("/portal.jsf"),
+	ERROR("/error.jsf"), UNSUBSCRIBE("/unsubscribe.jsf"),
 	INVENTORY_START(Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)), // "/inventory/inventorySearch.jsf"),
 	STAFF_START(Settings.getString(SettingCodes.STAFF_START_URL, Bundle.SETTINGS, DefaultSettings.STAFF_START_URL)), // "/staff/staffSearch.jsf"),
 	COURSE_START(Settings.getString(SettingCodes.COURSE_START_URL, Bundle.SETTINGS, DefaultSettings.COURSE_START_URL)), // "/course/courseSearch.jsf"),
@@ -32,6 +35,7 @@ public enum Urls {
 	TRIAL_START(Settings.getString(SettingCodes.TRIAL_START_URL, Bundle.SETTINGS, DefaultSettings.TRIAL_START_URL)), // "/trial/trialSearch.jsf"),
 	PROBAND_START(Settings.getString(SettingCodes.PROBAND_START_URL, Bundle.SETTINGS, DefaultSettings.PROBAND_START_URL)), // "/proband/probandSearch.jsf"),
 	INPUT_FIELD_START(Settings.getString(SettingCodes.INPUT_FIELD_START_URL, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
+	MASS_MAIL_START(Settings.getString(SettingCodes.MASS_MAIL_START_URL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
 	INVENTORY_SEARCH("/inventory/inventorySearch.jsf"),
 	STAFF_SEARCH("/staff/staffSearch.jsf"),
 	COURSE_SEARCH("/course/courseSearch.jsf"),
@@ -39,6 +43,7 @@ public enum Urls {
 	TRIAL_SEARCH("/trial/trialSearch.jsf"),
 	PROBAND_SEARCH("/proband/probandSearch.jsf"),
 	INPUT_FIELD_SEARCH("/inputfield/inputFieldSearch.jsf"),
+	MASS_MAIL_SEARCH("/massmail/massMailSearch.jsf"),
 	CHANGE_PASSWORD("/user/changePassword.jsf"),
 	ADMIN_UPCOMING_COURSE_OVERVIEW("/course/adminUpcomingCourseOverview.jsf"),
 	EXPIRING_COURSE_OVERVIEW("/course/expiringCourseOverview.jsf"),
@@ -56,6 +61,7 @@ public enum Urls {
 	TIMELINE_EVENT_OVERVIEW("/trial/timelineEventOverview.jsf"),
 	TRIAL_TIMELINE("/trial/trialTimeline.jsf"),
 	TRIAL_SHIFT_SUMMARY_OVERVIEW("/trial/trialShiftSummaryOverview.jsf"),
+	RECIPIENT_OVERVIEW("/massmail/recipientOverview.jsf"),
 	MONEY_TRANSFER_OVERVIEW("/trial/moneyTransferOverview.jsf"),
 	DUTY_ROSTER_SCHEDULE("/trial/dutyRosterSchedule.jsf");
 
@@ -106,6 +112,10 @@ public enum Urls {
 			case INPUT_FIELD_PICKER:
 			case INPUT_FIELD_SEARCH:
 				return DBModule.INPUT_FIELD_DB;
+			case MASS_MAIL_START:
+			case MASS_MAIL_PICKER:
+			case MASS_MAIL_SEARCH:
+				return DBModule.MASS_MAIL_DB;
 			default:
 				return null;
 		}

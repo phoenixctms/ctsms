@@ -1,7 +1,6 @@
 package org.phoenixctms.ctsms.web.model.inputfield;
 
 import java.io.UnsupportedEncodingException;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -53,7 +52,7 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	}
 
 	private final static String getNewStrokesId() {
-		return UUID.randomUUID().toString();
+		return CommonUtil.generateUUID();
 	}
 
 	public static void initSelectionSetValueDefaultValues(InputFieldSelectionSetValueInVO in, Long inputFieldId) {

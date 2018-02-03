@@ -39,6 +39,10 @@ public interface JournalExcelSettingCodes {
 	public static final String ECRF_WRITEHEAD = "ecrf_writehead";
 	public static final String ECRF_AUTOSIZE = "ecrf_autosize";
 	public static final String ECRF_PAGE_BREAK_AT_ROW = "ecrf_page_break_at_row";
+	public static final String MASS_MAIL_TEMPLATE_FILE_NAME = "mass_mail_template_file_name";
+	public static final String MASS_MAIL_WRITEHEAD = "mass_mail_writehead";
+	public static final String MASS_MAIL_AUTOSIZE = "mass_mail_autosize";
+	public static final String MASS_MAIL_PAGE_BREAK_AT_ROW = "mass_mail_page_break_at_row";
 	public static final String INVENTORY_SCALE_FACTOR = "inventory_scale_factor";
 	public static final String STAFF_SCALE_FACTOR = "staff_scale_factor";
 	public static final String COURSE_SCALE_FACTOR = "course_scale_factor";
@@ -48,6 +52,7 @@ public interface JournalExcelSettingCodes {
 	public static final String INPUT_FIELD_SCALE_FACTOR = "input_field_scale_factor";
 	public static final String CRITERIA_SCALE_FACTOR = "criteria_scale_factor";
 	public static final String ECRF_SCALE_FACTOR = "ecrf_scale_factor";
+	public static final String MASS_MAIL_SCALE_FACTOR = "mass_mail_scale_factor";
 	public static final String INVENTORY_SPREADSHEET_NAME = "inventory_spreadsheet_name";
 	public static final String STAFF_SPREADSHEET_NAME = "staff_spreadsheet_name";
 	public static final String COURSE_SPREADSHEET_NAME = "course_spreadsheet_name";
@@ -57,6 +62,7 @@ public interface JournalExcelSettingCodes {
 	public static final String INPUT_FIELD_SPREADSHEET_NAME = "input_field_spreadsheet_name";
 	public static final String CRITERIA_SPREADSHEET_NAME = "criteria_spreadsheet_name";
 	public static final String ECRF_SPREADSHEET_NAME = "ecrf_spreadsheet_name";
+	public static final String MASS_MAIL_SPREADSHEET_NAME = "mass_mail_spreadsheet_name";
 	public static final String INVENTORY_HEAD_FORMAT = "inventory_head_format";
 	public static final String STAFF_HEAD_FORMAT = "staff_head_format";
 	public static final String COURSE_HEAD_FORMAT = "course_head_format";
@@ -66,6 +72,7 @@ public interface JournalExcelSettingCodes {
 	public static final String INPUT_FIELD_HEAD_FORMAT = "input_field_head_format";
 	public static final String CRITERIA_HEAD_FORMAT = "criteria_head_format";
 	public static final String ECRF_HEAD_FORMAT = "ecrf_head_format";
+	public static final String MASS_MAIL_HEAD_FORMAT = "mass_mail_head_format";
 	public static final String INVENTORY_ROW_FORMAT = "inventory_row_format";
 	public static final String STAFF_ROW_FORMAT = "staff_row_format";
 	public static final String COURSE_ROW_FORMAT = "course_row_format";
@@ -75,6 +82,7 @@ public interface JournalExcelSettingCodes {
 	public static final String INPUT_FIELD_ROW_FORMAT = "input_field_row_format";
 	public static final String CRITERIA_ROW_FORMAT = "criteria_row_format";
 	public static final String ECRF_ROW_FORMAT = "ecrf_row_format";
+	public static final String MASS_MAIL_ROW_FORMAT = "mass_mail_row_format";
 	public static final String INVENTORY_ROW_COLORS = "inventory_row_colors";
 	public static final String STAFF_ROW_COLORS = "staff_row_colors";
 	public static final String COURSE_ROW_COLORS = "course_row_colors";
@@ -84,4 +92,5 @@ public interface JournalExcelSettingCodes {
 	public static final String INPUT_FIELD_ROW_COLORS = "input_field_row_colors";
 	public static final String CRITERIA_ROW_COLORS = "criteria_row_colors";
 	public static final String ECRF_ROW_COLORS = "ecrf_row_colors";
+	public static final String MASS_MAIL_ROW_COLORS = "mass_mail_row_colors";
 }

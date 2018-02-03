@@ -155,6 +155,8 @@ public interface DefaultMessages {
 	public static final String TIMELINE_EVENT_TITLE_PRESET = "<timeline event title preset>";
 	public static final String TEAM_MEMBER_ROLE_NAME = "<team member role name>";
 	public static final String PROBAND_LIST_STATUS_TYPE_NAME = "<proband status list type name>";
+	public static final String MASS_MAIL_STATUS_TYPE_NAME = "<mass mail status type>";
+	public static final String MASS_MAIL_TYPE_NAME = "<mass mail type>";
 	public static final String INPUT_FIELD_SELECTEION_SET_VALUE_NAME = "<input field selection set value name>";
 	public static final String INPUT_FIELD_VALIDATION_ERROR_MSG = "<input field validation error message>";
 	public static final String INPUT_FIELD_TITLE = "<input field title>";
@@ -182,4 +184,7 @@ public interface DefaultMessages {
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
 	// public static final String NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR = ", ";
+	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
+	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
+	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "invalid proband/no recipients";
 }

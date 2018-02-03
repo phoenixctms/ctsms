@@ -77,6 +77,7 @@ import org.phoenixctms.ctsms.vo.ECRFProgressSummaryVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
+import org.phoenixctms.ctsms.vo.EmailMessageVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
@@ -94,8 +95,14 @@ import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
 import org.phoenixctms.ctsms.vo.LecturerOutVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.MassMailProgressVO;
+import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
+import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
@@ -123,6 +130,7 @@ import org.phoenixctms.ctsms.vo.StaffStatusTypeVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -177,6 +185,7 @@ public final class WebUtil {
 			return suffix;
 		}
 	}
+
 	public static final String REST_API_PATH = "rest";
 	public static final int IMAGE_STORE_MAX_SIZE = 2;
 	private final static String COLOR_STYLECLASS_PREFIX = "ctsms-color-";
@@ -200,6 +209,7 @@ public final class WebUtil {
 	public final static String FILE_LOGICAL_PATH_PSF_PROPERTY_NAME = "logicalPath";
 	public final static String FILE_NAME_HASH_PSF_PROPERTY_NAME = "fileNameHash";
 	public final static String FILE_ACTIVE_PSF_PROPERTY_NAME = "active";
+	public final static String FILE_PUBLIC_PSF_PROPERTY_NAME = "publicFile";
 	public final static String TRIAL_STATUS_PSF_PROPERTY_NAME = "status";
 	public final static String INQUIRY_POSITION_PSF_PROPERTY_NAME = "position";
 	public final static String PROBAND_LIST_ENTRY_TAG_POSITION_PSF_PROPERTY_NAME = "position";
@@ -329,6 +339,7 @@ public final class WebUtil {
 	public static String colorToStyleClass(Color color) {
 		return colorToStyleClass(color, null);
 	}
+
 	public static String colorToStyleClass(Color color, ColorOpacity alpha) {
 		StringBuilder result = new StringBuilder();
 		if (color != null) {
@@ -359,7 +370,6 @@ public final class WebUtil {
 		}
 		return new ArrayList<String>();
 	}
-
 	public static List<String> completeBankName(String bankCodeNumberPrefix, String bicPrefix, String query) {
 		Collection<String> bankNames = null;
 		try {
@@ -439,7 +449,7 @@ public final class WebUtil {
 	public static List<String> completeLogicalPath(FileModule module, Long entityId, String query) {
 		Collection<String> folders = null;
 		try {
-			folders = getServiceLocator().getFileService().getFileFolders(getAuthentication(), module, entityId, query, true, null, null);
+			folders = getServiceLocator().getFileService().getFileFolders(getAuthentication(), module, entityId, query, true, null, null, null);
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -551,6 +561,30 @@ public final class WebUtil {
 		}
 	}
 
+	public static MethodBinding createActionListenerMethodBinding(String actionListenerString) {
+		return FacesContext.getCurrentInstance().getApplication()
+				.createMethodBinding(actionListenerString, new Class[] { ActionEvent.class });
+	}
+
+	public static Converter createConverter(String converterId) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		return context.getApplication().createConverter(converterId);
+	}
+
+	public static String createViewUrl(Urls view, boolean relative, GetParamNames param, Long value) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		StringBuffer url = new StringBuffer();
+		if (!relative) {
+			url.append(getBaseUrl(request));
+		}
+		url.append(view.toString(request));
+		if (param != null && value != null) {
+			url.append('?').append(param.toString()).append("=").append(Long.toString(value));
+		}
+		return url.toString();
+	}
+
 	// public static String decodeBase64(String base64String) {
 	// if (base64String != null && base64String.length() > 0 && Base64.isBase64(base64String)) {
 	// try {
@@ -570,30 +604,6 @@ public final class WebUtil {
 	// }
 	// return "";
 	// }
-
-	public static MethodBinding createActionListenerMethodBinding(String actionListenerString) {
-		return FacesContext.getCurrentInstance().getApplication()
-				.createMethodBinding(actionListenerString, new Class[] { ActionEvent.class });
-	}
-
-	public static Converter createConverter(String converterId) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		return context.getApplication().createConverter(converterId);
-	}
-
-	public static String createViewUrl(Urls view, boolean relative, GetParamNames param, Long value) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-		StringBuffer url = new StringBuffer();
-		if (!relative) {
-			url.append(request.getScheme()).append("://").append(request.getServerName()).append(":").append(request.getServerPort());
-		}
-		url.append(view.toString(request));
-		if (param != null && value != null) {
-			url.append('?').append(param.toString()).append("=").append(Long.toString(value));
-		}
-		return url.toString();
-	}
 
 	public static String escapeHtml(String string) {
 		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(string);
@@ -936,6 +946,56 @@ public final class WebUtil {
 			maintenanceTypes = new ArrayList<SelectItem>();
 		}
 		return maintenanceTypes;
+	}
+
+	public static ArrayList<SelectItem> getAllMassMailStatusTypes() {
+		ArrayList<SelectItem> statusTypes;
+		Collection<MassMailStatusTypeVO> statusTypeVOs = null;
+		try {
+			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllMassMailStatusTypes(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (statusTypeVOs != null) {
+			statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
+			Iterator<MassMailStatusTypeVO> it = statusTypeVOs.iterator();
+			while (it.hasNext()) {
+				MassMailStatusTypeVO statusTypeVO = it.next();
+				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
+				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
+			}
+		} else {
+			statusTypes = new ArrayList<SelectItem>();
+		}
+		return statusTypes;
+	}
+
+	public static ArrayList<SelectItem> getAllMassMailTypes() {
+		ArrayList<SelectItem> massMailTypes;
+		Collection<MassMailTypeVO> massMailTypeVOs = null;
+		try {
+			massMailTypeVOs = getServiceLocator().getSelectionSetService().getAllMassMailTypes(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (massMailTypeVOs != null) {
+			massMailTypes = new ArrayList<SelectItem>(massMailTypeVOs.size());
+			Iterator<MassMailTypeVO> it = massMailTypeVOs.iterator();
+			while (it.hasNext()) {
+				MassMailTypeVO massMailTypeVO = it.next();
+				massMailTypes.add(new SelectItem(massMailTypeVO.getId().toString(), massMailTypeVO.getName()));
+				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
+			}
+		} else {
+			massMailTypes = new ArrayList<SelectItem>();
+		}
+		return massMailTypes;
 	}
 
 	public static ArrayList<SelectItem> getAllNotificationTypes() {
@@ -1345,7 +1405,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static AspVO getAsp(Long aspId) {
 		if (aspId != null) {
 			try {
@@ -1445,6 +1504,7 @@ public final class WebUtil {
 		}
 		return categories;
 	}
+
 
 	public static ArrayList<SelectItem> getAvailableJournalCategories(JournalModule module, Long categoryId) {
 		ArrayList<SelectItem> categories;
@@ -1583,6 +1643,12 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String getBaseUrl(HttpServletRequest request) {
+		StringBuffer url = new StringBuffer();
+		url.append(request.getScheme()).append("://").append(request.getServerName()).append(":").append(request.getServerPort());
+		return url.toString();
+	}
+
 	public static Boolean getBooleanParamValue(GetParamNames paramName) {
 		return stringToBoolean(getParamValue(paramName));
 	}
@@ -1614,6 +1680,8 @@ public final class WebUtil {
 		}
 		return booleans;
 	}
+
+
 
 	public static CalendarWeekVO getCalendarWeek(Date date) {
 		try {
@@ -2179,8 +2247,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
-
 	public static ECRFProgressVO getEcrfProgress(Long ecrfId, Long listEntryId, boolean sectionDetail) {
 		if (ecrfId != null && listEntryId != null) {
 			try {
@@ -2212,11 +2278,11 @@ public final class WebUtil {
 	public static Integer getEcrfSectionHashCode(ECRFFieldStatusEntryOutVO ecrfFieldStatusEntry) {
 		if (ecrfFieldStatusEntry != null) {
 			return new HashCodeBuilder(1249046965, -82296885)
-			.append(ecrfFieldStatusEntry.getListEntry().getId())
-			.append(ecrfFieldStatusEntry.getEcrfField().getEcrf().getId())
-			.append(ecrfFieldStatusEntry.getEcrfField().getSection())
-			.append(ecrfFieldStatusEntry.getIndex())
-			.toHashCode();
+					.append(ecrfFieldStatusEntry.getListEntry().getId())
+					.append(ecrfFieldStatusEntry.getEcrfField().getEcrf().getId())
+					.append(ecrfFieldStatusEntry.getEcrfField().getSection())
+					.append(ecrfFieldStatusEntry.getIndex())
+					.toHashCode();
 		}
 
 		return null;
@@ -2273,6 +2339,20 @@ public final class WebUtil {
 		return "";
 	}
 
+	public static EmailMessageVO getEmailMessage(Long massMailRecipientId) {
+
+		if (massMailRecipientId != null) {
+			try {
+				return getServiceLocator().getMassMailService().getEmailMessage(getAuthentication(), massMailRecipientId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
 
 	public static ArrayList<Enum> getEnumList(String value,Class enumeration) {
 
@@ -2340,27 +2420,10 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static Boolean getExpired(Date today, Date date, VariablePeriod validityPeriod, Long validityPeriodDays) {
 		if (today != null && date != null && validityPeriod != null) {
 			return getExpired(today, addIntervals(date, validityPeriod, validityPeriodDays, 1));
-		}
-		return null;
-	}
-
-	public static Long getFileCount(FileModule module, Long id) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
-		if (module != null && id != null) {
-			try {
-				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, null);
-				// count = psf.getRowCount();
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
 		}
 		return null;
 	}
@@ -2875,6 +2938,31 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static ArrayList<SelectItem> getLocales() {
+		Collection<LocaleVO> localeVOs = null;
+		ArrayList<SelectItem> locales;
+		try {
+			localeVOs = getServiceLocator().getSelectionSetService().getLocales(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (localeVOs != null) {
+			locales = new ArrayList<SelectItem>(localeVOs.size());
+			Iterator<LocaleVO> it = localeVOs.iterator();
+			while (it.hasNext()) {
+				LocaleVO locale = it.next();
+				locales.add(new SelectItem(locale.getLanguage(), locale.getName()));
+			}
+		} else {
+			locales = new ArrayList<SelectItem>();
+		}
+		return locales;
+
+	}
+
 	public static Long getLongParamValue(GetParamNames paramName) {
 		return stringToLong(getParamValue(paramName));
 	}
@@ -2892,6 +2980,33 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
+	// public static ArrayList<SelectItem> getSupportedLocales() {
+	// return getLocales(getLocale());
+	// }
+
+	// public static ArrayList<Locale> getLocales() {
+	// Collection<LocaleVO> localeVOs = null;
+	// ArrayList<Locale> locales;
+	// try {
+	// localeVOs = getServiceLocator().getSelectionSetService().getSupportedLocales(getAuthentication());
+	// } catch (ServiceException e) {
+	// } catch (AuthenticationException e) {
+	// publishException(e);
+	// } catch (AuthorisationException e) {
+	// } catch (IllegalArgumentException e) {
+	// }
+	// if (localeVOs != null) {
+	// locales = new ArrayList<Locale>(localeVOs.size());
+	// Iterator<LocaleVO> it = localeVOs.iterator();
+	// while (it.hasNext()) {
+	// locales.add(CommonUtil.localeFromString(it.next().getLanguage()));
+	// }
+	// } else {
+	// locales = new ArrayList<Locale>();
+	// }
+	// return locales;
+	// }
 
 	public static Long getMaintenanceScheduleItemCount(Long inventoryId) {
 		if (inventoryId != null) {
@@ -2920,6 +3035,96 @@ public final class WebUtil {
 			}
 		}
 		return null;
+	}
+
+	public static MassMailOutVO getMassMail(Long massMailId) {
+		if (massMailId != null) {
+			try {
+				return getServiceLocator().getMassMailService().getMassMail(getAuthentication(), massMailId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static MassMailProgressVO getMassMailProgress(Long massMailId) {
+		if (massMailId != null) {
+			try {
+				return getServiceLocator().getMassMailService().getMassMailProgress(getAuthentication(), massMailId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static String getMassMailProgressLabel(MassMailOutVO massMail, MassMailProgressVO massMailProgress) {
+
+		if (massMailProgress != null && massMailProgress.getRecipientTotalCount() > 0l) {
+			return Messages.getMessage(MessageCodes.MASS_MAIL_PROGRESS_LABEL, massMailProgress.getRecipientTotalCount() - massMailProgress.getRecipientPendingCount(),
+					massMailProgress.getRecipientTotalCount());
+		}
+		return null;
+	}
+
+	public static int getMassMailProgressValue(MassMailOutVO massMail,MassMailProgressVO massMailProgress) {
+		if (massMailProgress != null && massMailProgress.getRecipientTotalCount() > 0l) {
+			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
+					* (massMailProgress.getRecipientTotalCount() - massMailProgress.getRecipientPendingCount())) / ((float) massMailProgress.getRecipientTotalCount()));
+		}
+		return 0;
+	}
+
+	public static MassMailRecipientOutVO getMassMailRecipient(Long massMailRecipientId) {
+		if (massMailRecipientId != null) {
+			try {
+				return getServiceLocator().getMassMailService().getMassMailRecipient(getAuthentication(), massMailRecipientId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static Long getMassMailRecipientCount(Long massMailId, Long probandId, boolean pending) {
+		if (massMailId != null || probandId != null) {
+			try {
+				return getServiceLocator().getMassMailService().getMassMailRecipientCount(getAuthentication(), massMailId, probandId, pending);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static MassMailStatusTypeVO getMassMailStatusType(Long statusTypeId) {
+
+		if (statusTypeId != null) {
+			try {
+				return getServiceLocator().getSelectionSetService().getMassMailStatusType(getAuthentication(), statusTypeId);
+				// putSelectionSetServiceCache(id, statusType);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+
 	}
 
 	public static Long getMedicationCount(Long probandId, Long diagnosisId, Long procedureId) {
@@ -2979,6 +3184,8 @@ public final class WebUtil {
 					return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE);
 				case USER_DB:
 					return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE);
+				case MASS_MAIL_DB:
+					return Settings.getBoolean(SettingCodes.ENABLE_MASS_MAIL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_MASS_MAIL_MODULE);
 				default:
 			}
 		}
@@ -3056,6 +3263,10 @@ public final class WebUtil {
 
 	public static String getNoInventoryPickedMessage() {
 		return Messages.getString(MessageCodes.NO_INVENTORY_PICKED);
+	}
+
+	public static String getNoMassMailPickedMessage() {
+		return Messages.getString(MessageCodes.NO_MASS_MAIL_PICKED);
 	}
 
 	public static String getNoProbandPickedMessage() {
@@ -3324,6 +3535,7 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static ProbandListEntryOutVO getProbandListEntry(Long probandListEntryId) {
 		if (probandListEntryId != null) {
 			try {
@@ -3483,6 +3695,7 @@ public final class WebUtil {
 		// return statusType;
 	}
 
+
 	public static Long getProbandTagValueCount(Long probandId) {
 		if (probandId != null) {
 			try {
@@ -3511,6 +3724,14 @@ public final class WebUtil {
 		return null;
 	}
 
+	// public static Object getSelectionSetServiceCache(Class type, Object key) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
+	// }
+	// return null;
+	// }
+
 	public static ArrayList<SelectItem> getProcedures(Long probandId) {
 		ArrayList<SelectItem> procedures;
 		Collection<ProcedureOutVO> procedureVOs = null;
@@ -3538,6 +3759,10 @@ public final class WebUtil {
 		return procedures;
 	}
 
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
+
 	public static String getRefererBase64(HttpServletRequest request) {
 		if (request != null) {
 			String headerValue = request.getHeader(REFERER_HEADER_NAME);
@@ -3549,7 +3774,6 @@ public final class WebUtil {
 		}
 		return "";
 	}
-
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
@@ -3585,24 +3809,12 @@ public final class WebUtil {
 		return null;
 	}
 
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
-
 	public static String getRemoteHost(HttpServletRequest request) {
 		if (request != null) {
 			return request.getRemoteHost();
 		}
 		return null;
 	}
-
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
-	// }
 
 	public static Long getSelectionSetValueCount(Long inputFieldId) {
 		// PSFVO psf = new PSFVO();
@@ -3815,6 +4027,7 @@ public final class WebUtil {
 		// return statusType;
 	}
 
+
 	public static Long getStaffTagValueCount(Long staffId) {
 		if (staffId != null) {
 			try {
@@ -3827,29 +4040,6 @@ public final class WebUtil {
 			}
 		}
 		return null;
-	}
-
-	public static ArrayList<Locale> getSupportedLocales() {
-		Collection<String> supportedLocales = null;
-		ArrayList<Locale> locales;
-		try {
-			supportedLocales = getServiceLocator().getSelectionSetService().getSupportedLocales(getAuthentication());
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		if (supportedLocales != null) {
-			locales = new ArrayList<Locale>(supportedLocales.size());
-			Iterator<String> it = supportedLocales.iterator();
-			while (it.hasNext()) {
-				locales.add(CommonUtil.localeFromString(it.next()));
-			}
-		} else {
-			locales = new ArrayList<Locale>();
-		}
-		return locales;
 	}
 
 	public static String getTabTitleString(
@@ -3950,37 +4140,6 @@ public final class WebUtil {
 		// return eventType;
 	}
 
-	public static TimeZone getTimeZone() {
-		SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		if (sessionScopeBean != null) {
-			return sessionScopeBean.getTimeZone();
-		}
-		return null;
-	}
-
-	public static ArrayList<TimeZone> getTimeZones() {
-		Collection<String> timeZoneIDs = null;
-		ArrayList<TimeZone> timeZones;
-		try {
-			timeZoneIDs = getServiceLocator().getSelectionSetService().getTimeZones(getAuthentication());
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		if (timeZoneIDs != null) {
-			timeZones = new ArrayList<TimeZone>(timeZoneIDs.size());
-			Iterator<String> it = timeZoneIDs.iterator();
-			while (it.hasNext()) {
-				timeZones.add(CommonUtil.timeZoneFromString(it.next()));
-			}
-		} else {
-			timeZones = new ArrayList<TimeZone>();
-		}
-		return timeZones;
-	}
-
 	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;
 	// if (counts != null) {
@@ -3991,6 +4150,58 @@ public final class WebUtil {
 	// }
 	// return result;
 	// }
+
+	public static TimeZone getTimeZone() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			return sessionScopeBean.getTimeZone();
+		}
+		return null;
+	}
+
+	public static ArrayList<SelectItem> getTimeZones() {
+		Collection<TimeZoneVO> timeZoneVOs = null;
+		ArrayList<SelectItem> timeZones;
+		try {
+			timeZoneVOs = getServiceLocator().getSelectionSetService().getTimeZones(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (timeZoneVOs != null) {
+			timeZones = new ArrayList<SelectItem>(timeZoneVOs.size());
+			Iterator<TimeZoneVO> it = timeZoneVOs.iterator();
+			while (it.hasNext()) {
+				TimeZoneVO timeZone = it.next();
+				timeZones.add(new SelectItem(timeZone.getTimeZoneID(), timeZone.getName()));
+				//timeZones.add(CommonUtil.timeZoneFromString(it.next().getTimeZone()));
+			}
+		} else {
+			timeZones = new ArrayList<SelectItem>();
+		}
+		return timeZones;
+	}
+
+
+	public static Long getTotalFileCount(FileModule module, Long id) {
+		// PSFVO psf = new PSFVO();
+		// psf.setPageSize(0);
+		// Long count = null;
+		if (module != null && id != null) {
+			try {
+				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, null, null);
+				// count = psf.getRowCount();
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
 
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
@@ -4139,6 +4350,17 @@ public final class WebUtil {
 		// return statusType;
 	}
 
+	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
+	// long result = 0l;
+	// if (counts != null) {
+	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
+	// while (it.hasNext()) {
+	// result += it.next().getUnresolved();
+	// }
+	// }
+	// return result;
+	// }
+
 	public static Long getTrialTagValueCount(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -4152,17 +4374,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getUnresolved();
-	// }
-	// }
-	// return result;
-	// }
 
 	public static UserOutVO getUser() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
@@ -4316,6 +4527,31 @@ public final class WebUtil {
 			categories = new ArrayList<SelectItem>();
 		}
 		return categories;
+	}
+
+	public static ArrayList<SelectItem> getVisibleMassMailTypes(Long typeId) {
+		ArrayList<SelectItem> massMailTypes;
+		Collection<MassMailTypeVO> massMailTypeVOs = null;
+		try {
+			massMailTypeVOs = getServiceLocator().getSelectionSetService().getMassMailTypes(getAuthentication(), typeId);
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (massMailTypeVOs != null) {
+			massMailTypes = new ArrayList<SelectItem>(massMailTypeVOs.size());
+			Iterator<MassMailTypeVO> it = massMailTypeVOs.iterator();
+			while (it.hasNext()) {
+				MassMailTypeVO massMailTypeVO = it.next();
+				massMailTypes.add(new SelectItem(massMailTypeVO.getId().toString(), massMailTypeVO.getName()));
+				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
+			}
+		} else {
+			massMailTypes = new ArrayList<SelectItem>();
+		}
+		return massMailTypes;
 	}
 
 
@@ -4512,8 +4748,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
-
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4531,6 +4765,8 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
+
 
 	public static VisitTypeVO getVisitType(Long visitTypeId) {
 		// VisitTypeVO visitType = null; // (VisitTypeVO) getSelectionSetServiceCache(VisitTypeVO.class, id);
@@ -4571,10 +4807,6 @@ public final class WebUtil {
 		return Messages.getString(MessageCodes.INVALID_INPUT_FIELD_PICKED);
 	}
 
-	// public static String inputFieldVariableValueToJson(Object src) {
-	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-	// }
-
 	public static String inputFieldOutVOToString(InputFieldOutVO inputField) {
 		String result = CommonUtil.inputFieldOutVOToString(inputField);
 		if (result != null) {
@@ -4599,6 +4831,10 @@ public final class WebUtil {
 		}
 		return Messages.getString(MessageCodes.INVALID_INVENTORY_PICKED);
 	}
+
+	// public static String inputFieldVariableValueToJson(Object src) {
+	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
+	// }
 
 	public static String inventoryOutVOToString(InventoryOutVO inventory) {
 		String result = CommonUtil.inventoryOutVOToString(inventory);
@@ -4654,6 +4890,13 @@ public final class WebUtil {
 			return password.getSuccessfulLogons() >= password.getMaxSuccessfulLogons();
 		}
 		return null;
+	}
+
+	public static boolean isMassMailLocked(MassMailOutVO massMail) {
+		if (massMail != null) {
+			return massMail.getStatus().getLocked();
+		}
+		return false;
 	}
 
 	public static Boolean isPasswordExpired(Date now, PasswordOutVO password) {
@@ -4745,6 +4988,23 @@ public final class WebUtil {
 		return false;
 	}
 
+	public static boolean isTrustedHost(HttpServletRequest request) {
+		try {
+			return getServiceLocator().getToolsService().isTrustedHost(getRemoteHost(request));
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		return false;
+	}
+
+	public static boolean isTrustedReferer(HttpServletRequest request) {
+
+		return isTrustedReferer(request.getHeader(REFERER_HEADER_NAME), request);
+	}
+
 	public static boolean isTrustedReferer(String url, HttpServletRequest request) {
 		URL refererUrl;
 		try {
@@ -4798,17 +5058,46 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static void logout() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			sessionScopeBean.logout();
+		}
+	}
+
+	public static String massMailIdToName(Long id) {
+		if (id == null) {
+			return getNoMassMailPickedMessage();
+		}
+		try {
+			MassMailOutVO massMail = getServiceLocator().getMassMailService().getMassMail(getAuthentication(), id);
+			return massMailOutVOToString(massMail);
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		return Messages.getString(MessageCodes.INVALID_MASS_MAIL_PICKED);
+	}
+
+	public static String massMailOutVOToString(MassMailOutVO massMail) {
+		String result = CommonUtil.massMailOutVOToString(massMail);
+		if (result != null) {
+			return result;
+		} else {
+			return getNoMassMailPickedMessage();
+		}
+	}
+
 	// public static long perfDebug(String label, long t1) {
 	// long t2 = System.currentTimeMillis();
 	// System.out.println(label + (t2 - t1) + " ms");
 	// return t2;
 	// }
 
-	public static void logout() {
-		SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		if (sessionScopeBean != null) {
-			sessionScopeBean.logout();
-		}
+	public static JsonElement parseJson(String json) {
+		return JSON_PARSER.parse(json);
 	}
 
 	// private static void putSelectionSetServiceCache(Object key, Object value) {

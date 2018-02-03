@@ -207,7 +207,22 @@ public final class DefaultSettings {
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
+	public static final boolean REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = false;
 
+	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
+	public static final boolean MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = false;
+	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES = true;
+	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = true;
+	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = false;
+	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_MAPS = false;
+	public static final boolean REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS = true;
+	public static final boolean SEND_MASS_MAILS = true;
+	public static final int EMAIL_PROCESS_MASS_MAILS_DELAY_MILLIS = 10;
+	public static final Long EMAIL_PROCESS_MASS_MAILS_MAX = 3l;
+	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
 
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");

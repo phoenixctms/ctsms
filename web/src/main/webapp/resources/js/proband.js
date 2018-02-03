@@ -22,47 +22,50 @@ function handleProbandTabChange(index) {
 			changeProbandByContactDetail();
 			break;
 		case 4:
+			changeProbandByRecipient();
+			break;			
+		case 5:
 			changeProbandByAddress();
 			break;
-		case 5:
+		case 6:
 			changeProbandByStatus();
 			break;
-		case 6:
+		case 7:
 			changeProbandByInventoryBooking();
 			break;
-		case 7:
+		case 8:
 			changeProbandByDiagnosis();
 			break;
-		case 8:
+		case 9:
 			changeProbandByProcedure();
 			break;
-		case 9:
+		case 10:
 			changeProbandByMedication();
 			break;
-		case 10:
-
-			break;
 		case 11:
-			changeProbandByTrialParticipation();
+
 			break;
 		case 12:
-
+			changeProbandByTrialParticipation();
 			break;
 		case 13:
 
 			break;
 		case 14:
-			changeProbandByBankAccount();
+
 			break;
 		case 15:
+			changeProbandByBankAccount();
+			break;
+		case 16:
 			changeProbandByMoneyTransfer();
 			break;
 
 
-		case 16:
+		case 17:
 			changeProbandByFile();
 			break;
-		case 17:
+		case 18:
 			changeProbandByJournalEntry();
 			break;
 
@@ -82,50 +85,53 @@ function handleProbandTabChange(index) {
 		changeProbandContactDetail();
 		break;
 	case 4:
+		changeProbandRecipient();
+		break;		
+	case 5:
 		changeProbandAddress();
 		break;
-	case 5:
+	case 6:
 		changeProbandStatus();
 		break;
-	case 6:
+	case 7:
 		changeProbandInventoryBooking();
 		break;
-	case 7:
+	case 8:
 		changeDiagnosis();
 		break;
-	case 8:
+	case 9:
 		changeProcedure();
 		break;
-	case 9:
+	case 10:
 		changeMedication();
 		break;
-	case 10:
+	case 11:
 		changeInquiryValue();
 		break;
-	case 11:
+	case 12:
 		changeTrialParticipation();
 		break;
-	case 12:
+	case 13:
 		changeProbandVisitSchedule();
 		break;
 
-	case 13:
+	case 14:
 		changeProbandEcrfStatusEntry();
 		break;
 
-	case 14:
+	case 15:
 		changeBankAccount();
 		break;
-	case 15:
+	case 16:
 		changeMoneyTransfer();
 		break;
 
 
-	case 16:
+	case 17:
 		changeProbandFile();
 		break;
 
-	case 17:
+	case 18:
 		changeProbandJournalEntry();
 		break;
 
@@ -177,67 +183,71 @@ function handleUpdateProbandTabTitles(xhr, status, args) {
 		probandTabView.setTabTitle(3, decodeBase64(args[AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64]));
 		probandTabView.emphasizeTab(3, args[AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT] == 0);
 	}
+	if (_testPropertyExists(args, AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_RECIPIENT_COUNT)) {
+		probandTabView.setTabTitle(4, decodeBase64(args[AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(4, args[AJAX_PROBAND_RECIPIENT_COUNT] == 0);
+	}	
 	if (_testPropertyExists(args, AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_ADDRESS_COUNT)) {
-		probandTabView.setTabTitle(4, decodeBase64(args[AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(4, args[AJAX_PROBAND_ADDRESS_COUNT] == 0);
+		probandTabView.setTabTitle(5, decodeBase64(args[AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(5, args[AJAX_PROBAND_ADDRESS_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_PROBAND_STATUS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_STATUS_ENTRY_COUNT)) {
-		probandTabView.setTabTitle(5, decodeBase64(args[AJAX_PROBAND_STATUS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(5, args[AJAX_PROBAND_STATUS_ENTRY_COUNT] == 0);
+		probandTabView.setTabTitle(6, decodeBase64(args[AJAX_PROBAND_STATUS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(6, args[AJAX_PROBAND_STATUS_ENTRY_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_INVENTORY_BOOKING_COUNT)) {
-		probandTabView.setTabTitle(6, decodeBase64(args[AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(6, args[AJAX_PROBAND_INVENTORY_BOOKING_COUNT] == 0);
+		probandTabView.setTabTitle(7, decodeBase64(args[AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(7, args[AJAX_PROBAND_INVENTORY_BOOKING_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_DIAGNOSIS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_DIAGNOSIS_COUNT)) {
-		probandTabView.setTabTitle(7, decodeBase64(args[AJAX_DIAGNOSIS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(7, args[AJAX_DIAGNOSIS_COUNT] == 0);
+		probandTabView.setTabTitle(8, decodeBase64(args[AJAX_DIAGNOSIS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(8, args[AJAX_DIAGNOSIS_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROCEDURE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROCEDURE_COUNT)) {
-		probandTabView.setTabTitle(8, decodeBase64(args[AJAX_PROCEDURE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(8, args[AJAX_PROCEDURE_COUNT] == 0);
+		probandTabView.setTabTitle(9, decodeBase64(args[AJAX_PROCEDURE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(9, args[AJAX_PROCEDURE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_MEDICATION_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MEDICATION_COUNT)) {
-		probandTabView.setTabTitle(9, decodeBase64(args[AJAX_MEDICATION_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(9, args[AJAX_MEDICATION_COUNT] == 0);
+		probandTabView.setTabTitle(10, decodeBase64(args[AJAX_MEDICATION_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(10, args[AJAX_MEDICATION_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INQUIRY_VALUE_COUNT)) {
-		probandTabView.setTabTitle(10, decodeBase64(args[AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64]));
+		probandTabView.setTabTitle(11, decodeBase64(args[AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64]));
 		//inverse here
-		probandTabView.emphasizeTab(10, args[AJAX_INQUIRY_VALUE_COUNT] > 0);
+		probandTabView.emphasizeTab(11, args[AJAX_INQUIRY_VALUE_COUNT] > 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_PARTICIPATION_COUNT)) {
-		probandTabView.setTabTitle(11, decodeBase64(args[AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(11, args[AJAX_TRIAL_PARTICIPATION_COUNT] == 0);
+		probandTabView.setTabTitle(12, decodeBase64(args[AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(12, args[AJAX_TRIAL_PARTICIPATION_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT)) {
-		probandTabView.setTabTitle(12, decodeBase64(args[AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
+		probandTabView.setTabTitle(13, decodeBase64(args[AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
 
 	}
 
 
 	if (_testPropertyExists(args, AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_BANK_ACCOUNT_COUNT)) {
-		probandTabView.setTabTitle(14, decodeBase64(args[AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(14, args[AJAX_BANK_ACCOUNT_COUNT] == 0);
+		probandTabView.setTabTitle(15, decodeBase64(args[AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(15, args[AJAX_BANK_ACCOUNT_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MONEY_TRANSFER_COUNT)) {
-		probandTabView.setTabTitle(15, decodeBase64(args[AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(15, args[AJAX_MONEY_TRANSFER_COUNT] == 0);
+		probandTabView.setTabTitle(16, decodeBase64(args[AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(16, args[AJAX_MONEY_TRANSFER_COUNT] == 0);
 	}
 
 
 	if (_testPropertyExists(args, AJAX_PROBAND_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_FILE_COUNT)) {
-		probandTabView.setTabTitle(16, decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(16, args[AJAX_PROBAND_FILE_COUNT] == 0);
+		probandTabView.setTabTitle(17, decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(17, args[AJAX_PROBAND_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_JOURNAL_ENTRY_COUNT)) {
-		probandTabView.setTabTitle(17, decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(17, args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
+		probandTabView.setTabTitle(18, decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(18, args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

@@ -25,6 +25,8 @@ public class NotificationRecipientDaoImpl
 extends NotificationRecipientDaoBase
 {
 
+
+
 	@Override
 	protected Collection<NotificationRecipient> handleFindPending(Long notificationId, Long departmentId,
 			PSFVO psf) throws Exception {
@@ -47,6 +49,8 @@ extends NotificationRecipientDaoBase
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return notificationRecipientCriteria.list();
 	}
+
+
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object

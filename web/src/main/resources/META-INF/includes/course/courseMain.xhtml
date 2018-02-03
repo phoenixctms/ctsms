@@ -200,7 +200,7 @@
 								columns="1"
 								cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
-								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
+								rowClasses="ctsms-input-tied-row,#{!courseBean.in.selfRegistration ? 'ctsms-input-tied-row,' : ''}ctsms-textarea-row">
 								<h:panelGrid
 									columns="6"
 									cellpadding="2"

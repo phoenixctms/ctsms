@@ -79,6 +79,10 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 					scaleFactor = Settings.getIntNullable(SearchResultExcelSettingCodes.USER_SCALE_FACTOR, Bundle.SEARCH_RESULT_EXCEL,
 							SearchResultExcelDefaultSettings.USER_SCALE_FACTOR);
 					break;
+				case MASS_MAIL_DB:
+					scaleFactor = Settings.getIntNullable(SearchResultExcelSettingCodes.MASS_MAIL_SCALE_FACTOR, Bundle.SEARCH_RESULT_EXCEL,
+							SearchResultExcelDefaultSettings.MASS_MAIL_SCALE_FACTOR);
+					break;
 				default:
 			}
 		}
@@ -208,9 +212,28 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 											Settings.getIntNullable(SearchResultExcelSettingCodes.USER_PAGE_BREAK_AT_ROW, Bundle.SEARCH_RESULT_EXCEL,
 													SearchResultExcelDefaultSettings.USER_PAGE_BREAK_AT_ROW),
 													Settings.getBoolean(SearchResultExcelSettingCodes.USER_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.USER_ROW_COLORS),
-													Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_SCALE_FACTOR, Bundle.SEARCH_RESULT_EXCEL,
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 															SearchResultExcelDefaultSettings.USER_HEAD_FORMAT),
 															Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.USER_ROW_FORMAT));
+				case MASS_MAIL_DB:
+					return new SpreadSheetWriter(this,
+							getColumnIndexMap(L10nUtil.getSearchResultExcelColumns(Locales.USER, SearchResultExcelLabelCodes.MASS_MAIL_VO_FIELD_COLUMNS,
+									SearchResultExcelDefaultSettings.MASS_MAIL_VO_FIELD_COLUMNS)),
+									Settings.getInt(SearchResultExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.SEARCH_RESULT_EXCEL,
+											SearchResultExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+											omitFields,
+											Settings.getBoolean(SearchResultExcelSettingCodes.MASS_MAIL_AUTOSIZE, Bundle.SEARCH_RESULT_EXCEL,
+													SearchResultExcelDefaultSettings.MASS_MAIL_AUTOSIZE),
+													Settings.getBoolean(SearchResultExcelSettingCodes.MASS_MAIL_WRITEHEAD, Bundle.SEARCH_RESULT_EXCEL,
+															SearchResultExcelDefaultSettings.MASS_MAIL_WRITEHEAD),
+															Settings.getIntNullable(SearchResultExcelSettingCodes.MASS_MAIL_PAGE_BREAK_AT_ROW, Bundle.SEARCH_RESULT_EXCEL,
+																	SearchResultExcelDefaultSettings.MASS_MAIL_PAGE_BREAK_AT_ROW),
+																	Settings.getBoolean(SearchResultExcelSettingCodes.MASS_MAIL_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL,
+																			SearchResultExcelDefaultSettings.MASS_MAIL_ROW_COLORS),
+																			Settings.getExcelCellFormat(SearchResultExcelSettingCodes.MASS_MAIL_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+																					SearchResultExcelDefaultSettings.MASS_MAIL_HEAD_FORMAT),
+																					Settings.getExcelCellFormat(SearchResultExcelSettingCodes.MASS_MAIL_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+																							SearchResultExcelDefaultSettings.MASS_MAIL_ROW_FORMAT));
 				default:
 			}
 		}
@@ -275,6 +298,9 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 				case INPUT_FIELD_DB:
 					return Settings.getString(SearchResultExcelSettingCodes.INPUT_FIELD_TEMPLATE_FILE_NAME, Bundle.SEARCH_RESULT_EXCEL,
 							SearchResultExcelDefaultSettings.INPUT_FIELD_TEMPLATE_FILE_NAME);
+				case MASS_MAIL_DB:
+					return Settings.getString(SearchResultExcelSettingCodes.MASS_MAIL_TEMPLATE_FILE_NAME, Bundle.SEARCH_RESULT_EXCEL,
+							SearchResultExcelDefaultSettings.MASS_MAIL_TEMPLATE_FILE_NAME);
 				default:
 			}
 		}
@@ -361,6 +387,9 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 					templateSpreadSheetName = Settings.getString(SearchResultExcelSettingCodes.INPUT_FIELD_SPREADSHEET_NAME, Bundle.SEARCH_RESULT_EXCEL,
 							SearchResultExcelDefaultSettings.INPUT_FIELD_SPREADSHEET_NAME);
 					break;
+				case MASS_MAIL_DB:
+					templateSpreadSheetName = Settings.getString(SearchResultExcelSettingCodes.MASS_MAIL_SPREADSHEET_NAME, Bundle.SEARCH_RESULT_EXCEL,
+							SearchResultExcelDefaultSettings.MASS_MAIL_SPREADSHEET_NAME);
 				default:
 			}
 		}

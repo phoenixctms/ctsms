@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -37,6 +38,7 @@ import org.phoenixctms.ctsms.vo.FileInVO;
 import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
@@ -86,10 +88,27 @@ extends FileDaoBase
 						// case INPUT_FIELD_DOCUMENT:
 						// fileCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
 						// break;
+					case MASS_MAIL_DOCUMENT:
+						criteria.add(Restrictions.eq("massMail.id", id.longValue()));
+						break;
 					default:
 				}
 			}
 		}
+	}
+
+	private final static void applySubTreeCriterion(org.hibernate.Criteria criteria, boolean subTree, String logicalPath) {
+		if (logicalPath != null && logicalPath.length() > 0) {
+			logicalPath = CommonUtil.fixLogicalPathFolderName(logicalPath);
+			if (subTree) {
+				criteria.add(Restrictions.sqlRestriction("substr({alias}.logical_path, 1, length(?)) = ?",
+						new Object[] { logicalPath, logicalPath },
+						new  org.hibernate.type.NullableType[] { Hibernate.STRING, Hibernate.STRING }));
+			} else {
+				criteria.add(Restrictions.eq("logicalPath", logicalPath));
+			}
+		}
+
 	}
 
 	private org.hibernate.Criteria createFileCriteria() {
@@ -187,6 +206,7 @@ extends FileDaoBase
 		Long trialId = source.getTrialId();
 		Long probandId = source.getProbandId();
 		// Long inputFieldId = source.getInputFieldId();
+		Long massMailId = source.getMassMailId();
 		if (inventoryId != null) {
 			Inventory inventory = this.getInventoryDao().load(inventoryId);
 			target.setInventory(inventory);
@@ -253,6 +273,17 @@ extends FileDaoBase
 		// inputField.removeFiles(target);
 		// }
 		// }
+		if (massMailId != null) {
+			MassMail massMail = this.getMassMailDao().load(massMailId);
+			target.setMassMail(massMail);
+			massMail.addFiles(target);
+		} else if (copyIfNull) {
+			MassMail massMail = target.getMassMail();
+			target.setMassMail(null);
+			if (massMail != null) {
+				massMail.removeFiles(target);
+			}
+		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			try {
 				if (copyIfNull || source.getTitle() != null) {
@@ -312,6 +343,7 @@ extends FileDaoBase
 		ProbandOutVO probandVO = source.getProband();
 		// InputFieldOutVO inputFieldVO = source.getInputField();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
+		MassMailOutVO massMailVO = source.getMassMail();
 		if (contentTypeVO != null) {
 			target.setContentType(this.getMimeTypeDao().mimeTypeVOToEntity(contentTypeVO));
 		} else if (copyIfNull) {
@@ -383,6 +415,17 @@ extends FileDaoBase
 		// inputField.removeFiles(target);
 		// }
 		// }
+		if (massMailVO != null) {
+			MassMail massMail = this.getMassMailDao().massMailOutVOToEntity(massMailVO);
+			target.setMassMail(massMail);
+			massMail.addFiles(target);
+		} else if (copyIfNull) {
+			MassMail massMail = target.getMassMail();
+			target.setMassMail(null);
+			if (massMail != null) {
+				massMail.removeFiles(target);
+			}
+		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
@@ -507,7 +550,7 @@ extends FileDaoBase
 
 	@Override
 	protected Collection<String> handleFindFileFolders(FileModule module,
-			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean image, PSFVO psf) throws Exception {
+			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean publicFile, Boolean image, PSFVO psf) throws Exception {
 		org.hibernate.Criteria fileFolderPresetCriteria = this.getSession().createCriteria(FileFolderPreset.class);
 		fileFolderPresetCriteria.setCacheable(true);
 		boolean useParentPath;
@@ -581,6 +624,9 @@ extends FileDaoBase
 			if (active != null) {
 				fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
 			}
+			if (publicFile != null) {
+				fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
+			}
 			// if (image != null) {
 			// fileCriteria.createCriteria("contentType", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("image", image.booleanValue()));
 			// }
@@ -606,16 +652,17 @@ extends FileDaoBase
 	}
 
 	@Override
-	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath,
-			Boolean active, Boolean image, String mimeType, PSFVO psf) throws Exception {
+	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath,boolean subTree,
+			Boolean active, Boolean publicFile, Boolean image, String mimeType, PSFVO psf) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 		applyModuleIdCriterions(fileCriteria, module, id);
-		if (logicalPath != null && logicalPath.length() > 0) {
-			fileCriteria.add(Restrictions.eq("logicalPath", CommonUtil.fixLogicalPathFolderName(logicalPath)));
-		}
+		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
 		if (active != null) {
 			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (publicFile != null) {
+			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
 		applyContentTypeCriterions(fileCriteria, image, mimeType);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
@@ -623,15 +670,16 @@ extends FileDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(FileModule module, Long id, String logicalPath,
-			Boolean active, Boolean image, String mimeType) throws Exception {
+	protected long handleGetCount(FileModule module, Long id, String logicalPath,boolean subTree,
+			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
-		if (logicalPath != null && logicalPath.length() > 0) {
-			fileCriteria.add(Restrictions.eq("logicalPath", CommonUtil.fixLogicalPathFolderName(logicalPath)));
-		}
+		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
 		if (active != null) {
 			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (publicFile != null) {
+			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
 		applyContentTypeCriterions(fileCriteria, image, mimeType);
 		return (Long) fileCriteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -644,6 +692,22 @@ extends FileDaoBase
 		fileCriteria.add(Restrictions.eq("externalFile", true));
 		fileCriteria.add(Restrictions.eq("externalFileName", externalFileName));
 		return (Long) fileCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath,boolean subTree,
+			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
+		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		applyModuleIdCriterions(fileCriteria, module, id);
+		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
+		if (active != null) {
+			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (publicFile != null) {
+			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
+		}
+		applyContentTypeCriterions(fileCriteria, image, mimeType);
+		return (Long) fileCriteria.setProjection(Projections.sum("size")).uniqueResult();
 	}
 
 
@@ -806,6 +870,7 @@ extends FileDaoBase
 		Trial trial = source.getTrial();
 		Proband proband = source.getProband();
 		// InputField inputField = source.getInputField();
+		MassMail massMail = source.getMassMail();
 		if (inventory != null) {
 			target.setInventoryId(inventory.getId());
 		}
@@ -824,6 +889,9 @@ extends FileDaoBase
 		// if (inputField != null) {
 		// target.setInputFieldId(inputField.getId());
 		// }
+		if (massMail != null) {
+			target.setMassMailId(massMail.getId());
+		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			try {
 				target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
@@ -868,6 +936,7 @@ extends FileDaoBase
 		Proband proband = source.getProband();
 		// InputField inputField = source.getInputField();
 		User modifiedUser = source.getModifiedUser();
+		MassMail massMail = source.getMassMail();
 		if (contentType != null) {
 			target.setContentType(this.getMimeTypeDao().toMimeTypeVO(contentType));
 		}
@@ -889,6 +958,9 @@ extends FileDaoBase
 		// if (inputField != null) {
 		// target.setInputField(this.getInputFieldDao().toInputFieldOutVO(inputField));
 		// }
+		if (massMail != null) {
+			target.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
+		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}

@@ -58,6 +58,9 @@ import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
+import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
@@ -129,7 +132,7 @@ public class KeyValueString extends GraphEnumerator {
 	}
 
 	protected String getVOFieldValue(Object vo, String field, boolean omitFields) {
-		if (omitFields && OmittedFields.isOmitted(vo.getClass(), field)) {
+		if (omitFields && OmittedFields.isOmitted(vo.getClass(), field, false)) { // no case-insensitivity since used in outVOValueToString only
 			Long id = CommonUtil.getVOId(vo);
 			if (id != null) {
 				return id.toString();
@@ -146,7 +149,7 @@ public class KeyValueString extends GraphEnumerator {
 
 	@Override
 	protected boolean isFieldOmitted(Class graph, String field) {
-		return OmittedFields.isOmitted(graph, field);
+		return OmittedFields.isOmitted(graph, field, true); // case-insensitivity since fields can be transformed to lower case
 	}
 
 	@Override
@@ -258,6 +261,11 @@ public class KeyValueString extends GraphEnumerator {
 				}
 				return (String) getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && ProbandOutVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return (String) getVOFieldValue(value, "name", omitFields);
+			} else if (!enumerateEntities && MassMailOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
@@ -487,6 +495,16 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getInputFieldTypeName(locale, ((InputFieldTypeVO) value).getNameL10nKey());
+			} else if (MassMailStatusTypeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getMassMailStatusTypeName(locale, ((MassMailStatusTypeVO) value).getNameL10nKey());
+			} else if (MassMailTypeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getMassMailTypeName(locale, ((MassMailTypeVO) value).getNameL10nKey());
 			} else if (InventoryCategoryVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";

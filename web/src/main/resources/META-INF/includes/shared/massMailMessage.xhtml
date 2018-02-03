@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>mass mail message row expansion</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid
+			columns="2"
+			cellpadding="0"
+			styleClass="ctsms-rowexpansion-panelgrid"
+			columnClasses="ctsms-massmail-rowexpansion-left-column,ctsms-massmail-rowexpansion-right-column">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0">
+				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.toAddresses) > 0}">
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_to_recipients_label}" />
+					<p:dataList
+						value="#{message.toAddresses}"
+						var="recipient"
+						itemType="disc">
+						<h:outputLink value="mailto:#{recipient.address}">
+							<h:outputText value="#{empty recipient.personal ? recipient.address : recipient.personal}" />
+						</h:outputLink>
+					</p:dataList>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.ccAddresses) > 0}">
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_cc_recipients_label}" />
+					<p:dataList
+						value="#{message.ccAddresses}"
+						var="recipient"
+						itemType="disc">
+						<h:outputLink value="mailto:#{recipient.address}">
+							<h:outputText value="#{empty recipient.personal ? recipient.address : recipient.personal}" />
+						</h:outputLink>
+					</p:dataList>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.bccAddresses) > 0}">
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_bcc_recipients_label}" />
+					<p:dataList
+						value="#{message.bccAddresses}"
+						var="recipient"
+						itemType="disc">
+						<h:outputLink value="mailto:#{recipient.address}">
+							<h:outputText value="#{empty recipient.personal ? recipient.address : recipient.personal}" />
+						</h:outputLink>
+					</p:dataList>
+				</h:panelGroup>
+			</h:panelGrid>
+			<!-- <h:panelGrid
+				columns="1"
+				cellpadding="2"> -->
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-rowexpansion-panelgrid"
+								style="border-collapse: separate !important;"
+								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">				
+				<h:panelGrid
+					columns="2"
+					cellpadding="2"
+					style="width: auto !important;"
+					columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
+					<h:outputLabel value="#{massmaillabels.mass_mail_recipient_message_subject_label}" />
+					<h:outputText value="#{message.subject}" />
+				</h:panelGrid>
+													 <h:panelGrid
+										columns="1"
+										cellpadding="2" style="width:100%;" > 
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_message_text_label}" />
+					<ui:include src="multiLineOutputText.xhtml">
+						<ui:param
+							name="multiLineText"
+							value="#{message.text}" />
+						<ui:param
+							name="multiLineTextClass"
+							value="ctsms-email-message" />
+						<ui:param
+							name="rendered"
+							value="true" />
+						<ui:param
+							name="escapeHtml"
+							value="false" />
+					</ui:include>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>

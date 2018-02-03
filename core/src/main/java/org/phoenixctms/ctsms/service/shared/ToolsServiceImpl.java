@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.hibernate.Cache;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
@@ -33,11 +34,14 @@ import org.phoenixctms.ctsms.domain.Announcement;
 import org.phoenixctms.ctsms.domain.AnnouncementDao;
 import org.phoenixctms.ctsms.domain.AspDao;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
+import org.phoenixctms.ctsms.domain.ContactDetailType;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
+import org.phoenixctms.ctsms.domain.File;
+import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
@@ -48,6 +52,8 @@ import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.KeyPair;
 import org.phoenixctms.ctsms.domain.KeyPairDao;
 import org.phoenixctms.ctsms.domain.MaintenanceScheduleItem;
+import org.phoenixctms.ctsms.domain.MassMailRecipient;
+import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.Notification;
 import org.phoenixctms.ctsms.domain.NotificationDao;
 import org.phoenixctms.ctsms.domain.NotificationRecipient;
@@ -57,6 +63,8 @@ import org.phoenixctms.ctsms.domain.OpsCodeDao;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.PasswordDao;
 import org.phoenixctms.ctsms.domain.Proband;
+import org.phoenixctms.ctsms.domain.ProbandContactDetailValue;
+import org.phoenixctms.ctsms.domain.ProbandContactDetailValueDao;
 import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
@@ -82,6 +90,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -103,6 +112,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CalendarWeekVO;
 import org.phoenixctms.ctsms.vo.DBModuleVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
@@ -666,6 +676,7 @@ extends ToolsServiceBase
 					this.getECRFFieldStatusEntryDao(),
 					this.getSignatureDao(),
 					this.getECRFStatusEntryDao(),
+					this.getMassMailRecipientDao(),
 					this.getFileDao());
 			if (countMap.containsKey(probandDepartmentId)) {
 				countMap.put(probandDepartmentId, countMap.get(probandDepartmentId) + 1l);
@@ -687,6 +698,7 @@ extends ToolsServiceBase
 		}
 		return count;
 	}
+
 
 	@Override
 	protected String handleGetAllowedFileExtensionsPattern(FileModule module, Boolean image)
@@ -901,6 +913,22 @@ extends ToolsServiceBase
 	}
 
 	@Override
+	protected FileStreamOutVO handleGetPublicFileStream(Long fileId)
+			throws Exception
+	{
+		FileDao fileDao = this.getFileDao();
+		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		if (CommonUtil.getUseFileEncryption(file.getModule())) {
+			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.ENCRYPTED_FILE, fileId.toString());
+		}
+		if (!file.isPublicFile()) {
+			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
+		}
+		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
+		return result;
+	}
+
+	@Override
 	protected Integer handleGetStaffImageUploadSizeLimit()
 			throws Exception {
 		return Settings.getIntNullable(SettingCodes.STAFF_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.STAFF_IMAGE_SIZE_LIMIT);
@@ -962,6 +990,22 @@ extends ToolsServiceBase
 			}
 		}
 		return passwordDao.toPasswordOutVO(lastPassword);
+	}
+
+	@Override
+	protected void handleMarkMassMailRead(String beacon) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+		if (recipient == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
+		}
+		massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		recipient.setRead(recipient.getRead() + 1l);
+		recipient.setReadTimestamp(now);
+		CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+		massMailRecipientDao.update(recipient);
 	}
 
 	@Override
@@ -1143,7 +1187,7 @@ extends ToolsServiceBase
 			int toCount = 0;
 			if (sendDepartmentStaffCategoryIds.contains(recipientStaff.getCategory().getId())) {
 				try {
-					toCount = notificationEmailSender.send(notification, recipientStaff);
+					toCount = notificationEmailSender.prepareAndSend(notification, recipientStaff);
 					if (toCount > 0) {
 						sent = true;
 						if (delayMillis > 0) {
@@ -1166,6 +1210,10 @@ extends ToolsServiceBase
 			recipient.setSent(sent);
 			recipient.setDropped(dropped);
 			notificationRecipientDao.update(recipient);
+			notificationRecipientDao.commitAndResumeTransaction();
+			// this.updateNotificationRecipient(recipient);
+			// sessionFactory.getCurrentSession().getTransaction().commit();
+
 			totalEmailCount += toCount;
 		}
 		return totalEmailCount;
@@ -1176,6 +1224,46 @@ extends ToolsServiceBase
 			Long explicitDays, int n) throws Exception {
 		return DateCalc.subIntervals(date, period, explicitDays, n);
 	}
+
+	@Override
+	protected void handleUnsubscribeProbandEmail(String beacon) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		// if (auth != null) {
+		// authenticator.authenticate(auth, false);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
+		if (proband == null) {
+			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+			if (recipient != null) {
+				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+				recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
+				recipient.setUnsubscribedTimestamp(now);
+				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+				massMailRecipientDao.update(recipient);
+				proband = recipient.getProband();
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
+			}
+		}
+		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
+		if (proband != null) {
+			this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+			Iterator<ProbandContactDetailValue> contactsIt = proband.getContactDetailValues().iterator();
+			while (contactsIt.hasNext()) {
+				ProbandContactDetailValue contact = contactsIt.next();
+				ContactDetailType contactType;
+				if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
+					contact.setNotify(false);
+					CoreUtil.modifyVersion(contact, contact.getVersion(), now, contact.getModifiedUser());
+					probandContactDetailValueDao.update(contact);
+				}
+			}
+		}
+
+	}
+
+
 
 	public void setAuthenticator(Authenticator authenticator) {
 		this.authenticator = authenticator;

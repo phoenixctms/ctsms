@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -49,6 +47,9 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelectorListener {
 
+	private static final int AUTH_METHOD_PROPERTY_ID = 1;
+
+	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
 	public static void copyUserOutToIn(UserInVO in, UserOutVO out) {
 		if (in != null && out != null) {
 			DepartmentVO departmentVO = out.getDepartment();
@@ -60,6 +61,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setLocale(out.getLocale());
 			in.setShowTooltips(out.getShowTooltips());
 			in.setLocked(out.getLocked());
+			in.setDecrypt(out.getDecrypt());
 			in.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
 			in.setName(out.getName());
 			in.setTimeZone(out.getTimeZone());
@@ -67,7 +69,22 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setTheme(out.getTheme());
 		}
 	}
-
+	public static void initUserDefaultValues(UserInVO in, UserOutVO user) {
+		if (in != null) {
+			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
+			in.setId(null);
+			in.setIdentityId(null);
+			in.setLocale(Settings.getString(SettingCodes.USER_LOCALE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCALE_PRESET));
+			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
+			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
+			in.setDecrypt(Settings.getBoolean(SettingCodes.USER_DECRYPT_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_PRESET));
+			in.setAuthMethod(Settings.getAuthenticationType(SettingCodes.USER_AUTH_METHOD_PRESET, Bundle.SETTINGS, DefaultSettings.USER_AUTH_METHOD_PRESET));
+			in.setName(Messages.getString(MessageCodes.USER_NAME_PRESET));
+			in.setTimeZone(Settings.getString(SettingCodes.USER_TIME_ZONE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TIME_ZONE_PRESET));
+			in.setVersion(null);
+			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
+		}
+	}
 	private UserInVO in;
 	private UserOutVO out;
 	private String remoteUserMessage;
@@ -78,25 +95,8 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private ArrayList<SelectItem> locales;
 	private ArrayList<SelectItem> timeZones;
 	private ArrayList<SelectItem> themes;
-	private AuthenticationTypeSelector authMethod;
-	private static final int AUTH_METHOD_PROPERTY_ID = 1;
-	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
 
-	public static void initUserDefaultValues(UserInVO in, UserOutVO user) {
-		if (in != null) {
-			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
-			in.setId(null);
-			in.setIdentityId(null);
-			in.setLocale(Settings.getString(SettingCodes.USER_LOCALE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCALE_PRESET));
-			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
-			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
-			in.setAuthMethod(Settings.getAuthenticationType(SettingCodes.USER_AUTH_METHOD_PRESET, Bundle.SETTINGS, DefaultSettings.USER_AUTH_METHOD_PRESET));
-			in.setName(Messages.getString(MessageCodes.USER_NAME_PRESET));
-			in.setTimeZone(Settings.getString(SettingCodes.USER_TIME_ZONE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TIME_ZONE_PRESET));
-			in.setVersion(null);
-			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
-		}
-	}
+	private AuthenticationTypeSelector authMethod;
 
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -437,30 +437,31 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		ldapEntry2 = null;
 		loadRemoteUserInfo();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
-		Locale userLocale = null;
+		// Locale userLocale = null;
 		if (this.locales == null) {
-			if (userLocale == null) {
-				userLocale = WebUtil.getLocale();
-			}
-			Collection<Locale> locales = WebUtil.getSupportedLocales();
-			this.locales = new ArrayList<SelectItem>(locales.size());
-			Iterator<Locale> it = locales.iterator();
-			while (it.hasNext()) {
-				Locale locale = it.next();
-				this.locales.add(new SelectItem(CommonUtil.localeToString(locale), CommonUtil.localeToDisplayString(locale, userLocale)));
-			}
+			// if (userLocale == null) {
+			// userLocale = WebUtil.getLocale();
+			// }
+			this.locales = WebUtil.getLocales();
+			// Collection<Locale> locales = WebUtil.getSupportedLocales();
+			// this.locales = new ArrayList<SelectItem>(locales.size());
+			// Iterator<Locale> it = locales.iterator();
+			// while (it.hasNext()) {
+			// Locale locale = it.next();
+			// this.locales.add(new SelectItem(CommonUtil.localeToString(locale), CommonUtil.localeToDisplayString(locale, userLocale)));
+			// }
 		}
 		if (this.timeZones == null) {
-			if (userLocale == null) {
-				userLocale = WebUtil.getLocale();
-			}
-			Collection<TimeZone> timeZones = WebUtil.getTimeZones();
-			this.timeZones = new ArrayList<SelectItem>(timeZones.size());
-			Iterator<TimeZone> it = timeZones.iterator();
-			while (it.hasNext()) {
-				TimeZone timeZone = it.next();
-				this.timeZones.add(new SelectItem(CommonUtil.timeZoneToString(timeZone), CommonUtil.timeZoneToDisplayString(timeZone, userLocale)));
-			}
+			// if (userLocale == null) {
+			// userLocale = WebUtil.getLocale();
+			// }
+			this.timeZones = WebUtil.getTimeZones();
+			// this.timeZones = new ArrayList<SelectItem>(timeZones.size());
+			// Iterator<TimeZone> it = timeZones.iterator();
+			// while (it.hasNext()) {
+			// TimeZone timeZone = it.next();
+			// this.timeZones.add(new SelectItem(CommonUtil.timeZoneToString(timeZone), CommonUtil.timeZoneToDisplayString(timeZone, userLocale)));
+			// }
 		}
 		if (this.themes == null) {
 			Map<String, String> themeMap = Settings.getThemes();

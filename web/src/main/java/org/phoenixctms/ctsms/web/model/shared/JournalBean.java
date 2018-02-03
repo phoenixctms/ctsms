@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalEntryInVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -63,6 +64,7 @@ public class JournalBean extends ManagedBeanBase {
 			ProbandOutVO probandVO = out.getProband();
 			CriteriaOutVO criteriaVO = out.getCriteria();
 			InputFieldOutVO inputFieldVO = out.getInputField();
+			MassMailOutVO massMailVO = out.getMassMail();
 			in.setCategoryId(journalCategoryVO == null ? null : journalCategoryVO.getId());
 			in.setComment(out.getComment());
 			in.setCourseId(courseVO == null ? null : courseVO.getId());
@@ -77,6 +79,7 @@ public class JournalBean extends ManagedBeanBase {
 			in.setTitle(out.getTitle());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setUserId(userVO == null ? null : userVO.getId());
+			in.setMassMailId(massMailVO == null ? null : massMailVO.getId());
 		}
 	}
 
@@ -105,6 +108,7 @@ public class JournalBean extends ManagedBeanBase {
 			in.setTitle(categoryPreset == null ? Messages.getString(MessageCodes.JOURNAL_ENTRY_TITLE_PRESET) : categoryPreset.getTitlePreset());
 			in.setTrialId(JournalModule.TRIAL_JOURNAL.equals(module) ? entityId : null);
 			in.setUserId(JournalModule.USER_JOURNAL.equals(module) ? entityId : null);
+			in.setMassMailId(JournalModule.MASS_MAIL_JOURNAL.equals(module) ? entityId : null);
 		}
 	}
 
@@ -120,6 +124,7 @@ public class JournalBean extends ManagedBeanBase {
 	private CriteriaOutVO criteria;
 	private InputFieldOutVO inputField;
 	private UserOutVO user;
+	private MassMailOutVO massMail;
 	private ArrayList<SelectItem> categories;
 	private ArrayList<SelectItem> filterCategories;
 	private ArrayList<SelectItem> filterUsers;
@@ -199,6 +204,9 @@ public class JournalBean extends ManagedBeanBase {
 				case INPUT_FIELD_JOURNAL:
 					WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 							MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT, new Long(journalEntryModel.getRowCount()));
+				case MASS_MAIL_JOURNAL:
+					WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT,
+							MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT, new Long(journalEntryModel.getRowCount()));
 					break;
 				default:
 					break;
@@ -236,6 +244,7 @@ public class JournalBean extends ManagedBeanBase {
 		changeInputFieldAction(param);
 	}
 
+
 	public String changeInputFieldAction(String param) {
 		return changeAction(param, JournalModule.INPUT_FIELD_JOURNAL);
 	}
@@ -246,6 +255,14 @@ public class JournalBean extends ManagedBeanBase {
 
 	public String changeInventoryAction(String param) {
 		return changeAction(param, JournalModule.INVENTORY_JOURNAL);
+	}
+
+	public void changeMassMail(String param) {
+		changeMassMailAction(param);
+	}
+
+	public String changeMassMailAction(String param) {
+		return changeAction(param, JournalModule.MASS_MAIL_JOURNAL);
 	}
 
 	public void changeProband(String param) {
@@ -452,6 +469,9 @@ public class JournalBean extends ManagedBeanBase {
 			} else if (in.getInputFieldId() != null) {
 				entityId = in.getInputFieldId();
 				module = JournalModule.INPUT_FIELD_JOURNAL;
+			} else if (in.getMassMailId() != null) {
+				entityId = in.getMassMailId();
+				module = JournalModule.MASS_MAIL_JOURNAL;
 			} else {
 				entityId = null;
 				module = null;
@@ -469,6 +489,8 @@ public class JournalBean extends ManagedBeanBase {
 		proband = (JournalModule.PROBAND_JOURNAL.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);
 		criteria = (JournalModule.CRITERIA_JOURNAL.equals(module) ? WebUtil.getCriteria(entityId) : null);
 		user = (JournalModule.USER_JOURNAL.equals(module) ? WebUtil.getUser(entityId, null) : null);
+		inputField = (JournalModule.INPUT_FIELD_JOURNAL.equals(module) ? WebUtil.getInputField(entityId) : null);
+		massMail = (JournalModule.MASS_MAIL_JOURNAL.equals(module) ? WebUtil.getMassMail(entityId) : null);
 		journalEntryModel.setEntityId(entityId);
 		journalEntryModel.setModule(module);
 		journalEntryModel.updateRowCount();
@@ -530,6 +552,11 @@ public class JournalBean extends ManagedBeanBase {
 					break;
 				case INPUT_FIELD_JOURNAL:
 					break;
+				case MASS_MAIL_JOURNAL:
+					if (WebUtil.isMassMailLocked(massMail)) {
+						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MASS_MAIL_LOCKED);
+					}
+					break;
 				default:
 					break;
 			}
@@ -556,6 +583,8 @@ public class JournalBean extends ManagedBeanBase {
 					return (in.getCriteriaId() == null ? false : !isSystemMessage());
 				case INPUT_FIELD_JOURNAL:
 					return (in.getInputFieldId() == null ? false : !isSystemMessage());
+				case MASS_MAIL_JOURNAL:
+					return (in.getMassMailId() == null ? false : (!WebUtil.isMassMailLocked(massMail) && !isSystemMessage()));
 				default:
 					break;
 			}
@@ -592,6 +621,8 @@ public class JournalBean extends ManagedBeanBase {
 					return isCreated() && !isSystemMessage();
 				case INPUT_FIELD_JOURNAL:
 					return isCreated() && !isSystemMessage();
+				case MASS_MAIL_JOURNAL:
+					return isCreated() && !isSystemMessage() && !WebUtil.isMassMailLocked(massMail);
 				default:
 					break;
 			}
@@ -618,6 +649,8 @@ public class JournalBean extends ManagedBeanBase {
 					return true;
 				case INPUT_FIELD_JOURNAL:
 					return true;
+				case MASS_MAIL_JOURNAL:
+					return isCreated() || !WebUtil.isMassMailLocked(massMail);
 				default:
 					return true;
 			}
@@ -649,6 +682,8 @@ public class JournalBean extends ManagedBeanBase {
 					return isCreated() && !isSystemMessage();
 				case INPUT_FIELD_JOURNAL:
 					return isCreated() && !isSystemMessage();
+				case MASS_MAIL_JOURNAL:
+					return isCreated() && !isSystemMessage() && !WebUtil.isMassMailLocked(massMail);
 				default:
 					break;
 			}

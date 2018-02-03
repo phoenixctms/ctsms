@@ -22,13 +22,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Providers;
+
+import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
+import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.FilePathSplitter;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.FileInVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
+import org.phoenixctms.ctsms.vo.FileStreamInVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
+import org.phoenixctms.ctsms.vo.PSFVO;
+import org.phoenixctms.ctsms.web.model.shared.FileBean;
+import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import net.java.dev.webdav.jaxrs.xml.elements.ActiveLock;
 import net.java.dev.webdav.jaxrs.xml.elements.HRef;
@@ -51,21 +65,6 @@ import net.java.dev.webdav.jaxrs.xml.properties.GetETag;
 import net.java.dev.webdav.jaxrs.xml.properties.GetLastModified;
 import net.java.dev.webdav.jaxrs.xml.properties.LockDiscovery;
 
-import org.phoenixctms.ctsms.enumeration.FileModule;
-import org.phoenixctms.ctsms.exception.AuthenticationException;
-import org.phoenixctms.ctsms.exception.AuthorisationException;
-import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.FilePathSplitter;
-import org.phoenixctms.ctsms.vo.AuthenticationVO;
-import org.phoenixctms.ctsms.vo.FileInVO;
-import org.phoenixctms.ctsms.vo.FileOutVO;
-import org.phoenixctms.ctsms.vo.FileStreamInVO;
-import org.phoenixctms.ctsms.vo.FileStreamOutVO;
-import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.web.model.shared.FileBean;
-import org.phoenixctms.ctsms.web.util.WebUtil;
-
 /**
  * Sole JAX-RS Resource of JPA Address Book Sample.
  *
@@ -79,7 +78,7 @@ public abstract class FileDavResourceBase {
 	private final static String DAV_URL_FILE = "%s/" + WebUtil.REST_API_PATH + "/%s/%s/files/dav/%s";
 
 	private static final URI buildOpaqueLockToken() throws URISyntaxException {
-		return new URI("opaquelocktoken", UUID.randomUUID().toString(), null);
+		return new URI("opaquelocktoken", CommonUtil.generateUUID(), null);
 	}
 
 	private static final Prop buildProp(final FileOutVO f, final Providers providers) {
@@ -125,6 +124,8 @@ public abstract class FileDavResourceBase {
 			return String.format(DAV_URL_FILE, contextPath, "trial", Long.toString(f.getTrial().getId()), getDavFileName(f));
 		} else if (f.getProband() != null) {
 			return String.format(DAV_URL_FILE, contextPath, "proband", Long.toString(f.getProband().getId()), getDavFileName(f));
+		} else if (f.getMassMail() != null) {
+			return String.format(DAV_URL_FILE, contextPath, "massmail", Long.toString(f.getMassMail().getId()), getDavFileName(f));
 		}
 		return "";
 	}
@@ -164,7 +165,7 @@ public abstract class FileDavResourceBase {
 	protected Prop davLock(LockInfo lockInfo, UriInfo uriInfo, String depth, TimeOut timeout) throws URISyntaxException, IOException {
 		/* TODO Lock the resource here. */
 		return new Prop(new LockDiscovery(new ActiveLock(lockInfo.getLockScope(), lockInfo.getLockType(), ZERO, lockInfo.getOwner(), new TimeOut(3600),
-				new LockToken(new HRef("opaquelocktoken:" + UUID.randomUUID())), new LockRoot(new HRef(uriInfo.getAbsolutePath())))));
+				new LockToken(new HRef("opaquelocktoken:" + CommonUtil.generateUUID())), new LockRoot(new HRef(uriInfo.getAbsolutePath())))));
 	}
 
 	protected javax.ws.rs.core.Response davOptions() {
@@ -189,7 +190,7 @@ public abstract class FileDavResourceBase {
 			return javax.ws.rs.core.Response.status(MULTI_STATUS).entity(new MultiStatus(folder)).build();
 		}
 		final Collection<Response> responses = new LinkedList<Response>(singletonList(folder));
-		Iterator<FileOutVO> it = WebUtil.getServiceLocator().getFileService().getFiles(getAuth(), getFileModule(), id, null, null, null).iterator();
+		Iterator<FileOutVO> it = WebUtil.getServiceLocator().getFileService().getFiles(getAuth(), getFileModule(), id, null, false, null, null, null).iterator();
 		if (it != null) {
 			while (it.hasNext()) {
 				FileOutVO out = it.next();
@@ -380,7 +381,7 @@ public abstract class FileDavResourceBase {
 			fileFilters.put(CommonUtil.getUseFileEncryption(getFileModule()) ? WebUtil.FILE_NAME_HASH_PSF_PROPERTY_NAME : WebUtil.FILE_NAME_PSF_PROPERTY_NAME, fileName);
 			sf.setFilters(fileFilters);
 			sf.setPageSize(1);
-			Collection<FileOutVO> files = WebUtil.getServiceLocator().getFileService().getFiles(getAuth(), getFileModule(), id, null, null, sf);
+			Collection<FileOutVO> files = WebUtil.getServiceLocator().getFileService().getFiles(getAuth(), getFileModule(), id, null, false, null, null, sf);
 			if (files != null && files.iterator().hasNext()) {
 				return files.iterator().next();
 			}

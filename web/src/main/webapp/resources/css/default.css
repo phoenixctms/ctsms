@@ -32,11 +32,38 @@ td .ui-selectonemenu {
 	text-shadow: unset !important;
 }
 
-.fileupload-content {
+.ui-expanded-row-content.ui-state-highlight {
+	background: none !important;	
+}
+.ui-expanded-row-content.ui-state-hover {
+	background: none !important;	
+}
+
+.ctsms-upload-control .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
 	padding: 0.2em 0.4em;
 	background-image: url(../resources/images/css/save-file.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	min-height: 48px;
+}
+
+.ctsms-upload-control-encryption .fileupload-content {
+	border-top-width: 0;
+	height: 100%;
+	padding: 0.2em 0.4em;
+	background-image: url(../resources/images/css/save-file-encryption.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	min-height: 48px;
+}
+
+.ctsms-upload-control-noencryption .fileupload-content {
+	border-top-width: 0;
+	height: 100%;
+	padding: 0.2em 0.4em;
+	background-image: url(../resources/images/css/save-file-noencryption.png);
 	background-position: center center;
 	background-repeat: no-repeat;
 	min-height: 48px;
@@ -244,6 +271,28 @@ td .ui-selectonemenu {
 } */
 
 .ctsms-control-largest .ui-autocomplete-multiple-container {
+    width: 100% ;
+}
+
+
+.ctsms-control-max {
+	width: 800px !important;
+}
+
+.ctsms-control-max .ui-inputfield {
+	width: inherit !important;
+}
+
+.ctsms-control-max .highlightTextarea {
+	width: inherit ! important;
+	padding-right: 10px;
+}
+
+.ctsms-control-max .highlightTextarea .highlightTextarea-container {
+	width: inherit !important;
+}
+
+.ctsms-control-max .ui-autocomplete-multiple-container {
     width: 100% ;
 }
 
@@ -936,6 +985,14 @@ ctsms-ecrf-section {
 	height: 100%;
 }
 
+.ctsms-upload-control-noencryption {
+	height: 100%;
+}
+
+.ctsms-upload-control-encryption {
+	height: 100%;
+}
+
 .ui-state-default .ui-icon-pdf {
 	background-image: url(../resources/images/css/pdf_small.gif);
 	background-position: 0px 2px;
@@ -1106,6 +1163,10 @@ ctsms-ecrf-section {
 	vertical-align: top;
 }
 
+.ctsms-portalitems-datagrid .ui-datagrid-column {
+	width:25%;
+}
+
 .ctsms-signatureicon-column {
 	width: 54px !important;
 }
@@ -1170,6 +1231,11 @@ ctsms-ecrf-section {
 	width: 100%;
 }
 
+/* .ctsms-rowexpansion-input-panelgrid {
+	border-collapse: separate !important;
+	width: 100%;  auto !important; 
+} */
+
 .ctsms-notificationlist-rowexpansion-left-column {
 	vertical-align: top;
 	border-style: hidden !important;
@@ -1192,9 +1258,58 @@ ctsms-ecrf-section {
 }
 
 .ctsms-notificationlist-rowexpansion-right-column pre {
+	width: 600px;
 	max-width: 600px;
 	white-space: pre-wrap;
 }
+
+
+
+.ctsms-email-message {
+	height:280px;
+	border: 1px solid #999;
+padding: 4px;
+font: 10pt Arial,Verdana;
+cursor: text;
+overflow-y:scroll;
+}
+
+.ctsms-massmail-rowexpansion-left-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+	max-width: 300px;
+}
+
+.ctsms-massmail-rowexpansion-left-column td {
+	border-style: hidden !important;
+}
+
+.ctsms-massmail-rowexpansion-left-column div {
+	border: none;
+}
+
+.ctsms-massmail-rowexpansion-right-column {
+	vertical-align: top;
+	border-style: hidden !important;
+	padding: 2px !important;
+}
+
+.ctsms-massmail-rowexpansion-right-column td {
+	border-style: hidden !important;
+}
+
+.ctsms-massmail-rowexpansion-right-column div {
+	border: none;
+}
+
+.ctsms-massmail-rowexpansion-right-column pre {
+	/* width: 800px;
+	max-width: 800px; */
+	min-width: 800px;
+	white-space: pre-wrap;
+}
+
 
 .ctsms-systemmessage-left-column {
 	vertical-align: top;
@@ -1449,6 +1564,10 @@ ctsms-ecrf-section {
 
 .ctsms-icon-information {
 	background-image: url(../resources/images/css/information.png) !important;
+}
+
+.ctsms-icon-queue {
+	background-image: url(../resources/images/css/rectangles.png) !important;
 }
 
 .ctsms-icon-clock {
@@ -1919,6 +2038,10 @@ ctsms-ecrf-section {
 	background-image: url(../resources/images/probandcategories/star.png) !important;
 }
 
+.ctsms-probandcategory-signup-verified {
+	background-image: url(../resources/images/probandcategories/star_checked.png) !important;
+}
+
 .ctsms-probandcategory-migrated {
 	background-image: url(../resources/images/probandcategories/data_copy.png) !important;
 }
@@ -1951,6 +2074,18 @@ ctsms-ecrf-section {
 	background-image: url(../resources/images/css/autodelete.png) !important;
 }
 
+.ctsms-massmailstatus-paused {
+	background-image: url(../resources/images/massmailstatus/mail_pause.png) !important;
+}
+
+.ctsms-massmailstatus-sending {
+	background-image: url(../resources/images/massmailstatus/mail_play.png) !important;
+}
+
+.ctsms-massmailstatus-closed {
+	background-image: url(../resources/images/massmailstatus/mail_stop.png) !important;
+}
+
 .ctsms-icon-inventoryhome {
 	background-image: url(../resources/images/css/inventory_home.png) !important;
 }
@@ -1979,6 +2114,10 @@ ctsms-ecrf-section {
 	background-image: url(../resources/images/css/input_field_home.png) !important;
 }
 
+.ctsms-icon-massmailhome {
+	background-image: url(../resources/images/css/mass_mail_home.png) !important;
+}
+
 .ctsms-largeicon-inventoryhome {
 	background-image: url(../resources/images/css/inventory_home_large.png) !important;
 }
@@ -2005,6 +2144,10 @@ ctsms-ecrf-section {
 
 .ctsms-largeicon-inputfieldhome {
 	background-image: url(../resources/images/css/input_field_home_large.png) !important;
+}
+
+.ctsms-largeicon-massmailhome {
+	background-image: url(../resources/images/css/mass_mail_home_large.png) !important;
 }
 
 .ctsms-largeicon-signaturevalid {

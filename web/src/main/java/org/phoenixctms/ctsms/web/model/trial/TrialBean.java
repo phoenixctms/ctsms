@@ -515,7 +515,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		tabCountMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE, MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getFileCount(FileModule.TRIAL_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.TRIAL_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_FILES_TAB_TITLE, MessageCodes.TRIAL_FILES_TAB_TITLE_WITH_COUNT, count));

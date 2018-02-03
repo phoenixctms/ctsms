@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.executable;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,6 +313,14 @@ public class ProductionDataProvider {
 	protected ECRFFieldStatusEntryDao eCRFFieldStatusEntryDao;
 	@Autowired
 	protected ECRFFieldStatusTypeDao eCRFFieldStatusTypeDao;
+	@Autowired
+	protected MassMailRecipientDao massMailRecipientDao;
+	@Autowired
+	protected MassMailDao massMailDao;
+	@Autowired
+	protected MassMailStatusTypeDao massMailStatusTypeDao;
+	@Autowired
+	protected MassMailTypeDao massMailTypeDao;
 
 	public void clearDB() throws Exception {
 		ChunkedRemoveAll.remove(hyperlinkDao);
@@ -367,6 +377,11 @@ public class ProductionDataProvider {
 		ChunkedRemoveAll.remove(cvSectionDao);
 		ChunkedRemoveAll.remove(courseCategoryDao);
 		jobOutput.println("course db tables cleared");
+		ChunkedRemoveAll.remove(massMailRecipientDao);
+		ChunkedRemoveAll.remove(massMailDao);
+		ChunkedRemoveAll.remove(massMailStatusTypeDao);
+		ChunkedRemoveAll.remove(massMailTypeDao);
+		jobOutput.println("mass mail db tables cleared");
 		ChunkedRemoveAll.remove(trialTagValueDao);
 		ChunkedRemoveAll.remove(trialTagDao);
 		ChunkedRemoveAll.remove(teamMemberDao);
@@ -514,20 +529,21 @@ public class ProductionDataProvider {
 	}
 
 	private void createContactDetailTypes() {
-		String urlRegExp = "^([hH][tT][tT][pP][sS]?|[fF][tT][pP])://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+([/?].+)?$"; // http://answers.oreilly.com/topic/280-how-to-validate-urls-with-regular-expressions/
-		String emailRegExp = "^[\\w-]+(\\.[\\w-]+)*@([a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*?\\.[a-zA-Z]{2,6}|(\\d{1,3}\\.){3}\\d{1,3})(:\\d{4})?$"; // http://regexlib.com/UserPatterns.aspx?authorId=2c58598d-b6ac-4952-9a6a-bf2e6ae7dddc
-		String phoneNumberRegExp = "\\+(9[976]\\d|8[987530]\\d|6[987]\\d|5[90]\\d|42\\d|3[875]\\d|2[98654321]\\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\\d{1,14}$"; // http://stackoverflow.com/questions/2113908/what-regular-expression-will-match-valid-international-phone-numbers
-		// String phoneNumberRegExp =
-		// "^+(999|998|997|996|995|994|993|992|991|990|979|978|977|976|975|974|973|972|971|970|969|968|967|966|965|964|963|962|961|960|899|898|897|896|895|894|893|892|891|890|889|888|887|886|885|884|883|882|881|880|879|878|877|876|875|874|873|872|871|870|859|858|857|856|855|854|853|852|851|850|839|838|837|836|835|834|833|832|831|830|809|808|807|806|805|804|803|802|801|800|699|698|697|696|695|694|693|692|691|690|689|688|687|686|685|684|683|682|681|680|679|678|677|676|675|674|673|672|671|670|599|598|597|596|595|594|593|592|591|590|509|508|507|506|505|504|503|502|501|500|429|428|427|426|425|424|423|422|421|420|389|388|387|386|385|384|383|382|381|380|379|378|377|376|375|374|373|372|371|370|359|358|357|356|355|354|353|352|351|350|299|298|297|296|295|294|293|292|291|290|289|288|287|286|285|284|283|282|281|280|269|268|267|266|265|264|263|262|261|260|259|258|257|256|255|254|253|252|251|250|249|248|247|246|245|244|243|242|241|240|239|238|237|236|235|234|233|232|231|230|229|228|227|226|225|224|223|222|221|220|219|218|217|216|215|214|213|212|211|210|98|95|94|93|92|91|90|86|84|82|81|66|65|64|63|62|61|60|58|57|56|55|54|53|52|51|49|48|47|46|45|44|43|41|40|39|36|34|33|32|31|30|27|20|7|1)[0-9]{0,14}$";
-		createContactDetailType("business_phone_number", false, true, false, false, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
-		createContactDetailType("office_phone_number", false, true, false, false, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, false, false);
-		createContactDetailType("home_phone_number", false, true, false, false, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
-		createContactDetailType("mobile_phone_number", false, true, false, true, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
-		createContactDetailType("fax_number", false, false, false, false, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
-		createContactDetailType("business_email_address", true, false, false, false, null, emailRegExp, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true, false);
-		createContactDetailType("other_email_address", true, false, false, true, null, emailRegExp, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true, false);
-		createContactDetailType("web_page_url", false, false, true, false, null, urlRegExp, ServiceExceptionCodes.INVALID_URL, true, true, false);
-		createContactDetailType("care_phone_number", false, true, false, false, null, phoneNumberRegExp, ServiceExceptionCodes.INVALID_PHONE_NUMBER, false, false, true);
+		createContactDetailType("business_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true,
+				false);
+		createContactDetailType("office_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, false,
+				false);
+		createContactDetailType("home_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
+		createContactDetailType("mobile_phone_number", false, true, false, true, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true,
+				false);
+		createContactDetailType("fax_number", false, false, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
+		createContactDetailType("business_email_address", true, false, false, false, null, CoreUtil.EMAIL_ADDRESS_PATTERN, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true,
+				false);
+		createContactDetailType("other_email_address", true, false, false, true, null, CoreUtil.EMAIL_ADDRESS_PATTERN, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true,
+				false);
+		createContactDetailType("web_page_url", false, false, true, false, null, CoreUtil.URL_PATTERN, ServiceExceptionCodes.INVALID_URL, true, true, false);
+		createContactDetailType("care_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, false, false,
+				true);
 		// createContactDetailType("skype_user_name",false,false,false,false,null,null,null,true,true);
 		jobOutput.println("contact detail types created");
 	}
@@ -625,8 +641,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(passedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		updateCourseParticipationStatusType(
 				failedParticipationStatusType,
@@ -634,8 +650,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		updateCourseParticipationStatusType(
 				cancelledParticipationStatusType,
@@ -643,8 +659,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(cancelledParticipationStatusType, invitedParticipationStatusType, acknowledgedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		updateCourseParticipationStatusType(
 				unregisteredParticipationStatusType,
@@ -652,8 +668,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		updateCourseParticipationStatusType(
 				absentParticipationStatusType,
@@ -661,8 +677,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		updateCourseParticipationStatusType(
 				acknowledgedParticipationStatusType,
@@ -670,8 +686,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(cancelledParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
 				);
 		updateCourseParticipationStatusType(
 				invitedParticipationStatusType,
@@ -679,8 +695,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(invitedParticipationStatusType, acknowledgedParticipationStatusType, cancelledParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
 				);
 		updateCourseParticipationStatusType(
 				registeredParticipationStatusType,
@@ -688,8 +704,8 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
-						getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-								unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
+				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
 				);
 		jobOutput.println("course participation states created");
 	}
@@ -1133,7 +1149,7 @@ public class ProductionDataProvider {
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_STATUS_ENTRIES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_VALUES,
 						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
+				// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
 				);
 		ECRFStatusType skippedVerifiedEcrfStatusType = createEcrfStatusType(
 				"skipped_verified",
@@ -1247,7 +1263,7 @@ public class ProductionDataProvider {
 				false, // true,
 				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
+				// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
 				);
 		ECRFStatusType incompleteVerifiedEcrfStatusType = createEcrfStatusType(
 				"incomplete_verified",
@@ -1401,6 +1417,7 @@ public class ProductionDataProvider {
 		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("22 - DCF"));
 		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("23 - Final Report"));
 		// /1. Projektmanagement
+
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.1. PM Dokumente"));
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.2. Projektmeetingaufzeichungen"));
 		// /2. Prüferinformation
@@ -1469,6 +1486,9 @@ public class ProductionDataProvider {
 		createFileFolderPreset(FileModule.PROBAND_DOCUMENT, CommonUtil.fixLogicalPathFolderName("5. Belege"));
 		// createFileFolderPreset(FileModule.INPUT_FIELD_DOCUMENT,CommonUtil.fixLogicalPathFolderName("01 - Background Images"));
 		// createFileFolderPreset(FileModule.INPUT_FIELD_DOCUMENT,CommonUtil.fixLogicalPathFolderName("02 - Miscellaneous"));
+		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("01 - Attachments"));
+		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("02 - Images"));
+		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("03 - Miscellaneous"));
 		jobOutput.println("file folder presets created");
 	}
 
@@ -1754,6 +1774,7 @@ public class ProductionDataProvider {
 		createJournalCategory(JournalModule.PROBAND_JOURNAL, "general", "general_title_preset", true, Color.PAPAYAWHIP, "ctsms-journalcategory-general", false);
 		createJournalCategory(JournalModule.CRITERIA_JOURNAL, "general", "general_title_preset", true, Color.PAPAYAWHIP, "ctsms-journalcategory-general", false);
 		createJournalCategory(JournalModule.CRITERIA_JOURNAL, "instruction", "instruction_title_preset", true, Color.PALEGREEN, "ctsms-journalcategory-instruction", true);
+		createJournalCategory(JournalModule.MASS_MAIL_JOURNAL, "general", "general_title_preset", true, Color.PAPAYAWHIP, "ctsms-journalcategory-general", true);
 		jobOutput.println("journal categories created");
 	}
 
@@ -1812,6 +1833,72 @@ public class ProductionDataProvider {
 		createMaintenanceType("reorder", "reorder_title_preset", true);
 		createMaintenanceType("other", "other_title_preset", true);
 		jobOutput.println("maintenance reminder types created");
+	}
+
+	private MassMailStatusType createMassMailStatusType(String nameL10nKey,
+			org.phoenixctms.ctsms.enumeration.Color color,
+			String nodeStyleClass,
+			boolean initial,
+			boolean locked,
+			boolean sending) {
+		MassMailStatusType massMailStatusType = MassMailStatusType.Factory.newInstance();
+		massMailStatusType.setColor(color);
+		massMailStatusType.setNodeStyleClass(nodeStyleClass);
+		massMailStatusType.setInitial(initial);
+		massMailStatusType.setLocked(locked);
+		massMailStatusType.setSending(sending);
+		massMailStatusType.setNameL10nKey(nameL10nKey);
+		massMailStatusType = massMailStatusTypeDao.create(massMailStatusType);
+		return massMailStatusType;
+	}
+
+	private void createMassMailStatusTypeEntries() {
+		MassMailStatusType pausedMassMailStatusType = createMassMailStatusType("paused", Color.TOMATO,
+				"ctsms-massmailstatus-paused",
+				true,
+				false,
+				false);
+		MassMailStatusType sendingMassMailStatusType = createMassMailStatusType("sending", Color.LIME,
+				"ctsms-massmailstatus-sending",
+				false,
+				false,
+				true);
+		// MassMailStatusType sendingMassMailStatusType = createMassMailStatusType("locked", Color.LIMEGREEN,
+		// "ctsms-massmailstatus-sending",
+		// false,
+		// false,
+		// false);
+		MassMailStatusType closedMassMailStatusType = createMassMailStatusType("closed", Color.MISTYROSE,
+				"ctsms-massmailstatus-closed",
+				true,
+				true,
+				false);
+		updateMassMailStatusType(pausedMassMailStatusType,
+				getMassMailStatusTransitions(pausedMassMailStatusType, sendingMassMailStatusType, closedMassMailStatusType));
+		updateMassMailStatusType(sendingMassMailStatusType,
+				getMassMailStatusTransitions(pausedMassMailStatusType, sendingMassMailStatusType, closedMassMailStatusType));
+		updateMassMailStatusType(closedMassMailStatusType,
+				getMassMailStatusTransitions(pausedMassMailStatusType, sendingMassMailStatusType, closedMassMailStatusType));
+		jobOutput.println("mass mail states created");
+	}
+
+	private MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired) {
+		MassMailType massMailType = MassMailType.Factory.newInstance();
+		massMailType.setNameL10nKey(nameL10nKey);
+		massMailType.setVisible(visible);
+		massMailType.setTrialRequired(trialRequired);
+		massMailType.setProbandListStausRequired(probandListStausRequired);
+		massMailType = massMailTypeDao.create(massMailType);
+		return massMailType;
+	}
+
+	private void createMassMailTypes() {
+		createMassMailType("regulatory", true, false, false);
+		createMassMailType("welcome", true, false, false);
+		createMassMailType("newsletter", true, false, false);
+		createMassMailType("study_specific", true, true, false);
+		createMassMailType("enrollment", true, true, true);
+		jobOutput.println("mass mail types created");
 	}
 
 	private NotificationType createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType type,
@@ -2034,6 +2121,7 @@ public class ProductionDataProvider {
 		createProbandCategory("new_person", Color.WHITESMOKE, true, false, true, false, "ctsms-probandcategory-new-person", true, false, false);
 		createProbandCategory("new_animal", Color.WHITESMOKE, false, true, false, false, "ctsms-probandcategory-new-animal", true, false, false);
 		createProbandCategory("signup", Color.ANTIQUEWHITE, false, true, true, true, "ctsms-probandcategory-signup", true, true, false);
+		createProbandCategory("signup_verified", Color.PALEGREEN, false, true, true, true, "ctsms-probandcategory-signup-verified", false, true, false);
 		createProbandCategory("migrated", Color.SEASHELL, true, true, false, false, "ctsms-probandcategory-migrated", false, false, false);
 		createProbandCategory("test", Color.PAPAYAWHIP, true, true, false, false, "ctsms-probandcategory-test", false, false, false);
 		createProbandCategory("unable_to_reach", Color.GHOSTWHITE, false, true, true, false, "ctsms-probandcategory-unable-to-reach", false, false, false);
@@ -2512,6 +2600,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial team member roles created");
 	}
 
+
 	private TimelineEventType createTimelineEventType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean showPreset, boolean notifyPreset,
 			EventImportance importancePreset, String nodeStyleClass, Color color, TimelineEventTitlePresetType titlePresetType, String titlePresetL10nKey, boolean titlePresetFixed) {
 		TimelineEventType type = TimelineEventType.Factory.newInstance();
@@ -2833,6 +2922,17 @@ public class ProductionDataProvider {
 		return result;
 	}
 
+	private HashSet<MassMailStatusType> getMassMailStatusTransitions(MassMailStatusType... types) {
+		HashSet<MassMailStatusType> result = null;
+		if (types != null && types.length > 0) {
+			result = new HashSet<MassMailStatusType>();
+			for (int i = 0; i < types.length; i++) {
+				result.add(types[i]);
+			}
+		}
+		return result;
+	}
+
 	private HashSet<PrivacyConsentStatusType> getPrivacyConsentStatusTransitions(PrivacyConsentStatusType... types) {
 		HashSet<PrivacyConsentStatusType> result = null;
 		if (types != null && types.length > 0) {
@@ -2933,6 +3033,8 @@ public class ProductionDataProvider {
 		createProbandCategories();
 		createProbandTags();
 		createProbandStatusTypes();
+		createMassMailStatusTypeEntries();
+		createMassMailTypes();
 	}
 
 	public void setJobOutput(JobOutput jobOutput) {
@@ -3012,6 +3114,12 @@ public class ProductionDataProvider {
 			Set<ECRFStatusType> transitions) {
 		ecrfStatusType.setTransitions(transitions);
 		eCRFStatusTypeDao.update(ecrfStatusType);
+	}
+
+	private void updateMassMailStatusType(MassMailStatusType massMailStatusType,
+			Set<MassMailStatusType> transitions) {
+		massMailStatusType.setTransitions(transitions);
+		massMailStatusTypeDao.update(massMailStatusType);
 	}
 
 	private void updatePrivacyConsentStatusType(PrivacyConsentStatusType privacyConsentStatusType,

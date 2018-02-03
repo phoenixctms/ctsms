@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.JournalCategory;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
+import org.phoenixctms.ctsms.domain.MassMail;
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.Trial;
@@ -53,7 +54,6 @@ import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
 /**
@@ -160,11 +160,11 @@ extends JournalServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null))});
 	}
 
-	private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-			JournalEntryDao journalEntryDao) throws Exception {
-		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	}
+	// private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+	// JournalEntryDao journalEntryDao) throws Exception {
+	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
+	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
+	// }
 
 	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -248,6 +248,13 @@ extends JournalServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOURNAL_ENTRY_INPUT_FIELD_ONLY_ALLOWED);
 				}
 				break;
+			case MASS_MAIL_JOURNAL:
+				CheckIDUtil.checkMassMailId(journalEntry.getMassMailId(), this.getMassMailDao());
+				if (numIdsSet(journalEntry) > 1) {
+					// no other references must be set...
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOURNAL_ENTRY_MASS_MAIL_ONLY_ALLOWED);
+				}
+				break;
 			default:
 				// not supported for now...
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOURNAL_MODULE, DefaultMessages.UNSUPPORTED_JOURNAL_MODULE, new Object[] { category
@@ -281,6 +288,9 @@ extends JournalServiceBase
 					break;
 				case INPUT_FIELD_JOURNAL:
 					CheckIDUtil.checkInputFieldId(id, this.getInputFieldDao());
+					break;
+				case MASS_MAIL_JOURNAL:
+					CheckIDUtil.checkMassMailId(id, this.getMassMailDao());
 					break;
 				default:
 					// not supported for now...
@@ -373,6 +383,12 @@ extends JournalServiceBase
 				inputField.removeJournalEntries(journalEntry);
 				journalEntry.setInputField(null);
 				break;
+			case MASS_MAIL_JOURNAL:
+				MassMail massMail = journalEntry.getMassMail();
+				ServiceUtil.checkMassMailLocked(massMail);
+				massMail.removeJournalEntries(journalEntry);
+				journalEntry.setMassMail(null);
+				break;
 			default:
 				// not supported for now...
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOURNAL_MODULE, DefaultMessages.UNSUPPORTED_JOURNAL_MODULE,
@@ -409,7 +425,7 @@ extends JournalServiceBase
 		(new ExcelExporter(writer, writer)).write();
 		JournalExcelVO result = writer.getExcelVO();
 		Timestamp now = CommonUtil.dateToTimestamp(result.getContentTimestamp());
-		logSystemMessage(trial, writer.getTrial(), now, modified, SystemMessageCodes.ECRF_JOURNAL_EXPORTED, result, null, journalEntryDao);
+		ServiceUtil.logSystemMessage(trial, writer.getTrial(), now, modified, SystemMessageCodes.ECRF_JOURNAL_EXPORTED, result, null, journalEntryDao);
 		return result;
 	}
 
@@ -424,6 +440,7 @@ extends JournalServiceBase
 		Proband proband = null;
 		Criteria criteria = null;
 		InputField inputField = null;
+		MassMail massMail = null;
 		if (id != null) {
 			switch (module) {
 				case INVENTORY_JOURNAL:
@@ -457,6 +474,10 @@ extends JournalServiceBase
 				case INPUT_FIELD_JOURNAL:
 					inputField = CheckIDUtil.checkInputFieldId(id, this.getInputFieldDao());
 					writer.setInputField(this.getInputFieldDao().toInputFieldOutVO(inputField));
+					break;
+				case MASS_MAIL_JOURNAL:
+					massMail = CheckIDUtil.checkMassMailId(id, this.getMassMailDao());
+					writer.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
 					break;
 				default:
 					// not supported for now...
@@ -498,7 +519,7 @@ extends JournalServiceBase
 					logSystemMessage(user, writer.getUser(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
 					break;
 				case TRIAL_JOURNAL:
-					logSystemMessage(trial, writer.getTrial(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
+					ServiceUtil.logSystemMessage(trial, writer.getTrial(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
 					break;
 				case PROBAND_JOURNAL:
 					ServiceUtil.logSystemMessage(proband, writer.getProband(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
@@ -508,6 +529,9 @@ extends JournalServiceBase
 					break;
 				case INPUT_FIELD_JOURNAL:
 					logSystemMessage(inputField, writer.getInputField(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
+					break;
+				case MASS_MAIL_JOURNAL:
+					ServiceUtil.logSystemMessage(massMail, writer.getMassMail(), now, modified, SystemMessageCodes.JOURNAL_EXPORTED, result, null, journalEntryDao);
 					break;
 				default:
 			}
@@ -650,6 +674,8 @@ extends JournalServiceBase
 		result += (journalEntry.getTrialId() != null) ? 1 : 0;
 		result += (journalEntry.getProbandId() != null) ? 1 : 0;
 		result += (journalEntry.getCriteriaId() != null) ? 1 : 0;
+		result += (journalEntry.getInputFieldId() != null) ? 1 : 0;
+		result += (journalEntry.getMassMailId() != null) ? 1 : 0;
 		return result;
 	}
 }

@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
-import io.swagger.annotations.Api;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -16,7 +14,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -27,6 +28,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.jersey.index.CompleteIndex;
@@ -41,12 +43,12 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.google.gson.JsonElement;
 import com.sun.jersey.api.NotFoundException;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/tools")
 public class ToolsResource {
 
-	@Context
-	AuthenticationVO auth;
 	private final static Pattern COMPLETE_METHOD_NAME_REGEXP = Pattern.compile("^complete");
 	private static final MethodTransfilter COMPLETE_METHOD_NAME_TRANSFORMER = new MethodTransfilter() {
 
@@ -67,7 +69,6 @@ public class ToolsResource {
 	public final static CompleteIndex COMPLETE_INDEX = new CompleteIndex(getCompleteIndexNode(
 			ResourceUtils.getMethodPath(ToolsResource.class, "complete").replaceFirst("/\\{resource\\}", ""), // "completeIndex"),
 			getArgsUriPart("")));
-
 	private static ArgsUriPart getArgsUriPart(String resource) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, COMPLETE_METHOD_NAME_TRANSFORMER);
 		// args.getExcludePrimitiveConversion()
@@ -91,6 +92,9 @@ public class ToolsResource {
 			return IndexBase.EMPTY_INDEX_NODE;
 		}
 	}
+
+	@Context
+	AuthenticationVO auth;
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -153,6 +157,17 @@ public class ToolsResource {
 	@Path("passwordpolicy")
 	public PasswordPolicyVO getPasswordPolicy() throws AuthorisationException, ServiceException, AuthenticationException {
 		return WebUtil.getServiceLocator().getToolsService().getPasswordPolicy(auth);
+	}
+
+	@GET
+	@Path("file/{id}")
+	public Response getPublicFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+		// FileStreamOutVO f = WebUtil.getServiceLocator().getFileService().getFileStream(auth, fileId);
+		// return Response.ok(f.getStream(), f.getContentType().getMimeType()).build();
+		FileStreamOutVO stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream( id);
+		ResponseBuilder response = javax.ws.rs.core.Response.ok(stream.getStream(), stream.getContentType().getMimeType());
+		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
+		return response.build();
 	}
 
 	@GET

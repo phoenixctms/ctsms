@@ -90,6 +90,8 @@ public interface SystemMessageCodes {
 	public final static String TRIAL_DELETED_DUTY_ROSTER_TURN_UPDATED = "trial_deleted_duty_roster_turn_updated";
 	public final static String TRIAL_DELETED_TRIAL_MEMBERSHIP_DELETED = "trial_deleted_trial_membership_deleted";
 	public final static String TRIAL_DELETED_COURSE_UPDATED = "trial_deleted_course_updated";
+	public final static String TRIAL_DELETED_MASS_MAIL_UPDATED = "trial_deleted_mass_mail_updated";
+	public final static String TRIAL_DELETED_MASS_MAIL_RECIPIENT_UPDATED = "trial_deleted_mass_mail_recipient_updated";
 	public final static String TRIAL_MARKED_FOR_DELETION = "trial_marked_for_deletion";
 	public final static String TRIAL_DELETED_MONEY_TRANSFER_UPDATED = "trial_deleted_money_transfer_updated";
 	public static final String TRIAL_TAG_VALUE_CREATED = "trial_tag_value_created";
@@ -219,6 +221,8 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_DELETED = "proband_deleted";
 	public final static String PROBAND_DELETED_PARENT_REMOVED = "proband_deleted_parent_removed";
 	public final static String PROBAND_DELETED_PATIENT_REMOVED = "proband_deleted_patient_removed";
+	public final static String PROBAND_DELETED_MASS_MAIL_RECIPIENT_UPDATED = "proband_deleted_mass_mail_recipient_updated";
+	public final static String PROBAND_DELETED_MASS_MAIL_RECIPIENT_DELETED = "proband_deleted_mass_mail_recipient_deleted";
 	public final static String PROBAND_IMAGE_CREATED = "proband_image_created";
 	public final static String PROBAND_IMAGE_UPDATED = "proband_image_updated";
 	public final static String PROBAND_IMAGE_CLEARED = "proband_image_cleared";
@@ -323,4 +327,16 @@ public interface SystemMessageCodes {
 	public static final String PROBAND_ADDRESS_PROBAND_LETTER_PDF_RENDERED = "proband_address_proband_letter_pdf_rendered";
 	public static final String REIMBURSEMENTS_PDF_RENDERED = "reimbursements_pdf_rendered";
 	public static final String REIMBURSEMENTS_PDF_NO_TRIAL_RENDERED = "reimbursements_pdf_no_trial_rendered";
+	public static final String MASS_MAIL_CREATED = "mass_mail_created";
+	public static final String MASS_MAIL_UPDATED = "mass_mail_updated";
+	public static final String MASS_MAIL_DELETED = "mass_mail_deleted";
+	public static final String MASS_MAIL_DELETED_RECIPIENT_DELETED = "mass_mail_deleted_recipient_deleted";
+	public static final String MASS_MAIL_DELETED_TRIAL_REMOVED = "mass_mail_deleted_trial_removed";
+	public static final String MASS_MAIL_MARKED_FOR_DELETION = "mass_mail_marked_for_deletion";
+	public static final String MASS_MAIL_RECIPIENT_CREATED = "mass_mail_recipient_created";
+	public static final String MASS_MAIL_RECIPIENT_DELETED = "mass_mail_recipient_deleted";
+	public static final String MASS_MAIL_RECIPIENTS_CREATED = "mass_mail_recipients_created";
+	public static final String MASS_MAIL_RECIPIENTS_DELETED = "mass_mail_recipients_deleted";
+	public static final String MASS_MAIL_LOCKED = "mass_mail_locked";
+	public static final String MASS_MAIL_RECIPIENT_RESET = "mass_mail_recipient_reset";
 }

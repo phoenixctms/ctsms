@@ -247,7 +247,7 @@ extends UserServiceBase
 				userPermissionProfileDao.remove(permissionProfile);
 			}
 			user.getPermissionProfiles().clear();
-			ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
+			// ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
 			// } else {
 			// checkActivityCount(userId, journalEntryDao);
 			// }
@@ -260,10 +260,12 @@ extends UserServiceBase
 				StaffOutVO identityVO = staffDao.toStaffOutVO(identity);
 				logSystemMessage(identity, result, now, modified, SystemMessageCodes.USER_DELETED_IDENTITY_REMOVED, null, identityVO, journalEntryDao);
 			}
+			ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
 			KeyPair keyPair = user.getKeyPair();
 			userDao.remove(user);
 			this.getKeyPairDao().remove(keyPair);
 			logSystemMessage(modified, result, now, modified, SystemMessageCodes.USER_DELETED, result, null, journalEntryDao);
+
 		}
 		return result;
 	}

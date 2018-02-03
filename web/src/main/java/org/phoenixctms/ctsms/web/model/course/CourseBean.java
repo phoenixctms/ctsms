@@ -59,6 +59,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class CourseBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
+	private static final int VALIDITY_PERIOD_PROPERTY_ID = 1;
+
 	public static void copyCourseOutToIn(CourseInVO in, CourseOutVO out) {
 		if (in != null && out != null) {
 			CourseCategoryVO courseCategoryVO = out.getCategory();
@@ -97,20 +99,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setValidityPeriodDays(out.getValidityPeriodDays());
 		}
 	}
-
-	private CourseInVO in;
-	private CourseOutVO out;
-	private ArrayList<SelectItem> categories;
-	private ArrayList<SelectItem> departments;
-	private ArrayList<SelectItem> cvSections;
-	private CvSectionVO cvSection;
-	private TreeNode renewalsRoot;
-	private TreeNode precedingCoursesRoot;
-	private CourseMultiPickerModel precedingCourseMultiPicker;
-	private VariablePeriodSelector validity;
-	private Date today;
-	private static final int VALIDITY_PERIOD_PROPERTY_ID = 1;
-
 	private static CourseOutVO createCourseOutFromIn(CourseInVO in) {
 		CourseOutVO result = new CourseOutVO();
 		if (in != null) {
@@ -142,7 +130,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 		return result;
 	}
-
 	public static void initCourseDefaultValues(CourseInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setCategoryId(null);
@@ -178,6 +165,19 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setValidityPeriodDays(Settings.getLongNullable(SettingCodes.COURSE_VALIDITY_PERIOD_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_VALIDITY_PERIOD_DAYS_PRESET));
 		}
 	}
+	private CourseInVO in;
+	private CourseOutVO out;
+	private ArrayList<SelectItem> categories;
+	private ArrayList<SelectItem> departments;
+	private ArrayList<SelectItem> cvSections;
+	private CvSectionVO cvSection;
+	private TreeNode renewalsRoot;
+	private TreeNode precedingCoursesRoot;
+	private CourseMultiPickerModel precedingCourseMultiPicker;
+
+	private VariablePeriodSelector validity;
+
+	private Date today;
 
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -195,7 +195,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		precedingCoursesRoot.setExpanded(true);
 		precedingCoursesRoot.setType(WebUtil.PARENT_NODE_TYPE);
 		this.precedingCoursesRoot = precedingCoursesRoot;
-		precedingCourseMultiPicker = new CourseMultiPickerModel();
+		precedingCourseMultiPicker = new CourseMultiPickerModel(
+				Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES));
 		setValidity(new VariablePeriodSelector(this, VALIDITY_PERIOD_PROPERTY_ID));
 	}
 
@@ -657,7 +658,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		tabCountMap.put(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.COURSE_HYPERLINKS_TAB_TITLE, MessageCodes.COURSE_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getFileCount(FileModule.COURSE_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.COURSE_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_COURSE_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_COURSE_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.COURSE_FILES_TAB_TITLE, MessageCodes.COURSE_FILES_TAB_TITLE_WITH_COUNT, count));

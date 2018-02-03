@@ -1,0 +1,1313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>mass mail main</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="massmailmain_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailRecipient"
+				actionListener="#{massMailRecipientBean.change(massMailBean.in.id)}"
+				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
+				update=":tabView:massmailrecipient_form:mass_mail_recipient_list,:tabView:massmailrecipient_form:mass_mail_recipient_bulkadd,:tabView:massmailrecipient_form:mass_mail_recipient_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailJournalEntry"
+				actionListener="#{journalBean.changeMassMail(massMailBean.in.id)}"
+				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
+				update=":tabView:massmailjournal_form:journal_list,:tabView:massmailjournal_form:journal_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailFile"
+				actionListener="#{fileBean.changeMassMail(massMailBean.in.id)}"
+				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
+				update=":tabView:massmailfile_form" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailByMassMailRecipient"
+				actionListener="#{massMailBean.change(massMailRecipientBean.in.massMailId)}"
+				oncomplete="handleMassMailChanged(xhr, status, args)"
+				update="mass_mail_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailByJournalEntry"
+				actionListener="#{massMailBean.change(journalBean.in.massMailId)}"
+				oncomplete="handleMassMailChanged(xhr, status, args)"
+				update="mass_mail_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeMassMailByFile"
+				actionListener="#{massMailBean.change(fileBean.in.massMailId)}"
+				oncomplete="handleMassMailChanged(xhr, status, args)"
+				update="mass_mail_input" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:panel id="mass_mail_input">
+					<f:facet name="header">
+						<h:outputText value="#{massMailBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.mass_mail_main_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
+								<!-- id="course_self_registration_input" -->
+								<h:panelGrid
+									columns="9"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel
+										for="massmailname"
+										value="#{massmaillabels.mass_mail_name_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="massmailname"
+											value="#{massMailBean.in.name}"
+											required="true"
+											label="#{massmaillabels.mass_mail_name}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="massmailname">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_name_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="massmailname" />
+									<h:outputLabel
+										for="department"
+										value="#{massmaillabels.mass_mail_department_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu
+											id="department"
+											value="#{massMailBean.in.departmentId}"
+											required="true"
+											label="#{massmaillabels.mass_mail_department}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem
+												itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{massMailBean.departments}"
+												var="selectItem"
+												itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+											<p:ajax />
+										</p:selectOneMenu>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="department">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_department_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="department" />
+									<h:outputLabel
+										for="massmailtype"
+										value="#{massmaillabels.mass_mail_type_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu
+											id="massmailtype"
+											value="#{massMailBean.in.typeId}"
+											required="true"
+											label="#{massmaillabels.mass_mail_type}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem
+												itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{massMailBean.massMailTypes}"
+												var="selectItem"
+												itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="massmailtype">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_type_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="massmailtype" />
+									<h:outputLabel
+										for="trial"
+										value="#{massmaillabels.mass_mail_trial_label}" />
+									<h:panelGrid
+										columns="3"
+										cellpadding="0">
+										<h:panelGroup>
+											<h:inputHidden
+												id="trial"
+												required="false"
+												value="#{massMailBean.in.trialId}">
+												<f:converter converterId="ctsms.ID" />
+											</h:inputHidden>
+											<p:commandButton
+												id="trialName"
+												value="#{applicationScopeBean.clipStringPicker(massMailBean.trialName)}"
+												title="#{massmaillabels.mass_mail_trial_tooltip}#{labels.open_trial_button_label}"
+												styleClass="ctsms-picker"
+												icon="ui-icon ui-icon-extlink"
+												type="button"
+												onclick="openPickedTrial(':tabView:massmailmain_form:trial')" />
+										</h:panelGroup>
+										<p:commandButton
+											title="#{labels.pick_trial_button_label}"
+											icon="ui-icon ui-icon-search"
+											type="button"
+											onclick="openTrialPickerAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+										<p:commandButton
+											title="#{labels.clear_trial_button_label}"
+											icon="ui-icon ui-icon-close"
+											type="button"
+											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+									</h:panelGrid>
+									<p:message for="trial" />
+									<h:outputLabel
+										for="probandliststatus"
+										value="#{massmaillabels.mass_mail_proband_list_status_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu
+											id="probandliststatus"
+											value="#{massMailBean.in.probandListStatusId}"
+											required="false"
+											label="#{massmaillabels.mass_mail_proband_list_status}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem
+												itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{massMailBean.probandListStatusTypes}"
+												var="selectItem"
+												itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="probandliststatus">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_proband_list_status_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="probandliststatus" />
+									
+									
+									<h:outputLabel
+										for="probandliststatusresend"
+										value="#{massmaillabels.mass_mail_probandliststatusresend_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="probandliststatusresend"
+											value="#{massMailBean.in.probandListStatusResend}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="probandliststatusresend">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_probandliststatusresend_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="probandliststatusresend" />	
+								</h:panelGrid>
+								<h:panelGrid
+									columns="1"
+									cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+									<h:outputLabel
+										for="massmaildescription"
+										value="#{massmaillabels.mass_mail_description_label}" />
+									<h:panelGroup>
+										<p:inputTextarea
+											id="massmaildescription"
+											value="#{massMailBean.in.description}"
+											required="false"
+											autoResize="false"
+											styleClass="ctsms-textarea"
+											label="#{massmaillabels.mass_mail_description}">
+											<p:ajax />
+										</p:inputTextarea>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="massmaildescription">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_description_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.mass_mail_control_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="9"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel
+										for="massmailstatustype"
+										value="#{massmaillabels.mass_mail_status_type_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu
+											id="massmailstatustype"
+											value="#{massMailBean.in.statusId}"
+											required="true"
+											label="#{massmaillabels.mass_mail_status_type}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem
+												itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{massMailBean.statusTypes}"
+												var="selectItem"
+												itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+											<!-- <p:ajax
+										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,trialStatusType_ecrfValueInputEnabled_message,toolbar"
+										listener="#{trialBean.handleStatusTypeChange}" /> -->
+										</p:selectOneMenu>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="massmailstatustype">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_status_type_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="massmailstatustype" />
+									
+									
+
+									
+									
+									<h:outputLabel
+										for="start"
+										value="#{massmaillabels.mass_mail_start_label}" />
+									<h:panelGroup>
+										<p:calendar
+											id="start"
+											value="#{massMailBean.in.start}"
+											required="true"
+											label="#{massmaillabels.mass_mail_start}"
+											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											yearRange="#{applicationScopeBean.calendarYearRange}"
+											showWeek="true"
+											navigator="true"
+											locale="#{sessionScopeBean.locale}"
+											timeZone="#{sessionScopeBean.timeZone}"
+											styleClass="ctsms-calendar-datetime">
+										</p:calendar>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="start">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_start_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="start" />
+									
+									<h:outputLabel
+										for="lockaftersending"
+										value="#{massmaillabels.mass_mail_lockaftersending_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="lockaftersending"
+											value="#{massMailBean.in.lockAfterSending}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="lockaftersending">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_lockaftersending_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="lockaftersending" />									
+									
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+						
+						
+<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.sender_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="6"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel
+										for="fromaddress"
+										value="#{massmaillabels.mass_mail_from_address_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="fromaddress"
+											value="#{massMailBean.in.fromAddress}"
+											required="true"
+											label="#{massmaillabels.mass_mail_from_address}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="fromaddress">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_from_address_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="fromaddress" />
+									<h:outputLabel
+										for="fromname"
+										value="#{massmaillabels.mass_mail_from_name_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="fromname"
+											value="#{massMailBean.in.fromName}"
+											required="false"
+											label="#{massmaillabels.mass_mail_from_name}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="fromname">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_from_name_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="fromname" />
+									<h:outputLabel
+										for="replytoaddress"
+										value="#{massmaillabels.mass_mail_replyto_address_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="replytoaddress"
+											value="#{massMailBean.in.replyToAddress}"
+											required="true"
+											label="#{massmaillabels.mass_mail_replyto_address}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="replytoaddress">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_replyto_address_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="replytoaddress" />
+									<h:outputLabel
+										for="replytoname"
+										value="#{massmaillabels.mass_mail_replyto_name_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="replytoname"
+											value="#{massMailBean.in.replyToName}"
+											required="false"
+											label="#{massmaillabels.mass_mail_replyto_name}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="replytoname">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_replyto_name_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="replytoname" />
+									</h:panelGrid>
+									</h:panelGrid>
+									</p:fieldset>						
+						
+						
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.recipients_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="3"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
+									<h:outputLabel
+										for="probandto"
+										value="#{massmaillabels.mass_mail_probandto_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="probandto"
+											value="#{massMailBean.in.probandTo}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="probandto">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_probandto_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="probandto" />
+									<h:outputLabel
+										for="physicianto"
+										value="#{massmaillabels.mass_mail_physicianto_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="physicianto"
+											value="#{massMailBean.in.physicianTo}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="physicianto">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_physicianto_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="physicianto" />
+									<h:outputLabel
+										for="otherto"
+										value="#{massmaillabels.mass_mail_otherto_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="otherto"
+											value="#{massMailBean.in.otherTo}"
+											required="false"
+											label="#{massmaillabels.mass_mail_otherto}"
+											styleClass="ctsms-control-max">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="otherto">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_otherto_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="otherto" />
+									<h:outputLabel
+										for="cc"
+										value="#{massmaillabels.mass_mail_cc_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="cc"
+											value="#{massMailBean.in.cc}"
+											required="false"
+											label="#{massmaillabels.mass_mail_cc}"
+											styleClass="ctsms-control-max">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="cc">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_cc_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="cc" />
+									<h:outputLabel
+										for="bcc"
+										value="#{massmaillabels.mass_mail_bcc_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="bcc"
+											value="#{massMailBean.in.bcc}"
+											required="false"
+											label="#{massmaillabels.mass_mail_bcc}"
+											styleClass="ctsms-control-max">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="bcc">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_bcc_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="bcc" />
+									
+									
+									
+<h:outputLabel
+										for="usebeacon"
+										value="#{massmaillabels.mass_mail_usebeacon_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="usebeacon"
+											value="#{massMailBean.in.useBeacon}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="usebeacon">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_usebeacon_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="usebeacon" />									
+									
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.message_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-textarea-row">
+								<h:panelGrid
+									columns="9"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel
+										for="locale"
+										value="#{massmaillabels.mass_mail_locale_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu
+											id="locale"
+											value="#{massMailBean.in.locale}"
+											required="true"
+											label="#{massmaillabels.mass_mail_locale}"
+											styleClass="ctsms-control">
+											<f:selectItem
+												itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{massMailBean.locales}"
+												var="selectItem"
+												itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+											<p:ajax />
+										</p:selectOneMenu>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="locale">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_locale_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="locale" />
+									<h:outputLabel
+										for="malesalutation"
+										value="#{massmaillabels.mass_mail_malesalutation_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="malesalutation"
+											value="#{massMailBean.in.maleSalutation}"
+											required="false"
+											label="#{massmaillabels.mass_mail_malesalutation}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="malesalutation">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_malesalutation_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="malesalutation" />
+									<h:outputLabel
+										for="femalesalutation"
+										value="#{massmaillabels.mass_mail_femalesalutation_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="femalesalutation"
+											value="#{massMailBean.in.femaleSalutation}"
+											required="false"
+											label="#{massmaillabels.mass_mail_femalesalutation}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="femalesalutation">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_femalesalutation_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="femalesalutation" />
+									</h:panelGrid>
+								<h:panelGrid
+									columns="3"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">	
+									<h:outputLabel
+										for="subjectformat"
+										value="#{massmaillabels.mass_mail_subject_format_label}" />
+									<h:panelGroup>
+										<p:inputText
+											id="subjectformat"
+											value="#{massMailBean.in.subjectFormat}"
+											required="true"
+											label="#{massmaillabels.mass_mail_subject_format}"
+											styleClass="ctsms-control-max">
+										</p:inputText>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="subjectformat">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_subject_format_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="subjectformat" />
+								</h:panelGrid>
+								<h:panelGrid
+									columns="1"
+									cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+									<h:outputLabel
+										for="texttemplate"
+										value="#{massmaillabels.mass_mail_texttemplate_label}" />
+									<h:panelGroup>
+										<p:editor
+											id="texttemplate"
+											value="#{massMailBean.in.textTemplate}"
+											required="true"
+											controls="bold italic underline strikethrough color indent outdent bullets numbering image link unlink source"
+											height="280"
+											styleClass="ctsms-editor"
+											label="#{massmaillabels.mass_mail_texttemplate}">
+										</p:editor>
+										<!-- autoResize="false" -->
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="texttemplate">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_texttemplate_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="texttemplate" />
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.preview_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-textarea-row,ctsms-messages-row,ctsms-toolbar-row">
+								<h:panelGrid
+									columns="6"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel
+										for="previewproband"
+										value="#{massmaillabels.mass_mail_previewproband_label}" />
+									<h:panelGrid
+										columns="3"
+										cellpadding="0">
+										<h:panelGroup>
+											<h:inputHidden
+												id="previewproband"
+												required="false"
+												value="#{massMailBean.previewProbandId}">
+												<f:converter converterId="ctsms.ID" />
+											</h:inputHidden>
+											<p:commandButton
+												id="previewprobandName"
+												value="#{applicationScopeBean.clipStringPicker(massMailBean.previewProbandName)}"
+												title="#{massmaillabels.mass_mail_previewproband_tooltip}#{labels.open_proband_button_label}"
+												styleClass="ctsms-picker"
+												icon="ui-icon ui-icon-extlink"
+												type="button"
+												onclick="openPickedProband(':tabView:massmailmain_form:previewproband')" />
+										</h:panelGroup>
+										<p:commandButton
+											title="#{labels.pick_proband_button_label}"
+											icon="ui-icon ui-icon-search"
+											type="button"
+											onclick="openProbandPickerAjaxUpdate(':tabView:massmailmain_form:previewproband',':tabView:massmailmain_form:previewprobandName',':tabView:massmailmain_form:proband_attachments_file_system_stats')" />
+										<p:commandButton
+											title="#{labels.clear_proband_button_label}"
+											icon="ui-icon ui-icon-close"
+											type="button"
+											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:previewproband',':tabView:massmailmain_form:previewprobandName','#{applicationScopeBean.noProbandPickedMessage}',':tabView:massmailmain_form:proband_attachments_file_system_stats')" />
+									</h:panelGrid>
+									<p:message for="previewproband" />
+									<!-- 	<h:outputLabel
+			for="previewtrial"
+			value="#{massmaillabels.mass_mail_previewtrial_label}" />
+		<h:panelGrid
+			columns="3"
+			cellpadding="0">
+			<h:panelGroup>
+				<h:inputHidden
+					id="previewtrial"
+					required="false"
+					value="#{massMailBean.previewTrialId}">
+					<f:converter converterId="ctsms.ID" />
+				</h:inputHidden>
+				<p:commandButton
+					id="previewtrialName"
+					value="#{applicationScopeBean.clipStringPicker(massMailBean.previewTrialName)}"
+					title="#{massmaillabels.mass_mail_previewtrial_tooltip}#{labels.open_trial_button_label}"
+					styleClass="ctsms-picker"
+					icon="ui-icon ui-icon-extlink"
+					type="button"
+					onclick="openPickedTrial(':tabView:massmailmain_form:previewtrial')" />
+			</h:panelGroup>
+			<p:commandButton
+				title="#{labels.pick_trial_button_label}"
+				icon="ui-icon ui-icon-search"
+				type="button"
+				onclick="openTrialPickerAjax(':tabView:massmailmain_form:previewtrial',':tabView:massmailmain_form:previewtrialName')" />
+			<p:commandButton
+				title="#{labels.clear_trial_button_label}"
+				icon="ui-icon ui-icon-close"
+				type="button"
+				onclick="clearIDAjax(':tabView:massmailmain_form:previewtrial',':tabView:massmailmain_form:previewtrialName','#{applicationScopeBean.noTrialPickedMessage}')" />
+		</h:panelGrid>
+		<p:message
+			for="previewtrial" /> -->
+								</h:panelGrid>
+
+									<h:panelGrid
+										columns="2"
+										cellpadding="2"
+										columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
+										<h:outputLabel value="#{massmaillabels.mass_mail_previewsubject_label}" />
+										<h:outputText value="#{massMailBean.previewSubject}" />
+									</h:panelGrid>
+									
+									 <h:panelGrid
+										columns="1"
+										cellpadding="2" style="width:100%;"> 
+									<!-- <h:panelGroup> -->
+										<h:outputText value="#{massmaillabels.mass_mail_previewtext_label}" />
+										<ui:include src="../shared/multiLineOutputText.xhtml">
+											<ui:param
+												name="multiLineText"
+												value="#{massMailBean.previewText}" />
+											<ui:param
+												name="multiLineTextClass"
+												value="ctsms-email-message" />
+											<ui:param
+												name="rendered"
+												value="true" />
+											<ui:param
+												name="escapeHtml"
+												value="false" />
+										</ui:include>
+									<!-- </h:panelGroup> --> 
+									 </h:panelGrid> 
+								
+								<p:messages for="previewMessages" />
+								<p:toolbar>
+									<p:toolbarGroup align="right">
+										<p:commandButton
+											process="@this,mass_mail_input"
+											value="#{massmaillabels.update_preview_button_label}"
+											id="updatePreview"
+											actionListener="#{massMailBean.handleUpdatePreview}"
+											icon="ui-icon ui-icon-refresh"
+											ajax="true"
+											update="mass_mail_input" />
+									</p:toolbarGroup>
+								</p:toolbar>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{massmaillabels.attachments_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="7"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-text-column">
+									<h:outputLabel
+										for="attachmassmailfiles"
+										value="#{massmaillabels.mass_mail_attachmassmailfiles_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachmassmailfiles"
+											value="#{massMailBean.in.attachMassMailFiles}" >
+											<p:ajax
+										
+										update="massmail_attachments_file_system_stats" />
+										</p:selectBooleanCheckbox>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachmassmailfiles">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachmassmailfiles_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachmassmailfiles" />
+									<h:outputLabel
+										for="massmailfileslogicalpath"
+										value="#{massmaillabels.mass_mail_massmailfileslogicalpath_label}" />
+									<h:panelGroup>
+										<p:autoComplete
+											id="massmailfileslogicalpath"
+											value="#{massMailBean.in.massMailFilesLogicalPath}"
+											required="false"
+											label="#{massmaillabels.mass_mail_massmailfileslogicalpath}"
+											styleClass="ctsms-control-larger"
+											minQueryLength="#{autoCompleteMinQueryLengthLogicalPath}"
+											maxResults="#{autoCompleteMaxResultsLogicalPath}"
+											queryDelay="#{autoCompleteQueryDelayLogicalPath}"
+											dropdown="#{autoCompleteDropdownLogicalPath}"
+											global="#{autoCompleteGlobalLogicalPath}"
+											scrollHeight="#{autoCompleteScrollHeightLogicalPath}"
+											completeMethod="#{massMailBean.completeMassMailFilesLogicalPath}">
+											<p:ajax
+												listener="#{massMailBean.handleMassMailFilesLogicalPathSelect}"
+												event="itemSelect"
+												process="@this"
+												update="massmail_attachments_file_system_stats" />
+											<p:ajax
+												event="blur"
+												process="@this"
+												update="massmail_attachments_file_system_stats" />
+										</p:autoComplete>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="massmailfileslogicalpath">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_massmailfileslogicalpath_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="massmailfileslogicalpath" />
+									
+									
+								<h:outputText
+									value="#{massMailBean.massMailAttachmentFileSystemStats}"
+									id="massmail_attachments_file_system_stats" />
+									
+									<h:outputLabel
+										for="attachtrialfiles"
+										value="#{massmaillabels.mass_mail_attachtrialfiles_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachtrialfiles"
+											value="#{massMailBean.in.attachTrialFiles}" >
+											<p:ajax
+										
+										update="trial_attachments_file_system_stats" />
+											</p:selectBooleanCheckbox>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachtrialfiles">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachtrialfiles_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachtrialfiles" />
+									<h:outputLabel
+										for="trialfileslogicalpath"
+										value="#{massmaillabels.mass_mail_trialfileslogicalpath_label}" />
+									<h:panelGroup>
+										<p:autoComplete
+											id="trialfileslogicalpath"
+											value="#{massMailBean.in.trialFilesLogicalPath}"
+											required="false"
+											label="#{massmaillabels.mass_mail_trialfileslogicalpath}"
+											styleClass="ctsms-control-larger"
+											minQueryLength="#{autoCompleteMinQueryLengthLogicalPath}"
+											maxResults="#{autoCompleteMaxResultsLogicalPath}"
+											queryDelay="#{autoCompleteQueryDelayLogicalPath}"
+											dropdown="#{autoCompleteDropdownLogicalPath}"
+											global="#{autoCompleteGlobalLogicalPath}"
+											scrollHeight="#{autoCompleteScrollHeightLogicalPath}"
+											completeMethod="#{massMailBean.completeTrialFilesLogicalPath}">
+											<p:ajax
+												listener="#{massMailBean.handleTrialFilesLogicalPathSelect}"
+												event="itemSelect"
+												process="@this"
+												update="trial_attachments_file_system_stats" />
+											<p:ajax
+												event="blur"
+												process="@this"
+												update="trial_attachments_file_system_stats" />
+										</p:autoComplete>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="trialfileslogicalpath">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_trialfileslogicalpath_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="trialfileslogicalpath" />
+									
+									<h:outputText
+									value="#{massMailBean.trialAttachmentFileSystemStats}"
+									id="trial_attachments_file_system_stats" />
+									
+									<h:outputLabel
+										for="attachprobandfiles"
+										value="#{massmaillabels.mass_mail_attachprobandfiles_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachprobandfiles"
+											value="#{massMailBean.in.attachProbandFiles}" >
+											<p:ajax
+										
+										update="proband_attachments_file_system_stats" />
+											
+										</p:selectBooleanCheckbox>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachprobandfiles">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandfiles_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandfiles" />
+									<h:outputLabel
+										for="probandfileslogicalpath"
+										value="#{massmaillabels.mass_mail_probandfileslogicalpath_label}" />
+									<h:panelGroup>
+										<p:autoComplete
+											id="probandfileslogicalpath"
+											value="#{massMailBean.in.probandFilesLogicalPath}"
+											required="false"
+											label="#{massmaillabels.mass_mail_probandfileslogicalpath}"
+											styleClass="ctsms-control-larger"
+											minQueryLength="#{autoCompleteMinQueryLengthLogicalPath}"
+											maxResults="#{autoCompleteMaxResultsLogicalPath}"
+											queryDelay="#{autoCompleteQueryDelayLogicalPath}"
+											dropdown="#{autoCompleteDropdownLogicalPath}"
+											global="#{autoCompleteGlobalLogicalPath}"
+											scrollHeight="#{autoCompleteScrollHeightLogicalPath}"
+											completeMethod="#{massMailBean.completeProbandFilesLogicalPath}">
+											<p:ajax
+												listener="#{massMailBean.handleProbandFilesLogicalPathSelect}"
+												event="itemSelect"
+												process="@this"
+												update="proband_attachments_file_system_stats" />
+											<p:ajax
+												event="blur"
+												process="@this"
+												upadte="proband_attachments_file_system_stats" />
+										</p:autoComplete>
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="probandfileslogicalpath">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_probandfileslogicalpath_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="probandfileslogicalpath" />
+									
+									
+									<h:outputText
+									value="#{massMailBean.probandAttachmentFileSystemStats}"
+									id="proband_attachments_file_system_stats" />
+									
+									<h:outputLabel
+										for="attachinquiries"
+										value="#{massmaillabels.mass_mail_attachinquiries_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachinquiries"
+											value="#{massMailBean.in.attachInquiries}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachinquiries">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachinquiries_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachinquiries" />
+									
+																<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+
+							<h:outputText value="" />
+									
+									<h:outputLabel
+										for="attachprobandlistentrytags"
+										value="#{massmaillabels.mass_mail_attachprobandlistentrytags_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachprobandlistentrytags"
+											value="#{massMailBean.in.attachProbandListEntryTags}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachprobandlistentrytags">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandlistentrytags_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandlistentrytags" />
+									
+																<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+
+							<h:outputText value="" />
+
+									
+									<h:outputLabel
+										for="attachecrfs"
+										value="#{massmaillabels.mass_mail_attachecrfs_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachecrfs"
+											value="#{massMailBean.in.attachEcrfs}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachecrfs">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachecrfs_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachecrfs" />
+									
+									
+																<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+
+							<h:outputText value="" />
+
+									
+									<h:outputLabel
+										for="attachprobandletter"
+										value="#{massmaillabels.mass_mail_attachprobandletter_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachprobandletter"
+											value="#{massMailBean.in.attachProbandLetter}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachprobandletter">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandletter_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandletter" />
+									
+																<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+
+							<h:outputText value="" />
+
+									
+									
+									<h:outputLabel
+										for="attachreimbursementspdf"
+										value="#{massmaillabels.mass_mail_attachreimbursementspdf_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachreimbursementspdf"
+											value="#{massMailBean.in.attachReimbursementsPdf}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="attachreimbursementspdf">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachreimbursementspdf_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachreimbursementspdf" />
+									
+																
+									
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:messages for="inputMessages" />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{massMailBean.created ? massMailBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{massMailBean.reset}"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									oncomplete="handleMassMailChanged(xhr, status, args)"
+									disabled="false"
+									update="mass_mail_input" />
+								<p:commandButton
+									rendered="#{!massMailBean.created}"
+									process="@this,mass_mail_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{massMailBean.add}"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									oncomplete="handleMassMailChanged(xhr, status, args)"
+									disabled="#{!massMailBean.createable}"
+									update="mass_mail_input" />
+								<p:commandButton
+									rendered="#{massMailBean.created}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="massMailAddConfirmation.show()"
+									disabled="#{!massMailBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+								<p:commandButton
+									process="@this,mass_mail_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{massMailBean.update}"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									oncomplete="handleMassMailChanged(xhr, status, args)"
+									disabled="#{!massMailBean.editable}"
+									update="mass_mail_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									onclick="massMailDeleteConfirmation.show()"
+									disabled="#{!massMailBean.removable}"
+									icon="ui-icon ui-icon-trash"
+									type="button" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{massMailBean.load}"
+									icon="ui-icon-refresh"
+									ajax="true"
+									oncomplete="handleMassMailChanged(xhr, status, args)"
+									disabled="#{!massMailBean.created}"
+									update="mass_mail_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGrid>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="alert"
+				widgetVar="massMailDeleteConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{massmaillabels.mass_mail_delete_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this"
+					value="#{labels.yes_button_label}"
+					actionListener="#{massMailBean.delete}"
+					onclick="massMailDeleteConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleMassMailChanged(xhr, status, args)"
+					update="mass_mail_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="massMailDeleteConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				widgetVar="massMailAddConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{massmaillabels.mass_mail_add_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton
+					process="@this,mass_mail_input"
+					id="addConfirmed"
+					value="#{labels.yes_button_label}"
+					actionListener="#{massMailBean.add}"
+					onclick="massMailAddConfirmation.hide()"
+					ajax="true"
+					oncomplete="handleMassMailChanged(xhr, status, args)"
+					update="mass_mail_input" />
+				<p:commandButton
+					value="#{labels.no_button_label}"
+					onclick="massMailAddConfirmation.hide()"
+					type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

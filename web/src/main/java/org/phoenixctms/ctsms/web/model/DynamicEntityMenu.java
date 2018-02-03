@@ -209,6 +209,71 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		});
 	}
 
+	public static DynamicEntityMenu getMassMailEntityMenu() {
+		return (new DynamicEntityMenu() {
+
+			@Override
+			protected DBModule getDbModule() {
+				return DBModule.MASS_MAIL_DB;
+			}
+
+			@Override
+			protected String getEntityHomeMenuItemLabel() {
+				return Messages.getString(MessageCodes.MASS_MAIL_HOME_MENU_ITEM_LABEL);
+			}
+
+			@Override
+			protected String getEntityHomeMenuItemOnClick() {
+				return "openMassMailHome()";
+			}
+
+			@Override
+			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail().getStatus().getNodeStyleClass();
+			}
+
+			@Override
+			protected long getEntityId(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail().getId();
+			}
+
+			@Override
+			protected String getHomeIcon() {
+				return "ctsms-icon-massmailhome";
+			}
+
+			@Override
+			protected JournalModule getJournalModule() {
+				return JournalModule.MASS_MAIL_JOURNAL;
+			}
+
+			@Override
+			protected String getOpenEntityJsName() {
+				return "openMassMail({0})";
+			}
+
+			@Override
+			protected String getOpenNewEntityJsName() {
+				return "openNewMassMail()";
+			}
+
+			@Override
+			protected String getOpenNewEntityMenuItemLabel() {
+				return Messages.getString(MessageCodes.MASS_MAIL_OPEN_NEW_MENU_ITEM_LABEL);
+			}
+
+			@Override
+			protected String getRecentEntityMenuItemLabel(JournalEntryOutVO journalEntry) {
+				return CommonUtil.massMailOutVOToString(journalEntry.getMassMail());
+			}
+
+			@Override
+			protected boolean hasEntity(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail() != null;
+			}
+		});
+	}
+
 	public static DynamicEntityMenu getProbandEntityMenu() {
 		return (new DynamicEntityMenu() {
 

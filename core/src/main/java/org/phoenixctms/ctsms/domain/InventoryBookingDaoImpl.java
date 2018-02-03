@@ -77,7 +77,7 @@ extends InventoryBookingDaoBase
 			Boolean isProbandAppointment, Boolean isRelevantForProbandAppointments,
 			Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments,
 			Boolean isTrialAppointment, Boolean isRelevantForTrialAppointments) throws Exception
-			{
+	{
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 
@@ -100,7 +100,7 @@ extends InventoryBookingDaoBase
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		bookingCriteria.addOrder(Order.asc("start"));
 		return bookingCriteria.list();
-			}
+	}
 
 	/**
 	 * @inheritDoc
@@ -123,12 +123,12 @@ extends InventoryBookingDaoBase
 	@Override
 	protected Collection<InventoryBooking> handleFindByCourseCalendarInterval(Long courseId, String calendar, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments)
 			throws Exception
-			{
+	{
 		Criteria bookingCriteria = createBookingCriteria();
 		applyCourseIntervalCriterion(bookingCriteria, courseId, from, to, isRelevantForCourseAppointments);
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		return bookingCriteria.list();
-			}
+	}
 
 	@Override
 	protected Collection<InventoryBooking> handleFindByCourseParticipantDepartmentCategoryInterval(
@@ -281,7 +281,7 @@ extends InventoryBookingDaoBase
 	@Override
 	protected Collection<InventoryBooking> handleFindByProbandCalendarInterval(Long probandId, String calendar, Timestamp from, Timestamp to,
 			Boolean isRelevantForProbandAppointments) throws Exception
-			{
+	{
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		if (probandId != null) {
@@ -293,7 +293,32 @@ extends InventoryBookingDaoBase
 		}
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		return bookingCriteria.list();
+	}
+
+	@Override
+	protected Collection<InventoryBooking> handleFindByProbandTrial(Long probandId, Long trialId, Boolean isRelevantForProbandAppointments, Boolean isRelevantForTrialAppointments,
+			boolean sort) throws Exception {
+		Criteria bookingCriteria = createBookingCriteria();
+		if (probandId != null) {
+			bookingCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
+		}
+		if (trialId != null) {
+			bookingCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (isRelevantForProbandAppointments != null || isRelevantForTrialAppointments != null) {
+			Criteria categoryCriteria = bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN);
+			if (isRelevantForProbandAppointments != null) {
+				categoryCriteria.add(Restrictions.eq("relevantForProbandAppointments", isRelevantForProbandAppointments.booleanValue()));
 			}
+			if (isRelevantForTrialAppointments != null) {
+				categoryCriteria.add(Restrictions.eq("relevantForTrialAppointments", isRelevantForTrialAppointments.booleanValue()));
+			}
+		}
+		if (sort) {
+			bookingCriteria.addOrder(Order.asc("start"));
+		}
+		return bookingCriteria.list();
+	}
 
 	/**
 	 * @inheritDoc

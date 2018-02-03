@@ -41,6 +41,25 @@
             ]]>
         </to>
     </mapping>
+    
+    <mapping>
+        <from><![CDATA[<!-- MassMailRecipient entity property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="massMailEmailSender" ref="massMailEmailSender"/>
+            ]]>
+        </to>
+    </mapping>    
+    
+	<mapping>
+        <from><![CDATA[<!-- MassMailService service property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="massMailEmailSender" ref="massMailEmailSender"/>
+                <property name="velocityEngine" ref="massMailVelocityEngine"/>
+            ]]>
+        </to>
+    </mapping>    
 
     <mapping>
         <from><![CDATA[<!-- applicationContext hibernateProperties merge-point -->]]></from>
@@ -132,6 +151,14 @@
             ]]>
         </to>
     </mapping>
+    <mapping>
+        <from><![CDATA[<!-- MassMailService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>    
     <mapping>
         <from><![CDATA[<!-- JournalService top-level interceptor merge-point -->]]></from>
         <to>

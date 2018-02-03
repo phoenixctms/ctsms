@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.Inventory;
+import org.phoenixctms.ctsms.domain.MassMail;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Proband;
@@ -136,6 +137,9 @@ public abstract class EntitySignature extends GraphEnumerator {
 			} else if (InputField.class.isAssignableFrom(entityClass)) {
 				InputField inputField = ((InputField) entity);
 				return new Serializable[] { inputField.getId(), inputField.getNameL10nKey(), inputField.getTitleL10nKey(), inputField.getFieldType() };
+			} else if (MassMail.class.isAssignableFrom(entityClass)) {
+				MassMail massMail = ((MassMail) entity);
+				return new Serializable[] { massMail.getId(), massMail.getName() };
 			} else if (File.class.isAssignableFrom(entityClass)) {
 				File file = ((File) entity);
 				return new Serializable[] {

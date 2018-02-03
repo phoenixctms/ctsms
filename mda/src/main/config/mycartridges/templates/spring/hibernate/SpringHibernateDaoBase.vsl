@@ -45,6 +45,8 @@ package $entity.packageName;
 import org.phoenixctms.ctsms.VOCacheContext;
 import org.hibernate.criterion.Order;
 import org.hibernate.LockMode;
+import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 /**
  * <p>
  * Base Spring DAO Class: is able to create, update, remove, load, and find
@@ -292,12 +294,18 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
     //}
 
     public void evict($rootEntityType entity) {
-        ((VOCacheContext) getPrincipal()).voMapEvict(${rootEntityType}.class, entity.getId());
+        VOCacheContext cache = (VOCacheContext) getPrincipal();
+        if (cache != null) {
+            cache.voMapEvict(${rootEntityType}.class, entity.getId());
+        }
     	this.getHibernateTemplate().evict(entity);
     }
 
     public void lock($rootEntityType entity, final LockMode lockMode) {
     	this.getHibernateTemplate().lock(entity, lockMode);
+    }
+    public void refresh($rootEntityType entity, final LockMode lockMode) {
+    	this.getHibernateTemplate().refresh(entity, lockMode);
     }
 
     //protected net.sf.ehcache.CacheManager cacheManager;
@@ -626,6 +634,10 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
                 "${entity.name}.update - '$argumentName' can not be null");
         }
         this.getHibernateTemplate().update($argumentName);
+        VOCacheContext cache = (VOCacheContext) getPrincipal();
+        if (cache != null) {
+            cache.voMapEvict(${entity.fullyQualifiedEntityName}.class, ${argumentName}.getId());
+        }
     }
 
 #if ($hibernateUtils.xmlPersistenceActive)
@@ -685,6 +697,29 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
             }${executeWithNativeSessionParameter});
     }
 
+    public void commitAndResumeTransaction() {
+        //http://forum.spring.io/forum/spring-projects/data/70262-how-to-have-multiple-commits-within-a-spring-transaction-with-hibernate
+		org.hibernate.Session session = getSession();
+
+		org.hibernate.Transaction existingTransaction = session.getTransaction();
+
+		existingTransaction.commit();
+		//Assert.isTrue("Transaction should have been committed.", existingTransaction.wasCommitted());
+
+		// Cannot reuse existing Hibernate transaction, so start a new one.
+		org.hibernate.Transaction newTransaction = session.beginTransaction();
+
+		// Now need to update Spring transaction infrastructure with new Hibernate transaction.
+		// The logic for this is based on SessionFactoryUtils.doGetSession
+		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource( getSessionFactory());
+		sessionHolder.setTransaction(newTransaction);
+		
+		VOCacheContext cache = (VOCacheContext) getPrincipal();
+		if (cache != null) {
+            cache.voMapClear();
+        }
+	}
+
     /**
      * {@inheritDoc}
      */
@@ -696,6 +731,10 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
                 "${entity.name}.remove - '$argumentName' can not be null");
         }
         this.getHibernateTemplate().delete($argumentName);
+        VOCacheContext cache = (VOCacheContext) getPrincipal();
+        if (cache != null) {
+            cache.voMapEvict(${entity.fullyQualifiedEntityName}.class, ${argumentName}.getId());
+        }
     }
 
 #if ($hibernateUtils.xmlPersistenceActive)

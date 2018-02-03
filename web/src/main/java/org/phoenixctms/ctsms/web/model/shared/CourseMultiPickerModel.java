@@ -7,7 +7,11 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class CourseMultiPickerModel extends MultiPickerModelBase<CourseOutVO> {
 
 	public CourseMultiPickerModel() {
-		super();
+		super(null);
+	}
+
+	public CourseMultiPickerModel(Integer limit) {
+		super(limit);
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.domain.InventoryCategoryDao;
 import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.InventoryStatusTypeDao;
 import org.phoenixctms.ctsms.domain.InventoryTagDao;
+import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.PrivacyConsentStatusTypeDao;
 import org.phoenixctms.ctsms.domain.ProbandCategoryDao;
 import org.phoenixctms.ctsms.domain.ProbandDao;
@@ -127,6 +128,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	private TrialDao trialDao;
 	private ProbandDao probandDao;
 	private InputFieldDao inputFieldDao;
+	private MassMailDao massMailDao;
 	private UserDao userDao;
 	private DepartmentDao departmentDao;
 	private InventoryCategoryDao inventoryCategoryDao;
@@ -332,6 +334,10 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		return inventoryTagDao;
 	}
 
+	public MassMailDao getMassMailDao() {
+		return massMailDao;
+	}
+
 	@Override
 	protected OperandConfiguration getOperandConfiguration(
 			CriterionInstantVO operator) {
@@ -357,6 +363,8 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 					}
 				case INPUT_FIELD_DB:
 					return CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(CheckIDUtil.checkInputFieldId(id, inputFieldDao)));
+				case MASS_MAIL_DB:
+					return CommonUtil.massMailOutVOToString(massMailDao.toMassMailOutVO(CheckIDUtil.checkMassMailId(id, massMailDao)));
 				case USER_DB:
 					return CommonUtil.userOutVOToString(userDao.toUserOutVO(CheckIDUtil.checkUserId(id, userDao)));
 				default:
@@ -540,10 +548,10 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	public TrialTypeDao getTrialTypeDao() {
 		return trialTypeDao;
 	}
-
 	public UserDao getUserDao() {
 		return userDao;
 	}
+
 	private String getValueObjectCriterionValueString(String entityName, Long id, String getNameMethodName) throws ServiceException {
 		if (id != null) {
 			Object dao;
@@ -568,12 +576,12 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		return PRETTY_PRINT_EMPTY_VALUE;
 	}
 
+
+
 	@Override
 	protected ValueType getValueType(CriterionInstantVO operand) {
 		return WhereTermValueType.VALUE_TYPE;
 	}
-
-
 
 	@Override
 	protected boolean isLeftParenthesis(CriterionInstantVO token) {
@@ -672,6 +680,10 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 
 	public void setInventoryTagDao(InventoryTagDao inventoryTagDao) {
 		this.inventoryTagDao = inventoryTagDao;
+	}
+
+	public void setMassMailDao(MassMailDao massMailDao) {
+		this.massMailDao = massMailDao;
 	}
 
 	public void setPrivacyConsentStatusTypeDao(PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao) {

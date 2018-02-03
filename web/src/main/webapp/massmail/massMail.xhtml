@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>mass mail tab</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/massMailEntityTemplate.xhtml">
+		<ui:param
+			name="title"
+			value="#{massMailBean.title}" />
+		<ui:param
+			name="windowName"
+			value="#{massMailBean.windowName}" />
+		<ui:define name="content">
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:tabView
+					id="tabView"
+					dynamic="true" cache="false"
+					widgetVar="massMailTabView"
+					onTabShow="handleMassMailTabChange(index.index())"
+					styleClass="ctsms-tabview">
+					<p:tab
+						id="massMailmain"
+						disabled="false"
+						titleStyleClass="#{!massMailBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{massmaillabels.mass_mail_main_tab_label}">
+						<ui:include src="/META-INF/includes/massmail/massMailMain.xhtml" />
+					</p:tab>
+					<p:tab
+						id="massmailrecipients"
+						disabled="#{!massMailBean.created}"
+						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT'))}">
+						<ui:include src="/META-INF/includes/massmail/massMailRecipient.xhtml" />
+					</p:tab>
+					<p:tab
+						id="massmailfiles"
+						disabled="#{!massMailBean.created}"
+						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT'))}">
+						<ui:include src="/META-INF/includes/massmail/massMailFile.xhtml" />
+					</p:tab>					
+					<p:tab
+						id="massmailjournal"
+						disabled="#{!massMailBean.created}"
+						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT'))}">
+						<ui:include src="/META-INF/includes/massmail/massMailJournal.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
+import org.phoenixctms.ctsms.util.OmittedFields;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
@@ -30,10 +31,14 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 
 public class Authenticator {
 
+	private static String obfuscateWrongPassword(String password) {
+		return OmittedFields.OBFUSCATED_STRING;
+	}
 	private PasswordDao passwordDao;
 	private UserDao userDao;
 	private JournalEntryDao journalEntryDao;
 	private LdapService ldapService1;
+
 	private LdapService ldapService2;
 
 	public Authenticator() {
@@ -120,20 +125,20 @@ public class Authenticator {
 						ServiceUtil.logSystemMessage(user, passwordVO.getUser(), now, CoreUtil.getUser(), SystemMessageCodes.LOCAL_PASSWORD_CREATED, passwordVO, null,
 								journalEntryDao);
 					} else {
-						throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_LOCAL_PASSWORD, auth.getLocalPassword());
+						throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_LOCAL_PASSWORD, obfuscateWrongPassword(auth.getLocalPassword()));
 					}
 				} else {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.LOCAL_PASSWORD_REQUIRED);
 				}
 			} else {
-				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_LOCAL_PASSWORD, auth.getLocalPassword());
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_LOCAL_PASSWORD, obfuscateWrongPassword(auth.getLocalPassword()));
 			}
 			if (logon) {
 				setSuccessfullLogon(lastPassword, auth, now);
 			}
 			return lastPassword;
 		} else {
-			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_REMOTE_PASSWORD, auth.getPassword());
+			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_REMOTE_PASSWORD, obfuscateWrongPassword(auth.getPassword()));
 		}
 	}
 
@@ -175,7 +180,7 @@ public class Authenticator {
 			if (logon) {
 				lastPassword.setWrongPasswordAttemptsSinceLastSuccessfulLogon(lastPassword.getWrongPasswordAttemptsSinceLastSuccessfulLogon() + 1);
 			}
-			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_PASSWORD, auth.getPassword());
+			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_PASSWORD, obfuscateWrongPassword(auth.getPassword()));
 		}
 		userContext.setPlainPassword(auth.getPassword());
 		if (logon) {

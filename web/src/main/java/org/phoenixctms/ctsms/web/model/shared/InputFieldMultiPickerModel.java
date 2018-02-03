@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class InputFieldMultiPickerModel extends MultiPickerModelBase<InputFieldOutVO> {
 
 	public InputFieldMultiPickerModel() {
-		super();
+		super(null);
 	}
 
 	@Override

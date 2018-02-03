@@ -1,6 +1,9 @@
 package org.phoenixctms.ctsms.util;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -9,6 +12,28 @@ import org.apache.commons.cli.Options;
 
 public final class DBToolOptions {
 
+	private enum LockId {
+		DEFAULT_LOCK_ID("dbtool.init"),
+		NOTIFICATION_LOCK_ID("dbtool.notification"),
+		//OPT_XY_LOCK_ID("dbtool." + XY_OPT),
+		MASS_MAIL_LOCK_ID("dbtool.massmail"),
+		VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf");
+
+		private final String fileNamePrefix;
+
+		private LockId(final String fileNamePrefix) {
+			this.fileNamePrefix = fileNamePrefix;
+		}
+
+
+
+		@Override
+		public String toString() {
+			return fileNamePrefix;
+		}
+
+
+	}
 	public static final String VARIABLE_PERIOD_OPT = "vp";
 	public static final String PROBAND_LIST_STATUS_LOG_LEVEL_OPT = "ll";
 	public static final String VARIABLE_PERIOD_EXPLICIT_DAYS_OPT = "ed";
@@ -43,6 +68,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_MIME_INPUT_FIELD_IMAGE_OPT = "imifi";
 	public static final String IMPORT_MIME_STAFF_IMAGE_OPT = "imsi";
 	public static final String IMPORT_MIME_PROBAND_IMAGE_OPT = "impi";
+	public static final String IMPORT_MIME_MASS_MAIL_OPT = "immm";
 	public static final String IMPORT_ZIP_OPT = "iz";
 	public static final String IMPORT_STREET_OPT = "is";
 	public static final String IMPORT_TITLE_OPT = "it";
@@ -71,6 +97,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_COURSE_DOCUMENT_FILES_OPT = "icdf";
 	public static final String IMPORT_TRIAL_DOCUMENT_FILES_OPT = "itdf";
 	public static final String IMPORT_PROBAND_DOCUMENT_FILES_OPT = "ipdf";
+	public static final String IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT = "immdf";
 	// public static final String IMPORT_INPUT_FIELD_DOCUMENT_FILES_OPT = "iifdf";
 	public static final String REMOVE_INVENTORY_DOCUMENT_FILES_OPT = "ridf";
 	public static final String REMOVE_STAFF_DOCUMENT_FILES_OPT = "rsdf";
@@ -78,8 +105,10 @@ public final class DBToolOptions {
 	public static final String REMOVE_TRIAL_DOCUMENT_FILES_OPT = "rtdf";
 	public static final String REMOVE_PROBAND_DOCUMENT_FILES_OPT = "rpdf";
 	// public static final String REMOVE_INPUT_FIELD_DOCUMENT_FILES_OPT = "rifdf";
+	public static final String REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT = "rmmdf";
 	public static final String PREPARE_NOTIFICATIONS_OPT = "pn";
 	public static final String SEND_NOTIFICATIONS_OPT = "sn";
+	public static final String SEND_MASS_MAILS_OPT = "smm";
 	public static final String REMOVE_PROBANDS_OPT = "rp";
 	public static final String DELETE_INVENTORY_OPT = "idi";
 	public static final String PERFORM_INVENTORY_DEFERRED_DELETE_OPT = "pdidi";
@@ -97,6 +126,8 @@ public final class DBToolOptions {
 	public static final String PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT = "pdtdef";
 	public static final String DELETE_PROBAND_OPT = "pdp";
 	public static final String PERFORM_PROBAND_DEFERRED_DELETE_OPT = "pdpdp";
+	public static final String DELETE_MASS_MAIL_OPT = "mmdmm";
+	public static final String PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT = "pdmmdmm";
 	public static final String DELETE_USER_OPT = "udu";
 	public static final String PERFORM_USER_DEFERRED_DELETE_OPT = "pdudu";
 	public static final String DELETE_INPUT_FIELD_OPT = "ifdif";
@@ -125,6 +156,7 @@ public final class DBToolOptions {
 	public static final String PURGE_INPUT_FIELD_JOURNAL = "pifj";
 	public static final String PURGE_USER_JOURNAL = "puj";
 	public static final String PURGE_CRITERIA_JOURNAL = "pscj";
+	public static final String PURGE_MASS_MAIL_JOURNAL = "pmmj";
 	public static final String EXPORT_CRITERIA_RESULT_OPT = "ecr";
 	public static final String EXPORT_PROBAND_LIST_OPT = "epl";
 	public static final String EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT = "eccpl";
@@ -145,156 +177,181 @@ public final class DBToolOptions {
 	public static final String EXPORT_ECRF_JOURNAL_OPT = "eej";
 	public static final String EXPORT_PROBAND_JOURNAL_OPT = "epj";
 	public static final String EXPORT_INPUT_FIELD_JOURNAL_OPT = "eifj";
+	public static final String EXPORT_MASS_MAIL_JOURNAL_OPT = "emmj";
 	public static final String EXPORT_USER_JOURNAL_OPT = "euj";
 	public static final String EXPORT_CRITERIA_JOURNAL_OPT = "escj";
 	public static final String EXPORT_PROBAND_APPOINTMENTS_OPT = "epa";
 	private final static HashMap<String, Option> taskOptionMap = new HashMap<String, Option>();
 	private final static HashMap<String, Option> optionalOptionMap = new HashMap<String, Option>();
+	private final static HashMap<String, LinkedHashSet<LockId>> taskLockIdsMap = new HashMap<String, LinkedHashSet<LockId>>();
 	public final static Options options = new Options();
 	static {
+		LockId[] allLockIds = LockId.values();
 		OptionGroup tasks = new OptionGroup();
-		tasks.addOption(registerTaskOption(CLEAN_OPT, "clear", "clear database", 0));
-		tasks.addOption(registerTaskOption(INIT_OPT, "init", "initialize db by insertig required setup records", 0));
+		tasks.addOption(registerTaskOption(CLEAN_OPT, "clear", "clear database", 0, allLockIds));
+		tasks.addOption(registerTaskOption(INIT_OPT, "init", "initialize db by insertig required setup records", 0, allLockIds));
 		// tasks.addOption(registerTaskOption(CLEAR_CRITERIA_TABLES_OPT,"clear_criteria_tables","clear criteria tables",0));
 		// tasks.addOption(registerTaskOption(INIT_CRITERIA_TABLES_OPT,"init_criteria_tables","initialize criteria tables",0));
-		tasks.addOption(registerTaskOption(IMPORT_CRITERION_PROPERTIES_OPT, "import_criterion_properties", "import criterion properties tables", 1));
+		tasks.addOption(registerTaskOption(IMPORT_CRITERION_PROPERTIES_OPT, "import_criterion_properties", "import criterion properties tables", 1, allLockIds));
 		tasks.addOption(registerTaskOption(SCAN_MISSING_OPT, "scan_missing", "scan for missing external files", 0));
 		tasks.addOption(registerTaskOption(SCAN_ORPHANED_OPT, "scan_orphaned", "scan for orphaned external files", 0));
-		tasks.addOption(registerTaskOption(DELETE_MISSING_OPT, "delete_missing", "scan for missing external files and delete references from DB", 0));
-		tasks.addOption(registerTaskOption(DELETE_ORPHANED_OPT, "delete_orphaned", "scan for orphaned external files and delete them", 0));
-		tasks.addOption(registerTaskOption(IMPORT_BANK_OPT, "import_bank", "import bank identifications from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_COUNTRY_OPT, "import_country", "import country names from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_TITLE_OPT, "import_title", "import titles from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_STREET_OPT, "import_street", "import street names from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_ZIP_OPT, "import_zip", "import zip codes from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_INVENTORY_OPT, "import_mime_inventory", "import inventory file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_OPT, "import_mime_staff", "import staff file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_COURSE_OPT, "import_mime_course", "import course file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_TRIAL_OPT, "import_mime_trial", "import trial file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_OPT, "import_mime_proband", "import proband file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_INPUT_FIELD_IMAGE_OPT, "import_mime_input_field_image", "import input field image file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_IMAGE_OPT, "import_mime_staff_image", "import input staff image file mime types from csv/text file", 1));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_IMAGE_OPT, "import_mime_input_field_image", "import proband image file mime types from csv/text file", 1));
+		tasks.addOption(registerTaskOption(DELETE_MISSING_OPT, "delete_missing", "scan for missing external files and delete references from DB", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_ORPHANED_OPT, "delete_orphaned", "scan for orphaned external files and delete them", 0, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_BANK_OPT, "import_bank", "import bank identifications from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_COUNTRY_OPT, "import_country", "import country names from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_TITLE_OPT, "import_title", "import titles from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_STREET_OPT, "import_street", "import street names from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_ZIP_OPT, "import_zip", "import zip codes from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_INVENTORY_OPT, "import_mime_inventory", "import inventory file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_OPT, "import_mime_staff", "import staff file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_COURSE_OPT, "import_mime_course", "import course file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_TRIAL_OPT, "import_mime_trial", "import trial file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_OPT, "import_mime_proband", "import proband file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_INPUT_FIELD_IMAGE_OPT, "import_mime_input_field_image", "import input field image file mime types from csv/text file", 1,
+				allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_IMAGE_OPT, "import_mime_staff_image", "import input staff image file mime types from csv/text file", 1,
+				allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_IMAGE_OPT, "import_mime_input_field_image", "import proband image file mime types from csv/text file", 1,
+				allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_MASS_MAIL_OPT, "import_mime_mass_mail", "import mass mail file mime types from csv/text file", 1, allLockIds));
 		tasks.addOption(registerTaskOption(HELP_OPT, "help", "print help", 0));
 		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT, "change_department_password_interactive", "change department password (interactive)", 0));
 		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_INTERACTIVE_OPT, "create_department_interactive", "create new department (interactive)", 0));
 		tasks.addOption(registerTaskOption(CREATE_USER_INTERACTIVE_OPT, "create_user_interactive", "create new user (interactive)", 0));
-		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_OPT, "change_department_password", "change department password", 0));
-		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_USER_OPT, "change_department_password_user", "change department password (user authentication)", 0));
-		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_OPT, "create_department", "create new department", 0));
-		tasks.addOption(registerTaskOption(CREATE_USER_OPT, "create_user", "create new user", 0));
-		tasks.addOption(registerTaskOption(LOAD_DEMO_DATA_OPT, "load_demo_data", "load db with demo data records", 0));
+		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_OPT, "change_department_password", "change department password", 0, allLockIds));
+		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_USER_OPT, "change_department_password_user", "change department password (user authentication)", 0,
+				allLockIds));
+		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_OPT, "create_department", "create new department", 0, allLockIds));
+		tasks.addOption(registerTaskOption(CREATE_USER_OPT, "create_user", "create new user", 0, allLockIds));
+		tasks.addOption(registerTaskOption(LOAD_DEMO_DATA_OPT, "load_demo_data", "load db with demo data records", 0, allLockIds));
 		//tasks.addOption(registerTaskOption(CREATE_DEMO_INPUT_FIELDS_OPT, "create_demo_input_fields", "create demo input fields", 0));
-		tasks.addOption(registerTaskOption(IMPORT_INVENTORY_DOCUMENT_FILES_OPT, "import_inventory_document_files", "import documents and files for an inventory entity", 1));
-		tasks.addOption(registerTaskOption(IMPORT_STAFF_DOCUMENT_FILES_OPT, "import_staff_documents_files", "import documents and files for a staff entity", 1));
-		tasks.addOption(registerTaskOption(IMPORT_COURSE_DOCUMENT_FILES_OPT, "import_course_documents_files", "import documents and files for a course entity", 1));
-		tasks.addOption(registerTaskOption(IMPORT_TRIAL_DOCUMENT_FILES_OPT, "import_trial_documents_files", "import documents and files for a trial entity", 1));
-		tasks.addOption(registerTaskOption(IMPORT_PROBAND_DOCUMENT_FILES_OPT, "import_proband_documents_files", "import documents and files for a proband entity", 1));
+		tasks.addOption(registerTaskOption(IMPORT_INVENTORY_DOCUMENT_FILES_OPT, "import_inventory_document_files", "import documents and files for an inventory entity", 1,
+				allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_STAFF_DOCUMENT_FILES_OPT, "import_staff_documents_files", "import documents and files for a staff entity", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_COURSE_DOCUMENT_FILES_OPT, "import_course_documents_files", "import documents and files for a course entity", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_TRIAL_DOCUMENT_FILES_OPT, "import_trial_documents_files", "import documents and files for a trial entity", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_PROBAND_DOCUMENT_FILES_OPT, "import_proband_documents_files", "import documents and files for a proband entity", 1,
+				allLockIds));
 		// tasks.addOption(registerTaskOption(IMPORT_INPUT_FIELD_DOCUMENT_FILES_OPT,"import_input_field_documents_files","import documents and files for an input field entity",1));
-		tasks.addOption(registerTaskOption(REMOVE_INVENTORY_DOCUMENT_FILES_OPT, "remove_inventory_documents_files", "remove all files of an inventory entity", 0));
-		tasks.addOption(registerTaskOption(REMOVE_STAFF_DOCUMENT_FILES_OPT, "remove_staff_documents_files", "remove all files of a staff entity", 0));
-		tasks.addOption(registerTaskOption(REMOVE_COURSE_DOCUMENT_FILES_OPT, "remove_course_documents_files", "remove all files of a course entity", 0));
-		tasks.addOption(registerTaskOption(REMOVE_TRIAL_DOCUMENT_FILES_OPT, "remove_trial_documents_files", "remove all files of a trial entity", 0));
-		tasks.addOption(registerTaskOption(REMOVE_PROBAND_DOCUMENT_FILES_OPT, "remove_proband_documents_files", "remove all files of a proband entity", 0));
+		tasks.addOption(registerTaskOption(IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT, "import_mass_mail_documents_files", "import documents and files for a mass mail entity", 1,
+				allLockIds));
+		tasks.addOption(registerTaskOption(REMOVE_INVENTORY_DOCUMENT_FILES_OPT, "remove_inventory_documents_files", "remove all files of an inventory entity", 0, allLockIds));
+		tasks.addOption(registerTaskOption(REMOVE_STAFF_DOCUMENT_FILES_OPT, "remove_staff_documents_files", "remove all files of a staff entity", 0, allLockIds));
+		tasks.addOption(registerTaskOption(REMOVE_COURSE_DOCUMENT_FILES_OPT, "remove_course_documents_files", "remove all files of a course entity", 0, allLockIds));
+		tasks.addOption(registerTaskOption(REMOVE_TRIAL_DOCUMENT_FILES_OPT, "remove_trial_documents_files", "remove all files of a trial entity", 0, allLockIds));
+		tasks.addOption(registerTaskOption(REMOVE_PROBAND_DOCUMENT_FILES_OPT, "remove_proband_documents_files", "remove all files of a proband entity", 0, allLockIds));
 		// tasks.addOption(registerTaskOption(REMOVE_INPUT_FIELD_DOCUMENT_FILES_OPT,"remove_input_field_documents_files","remove all files of a proband entity",0));
-		tasks.addOption(registerTaskOption(PREPARE_NOTIFICATIONS_OPT, "prepare_notifications", "prepare notifications", 0));
-		tasks.addOption(registerTaskOption(SEND_NOTIFICATIONS_OPT, "send_notifications", "send notifications", 0));
-		tasks.addOption(registerTaskOption(REMOVE_PROBANDS_OPT, "remove_probands", "remove probands pending for auto-delete", 0));
-		tasks.addOption(registerTaskOption(DELETE_INVENTORY_OPT, "delete_inventory", "delete inventory", 0));
-		tasks.addOption(registerTaskOption(PERFORM_INVENTORY_DEFERRED_DELETE_OPT, "perform_deferred_delete_inventory", "perform deferred delete of inventory items", 0));
-		tasks.addOption(registerTaskOption(DELETE_STAFF_OPT, "delete_staff", "delete staff", 0));
-		tasks.addOption(registerTaskOption(PERFORM_STAFF_DEFERRED_DELETE_OPT, "perform_deferred_delete_staff", "perform deferred delete of staff items", 0));
-		tasks.addOption(registerTaskOption(DELETE_COURSE_OPT, "delete_course", "delete course", 0));
-		tasks.addOption(registerTaskOption(PERFORM_COURSE_DEFERRED_DELETE_OPT, "perform_deferred_delete_course", "perform deferred delete of course items", 0));
-		tasks.addOption(registerTaskOption(DELETE_TRIAL_OPT, "delete_trial", "delete trial", 0));
-		tasks.addOption(registerTaskOption(PERFORM_TRIAL_DEFERRED_DELETE_OPT, "perform_deferred_delete_trial", "perform deferred delete of trial items", 0));
-		tasks.addOption(registerTaskOption(DELETE_INQUIRY_OPT, "delete_inquiry", "delete inquiry", 0));
-		tasks.addOption(registerTaskOption(PERFORM_INQUIRY_DEFERRED_DELETE_OPT, "perform_deferred_delete_inquiry", "perform deferred delete of inquiry items", 0));
-		tasks.addOption(registerTaskOption(DELETE_ECRF_OPT, "delete_ecrf", "delete eCRF", 0));
-		tasks.addOption(registerTaskOption(PERFORM_ECRF_DEFERRED_DELETE_OPT, "perform_deferred_delete_ecrf", "perform deferred delete of eCRF items", 0));
-		tasks.addOption(registerTaskOption(DELETE_ECRF_FIELD_OPT, "delete_ecrf_field", "delete eCRF field", 0));
-		tasks.addOption(registerTaskOption(PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT, "perform_deferred_delete_ecrf_field", "perform deferred delete of eCRF field items", 0));
-		tasks.addOption(registerTaskOption(DELETE_PROBAND_OPT, "delete_proband", "delete proband", 0));
-		tasks.addOption(registerTaskOption(PERFORM_PROBAND_DEFERRED_DELETE_OPT, "perform_deferred_delete_proband", "perform deferred delete of proband items", 0));
-		tasks.addOption(registerTaskOption(DELETE_USER_OPT, "delete_user", "delete user", 0));
-		tasks.addOption(registerTaskOption(PERFORM_USER_DEFERRED_DELETE_OPT, "perform_deferred_delete_user", "perform deferred delete of user items", 0));
-		tasks.addOption(registerTaskOption(DELETE_INPUT_FIELD_OPT, "delete_input_field", "delete input field", 0));
-		tasks.addOption(registerTaskOption(PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT, "perform_deferred_delete_input_field", "perform deferred delete of input field items", 0));
-		tasks.addOption(registerTaskOption(DELETE_SELECTION_SET_VALUE_OPT, "delete_selection_set_value", "delete selection set value", 0));
+		tasks.addOption(registerTaskOption(REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT, "remove_mass_mail_documents_files", "remove all files of a mass mail entity", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PREPARE_NOTIFICATIONS_OPT, "prepare_notifications", "prepare notifications", 0, LockId.NOTIFICATION_LOCK_ID));
+		tasks.addOption(registerTaskOption(SEND_NOTIFICATIONS_OPT, "send_notifications", "send notifications", 0, LockId.NOTIFICATION_LOCK_ID));
+		tasks.addOption(registerTaskOption(SEND_MASS_MAILS_OPT, "send_mass_mails", "send mass mails", 0, LockId.MASS_MAIL_LOCK_ID));
+		tasks.addOption(registerTaskOption(REMOVE_PROBANDS_OPT, "remove_probands", "remove probands pending for auto-delete", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_INVENTORY_OPT, "delete_inventory", "delete inventory", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_INVENTORY_DEFERRED_DELETE_OPT, "perform_deferred_delete_inventory", "perform deferred delete of inventory items", 0,
+				allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_STAFF_OPT, "delete_staff", "delete staff", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_STAFF_DEFERRED_DELETE_OPT, "perform_deferred_delete_staff", "perform deferred delete of staff items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_COURSE_OPT, "delete_course", "delete course", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_COURSE_DEFERRED_DELETE_OPT, "perform_deferred_delete_course", "perform deferred delete of course items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_TRIAL_OPT, "delete_trial", "delete trial", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_TRIAL_DEFERRED_DELETE_OPT, "perform_deferred_delete_trial", "perform deferred delete of trial items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_INQUIRY_OPT, "delete_inquiry", "delete inquiry", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_INQUIRY_DEFERRED_DELETE_OPT, "perform_deferred_delete_inquiry", "perform deferred delete of inquiry items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_ECRF_OPT, "delete_ecrf", "delete eCRF", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_ECRF_DEFERRED_DELETE_OPT, "perform_deferred_delete_ecrf", "perform deferred delete of eCRF items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_ECRF_FIELD_OPT, "delete_ecrf_field", "delete eCRF field", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT, "perform_deferred_delete_ecrf_field", "perform deferred delete of eCRF field items", 0,
+				allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_PROBAND_OPT, "delete_proband", "delete proband", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_PROBAND_DEFERRED_DELETE_OPT, "perform_deferred_delete_proband", "perform deferred delete of proband items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_MASS_MAIL_OPT, "delete_mass_mail", "delete mass mail", 0, allLockIds));
+		tasks.addOption(
+				registerTaskOption(PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT, "perform_deferred_delete_mass_mail", "perform deferred delete of mass mail items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_USER_OPT, "delete_user", "delete user", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_USER_DEFERRED_DELETE_OPT, "perform_deferred_delete_user", "perform deferred delete of user items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_INPUT_FIELD_OPT, "delete_input_field", "delete input field", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT, "perform_deferred_delete_input_field", "perform deferred delete of input field items", 0,
+				allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_SELECTION_SET_VALUE_OPT, "delete_selection_set_value", "delete selection set value", 0, allLockIds));
 		tasks.addOption(registerTaskOption(PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT, "perform_deferred_delete_selection_set_value",
-				"perform deferred delete of selection set value items", 0));
-		tasks.addOption(registerTaskOption(DELETE_CRITERIA_OPT, "delete_criteria", "delete criteria", 0));
-		tasks.addOption(registerTaskOption(PERFORM_CRITERIA_DEFERRED_DELETE_OPT, "perform_deferred_delete_criteria", "perform deferred delete of criteria items", 0));
+				"perform deferred delete of selection set value items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(DELETE_CRITERIA_OPT, "delete_criteria", "delete criteria", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PERFORM_CRITERIA_DEFERRED_DELETE_OPT, "perform_deferred_delete_criteria", "perform deferred delete of criteria items", 0,
+				allLockIds));
 		tasks.addOption(registerTaskOption(SCAN_ALL_DEFERRED_DELETE_OPT, "scan_deferred_delete_all", "scan deferred delete of all entity items", 0));
-		tasks.addOption(registerTaskOption(PERFORM_ALL_DEFERRED_DELETE_OPT, "perform_deferred_delete_all", "perform deferred delete of all items", 0));
-		tasks.addOption(registerTaskOption(IMPORT_PERMISSION_DEFINITIONS_OPT, "import_permission_definitions", "import permission definitions from csv/text file", 1));
+		tasks.addOption(registerTaskOption(PERFORM_ALL_DEFERRED_DELETE_OPT, "perform_deferred_delete_all", "perform deferred delete of all items", 0, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_PERMISSION_DEFINITIONS_OPT, "import_permission_definitions", "import permission definitions from csv/text file", 1,
+				allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT, "export_permission_definition_template",
-				"export permission definition template as csv/text file", 1));
-		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, "initialize_proband_image_fields", "initialize proband image fields", 0));
+				"export permission definition template as csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, "initialize_proband_image_fields", "initialize proband image fields", 0, allLockIds));
 		tasks.addOption(registerTaskOption(INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT, "initialize_encrypted_trial_documents_files",
-				"initialize encrypted trial documents and files", 0));
-		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "initialize proband comment fields", 0));
+				"initialize encrypted trial documents and files", 0, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "initialize proband comment fields", 0, allLockIds));
 		tasks.addOption(registerTaskOption(INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, "initialize_journal_system_message_codes", "initialize journal system message code fields",
-				0));
-		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1));
-		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1));
-		tasks.addOption(registerTaskOption(IMPORT_OPS_SYSTEMATICS_OPT, "import_ops_systematics", "import ops systematics", 1));
-		tasks.addOption(registerTaskOption(IMPORT_OPS_CODES_OPT, "import_ops_codes", "import ops codes", 1));
-		tasks.addOption(registerTaskOption(PURGE_INVENTORY_JOURNAL, "purge_inventory_journal", "purge old inventory journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_STAFF_JOURNAL, "purge_staff_journal", "purge old staff journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_COURSE_JOURNAL, "purge_course_journal", "purge old course journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_TRIAL_JOURNAL, "purge_trial_journal", "purge old trial journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_PROBAND_JOURNAL, "purge_proband_journal", "purge old proband journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_INPUT_FIELD_JOURNAL, "purge_input_field_journal", "purge old input field journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_USER_JOURNAL, "purge_user_journal", "purge old user journal records", 0));
-		tasks.addOption(registerTaskOption(PURGE_CRITERIA_JOURNAL, "purge_criteria_journal", "purge old criteria journal records", 0));
+				0, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_OPS_SYSTEMATICS_OPT, "import_ops_systematics", "import ops systematics", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_OPS_CODES_OPT, "import_ops_codes", "import ops codes", 1, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_INVENTORY_JOURNAL, "purge_inventory_journal", "purge old inventory journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_STAFF_JOURNAL, "purge_staff_journal", "purge old staff journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_COURSE_JOURNAL, "purge_course_journal", "purge old course journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_TRIAL_JOURNAL, "purge_trial_journal", "purge old trial journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_PROBAND_JOURNAL, "purge_proband_journal", "purge old proband journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_INPUT_FIELD_JOURNAL, "purge_input_field_journal", "purge old input field journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_USER_JOURNAL, "purge_user_journal", "purge old user journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_CRITERIA_JOURNAL, "purge_criteria_journal", "purge old criteria journal records", 0, allLockIds));
+		tasks.addOption(registerTaskOption(PURGE_MASS_MAIL_JOURNAL, "purge_mass_mail_journal", "purge old mass mail journal records", 0, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_RESULT_OPT, "export_criteria_result",
-				"export search results", 1));
+				"export search results", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_PROBAND_LIST_OPT, "export_proband_list",
-				"export a trial's proband list", 1));
+				"export a trial's proband list", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT, "export_criteria_course_participant_lists",
-				"export course participant lists by criteria", 1));
+				"export course participant lists by criteria", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_CVS_OPT, "export_criteria_cvs",
-				"export CVs by criteria", 1));
+				"export CVs by criteria", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_PROBAND_LETTERS_OPT, "export_criteria_proband_letters",
-				"export proband letters by criteria", 1));
+				"export proband letters by criteria", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_ECRF_PDFS_OPT, "export_ecrf_pdfs",
-				"export eCRFs by trial", 1));
+				"export eCRFs by trial", 1, allLockIds));
 		// "export eCRFs by proband list entry", 1));
 		tasks.addOption(registerTaskOption(EXPORT_AUDIT_TRAIL_OPT, "export_audit_trail",
-				"export eCRF audit trail", 1));
+				"export eCRF audit trail", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_INPUT_FIELDS_OPT, "import_input_fields",
-				"import input fields and selection set values", 1));
+				"import input fields and selection set values", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_INPUT_FIELD_OPT, "export_input_field",
-				"export input field and selection set values", 1));
+				"export input field and selection set values", 1, allLockIds));
 
 		tasks.addOption(registerTaskOption(IMPORT_ECRFS_OPT, "import_ecrfs",
-				"import eCRFs, eCRF fields, input fields and selection set values", 1));
+				"import eCRFs, eCRF fields, input fields and selection set values", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_ECRFS_OPT, "export_ecrfs",
-				"export eCRFs, eCRF fields, input fields and selection set values", 1));
+				"export eCRFs, eCRF fields, input fields and selection set values", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ASPS_OPT, "import_asps",
-				"import asp and substances", 1));
-		tasks.addOption(registerTaskOption(VALIDATE_PENDING_ECRFS_OPT, "validate_pending_ecrfs", "validate pending ecrfs", 0));
+				"import asp and substances", 1, allLockIds));
+		tasks.addOption(registerTaskOption(VALIDATE_PENDING_ECRFS_OPT, "validate_pending_ecrfs", "validate pending ecrfs", 0, LockId.VALIDATE_ECRF_LOCK_ID));
 		tasks.addOption(registerTaskOption(EXPORT_INVENTORY_JOURNAL_OPT, "export_inventory_journal",
-				"export inventory journal", 1));
+				"export inventory journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_STAFF_JOURNAL_OPT, "export_staff_journal",
-				"export staff journal", 1));
+				"export staff journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_COURSE_JOURNAL_OPT, "export_course_journal",
-				"export course journal", 1));
+				"export course journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_TRIAL_JOURNAL_OPT, "export_trial_journal",
-				"export trial journal", 1));
+				"export trial journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_ECRF_JOURNAL_OPT, "export_ecrf_journal",
-				"export ecrf journal of a trial", 1));
+				"export ecrf journal of a trial", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_PROBAND_JOURNAL_OPT, "export_proband_journal",
-				"export proband journal", 1));
+				"export proband journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_INPUT_FIELD_JOURNAL_OPT, "export_input_field_journal",
-				"export input field journal", 1));
+				"export input field journal", 1, allLockIds));
+		tasks.addOption(registerTaskOption(EXPORT_MASS_MAIL_JOURNAL_OPT, "export_mass_mail_journal",
+				"export mass mail journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_USER_JOURNAL_OPT, "export_user_journal",
-				"export user journal", 1));
+				"export user journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_JOURNAL_OPT, "export_criteria_journal",
-				"export criteria journal", 1));
+				"export criteria journal", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_PROBAND_APPOINTMENTS_OPT, "export_proband_appointments",
-				"export proband inventory bookings of trials", 1));
+				"export proband inventory bookings of trials", 1, allLockIds));
 		tasks.setRequired(true);
 		options.addOptionGroup(tasks);
 		options.addOption(registerOptionalOption(FORCE_OPT, "force", "skip confirmation promt", 0));
@@ -328,7 +385,14 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(USER_LANG_OPT, "user_lang", "user language", 1));
 	}
 
-	public static Option getTask(String opt) {
+
+	public static Option getTaskAndLockProcess(String opt) {
+		Iterator<LockId> lockIdsIt = taskLockIdsMap.get(opt).iterator();
+		while (lockIdsIt.hasNext()) {
+			ExecUtil.lockProcess(MessageFormat.format(
+					ExecSettings.getString(ExecSettingCodes.DBTOOL_LOCK_FILE_NAME,
+							ExecDefaultSettings.DBTOOL_LOCK_FILE_NAME), lockIdsIt.next().toString()));
+		}
 		return taskOptionMap.get(opt);
 	}
 
@@ -342,13 +406,23 @@ public final class DBToolOptions {
 		return option;
 	}
 
-	private static Option registerTaskOption(String opt, String longOpt, String description, int numArgs) {
+
+	private static Option registerTaskOption(String opt, String longOpt, String description, int numArgs, LockId... lockIds) {
 		Option option = OptionBuilder.create(opt);
 		option.setRequired(false);
 		option.setDescription("task: " + description);
 		option.setLongOpt(longOpt);
 		option.setArgs(numArgs);
 		taskOptionMap.put(opt, option);
+		LinkedHashSet<LockId> taskLockIdMap = new LinkedHashSet<LockId>();
+		if (lockIds != null) {
+			for (int i = 0; i < lockIds.length; i++) {
+				if (lockIds[i] != null) {
+					taskLockIdMap.add(lockIds[i]);
+				}
+			}
+		}
+		taskLockIdsMap.put(opt, taskLockIdMap);
 		return option;
 	}
 

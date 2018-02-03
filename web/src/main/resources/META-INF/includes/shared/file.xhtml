@@ -15,6 +15,12 @@
 			name="selectFileByTreeNode"
 			actionListener="#{fileBean.selectFileByNode()}"
 			update="#{namingContainer}:file_filters,#{namingContainer}:file_inputs,#{namingContainer}:messages,#{namingContainer}:toolbar" />
+		<p:remoteCommand
+			process="@this"
+			name="uploadComplete"
+			actionListener="#{fileBean.handleFileUploaded()}"
+			oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+			update="#{namingContainer}:file_filters,#{namingContainer}:file_treetable,#{namingContainer}:file_tree,#{namingContainer}:file_inputs,#{namingContainer}:toolbar" /> <!-- ,#{namingContainer}:messages  -->			
 		<h:panelGrid
 			columns="2"
 			cellpadding="0"
@@ -31,9 +37,9 @@
 					rowClasses="ctsms-file-treetable-filter-row,ctsms-file-treetable-row">
 					<h:panelGrid
 						id="file_filters"
-						columns="14"
+						columns="17"
 						cellpadding="0"
-						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-delete-pdf-files-button-column,ctsms-aggregated-pdf-files-button-column">
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-delete-pdf-files-button-column,ctsms-aggregated-pdf-files-button-column">
 						<h:outputLabel
 							for="filelogicalpath_filter"
 							value="#{labels.file_filelogicalpath_filter_label}" />
@@ -141,6 +147,7 @@
 							<p:selectOneRadio
 								id="active_filter"
 								layout="lineDirection"
+								styleClass="ui-widget-content ui-corner-all"
 								value="#{fileBean.activeFilter}">
 								<f:selectItem
 									itemLabel="#{labels.file_active_filter_all_option_label}"
@@ -165,6 +172,41 @@
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="active_filter" />
+						
+						<h:outputLabel
+							for="public_filter"
+							value="#{labels.file_public_filter_label}" />
+						<h:panelGroup>
+							<p:selectOneRadio
+								id="public_filter"
+								layout="lineDirection"
+								styleClass="ui-widget-content ui-corner-all"
+								value="#{fileBean.publicFilter}">
+								<f:selectItem
+									itemLabel="#{labels.file_public_filter_all_option_label}"
+									itemValue="#{applicationScopeBean.noSelectionValue}" />
+								<f:selectItem
+									itemLabel="#{labels.file_public_filter_active_option_label}"
+									itemValue="true" />
+								<f:selectItem
+									itemLabel="#{labels.file_public_filter_inactive_option_label}"
+									itemValue="false" />
+								<f:converter converterId="ctsms.Tristate" />
+								<p:ajax
+									update="file_treetable,file_tree,delete_files_btn"
+									listener="#{fileBean.handlePublicFilterChanged}" />
+							</p:selectOneRadio>
+							<p:tooltip
+								rendered="#{enableTooltips}"
+								for="public_filter">
+								<h:outputText
+									value="#{labels.file_public_filter_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="public_filter" />
+						
+						
 						<p:commandButton
 							immediate="true"
 							ajax="false"
@@ -202,7 +244,7 @@
 									name="iconClass"
 									value="ctsms-mimetype-unkown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
 							</ui:include>
-							<h:outputText value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,36) : labels.encrypted_file_label}" />
+							<h:outputText value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,56) : labels.encrypted_file_label}" />
 						</p:column>
 						<p:column style="width:32px;">
 							<f:facet name="header">
@@ -230,11 +272,12 @@
 							</f:facet>
 							<h:outputText value="#{applicationScopeBean.byteCountToString(filefolder.size)}" />
 						</p:column>
-						<p:column style="width:100px;">
+						<p:column style="width:140px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.file_treetable_user_column}" />
 							</f:facet>
-							<h:outputText value="#{filefolder.modifiedUser.identity.lastName}" />
+							<!-- <h:outputText value="#{empty filefolder.modifiedUser.identity ? filefolder.modifiedUser.name : filefolder.modifiedUser.identity.lastName}" /> -->
+							<h:outputText value="#{applicationScopeBean.getIdentityString(filefolder.modifiedUser)}" />
 						</p:column>
 						<p:column style="width:106px;">
 							<f:facet name="header">
@@ -381,7 +424,6 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="fileactive" />
-							
 							<h:outputLabel
 								for="filepublic"
 								value="#{labels.file_public_label}" />
@@ -389,7 +431,7 @@
 								<p:selectBooleanCheckbox
 									id="filepublic"
 									value="#{fileBean.in.publicFile}">
-									<p:ajax />
+									<p:ajax update="publicfilelinksignup,publicfilelink" />
 								</p:selectBooleanCheckbox>
 								<p:tooltip
 									rendered="#{enableTooltips}"
@@ -400,12 +442,38 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="filepublic" />
-							
 							<h:outputLabel
-								styleClass="#{fileBean.useFileEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : (markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : '')}"
+								rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}"
+								for="publicfilelinksignup"
+								value="#{labels.file_public_link_signup_label}" />
+							<h:outputLink
+							    styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
+								id="publicfilelinksignup"
+								rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}"
+								disabled="#{not fileBean.out.publicFile}"
+								value="#{fileBean.publicFileSignupUrl}"
+								target="_blank">
+								<h:outputText value="#{fileBean.publicFileSignupUrl}" />
+							</h:outputLink>
+							<p:message rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}" for="publicfilelinksignup" />
+							<h:outputLabel
+								rendered="#{fileBean.created and not fileBean.useFileEncryption}"
+								for="publicfilelink"
+								value="#{labels.file_public_link_label}" />
+							<h:outputLink
+							    styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
+								id="publicfilelink"
+								rendered="#{fileBean.created and not fileBean.useFileEncryption}"
+								disabled="#{not fileBean.out.publicFile}"
+								value="#{fileBean.publicFileUrl}"
+								target="_blank">
+								<h:outputText value="#{fileBean.publicFileUrl}" />
+							</h:outputLink>
+							<p:message rendered="#{fileBean.created and not fileBean.useFileEncryption}" for="publicfilelink" />							
+							<h:outputLabel
 								rendered="#{fileBean.created}"
 								for="filedownload"
-								value="#{fileBean.useFileEncryption ? '' : (markUnEncrypted ? labels.noencryption_warning_short_label : '')}#{labels.file_download_label}" />
+								value="#{labels.file_download_label}" />
 							<p:commandLink
 								immediate="true"
 								id="filedownload"
@@ -540,13 +608,14 @@
 					id="fileUpload"
 					fileUploadListener="#{fileBean.handleFileUpload}"
 					mode="advanced"
-					update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar"
+					update="messages"
+					oncomplete="uploadComplete()"
 					multiple="true"
 					auto="true"
 					label="#{labels.choose_file_button_label}"
-					styleClass="ctsms-upload-control"
+					styleClass="#{fileBean.useFileEncryption ? 'ctsms-upload-control-encryption' : (markUnEncrypted ? 'ctsms-upload-control-noencryption' : 'ctsms-upload-control')}"
 					sizeLimit="#{fileBean.getUploadSizeLimit()}"
-					allowTypes="#{fileBean.allowTypes}" />
+					allowTypes="#{fileBean.allowTypes}" /> <!-- update="file_filters,file_treetable,file_tree,file_inputs,messages,toolbar" -->
 			</h:panelGrid>
 		</h:panelGrid>
 			<p:confirmDialog

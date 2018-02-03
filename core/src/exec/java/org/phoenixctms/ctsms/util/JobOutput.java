@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.mail.Address;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -20,47 +21,44 @@ import javax.mail.util.ByteArrayDataSource;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.EmailAttachmentVO;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class JobOutput {
 
-	static class EmailAttachment {
-
-		private byte[] data;
-		private String mimeType;
-		private String fileName;
-
-		public EmailAttachment(byte[] data, String mimeType, String fileName) {
-			super();
-			this.data = data;
-			this.mimeType = mimeType;
-			this.fileName = fileName;
-		}
-
-		public byte[] getData() {
-			return data;
-		}
-
-		public String getFileName() {
-			return fileName;
-		}
-
-		public String getMimeType() {
-			return mimeType;
-		}
-	}
+	// static class EmailAttachment {
+	//
+	// private byte[] data;
+	// private String mimeType;
+	// private String fileName;
+	//
+	// public EmailAttachment(byte[] data, String mimeType, String fileName) {
+	// super();
+	// this.data = data;
+	// this.mimeType = mimeType;
+	// this.fileName = fileName;
+	// }
+	//
+	// public byte[] getData() {
+	// return data;
+	// }
+	//
+	// public String getFileName() {
+	// return fileName;
+	// }
+	//
+	// public String getMimeType() {
+	// return mimeType;
+	// }
+	// }
 
 	private final static String EMAIL_ENCODING = "UTF-8";
-	private Date start;
-	private StringBuilder output;
 	private final static String LINE_FORMAT = "{0}";
 	private final static String LINE_FORMAT_WITH_TIMESTAMP = "{0}: {1}";
 	private final static boolean ALWAYS_PRINT_TIMESTAMP = false;
 	private final static String DEFAULT_EMAIL_ADDRESS_SEPARATOR = ";";
-
 	private final static Pattern emailAddressSeparatorRegexp = Pattern.compile(DEFAULT_EMAIL_ADDRESS_SEPARATOR + "|,| ");
-
 	private static StringBuilder getEmailRecipients(CommandLine line, boolean send) {
 		StringBuilder recipients = new StringBuilder();
 		if (line.hasOption(DBToolOptions.EMAIL_RECIPIENTS_OPT)) {
@@ -78,7 +76,10 @@ public class JobOutput {
 		return recipients;
 	}
 
-	private ArrayList<EmailAttachment> attachments;
+	private Date start;
+
+	private StringBuilder output;
+	private ArrayList<EmailAttachmentVO> attachments;
 
 	private JavaMailSender mailSender;
 
@@ -87,7 +88,7 @@ public class JobOutput {
 	}
 
 	public void addEmailAttachment(byte[] data, String mimeType, String fileName) {
-		attachments.add(new EmailAttachment(data, mimeType, fileName));
+		attachments.add(new EmailAttachmentVO(data, mimeType, fileName));
 	}
 
 	public void addLinkOrEmailAttachment(String fileName, byte[] documentData, String mimeType, String documentFileName) throws Exception {
@@ -109,6 +110,18 @@ public class JobOutput {
 		}
 	}
 
+	protected String getEmailEncoding() {
+		String encoding = null;
+		try {
+			encoding = ((org.springframework.mail.javamail.JavaMailSenderImpl) mailSender).getDefaultEncoding();
+		} catch (Exception e) {
+		}
+		if (CommonUtil.isEmptyString(encoding)) {
+			encoding = EMAIL_ENCODING;
+		}
+		return encoding;
+	}
+
 	public String getOutput() {
 		return output.toString();
 	}
@@ -117,10 +130,10 @@ public class JobOutput {
 		return start;
 	}
 
-	private int prepareEmail(MimeMessage mimeMessage, String subject, String emailAddresses) throws Exception {
-		int toCount = 0;
+	private void prepareEmail(MimeMessage mimeMessage, String subject, String emailAddresses) throws Exception {
+		// int toCount = 0;
 		if (!CommonUtil.isEmptyString(emailAddresses)) {
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, EMAIL_ENCODING);
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEmailEncoding());
 			mimeMessageHelper.setSubject(subject);
 			mimeMessageHelper.setText(output.toString());
 			mimeMessageHelper.setFrom(Settings.getEmailExecFromAddress(), Settings.getEmailExecFromName());
@@ -128,11 +141,11 @@ public class JobOutput {
 			for (int i = 0; i < addresses.length; i++) {
 				if (!CommonUtil.isEmptyString(addresses[i])) {
 					mimeMessageHelper.addTo(addresses[i].trim());
-					toCount++;
+					// toCount++;
 				}
 			}
 		}
-		return toCount;
+		// return toCount;
 	}
 
 	public void printExecutionTime(boolean error) {
@@ -183,7 +196,7 @@ public class JobOutput {
 	}
 
 	public void reset() {
-		attachments = new ArrayList<EmailAttachment>();
+		attachments = new ArrayList<EmailAttachmentVO>();
 		start = new Date();
 		output = new StringBuilder();
 	}
@@ -194,18 +207,20 @@ public class JobOutput {
 			StringBuilder recipients = getEmailRecipients(line, send);
 			if (recipients.length() > 0) {
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
-				int toCount = prepareEmail(mimeMessage, MessageFormat.format(subjectFormat, task.getDescription()), recipients.toString());
+				prepareEmail(mimeMessage, MessageFormat.format(subjectFormat, task.getDescription()), recipients.toString());
+				Address[] to = mimeMessage.getRecipients(MimeMessage.RecipientType.TO);
+				int toCount = to != null ? to.length : 0;
 				if (toCount > 0) {
 					if (attachments.size() > 0) {
 						Multipart multipart = new MimeMultipart();
-						Iterator<EmailAttachment> it = attachments.iterator();
+						Iterator<EmailAttachmentVO> it = attachments.iterator();
 						MimeBodyPart messageBodyPart = new MimeBodyPart();
-						messageBodyPart.setText(output.toString(), EMAIL_ENCODING);
+						messageBodyPart.setText(output.toString(), getEmailEncoding());
 						multipart.addBodyPart(messageBodyPart);
 						while (it.hasNext()) {
-							EmailAttachment attachment = it.next();
+							EmailAttachmentVO attachment = it.next();
 							messageBodyPart = new MimeBodyPart();
-							DataSource source = new ByteArrayDataSource(attachment.getData(), attachment.getMimeType());
+							DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getMimeType());
 							messageBodyPart.setDataHandler(new DataHandler(source));
 							messageBodyPart.setFileName(attachment.getFileName());
 							multipart.addBodyPart(messageBodyPart);

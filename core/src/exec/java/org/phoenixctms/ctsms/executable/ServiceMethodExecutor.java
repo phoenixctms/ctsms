@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InventoryDao;
+import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.StaffDao;
 import org.phoenixctms.ctsms.domain.TrialDao;
@@ -30,6 +31,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
+import org.phoenixctms.ctsms.service.massmail.MassMailService;
 import org.phoenixctms.ctsms.service.proband.ProbandService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.service.shared.JournalService;
@@ -66,6 +68,7 @@ import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
@@ -150,6 +153,8 @@ public class ServiceMethodExecutor {
 	@Autowired
 	private ProbandService probandService;
 	@Autowired
+	private MassMailService massMailService;
+	@Autowired
 	private UserService userService;
 	@Autowired
 	private InputFieldService inputFieldService;
@@ -171,6 +176,8 @@ public class ServiceMethodExecutor {
 	private InquiryDao inquiryDao;
 	@Autowired
 	private ProbandDao probandDao;
+	@Autowired
+	private MassMailDao massMailDao;
 	@Autowired
 	private InputFieldDao inputFieldDao;
 	@Autowired
@@ -220,6 +227,11 @@ public class ServiceMethodExecutor {
 	public void deleteInventory(AuthenticationVO auth, Long id) throws Exception {
 		InventoryOutVO inventory = inventoryService.deleteInventory(auth, id, false, true, null, null);
 		jobOutput.println("inventory ID " + Long.toString(inventory.getId()) + " '" + CommonUtil.inventoryOutVOToString(inventory) + "' removed");
+	}
+
+	public void deleteMassMail(AuthenticationVO auth, Long id) throws Exception {
+		MassMailOutVO massMail = massMailService.deleteMassMail(auth, id, false, true);
+		jobOutput.println("mass mail ID " + Long.toString(massMail.getId()) + " removed");
 	}
 
 	public void deleteProband(AuthenticationVO auth, Long id) throws Exception {
@@ -343,6 +355,10 @@ public class ServiceMethodExecutor {
 				result = searchService.exportUser(auth, criteria, criterions, null);
 				type = "user";
 				break;
+			case MASS_MAIL_DB:
+				result = searchService.exportMassMail(auth, criteria, criterions, null);
+				type = "massmail";
+				break;
 			default:
 				result = null;
 				type = null;
@@ -383,6 +399,17 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INVENTORY_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("inventory ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportMassMailJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.MASS_MAIL_JOURNAL, id);
+		if (result != null) {
+			jobOutput.println("mass mail ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
 			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
 			return result.getRowCount();
 		} else {
@@ -479,6 +506,7 @@ public class ServiceMethodExecutor {
 				performEcrfDeferredDelete(auth, remove) +
 				performEcrfFieldDeferredDelete(auth, remove) +
 				performProbandDeferredDelete(auth, remove) +
+				performMassMailDeferredDelete(auth, remove) +
 				performInputFieldDeferredDelete(auth, remove) +
 				performSelectionSetValueDeferredDelete(auth, remove) +
 				performUserDeferredDelete(auth, remove) +
@@ -511,6 +539,10 @@ public class ServiceMethodExecutor {
 
 	public long performInventoryDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
 		return performDeferredDelete(auth, remove, inventoryDao, this, "deleteInventory", "inventory");
+	}
+
+	public long performMassMailDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
+		return performDeferredDelete(auth, remove, massMailDao, this, "deleteMassMail", "mass mail");
 	}
 
 	public long performProbandDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {

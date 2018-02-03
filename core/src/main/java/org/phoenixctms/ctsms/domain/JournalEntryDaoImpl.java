@@ -44,6 +44,7 @@ import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalEntryInVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
+import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
@@ -147,6 +148,9 @@ extends JournalEntryDaoBase
 					case INPUT_FIELD_JOURNAL:
 						journalCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
 						break;
+					case MASS_MAIL_JOURNAL:
+						journalCriteria.add(Restrictions.eq("massMail.id", id.longValue()));
+						break;
 					default:
 				}
 			}
@@ -229,6 +233,23 @@ extends JournalEntryDaoBase
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setInventory(inventory);
 		inventory.addJournalEntries(journalEntry);
+		return this.create(journalEntry);
+	}
+
+	@Override
+	protected JournalEntry handleAddSystemMessage(MassMail massMail, Timestamp now, User modifiedUser, String systemMessageCode, Object[] titleArgs,
+			Object[] commentArgs) throws Exception {
+		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
+		journalEntry.setSystemMessageModule(JournalModule.MASS_MAIL_JOURNAL);
+		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
+			return null;
+		}
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
+		journalEntry.setRealTimestamp(now);
+		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
+		journalEntry.setMassMail(massMail);
+		massMail.addJournalEntries(journalEntry);
 		return this.create(journalEntry);
 	}
 
@@ -355,6 +376,11 @@ extends JournalEntryDaoBase
 					break;
 				case INPUT_FIELD_JOURNAL:
 					break;
+				case MASS_MAIL_JOURNAL:
+					if (entityDepartmentId != null) {
+						criteriaMap.createCriteria("massMail").add(Restrictions.eq("department.id", entityDepartmentId.longValue()));
+					}
+					break;
 				default:
 			}
 		}
@@ -476,6 +502,12 @@ extends JournalEntryDaoBase
 			case INPUT_FIELD_JOURNAL:
 				subQuery.add(Restrictions.eqProperty("journalEntry1.inputField", "journalEntry0.inputField"));
 				break;
+			case MASS_MAIL_JOURNAL:
+				subQuery.add(Restrictions.eqProperty("journalEntry1.massMail", "journalEntry0.massMail"));
+				if (entityDepartmentId != null) {
+					criteriaMap.createCriteria("massMail").add(Restrictions.eq("department.id", entityDepartmentId.longValue()));
+				}
+				break;
 			default:
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
@@ -552,6 +584,13 @@ extends JournalEntryDaoBase
 			case INPUT_FIELD_JOURNAL:
 				property = "inputField";
 				break;
+			case MASS_MAIL_JOURNAL:
+				property = "massMail";
+				if (entityDepartmentId != null) {
+					entityCriteria = journalCriteria.createCriteria(property, CriteriaSpecification.INNER_JOIN);
+					entityCriteria.add(Restrictions.eq("department.id", entityDepartmentId.longValue()));
+				}
+				break;
 			default:
 		}
 		journalCriteria.add(Restrictions.isNotNull(property));
@@ -591,6 +630,9 @@ extends JournalEntryDaoBase
 						break;
 					case INPUT_FIELD_JOURNAL:
 						id = journalEntry.getInputField().getId();
+						break;
+					case MASS_MAIL_JOURNAL:
+						id = journalEntry.getMassMail().getId();
 						break;
 					default:
 				}
@@ -672,6 +714,11 @@ extends JournalEntryDaoBase
 					break;
 				case INPUT_FIELD_JOURNAL:
 					break;
+				case MASS_MAIL_JOURNAL:
+					if (entityDepartmentId != null) {
+						journalCriteria.createCriteria("massMail", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", entityDepartmentId.longValue()));
+					}
+					break;
 				default:
 			}
 		}
@@ -710,6 +757,8 @@ extends JournalEntryDaoBase
 					return (Long) journalCriteria.add(Restrictions.eq("inputField.id", journalEntry.getInputField().getId())).uniqueResult();
 				case CRITERIA_JOURNAL:
 					return (Long) journalCriteria.add(Restrictions.eq("criteria.id", journalEntry.getCriteria().getId())).uniqueResult();
+				case MASS_MAIL_JOURNAL:
+					return (Long) journalCriteria.add(Restrictions.eq("massMail.id", journalEntry.getMassMail().getId())).uniqueResult();
 				default:
 			}
 		}
@@ -754,6 +803,7 @@ extends JournalEntryDaoBase
 		Long probandId = source.getProbandId();
 		Long criteriaId = source.getCriteriaId();
 		Long inputFieldId = source.getInputFieldId();
+		Long massMailId = source.getMassMailId();
 		JournalCategory category = null;
 		if (categoryId != null) {
 			category = this.getJournalCategoryDao().load(categoryId);
@@ -849,6 +899,17 @@ extends JournalEntryDaoBase
 				inputField.removeJournalEntries(target);
 			}
 		}
+		if (massMailId != null) {
+			MassMail massMail = this.getMassMailDao().load(massMailId);
+			target.setMassMail(massMail);
+			massMail.addJournalEntries(target);
+		} else if (copyIfNull) {
+			MassMail massMail = target.getMassMail();
+			target.setMassMail(null);
+			if (massMail != null) {
+				massMail.removeJournalEntries(target);
+			}
+		}
 		if (CommonUtil.getUseJournalEncryption(target.getSystemMessageModule(), category == null ? null : category.getModule())) {
 			try {
 				if (copyIfNull || source.getTitle() != null) {
@@ -909,6 +970,7 @@ extends JournalEntryDaoBase
 		ProbandOutVO probandVO = source.getProband();
 		CriteriaOutVO criteriaVO = source.getCriteria();
 		InputFieldOutVO inputFieldVO = source.getInputField();
+		MassMailOutVO massMailVO = source.getMassMail();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (categoryVO != null) {
 			target.setCategory(this.getJournalCategoryDao().journalCategoryVOToEntity(categoryVO));
@@ -1001,6 +1063,17 @@ extends JournalEntryDaoBase
 			target.setInputField(null);
 			if (inputField != null) {
 				inputField.removeJournalEntries(target);
+			}
+		}
+		if (massMailVO != null) {
+			MassMail massMail = this.getMassMailDao().massMailOutVOToEntity(massMailVO);
+			target.setMassMail(massMail);
+			massMail.addJournalEntries(target);
+		} else if (copyIfNull) {
+			MassMail massMail = target.getMassMail();
+			target.setMassMail(null);
+			if (massMail != null) {
+				massMail.removeJournalEntries(target);
 			}
 		}
 		if (modifiedUserVO != null) {
@@ -1099,6 +1172,7 @@ extends JournalEntryDaoBase
 		Proband proband = source.getProband();
 		Criteria criteria = source.getCriteria();
 		InputField inputField = source.getInputField();
+		MassMail massMail = source.getMassMail();
 		if (category != null) {
 			target.setCategoryId(category.getId());
 		}
@@ -1125,6 +1199,9 @@ extends JournalEntryDaoBase
 		}
 		if (inputField != null) {
 			target.setInputFieldId(inputField.getId());
+		}
+		if (massMail != null) {
+			target.setMassMailId(massMail.getId());
 		}
 		if (CommonUtil.getUseJournalEncryption(source.getSystemMessageModule(), category == null ? null : category.getModule())) {
 			try {
@@ -1172,6 +1249,7 @@ extends JournalEntryDaoBase
 		Proband proband = source.getProband();
 		Criteria criteria = source.getCriteria();
 		InputField inputField = source.getInputField();
+		MassMail massMail = source.getMassMail();
 		User modifiedUser = source.getModifiedUser();
 		if (category != null) {
 			target.setCategory(this.getJournalCategoryDao().toJournalCategoryVO(category));
@@ -1199,6 +1277,9 @@ extends JournalEntryDaoBase
 		}
 		if (inputField != null) {
 			target.setInputField(this.getInputFieldDao().toInputFieldOutVO(inputField));
+		}
+		if (massMail != null) {
+			target.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
 		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));

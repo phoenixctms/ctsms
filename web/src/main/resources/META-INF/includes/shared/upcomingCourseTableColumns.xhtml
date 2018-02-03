@@ -40,7 +40,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{courselabels.admin_upcoming_course_overview_upcomingcourse_list_course_category_column}" />
 			</f:facet>
-			<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+			<ui:include src="listIcon.xhtml">
 				<ui:param
 					name="label"
 					value="#{course.vo.category.name}" />
@@ -58,7 +58,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{courselabels.admin_upcoming_course_overview_upcomingcourse_list_course_trial_column}" />
 			</f:facet>
-			<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
+			<ui:include src="listIcon.xhtml">
 				<ui:param
 					name="label"
 					value="#{course.vo.trial.name}" />
@@ -74,7 +74,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{courselabels.admin_upcoming_course_overview_upcomingcourse_list_course_self_registration_column}" />
 			</f:facet>
-			<ui:include src="/META-INF/includes/shared/listBooleanIcon.xhtml">
+			<ui:include src="listBooleanIcon.xhtml">
 				<ui:param
 					name="value"
 					value="#{course.vo.selfRegistration}" />

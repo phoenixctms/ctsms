@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>mass mail attachment links</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:outputLabel
+			rendered="#{message.decrypted}"
+			value="#{massmaillabels.mass_mail_recipient_attachments_label}" />
+		<h:panelGroup rendered="#{message.decrypted}" style="white-space:normal;">
+			<ui:repeat
+				value="#{message.attachments}"
+				var="attachment"
+				varStatus="attachmentVarStatus">
+				<p:commandLink
+					immediate="true"
+					ajax="false"
+					title="#{labels.file_download_tooltip} #{attachment.fileName}">
+					<h:outputText value="#{attachment.fileName}" />
+					<p:fileDownload value="#{recipientBean.getEmailAttachmentStreamedContent(attachment)}" />
+				</p:commandLink>#{not attachmentVarStatus.last ? '; ' : ''}
+							</ui:repeat>
+		</h:panelGroup>
+	</ui:composition>
+</h:body>
+</html>

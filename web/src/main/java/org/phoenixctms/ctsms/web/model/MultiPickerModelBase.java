@@ -19,13 +19,15 @@ public abstract class MultiPickerModelBase<VO> {
 	private HashMap<Long, Integer> indexMap;
 	private Long lastPickedId;
 	private String lastPickedIds;
+	private Integer limit;
 
-	protected MultiPickerModelBase() {
+	protected MultiPickerModelBase(Integer limit) {
 		idvoMap = new HashMap<Long, IDVO>();
 		selection = new ArrayList<IDVO>();
 		indexMap = new HashMap<Long, Integer>();
 		lastPickedId = null;
 		lastPickedIds = null;
+		this.limit = limit;
 	}
 
 	public void addId(Long id) {
@@ -33,11 +35,15 @@ public abstract class MultiPickerModelBase<VO> {
 			if (!idvoMap.containsKey(id)) {
 				VO vo = loadSelectionElement(id);
 				if (vo != null) {
-					IDVO idvo = new IDVO(vo);
-					idvo.setRowIndex(WebUtil.FACES_INITIAL_ROW_INDEX + selection.size());
-					idvoMap.put(id, idvo);
-					indexMap.put(id, selection.size());
-					selection.add(idvo);
+					if (limit == null || selection.size() < limit) {
+						IDVO idvo = new IDVO(vo);
+						idvo.setRowIndex(WebUtil.FACES_INITIAL_ROW_INDEX + selection.size());
+						idvoMap.put(id, idvo);
+						indexMap.put(id, selection.size());
+						selection.add(idvo);
+					} else {
+						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.IDS_PICKED_MAX_LIMIT, limit.toString());
+					}
 				} else {
 					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.ID_NOT_PICKED, Long.toString(id));
 				}

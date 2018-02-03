@@ -17,7 +17,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -155,8 +154,7 @@ import org.springframework.core.io.ClassPathResource;
 public class DemoDataProvider {
 
 	private enum InputFields {
-		HEIGHT("Körpergröße"),
-		WEIGHT("Körpergewicht"),
+		HEIGHT("Körpergröße"), WEIGHT("Körpergewicht"),
 		BMI("Body Mass Index"),
 		DIABETES_YN("Diabetes J/N"),
 		DIABETES_TYPE("Diabetes Typ"),
@@ -191,8 +189,7 @@ public class DemoDataProvider {
 		GESTATION("schwanger, stillen etc."),
 		GESTATION_TYPE("schwanger, stillen etc. Auswahl"),
 		CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
-		CONTRACEPTION("Empfängnisverhütung"),
-		CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"),
+		CONTRACEPTION("Empfängnisverhütung"), CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"),
 		ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
 		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"),
 		PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
@@ -257,8 +254,7 @@ public class DemoDataProvider {
 		TYP_1_DIABETES("Typ 1 Diabetes"),
 		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
 		TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION("Typ 2 Diabetes ohne Insulineigenproduktion"),
-		DIAET("Diät"),
-		SPORTLICHE_BETAETIGUNG("Sportliche Betätigung"),
+		DIAET("Diät"), SPORTLICHE_BETAETIGUNG("Sportliche Betätigung"),
 		ORALE_ANTIDIABETIKA("Orale Antidiabetika"),
 		INSULINTHERAPIE("Insulintherapie"),
 		CIGARETTES_UNTER_5("Unter 5"),
@@ -341,6 +337,7 @@ public class DemoDataProvider {
 		ALL_TRIALS("all trials"),
 		ALL_PROBANDS("all probands"),
 		ALL_INPUTFIELDS("all inputfields"),
+		ALL_MASSMAILS("all_massmails"),
 		ALL_USERS("all users"),
 		SUBJECTS_1("subjects_1");
 
@@ -440,17 +437,17 @@ public class DemoDataProvider {
 
 	private final class Stroke {
 
+		private final static String INK_VALUE_CHARSET = "UTF8";
 		public String color;
 		public String path;
 		public String strokesId;
 		public String value;
 		public boolean valueSet;
-		private final static String INK_VALUE_CHARSET = "UTF8";
 
 		private Stroke() {
 			color = null;
 			path = null;
-			strokesId = UUID.randomUUID().toString();
+			strokesId = CommonUtil.generateUUID();
 			value = null;
 			valueSet = false;
 		}
@@ -499,6 +496,13 @@ public class DemoDataProvider {
 		}
 	}
 
+	private static final int FILE_COUNT_PER_STAFF = 5;
+	private static final int FILE_COUNT_PER_ORGANISATION = 5;
+	private static final int FILE_COUNT_PER_COURSE = 10;
+	private static final int FILE_COUNT_PER_INVENTORY = 10;
+	private static final int FILE_COUNT_PER_PROBAND = 3;
+	private static final int FILE_COUNT_PER_TRIAL = 500;
+	private static final boolean CREATE_FILES = false;
 	@Autowired
 	private DepartmentDao departmentDao;
 	@Autowired
@@ -568,13 +572,6 @@ public class DemoDataProvider {
 	private int year;
 	private int departmentCount;
 	private int usersPerDepartmentCount; // more users than persons intended
-	private static final int FILE_COUNT_PER_STAFF = 5;
-	private static final int FILE_COUNT_PER_ORGANISATION = 5;
-	private static final int FILE_COUNT_PER_COURSE = 10;
-	private static final int FILE_COUNT_PER_INVENTORY = 10;
-	private static final int FILE_COUNT_PER_PROBAND = 3;
-	private static final int FILE_COUNT_PER_TRIAL = 500;
-	private static final boolean CREATE_FILES = false;
 	private JobOutput jobOutput;
 	private ApplicationContext context;
 
@@ -652,6 +649,7 @@ public class DemoDataProvider {
 			modifiedUser.setTheme(user.getTheme());
 			modifiedUser.setLocked(user.isLocked());
 			modifiedUser.setShowTooltips(user.isShowTooltips());
+			modifiedUser.setDecrypt(user.isDecrypt());
 			modifiedUser.setAuthMethod(user.getAuthMethod());
 			modifiedUser.setVersion(user.getVersion());
 			userVO = userService.updateUser(getRandomAuth(user.getDepartment().getId()), modifiedUser, null);
@@ -1117,16 +1115,19 @@ public class DemoDataProvider {
 			case PROBAND_DOCUMENT:
 				newFile.setProbandId(id);
 				break;
+			case MASS_MAIL_DOCUMENT:
+				newFile.setMassMailId(id);
+				break;
 			default:
 		}
 		newFile.setModule(module);
 		if (folders.size() == 0) {
 			folders.add(CommonUtil.LOGICAL_PATH_SEPARATOR);
-			folders.addAll(fileService.getFileFolders(auth, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, false, null, null));
+			folders.addAll(fileService.getFileFolders(auth, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, false, null, null, null));
 		}
 		StringBuilder logicalPath = new StringBuilder(getRandomElement(folders));
 		if (getRandomBoolean(50)) {
-			logicalPath.append(UUID.randomUUID().toString());
+			logicalPath.append(CommonUtil.generateUUID());
 			logicalPath.append(CommonUtil.LOGICAL_PATH_SEPARATOR);
 			folders.add(logicalPath.toString());
 		}
@@ -1136,7 +1137,7 @@ public class DemoDataProvider {
 		blankPDF.setOutput(pdfStream);
 		blankPDF.render();
 		FileStreamInVO newFileStream = new FileStreamInVO();
-		StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
+		StringBuilder fileName = new StringBuilder(CommonUtil.generateUUID());
 		fileName.append(".");
 		fileName.append(CoreUtil.PDF_FILENAME_EXTENSION);
 		newFileStream.setFileName(fileName.toString());
@@ -2313,6 +2314,7 @@ public class DemoDataProvider {
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
 		newUser.setLocked(false);
 		newUser.setShowTooltips(false);
+		newUser.setDecrypt(true);
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
 		PasswordInVO newPassword = new PasswordInVO();
 		ServiceUtil.applyLogonLimitations(newPassword);
@@ -2378,6 +2380,9 @@ public class DemoDataProvider {
 				case ALL_USERS:
 					return createCriteria(a, DBModule.USER_DB,
 							new ArrayList<SearchCriterion>(), name, "This query lists all users.", true);
+				case ALL_MASSMAILS:
+					return createCriteria(a, DBModule.MASS_MAIL_DB,
+							new ArrayList<SearchCriterion>(), name, "This query lists all mass mails.", true);
 				case SUBJECTS_1:
 					return createCriteria(a, DBModule.PROBAND_DB,
 							new ArrayList<SearchCriterion>() {
@@ -2705,7 +2710,7 @@ public class DemoDataProvider {
 							put(InputFieldValues.KNEE_LEFT, new Stroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
 						}
 					},
-					0, 28, "Mark up to 28 joints.");
+							0, 28, "Mark up to 28 joints.");
 				case VAS:
 					return createSketchField(auth, name, inquiryQuestionsCategory, "Visual Analogue Scale:", "",
 							"vas.png", new TreeMap<InputFieldValues, Stroke>() {
@@ -2730,7 +2735,7 @@ public class DemoDataProvider {
 							}
 						}
 					},
-					1, 1, "Mark exactly one position.");
+							1, 1, "Mark exactly one position.");
 				case ESR:
 					return createFloatField(auth, name, inquiryQuestionsCategory, "Erythrocyte Sedimentation Rate (mm/h):", "", null, 1.0f, 30.0f,
 							"Erythrocyte sedimentation rate requires a decimal value between 1.0 and 30.0 mm/h.");
@@ -3006,6 +3011,10 @@ public class DemoDataProvider {
 			case USER_DB:
 				result = searchService.searchUser(auth, newCriteria, newCriterions, maxInstances, psf);
 				type = "user";
+				break;
+			case MASS_MAIL_DB:
+				result = searchService.searchMassMail(auth, newCriteria, newCriterions, psf);
+				type = "massmail";
 				break;
 			default:
 				result = null;

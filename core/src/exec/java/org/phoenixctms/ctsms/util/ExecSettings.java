@@ -73,6 +73,7 @@ public final class ExecSettings {
 		bundleBasename = null;
 	}
 
+
 	private ExecSettings() {
 	}
 

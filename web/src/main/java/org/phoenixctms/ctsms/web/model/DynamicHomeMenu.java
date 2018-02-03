@@ -257,6 +257,80 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		});
 	}
 
+	public static DynamicHomeMenu getMassMailHomeMenu() {
+		return (new DynamicHomeMenu() {
+
+			@Override
+			protected void addMenuItems(SessionScopeBean sessionScopeBean, MenuModel entityModel) {
+				if (entityModel != null) {
+					Submenu subMenu = addSubMenu(sessionScopeBean, entityModel);
+					MenuItem recipientOverviewMenuItem = new MenuItem();
+					recipientOverviewMenuItem.setValue(Messages.getString(MessageCodes.RECIPIENT_OVERVIEW_MENU_ITEM_LABEL));
+					recipientOverviewMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-queue");
+					recipientOverviewMenuItem.setOnclick("openRecipientOverview()");
+					recipientOverviewMenuItem.setUrl("#");
+					recipientOverviewMenuItem.setId("recipientOverviewMenuItem");
+					subMenu.getChildren().add(recipientOverviewMenuItem);
+				}
+			}
+
+			@Override
+			protected DBModule getDbModule() {
+				return DBModule.MASS_MAIL_DB;
+			}
+
+			@Override
+			protected String getEntityIcon(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail().getStatus().getNodeStyleClass();
+			}
+
+			@Override
+			protected long getEntityId(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail().getId();
+			}
+
+			@Override
+			protected String getHomeIcon() {
+				return "ctsms-icon-massmailhome";
+			}
+
+			@Override
+			protected JournalModule getJournalModule() {
+				return JournalModule.MASS_MAIL_JOURNAL;
+			}
+
+			@Override
+			protected String getOpenEntityJsName() {
+				return "openMassMailField({0})";
+			}
+
+			@Override
+			protected String getOpenNewEntityJsName() {
+				return "openNewMassMail()";
+			}
+
+			@Override
+			protected String getOpenNewEntityMenuItemLabel() {
+				return Messages.getString(MessageCodes.MASS_MAIL_OPEN_NEW_MENU_ITEM_LABEL);
+			}
+
+			@Override
+			protected String getRecentEntityMenuItemLabel(JournalEntryOutVO journalEntry) {
+				return CommonUtil.massMailOutVOToString(journalEntry.getMassMail());
+			}
+
+			@Override
+			protected String getSearchMenuItemOnClick() {
+				return "openMassMailSearch(null)";
+			}
+
+			@Override
+			protected boolean hasEntity(JournalEntryOutVO journalEntry) {
+				return journalEntry.getMassMail() != null;
+			}
+		});
+	}
+
 	public static DynamicHomeMenu getProbandHomeMenu() {
 		return (new DynamicHomeMenu() {
 
@@ -579,6 +653,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 			}
 		});
 	}
+
 
 	@Override
 	protected void addMenuItems(SessionScopeBean sessionScopeBean, MenuModel entityModel) {

@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
-import io.swagger.annotations.Api;
-
 import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +36,8 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
+
+import io.swagger.annotations.Api;
 
 @Api
 @Path("/file")
@@ -79,7 +79,9 @@ public class FileResource {
 	public Page<FileOutVO> getCourseFiles(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.COURSE_DOCUMENT, null, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.COURSE_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	// @HEAD
@@ -107,7 +109,18 @@ public class FileResource {
 	public Page<FileOutVO> getInventoryFiles(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.INVENTORY_DOCUMENT, null, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.INVENTORY_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("massmail")
+	public Page<FileOutVO> getMassMailFiles(@Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.MASS_MAIL_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET
@@ -116,7 +129,9 @@ public class FileResource {
 	public Page<FileOutVO> getProbandFiles(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.PROBAND_DOCUMENT, null, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.PROBAND_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
@@ -125,7 +140,9 @@ public class FileResource {
 	public Page<FileOutVO> getStaffFiles(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.STAFF_DOCUMENT, null, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.STAFF_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
@@ -134,7 +151,9 @@ public class FileResource {
 	public Page<FileOutVO> getTrialFiles(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.TRIAL_DOCUMENT, null, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.TRIAL_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET

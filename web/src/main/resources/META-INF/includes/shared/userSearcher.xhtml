@@ -217,6 +217,16 @@
 							value="#{!user.vo.locked}" />
 					</ui:include>
 				</p:column>
+				<p:column sortBy="#{user.vo.decrypt}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_decrypt_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{user.vo.decrypt}" />
+					</ui:include>
+				</p:column>				
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{userlabels.search_user_result_list_password_valid_column}" />

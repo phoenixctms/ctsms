@@ -46,6 +46,22 @@
         </property>
 
     </bean>
+    
+    <bean id="massMailVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">class</prop>
+                <prop key="class.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <!-- <prop key="eventhandler.referenceinsertion.class">org.apache.velocity.app.event.implement.EscapeHtmlReference</prop>
+                <prop key="eventhandler.escape.html.match">/.*/</prop> -->
+                <prop key="input.encoding" >UTF-8</prop>
+                <prop key="output.encoding" >UTF-8</prop>
+            </props>
+        </property>
+
+    </bean>
 
 <bean id="notificationMailSenderJavaMailBundle"
     class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
@@ -83,6 +99,145 @@
 		<property name="staffDao" ref="staffDao" />
 		<property name="mailSender" ref="notificationMailSender"/>
 	</bean>
+	
+	
+<bean id="massMailMailSenderJavaMailBundle"
+    class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
+<property name="basename" value="ctsms-massmail-mail-sender" />
+</bean>
+
+<bean id="massMailMailSenderJavaMailProperties"
+    factory-bean="massMailMailSenderJavaMailBundle"
+    factory-method="getProperties" />
+
+    <bean id="massMailMailSenderJavaMailPropertiesFactory" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="properties">
+        <ref local="massMailMailSenderJavaMailProperties" />
+    </property>
+    </bean>
+
+    <bean id="massMailMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mass_mail_mail_sender_host}"/>
+        <property name="port" value="${mass_mail_mail_sender_port}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+		<property name="protocol" value="${mass_mail_mail_sender_protocol}"/>
+        <property name="username" value="${mass_mail_mail_sender_username}"/>
+        <property name="password" value="${mass_mail_mail_sender_password}"/>
+
+        <property name="javaMailProperties" ref="massMailMailSenderJavaMailPropertiesFactory"/>
+
+        <!-- <props>
+        	<prop key="mail.smtp.starttls.enable">${notification_mail_sender_starttls}</prop>
+            <prop key="mail.smtp.auth">${notification_mail_sender_auth}</prop>
+        </props> -->
+
+    </bean>
+	<bean
+		id="massMailEmailSender"
+		class="org.phoenixctms.ctsms.email.MassMailEmailSender">
+		<property
+			name="massMailRecipientDao"
+			ref="massMailRecipientDao" />
+		<property
+			name="trialDao"
+			ref="trialDao" />
+		<property
+			name="inputFieldDao"
+			ref="inputFieldDao" />
+		<property
+			name="inputFieldSelectionSetValueDao"
+			ref="inputFieldSelectionSetValueDao" />
+		<property
+			name="inquiryDao"
+			ref="inquiryDao" />
+		<property
+			name="inquiryValueDao"
+			ref="inquiryValueDao" />
+		<property
+			name="eCRFDao"
+			ref="eCRFDao" />
+		<property
+			name="eCRFFieldDao"
+			ref="eCRFFieldDao" />
+		<property
+			name="eCRFFieldValueDao"
+			ref="eCRFFieldValueDao" />
+		<property
+			name="eCRFStatusEntryDao"
+			ref="eCRFStatusEntryDao" />
+		<property
+			name="eCRFFieldStatusEntryDao"
+			ref="eCRFFieldStatusEntryDao" />
+		<property
+			name="eCRFFieldStatusTypeDao"
+			ref="eCRFFieldStatusTypeDao" />
+		<property
+			name="signatureDao"
+			ref="signatureDao" />
+		<property
+			name="probandAddressDao"
+			ref="probandAddressDao" />
+		<property
+			name="probandDao"
+			ref="probandDao" />
+		<property
+			name="moneyTransferDao"
+			ref="moneyTransferDao" />
+		<property
+			name="bankAccountDao"
+			ref="bankAccountDao" />
+		<property
+			name="userDao"
+			ref="userDao" />
+		<property
+			name="probandTagValueDao"
+			ref="probandTagValueDao" />
+		<property
+			name="diagnosisDao"
+			ref="diagnosisDao" />
+		<property
+			name="procedureDao"
+			ref="procedureDao" />
+		<property
+			name="medicationDao"
+			ref="medicationDao" />
+		<property
+			name="probandContactDetailValueDao"
+			ref="probandContactDetailValueDao" />
+		<property
+			name="fileDao"
+			ref="fileDao" />
+		<property
+			name="trialTagValueDao"
+			ref="trialTagValueDao" />
+		<property
+			name="probandListEntryDao"
+			ref="probandListEntryDao" />
+		<property
+			name="probandListEntryTagDao"
+			ref="probandListEntryTagDao" />
+		<property
+			name="probandListEntryTagValueDao"
+			ref="probandListEntryTagValueDao" />
+		<property
+			name="inventoryBookingDao"
+			ref="inventoryBookingDao" />
+		<property
+			name="mailSender"
+			ref="massMailMailSender" />
+		<property
+			name="velocityEngine"
+			ref="massMailVelocityEngine" />
+		<property
+			name="strictEmailAddresses"
+			value="${mass_mail_strict_email_addresses}" />
+	</bean>	
+	
+	
+	
+	
+	
+	
 
     <!-- http://docs.spring.io/spring-ldap/docs/1.3.x/reference/html/introduction.html -->
     <bean id="ldapContextSource1" class="org.springframework.ldap.core.support.LdapContextSource">
@@ -143,6 +298,7 @@
 		<property name="probandDao" ref="probandDao" />
 		<property name="inputFieldDao" ref="inputFieldDao" />
 		<property name="userDao" ref="userDao" />
+		<property name="massMailDao" ref="massMailDao" />
 
 		<property name="departmentDao" ref="departmentDao" />
 		<property name="inventoryCategoryDao" ref="inventoryCategoryDao" />
@@ -182,6 +338,7 @@
 		<property name="probandDao" ref="probandDao" />
 		<property name="inputFieldDao" ref="inputFieldDao" />
 		<property name="userDao" ref="userDao" />
+		<property name="massMailDao" ref="massMailDao" />
 
 		<property name="departmentDao" ref="departmentDao" />
 		<property name="inventoryCategoryDao" ref="inventoryCategoryDao" />
@@ -254,6 +411,8 @@
 		<property name="courseDao" ref="courseDao" />
 		<property name="trialDao" ref="trialDao" />
 		<property name="probandDao" ref="probandDao" />
+		<property name="massMailDao" ref="massMailDao" />
+		<property name="massMailRecipientDao" ref="massMailRecipientDao" />
 		<property name="staffTagValueDao" ref="staffTagValueDao" />
 		<property name="staffStatusEntryDao" ref="staffStatusEntryDao" />
 		<property name="criteriaDao" ref="criteriaDao" />
@@ -393,6 +552,9 @@
    <property name="inputFieldTextPresetsBundleBasename" value="ctsms-inputfieldtextpresets" />
    <property name="inputFieldNamesBundleBasename" value="ctsms-inputfieldnames" />
    <property name="inputFieldCommentsBundleBasename" value="ctsms-inputfieldcomments" />
+
+   <property name="massMailStatusTypesBundleBasename" value="ctsms-massmailstatustypes" />
+   <property name="massMailTypesBundleBasename" value="ctsms-massmailtypes" />
 
    <property name="serviceExceptionMessagesBundleBasename" value="ctsms-serviceexceptionmessages" />
    <property name="authenticationExceptionMessagesBundleBasename" value="ctsms-authenticationexceptionmessages" />

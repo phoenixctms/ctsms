@@ -44,7 +44,10 @@ public final class OmittedFields {
 	public final static String OBFUSCATED_STRING = "********";
 	private static HashMap<Class, HashSet<String>> protectedOutVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashMap<Class, HashSet<String>> protectedInVOFieldMap = new HashMap<Class, HashSet<String>>();
+	private static HashMap<Class, HashSet<String>> lcProtectedOutVOFieldMap = new HashMap<Class, HashSet<String>>();
+	private static HashMap<Class, HashSet<String>> lcProtectedInVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashSet<String> protectedCriterionProperties = new HashSet<String>();
+	// private static final boolean IGNORE_CASE = true;
 	static {
 		addProtectedField(protectedOutVOFieldMap, BankAccountOutVO.class, "accountHolderName");
 		addProtectedField(protectedOutVOFieldMap, BankAccountOutVO.class, "accountNumber");
@@ -140,6 +143,22 @@ public final class OmittedFields {
 		addProtectedField(protectedInVOFieldMap, ProcedureInVO.class, "comment");
 		addProtectedField(protectedInVOFieldMap, MedicationInVO.class, "comment");
 		addProtectedField(protectedInVOFieldMap, MoneyTransferInVO.class, "comment");
+		Iterator<Class> it = protectedOutVOFieldMap.keySet().iterator();
+		while (it.hasNext()) {
+			Class vo = it.next();
+			Iterator<String> fieldNamesIt = protectedOutVOFieldMap.get(vo).iterator();
+			while (fieldNamesIt.hasNext()) {
+				addProtectedField(lcProtectedOutVOFieldMap, vo, fieldNamesIt.next().toLowerCase());
+			}
+		}
+		it = protectedInVOFieldMap.keySet().iterator();
+		while (it.hasNext()) {
+			Class vo = it.next();
+			Iterator<String> fieldNamesIt = protectedInVOFieldMap.get(vo).iterator();
+			while (fieldNamesIt.hasNext()) {
+				addProtectedField(lcProtectedInVOFieldMap, vo, fieldNamesIt.next().toLowerCase());
+			}
+		}
 		protectedCriterionProperties.add("proband.personParticulars.firstNameHash");
 		protectedCriterionProperties.add("proband.personParticulars.lastNameHash");
 		protectedCriterionProperties.add("proband.personParticulars.dateOfBirthHash");
@@ -167,8 +186,15 @@ public final class OmittedFields {
 		}
 	}
 
-	public static boolean isOmitted(Class vo, String fieldName) {
-		return isOmitted(protectedOutVOFieldMap, vo, fieldName) || isOmitted(protectedInVOFieldMap, vo, fieldName);
+	public static boolean isOmitted(Class vo, String fieldName, boolean ignoreCase) {
+		if (ignoreCase) {
+			if (fieldName != null) {
+				return isOmitted(lcProtectedOutVOFieldMap, vo, fieldName.toLowerCase()) || isOmitted(lcProtectedInVOFieldMap, vo, fieldName.toLowerCase());
+			}
+			return false;
+		} else {
+			return isOmitted(protectedOutVOFieldMap, vo, fieldName) || isOmitted(protectedInVOFieldMap, vo, fieldName);
+		}
 	}
 
 	private static boolean isOmitted(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {

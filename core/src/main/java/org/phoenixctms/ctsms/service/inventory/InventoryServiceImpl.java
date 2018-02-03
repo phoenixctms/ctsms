@@ -195,6 +195,9 @@ extends InventoryServiceBase
 					this.getProbandListEntryDao(),
 					this.getProbandListStatusEntryDao(),
 					this.getProbandListStatusTypeDao(),
+					this.getTrialDao(),
+					this.getMassMailDao(),
+					this.getMassMailRecipientDao(),
 					this.getJournalEntryDao());
 		}
 		return null;
@@ -503,7 +506,7 @@ extends InventoryServiceBase
 	@Override
 	protected InventoryOutVO handleAddInventory(AuthenticationVO auth, InventoryInVO newInventory, Integer maxInstances, Integer maxParentDepth)
 			throws Exception
-			{
+	{
 		checkInventoryInput(newInventory);
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory inventory = inventoryDao.inventoryInVOToEntity(newInventory);
@@ -519,7 +522,7 @@ extends InventoryServiceBase
 			logSystemMessage(owner, result, now, user, SystemMessageCodes.INVENTORY_CREATED, result, null, journalEntryDao);
 		}
 		return result;
-			}
+	}
 
 	@Override
 	protected InventoryBookingOutVO handleAddInventoryBooking(AuthenticationVO auth, InventoryBookingInVO newInventoryBooking, Long probandListStatusTypeId)
@@ -1299,7 +1302,7 @@ extends InventoryServiceBase
 	@Override
 	protected InventoryOutVO handleUpdateInventory(AuthenticationVO auth, InventoryInVO modifiedInventory, Integer maxInstances, Integer maxParentDepth)
 			throws Exception
-			{
+	{
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory originalInventory = CheckIDUtil.checkInventoryId(modifiedInventory.getId(), inventoryDao, LockMode.PESSIMISTIC_WRITE);
 		checkInventoryInput(modifiedInventory);
@@ -1319,7 +1322,7 @@ extends InventoryServiceBase
 			logSystemMessage(owner, result, now, user, SystemMessageCodes.INVENTORY_UPDATED, result, original, journalEntryDao);
 		}
 		return result;
-			}
+	}
 
 	@Override
 	protected InventoryBookingOutVO handleUpdateInventoryBooking(AuthenticationVO auth, InventoryBookingInVO modifiedInventoryBooking, Long probandListStatusTypeId)

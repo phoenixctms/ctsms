@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.web.jersey.index.CourseListIndex;
 import org.phoenixctms.ctsms.web.jersey.index.IndexBase;
 import org.phoenixctms.ctsms.web.jersey.index.InputFieldListIndex;
 import org.phoenixctms.ctsms.web.jersey.index.InventoryListIndex;
+import org.phoenixctms.ctsms.web.jersey.index.MassMailListIndex;
 import org.phoenixctms.ctsms.web.jersey.index.ProbandListIndex;
 import org.phoenixctms.ctsms.web.jersey.index.ResourceIndex;
 import org.phoenixctms.ctsms.web.jersey.index.SelectionSetIndex;
@@ -54,6 +55,7 @@ import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.jersey.resource.course.CourseResource;
 import org.phoenixctms.ctsms.web.jersey.resource.inputfield.InputFieldResource;
 import org.phoenixctms.ctsms.web.jersey.resource.inventory.InventoryResource;
+import org.phoenixctms.ctsms.web.jersey.resource.massmail.MassMailResource;
 import org.phoenixctms.ctsms.web.jersey.resource.proband.ProbandResource;
 import org.phoenixctms.ctsms.web.jersey.resource.staff.StaffResource;
 import org.phoenixctms.ctsms.web.jersey.resource.trial.TrialResource;
@@ -161,6 +163,8 @@ public class IndexResource {
 					returnTypeNode = StaffResource.LIST_INDEX.getJson();
 				} else if (TrialListIndex.class.equals(returnType)) {
 					returnTypeNode = TrialResource.LIST_INDEX.getJson();
+				} else if (MassMailListIndex.class.equals(returnType)) {
+					returnTypeNode = MassMailResource.LIST_INDEX.getJson();
 				} else if (UserListIndex.class.equals(returnType)) {
 					returnTypeNode = UserResource.LIST_INDEX.getJson();
 				} else if (SelectionSetIndex.class.equals(returnType)) {
@@ -367,7 +371,10 @@ public class IndexResource {
 	}
 
 	private static String getBasePath(HttpServletRequest request) {
-		return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/" + WebUtil.REST_API_PATH;
+		StringBuffer url = new StringBuffer(WebUtil.getBaseUrl(request));
+		url.append(request.getContextPath()).append("/").append(WebUtil.REST_API_PATH);
+		// return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/" + WebUtil.REST_API_PATH;
+		return url.toString();
 	}
 
 	public static JsonObject getResourceIndexNode(Class resourceClass, HttpServletRequest request) throws Exception { // String basePath) throws Exception {

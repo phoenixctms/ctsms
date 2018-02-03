@@ -38,6 +38,7 @@ public final class DefaultSettings {
 	// public final static String APPLICATION_SITE = "127.0.0.1";
 	public final static String API_REALM = "api";
 	public final static String API_TITLE = "REST API";
+	public static final boolean API_TRUSTED_HOSTS_ONLY = true;
 	// public final static String API_INSTANCE = "127.0.0.1";
 	public final static String API_VERSION = "0.0.0";
 	public static final boolean ENABLE_TOOLTIPS = true;
@@ -257,6 +258,7 @@ public final class DefaultSettings {
 	public static final Date INPUT_FIELD_TIME_PRESET_PRESET = null;
 	public static final boolean INPUT_FIELD_SELECTION_SET_VALUE_LOCALIZED_PRESET = false;
 	public final static boolean USER_LOCKED_PRESET = false;
+	public final static boolean USER_DECRYPT_PRESET = true;
 	public static final String USER_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String USER_TIME_ZONE_PRESET = CommonUtil.timeZoneToString(TimeZone.getDefault());
 	public static final String USER_THEME_PRESET = "aristo";
@@ -365,7 +367,8 @@ public final class DefaultSettings {
 	public static final boolean COURSE_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
 	public static final boolean TRIAL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = true;
 	public static final boolean PROBAND_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
-	public static final boolean INPUT_FIELD_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
+	// public static final boolean INPUT_FIELD_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
+	public static final boolean MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
 	public static final String INVENTORY_START_URL = "/inventory/inventorySearch.jsf";
 	public static final String STAFF_START_URL = "/staff/staffSearch.jsf";
 	public static final String COURSE_START_URL = "/course/courseSearch.jsf";
@@ -373,6 +376,7 @@ public final class DefaultSettings {
 	public static final String TRIAL_START_URL = "/trial/trialSearch.jsf";
 	public static final String PROBAND_START_URL = "/proband/probandSearch.jsf";
 	public static final String INPUT_FIELD_START_URL = "/inputfield/inputFieldSearch.jsf";
+	public static final String MASS_MAIL_START_URL = "/massmail/massMailSearch.jsf";
 	public static final Integer GRAPH_MAX_STAFF_INSTANCES = 100;
 	public static final boolean GRAPH_STAFF_BREADTH_FIRST = true;
 	public static final Integer GRAPH_MAX_STAFF_PARENT_DEPTH = 5;
@@ -520,6 +524,7 @@ public final class DefaultSettings {
 	public static final boolean STAFF_DEFERRED_DELETE = true;
 	public static final boolean TRIAL_DEFERRED_DELETE = true;
 	public static final boolean USER_DEFERRED_DELETE = false;
+	public static final boolean MASS_MAIL_DEFERRED_DELETE = true;
 	public static final int PROGRESS_BAR_MAX_VALUE = 100;
 	public static final boolean ENABLE_PROBAND_SEARCH_EXPORTS = false;
 	public static final boolean ENABLE_STAFF_SEARCH_EXPORTS = false;
@@ -530,6 +535,7 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_INPUT_FIELD_SEARCH_EXPORTS = false;
 	public static final boolean ENABLE_USER_SEARCH_EXPORTS = false;
 	public static final boolean ENABLE_JOURNAL_EXPORTS = false;
+	public static final boolean ENABLE_MASS_MAIL_SEARCH_EXPORTS = false;
 
 	public static final int TIME_PICKER_INTERVAL_MINUTES = 5;
 
@@ -561,6 +567,7 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_PROBAND_MODULE = false;
 	public static final boolean ENABLE_INPUT_FIELD_MODULE = false;
 	public static final boolean ENABLE_USER_MODULE = false;
+	public static final boolean ENABLE_MASS_MAIL_MODULE = false;
 
 	public static final Long PROBAND_RATING_PRESET = null; // 3l;
 	public static final Long PROBAND_RATING_MAX_PRESET = null; // 5l;
@@ -570,6 +577,33 @@ public final class DefaultSettings {
 	public static final Long PROBAND_LIST_ENTRY_RATING_MAX_PRESET = null; // 5l;
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_RATING = false;
 	public static final Long DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT = null;
+	public static final boolean MASS_MAIL_LOCK_AFTER_SENDING_PRESET = false;
+	public static final String MASS_MAIL_FROM_ADDRESS_PRESET = "";
+	public static final String MASS_MAIL_FROM_NAME_PRESET = "";
+	public static final String MASS_MAIL_REPLY_TO_ADDRESS_PRESET = "";
+	public static final String MASS_MAIL_REPLY_TO_NAME_PRESET = "";
+	public static final boolean MASS_MAIL_PROBAND_TO_PRESET = true;
+	public static final boolean MASS_MAIL_PHYSICIAN_TO_PRESET = false;
+	public static final String MASS_MAIL_OTHER_TO_PRESET = "";
+	public static final String MASS_MAIL_CC_PRESET = "";
+	public static final String MASS_MAIL_BCC_PRESET = "";
+	public static final boolean MASS_MAIL_USE_BEACON_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET = false;
+	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_PRESET = "";
+	public static final boolean MASS_MAIL_ATTACH_TRIAL_FILES_PRESET = false;
+	public static final String MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_PRESET = "";
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_FILES_PRESET = false;
+	public static final String MASS_MAIL_PROBAND_LOGICAL_PATH_PRESET = "";
+	public static final boolean MASS_MAIL_ATTACH_INQUIRIES_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_ECRFS_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET = false;
+	public static final String MASS_MAIL_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
+	public static final String PUBLIC_FILE_SIGNUP_URL = null;
+	public static final Boolean RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = null;
+	public static final boolean RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = true;
+	public static final boolean MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET = false;
 
 
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";

@@ -7,7 +7,11 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class ProbandMultiPickerModel extends MultiPickerModelBase<ProbandOutVO> {
 
 	public ProbandMultiPickerModel() {
-		super();
+		super(null);
+	}
+
+	public ProbandMultiPickerModel(Integer limit) {
+		super(limit);
 	}
 
 	@Override

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>mass mail recipients</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="massmailrecipient_form">
+			<p:remoteCommand
+				process="@this"
+				name="resetMassMailRecipient"
+				actionListener="#{probandRecipientBean.resetMassMailRecipient}"
+				update="probandrecipient_list,probandrecipient_input" />
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{massMailRecipient.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="massMailRecipient"
+					value="#{probandRecipientBean.massMailRecipientModel}"
+					id="probandrecipient_list"
+					selectionMode="single"
+					selection="#{probandRecipientBean.selectedMassMailRecipient}"
+					rowStyleClass="#{massMail.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMailRecipient.vo.massMail)}#{rowBgColorAlpha}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:massmailrecipient_form:probandrecipient_input" />
+					<f:facet name="header">
+						<h:outputText value="#{probandRecipientBean.massMailRecipientModel.rowCount} #{probandlabels.mass_mail_recipient_probandrecipient_list_header}" />
+					</f:facet>
+					<p:column style="width:16px;">
+						<p:rowToggler rendered="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).decrypted}" />
+					</p:column>
+					<p:column sortBy="#{massMailRecipient.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{massMailRecipient.vo.id}" />
+					</p:column>
+					<p:column
+						sortBy="#{massMailRecipient.vo.massMail.name}"
+						filterBy="#{massMailRecipient.vo.massMail.name}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_mass_mail_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{massMailRecipient.vo.massMail.name}" />
+							<ui:param
+								name="icon"
+								value="#{massMailRecipient.vo.massMail.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+
+				<p:column
+					sortBy="#{massMailRecipient.vo.massMail.type}"
+					filterBy="#{massMailRecipient.vo.massMail.id}"
+					filterOptions="#{sessionScopeBean.filterMassMailTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_mass_mail_type_column}" />
+					</f:facet>
+					<h:outputText value="#{massMailRecipient.vo.massMail.type.name}" />
+				</p:column>
+					
+<p:column sortBy="#{massMailRecipient.vo.massMail.trial.name}" filterBy="#{massMailRecipient.vo.massMail.trial.name}">
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_trial_name_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{massMailRecipient.vo.massMail.trial.name}" />
+							<ui:param
+								name="icon"
+								value="#{massMailRecipient.vo.massMail.trial.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>			
+					
+									<p:column
+							sortBy="#{massMailRecipient.vo.massMail.probandListStatus}"
+							filterBy="#{massMailRecipient.vo.massMail.probandListStatus.id}"
+							filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
+							<f:facet name="header">
+								<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_proband_list_status_column}" />
+							</f:facet>
+							<h:outputText value="#{massMailRecipient.vo.massMail.probandListStatus.name}" />
+						</p:column>
+							
+					<ui:include src="../shared/massMailRecipientTableColumns.xhtml" >
+					<ui:param
+								name="showModified"
+								value="true" />
+					</ui:include>
+					<p:column style="width:64px;white-space:nowrap;">
+						<p:commandButton
+							title="#{massmaillabels.reset_mass_mail_recipient_button_title}"
+							icon="ui-icon ui-icon-arrowrefresh-1-e"
+							type="button"
+							disabled="#{massMailRecipient.vo.pending}"
+							onclick="resetMassMailRecipient(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('MASS_MAIL_RECIPIENT_ID')}:'#{massMailRecipient.vo.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{massMailRecipient.vo.version}' }));" />
+						<p:commandButton
+							type="button"
+							title="#{labels.open_mass_mail_button_label}"
+							icon="ui-icon ui-icon-extlink"
+							onclick="openMassMail(#{massMailRecipient.vo.massMail.id})" />
+					</p:column>
+					<p:rowExpansion rendered="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).decrypted}">
+						<ui:include src="../shared/massMailMessage.xhtml">
+							<ui:param
+								name="message"
+								value="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo)}" />
+						</ui:include>
+						<!-- <ui:repeat
+			value="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).attachments}"
+			var="attachment">
+								<p:commandLink
+								immediate="true"
+								ajax="false"
+								title="#{labels.file_download_tooltip} #{attachment.fileName}">
+								<h:outputText value="#{attachment.fileName}" />
+								<p:fileDownload value="#{probandRecipientBean.getEmailAttachmentStreamedContent(attachment)}" />
+							</p:commandLink>
+							</ui:repeat> -->
+					</p:rowExpansion>
+				</p:dataTable>
+
+					<p:panel
+						id="probandrecipient_input">
+						<f:facet name="header">
+							<h:outputText value="#{probandRecipientBean.title}" />
+						</f:facet>
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+							<h:panelGrid
+								rendered="#{probandRecipientBean.inputVisible}"
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="probandRecipientMassMail"
+									value="#{probandlabels.proband_recipient_mass_mail_label}" />
+								<h:panelGrid
+									columns="3"
+									cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden
+											id="probandRecipientMassMail"
+											required="true"
+											requiredMessage="#{probandlabels.proband_recipient_mass_mail_required_message}"
+											value="#{probandRecipientBean.in.massMailId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton
+											id="probandRecipientMassMailName"
+											value="#{applicationScopeBean.clipStringPicker(probandRecipientBean.massMailName)}"
+											title="#{probandlabels.proband_recipient_mass_mail_tooltip}#{labels.open_mass_mail_button_label}"
+											styleClass="ctsms-picker"
+											icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedMassMail(':tabView:massmailrecipient_form:probandRecipientMassMail')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_mass_mail_button_label}"
+										icon="ui-icon ui-icon-search"
+										type="button"
+										onclick="openMassMailPickerAjax(':tabView:massmailrecipient_form:probandRecipientMassMail',':tabView:massmailrecipient_form:probandRecipientMassMailName')" />
+									<p:commandButton
+										title="#{labels.clear_mass_mail_button_label}"
+										icon="ui-icon ui-icon-close"
+										type="button"
+										onclick="clearIDAjax(':tabView:massmailrecipient_form:probandRecipientMassMail',':tabView:massmailrecipient_form:probandRecipientMassMailName','#{applicationScopeBean.noMassMailPickedMessage}')" />
+								</h:panelGrid>
+								<p:message for="probandRecipientMassMail" />
+								<ui:include src="../shared/massMailAttachments.xhtml">
+									<ui:param
+										name="message"
+										value="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(probandRecipientBean.out)}" />
+									<ui:param
+										name="recipientBean"
+										value="#{probandRecipientBean}" />
+								</ui:include>
+							</h:panelGrid>
+							<h:outputLabel rendered="#{!probandRecipientBean.inputVisible}" />
+							<p:messages />
+							<p:toolbar>
+								<p:toolbarGroup align="left">
+									<h:outputText
+										styleClass="ctsms-toolbar-text"
+										value="#{probandRecipientBean.created ? probandRecipientBean.modifiedAnnotation : ''}" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										process="@this"
+										value="#{labels.reset_button_label}"
+										actionListener="#{probandRecipientBean.reset}"
+										oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-close"
+										ajax="true"
+										disabled="false"
+										update="probandrecipient_list,probandrecipient_input" />
+									<p:commandButton
+										process="@this,probandrecipient_input"
+										id="add"
+										value="#{labels.add_button_label}"
+										actionListener="#{probandRecipientBean.add}"
+										oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-plusthick"
+										ajax="true"
+										disabled="#{!probandRecipientBean.createable}"
+										update="probandrecipient_list,probandrecipient_input" />
+									<p:commandButton
+										value="#{massmaillabels.reset_mass_mail_recipient_button_title}"
+										icon="ui-icon ui-icon-arrowrefresh-1-e"
+										type="button"
+										disabled="#{!probandRecipientBean.editable or probandRecipientBean.out.pending}"
+										onclick="resetMassMailRecipient(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('MASS_MAIL_RECIPIENT_ID')}:'#{probandRecipientBean.in.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{probandRecipientBean.in.version}' }));" />
+									<!-- <p:commandButton
+										process="@this,team_member_input"
+										id="update"
+										value="#{labels.update_button_label}"
+										actionListener="#{teamMemberBean.update}"
+										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-disk"
+										ajax="true"
+										disabled="#{!teamMemberBean.editable}"
+										update="team_member_list,team_member_input" /> -->
+									<p:commandButton
+										process="@this"
+										value="#{labels.delete_button_label}"
+										actionListener="#{probandRecipientBean.delete}"
+										oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-trash"
+										ajax="true"
+										disabled="#{!probandRecipientBean.removable}"
+										update="probandrecipient_list,probandrecipient_input" />
+									<p:commandButton
+										process="@this"
+										value="#{labels.load_button_label}"
+										actionListener="#{probandRecipientBean.load}"
+										oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+										icon="ui-icon-refresh"
+										ajax="true"
+										disabled="#{!probandRecipientBean.created}"
+										update="probandrecipient_list,probandrecipient_input" />
+									<!-- <p:commandButton
+										immediate="true"
+										ajax="false"
+										value="#{triallabels.export_team_members_button_label}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload value="#{teamMemberBean.teamMembersExcelStreamedContent}" />
+									</p:commandButton> -->
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+
+			</h:panelGrid>
+
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

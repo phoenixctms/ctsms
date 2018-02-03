@@ -44,9 +44,10 @@ function handleUserTabChange(index) {
 
 function handleUserChanged(xhr, status, args) {
 
-	if (_testFlag(args, AJAX_LOGGED_OUT)) {
-		handleLogout(xhr, status, args);
-	} else if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_WINDOW_TITLE_BASE64)
+	//if (_testFlag(args, AJAX_LOGGED_OUT)) {
+	//	handleLogout(xhr, status, args);
+	//} else
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_WINDOW_TITLE_BASE64)
 	        && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED) && _testPropertyExists(args, AJAX_WINDOW_NAME)) {
 		window.name = args[AJAX_WINDOW_NAME];
 		enableTabs(userTabView, 1, args[AJAX_ROOT_ENTITY_CREATED]);
@@ -60,9 +61,9 @@ function handleUserChanged(xhr, status, args) {
 }
 
 function handleUpdateUserTabTitles(xhr, status, args) {
-	if (_testFlag(args, AJAX_LOGGED_OUT)) {
-		handleLogout(xhr, status, args);
-	} else {
+	//if (_testFlag(args, AJAX_LOGGED_OUT)) {
+	//	handleLogout(xhr, status, args);
+	//} else {
 		if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
 			userTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 		}
@@ -81,6 +82,6 @@ function handleUpdateUserTabTitles(xhr, status, args) {
 			userTabView.setTabTitle(4, decodeBase64(args[AJAX_USER_JOURNAL_TAB_TITLE_BASE64]));
 			userTabView.emphasizeTab(4, args[AJAX_USER_JOURNAL_ENTRY_COUNT] == 0);
 		}
-	}
+	//}
 
 }

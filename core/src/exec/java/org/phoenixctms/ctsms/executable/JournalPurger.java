@@ -75,6 +75,10 @@ public class JournalPurger {
 						searchParams.add(new SearchParameter("inputField.id", id, SearchParameter.EQUAL_COMPARATOR));
 						jobOutput.println("limit records to drop to journal records of inputfield ID " + id);
 						break;
+					case MASS_MAIL_JOURNAL:
+						searchParams.add(new SearchParameter("massMail.id", id, SearchParameter.EQUAL_COMPARATOR));
+						jobOutput.println("limit records to drop to journal records of mass mail ID " + id);
+						break;
 					default:
 						// not supported for now...
 						throw new IllegalArgumentException(MessageFormat.format(DefaultMessages.UNSUPPORTED_JOURNAL_MODULE, module.toString()));

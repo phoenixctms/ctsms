@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class UserMultiPickerModel extends MultiPickerModelBase<UserOutVO> {
 
 	public UserMultiPickerModel() {
-		super();
+		super(null);
 	}
 
 	@Override

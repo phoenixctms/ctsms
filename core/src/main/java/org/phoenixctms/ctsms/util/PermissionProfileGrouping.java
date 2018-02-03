@@ -57,6 +57,13 @@ public final class PermissionProfileGrouping {
 		addProfile(PermissionProfileGroup.PROBAND, PermissionProfile.PROBAND_NO_ACCESS);
 		addProfile(PermissionProfileGroup.PROBAND, PermissionProfile.PROBAND_DEVICE);
 		addProfile(PermissionProfileGroup.PROBAND, PermissionProfile.PROBAND_SIGNUP);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_MASTER_ALL_DEPARTMENTS);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_MASTER_USER_DEPARTMENT);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_DETAIL_USER_DEPARTMENT);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_VIEW_ALL_DEPARTMENTS);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_VIEW_USER_DEPARTMENT);
+		addProfile(PermissionProfileGroup.MASS_MAIL, PermissionProfile.MASS_MAIL_SIGNUP);
 		addProfile(PermissionProfileGroup.USER, PermissionProfile.USER_ALL_DEPARTMENTS);
 		addProfile(PermissionProfileGroup.USER, PermissionProfile.USER_USER_DEPARTMENT);
 		addProfile(PermissionProfileGroup.USER, PermissionProfile.USER_ACTIVE_USER);
@@ -77,6 +84,9 @@ public final class PermissionProfileGrouping {
 		addProfile(PermissionProfileGroup.PROBAND_SEARCH, PermissionProfile.PROBAND_MASTER_SEARCH);
 		addProfile(PermissionProfileGroup.PROBAND_SEARCH, PermissionProfile.PROBAND_SAVED_SEARCH);
 		addProfile(PermissionProfileGroup.PROBAND_SEARCH, PermissionProfile.PROBAND_NO_SEARCH);
+		addProfile(PermissionProfileGroup.MASS_MAIL_SEARCH, PermissionProfile.MASS_MAIL_MASTER_SEARCH);
+		addProfile(PermissionProfileGroup.MASS_MAIL_SEARCH, PermissionProfile.MASS_MAIL_SAVED_SEARCH);
+		addProfile(PermissionProfileGroup.MASS_MAIL_SEARCH, PermissionProfile.MASS_MAIL_NO_SEARCH);
 		addProfile(PermissionProfileGroup.USER_SEARCH, PermissionProfile.USER_MASTER_SEARCH);
 		addProfile(PermissionProfileGroup.USER_SEARCH, PermissionProfile.USER_SAVED_SEARCH);
 		addProfile(PermissionProfileGroup.USER_SEARCH, PermissionProfile.USER_NO_SEARCH);
