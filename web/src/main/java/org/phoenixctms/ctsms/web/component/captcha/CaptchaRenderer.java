@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.FacesRenderer;
 
+import org.phoenixctms.ctsms.web.component.captcha.Captcha.ReCaptchaVersions;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -44,21 +45,42 @@ public class CaptchaRenderer extends CoreRenderer {
 	private static final Logger logger = Logger.getLogger(CaptchaRenderer.class.getName());
 	private final static String CHALLENGE_FIELD = "recaptcha_challenge_field";
 	private final static String RESPONSE_FIELD = "recaptcha_response_field";
+	private final static String TOKEN_FIELD = "g-recaptcha-response";
+
+	// private final static String clientIdToJsFnName(String clientId) {
+	// String result = clientId.replaceAll("[^a-zA-Z0-9_]", "_");
+	// return "set" + WordUtils.capitalizeFully(result, '_').replaceAll("_", "");
+	// }
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
 		Captcha captcha = (Captcha) component;
 		Map<String, String> params = context.getExternalContext().getRequestParameterMap();
-		String challenge = params.get(CHALLENGE_FIELD);
-		String answer = params.get(RESPONSE_FIELD);
-		if (answer != null) {
-			if (answer.equals("")) {
-				captcha.setSubmittedValue(answer);
+		if (ReCaptchaVersions.V1.equals(Captcha.RECAPTCHA_VERSION)) {
+			String challenge = params.get(CHALLENGE_FIELD);
+			String answer = params.get(RESPONSE_FIELD);
+			if (answer != null) {
+				if (answer.equals("")) {
+					captcha.setSubmittedValue(answer);
+				} else {
+					captcha.setSubmittedValue(new Verification(challenge, answer));
+				}
 			} else {
-				captcha.setSubmittedValue(new Verification(challenge, answer));
+				captcha.setSubmittedValue("");
+			}
+		} else if (ReCaptchaVersions.V2.equals(Captcha.RECAPTCHA_VERSION)) {
+			String token = params.get(TOKEN_FIELD);
+			if (token != null) {
+				if (token.equals("")) {
+					captcha.setSubmittedValue(token);
+				} else {
+					captcha.setSubmittedValue(new Verification(token));
+				}
+			} else {
+				captcha.setSubmittedValue("");
 			}
 		} else {
-			captcha.setSubmittedValue("");
+			throw new FacesException("reCAPTCHA version not supported");
 		}
 	}
 
@@ -69,39 +91,69 @@ public class CaptchaRenderer extends CoreRenderer {
 		captcha.setRequired(true);
 		String protocol = captcha.isSecure() ? "https" : "http";
 		String publicKey = Settings.getString(SettingCodes.PUBLIC_CAPTCHA_KEY, Bundle.SETTINGS, DefaultSettings.PUBLIC_CAPTCHA_KEY);
-		if (publicKey == null) {
-			throw new FacesException("Cannot find public key for catpcha, use primefaces.PUBLIC_CAPTCHA_KEY context-param to define one");
+		if (publicKey == null || publicKey.length() == 0) {
+			throw new FacesException("Cannot find public key for catpcha, use PUBLIC_CAPTCHA_KEY property to define one");
 		}
-		writer.startElement("script", null);
-		writer.writeAttribute("type", "text/javascript", null);
-		writer.write("var RecaptchaOptions = {");
-		writer.write("theme:\"" + captcha.getTheme() + "\"");
-		writer.write(",lang:\"" + captcha.getLanguage() + "\"");
-		if (captcha.getTabindex() != 0) {
-			writer.write(",tabIndex:" + captcha.getTabindex());
+		// if (publicKey == null) {
+		// throw new FacesException("Cannot find public key for catpcha, use primefaces.PUBLIC_CAPTCHA_KEY context-param to define one");
+		// }
+		if (ReCaptchaVersions.V1.equals(Captcha.RECAPTCHA_VERSION)) {
+
+			writer.startElement("script", null);
+			writer.writeAttribute("type", "text/javascript", null);
+			writer.write("var RecaptchaOptions = {");
+			writer.write("theme:\"" + captcha.getTheme() + "\"");
+			writer.write(",lang:\"" + captcha.getLanguage() + "\"");
+			if (captcha.getTabindex() != 0) {
+				writer.write(",tabIndex:" + captcha.getTabindex());
+			}
+			writer.write("};");
+			writer.endElement("script");
+			writer.startElement("script", null);
+			writer.writeAttribute("type", "text/javascript", null);
+			writer.writeAttribute("src", protocol + "://www.google.com/recaptcha/api/challenge?k=" + publicKey, null);
+			writer.endElement("script");
+			writer.startElement("noscript", null);
+			writer.startElement("iframe", null);
+			writer.writeAttribute("src", protocol + "://www.google.com/recaptcha/api/noscript?k=" + publicKey, null);
+			writer.endElement("iframe");
+			writer.startElement("textarea", null);
+			writer.writeAttribute("id", CHALLENGE_FIELD, null);
+			writer.writeAttribute("name", CHALLENGE_FIELD, null);
+			writer.writeAttribute("rows", "3", null);
+			writer.writeAttribute("columns", "40", null);
+			writer.endElement("textarea");
+			writer.startElement("input", null);
+			writer.writeAttribute("id", RESPONSE_FIELD, null);
+			writer.writeAttribute("name", RESPONSE_FIELD, null);
+			writer.writeAttribute("type", "hidden", null);
+			writer.writeAttribute("value", "manual_challenge", null);
+			writer.endElement("input");
+			writer.endElement("noscript");
+		} else if (ReCaptchaVersions.V2.equals(Captcha.RECAPTCHA_VERSION)) {
+			writer.startElement("script", null);
+			writer.writeAttribute("type", "text/javascript", null);
+			writer.writeAttribute("src", protocol + "://www.google.com/recaptcha/api.js?hl=" + captcha.getLanguage(), null);
+			writer.writeAttribute("async", "async", null);
+			writer.writeAttribute("defer", "defer", null);
+			writer.endElement("script");
+			// startScript(writer, captcha.getClientId(context));
+			// String fnName = clientIdToJsFnName(captcha.getClientId(context));
+			// writer.write("function " + fnName + "(token){alert(token);}");
+			// endScript(writer);
+			writer.startElement("div", null);
+			writer.writeAttribute("class", "g-recaptcha", null);
+			writer.writeAttribute("data-sitekey", publicKey, null);
+			writer.writeAttribute("data-theme", captcha.getTheme(), null);
+			writer.writeAttribute("data-type", "image", null);
+			writer.writeAttribute("data-size", "normal", null); // compact
+			if (captcha.getTabindex() != 0) {
+				writer.writeAttribute("data-tabindex", captcha.getTabindex(), null);
+			}
+			// writer.writeAttribute("data-callback", fnName, null);
+			writer.endElement("div");
+		} else {
+			throw new FacesException("reCAPTCHA version not supported");
 		}
-		writer.write("};");
-		writer.endElement("script");
-		writer.startElement("script", null);
-		writer.writeAttribute("type", "text/javascript", null);
-		writer.writeAttribute("src", protocol + "://www.google.com/recaptcha/api/challenge?k=" + publicKey, null);
-		writer.endElement("script");
-		writer.startElement("noscript", null);
-		writer.startElement("iframe", null);
-		writer.writeAttribute("src", protocol + "://www.google.com/recaptcha/api/noscript?k=" + publicKey, null);
-		writer.endElement("iframe");
-		writer.startElement("textarea", null);
-		writer.writeAttribute("id", CHALLENGE_FIELD, null);
-		writer.writeAttribute("name", CHALLENGE_FIELD, null);
-		writer.writeAttribute("rows", "3", null);
-		writer.writeAttribute("columns", "40", null);
-		writer.endElement("textarea");
-		writer.startElement("input", null);
-		writer.writeAttribute("id", RESPONSE_FIELD, null);
-		writer.writeAttribute("name", RESPONSE_FIELD, null);
-		writer.writeAttribute("type", "hidden", null);
-		writer.writeAttribute("value", "manual_challenge", null);
-		writer.endElement("input");
-		writer.endElement("noscript");
 	}
 }

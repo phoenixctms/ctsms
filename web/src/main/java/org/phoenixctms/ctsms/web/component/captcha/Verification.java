@@ -21,14 +21,22 @@ class Verification implements Serializable {
 
 	private String challenge;
 	private String answer;
+	private String token;
 
 	public Verification() {
 		// NoOp
 	}
 
+	public Verification(String token) {
+		this.challenge = null;
+		this.answer = null;
+		this.token = token;
+	}
+
 	public Verification(String challenge, String answer) {
 		this.challenge = challenge;
 		this.answer = answer;
+		this.token = null;
 	}
 
 	public String getAnswer() {
@@ -37,5 +45,9 @@ class Verification implements Serializable {
 
 	public String getChallenge() {
 		return challenge;
+	}
+
+	public String getToken() {
+		return token;
 	}
 }
