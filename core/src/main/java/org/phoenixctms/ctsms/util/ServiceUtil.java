@@ -1505,17 +1505,17 @@ public final class ServiceUtil {
 
 
 
-		voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialOutVO.class, enumerateEntities, excludeEncryptedFields);
-		while (voFieldIt.hasNext()) {
-			KeyValueString keyValuePair = voFieldIt.next();
-			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(massMail.getTrial()).iterator();
-			while (indexesKeysIt.hasNext()) {
-				ArrayList<Object> indexesKeys = indexesKeysIt.next();
-				model.put(MassMailMessageTemplateParameters.TRIAL_PREFIX + keyValuePair.getKey(indexesKeys),
-						keyValuePair.getValue(locale, massMail.getTrial(), indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
-								excludeEncryptedFields));
-			}
-		}
+		// voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialOutVO.class, enumerateEntities, excludeEncryptedFields);
+		// while (voFieldIt.hasNext()) {
+		// KeyValueString keyValuePair = voFieldIt.next();
+		// Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(massMail.getTrial()).iterator();
+		// while (indexesKeysIt.hasNext()) {
+		// ArrayList<Object> indexesKeys = indexesKeysIt.next();
+		// model.put(MassMailMessageTemplateParameters.TRIAL_PREFIX + keyValuePair.getKey(indexesKeys),
+		// keyValuePair.getValue(locale, massMail.getTrial(), indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+		// excludeEncryptedFields));
+		// }
+		// }
 
 		model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES, new ArrayList());
 		model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, new ArrayList());

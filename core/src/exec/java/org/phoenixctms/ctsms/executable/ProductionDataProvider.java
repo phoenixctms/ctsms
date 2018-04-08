@@ -1870,7 +1870,7 @@ public class ProductionDataProvider {
 		// false);
 		MassMailStatusType closedMassMailStatusType = createMassMailStatusType("closed", Color.MISTYROSE,
 				"ctsms-massmailstatus-closed",
-				true,
+				false,
 				true,
 				false);
 		updateMassMailStatusType(pausedMassMailStatusType,

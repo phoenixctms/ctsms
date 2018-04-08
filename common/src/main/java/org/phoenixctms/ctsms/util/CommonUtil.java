@@ -5,7 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -18,6 +20,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -241,6 +244,9 @@ public final class CommonUtil {
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "%";
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
+	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
+
+
 	private static void appendProbandAlias(StringBuilder sb,ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
 		if (alias != null && alias.trim().length() > 0) {
@@ -255,7 +261,6 @@ public final class CommonUtil {
 			sb.append(newBlindedProbandNameLabel);
 		}
 	}
-
 
 	public static boolean appendString(StringBuilder sb, String string, String separator) {
 		return appendString(sb, string, separator, null);
@@ -580,14 +585,14 @@ public final class CommonUtil {
 		}
 	}
 
+
+
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
 		}
 		return null;
 	}
-
-
 
 	public static long dateDeltaSecs(Date start, Date stop) {
 		return (stop.getTime() - start.getTime()) / 1000;
@@ -995,6 +1000,80 @@ public final class CommonUtil {
 
 	public static boolean getIsValueNull(String value) {
 		return value != null && PROPERTIES_NULL_LITERAL.equalsIgnoreCase(value); // properties value must explicitly be "null" - if empty, default value is used.
+	}
+
+	private static String getLocalHostAddress() {
+		DatagramSocket socket = null;
+		String ip = null;
+		try {
+			socket = new DatagramSocket();
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ip = socket.getLocalAddress().getHostAddress();
+		} catch (Exception e) {
+		} finally {
+			try {
+				socket.close();
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		}
+		if (ip == null) {
+			try {
+				ip = getLocalHostLANAddress().getHostAddress();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return ip;
+	}
+
+	//https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+		try {
+			InetAddress candidateAddress = null;
+			// Iterate all NICs (network interface cards)...
+			for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+				NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+				// Iterate all IP addresses assigned to each card...
+				for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+					InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+					if (!inetAddr.isLoopbackAddress()) {
+
+						if (inetAddr.isSiteLocalAddress()) {
+							// Found non-loopback site-local address. Return it immediately...
+							return inetAddr;
+						}
+						else if (candidateAddress == null) {
+							// Found non-loopback address, but not necessarily site-local.
+							// Store it as a candidate to be returned if site-local address is not subsequently found...
+							candidateAddress = inetAddr;
+							// Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
+							// only the first. For subsequent iterations, candidate will be non-null.
+						}
+					}
+				}
+			}
+			if (candidateAddress != null) {
+				// We did not find a site-local address, but we found some other non-loopback address.
+				// Server might have a non-site-local address assigned to its NIC (or it might be running
+				// IPv6 which deprecates the "site-local" concept).
+				// Return this non-loopback candidate address...
+				return candidateAddress;
+			}
+			// At this point, we did not find a non-loopback address.
+			// Fall back to returning whatever InetAddress.getLocalHost() returns...
+			InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
+			if (jdkSuppliedAddress == null) {
+				throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
+			}
+			return jdkSuppliedAddress;
+		}
+		catch (Exception e) {
+			UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
+			unknownHostException.initCause(e);
+			throw unknownHostException;
+		}
 	}
 
 	private static String getLocalHostName() {
@@ -1846,6 +1925,14 @@ public final class CommonUtil {
 		return locale == null ? null : (displayLocale == null ? locale.getDisplayLanguage() : locale.getDisplayLanguage(displayLocale));
 	}
 
+	// public static String normalizeLineEndings(String string) {
+	// return normalizeLineEndings(string, "\n");
+	// }
+	//
+	// public static String normalizeLineEndings(String string, String lineBreak) {
+	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
+	// }
+
 	public static String localeToString(Locale locale) {
 		return locale == null ? null : locale.getLanguage();
 
@@ -1866,14 +1953,6 @@ public final class CommonUtil {
 			throw new IllegalArgumentException(e);
 		}
 	}
-
-	// public static String normalizeLineEndings(String string) {
-	// return normalizeLineEndings(string, "\n");
-	// }
-	//
-	// public static String normalizeLineEndings(String string, String lineBreak) {
-	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
-	// }
 
 	public static Date parseDate(String date, String pattern, Locale locale) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
@@ -1915,6 +1994,8 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
+
+
 	public static int safeLongToInt(long lng) {
 		if (lng < Integer.MIN_VALUE || lng > Integer.MAX_VALUE) {
 			throw new IllegalArgumentException(MessageFormat.format(INVALID_LONG_CAST, Long.toString(lng)));
@@ -1933,8 +2014,6 @@ public final class CommonUtil {
 		}
 		return filePath.replaceAll(FILE_PATH_SEPARATOR_PATTERN, Matcher.quoteReplacement(pathSeparator));
 	}
-
-
 
 	public static void setCriterionValueFromString(CriterionInstantVO criterion, CriterionValueType valueType, String value) {
 		setCriterionValueFromString(criterion, valueType, value, NO_SELECTION_VALUE);

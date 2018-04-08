@@ -15,7 +15,7 @@ public final class DefaultSettings {
 	public static final String EMAIL_DOMAIN_NAME = "{0}";
 	public static final String HTTP_DOMAIN_NAME = "localhost";
 	public static final String HTTP_BASE_URL = "{0}://{1}";
-	public static final String HTTP_HOST = "{0}:80";
+	public static final String HTTP_HOST = "{1}:80";
 	public final static String HTTP_SCHEME = "https";
 	public final static String INSTANCE_NAME = "{0}";
 	// public final static int PBE_KEY_ITERATIONS = 1;

@@ -420,7 +420,7 @@ public final class Settings {
 	}
 
 	public static String getHttpHost() {
-		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_HOST, Bundle.SETTINGS, DefaultSettings.HTTP_HOST), getHttpDomainName());
+		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_HOST, Bundle.SETTINGS, DefaultSettings.HTTP_HOST), getHttpDomainName(), CommonUtil.LOCAL_HOST_ADDRESS);
 	}
 
 	public static String getHttpScheme() {
