@@ -237,7 +237,7 @@ public final class CommonUtil {
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
 	public static final String BEACON_PATH = "beacon";
-	public static final String BEACON_GET_PARAMETER_NAME = "beacon";
+	// public static final String BEACON_GET_PARAMETER_NAME = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");

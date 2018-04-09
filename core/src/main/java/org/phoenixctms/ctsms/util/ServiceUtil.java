@@ -201,7 +201,7 @@ public final class ServiceUtil {
 
 	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
 
-	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}?{2}={3}";
+	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
 
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
 
@@ -1629,10 +1629,10 @@ public final class ServiceUtil {
 
 		model.put(
 				MassMailMessageTemplateParameters.MASS_MAIL_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
-						CommonUtil.UNSUBSCRIBE_PATH, CommonUtil.BEACON_GET_PARAMETER_NAME, beacon != null ? beacon : DUUMY_BEACON));
+						CommonUtil.UNSUBSCRIBE_PATH, beacon != null ? beacon : DUUMY_BEACON)); // CommonUtil.BEACON_GET_PARAMETER_NAME,
 		model.put(
 				MassMailMessageTemplateParameters.PROBAND_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
-						CommonUtil.UNSUBSCRIBE_PATH, CommonUtil.BEACON_GET_PARAMETER_NAME, proband != null ? proband.getBeacon() : DUUMY_BEACON));
+						CommonUtil.UNSUBSCRIBE_PATH, proband != null ? proband.getBeacon() : DUUMY_BEACON)); // CommonUtil.BEACON_GET_PARAMETER_NAME
 		model.put(
 				MassMailMessageTemplateParameters.GENERATED_ON,
 				Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
