@@ -236,7 +236,7 @@
 									actionListener="#{recipientOverviewBean.resetMassMailRecipient(massMailRecipient.vo)}"
 									icon="ui-icon ui-icon-arrowrefresh-1-e"
 									ajax="true"
-									disabled="#{massMailRecipient.vo.pending}"
+									disabled="#{massMailRecipient.vo.timesProcessed == 0}"
 									update=":recipientoverview_form:massmailrecipient_list_wrapper,:recipientoverview_form:messages" />
 								<p:commandButton
 									type="button"

@@ -125,7 +125,7 @@
 							title="#{massmaillabels.reset_mass_mail_recipient_button_title}"
 							icon="ui-icon ui-icon-arrowrefresh-1-e"
 							type="button"
-							disabled="#{massMailRecipient.vo.pending}"
+							disabled="#{massMailRecipient.vo.timesProcessed == 0}"
 							onclick="resetMassMailRecipient(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('MASS_MAIL_RECIPIENT_ID')}:'#{massMailRecipient.vo.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{massMailRecipient.vo.version}' }));" />
 						<p:commandButton
 							type="button"
@@ -358,7 +358,7 @@
 										value="#{massmaillabels.reset_mass_mail_recipient_button_title}"
 										icon="ui-icon ui-icon-arrowrefresh-1-e"
 										type="button"
-										disabled="#{!massMailRecipientBean.editable or massMailRecipientBean.out.pending}"
+										disabled="#{!massMailRecipientBean.editable or massMailRecipientBean.out.timesProcessed == 0}"
 										onclick="resetMassMailRecipient(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('MASS_MAIL_RECIPIENT_ID')}:'#{massMailRecipientBean.in.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{massMailRecipientBean.in.version}' }));" />
 									<!-- <p:commandButton
 										process="@this,team_member_input"

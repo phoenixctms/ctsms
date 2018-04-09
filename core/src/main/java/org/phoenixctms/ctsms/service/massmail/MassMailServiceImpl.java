@@ -504,14 +504,14 @@ extends MassMailServiceBase
 	}
 
 	@Override
-	protected long handleGetMassMailCount(AuthenticationVO auth, Long trialId, Long probandListStatusTypeId, Boolean locked, Long resendProbandI) throws Exception {
+	protected long handleGetMassMailCount(AuthenticationVO auth, Long trialId, Long probandListStatusTypeId, Boolean locked, Long resendProbandId) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
-		if (resendProbandI != null) {
-			CheckIDUtil.checkProbandId(resendProbandI, this.getProbandDao());
+		if (resendProbandId != null) {
+			CheckIDUtil.checkProbandId(resendProbandId, this.getProbandDao());
 		}
-		return this.getMassMailDao().getCount(trialId, probandListStatusTypeId, locked, resendProbandI);
+		return this.getMassMailDao().getCount(trialId, probandListStatusTypeId, locked, resendProbandId);
 	}
 
 
@@ -715,6 +715,9 @@ extends MassMailServiceBase
 	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
+		// if (recipient.getTimesProcessed() == 0l) {
+		// x
+		// }
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ServiceUtil.resetMassMailRecipient(recipient, original);
 		Timestamp now = new Timestamp(System.currentTimeMillis());

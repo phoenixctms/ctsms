@@ -419,7 +419,7 @@ public final class ServiceUtil {
 			logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
 			// logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
 			logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
-		} else if (massMail.isProbandListStatusResend()) {
+		} else if (massMail.isProbandListStatusResend()) { // && recipient.getTimesProcessed() > 0l) {
 			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 			MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			resetMassMailRecipient(recipient, original);
