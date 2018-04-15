@@ -193,6 +193,7 @@ public interface $entity.daoName
     public void evict($rootEntityType entity);
     public void lock($rootEntityType entity, final LockMode lockMode);
     public void refresh($rootEntityType entity, final LockMode lockMode);
+    public void refresh($rootEntityType entity);
     //public void clearEhCache();
 
     /**

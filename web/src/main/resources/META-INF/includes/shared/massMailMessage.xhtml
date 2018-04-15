@@ -18,6 +18,28 @@
 			<h:panelGrid
 				columns="1"
 				cellpadding="0">
+				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.fromAddresses) > 0}">
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_from_label}" />
+					<p:dataList
+						value="#{message.fromAddresses}"
+						var="recipient"
+						itemType="disc">
+						<h:outputLink value="mailto:#{recipient.address}">
+							<h:outputText value="#{empty recipient.personal ? recipient.address : recipient.personal}" />
+						</h:outputLink>
+					</p:dataList>
+				</h:panelGroup>		
+				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.replyToAddresses) > 0}">
+					<h:outputText value="#{massmaillabels.mass_mail_recipient_reply_to_label}" />
+					<p:dataList
+						value="#{message.replyToAddresses}"
+						var="recipient"
+						itemType="disc">
+						<h:outputLink value="mailto:#{recipient.address}">
+							<h:outputText value="#{empty recipient.personal ? recipient.address : recipient.personal}" />
+						</h:outputLink>
+					</p:dataList>
+				</h:panelGroup>							
 				<h:panelGroup rendered="#{applicationScopeBean.getListSize(message.toAddresses) > 0}">
 					<h:outputText value="#{massmaillabels.mass_mail_recipient_to_recipients_label}" />
 					<p:dataList

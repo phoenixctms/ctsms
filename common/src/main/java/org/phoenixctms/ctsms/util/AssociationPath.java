@@ -17,6 +17,7 @@ public class AssociationPath {
 	// public static final MethodTransfilter MethodTransfilter.DEFAULT_TRANSFILTER = new MethodTransfilter();
 	public final static String ASSOCIATION_PATH_SEPARATOR = ".";
 	private final static Pattern ASSOCIATION_PATH_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ASSOCIATION_PATH_SEPARATOR));
+	public final static String ASSOCIATION_PATH_PATTERN = "([a-zA-Z_][a-zA-Z0-9_]*)(" + Pattern.quote(ASSOCIATION_PATH_SEPARATOR) + "[a-zA-Z_][a-zA-Z0-9_]*)*";
 
 	public static Method findMethod(String methodName, boolean sortMethods, Method[] methods) throws Exception {
 		return findMethod(methodName, MethodTransfilter.DEFAULT_TRANSFILTER, sortMethods, methods);

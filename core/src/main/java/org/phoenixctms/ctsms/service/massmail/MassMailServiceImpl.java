@@ -171,16 +171,19 @@ extends MassMailServiceBase
 				this.getMedicationDao(),
 				this.getBankAccountDao());
 
-		CoreUtil.checkEmailAddress(massMailIn.getFromAddress());
-		CoreUtil.checkEmailAddress(massMailIn.getReplyToAddress());
+		CoreUtil.checkEmailAddress(massMailIn.getFromAddress(), true);
+		CoreUtil.checkEmailAddress(massMailIn.getReplyToAddress(), true);
 		if (!CommonUtil.isEmptyString(massMailIn.getOtherTo())) {
 			try {
 				InternetAddress.parse(massMailIn.getOtherTo(), massMailEmailSender.isStrictEmailAddresses());
 			} catch (AddressException e) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_OTHER_TO, massMailIn.getOtherTo(), e.getMessage());
 			}
-		} else if (!massMailIn.getProbandTo() && !massMailIn.getPhysicianTo()) {
+		} else if (!massMailIn.getProbandTo() && !massMailIn.getPhysicianTo() && !massMailIn.getTrialTeamTo()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_OTHER_TO_REQUIRED);
+		}
+		if (massMailIn.getTrialId() == null && massMailIn.getTrialTeamTo()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_TRIAL_TEAM_TO_NOT_FALSE);
 		}
 		if (!CommonUtil.isEmptyString(massMailIn.getCc())) {
 			try {
@@ -276,6 +279,7 @@ extends MassMailServiceBase
 						massMailVO.setReplyToName(massMailIn.getReplyToName());
 						massMailVO.setProbandTo(massMailIn.getProbandTo());
 						massMailVO.setPhysicianTo(massMailIn.getPhysicianTo());
+						massMailVO.setTrialTeamTo(massMailIn.getTrialTeamTo());
 						massMailVO.setOtherTo(massMailIn.getOtherTo());
 						massMailVO.setCc(massMailIn.getCc());
 						massMailVO.setBcc(massMailIn.getBcc());
@@ -488,6 +492,7 @@ extends MassMailServiceBase
 	protected EmailMessageVO handleGetEmailMessage(AuthenticationVO auth, Long massMailRecipientId) throws Exception {
 		MassMailRecipientDao massMailRecpientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecpientDao);
+		massMailRecpientDao.refresh(recipient);
 		return massMailRecpientDao.toEmailMessageVO(recipient);
 	}
 
@@ -549,6 +554,7 @@ extends MassMailServiceBase
 	protected MassMailRecipientOutVO handleGetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId) throws Exception {
 		MassMailRecipientDao massMailRecpientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecpientDao);
+		massMailRecpientDao.refresh(recipient);
 		return massMailRecpientDao.toMassMailRecipientOutVO(recipient);
 	}
 

@@ -5497,9 +5497,9 @@ public final class ServiceUtil {
 	}
 
 	public static void resetMassMailRecipient(MassMailRecipient recipient, MassMailRecipientOutVO original) throws ServiceException {
-		if (original.getPending()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_PENDING);
-		}
+		// if (original.getTimesProcessed() == 0l) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_PENDING);
+		// }
 		checkMassMailLocked(recipient.getMassMail());
 		Proband proband = recipient.getProband();
 		if (proband == null) {

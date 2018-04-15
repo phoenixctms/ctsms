@@ -702,6 +702,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";
 	public static final String MASS_MAIL_INVALID_OTHER_TO = "mass_mail_invalid_other_to";
 	public static final String MASS_MAIL_OTHER_TO_REQUIRED = "mass_mail_other_to_required";
+	public static final String MASS_MAIL_TRIAL_TEAM_TO_NOT_FALSE = "mass_mail_trial_team_to_not_false";
 	public static final String MASS_MAIL_INVALID_CC = "mass_mail_invalid_cc";
 	public static final String MASS_MAIL_INVALID_BCC = "mass_mail_invalid_bcc";
 	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_mass_mail_files_logical_path_not_null";
@@ -717,7 +718,7 @@ public interface ServiceExceptionCodes {
 	public static final String SENDING_MASS_MAILS_DISABLED = "sending_mass_mails_disabled";
 	public static final String EMAIL_NOTIFICATIONS_DISABLED = "email_notifications_disabled";
 	public static final String MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND = "mass_mail_recipient_beacon_not_found";
-	public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
+	// public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
 	public static final String MASS_MAIL_RECIPIENT_PROBAND_NULL = "mass_mail_recipient_proband_null";
 
 

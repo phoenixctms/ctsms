@@ -223,6 +223,7 @@ public final class DefaultSettings {
 	public static final int EMAIL_PROCESS_MASS_MAILS_DELAY_MILLIS = 10;
 	public static final Long EMAIL_PROCESS_MASS_MAILS_MAX = 3l;
 	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
+	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
 
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");

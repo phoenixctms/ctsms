@@ -174,8 +174,18 @@ public final class CoreUtil {
 		return false;
 	}
 
-	public static void checkEmailAddress(String email) throws ServiceException {
+	public static void checkEmailAddress(String email, boolean allowResolveMailAddress) throws ServiceException {
 		if (!EMAIL_ADDRESS_REGEXP.matcher(email).find()) {
+			if (allowResolveMailAddress) {
+				String resolveMailAddressDomainName = Settings.getString(SettingCodes.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME, Bundle.SETTINGS,
+						DefaultSettings.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME);
+				if (!CommonUtil.isEmptyString(resolveMailAddressDomainName)) {
+					Pattern resolveMailAddressRegExp = Pattern.compile("^" + AssociationPath.ASSOCIATION_PATH_PATTERN + "@" + Pattern.quote(resolveMailAddressDomainName) + "$");
+					if (resolveMailAddressRegExp.matcher(email).find()) {
+						return;
+					}
+				}
+			}
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, email);
 		}
 	}

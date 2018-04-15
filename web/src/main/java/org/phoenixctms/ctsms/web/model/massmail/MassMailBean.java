@@ -75,6 +75,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setReplyToName(out.getReplyToName());
 			in.setProbandTo(out.getProbandTo());
 			in.setPhysicianTo(out.getPhysicianTo());
+			in.setTrialTeamTo(out.getTrialTeamTo());
 			in.setOtherTo(out.getOtherTo());
 			in.setCc(out.getCc());
 			in.setBcc(out.getBcc());
@@ -119,6 +120,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setReplyToName(Settings.getString(SettingCodes.MASS_MAIL_REPLY_TO_NAME_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_REPLY_TO_NAME_PRESET));
 			in.setProbandTo(Settings.getBoolean(SettingCodes.MASS_MAIL_PROBAND_TO_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PROBAND_TO_PRESET));
 			in.setPhysicianTo(Settings.getBoolean(SettingCodes.MASS_MAIL_PHYSICIAN_TO_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PHYSICIAN_TO_PRESET));
+			in.setTrialTeamTo(Settings.getBoolean(SettingCodes.MASS_MAIL_TRIAL_TEAM_TO_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TRIAL_TEAM_TO_PRESET));
 			in.setOtherTo(Settings.getString(SettingCodes.MASS_MAIL_OTHER_TO_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_OTHER_TO_PRESET));
 			in.setCc(Settings.getString(SettingCodes.MASS_MAIL_CC_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_CC_PRESET));
 			in.setBcc(Settings.getString(SettingCodes.MASS_MAIL_BCC_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_BCC_PRESET));

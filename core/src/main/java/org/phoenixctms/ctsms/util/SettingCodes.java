@@ -278,4 +278,5 @@ public interface SettingCodes {
 	public static final String EMAIL_PROCESS_MASS_MAILS_DELAY_MILLIS = "email_process_mass_mails_delay_millis";
 	public static final String EMAIL_PROCESS_MASS_MAILS_MAX = "email_process_mass_mails_max";
 	public static final String MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = "mass_mail_mime_message_max_age_seconds";
+	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "resolve_mail_address_domain_name";
 }

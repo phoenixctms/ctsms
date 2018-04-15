@@ -404,6 +404,20 @@ extends MassMailRecipientDaoBase {
 						target.getBccAddresses().add(internetAddressToEmailAddressVO((InternetAddress) bcc[i]));
 					}
 				}
+				Address[] from = mimeMessage.getFrom();
+				target.getFromAddresses().clear();
+				if (from != null) {
+					for (int i = 0; i < from.length; i++) {
+						target.getFromAddresses().add(internetAddressToEmailAddressVO((InternetAddress) from[i]));
+					}
+				}
+				Address[] replyTo = mimeMessage.getReplyTo();
+				target.getReplyToAddresses().clear();
+				if (replyTo != null) {
+					for (int i = 0; i < replyTo.length; i++) {
+						target.getReplyToAddresses().add(internetAddressToEmailAddressVO((InternetAddress) replyTo[i]));
+					}
+				}
 				Object content = mimeMessage.getContent();
 				target.setText(null);
 				target.getAttachments().clear();
@@ -433,6 +447,8 @@ extends MassMailRecipientDaoBase {
 			} catch (Exception e) {
 				target.setSubject(null);
 				target.setText(null);
+				target.getFromAddresses().clear();
+				target.getReplyToAddresses().clear();
 				target.getToAddresses().clear();
 				target.getCcAddresses().clear();
 				target.getBccAddresses().clear();

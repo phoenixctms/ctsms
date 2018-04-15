@@ -98,6 +98,8 @@ public interface MessageCodes {
 	public static final String DIFFERRING_ORIGINAL_AND_UPDATED_VO_TYPES = "differring_original_and_updated_vo_types";
 	public static final String UNSUPPORTED_ENUMERATION_OR_VALUE = "unsupported_enumeration_or_value";
 	public static final String UNSUPPORTED_ENTITY = "unsupported_entity";
+	public static final String UNSUPPORTED_MAIL_RECIPIENT_ENTITY = "unsupported_mail_recipient_entity";
+	public static final String UNSUPPORTED_MAIL_RECIPIENT_PROPERTY = "unsupported_mail_recipient_property";
 	public static final String SIGNEE_IDENTITY_LABEL = "signee_identity_label";
 	public static final String TRIAL_SIGNATURE_VALID_DESCRIPTION = "trial_signature_valid_description";
 	public static final String TRIAL_SIGNATURE_INVALID_DESCRIPTION = "trial_signature_invalid_description";

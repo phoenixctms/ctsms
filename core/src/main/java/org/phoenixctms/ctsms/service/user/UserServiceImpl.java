@@ -275,6 +275,7 @@ extends UserServiceBase
 			Long notificationId) throws Exception {
 		NotificationDao notificationDao = this.getNotificationDao();
 		Notification notification = CheckIDUtil.checkNotificationId(notificationId, notificationDao);
+		notificationDao.refresh(notification);
 		User user = CoreUtil.getUser();
 		Staff identity = user.getIdentity();
 		if (identity != null) {

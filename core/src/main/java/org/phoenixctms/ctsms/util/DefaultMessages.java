@@ -171,6 +171,8 @@ public interface DefaultMessages {
 	public static final String DIFFERRING_ORIGINAL_AND_UPDATED_VO_TYPES = "differring original ({0}) and updated ({1}) types";
 	public static final String UNSUPPORTED_ENUMERATION_OR_VALUE = "unsupported enumeration {0} or value {1}";
 	public static final String UNSUPPORTED_ENTITY = "unsupported entity {0}";
+	public static final String UNSUPPORTED_MAIL_RECIPIENT_ENTITY = "entity {0} cannot be used as recipient";
+	public static final String UNSUPPORTED_MAIL_RECIPIENT_PROPERTY = "unknown property {0}";
 	public static final String SIGNEE_IDENTITY_LABEL = "{0} ({1})";
 	public static final String TRIAL_SIGNATURE_VALID_DESCRIPTION = "Successful signature validation!\nTrial {0} database records content from {2}, signed by {1} is evidentially untampered.\nSignature: {4}\nTime of verification: {3}";
 	public static final String TRIAL_SIGNATURE_INVALID_DESCRIPTION = "Signature validation FAILED!\nTrial {0} database records content from {2}, signed by {1} was modified in meantime.\nTime of verification: {3}";

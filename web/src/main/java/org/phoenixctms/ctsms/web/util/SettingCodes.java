@@ -455,6 +455,7 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_REPLY_TO_NAME_PRESET = "mass_mail_reply_to_name_preset";
 	public static final String MASS_MAIL_PROBAND_TO_PRESET = "mass_mail_proband_to_preset";
 	public static final String MASS_MAIL_PHYSICIAN_TO_PRESET = "mass_mail_physician_to_preset";
+	public static final String MASS_MAIL_TRIAL_TEAM_TO_PRESET = "mass_mail_trial_team_to_preset";
 	public static final String MASS_MAIL_OTHER_TO_PRESET = "mass_mail_other_to_preset";
 	public static final String MASS_MAIL_CC_PRESET = "mass_mail_cc_preset";
 	public static final String MASS_MAIL_BCC_PRESET = "mass_mail_bcc_preset";

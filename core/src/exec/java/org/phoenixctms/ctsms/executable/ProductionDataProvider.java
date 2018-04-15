@@ -511,7 +511,7 @@ public class ProductionDataProvider {
 	}
 
 	private ContactDetailType createContactDetailType(String nameL10nKey, boolean email, boolean phone, boolean url, boolean notifyPreset, Integer maxOccurrence, String regExp,
-			String mismatchMsgL10nKey, boolean staff, boolean proband, boolean animal) {
+			String mismatchMsgL10nKey, boolean staff, boolean proband, boolean animal, boolean business) {
 		ContactDetailType type = ContactDetailType.Factory.newInstance();
 		type.setNameL10nKey(nameL10nKey);
 		type.setEmail(email);
@@ -524,26 +524,29 @@ public class ProductionDataProvider {
 		type.setStaff(staff);
 		type.setProband(proband);
 		type.setAnimal(animal);
+		type.setBusiness(business);
 		type = contactDetailTypeDao.create(type);
 		return type;
 	}
 
 	private void createContactDetailTypes() {
 		createContactDetailType("business_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true,
-				false);
+				false, true);
 		createContactDetailType("office_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, false,
+				false, false);
+		createContactDetailType("home_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false,
 				false);
-		createContactDetailType("home_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
 		createContactDetailType("mobile_phone_number", false, true, false, true, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true,
+				false, false);
+		createContactDetailType("fax_number", false, false, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false,
 				false);
-		createContactDetailType("fax_number", false, false, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true, false);
 		createContactDetailType("business_email_address", true, false, false, false, null, CoreUtil.EMAIL_ADDRESS_PATTERN, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true,
-				false);
+				false, true);
 		createContactDetailType("other_email_address", true, false, false, true, null, CoreUtil.EMAIL_ADDRESS_PATTERN, ServiceExceptionCodes.INVALID_EMAIL_ADDRESS, true, true,
-				false);
-		createContactDetailType("web_page_url", false, false, true, false, null, CoreUtil.URL_PATTERN, ServiceExceptionCodes.INVALID_URL, true, true, false);
+				false, false);
+		createContactDetailType("web_page_url", false, false, true, false, null, CoreUtil.URL_PATTERN, ServiceExceptionCodes.INVALID_URL, true, true, false, false);
 		createContactDetailType("care_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, false, false,
-				true);
+				true, false);
 		// createContactDetailType("skype_user_name",false,false,false,false,null,null,null,true,true);
 		jobOutput.println("contact detail types created");
 	}

@@ -39,6 +39,11 @@ insert into MASS_MAIL_TYPE values (nextval('hibernate_sequence'), 'enrollment', 
 
 insert into PROBAND_CATEGORY values (nextval('hibernate_sequence'), 'signup_verified', 'PALEGREEN', 't', 'ctsms-probandcategory-signup-verified', 't', 'f', 'f', 't', 't', 'f');
 
+alter table CONTACT_DETAIL_TYPE add column BUSINESS BOOLEAN;
+update CONTACT_DETAIL_TYPE set BUSINESS = 'f';
+update CONTACT_DETAIL_TYPE set BUSINESS = 't' where name_l10n_key like 'business%';
+alter table CONTACT_DETAIL_TYPE alter BUSINESS set not null;
+
 
 
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -17,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.velocity.app.VelocityEngine;
 import org.phoenixctms.ctsms.domain.BankAccountDao;
 import org.phoenixctms.ctsms.domain.ContactDetailType;
+import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.DiagnosisDao;
 import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
@@ -36,6 +38,7 @@ import org.phoenixctms.ctsms.domain.MassMailRecipient;
 import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.MedicationDao;
 import org.phoenixctms.ctsms.domain.MoneyTransferDao;
+import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandAddressDao;
 import org.phoenixctms.ctsms.domain.ProbandContactDetailValue;
 import org.phoenixctms.ctsms.domain.ProbandContactDetailValueDao;
@@ -47,7 +50,10 @@ import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
 import org.phoenixctms.ctsms.domain.ProbandTagValueDao;
 import org.phoenixctms.ctsms.domain.ProcedureDao;
 import org.phoenixctms.ctsms.domain.SignatureDao;
+import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffContactDetailValue;
+import org.phoenixctms.ctsms.domain.StaffContactDetailValueDao;
+import org.phoenixctms.ctsms.domain.TeamMember;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.TrialTagValueDao;
@@ -60,11 +66,15 @@ import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.security.CipherStream;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
+import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -81,6 +91,7 @@ import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagsPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
+import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -96,6 +107,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private final static boolean INQUIRIES_BLANK = false;
 	private final static boolean PROBAND_LIST_ENTRY_TAGS_BLANK = false;
 	private final static boolean ECRFS_BLANK = false;
+	private final static Pattern MAIL_USER_DOMAIN_REGEXP = Pattern.compile("@");
+	private static final MethodTransfilter RESOLVE_MAIL_ADDRESS_TRANSFILTER = MethodTransfilter.getEntityMethodTransfilter(true);
 	private static EmailAttachmentVO fileContentOutVOtoEmailAttachentVO(FileContentOutVO file) throws ServiceException {
 
 		if (file.isDecrypted()) {
@@ -137,20 +150,21 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private ProbandContactDetailValueDao probandContactDetailValueDao;
 	private TrialTagValueDao trialTagValueDao;
 	private ProbandListEntryDao probandListEntryDao;
-	private ProbandListEntryTagDao probandListEntryTagDao;
-	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
 
+	private ProbandListEntryTagDao probandListEntryTagDao;
+
+	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
 	private InventoryBookingDao inventoryBookingDao;
 
 	private boolean strictEmailAddresses;
 	private VelocityEngine velocityEngine;
-
 	private ProbandTagValueDao probandTagValueDao;
+
 	private DiagnosisDao diagnosisDao;
+
 	private ProcedureDao procedureDao;
-
 	private MedicationDao medicationDao;
-
+	private StaffContactDetailValueDao staffContactDetailValueDao;
 	@Override
 	protected void addAttachments(MassMail massMail, MassMailRecipient recipient, ArrayList<EmailAttachmentVO> attachments) throws Exception {
 		if (massMail.isAttachMassMailFiles()) {
@@ -280,6 +294,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			}
 		}
 	}
+
 	@Override
 	protected boolean isHtml() {
 		return HTML;
@@ -316,6 +331,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		}
 		return null;
 	}
+
 	@Override
 	protected void prepareMessage(MimeMessage mimeMessage, MassMail massMail,
 			MassMailRecipient recipient, StringBuilder text, Date now) throws Exception {
@@ -330,14 +346,14 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			MassMailOutVO massMailVO = recipientVO.getMassMail();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEncoding());
 			if (!CommonUtil.isEmptyString(massMail.getFromName())) {
-				mimeMessageHelper.setFrom(massMail.getFromAddress(), massMail.getFromName());
+				mimeMessageHelper.setFrom(resolveMailAddress(recipient, massMail.getFromAddress(), true), massMail.getFromName());
 			} else {
-				mimeMessageHelper.setFrom(massMail.getFromAddress());
+				mimeMessageHelper.setFrom(resolveMailAddress(recipient, massMail.getFromAddress(), true));
 			}
 			if (!CommonUtil.isEmptyString(massMail.getReplyToName())) {
-				mimeMessageHelper.setReplyTo(massMail.getReplyToAddress(), massMail.getReplyToName());
+				mimeMessageHelper.setReplyTo(resolveMailAddress(recipient, massMail.getReplyToAddress(), true), massMail.getReplyToName());
 			} else {
-				mimeMessageHelper.setReplyTo(massMail.getReplyToAddress());
+				mimeMessageHelper.setReplyTo(resolveMailAddress(recipient, massMail.getReplyToAddress(), true));
 			}
 			Locales locale = L10nUtil.getLocales(massMailVO.getLocale());
 			String subject = ServiceUtil.getMassMailSubject(massMailVO.getSubjectFormat(), locale, massMailVO.getMaleSalutation(), massMailVO.getFemaleSalutation(), probandVO,
@@ -350,18 +366,13 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			}
 			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), now, null, trialTagValueDao, probandListEntryDao, // recipientVO.getTrial()
 					probandListEntryTagValueDao, inventoryBookingDao,
-
 					probandTagValueDao,
 					probandContactDetailValueDao,
 					probandAddressDao,
 					diagnosisDao,
 					procedureDao,
 					medicationDao,
-					bankAccountDao
-
-
-
-					);
+					bankAccountDao);
 			if (!CommonUtil.isEmptyString(message)) {
 				text.append(message);
 				if (massMailVO.getUseBeacon() && isHtml()) {
@@ -401,13 +412,39 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					}
 				}
 			}
+			if (massMailVO.getTrialTeamTo() && massMail.getTrial() != null) {
+				Iterator<TeamMember> membersIt = massMail.getTrial().getMembers().iterator();
+				while (membersIt.hasNext()) {
+					TeamMember teamMember = membersIt.next();
+					if (teamMember.isNotifyOther()) {
+						Iterator<StaffContactDetailValue> contactsIt = teamMember.getStaff().getContactDetailValues().iterator();
+						while (contactsIt.hasNext()) {
+							StaffContactDetailValue contact = contactsIt.next();
+							ContactDetailType contactType;
+							if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
+								StaffContactDetailValueOutVO contactVO = staffContactDetailValueDao.toStaffContactDetailValueOutVO(contact);
+								mimeMessageHelper.addTo(contact.getValue(),
+										MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
+												L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+								// toCount++;
+							}
+						}
+					}
+				}
+			}
 			if (!CommonUtil.isEmptyString(massMail.getOtherTo())) {
 				try {
 					InternetAddress[] otherTo = InternetAddress.parse(massMail.getOtherTo(), strictEmailAddresses);
 					if (otherTo != null) {
 						for (int i = 0; i < otherTo.length; i++) {
-							mimeMessageHelper.addTo(otherTo[i]);
-							// toCount++;
+							Iterator<InternetAddress> it = resolveMailAddresses(recipient, otherTo[i].getAddress(), false).iterator();
+							if (it.hasNext()) {
+								while (it.hasNext()) {
+									mimeMessageHelper.addTo(it.next());
+								}
+							} else {
+								mimeMessageHelper.addTo(otherTo[i]);
+							}
 						}
 					}
 				} catch (AddressException e) {
@@ -419,7 +456,14 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					InternetAddress[] cc = InternetAddress.parse(massMail.getCc(), strictEmailAddresses);
 					if (cc != null) {
 						for (int i = 0; i < cc.length; i++) {
-							mimeMessageHelper.addCc(cc[i]);
+							Iterator<InternetAddress> it = resolveMailAddresses(recipient, cc[i].getAddress(), false).iterator();
+							if (it.hasNext()) {
+								while (it.hasNext()) {
+									mimeMessageHelper.addCc(it.next());
+								}
+							} else {
+								mimeMessageHelper.addCc(cc[i]);
+							}
 						}
 					}
 				} catch (AddressException e) {
@@ -431,7 +475,14 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					InternetAddress[] bcc = InternetAddress.parse(massMail.getBcc(), strictEmailAddresses);
 					if (bcc != null) {
 						for (int i = 0; i < bcc.length; i++) {
-							mimeMessageHelper.addCc(bcc[i]);
+							Iterator<InternetAddress> it = resolveMailAddresses(recipient, bcc[i].getAddress(), false).iterator();
+							if (it.hasNext()) {
+								while (it.hasNext()) {
+									mimeMessageHelper.addBcc(it.next());
+								}
+							} else {
+								mimeMessageHelper.addBcc(bcc[i]);
+							}
 						}
 					}
 				} catch (AddressException e) {
@@ -443,23 +494,146 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		}
 		// return toCount;
 	}
-	public void setBankAccountDao(BankAccountDao bankAccountDao) {
-		this.bankAccountDao = bankAccountDao;
+
+	private String resolveMailAddress(MassMailRecipient recipient, String address, boolean reply) throws Exception {
+		ArrayList<InternetAddress> result = resolveMailAddresses(recipient, address, reply);
+		if (result.size() > 0) {
+			return result.iterator().next().getAddress();
+		}
+		return address;
 	}
 
 
+	private ArrayList<InternetAddress> resolveMailAddresses(MassMailRecipient recipient, String address, boolean reply) throws Exception {
+		String resolveMailAddressDomainName = Settings.getString(SettingCodes.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME, Bundle.SETTINGS, DefaultSettings.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME);
+		ArrayList<InternetAddress> result = new ArrayList<InternetAddress>();
+		if (!CommonUtil.isEmptyString(resolveMailAddressDomainName) && !CommonUtil.isEmptyString(address)) {
+			String[] addressParts = MAIL_USER_DOMAIN_REGEXP.split(address, 2);
+			if (addressParts != null && addressParts.length == 2 && resolveMailAddressDomainName.equals(addressParts[1])) {
+				User user = null;
+				try {
+					user = (User) userDao.searchUniqueName(UserDao.TRANSFORM_NONE, addressParts[0]);
+				} catch (Throwable t) {
+				}
+				Locales locale = null;
+				if (user != null) {
+					if (recipient != null) {
+						locale = L10nUtil.getLocales(recipient.getMassMail().getLocale());
+					} else {
+						locale = L10nUtil.getLocales(user.getLocale());
+					}
+					if (user.getIdentity() != null) {
+						Iterator<StaffContactDetailValue> contactsIt = user.getIdentity().getContactDetailValues().iterator();
+						while (contactsIt.hasNext()) {
+							StaffContactDetailValue contact = contactsIt.next();
+							ContactDetailType contactType;
+							if (!contact.isNa() && (contactType = contact.getType()).isEmail() &&
+									(reply ? contactType.isBusiness() : contact.isNotify())) {
+								StaffContactDetailValueOutVO contactVO = staffContactDetailValueDao.toStaffContactDetailValueOutVO(contact);
+								result.add(new InternetAddress(contact.getValue(),
+										MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
+												L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey()))));
+							}
+						}
+					}
+				} else if (recipient != null) {
+					locale = L10nUtil.getLocales(recipient.getMassMail().getLocale());
+					AssociationPath getter = new AssociationPath(addressParts[0]);
+					Object userProbandStaff = null;
+					try {
+						userProbandStaff = getter.invoke(recipient, null, RESOLVE_MAIL_ADDRESS_TRANSFILTER, false);
+					} catch (NoSuchMethodException e) {
+						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_MAIL_RECIPIENT_PROPERTY,
+								DefaultMessages.UNSUPPORTED_MAIL_RECIPIENT_ENTITY,
+								new Object[] { e.getMessage() }));
+					}
+					if (userProbandStaff != null) {
+						Iterator it;
+						if (userProbandStaff instanceof Collection) {
+							it = ((Collection) userProbandStaff).iterator();
+						} else {
+							ArrayList<Object> userProbandStaffs = new ArrayList<Object>(1);
+							userProbandStaffs.add(userProbandStaff);
+							it = userProbandStaffs.iterator();
+						}
+						while (it.hasNext()) {
+							userProbandStaff = it.next();
+							Staff staff = null;
+							Proband proband = null;
+							if (userProbandStaff instanceof User) {
+								staff = ((User) userProbandStaff).getIdentity();
+							} else if (userProbandStaff instanceof TeamMember) {
+								staff = ((TeamMember) userProbandStaff).getStaff();
+							} else if (userProbandStaff instanceof CourseParticipationStatusEntry) {
+								staff = ((CourseParticipationStatusEntry) userProbandStaff).getStaff();
+							} else if (userProbandStaff instanceof ProbandListEntry) {
+								proband = ((ProbandListEntry) userProbandStaff).getProband();
+							} else if (userProbandStaff instanceof Proband) {
+								proband = (Proband) userProbandStaff;
+							} else if (userProbandStaff instanceof Staff) {
+								staff = (Staff) userProbandStaff;
+							} else {
+								throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_MAIL_RECIPIENT_ENTITY,
+										DefaultMessages.UNSUPPORTED_MAIL_RECIPIENT_ENTITY,
+										new Object[] { userProbandStaff.getClass().getName() }));
+							}
+							if (staff != null) {
+								Iterator<StaffContactDetailValue> contactsIt = staff.getContactDetailValues().iterator();
+								while (contactsIt.hasNext()) {
+									StaffContactDetailValue contact = contactsIt.next();
+									ContactDetailType contactType;
+									if (!contact.isNa() && (contactType = contact.getType()).isEmail() &&
+											(reply ? contactType.isBusiness() : contact.isNotify())) {
+										StaffContactDetailValueOutVO contactVO = staffContactDetailValueDao.toStaffContactDetailValueOutVO(contact);
+										result.add(new InternetAddress(contact.getValue(),
+												MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
+														L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey()))));
+									}
+								}
+							}
+							if (proband != null) {
+								Iterator<ProbandContactDetailValue> contactsIt = ((Proband) userProbandStaff).getContactDetailValues().iterator();
+								while (contactsIt.hasNext()) {
+									ProbandContactDetailValue contact = contactsIt.next();
+									ContactDetailType contactType;
+									if (!contact.isNa() && (contactType = contact.getType()).isEmail() &&
+											(reply ? contactType.isBusiness() : contact.isNotify())) {
+										ProbandContactDetailValueOutVO contactVO = probandContactDetailValueDao.toProbandContactDetailValueOutVO(contact);
+										if (contactVO.isDecrypted()) {
+											result.add(new InternetAddress(contactVO.getValue(),
+													MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getProband().getName(),
+															L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey()))));
+										} else {
+											throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_CONTACT_DETAIL_VALUE);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 
+			}
+		}
+		return result;
+	}
+
+	public void setBankAccountDao(BankAccountDao bankAccountDao) {
+		this.bankAccountDao = bankAccountDao;
+	}
 	public void setDiagnosisDao(DiagnosisDao diagnosisDao) {
 		this.diagnosisDao = diagnosisDao;
 	}
 
+
+
 	public void seteCRFDao(ECRFDao eCRFDao) {
 		this.eCRFDao = eCRFDao;
 	}
+
 	public void seteCRFFieldDao(ECRFFieldDao eCRFFieldDao) {
 		this.eCRFFieldDao = eCRFFieldDao;
 	}
-
 	public void seteCRFFieldStatusEntryDao(ECRFFieldStatusEntryDao eCRFFieldStatusEntryDao) {
 		this.eCRFFieldStatusEntryDao = eCRFFieldStatusEntryDao;
 	}
@@ -483,6 +657,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInputFieldDao(InputFieldDao inputFieldDao) {
 		this.inputFieldDao = inputFieldDao;
 	}
+
 	public void setInputFieldSelectionSetValueDao(InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		this.inputFieldSelectionSetValueDao = inputFieldSelectionSetValueDao;
 	}
@@ -492,7 +667,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInquiryValueDao(InquiryValueDao inquiryValueDao) {
 		this.inquiryValueDao = inquiryValueDao;
 	}
-
 	public void setInventoryBookingDao(InventoryBookingDao inventoryBookingDao) {
 		this.inventoryBookingDao = inventoryBookingDao;
 	}
@@ -509,10 +683,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		this.moneyTransferDao = moneyTransferDao;
 	}
 
-
 	public void setProbandAddressDao(ProbandAddressDao probandAddressDao) {
 		this.probandAddressDao = probandAddressDao;
 	}
+
 
 	public void setProbandContactDetailValueDao(ProbandContactDetailValueDao probandContactDetailValueDao) {
 		this.probandContactDetailValueDao = probandContactDetailValueDao;
@@ -529,10 +703,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setProbandListEntryTagDao(ProbandListEntryTagDao probandListEntryTagDao) {
 		this.probandListEntryTagDao = probandListEntryTagDao;
 	}
+
 	public void setProbandListEntryTagValueDao(ProbandListEntryTagValueDao probandListEntryTagValueDao) {
 		this.probandListEntryTagValueDao = probandListEntryTagValueDao;
 	}
-
 	public void setProbandTagValueDao(ProbandTagValueDao probandTagValueDao) {
 		this.probandTagValueDao = probandTagValueDao;
 	}
@@ -543,6 +717,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 
 	public void setSignatureDao(SignatureDao signatureDao) {
 		this.signatureDao = signatureDao;
+	}
+
+	public void setStaffContactDetailValueDao(StaffContactDetailValueDao staffContactDetailValueDao) {
+		this.staffContactDetailValueDao = staffContactDetailValueDao;
 	}
 
 	public void setStrictEmailAddresses(boolean strictEmailAddresses) {

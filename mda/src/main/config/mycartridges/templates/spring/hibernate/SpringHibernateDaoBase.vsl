@@ -307,6 +307,9 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
     public void refresh($rootEntityType entity, final LockMode lockMode) {
     	this.getHibernateTemplate().refresh(entity, lockMode);
     }
+    public void refresh($rootEntityType entity) {
+    	this.getHibernateTemplate().refresh(entity);
+    }
 
     //protected net.sf.ehcache.CacheManager cacheManager;
     //public void setCacheManager(net.sf.ehcache.CacheManager cacheManager) {

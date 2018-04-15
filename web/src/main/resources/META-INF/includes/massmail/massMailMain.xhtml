@@ -515,6 +515,25 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="physicianto" />
+									
+									
+									<h:outputLabel
+										for="trialteamto"
+										value="#{massmaillabels.mass_mail_trialteamto_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="trialteamto"
+											value="#{massMailBean.in.trialTeamTo}" />
+										<p:tooltip
+											rendered="#{enableTooltips}"
+											for="trialteamto">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_trialteamto_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="trialteamto" />
+									
 									<h:outputLabel
 										for="otherto"
 										value="#{massmaillabels.mass_mail_otherto_label}" />
