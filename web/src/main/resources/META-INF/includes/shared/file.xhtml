@@ -242,7 +242,7 @@
 							<ui:include src="treeTableIcon.xhtml">
 								<ui:param
 									name="iconClass"
-									value="ctsms-mimetype-unkown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
+									value="ctsms-mimetype-unknown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
 							</ui:include>
 							<h:outputText value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,56) : labels.encrypted_file_label}" />
 						</p:column>
@@ -307,7 +307,7 @@
 							<ui:include src="treeIcon.xhtml">
 								<ui:param
 									name="iconClass"
-									value="ctsms-mimetype-unkown #{filefolder.contentType.nodeStyleClass}" />
+									value="ctsms-mimetype-unknown #{filefolder.contentType.nodeStyleClass}" />
 							</ui:include>
 							<span
 								class="ctsms-filetree-node-folder"
@@ -319,7 +319,7 @@
 							<ui:include src="treeIcon.xhtml">
 								<ui:param
 									name="iconClass"
-									value="ctsms-mimetype-unkown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
+									value="ctsms-mimetype-unknown #{filefolder.decrypted ? filefolder.contentType.nodeStyleClass : 'ctsms-icon-encrypted'}" />
 							</ui:include>
 							<span
 								class="ctsms-filetree-node-file"
@@ -478,6 +478,7 @@
 								immediate="true"
 								id="filedownload"
 								rendered="#{fileBean.created}"
+								styleClass="ctsms-field-icon ctsms-mimetype-unknown #{fileBean.out.contentType.nodeStyleClass}"
 								ajax="false"
 								title="#{labels.file_download_tooltip} #{fileBean.fileDownloadLinkLabel}">
 								<h:outputText value="#{fileBean.fileDownloadLinkLabel}" />

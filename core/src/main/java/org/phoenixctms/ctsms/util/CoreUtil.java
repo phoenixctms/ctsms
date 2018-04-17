@@ -138,6 +138,8 @@ public final class CoreUtil {
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setProbandAddressWireTransfer");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setMoneyTransferPaid");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid");
+		// PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.MassMailService.addMassMailRecipient");
+		// PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.MassMailService.resetMassMailRecipient");
 	}
 	public final static HashSet<String> VO_VERSION_EQUALS_EXCLUDES = new HashSet<String>();
 

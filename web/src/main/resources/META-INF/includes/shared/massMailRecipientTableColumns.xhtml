@@ -52,7 +52,7 @@
 				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_error_message_column}" />
 			</f:facet>
 			<h:outputText 
-			styleClass="#{massMailRecipient.vo.sent ? 'ctsms-strikethrough' : ''}"
+			styleClass="#{massMailRecipient.vo.sent ? 'ui-state-disabled' : ''}"
 			value="#{applicationScopeBean.clipStringTrailing(massMailRecipient.vo.errorMessage,48)}" />
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.processedTimestamp}">

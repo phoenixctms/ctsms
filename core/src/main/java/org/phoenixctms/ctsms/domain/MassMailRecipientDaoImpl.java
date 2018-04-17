@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.activation.DataHandler;
 import javax.mail.Address;
@@ -26,6 +27,7 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.email.MassMailEmailSender;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CryptoUtil;
@@ -42,6 +44,7 @@ import org.phoenixctms.ctsms.vo.EmailMessageVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
 import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -116,6 +119,21 @@ extends MassMailRecipientDaoBase {
 			boolean copyIfNull) {
 		// TODO verify behavior of emailMessageVOToEntity
 		super.emailMessageVOToEntity(source, target, copyIfNull);
+	}
+
+	private MimeTypeVO getContentType(String mimeType) {
+		MimeTypeDao mimeTypeDao = this.getMimeTypeDao();
+		int paramsIndex = mimeType.indexOf(";");
+		if (paramsIndex >= 0) {
+			mimeType = mimeType.substring(0, paramsIndex);
+		}
+		Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(mimeType, FileModule.MASS_MAIL_DOCUMENT).iterator();
+		if (it.hasNext()) {
+			// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN, mimeType);
+			return mimeTypeDao.toMimeTypeVO(it.next());
+		}
+		// return mimeTypeDao.toMimeTypeVO(it.next());
+		return null;
 	}
 
 	@Override
@@ -429,8 +447,8 @@ extends MassMailRecipientDaoBase {
 							// this part is attachment
 							// code to save attachment...
 							DataHandler handler = messageBodyPart.getDataHandler();
-							target.getAttachments().add(new EmailAttachmentVO(
-									CommonUtil.inputStreamToByteArray(handler.getInputStream()), handler.getContentType(), handler.getName()));
+							byte[] data = CommonUtil.inputStreamToByteArray(handler.getInputStream());
+							target.getAttachments().add(new EmailAttachmentVO(data, handler.getName(), (long) data.length, getContentType(handler.getContentType())));
 						} else {
 							target.setText(messageBodyPart.getContent().toString());
 						}
@@ -444,6 +462,8 @@ extends MassMailRecipientDaoBase {
 				throw new RuntimeException(e);
 			} catch (IOException e) { // covered by MessagingException, but not handler.getInputStream()
 				throw new RuntimeException(e);
+				// } catch (ServiceException e) {
+				// throw new RuntimeException(e);
 			} catch (Exception e) {
 				target.setSubject(null);
 				target.setText(null);

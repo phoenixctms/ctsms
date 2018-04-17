@@ -38,6 +38,8 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private final static String DEFAULT_PROFILE_SPLIT_REGEXP_PATTERN = " *: *";
 	private static final String DEFAULT_EXCLUDE_RESTRICTION_OVERRIDE_PROFILE_CHAR = "/";
 
+	private static Collection<String> SERVICE_METHOD_NAMES = getServiceMethodNames();
+
 	private static void addServiceMethodName(Collection<String> serviceMethodNames, Class serviceClass) {
 		Method[] serviceMethods = serviceClass.getMethods();
 		for (int i = 0; i < serviceMethods.length; i++) {
@@ -97,7 +99,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		}
 		return serviceMethods;
 	}
-
 	@Autowired
 	protected PermissionDao permissionDao;
 	@Autowired
@@ -106,7 +107,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private Pattern restrictionOverrideProfileSeparatorRegexp;
 	private Pattern profileSplitRegexp;
 	private String excludeRestrictionOverrideProfileChar;
-	private static Collection<String> SERVICE_METHOD_NAMES = getServiceMethodNames();
 
 	public PermissionDefinitionLineProcessor() {
 		super();
@@ -220,14 +220,14 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getServiceMethod(values))
-		.append(getParameterGetter(values))
-		.append(getTransformation(values))
-		.append(getRestrictions(values))
-		.append(getDisjunctionGroup(values))
-		.append(getParameterSetter(values))
-		.append(getOverrides(values))
-		.toHashCode();
+				.append(getServiceMethod(values))
+				.append(getParameterGetter(values))
+				.append(getTransformation(values))
+				.append(getRestrictions(values))
+				.append(getDisjunctionGroup(values))
+				.append(getParameterSetter(values))
+				.append(getOverrides(values))
+				.toHashCode();
 	}
 
 	@Override
@@ -296,7 +296,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	@Override
 	protected int processLine(String[] values, long lineNumber) {
 		if (!SERVICE_METHOD_NAMES.contains(getServiceMethod(values))) {
-			throw new IllegalArgumentException("unkown service method " + getServiceMethod(values));
+			throw new IllegalArgumentException("unknown service method " + getServiceMethod(values));
 		}
 		checkValidIpRanges(getIpRanges(values));
 		ArrayList<String[]> rows;

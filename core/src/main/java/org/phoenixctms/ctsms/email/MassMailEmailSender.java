@@ -37,6 +37,8 @@ import org.phoenixctms.ctsms.domain.MassMail;
 import org.phoenixctms.ctsms.domain.MassMailRecipient;
 import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.MedicationDao;
+import org.phoenixctms.ctsms.domain.MimeType;
+import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.MoneyTransferDao;
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandAddressDao;
@@ -109,21 +111,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private final static boolean ECRFS_BLANK = false;
 	private final static Pattern MAIL_USER_DOMAIN_REGEXP = Pattern.compile("@");
 	private static final MethodTransfilter RESOLVE_MAIL_ADDRESS_TRANSFILTER = MethodTransfilter.getEntityMethodTransfilter(true);
-	private static EmailAttachmentVO fileContentOutVOtoEmailAttachentVO(FileContentOutVO file) throws ServiceException {
 
-		if (file.isDecrypted()) {
-			EmailAttachmentVO attachment  = new EmailAttachmentVO();
-			attachment.setDatas(file.getDatas());
-			attachment.setFileName(file.getFileName());
-			attachment.setMimeType(file.getContentType().getMimeType());
-			return attachment;
-
-		} else {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
-		}
-
-
-	}
 	public static String getBeaconImageHtmlElement(String beacon) {
 		return MessageFormat.format(ServiceUtil.BEACON_IMAGE_HTML_ELEMENT, Settings.getHttpBaseUrl(), CommonUtil.BEACON_PATH, beacon, CommonUtil.GIF_FILENAME_EXTENSION);
 	}
@@ -150,21 +138,23 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private ProbandContactDetailValueDao probandContactDetailValueDao;
 	private TrialTagValueDao trialTagValueDao;
 	private ProbandListEntryDao probandListEntryDao;
-
 	private ProbandListEntryTagDao probandListEntryTagDao;
 
 	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
-	private InventoryBookingDao inventoryBookingDao;
 
+	private InventoryBookingDao inventoryBookingDao;
 	private boolean strictEmailAddresses;
+
 	private VelocityEngine velocityEngine;
 	private ProbandTagValueDao probandTagValueDao;
-
 	private DiagnosisDao diagnosisDao;
 
 	private ProcedureDao procedureDao;
+
 	private MedicationDao medicationDao;
 	private StaffContactDetailValueDao staffContactDetailValueDao;
+	private MimeTypeDao mimeTypeDao;
+
 	@Override
 	protected void addAttachments(MassMail massMail, MassMailRecipient recipient, ArrayList<EmailAttachmentVO> attachments) throws Exception {
 		if (massMail.isAttachMassMailFiles()) {
@@ -218,8 +208,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				if (inquiriesPDF.getTrials().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(inquiriesPDF.getDocumentDatas());
+					attachment.setFileSize((long) attachment.getDatas().length);
 					attachment.setFileName(inquiriesPDF.getFileName());
-					attachment.setMimeType(inquiriesPDF.getContentType().getMimeType());
+					attachment.setContentType(inquiriesPDF.getContentType());
 					attachments.add(attachment);
 				}
 				// }
@@ -233,8 +224,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				if (probandListEntryTagsPDF.getListEntries().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(probandListEntryTagsPDF.getDocumentDatas());
+					attachment.setFileSize((long) attachment.getDatas().length);
 					attachment.setFileName(probandListEntryTagsPDF.getFileName());
-					attachment.setMimeType(probandListEntryTagsPDF.getContentType().getMimeType());
+					attachment.setContentType(probandListEntryTagsPDF.getContentType());
 					attachments.add(attachment);
 				}
 			}
@@ -257,8 +249,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					if (ecrfsPDF.getStatusEntries().size() > 0) {
 						EmailAttachmentVO attachment = new EmailAttachmentVO();
 						attachment.setDatas(ecrfsPDF.getDocumentDatas());
+						attachment.setFileSize((long) attachment.getDatas().length);
 						attachment.setFileName(ecrfsPDF.getFileName());
-						attachment.setMimeType(ecrfsPDF.getContentType().getMimeType());
+						attachment.setContentType(ecrfsPDF.getContentType());
 						attachments.add(attachment);
 					}
 				}
@@ -275,8 +268,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				if (probandLetterPDF.getProbands().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(probandLetterPDF.getDocumentDatas());
+					attachment.setFileSize((long) attachment.getDatas().length);
 					attachment.setFileName(probandLetterPDF.getFileName());
-					attachment.setMimeType(probandLetterPDF.getContentType().getMimeType());
+					attachment.setContentType(probandLetterPDF.getContentType());
 					attachments.add(attachment);
 				}
 			}
@@ -287,14 +281,36 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				if (reimbursementsPDF.getProbands().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(reimbursementsPDF.getDocumentDatas());
+					attachment.setFileSize((long) attachment.getDatas().length);
 					attachment.setFileName(reimbursementsPDF.getFileName());
-					attachment.setMimeType(reimbursementsPDF.getContentType().getMimeType());
+					attachment.setContentType(reimbursementsPDF.getContentType());
 					attachments.add(attachment);
 				}
 			}
 		}
 	}
 
+	private  EmailAttachmentVO fileContentOutVOtoEmailAttachentVO(FileContentOutVO file) throws ServiceException {
+
+		if (file.isDecrypted()) {
+			EmailAttachmentVO attachment  = new EmailAttachmentVO();
+			attachment.setDatas(file.getDatas());
+			attachment.setFileSize((long) attachment.getDatas().length);
+			attachment.setFileName(file.getFileName());
+			Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(file.getContentType().getMimeType(), FileModule.MASS_MAIL_DOCUMENT).iterator();
+			if (it.hasNext()) {
+				attachment.setContentType(mimeTypeDao.toMimeTypeVO(it.next()));
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN, file.getContentType().getMimeType());
+			}
+			return attachment;
+
+		} else {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
+		}
+
+
+	}
 	@Override
 	protected boolean isHtml() {
 		return HTML;
@@ -503,7 +519,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		return address;
 	}
 
-
 	private ArrayList<InternetAddress> resolveMailAddresses(MassMailRecipient recipient, String address, boolean reply) throws Exception {
 		String resolveMailAddressDomainName = Settings.getString(SettingCodes.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME, Bundle.SETTINGS, DefaultSettings.RESOLVE_MAIL_ADDRESS_DOMAIN_NAME);
 		ArrayList<InternetAddress> result = new ArrayList<InternetAddress>();
@@ -618,26 +633,27 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		return result;
 	}
 
+
 	public void setBankAccountDao(BankAccountDao bankAccountDao) {
 		this.bankAccountDao = bankAccountDao;
 	}
+
 	public void setDiagnosisDao(DiagnosisDao diagnosisDao) {
 		this.diagnosisDao = diagnosisDao;
 	}
-
-
-
 	public void seteCRFDao(ECRFDao eCRFDao) {
 		this.eCRFDao = eCRFDao;
 	}
 
+
+
 	public void seteCRFFieldDao(ECRFFieldDao eCRFFieldDao) {
 		this.eCRFFieldDao = eCRFFieldDao;
 	}
+
 	public void seteCRFFieldStatusEntryDao(ECRFFieldStatusEntryDao eCRFFieldStatusEntryDao) {
 		this.eCRFFieldStatusEntryDao = eCRFFieldStatusEntryDao;
 	}
-
 	public void seteCRFFieldStatusTypeDao(ECRFFieldStatusTypeDao eCRFFieldStatusTypeDao) {
 		this.eCRFFieldStatusTypeDao = eCRFFieldStatusTypeDao;
 	}
@@ -661,6 +677,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInputFieldSelectionSetValueDao(InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		this.inputFieldSelectionSetValueDao = inputFieldSelectionSetValueDao;
 	}
+
 	public void setInquiryDao(InquiryDao inquiryDao) {
 		this.inquiryDao = inquiryDao;
 	}
@@ -670,13 +687,16 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInventoryBookingDao(InventoryBookingDao inventoryBookingDao) {
 		this.inventoryBookingDao = inventoryBookingDao;
 	}
-
 	public void setmassMailRecipientDao(MassMailRecipientDao massMailRecipientDao) {
 		this.massMailRecipientDao = massMailRecipientDao;
 	}
 
 	public void setMedicationDao(MedicationDao medicationDao) {
 		this.medicationDao = medicationDao;
+	}
+
+	public void setMimeTypeDao(MimeTypeDao mimeTypeDao) {
+		this.mimeTypeDao = mimeTypeDao;
 	}
 
 	public void setMoneyTransferDao(MoneyTransferDao moneyTransferDao) {

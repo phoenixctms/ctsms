@@ -54,7 +54,7 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 					while (it.hasNext()) {
 						EmailAttachmentVO attachment = it.next();
 						messageBodyPart = new MimeBodyPart();
-						DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getMimeType());
+						DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getContentType().getMimeType());
 						messageBodyPart.setDataHandler(new DataHandler(source));
 						messageBodyPart.setFileName(attachment.getFileName());
 						multipart.addBodyPart(messageBodyPart);

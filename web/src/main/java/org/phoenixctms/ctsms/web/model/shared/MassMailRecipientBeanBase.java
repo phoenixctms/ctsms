@@ -111,7 +111,7 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 
 	public StreamedContent getEmailAttachmentStreamedContent(EmailAttachmentVO attachment) throws Exception {
 		if (attachment != null) {
-			return new DefaultStreamedContent(new ByteArrayInputStream(attachment.getDatas()), attachment.getMimeType(), attachment.getFileName());
+			return new DefaultStreamedContent(new ByteArrayInputStream(attachment.getDatas()), attachment.getContentType().getMimeType(), attachment.getFileName());
 		}
 		return null;
 	}

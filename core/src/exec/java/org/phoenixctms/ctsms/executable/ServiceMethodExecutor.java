@@ -288,7 +288,7 @@ public class ServiceMethodExecutor {
 				count += (Long) result.getEcrfFieldStatusRowCountMap().get(queue);
 			}
 			jobOutput.println(sb.toString());
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return count;
 		} else {
 			return 0l;
@@ -299,7 +299,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.COURSE_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("course ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -310,7 +310,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.CRITERIA_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("criteria ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -366,7 +366,7 @@ public class ServiceMethodExecutor {
 		}
 		if (result != null) {
 			printCriteriaResult(criteria, result.getCriteria(), result.getRowCount(), type);
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -377,7 +377,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportEcrfJournal(auth, id);
 		if (result != null) {
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -388,7 +388,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INPUT_FIELD_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("input field ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -399,7 +399,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INVENTORY_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("inventory ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -410,7 +410,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.MASS_MAIL_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("mass mail ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -433,7 +433,7 @@ public class ServiceMethodExecutor {
 			} else {
 				jobOutput.println( result.getRowCount() + " inventory bookings");
 			}
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -444,7 +444,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.PROBAND_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("proband ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -457,7 +457,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			jobOutput.println(result.getTrial().getName() + " " + (result.getLogLevel() != null ? result.getLogLevel().name() : "[full subject list]") + ": "
 					+ result.getRowCount() + " probands");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -468,7 +468,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.STAFF_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("staff ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -479,7 +479,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.TRIAL_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -490,7 +490,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.USER_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("user ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -579,7 +579,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getCourses().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "course");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;
@@ -594,7 +594,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getStafves().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "staff");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;
@@ -607,7 +607,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long ecrfCount = result.getStatusEntries().size();
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + ecrfCount + " eCRF(s)");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return ecrfCount;
 		} else {
 			return 0l;
@@ -623,7 +623,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getProbands().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "proband");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType().getMimeType(), result.getFileName());
+			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;

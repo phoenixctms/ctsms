@@ -39,6 +39,10 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 	private final static String DEFAULT_RESTRICTION_SEPARATOR_REGEXP_PATTERN = " *, *";
 	private static final String DEFAULT_EXCLUDE_RESTRICTION_CHAR = "/";
 
+	private final static Collection<String> SELECTION_SET_SERVICE_METHOD_NAMES = getServiceMethodNames(SelectionSetService.class);
+
+	private final static Collection<String> TOOLS_SERVICE_METHOD_NAMES = getServiceMethodNames(ToolsService.class);
+
 	private static Collection<String> getServiceMethodNames(Class serviceClass) {
 		HashSet<String> serviceMethods = new HashSet<String>();
 		Method[] methods = serviceClass.getMethods();
@@ -47,20 +51,16 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 		}
 		return serviceMethods;
 	}
-
 	private static boolean isValidEntityName(String entityName) {
 		return CoreUtil.isEnumerationClass(entityName) || (CoreUtil.checkClassExists(CoreUtil.getOutVOClassNameFromEntityName(entityName))
 				|| CoreUtil.checkClassExists(CoreUtil.getVOClassNameFromEntityName(entityName)));
 	}
-
 	@Autowired
 	protected CriterionRestrictionDao criterionRestrictionDao;
 	@Autowired
 	protected CriterionPropertyDao criterionPropertyDao;
 	private Pattern restrictionSeparatorRegexp;
 	private String excludeRestrictionChar;
-	private final static Collection<String> SELECTION_SET_SERVICE_METHOD_NAMES = getServiceMethodNames(SelectionSetService.class);
-	private final static Collection<String> TOOLS_SERVICE_METHOD_NAMES = getServiceMethodNames(ToolsService.class);
 
 	public CriterionPropertyLineProcessor() {
 		super();
@@ -172,8 +172,8 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getNameL10nKey(values))
-		.toHashCode();
+				.append(getNameL10nKey(values))
+				.toHashCode();
 	}
 
 	@Override
@@ -186,21 +186,21 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 		String picker = getPicker(values);
 		String selectionSetServiceMethodName = getSelectionSetServiceMethodName(values);
 		if (!CommonUtil.isEmptyString(selectionSetServiceMethodName) && !SELECTION_SET_SERVICE_METHOD_NAMES.contains(selectionSetServiceMethodName)) {
-			throw new IllegalArgumentException("unkown selection set service method " + selectionSetServiceMethodName);
+			throw new IllegalArgumentException("unknown selection set service method " + selectionSetServiceMethodName);
 		}
 		String getNameMethodName = getGetNameMethodName(values);
 		String getValueMethodName = getGetValueMethodName(values);
 		String completeMethodName = getCompleteMethodName(values);
 		if (!CommonUtil.isEmptyString(completeMethodName) && !TOOLS_SERVICE_METHOD_NAMES.contains(completeMethodName)) {
-			throw new IllegalArgumentException("unkown tools service method " + completeMethodName);
+			throw new IllegalArgumentException("unknown tools service method " + completeMethodName);
 		}
 		String converter = getConverter(values);
 		if (!CommonUtil.isEmptyString(converter) && !JSFVOConverterIDs.CONVERTER_IDS.contains(converter)) {
-			throw new IllegalArgumentException("unkown JSF converter ID " + converter);
+			throw new IllegalArgumentException("unknown JSF converter ID " + converter);
 		}
 		String entityName = getEntityName(values);
 		if (!CommonUtil.isEmptyString(entityName) && !isValidEntityName(entityName)) {
-			throw new IllegalArgumentException("unkown entity/enumeration " + entityName);
+			throw new IllegalArgumentException("unknown entity/enumeration " + entityName);
 		}
 		String[] restrictionNames = restrictionSeparatorRegexp.split(getValidRestrictions(values), -1);
 		HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
@@ -219,7 +219,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 										CommonUtil.isEmptyString(getValueMethodName) ? null : getValueMethodName,
 												CommonUtil.isEmptyString(completeMethodName) ? null : completeMethodName,
 														CommonUtil.isEmptyString(converter) ? null : converter,
-				CommonUtil.isEmptyString(entityName) ? null : entityName,
+																CommonUtil.isEmptyString(entityName) ? null : entityName,
 																		getNameL10nKey(values),
 																		restrictions);
 		return 1;

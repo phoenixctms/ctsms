@@ -21,6 +21,7 @@
 				<p:commandLink
 					immediate="true"
 					ajax="false"
+					styleClass="ctsms-field-icon ctsms-mimetype-unknown #{attachment.contentType.nodeStyleClass}"
 					title="#{labels.file_download_tooltip} #{attachment.fileName}">
 					<h:outputText value="#{attachment.fileName}" />
 					<p:fileDownload value="#{recipientBean.getEmailAttachmentStreamedContent(attachment)}" />

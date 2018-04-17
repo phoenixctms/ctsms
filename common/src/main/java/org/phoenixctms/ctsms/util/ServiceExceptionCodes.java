@@ -565,6 +565,7 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_IMAGE_SIZE_LIMIT_EXCEEDED = "input_field_image_size_limit_exceeded";
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_REQUIRED = "input_field_image_mime_type_required";
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_UNKNOWN = "input_field_image_mime_type_unknown";
+
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_NO_IMAGE = "input_field_image_mime_type_no_image";
 	public static final String INPUT_FIELD_IMAGE_CANNOT_READ_DIMENSIONS = "input_field_image_cannot_read_dimensions";
 	public static final String INPUT_FIELD_SKETCH_WIDTH_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_width_less_than_or_equal_to_zero";
@@ -721,5 +722,5 @@ public interface ServiceExceptionCodes {
 	// public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
 	public static final String MASS_MAIL_RECIPIENT_PROBAND_NULL = "mass_mail_recipient_proband_null";
 
-
+	public static final String MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN = "mass_mail_attachment_mime_type_unknown";
 }

@@ -22,6 +22,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.EmailAttachmentVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -87,11 +88,13 @@ public class JobOutput {
 		reset();
 	}
 
-	public void addEmailAttachment(byte[] data, String mimeType, String fileName) {
-		attachments.add(new EmailAttachmentVO(data, mimeType, fileName));
+	public void addEmailAttachment(byte[] data, MimeTypeVO contentType, String fileName) {
+
+		// this.getMimeTypeDao().findByMimeTypeModule(fileContent.getMimeType(), file.getModule()).iterator().next()
+		attachments.add(new EmailAttachmentVO(data, fileName, (long) data.length, contentType));
 	}
 
-	public void addLinkOrEmailAttachment(String fileName, byte[] documentData, String mimeType, String documentFileName) throws Exception {
+	public void addLinkOrEmailAttachment(String fileName, byte[] documentData, MimeTypeVO contentType, String documentFileName) throws Exception {
 		if (!CommonUtil.isEmptyString(fileName)) {
 			File file = new java.io.File(fileName);
 			FileOutputStream stream = new FileOutputStream(file);
@@ -106,7 +109,7 @@ public class JobOutput {
 				println("download: " + downloadUri.toString());
 			}
 		} else {
-			addEmailAttachment(documentData, mimeType, documentFileName);
+			addEmailAttachment(documentData, contentType, documentFileName);
 		}
 	}
 
@@ -220,7 +223,7 @@ public class JobOutput {
 						while (it.hasNext()) {
 							EmailAttachmentVO attachment = it.next();
 							messageBodyPart = new MimeBodyPart();
-							DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getMimeType());
+							DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getContentType().getMimeType());
 							messageBodyPart.setDataHandler(new DataHandler(source));
 							messageBodyPart.setFileName(attachment.getFileName());
 							multipart.addBodyPart(messageBodyPart);
