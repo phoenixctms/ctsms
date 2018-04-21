@@ -358,7 +358,13 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		// int toCount = 0;
 		MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ProbandOutVO probandVO = recipientVO.getProband();
-		if (probandVO != null && probandVO.isDecrypted() && !probandVO.getDeferredDelete() && !probandVO.getCategory().getLocked()) { // probandVO != null &&
+
+		if (probandVO != null && probandVO.getDeferredDelete()) {
+			if (!probandVO.isDecrypted() ) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			}
+			ServiceUtil.checkProbandLocked(recipient.getProband());
+
 			MassMailOutVO massMailVO = recipientVO.getMassMail();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEncoding());
 			if (!CommonUtil.isEmptyString(massMail.getFromName())) {
@@ -505,8 +511,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_BCC, massMail.getBcc(), e.getMessage());
 				}
 			}
+
 		} else {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DELETED_OR_MARKED_FOR_DELETION);
 		}
 		// return toCount;
 	}
