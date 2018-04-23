@@ -2333,6 +2333,7 @@ public class DemoDataProvider {
 				add(PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS);
 				add(PermissionProfile.USER_ALL_DEPARTMENTS);
 				add(PermissionProfile.INPUT_FIELD_MASTER);
+				add(PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS);
 				add(PermissionProfile.INVENTORY_MASTER_SEARCH);
 				add(PermissionProfile.STAFF_MASTER_SEARCH);
 				add(PermissionProfile.COURSE_MASTER_SEARCH);
@@ -2340,6 +2341,7 @@ public class DemoDataProvider {
 				add(PermissionProfile.PROBAND_MASTER_SEARCH);
 				add(PermissionProfile.USER_MASTER_SEARCH);
 				add(PermissionProfile.INPUT_FIELD_MASTER_SEARCH);
+				add(PermissionProfile.MASS_MAIL_MASTER_SEARCH);
 			}
 		});
 		return user;
