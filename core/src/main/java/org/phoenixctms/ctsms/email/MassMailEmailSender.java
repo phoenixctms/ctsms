@@ -359,7 +359,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ProbandOutVO probandVO = recipientVO.getProband();
 
-		if (probandVO != null && probandVO.getDeferredDelete()) {
+		if (probandVO != null && !probandVO.getDeferredDelete()) {
 			if (!probandVO.isDecrypted() ) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
 			}
