@@ -638,7 +638,11 @@ var FieldCalculation = FieldCalculation || {};
 
 				} else {
 					if (typeof formatOrSeparator === 'undefined') {
-						formatOrSeparator = "%d";
+						if (parseInt(value) === value) {
+							formatOrSeparator = "%d";
+						} else {
+							formatOrSeparator = "%f";
+						}
 					}
 					return sprintf(formatOrSeparator,value);
 				}
