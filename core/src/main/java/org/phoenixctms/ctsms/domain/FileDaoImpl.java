@@ -707,7 +707,11 @@ extends FileDaoBase
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
 		applyContentTypeCriterions(fileCriteria, image, mimeType);
-		return (Long) fileCriteria.setProjection(Projections.sum("size")).uniqueResult();
+		try {
+			return (Long) fileCriteria.setProjection(Projections.sum("size")).uniqueResult();
+		} catch (NullPointerException e) { // sum() returns NULL if no records, so reduce log noise
+			return 0l;
+		}
 	}
 
 
