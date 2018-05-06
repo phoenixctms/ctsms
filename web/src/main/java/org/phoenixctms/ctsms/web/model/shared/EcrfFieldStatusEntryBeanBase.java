@@ -59,7 +59,7 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	protected ECRFFieldStatusEntryInVO in;
 	protected ECRFFieldStatusEntryOutVO out;
 	protected Long listEntryId;
-	private ProbandListEntryOutVO probandListEntry;
+	protected ProbandListEntryOutVO probandListEntry;
 	private ECRFStatusEntryVO ecrfStatus;
 	protected Long ecrfFieldId;
 	protected ECRFFieldOutVO ecrfField;

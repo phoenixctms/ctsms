@@ -201,8 +201,9 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		if (getQueue() != null) {
 			if (out != null) {
 				return Messages.getMessage(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TITLE, getQueueName(), Long.toString(out.getId()), out.getStatus().getName());
-			} else if (ecrfField != null) {
-				return Messages.getMessage(MessageCodes.CREATE_NEW_ECRF_FIELD_STATUS, getQueueName(), ecrfField.getUniqueName());
+			} else if (ecrfField != null && probandListEntry != null) {
+				return Messages.getMessage(MessageCodes.CREATE_NEW_ECRF_FIELD_STATUS, getQueueName(), CommonUtil.probandOutVOToString(probandListEntry.getProband()),
+						ecrfField.getUniqueName());
 			} else {
 				return Messages.getMessage(MessageCodes.CREATE_NEW_ECRF_FIELD_STATUS_ENTRY, getQueueName());
 			}
