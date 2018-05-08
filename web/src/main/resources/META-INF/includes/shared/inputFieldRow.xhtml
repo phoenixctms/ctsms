@@ -34,7 +34,7 @@
 				columns="1"
 				cellpadding="0"
 				styleClass="ctsms-input-panelgrid"
-				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{!fieldInput.jsOutputExpressionEmpty or !fieldInput.jsValueExpressionEmpty ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
+				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
 				<h:panelGrid
 					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch)}"
 					columns="#{fieldInput.longTitle ? 1 : 4}"
@@ -539,7 +539,7 @@
 					</ui:include>
 					<p:message for="sketchpad#{index}" />
 				</h:panelGrid>
-				<h:panelGroup rendered="#{!fieldInput.jsOutputExpressionEmpty or !fieldInput.jsValueExpressionEmpty}">
+				<h:panelGroup rendered="#{fieldInput.hasOutput}">
 					<div id="#{fieldInput.outputId}"></div>
 				</h:panelGroup>
 				<ui:include src="multiLineOutputText.xhtml">

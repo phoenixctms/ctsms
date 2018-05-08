@@ -1577,8 +1577,8 @@ var FieldCalculation = FieldCalculation || {};
 					var inputFieldVariable = {};
 					inputFieldVariableValue.jsValueExpression = cs.strip(inputFieldVariableValue.jsValueExpression);
 					inputFieldVariableValue.jsOutputExpression = cs.strip(inputFieldVariableValue.jsOutputExpression);
-					if (inputFieldVariableValue.jsValueExpression != null && inputFieldVariableValue.jsValueExpression.length > 0
-						|| inputFieldVariableValue.jsOutputExpression != null && inputFieldVariableValue.jsOutputExpression.length > 0) {
+					//if (inputFieldVariableValue.jsValueExpression != null && inputFieldVariableValue.jsValueExpression.length > 0
+					//	|| inputFieldVariableValue.jsOutputExpression != null && inputFieldVariableValue.jsOutputExpression.length > 0) {
 						if (_testPropertyExists(inputFieldVariableValue, "inquiryId")) {
 							inputFieldVariable.outputId = INPUT_FIELD_OUTPUT_ID_PREFIX + inputFieldVariableValue.inquiryId;
 						} else if (_testPropertyExists(inputFieldVariableValue, "tagId")) {
@@ -1589,9 +1589,9 @@ var FieldCalculation = FieldCalculation || {};
 								inputFieldVariable.outputId += INPUT_FIELD_OUTPUT_ID_INDEX_SEPARATOR + inputFieldVariableValue.index;
 							}
 						}
-					} else {
-						inputFieldVariable.outputId = null;
-					}
+					//} else {
+					//	inputFieldVariable.outputId = null;
+					//}
 
 					if (_testPropertyExists(inputFieldVariableValue, "inquiryId")) {
 						inputFieldVariable.widgetVarName = INPUT_FIELD_WIDGET_VAR_PREFIX + inputFieldVariableValue.inquiryId;
