@@ -851,11 +851,12 @@ extends TrialServiceBase
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(), null, null);
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
-		} else {
-			ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
-			probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
-			probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
+		//} else {
+
 		}
+		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
+		probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
+		probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
 		// ProbandAddressDao addressDao = this.getProbandAddressDao();
 		// Collection probandAddresses = addressDao.findByProband(listEntry.getProband().getId(), null, null, null, null);
 		// addressDao.toProbandAddressOutVOCollection(probandAddresses);
