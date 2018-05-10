@@ -503,7 +503,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	// }
 
 	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
-		if (listEntry != null && listEntry.getGroup() == null) {
+		if (listEntry != null) { // && listEntry.getGroup() == null) {
 			try {
 				return WebUtil
 						.getServiceLocator()
