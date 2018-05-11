@@ -16,7 +16,7 @@
 			value="#{validationStatus.name}" />
 		<h:panelGrid
 			style="width:0%;"
-			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value != null and value.total > 0}"
+			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value != null}"
 			columns="4"
 			columnClasses="ctsms-list-cell-noborder,ctsms-list-cell-noborder,ctsms-list-cell-noborder,ctsms-list-cell-noborder"
 			cellpadding="0">
@@ -102,7 +102,7 @@
 			</h:panelGroup>
 		</h:panelGrid>
 		<h:panelGrid
-			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value != null and value.total == 0}"
+			rendered="#{(validationStatus == null or validationStatus.validationStatus != 'FAILED') and value == null}"
 			columns="1"
 			columnClasses="ctsms-list-cell-noborder"
 			cellpadding="0">
@@ -111,7 +111,7 @@
 				styleClass="ctsms-list-icon"
 				value="" />
 			
-		</h:panelGrid>		
+		</h:panelGrid>	
 	
 	</ui:composition>
 </h:body>

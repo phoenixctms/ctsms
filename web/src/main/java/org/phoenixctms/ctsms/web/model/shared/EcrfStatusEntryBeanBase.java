@@ -526,7 +526,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public ECRFFieldStatusQueueCountVO getEcrfFieldStatusCount(ECRFOutVO ecrfVO, String queues) {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
 		ECRFFieldStatusQueueCountVO result = null;
-		if (ecrfProgress != null) {
+		if (ecrfProgress != null && ecrfProgress.getStatus() != null) {
 			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = ecrfProgress.getEcrfFieldStatusQueueCounts().iterator();
@@ -782,6 +782,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				}
 				result.setTotal(result.getTotal() + queueCount.getTotal());
 			}
+			if (result.getTotal() == 0l) {
+				result = null;
+			}
 		}
 		return result;
 	}
@@ -837,7 +840,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public ECRFFieldStatusQueueCountVO getSummaryFieldStatusCount(ProbandListEntryOutVO listEntryVO, String queues) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
 		ECRFFieldStatusQueueCountVO result = null;
-		if (progressSummary != null ) {
+		if (progressSummary != null && progressSummary.getEcrfStatusEntryCount() > 0l) {
 			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = progressSummary.getEcrfFieldStatusQueueCounts().iterator();
@@ -906,7 +909,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public HashMap<Long, Long> getSummaryStatusCountMap(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
-		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0l) {
+		if (progressSummary != null && progressSummary.getEcrfStatusEntryCount() > 0l) {
 			Iterator<ECRFProgressVO> it = progressSummary.getEcrfs().iterator();
 			HashMap<Long,Long> countMap = new HashMap<Long,Long>();
 			while (it.hasNext()) {

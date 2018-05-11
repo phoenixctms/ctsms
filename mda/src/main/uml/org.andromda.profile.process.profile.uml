@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xmi:id="_11_5_e240333_1154527578125_463523_83" name="process" metamodelReference="_11_5_e240333_1154527578125_463523_83_packageImportcreatedOnLoad">
-  <eAnnotations xmi:id="_MsClmUEkEeiSKYZTboPsig" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_MsClmkEkEeiSKYZTboPsig" name="process" nsURI="http:///schemas/process/_MAuG0EEkEeiSKYZTboPsig/0" nsPrefix="process"/>
+  <eAnnotations xmi:id="_0QxvMVU5EeiPHosl9cmxVg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_0QxvMlU5EeiPHosl9cmxVg" name="process" nsURI="http:///schemas/process/_pT2HkVU5EeiPHosl9cmxVg/0" nsPrefix="process"/>
   </eAnnotations>
   <packageImport xmi:id="_11_5_e240333_1154527578125_463523_83_packageImportcreatedOnLoad">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
@@ -12,77 +12,14 @@
   <packageImport xmi:id="_0javaPrimitiveTypesprocess">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
   </packageImport>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_782515_27" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_107027_29">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_107027_29" name="extension_Timer" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_782515_27">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1120030836093_315389_0"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_261517_31" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_937380_30" name=""/>
-    </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_682846_28"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_107027_29"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_239757_62" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_536074_64">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_536074_64" name="extension_Business Process" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_239757_62">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568518_911545_8"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_974211_66" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_525986_65" name=""/>
-    </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_536074_64"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_167673_63"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_501371_67" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_331049_69">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_331049_69" name="extension_andromda_process_jbpm_timer_repeat" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_501371_67">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_300330_20"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_618694_71" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_108417_70" name=""/>
-    </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_150128_68"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_331049_69"/>
-  </packagedElement>
   <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_661413_37" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_531518_39">
     <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_531518_39" name="extension_After Signal" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_661413_37">
       <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129567784_936874_5"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_23281_41" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_204708_40" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_975969_38"/>
     <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_531518_39"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_955233_52" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_470890_54">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_470890_54" name="extension_Node Leave" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_955233_52">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568393_539365_7"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_798020_56" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_636468_55" name=""/>
-    </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_470890_54"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_288630_53"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_847264_72" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_229457_74">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_229457_74" name="extension_Node Enter" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_847264_72">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568378_575653_6"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_940443_76" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_374497_75" name=""/>
-    </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_229457_74"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_230071_73"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555593_361596_22" name="" navigableOwnedEnd="_11_5_e240333_1154527555593_757805_24">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555593_757805_24" name="extension_andromda_process_jbpm_task_blocking" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555593_361596_22">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_345527_11"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555593_582139_26" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555593_810105_25" name=""/>
-    </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555593_757805_24"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555593_754626_23"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_586608_57" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_687929_59">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_687929_59" name="extension_andromda_process_jbpm_timer_duedate" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_586608_57">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_812393_17"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_927203_61" name="" value="1"/>
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_918021_60" name=""/>
-    </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_93555_58"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_687929_59"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_975969_38"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_685498_77" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_612842_79">
     <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_612842_79" name="extension_andromda_process_jbpm_assignment_expression" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_685498_77">
@@ -90,8 +27,8 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_65442_81" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_790138_80" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_639719_78"/>
     <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_612842_79"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_639719_78"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_621075_42" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_522910_44">
     <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_522910_44" name="extension_andromda_process_jbpm_timer_transition" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_621075_42">
@@ -108,8 +45,35 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_903864_36" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_976730_35" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_130548_33"/>
     <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_264326_34"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_130548_33"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555593_361596_22" name="" navigableOwnedEnd="_11_5_e240333_1154527555593_757805_24">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555593_757805_24" name="extension_andromda_process_jbpm_task_blocking" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555593_361596_22">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_345527_11"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555593_582139_26" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555593_810105_25" name=""/>
+    </ownedEnd>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555593_757805_24"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555593_754626_23"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_239757_62" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_536074_64">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_536074_64" name="extension_Business Process" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_239757_62">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568518_911545_8"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_974211_66" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_525986_65" name=""/>
+    </ownedEnd>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_167673_63"/>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_536074_64"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_586608_57" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_687929_59">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_687929_59" name="extension_andromda_process_jbpm_timer_duedate" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_586608_57">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_812393_17"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_927203_61" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_918021_60" name=""/>
+    </ownedEnd>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_687929_59"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_93555_58"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_480373_47" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_278062_49">
     <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_278062_49" name="extension_Before Signal" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_480373_47">
@@ -119,5 +83,41 @@
     </ownedEnd>
     <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_278062_49"/>
     <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_896373_48"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_847264_72" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_229457_74">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_229457_74" name="extension_Node Enter" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_847264_72">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568378_575653_6"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_940443_76" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_374497_75" name=""/>
+    </ownedEnd>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_229457_74"/>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_230071_73"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_782515_27" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_107027_29">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_107027_29" name="extension_Timer" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_782515_27">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1120030836093_315389_0"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_261517_31" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_937380_30" name=""/>
+    </ownedEnd>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_682846_28"/>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_107027_29"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_501371_67" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_331049_69">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_331049_69" name="extension_andromda_process_jbpm_timer_repeat" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_501371_67">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555484_300330_20"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_618694_71" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_108417_70" name=""/>
+    </ownedEnd>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_150128_68"/>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_331049_69"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527555609_955233_52" name="" navigableOwnedEnd="_11_5_e240333_1154527555609_470890_54">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527555609_470890_54" name="extension_Node Leave" visibility="private" aggregation="composite" association="_11_5_e240333_1154527555609_955233_52">
+      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119129568393_539365_7"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527555609_798020_56" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527555609_636468_55" name=""/>
+    </ownedEnd>
+    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527555609_288630_53"/>
+    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527555609_470890_54"/>
   </packagedElement>
 </uml:Profile>

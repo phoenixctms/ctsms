@@ -851,8 +851,7 @@ extends TrialServiceBase
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(), null, null);
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
-		//} else {
-
+			// } else {
 		}
 		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
 		probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
@@ -5605,8 +5604,10 @@ extends TrialServiceBase
 		ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao));
 		ECRFDao ecrfDao = this.getECRFDao();
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		ECRFProgressSummaryVO result = new ECRFProgressSummaryVO();
 		result.setListEntry(listEntryVO);
+		result.setEcrfStatusEntryCount(ecrfStatusEntryDao.getCount(probandListEntryId, null, null, null, null, null, null, null));
 		if (ecrfDetail) {
 			result.setEcrfTotalCount(0l);
 			// result.setEcrfValidatedCount(0l);
@@ -5616,7 +5617,6 @@ extends TrialServiceBase
 			// result.setBlank(true);
 			// result.setUnresolvedValidationLastFieldStatusCount(0l);
 			// result.setUnresolvedQueryLastFieldStatusCount(0l);
-			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 			ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
@@ -5661,7 +5661,6 @@ extends TrialServiceBase
 			// result.setUnresolvedValidationLastFieldStatusCount(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), true, false));
 			// result.setUnresolvedQueryLastFieldStatusCount(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), true, false));
 			ServiceUtil.populateEcrfFieldStatusEntryCount(result.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfFieldStatusEntryDao);
-			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 			ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
 			Iterator<ECRF> it = ecrfDao.findByTrialGroupVisitActiveSorted(listEntryVO.getTrial().getId(),
 					listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null, null, true, true, null).iterator();
