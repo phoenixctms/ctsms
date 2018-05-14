@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -25,7 +26,9 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.springframework.core.io.ClassPathResource;
 
-import sun.org.mozilla.javascript.internal.Scriptable;
+import jdk.nashorn.api.scripting.JSObject;
+
+//import sun.org.mozilla.javascript.internal.Scriptable;
 
 public class FieldCalculation {
 
@@ -184,30 +187,40 @@ public class FieldCalculation {
 	}
 
 	private ArrayList<ValidationError> invoke(String function) throws ScriptException, NoSuchMethodException {
-		//Scriptable msgs = null;
-		//try {
-		// SCRIPT.eval(SCRIPT.getEngine().createBindings());
-		// SCRIPT.getEngine().getBindings(GLOBAL).
-		// ((NativeObject)bindings.get(function)).callc.call(this, args...)
-		Scriptable msgs = (Scriptable) invocable.invokeFunction(function, new JsMap(args));
-		//SCRIPT.getEngine().g.get(function);
-		// Scriptable msgs = (Scriptable) SCRIPT.getEngine().get(function)).invokeFunction(function, new JsMap(args));
-		//		} catch (NoSuchMethodException e) {
-		//			// TODO Auto-generated catch block
-		//			// e.printStackTrace();
-		//		}
+		JSObject msgs = (JSObject) invocable.invokeFunction(function, new JSObjectMap(args));
 		ArrayList<ValidationError> result = new ArrayList<ValidationError>();
 		if (msgs != null) {
-			for (Object o : msgs.getIds()) {
-				int index = (Integer) o;
-				result.add(new ValidationError((Scriptable) msgs.get(index, null)));
-				// array[index] = msgs.get(index, null);
+			Iterator<String> it = msgs.keySet().iterator();
+			while (it.hasNext()) {
+				int index = Integer.parseInt(it.next());
+				result.add(new ValidationError((JSObject) msgs.getSlot(index)));
 			}
-			// while (it.hasNext()) {
-			// result.add(new ValidationError((NativeObject) it.next()));
-			// }
 		}
 		return result;
+		// //Scriptable msgs = null;
+		// //try {
+		// // SCRIPT.eval(SCRIPT.getEngine().createBindings());
+		// // SCRIPT.getEngine().getBindings(GLOBAL).
+		// // ((NativeObject)bindings.get(function)).callc.call(this, args...)
+		// Scriptable msgs = (Scriptable) invocable.invokeFunction(function, new JsMap(args));
+		// //SCRIPT.getEngine().g.get(function);
+		// // Scriptable msgs = (Scriptable) SCRIPT.getEngine().get(function)).invokeFunction(function, new JsMap(args));
+		// // } catch (NoSuchMethodException e) {
+		// // // TODO Auto-generated catch block
+		// // // e.printStackTrace();
+		// // }
+		// ArrayList<ValidationError> result = new ArrayList<ValidationError>();
+		// if (msgs != null) {
+		// for (Object o : msgs.getIds()) {
+		// int index = (Integer) o;
+		// result.add(new ValidationError((Scriptable) msgs.get(index, null)));
+		// // array[index] = msgs.get(index, null);
+		// }
+		// // while (it.hasNext()) {
+		// // result.add(new ValidationError((NativeObject) it.next()));
+		// // }
+		// }
+		// return result;
 	}
 	public void reset() throws ScriptException {
 		args.clear();
