@@ -1214,7 +1214,7 @@ extends ProbandServiceBase
 
 	@Override
 	protected ProbandOutVO handleDeleteProband(AuthenticationVO auth, Long probandId,
-			boolean defer, boolean force, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth) throws Exception {
+			boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth) throws Exception {
 		ProbandDao probandDao = this.getProbandDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1228,7 +1228,11 @@ extends ProbandServiceBase
 			}
 			probandDao.evict(originalProband);
 			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			proband.setDeferredDelete(true);
+			proband.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(proband, proband.getVersion(), now, user); // no opt. locking
 			probandDao.update(proband);
 			result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);

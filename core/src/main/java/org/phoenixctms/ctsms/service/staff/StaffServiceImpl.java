@@ -1100,7 +1100,8 @@ extends StaffServiceBase
 	 * @see org.phoenixctms.ctsms.service.staff.StaffService#deleteStaff(Long)
 	 */
 	@Override
-	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId,  boolean defer, boolean force,Integer maxInstances, Integer maxParentDepth)
+	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
+			Integer maxParentDepth)
 			throws Exception
 	{
 		StaffDao staffDao = this.getStaffDao();
@@ -1117,7 +1118,11 @@ extends StaffServiceBase
 			StaffOutVO original = staffDao.toStaffOutVO(originalStaff, maxInstances, maxParentDepth);
 			staffDao.evict(originalStaff);
 			Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			staff.setDeferredDelete(true);
+			staff.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(staff, originalStaff.getVersion(), now, user); // no opt. locking
 			staffDao.update(staff);
 			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);

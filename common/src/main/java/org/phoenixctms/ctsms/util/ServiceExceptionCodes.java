@@ -724,4 +724,5 @@ public interface ServiceExceptionCodes {
 
 	public static final String MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN = "mass_mail_attachment_mime_type_unknown";
 	public static final String PROBAND_DELETED_OR_MARKED_FOR_DELETION = "proband_deleted_or_marked_for_deletion";
+	public static final String DEFERRED_DELETE_REASON_REQUIRED = "deferred_delete_reason_required";
 }

@@ -171,6 +171,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
 
+	private String deferredDeleteReason;
+
 	protected SearchBeanBase() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -307,7 +309,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getSearchService().deleteCriteria(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE),
-					false);
+					false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -462,6 +464,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	protected abstract DBModule getDBModule();
 
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
+	}
+
 	public List<String> getInputFieldName() {
 		return new CriterionEntityNameList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.INPUT_FIELD_DB);
 	}
@@ -518,13 +524,13 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return new CriterionIsMoveCriterionDownEnabledList(criterionsIn);
 	}
 
-	public List<Boolean> getIsMoveCriterionUpEnabled() {
-		return new CriterionIsMoveCriterionUpEnabledList(criterionsIn);
-	}
-
 	// public List<Boolean> getIsPickerList() {
 	// return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap);
 	// }
+
+	public List<Boolean> getIsMoveCriterionUpEnabled() {
+		return new CriterionIsMoveCriterionUpEnabledList(criterionsIn);
+	}
 
 	public List<Boolean> getIsProbandPicker() {
 		return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.PROBAND_DB);
@@ -898,8 +904,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 		updateInstantCriteria(true);
 		initSpecificSets();
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -929,6 +936,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE);
 	}
 
 	public boolean isEditable() {
@@ -1109,6 +1120,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public String searchAction() {
 		return UNIMPLEMENTED_OUTCOME;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	private boolean testCriterionIndex(int criterionIndex) {

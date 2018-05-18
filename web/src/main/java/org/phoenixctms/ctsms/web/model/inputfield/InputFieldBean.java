@@ -51,6 +51,8 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSelectorListener {
 
+	private static final int FIELD_TYPE_PROPERTY_ID = 1;
+
 	public static void copyInputFieldOutToIn(InputFieldInVO in, InputFieldOutVO out) {
 		if (in != null && out != null) {
 			InputFieldTypeVO fieldTypeVO = out.getFieldType();
@@ -137,7 +139,6 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setTimePreset(DefaultSettings.INPUT_FIELD_TIME_PRESET_PRESET);
 		}
 	}
-
 	private InputFieldInVO in;
 	private InputFieldInVOConfig config;
 	private InputFieldOutVO out;
@@ -147,7 +148,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private HashMap<String, String> tabTitleMap;
 	private String allowTypes;
 	private Integer uploadSizeLimit;
-	private static final int FIELD_TYPE_PROPERTY_ID = 1;
+
+	private String deferredDeleteReason;
 
 	public InputFieldBean() {
 		super();
@@ -351,7 +353,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		try {
 			out = WebUtil.getServiceLocator().getInputFieldService().deleteInputField(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE),
-					false);
+					false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -382,6 +384,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	public InputFieldConfig getConfig() {
 		return config;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public InputFieldTypeSelector getFieldType() {
@@ -557,9 +563,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		if (booleans == null) {
 			booleans = WebUtil.getBooleans(false, false);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS,
 			// DefaultSettings.INPUT_FIELD_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -575,6 +582,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE);
 	}
 
 	public boolean isEditable() {
@@ -642,6 +653,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		if (in.getValidationErrorMsg() != null && in.getValidationErrorMsg().length() == 0) {
 			in.setValidationErrorMsg(null);
 		}
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setFieldType(InputFieldTypeSelector fieldType) {

@@ -188,7 +188,7 @@ extends UserServiceBase
 	}
 
 	@Override
-	protected UserOutVO handleDeleteUser(AuthenticationVO auth, Long userId, boolean defer, boolean force, Integer maxInstances) throws Exception {
+	protected UserOutVO handleDeleteUser(AuthenticationVO auth, Long userId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances) throws Exception {
 		UserDao userDao = this.getUserDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		User modified = CoreUtil.getUser();
@@ -202,7 +202,11 @@ extends UserServiceBase
 			UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances);
 			userDao.evict(originalUser);
 			User user = CheckIDUtil.checkUserId(userId, userDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			user.setDeferredDelete(true);
+			user.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(user, user.getVersion(), now, user); // no opt. locking
 			userDao.update(user);
 			result = userDao.toUserOutVO(user, maxInstances);

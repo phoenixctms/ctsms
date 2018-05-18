@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.user;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
 
 import javax.ws.rs.Consumes;
@@ -12,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -39,12 +38,12 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/user")
 public class UserResource extends ServiceResourceBase {
 
-	@Context
-	AuthenticationVO auth;
 	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
 	// private final static DBModule dbModule = DBModule.USER_DB;
 	private final static JournalModule journalModule = JournalModule.USER_JOURNAL;
@@ -54,6 +53,8 @@ public class UserResource extends ServiceResourceBase {
 	public final static UserListIndex LIST_INDEX = new UserListIndex(getListIndexNode(ResourceUtils.getMethodPath(UserResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
 			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
+	@Context
+	AuthenticationVO auth;
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -64,9 +65,10 @@ public class UserResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public NoShortcutSerializationWrapper<UserOutVO> deleteUser(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public NoShortcutSerializationWrapper<UserOutVO> deleteUser(@PathParam("id") Long id, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService()
-				.deleteUser(auth, id, Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE), false,
+				.deleteUser(auth, id, Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE), false, reason,
 						MAX_GRAPH_USER_INSTANCES));
 	}
 

@@ -169,12 +169,15 @@ public class MassMailBean extends ManagedBeanBase {
 	private String previewSubject;
 	private String previewText;
 
+	private String deferredDeleteReason;
+
 	public MassMailBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
 		tabTitleMap = new HashMap<String, String>();
 
 	}
+
 
 	@Override
 	public String addAction()
@@ -207,7 +210,6 @@ public class MassMailBean extends ManagedBeanBase {
 		}
 		return ERROR_OUTCOME;
 	}
-
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
@@ -262,22 +264,23 @@ public class MassMailBean extends ManagedBeanBase {
 		return WebUtil.completeLogicalPath(FileModule.PROBAND_DOCUMENT, null, query);
 	}
 
+
 	public List<String> completeTrialFilesLogicalPath(String query) {
 		this.in.setTrialFilesLogicalPath(query);
 		return WebUtil.completeLogicalPath(FileModule.TRIAL_DOCUMENT, this.in.getTrialId(), query);
 	}
-
 
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
 	}
 
+
 	@Override
 	public String deleteAction(Long id) {
 		try {
 			out = WebUtil.getServiceLocator().getMassMailService().deleteMassMail(WebUtil.getAuthentication(), id,
-					Settings.getBoolean(SettingCodes.MASS_MAIL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_DEFERRED_DELETE), false);
+					Settings.getBoolean(SettingCodes.MASS_MAIL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_DEFERRED_DELETE), false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -298,11 +301,13 @@ public class MassMailBean extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
+	}
 
 	public ArrayList<SelectItem> getDepartments() {
 		return departments;
 	}
-
 
 	public MassMailInVO getIn() {
 		return in;
@@ -361,10 +366,6 @@ public class MassMailBean extends ManagedBeanBase {
 		return WebUtil.probandIdToName(previewProbandId);
 	}
 
-	public String getPreviewSubject() {
-		return previewSubject;
-	}
-
 	// public Long getPreviewTrialId() {
 	// return previewTrialId;
 	// }
@@ -373,6 +374,10 @@ public class MassMailBean extends ManagedBeanBase {
 	// return WebUtil.trialIdToName(previewTrialId);
 	// }
 
+
+	public String getPreviewSubject() {
+		return previewSubject;
+	}
 
 	public String getPreviewText() {
 		return previewText;
@@ -432,14 +437,14 @@ public class MassMailBean extends ManagedBeanBase {
 		return tabTitleMap.get(tab);
 	}
 
+	// public void handleBlindedChange() {
+	// loadProbandCategories();
+	// }
+
 	@Override
 	public String getTitle() {
 		return getTitle(WebUtil.getLongParamValue(GetParamNames.MASS_MAIL_ID) == null);
 	}
-
-	// public void handleBlindedChange() {
-	// loadProbandCategories();
-	// }
 
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
@@ -502,10 +507,10 @@ public class MassMailBean extends ManagedBeanBase {
 		in.setMassMailFilesLogicalPath((String) event.getObject());
 	}
 
+
 	public void handleProbandFilesLogicalPathSelect(SelectEvent event) {
 		in.setProbandFilesLogicalPath((String) event.getObject());
 	}
-
 
 	public void handleStatusTypeChange() {
 		loadMassMailStatusType();
@@ -519,6 +524,7 @@ public class MassMailBean extends ManagedBeanBase {
 		updatePreview(true);
 	}
 
+
 	@PostConstruct
 	private void init() {
 		// System.out.println("POSTCONSTRUCT: " + this.toString());
@@ -529,7 +535,6 @@ public class MassMailBean extends ManagedBeanBase {
 			this.change();
 		}
 	}
-
 
 	private void initIn() {
 		if (in == null) {
@@ -597,8 +602,9 @@ public class MassMailBean extends ManagedBeanBase {
 			this.locales = WebUtil.getLocales();
 		}
 		updatePreview(false);
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessageClientId("inputMessages", FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -612,11 +618,15 @@ public class MassMailBean extends ManagedBeanBase {
 		return out != null;
 	}
 
+
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.MASS_MAIL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_DEFERRED_DELETE);
+	}
+
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.MASS_MAIL_DB) && super.isEditable();
 	}
-
-
 
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.MASS_MAIL_DB) && super.isRemovable();
@@ -625,6 +635,8 @@ public class MassMailBean extends ManagedBeanBase {
 	public boolean isTabEmphasized(String tab) {
 		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));
 	}
+
+
 
 	@Override
 	public String loadAction() {
@@ -653,11 +665,14 @@ public class MassMailBean extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-
-
 	private void loadMassMailStatusType() {
 		massMailStatusType = WebUtil.getMassMailStatusType(in.getStatusId());
 	}
+
+
+	// public void setPreviewTrialId(Long previewTrialId) {
+	// this.previewTrialId = previewTrialId;
+	// }
 
 	@Override
 	public String resetAction() {
@@ -685,10 +700,9 @@ public class MassMailBean extends ManagedBeanBase {
 		}
 	}
 
-
-	// public void setPreviewTrialId(Long previewTrialId) {
-	// this.previewTrialId = previewTrialId;
-	// }
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
+	}
 
 	public void setPreviewProbandId(Long previewProbandId) {
 		this.previewProbandId = previewProbandId;

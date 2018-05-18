@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -99,12 +100,12 @@ public class InventoryResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public InventoryOutVO deleteInventory(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public InventoryOutVO deleteInventory(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil
 				.getServiceLocator()
 				.getInventoryService()
 				.deleteInventory(auth, id, Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE),
-						false,
+						false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH));
 	}

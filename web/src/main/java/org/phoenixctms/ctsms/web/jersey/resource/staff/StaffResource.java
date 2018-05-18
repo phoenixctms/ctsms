@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -105,12 +106,12 @@ public class StaffResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public StaffOutVO deleteStaff(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public StaffOutVO deleteStaff(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil
 				.getServiceLocator()
 				.getStaffService()
 				.deleteStaff(auth, id, Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE),
-						false,
+						false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH));
 	}

@@ -137,6 +137,8 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	private HashMap<String, String> tabTitleMap;
 	private VariablePeriodSelector blocking;
 	private Collection<TrialStatusTypeVO> allStatusTypes;
+	private String deferredDeleteReason;
+
 	public TrialBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -231,7 +233,6 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 					MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString()));
 		}
 	}
-
 	@Override
 	protected String changeAction(Long id) {
 		out = null;
@@ -253,6 +254,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		initSets();
 		return CHANGE_OUTCOME;
 	}
+
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -263,7 +265,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().deleteTrial(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE),
-					false);
+					false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -290,6 +292,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 
 	public VariablePeriodSelector getBlocking() {
 		return blocking;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -559,8 +565,9 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		}
 		loadTrialStatusType();
 		loadSignature();
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -580,6 +587,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE);
 	}
 
 	public boolean isEditable() {
@@ -682,6 +693,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 
 	public void setBlocking(VariablePeriodSelector validity) {
 		this.blocking = validity;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setPassword(String password) {

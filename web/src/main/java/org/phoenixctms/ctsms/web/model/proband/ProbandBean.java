@@ -217,6 +217,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	private HashMap<String, String> tabTitleMap;
 	private Object[] inquiryValuesTotalCounts;
 
+	private String deferredDeleteReason;
+
 	public ProbandBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -408,7 +410,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	public String deleteAction(Long id) {
 		try {
 			out = WebUtil.getServiceLocator().getProbandService().deleteProband(WebUtil.getAuthentication(), id,
-					Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE), false,
+					Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE), false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
@@ -471,6 +473,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	public TreeNode getChildrenRoot() {
 		return childrenRoot;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -569,14 +575,14 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		}
 	}
 
+	// public void handleBlindedChange() {
+	// loadProbandCategories();
+	// }
+
 	@Override
 	public String getWindowName() {
 		return getWindowName(WebUtil.getLongParamValue(GetParamNames.PROBAND_ID) == null);
 	}
-
-	// public void handleBlindedChange() {
-	// loadProbandCategories();
-	// }
 
 	private String getWindowName(boolean operationSuccess) {
 		if (out != null) {
@@ -769,8 +775,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		loadProbandCategories();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		loadSelectedCategory();
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -789,6 +796,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE);
 	}
 
 	public boolean isEditable() {
@@ -998,6 +1009,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setRating(null);
 		}
 		in.setChildIds(new ArrayList<Long>(childrenMultiPicker.getSelectionIds()));
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setGender(SexSelector gender) {

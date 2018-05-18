@@ -945,14 +945,48 @@
 			<p:confirmDialog
 				appendToBody="false"
 				severity="alert"
+				width="500"
 				widgetVar="staffDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{stafflabels.staff_delete_confirmation_dialog_message}"
 						escape="false" />
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						<h:panelGrid
+							rendered="#{staffBean.deferredDelete}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="deferredDeleteReason"
+								value="#{stafflabels.staff_deferred_delete_reason_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="deferredDeleteReason"
+									value="#{staffBean.deferredDeleteReason}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{stafflabels.staff_deferred_delete_reason}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="deferredDeleteReason">
+									<h:outputText
+										value="#{stafflabels.staff_deferred_delete_reason_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this"
+					process="@this#{staffBean.deferredDelete ? ',:tabView:staffmain_form:deferredDeleteReason' : ''}"
 					value="#{labels.yes_button_label}"
 					actionListener="#{staffBean.delete}"
 					onclick="staffDeleteConfirmation.hide()"

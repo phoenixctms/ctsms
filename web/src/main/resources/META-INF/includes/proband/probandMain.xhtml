@@ -1220,14 +1220,49 @@
 			<p:confirmDialog
 				appendToBody="false"
 				severity="alert"
+				width="500"
 				widgetVar="probandDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{probandlabels.proband_delete_confirmation_dialog_message}"
 						escape="false" />
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						<h:panelGrid
+							rendered="#{probandBean.deferredDelete}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+							    styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="deferredDeleteReason"
+								value="#{labels.noencryption_warning_label}#{probandlabels.proband_deferred_delete_reason_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="deferredDeleteReason"
+									value="#{probandBean.deferredDeleteReason}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{probandlabels.proband_deferred_delete_reason}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="deferredDeleteReason">
+									<h:outputText
+										value="#{probandlabels.proband_deferred_delete_reason_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this"
+					process="@this#{probandBean.deferredDelete ? ',:tabView:probandmain_form:deferredDeleteReason' : ''}"
 					value="#{labels.yes_button_label}"
 					actionListener="#{probandBean.delete}"
 					onclick="probandDeleteConfirmation.hide()"

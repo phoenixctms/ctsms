@@ -109,6 +109,8 @@ public class InquiryBean extends ManagedBeanBase {
 	private boolean bulkAddOptional;
 	private boolean bulkAddExcel;
 
+	private String deferredDeleteReason;
+
 	public InquiryBean() {
 		super();
 		inquiryModel = new InquiryLazyModel();
@@ -229,7 +231,7 @@ public class InquiryBean extends ManagedBeanBase {
 	public String deleteAction(Long id) {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().deleteInquiry(WebUtil.getAuthentication(), id,
-					Settings.getBoolean(SettingCodes.INQUIRY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INQUIRY_DEFERRED_DELETE), false);
+					Settings.getBoolean(SettingCodes.INQUIRY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INQUIRY_DEFERRED_DELETE), false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -253,7 +255,6 @@ public class InquiryBean extends ManagedBeanBase {
 	public String getBulkAddCategory() {
 		return bulkAddCategory;
 	}
-
 	private List<String> getCompleteCategoryList(String query) {
 		Collection<String> categories = null;
 		if (in.getTrialId() != null) {
@@ -273,6 +274,10 @@ public class InquiryBean extends ManagedBeanBase {
 			}
 		}
 		return new ArrayList<String>();
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public String getFieldName() {
@@ -329,10 +334,10 @@ public class InquiryBean extends ManagedBeanBase {
 		bulkAddCategory = (String) event.getObject();
 	}
 
+
 	public void handleCategorySelect(SelectEvent event) {
 		in.setCategory((String) event.getObject());
 	}
-
 
 	@PostConstruct
 	private void init() {
@@ -390,8 +395,9 @@ public class InquiryBean extends ManagedBeanBase {
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INQUIRY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INQUIRY_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -411,6 +417,10 @@ public class InquiryBean extends ManagedBeanBase {
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.INQUIRY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INQUIRY_DEFERRED_DELETE);
 	}
 
 	@Override
@@ -576,6 +586,10 @@ public class InquiryBean extends ManagedBeanBase {
 
 	public void setBulkAddOptional(boolean bulkAddOptional) {
 		this.bulkAddOptional = bulkAddOptional;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setSelectedInquiry(IDVO inquiry) {

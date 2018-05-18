@@ -455,7 +455,7 @@ extends CourseServiceBase
 
 	@Override
 	protected CourseOutVO handleDeleteCourse(AuthenticationVO auth, Long courseId,
-			boolean defer, boolean force, Integer maxInstances, Integer maxPrecedingCoursesDepth, Integer maxRenewalsDepth) throws Exception {
+			boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances, Integer maxPrecedingCoursesDepth, Integer maxRenewalsDepth) throws Exception {
 		CourseDao courseDao = this.getCourseDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -466,7 +466,11 @@ extends CourseServiceBase
 			CourseOutVO original = courseDao.toCourseOutVO(originalCourse, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);
 			courseDao.evict(originalCourse);
 			Course course = CheckIDUtil.checkCourseId(courseId, courseDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			course.setDeferredDelete(true);
+			course.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(course, originalCourse.getVersion(), now, user); // no opt. locking
 			courseDao.update(course);
 			result = courseDao.toCourseOutVO(course, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);

@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.inputfield;
 
-import io.swagger.annotations.Api;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -13,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -48,12 +47,12 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/inputfield")
 public class InputFieldResource extends ServiceResourceBase {
 
-	@Context
-	AuthenticationVO auth;
 	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
 	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
 	private final static Class SERVICE_INTERFACE = InputFieldService.class;
@@ -63,6 +62,8 @@ public class InputFieldResource extends ServiceResourceBase {
 			ResourceUtils.getMethodPath(InputFieldResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
 			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
+	@Context
+	AuthenticationVO auth;
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -86,9 +87,11 @@ public class InputFieldResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public InputFieldOutVO deleteInputField(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public InputFieldOutVO deleteInputField(@PathParam("id") Long id, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService()
-				.deleteInputField(auth, id, Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE), false);
+				.deleteInputField(auth, id, Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE), false,
+						reason);
 	}
 
 	// @GET

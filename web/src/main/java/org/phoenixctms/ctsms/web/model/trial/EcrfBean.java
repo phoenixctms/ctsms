@@ -114,6 +114,8 @@ public class EcrfBean extends ManagedBeanBase {
 	private GroupVisitMatrix<ECRFOutVO> matrix;
 	private Long cloneAddTrialId;
 
+	private String deferredDeleteReason;
+
 	public EcrfBean() {
 		super();
 		ecrfModel = new EcrfLazyModel();
@@ -282,7 +284,7 @@ public class EcrfBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().deleteEcrf(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE),
-					false);
+					false, deferredDeleteReason);
 			initIn();
 			initSets();
 			matrix.loadMatrix();
@@ -310,6 +312,10 @@ public class EcrfBean extends ManagedBeanBase {
 
 	public String getCloneAddTrialName() {
 		return WebUtil.trialIdToName(cloneAddTrialId);
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public EcrfLazyModel getEcrfModel() {
@@ -417,8 +423,9 @@ public class EcrfBean extends ManagedBeanBase {
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -442,6 +449,10 @@ public class EcrfBean extends ManagedBeanBase {
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE);
 	}
 
 	@Override
@@ -597,6 +608,10 @@ public class EcrfBean extends ManagedBeanBase {
 
 	public void setCloneAddTrialId(Long cloneAddTrialId) {
 		this.cloneAddTrialId = cloneAddTrialId;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setSelectedEcrf(IDVO ecrf) {

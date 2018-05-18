@@ -99,6 +99,8 @@ public class InventoryBean extends ManagedBeanBase {
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 
+	private String deferredDeleteReason;
+
 	public InventoryBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -219,7 +221,7 @@ public class InventoryBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().deleteInventory(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE),
-					false,
+					false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
 			initIn();
@@ -252,6 +254,10 @@ public class InventoryBean extends ManagedBeanBase {
 
 	public ArrayList<SelectItem> getCategories() {
 		return categories;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -411,9 +417,10 @@ public class InventoryBean extends ManagedBeanBase {
 		}
 		categories = WebUtil.getVisibleInventoryCategories(in.getCategoryId());
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE))
 			// {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -474,10 +481,14 @@ public class InventoryBean extends ManagedBeanBase {
 		return out != null;
 	}
 
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE);
+	}
+
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.INVENTORY_DB) && super.isEditable();
 	}
-
 
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.INVENTORY_DB) && super.isRemovable();
@@ -528,6 +539,10 @@ public class InventoryBean extends ManagedBeanBase {
 		if (!in.getBookable()) {
 			in.setMaxOverlappingBookings(0l);
 		}
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	@Override

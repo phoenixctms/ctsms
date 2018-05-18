@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -14,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -47,6 +46,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/search")
 public class SearchResource {
@@ -64,9 +65,9 @@ public class SearchResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public CriteriaOutVO deleteCriteria(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public CriteriaOutVO deleteCriteria(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getSearchService()
-				.deleteCriteria(auth, id, Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE), false);
+				.deleteCriteria(auth, id, Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE), false, reason);
 	}
 
 	@GET

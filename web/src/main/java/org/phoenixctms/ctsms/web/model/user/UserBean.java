@@ -101,6 +101,8 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 
+	private String deferredDeleteReason;
+
 	public UserBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -221,7 +223,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		try {
 			out = WebUtil.getServiceLocator().getUserService().deleteUser(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE),
-					false,
+					false, deferredDeleteReason,
 					MAX_GRAPH_USER_INSTANCES);
 			initIn();
 			initSets();
@@ -255,6 +257,10 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public AuthenticationTypeSelector getAuthMethod() {
 		return authMethod;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -475,8 +481,9 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		if (WebUtil.isUserIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -485,11 +492,15 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return WebUtil.getModuleEnabled(DBModule.USER_DB);
 	}
 
+
 	@Override
 	public boolean isCreated() {
 		return out != null;
 	}
 
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE);
+	}
 
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.USER_DB) && super.isEditable();
@@ -596,6 +607,10 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public void setAuthMethod(AuthenticationTypeSelector method) {
 		this.authMethod = method;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setLdapEntry1(LdapEntryVO ldapEntry) {

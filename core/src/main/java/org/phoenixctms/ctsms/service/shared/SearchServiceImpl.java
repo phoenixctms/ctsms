@@ -627,7 +627,7 @@ extends SearchServiceBase
 				VOs = searchInventoryHelper(criteria,
 						Settings.getIntNullable(SearchResultExcelSettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SEARCH_RESULT_EXCEL,
 								SearchResultExcelDefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-								psf);
+						psf);
 				distinctColumnNames = new ArrayList<String>();
 				distinctFieldRows = new HashMap<Long, HashMap<String, Object>>(VOs.size());
 				prepareInventoryDistinctColumns(writer, VOs, distinctColumnNames, distinctFieldRows);
@@ -639,7 +639,7 @@ extends SearchServiceBase
 				VOs = searchStaffHelper(criteria,
 						Settings.getIntNullable(SearchResultExcelSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SEARCH_RESULT_EXCEL,
 								SearchResultExcelDefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-								psf);
+						psf);
 				distinctColumnNames = new ArrayList<String>();
 				distinctFieldRows = new HashMap<Long, HashMap<String, Object>>(VOs.size());
 				prepareStaffDistinctColumns(writer, VOs, distinctColumnNames, distinctFieldRows);
@@ -651,13 +651,13 @@ extends SearchServiceBase
 				writer.setVOs(searchCourseHelper(criteria,
 						Settings.getIntNullable(SearchResultExcelSettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SEARCH_RESULT_EXCEL,
 								SearchResultExcelDefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
-								psf));
+						psf));
 				break;
 			case USER_DB:
 				writer.setVOs(searchUserHelper(criteria,
 						Settings.getIntNullable(SearchResultExcelSettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SEARCH_RESULT_EXCEL,
 								SearchResultExcelDefaultSettings.GRAPH_MAX_USER_INSTANCES),
-								psf));
+						psf));
 				break;
 			case TRIAL_DB:
 				VOs = searchTrialHelper(criteria, psf);
@@ -727,7 +727,7 @@ extends SearchServiceBase
 
 	@Override
 	protected CriteriaOutVO handleDeleteCriteria(AuthenticationVO auth, Long criteriaId,
-			boolean defer, boolean force) throws Exception {
+			boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		CriteriaDao criteriaDao = this.getCriteriaDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -738,7 +738,11 @@ extends SearchServiceBase
 			CriteriaOutVO original = criteriaDao.toCriteriaOutVO(originalCriteria);
 			criteriaDao.evict(originalCriteria);
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			criteria.setDeferredDelete(true);
+			criteria.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(criteria, criteria.getVersion(), now, user); // no opt. locking
 			criteriaDao.update(criteria);
 			result = criteriaDao.toCriteriaOutVO(criteria);
@@ -996,7 +1000,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InventoryOutVO> handleSearchInventoryByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-			throws Exception {
+					throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<InventoryOutVO> result = searchInventoryHelper(instantCriteria, maxInstances, psf);
@@ -1301,7 +1305,7 @@ extends SearchServiceBase
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-									CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
@@ -1326,7 +1330,7 @@ extends SearchServiceBase
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-									CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
@@ -1351,7 +1355,7 @@ extends SearchServiceBase
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-									CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
@@ -1376,7 +1380,7 @@ extends SearchServiceBase
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-									CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
@@ -1408,12 +1412,12 @@ extends SearchServiceBase
 						new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO),
 								psf == null ? Integer.toString(result.size()) : (psf.getRowCount() == null ? new Long(0) : psf.getRowCount()).toString() },
 
-								new Object[] {
+						new Object[] {
 								CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 										!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-										CoreUtil.getSystemMessageCommentContent(psf, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
-										CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaVO), null,
-												!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+								CoreUtil.getSystemMessageCommentContent(psf, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
+								CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaVO), null,
+										!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 			}
 		}
 	}

@@ -2,8 +2,6 @@
 
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
-import io.swagger.annotations.Api;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,6 +26,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/ecrf")
 public class EcrfResource {
@@ -45,9 +45,9 @@ public class EcrfResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public ECRFOutVO deleteEcrf(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public ECRFOutVO deleteEcrf(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService()
-				.deleteEcrf(auth, id, Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE), false);
+				.deleteEcrf(auth, id, Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE), false, reason);
 	}
 
 	@GET

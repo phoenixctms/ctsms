@@ -731,7 +731,7 @@ extends InputFieldServiceBase
 	@Override
 	protected InputFieldOutVO handleAddInputField(AuthenticationVO auth, InputFieldInVO newInputField)
 			throws Exception
-			{
+	{
 		checkAddInputFieldInput(newInputField);
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = inputFieldDao.inputFieldInVOToEntity(newInputField);
@@ -742,7 +742,7 @@ extends InputFieldServiceBase
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
 		ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_CREATED, result, null, this.getJournalEntryDao());
 		return result;
-			}
+	}
 
 	@Override
 	protected InputFieldSelectionSetValueOutVO handleAddSelectionSetValue(
@@ -1014,7 +1014,7 @@ extends InputFieldServiceBase
 
 	@Override
 	protected InputFieldOutVO handleDeleteInputField(AuthenticationVO auth, Long inputFieldId,
-			boolean defer, boolean force) throws Exception {
+			boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1031,7 +1031,11 @@ extends InputFieldServiceBase
 			InputFieldOutVO original = inputFieldDao.toInputFieldOutVO(originalInputField);
 			inputFieldDao.evict(originalInputField);
 			InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			inputField.setDeferredDelete(true);
+			inputField.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(inputField, inputField.getVersion(), now, user); // no opt. locking
 			inputFieldDao.update(inputField);
 			result = inputFieldDao.toInputFieldOutVO(inputField);
@@ -1127,7 +1131,7 @@ extends InputFieldServiceBase
 
 	@Override
 	protected InputFieldSelectionSetValueOutVO handleDeleteSelectionSetValue(
-			AuthenticationVO auth, Long selectionSetValueId, boolean defer, boolean force) throws Exception {
+			AuthenticationVO auth, Long selectionSetValueId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -1142,7 +1146,11 @@ extends InputFieldServiceBase
 			InputFieldSelectionSetValueOutVO original = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(originalSelectionSetValue);
 			selectionSetValueDao.evict(originalSelectionSetValue);
 			InputFieldSelectionSetValue selectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, selectionSetValueDao);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			selectionSetValue.setDeferredDelete(true);
+			selectionSetValue.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(selectionSetValue, selectionSetValue.getVersion(), now, user); // no opt. locking
 			selectionSetValueDao.update(selectionSetValue);
 			result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);

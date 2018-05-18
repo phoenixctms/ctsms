@@ -3040,7 +3040,7 @@ extends TrialServiceBase
 		User user = CoreUtil.getUser();
 		ECRF newEcrf = ECRF.Factory.newInstance();
 		newEcrf.setActive(originalEcrf.isActive());
-		newEcrf.setDeferredDelete(originalEcrf.isDeferredDelete());
+		// newEcrf.setDeferredDelete(originalEcrf.isDeferredDelete());
 		newEcrf.setDescription(originalEcrf.getDescription());
 		newEcrf.setDisabled(originalEcrf.isDisabled());
 		newEcrf.setEnableBrowserFieldCalculation(originalEcrf.isEnableBrowserFieldCalculation());
@@ -3064,6 +3064,7 @@ extends TrialServiceBase
 			newEcrfField.setAuditTrail(originalEcrfField.isAuditTrail());
 			newEcrfField.setComment(originalEcrfField.getComment());
 			newEcrfField.setDeferredDelete(originalEcrfField.isDeferredDelete());
+			newEcrfField.setDeferredDeleteReason(originalEcrfField.getDeferredDeleteReason());
 			newEcrfField.setDisabled(originalEcrfField.isDisabled());
 			newEcrfField.setJsOutputExpression(originalEcrfField.getJsOutputExpression());
 			newEcrfField.setJsValueExpression(originalEcrfField.getJsValueExpression());
@@ -3093,7 +3094,7 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected ECRFOutVO handleDeleteEcrf(AuthenticationVO auth, Long ecrfId,  boolean defer, boolean force) throws Exception {
+	protected ECRFOutVO handleDeleteEcrf(AuthenticationVO auth, Long ecrfId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		ECRFDao ecrfDao = this.getECRFDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -3108,7 +3109,11 @@ extends TrialServiceBase
 			ECRFOutVO original = ecrfDao.toECRFOutVO(originalEcrf);
 			ecrfDao.evict(originalEcrf);
 			ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			ecrf.setDeferredDelete(true);
+			ecrf.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user); // no opt. locking
 			ecrfDao.update(ecrf);
 			result = ecrfDao.toECRFOutVO(ecrf);
@@ -3164,7 +3169,7 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected ECRFFieldOutVO handleDeleteEcrfField(AuthenticationVO auth, Long ecrfFieldId,  boolean defer,boolean force) throws Exception {
+	protected ECRFFieldOutVO handleDeleteEcrfField(AuthenticationVO auth, Long ecrfFieldId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -3179,7 +3184,11 @@ extends TrialServiceBase
 			ECRFFieldOutVO original = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 			ecrfFieldDao.evict(originalEcrfField);
 			ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, ecrfFieldDao);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			ecrfField.setDeferredDelete(true);
+			ecrfField.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(ecrfField, ecrfField.getVersion(), now, user); // no opt. locking
 			ecrfFieldDao.update(ecrfField);
 			result = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
@@ -3246,7 +3255,7 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected InquiryOutVO handleDeleteInquiry(AuthenticationVO auth, Long inquiryId, boolean defer, boolean force) throws Exception {
+	protected InquiryOutVO handleDeleteInquiry(AuthenticationVO auth, Long inquiryId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		InquiryDao inquiryDao = this.getInquiryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -3260,7 +3269,11 @@ extends TrialServiceBase
 			InquiryOutVO original = inquiryDao.toInquiryOutVO(originalInquiry);
 			inquiryDao.evict(originalInquiry);
 			Inquiry inquiry = CheckIDUtil.checkInquiryId(inquiryId, inquiryDao);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			inquiry.setDeferredDelete(true);
+			inquiry.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(inquiry, inquiry.getVersion(), now, user); // no opt. locking
 			inquiryDao.update(inquiry);
 			result = inquiryDao.toInquiryOutVO(inquiry);
@@ -3536,7 +3549,7 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected TrialOutVO handleDeleteTrial(AuthenticationVO auth, Long trialId,  boolean defer,boolean force) throws Exception {
+	protected TrialOutVO handleDeleteTrial(AuthenticationVO auth, Long trialId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -3547,7 +3560,11 @@ extends TrialServiceBase
 			TrialOutVO original = trialDao.toTrialOutVO(originalTrial);
 			trialDao.evict(originalTrial);
 			Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			trial.setDeferredDelete(true);
+			trial.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(trial, originalTrial.getVersion(), now, user); // no opt. locking
 			trialDao.update(trial);
 			result = trialDao.toTrialOutVO(trial);

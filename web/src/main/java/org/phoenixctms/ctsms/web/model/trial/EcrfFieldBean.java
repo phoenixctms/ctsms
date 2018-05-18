@@ -126,6 +126,8 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private String oldSection;
 	private String newSection;
 
+	private String deferredDeleteReason;
+
 	public EcrfFieldBean() {
 		super();
 		ecrfModel = new EcrfLazyModel();
@@ -261,7 +263,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().deleteEcrfField(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.ECRF_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_DEFERRED_DELETE),
-					false);
+					false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -285,7 +287,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getBulkAddSection() {
 		return bulkAddSection;
 	}
-
 	private List<String> getCompleteSectionList(String query) {
 		Collection<String> sections = null;
 		if (in.getEcrfId() != null) {
@@ -305,6 +306,10 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			}
 		}
 		return new ArrayList<String>();
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public String getEcrfFieldListHeader() {
@@ -488,9 +493,10 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessageClientId("ecrfFieldInputMessages", FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.ECRF_FIELD_DEFERRED_DELETE, Bundle.SETTINGS,
 			// DefaultSettings.ECRF_FIELD_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessageClientId("ecrfFieldInputMessages", FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessageClientId("ecrfFieldInputMessages", FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 		if (trial != null && ecrf == null) {
 			Messages.addLocalizedMessageClientId("ecrfFieldInputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.SELECT_ECRF);
@@ -517,6 +523,10 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.ECRF_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_DEFERRED_DELETE);
 	}
 
 	@Override
@@ -696,6 +706,10 @@ public class EcrfFieldBean extends ManagedBeanBase {
 
 	public void setBulkAddSeries(boolean bulkAddSeries) {
 		this.bulkAddSeries = bulkAddSeries;
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setNewSection(String newSection) {

@@ -79,6 +79,8 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	private String inkRegionsJson;
 	private boolean inkRegionsJsonVisible;
 
+	private String deferredDeleteReason;
+
 	public SelectionSetValueBean() {
 		super();
 		config = new InputFieldOutVOConfig();
@@ -146,7 +148,7 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	public String deleteAction(Long id) {
 		try {
 			out = WebUtil.getServiceLocator().getInputFieldService().deleteSelectionSetValue(WebUtil.getAuthentication(), id,
-					Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false);
+					Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false, deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -165,6 +167,10 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public InputFieldSelectionSetValueInVO getIn() {
@@ -287,9 +293,10 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		if (!config.isSelect()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.INPUT_FIELD_NOT_SELECT);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS,
 			// DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -305,6 +312,10 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE);
 	}
 
 	@Override
@@ -374,6 +385,10 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 			in.setStrokesId(null);
 			in.setInkRegions(null);
 		}
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setInkRegions(String value) throws UnsupportedEncodingException {

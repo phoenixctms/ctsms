@@ -616,7 +616,8 @@ extends InventoryServiceBase
 	}
 
 	@Override
-	protected InventoryOutVO handleDeleteInventory(AuthenticationVO auth, Long inventoryId,  boolean defer,boolean force, Integer maxInstances, Integer maxParentDepth)
+	protected InventoryOutVO handleDeleteInventory(AuthenticationVO auth, Long inventoryId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
+			Integer maxParentDepth)
 			throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -628,7 +629,11 @@ extends InventoryServiceBase
 			InventoryOutVO original = inventoryDao.toInventoryOutVO(originalInventory, maxInstances, maxParentDepth);
 			inventoryDao.evict(originalInventory);
 			Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			inventory.setDeferredDelete(true);
+			inventory.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(inventory, originalInventory.getVersion(), now, user); // no opt. locking
 			inventoryDao.update(inventory);
 			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);

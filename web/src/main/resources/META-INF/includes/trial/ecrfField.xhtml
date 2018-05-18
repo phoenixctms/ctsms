@@ -976,14 +976,48 @@
 			<p:confirmDialog
 				appendToBody="false"
 				severity="alert"
+				width="500"
 				widgetVar="ecrfFieldDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.ecrffield_delete_confirmation_dialog_message}"
 						escape="false" />
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						<h:panelGrid
+							rendered="#{ecrfFieldBean.deferredDelete}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="deferredDeleteReason"
+								value="#{triallabels.ecrffield_deferred_delete_reason_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="deferredDeleteReason"
+									value="#{ecrfFieldBean.deferredDeleteReason}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{triallabels.ecrffield_deferred_delete_reason}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="deferredDeleteReason">
+									<h:outputText
+										value="#{triallabels.ecrffield_deferred_delete_reason_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this"
+					process="@this#{ecrfFieldBean.deferredDelete ? ',:tabView:ecrffield_form:deferredDeleteReason' : ''}"
 					value="#{labels.yes_button_label}"
 					actionListener="#{ecrfFieldBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"

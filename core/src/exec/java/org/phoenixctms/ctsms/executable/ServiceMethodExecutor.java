@@ -195,47 +195,47 @@ public class ServiceMethodExecutor {
 	}
 
 	public void deleteCourse(AuthenticationVO auth, Long id) throws Exception {
-		CourseOutVO course = courseService.deleteCourse(auth, id, false, true, null, null, null);
+		CourseOutVO course = courseService.deleteCourse(auth, id, false, true, null, null, null, null);
 		jobOutput.println("course ID " + Long.toString(course.getId()) + " '" + CommonUtil.courseOutVOToString(course) + "' removed");
 	}
 
 	public void deleteCriteria(AuthenticationVO auth, Long id) throws Exception {
-		CriteriaOutVO criteria = searchService.deleteCriteria(auth, id, false, true);
+		CriteriaOutVO criteria = searchService.deleteCriteria(auth, id, false, true, null);
 		jobOutput.println("criteria ID " + Long.toString(criteria.getId()) + " '" + CommonUtil.criteriaOutVOToString(criteria) + "' removed");
 	}
 
 	public void deleteEcrf(AuthenticationVO auth, Long id) throws Exception {
-		ECRFOutVO ecrf = trialService.deleteEcrf(auth, id, false, true);
+		ECRFOutVO ecrf = trialService.deleteEcrf(auth, id, false, true, null);
 		jobOutput.println("eCRF ID " + Long.toString(ecrf.getId()) + " '" + ecrf.getUniqueName() + "' removed");
 	}
 
 	public void deleteEcrfField(AuthenticationVO auth, Long id) throws Exception {
-		ECRFFieldOutVO ecrfField = trialService.deleteEcrfField(auth, id, false, true);
+		ECRFFieldOutVO ecrfField = trialService.deleteEcrfField(auth, id, false, true, null);
 		jobOutput.println("eCRF field ID " + Long.toString(ecrfField.getId()) + " '" + ecrfField.getUniqueName() + "' removed");
 	}
 
 	public void deleteInputField(AuthenticationVO auth, Long id) throws Exception {
-		InputFieldOutVO inputField = inputFieldService.deleteInputField(auth, id, false, true);
+		InputFieldOutVO inputField = inputFieldService.deleteInputField(auth, id, false, true, null);
 		jobOutput.println("input field ID " + Long.toString(inputField.getId()) + " '" + CommonUtil.inputFieldOutVOToString(inputField) + "' removed");
 	}
 
 	public void deleteInquiry(AuthenticationVO auth, Long id) throws Exception {
-		InquiryOutVO inquiry = trialService.deleteInquiry(auth, id, false, true);
+		InquiryOutVO inquiry = trialService.deleteInquiry(auth, id, false, true, null);
 		jobOutput.println("inquiry ID " + Long.toString(inquiry.getId()) + " '" + inquiry.getUniqueName() + "' removed");
 	}
 
 	public void deleteInventory(AuthenticationVO auth, Long id) throws Exception {
-		InventoryOutVO inventory = inventoryService.deleteInventory(auth, id, false, true, null, null);
+		InventoryOutVO inventory = inventoryService.deleteInventory(auth, id, false, true, null, null, null);
 		jobOutput.println("inventory ID " + Long.toString(inventory.getId()) + " '" + CommonUtil.inventoryOutVOToString(inventory) + "' removed");
 	}
 
 	public void deleteMassMail(AuthenticationVO auth, Long id) throws Exception {
-		MassMailOutVO massMail = massMailService.deleteMassMail(auth, id, false, true);
+		MassMailOutVO massMail = massMailService.deleteMassMail(auth, id, false, true, null);
 		jobOutput.println("mass mail ID " + Long.toString(massMail.getId()) + " removed");
 	}
 
 	public void deleteProband(AuthenticationVO auth, Long id) throws Exception {
-		ProbandOutVO proband = probandService.deleteProband(auth, id, false, true, null, null, null);
+		ProbandOutVO proband = probandService.deleteProband(auth, id, false, true, null, null, null, null);
 		jobOutput.println("proband ID " + Long.toString(proband.getId()) + " removed");
 	}
 
@@ -255,22 +255,22 @@ public class ServiceMethodExecutor {
 	}
 
 	public void deleteSelectionSetValue(AuthenticationVO auth, Long id) throws Exception {
-		InputFieldSelectionSetValueOutVO selectionSetValue = inputFieldService.deleteSelectionSetValue(auth, id, false, true);
+		InputFieldSelectionSetValueOutVO selectionSetValue = inputFieldService.deleteSelectionSetValue(auth, id, false, true, null);
 		jobOutput.println("selection set value ID " + Long.toString(selectionSetValue.getId()) + " '" + selectionSetValue.getUniqueName() + "' removed");
 	}
 
 	public void deleteStaff(AuthenticationVO auth, Long id) throws Exception {
-		StaffOutVO staff = staffService.deleteStaff(auth, id, false, true, null, null);
+		StaffOutVO staff = staffService.deleteStaff(auth, id, false, true, null, null, null);
 		jobOutput.println("person/organisation ID " + Long.toString(staff.getId()) + " '" + CommonUtil.staffOutVOToString(staff) + "' removed");
 	}
 
 	public void deleteTrial(AuthenticationVO auth, Long id) throws Exception {
-		TrialOutVO trial = trialService.deleteTrial(auth, id, false, true);
+		TrialOutVO trial = trialService.deleteTrial(auth, id, false, true, null);
 		jobOutput.println("trial ID " + Long.toString(trial.getId()) + " '" + CommonUtil.trialOutVOToString(trial) + "' removed");
 	}
 
 	public void deleteUser(AuthenticationVO auth, Long id) throws Exception {
-		UserOutVO user = userService.deleteUser(auth, id, false, true, null);
+		UserOutVO user = userService.deleteUser(auth, id, false, true, null, null);
 		jobOutput.println("user ID " + Long.toString(user.getId()) + " '" + CommonUtil.userOutVOToString(user) + "' removed");
 	}
 

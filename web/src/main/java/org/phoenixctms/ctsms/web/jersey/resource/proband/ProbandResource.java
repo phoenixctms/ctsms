@@ -109,9 +109,9 @@ public class ProbandResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public ProbandOutVO deleteProband(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public ProbandOutVO deleteProband(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getProbandService()
-				.deleteProband(auth, id, Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE), false,
+				.deleteProband(auth, id, Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE), false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));

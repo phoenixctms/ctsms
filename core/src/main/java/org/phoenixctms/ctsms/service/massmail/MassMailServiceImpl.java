@@ -369,7 +369,7 @@ extends MassMailServiceBase
 	/**
 	 * @see org.phoenixctms.ctsms.service.massmail.MassMailService#deleteMassMail(AuthenticationVO, Long, boolean, boolean)
 	 */
-	protected MassMailOutVO handleDeleteMassMail(AuthenticationVO auth, Long massMailId, boolean defer, boolean force)
+	protected MassMailOutVO handleDeleteMassMail(AuthenticationVO auth, Long massMailId, boolean defer, boolean force, String deferredDeleteReason)
 			throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -381,7 +381,11 @@ extends MassMailServiceBase
 			MassMailOutVO original = massMailDao.toMassMailOutVO(originalMassMail);
 			massMailDao.evict(originalMassMail);
 			MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, massMailDao, LockMode.PESSIMISTIC_WRITE);
+			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEFERRED_DELETE_REASON_REQUIRED);
+			}
 			massMail.setDeferredDelete(true);
+			massMail.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(massMail, originalMassMail.getVersion(), now, user); // no opt. locking
 			massMailDao.update(massMail);
 			result = massMailDao.toMassMailOutVO(massMail);

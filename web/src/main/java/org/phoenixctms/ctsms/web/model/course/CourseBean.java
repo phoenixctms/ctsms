@@ -176,6 +176,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private CourseMultiPickerModel precedingCourseMultiPicker;
 
 	private VariablePeriodSelector validity;
+	private String deferredDeleteReason;
 
 	private Date today;
 
@@ -398,7 +399,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		try {
 			out = WebUtil.getServiceLocator().getCourseService().deleteCourse(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE),
-					false,
+					false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH));
@@ -499,6 +500,10 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 
 	public ArrayList<SelectItem> getCvSections() {
 		return cvSections;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -641,6 +646,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
+
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
 		Long count = (out == null ? null : WebUtil.getLecturerCount(in.getId(), null));
@@ -695,8 +701,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionPresetId());
 		loadSelectedSection();
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, out.getDeferredDeleteReason());
 		}
 	}
 
@@ -708,6 +715,10 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	@Override
 	public boolean isCreated() {
 		return out != null;
+	}
+
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE);
 	}
 
 	public boolean isEditable() {
@@ -781,6 +792,10 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setShowCommentCvPreset(false);
 		}
 		in.setPrecedingCourseIds(new ArrayList<Long>(precedingCourseMultiPicker.getSelectionIds()));
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	@Override

@@ -162,6 +162,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 
+	private String deferredDeleteReason;
+
 	public StaffBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
@@ -332,7 +334,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().deleteStaff(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE),
-					false,
+					false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
 			initIn();
@@ -365,6 +367,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
 	public ArrayList<SelectItem> getCategories() {
 		return categories;
+	}
+
+	public String getDeferredDeleteReason() {
+		return deferredDeleteReason;
 	}
 
 	public ArrayList<SelectItem> getDepartments() {
@@ -608,8 +614,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		if (WebUtil.isUserIdentityIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_IDENTITY);
 		}
+		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
@@ -618,11 +625,15 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		return WebUtil.getModuleEnabled(DBModule.STAFF_DB);
 	}
 
+
 	@Override
 	public boolean isCreated() {
 		return out != null;
 	}
 
+	public boolean isDeferredDelete() {
+		return Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE);
+	}
 
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.STAFF_DB) && super.isEditable();
@@ -708,6 +719,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		if (!in.getAllocatable()) {
 			in.setMaxOverlappingShifts(0l);
 		}
+	}
+
+	public void setDeferredDeleteReason(String deferredDeleteReason) {
+		this.deferredDeleteReason = deferredDeleteReason;
 	}
 
 	public void setGender(SexSelector gender) {
