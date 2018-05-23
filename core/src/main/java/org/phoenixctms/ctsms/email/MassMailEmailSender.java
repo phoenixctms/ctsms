@@ -33,6 +33,7 @@ import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InquiryValueDao;
 import org.phoenixctms.ctsms.domain.InventoryBookingDao;
+import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.MassMail;
 import org.phoenixctms.ctsms.domain.MassMailRecipient;
 import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
@@ -128,6 +129,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private SignatureDao signatureDao;
 	private MoneyTransferDao moneyTransferDao;
 	private BankAccountDao bankAccountDao;
+	private JournalEntryDao journalEntryDao;
 	private InquiryDao inquiryDao;
 	private ProbandAddressDao probandAddressDao;
 	private InquiryValueDao inquiryValueDao;
@@ -394,7 +396,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					diagnosisDao,
 					procedureDao,
 					medicationDao,
-					bankAccountDao);
+					bankAccountDao,
+					journalEntryDao);
 			if (!CommonUtil.isEmptyString(message)) {
 				text.append(message);
 				if (massMailVO.getUseBeacon() && isHtml()) {
@@ -648,23 +651,23 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setDiagnosisDao(DiagnosisDao diagnosisDao) {
 		this.diagnosisDao = diagnosisDao;
 	}
+
 	public void seteCRFDao(ECRFDao eCRFDao) {
 		this.eCRFDao = eCRFDao;
 	}
-
-
-
 	public void seteCRFFieldDao(ECRFFieldDao eCRFFieldDao) {
 		this.eCRFFieldDao = eCRFFieldDao;
 	}
 
+
+
 	public void seteCRFFieldStatusEntryDao(ECRFFieldStatusEntryDao eCRFFieldStatusEntryDao) {
 		this.eCRFFieldStatusEntryDao = eCRFFieldStatusEntryDao;
 	}
+
 	public void seteCRFFieldStatusTypeDao(ECRFFieldStatusTypeDao eCRFFieldStatusTypeDao) {
 		this.eCRFFieldStatusTypeDao = eCRFFieldStatusTypeDao;
 	}
-
 	public void seteCRFFieldValueDao(ECRFFieldValueDao eCRFFieldValueDao) {
 		this.eCRFFieldValueDao = eCRFFieldValueDao;
 	}
@@ -688,11 +691,15 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInquiryDao(InquiryDao inquiryDao) {
 		this.inquiryDao = inquiryDao;
 	}
+
 	public void setInquiryValueDao(InquiryValueDao inquiryValueDao) {
 		this.inquiryValueDao = inquiryValueDao;
 	}
 	public void setInventoryBookingDao(InventoryBookingDao inventoryBookingDao) {
 		this.inventoryBookingDao = inventoryBookingDao;
+	}
+	public void setJournalEntryDao(JournalEntryDao journalEntryDao) {
+		this.journalEntryDao = journalEntryDao;
 	}
 	public void setmassMailRecipientDao(MassMailRecipientDao massMailRecipientDao) {
 		this.massMailRecipientDao = massMailRecipientDao;

@@ -661,6 +661,18 @@ extends JournalEntryDaoBase
 	}
 
 	@Override
+	protected Collection<JournalEntry> handleFindSystemMessages(JournalModule module,
+			Long id, String systemMessageCode, PSFVO psf) throws Exception {
+		org.hibernate.Criteria journalCriteria = createJournalEntryCriteria(null);
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(JournalEntry.class, journalCriteria);
+		applyJournalCriterion(journalCriteria, module, id);
+		journalCriteria.add(Restrictions.eq("systemMessage", true));
+		journalCriteria.add(Restrictions.eq("systemMessageCode", systemMessageCode));
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return journalCriteria.list();
+	}
+
+	@Override
 	protected long handleGetActivityCount(JournalModule module,
 			Long modifiedUserId, DBModule criteriaModule, Long entityDepartmentId, boolean limit) throws Exception {
 		org.hibernate.Criteria journalCriteria = createJournalEntryCriteria(null);

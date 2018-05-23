@@ -169,7 +169,8 @@ extends MassMailServiceBase
 				this.getDiagnosisDao(),
 				this.getProcedureDao(),
 				this.getMedicationDao(),
-				this.getBankAccountDao());
+				this.getBankAccountDao(),
+				this.getJournalEntryDao());
 
 		CoreUtil.checkEmailAddress(massMailIn.getFromAddress(), true);
 		CoreUtil.checkEmailAddress(massMailIn.getReplyToAddress(), true);
@@ -627,7 +628,8 @@ extends MassMailServiceBase
 						this.getDiagnosisDao(),
 						this.getProcedureDao(),
 						this.getMedicationDao(),
-						this.getBankAccountDao());
+				this.getBankAccountDao(),
+				this.getJournalEntryDao());
 	}
 
 	@Override

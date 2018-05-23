@@ -33,5 +33,6 @@ public interface MassMailMessageTemplateParameters {
 	public static final String PROCEDURES = PROBAND_PREFIX + "procedures";
 	public static final String MEDICATIONS = PROBAND_PREFIX + "medications";
 	public static final String BANK_ACCOUNTS = PROBAND_PREFIX + "bankaccounts";
+	public static final String PROBAND_CREATED_DATE = PROBAND_PREFIX + "create_date";
 
 }

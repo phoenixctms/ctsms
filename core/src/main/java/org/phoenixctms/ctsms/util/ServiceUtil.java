@@ -1213,7 +1213,8 @@ public final class ServiceUtil {
 			DiagnosisDao diagnosisDao,
 			ProcedureDao procedureDao,
 			MedicationDao medicationDao,
-			BankAccountDao bankAccountDao) throws Exception {
+			BankAccountDao bankAccountDao,
+			JournalEntryDao journalEntryDao) throws Exception {
 		Map model = CoreUtil.createEmptyTemplateModel();
 
 		boolean enumerateEntities = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES, Bundle.SETTINGS,
@@ -1340,6 +1341,15 @@ public final class ServiceUtil {
 						keyValuePair.getValue(locale, proband, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
 								excludeEncryptedFields));
 			}
+		}
+		model.put(MassMailMessageTemplateParameters.PROBAND_CREATED_DATE, "");
+		try {
+			JournalEntry journalEntry = journalEntryDao.findSystemMessages(JournalModule.PROBAND_JOURNAL, proband.getId(), SystemMessageCodes.PROBAND_CREATED, null).iterator()
+					.next();
+			model.put(MassMailMessageTemplateParameters.PROBAND_CREATED_DATE,
+					Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN,
+							locale).format(journalEntry.getRealTimestamp() != null ? journalEntry.getRealTimestamp() : journalEntry.getModifiedTimestamp()));
+		} catch (Exception e) {
 		}
 		model.put(MassMailMessageTemplateParameters.PROBAND_TAG_VALUES, new ArrayList());
 		model.put(MassMailMessageTemplateParameters.PROBAND_CONTACT_DETAIL_VALUES, new ArrayList());
@@ -2933,7 +2943,8 @@ public final class ServiceUtil {
 			DiagnosisDao diagnosisDao,
 			ProcedureDao procedureDao,
 			MedicationDao medicationDao,
-			BankAccountDao bankAccountDao)
+			BankAccountDao bankAccountDao,
+			JournalEntryDao journalEntryDao)
 					throws ServiceException {
 
 		StringWriter result = new StringWriter();
@@ -2946,7 +2957,8 @@ public final class ServiceUtil {
 					diagnosisDao,
 					procedureDao,
 					medicationDao,
-					bankAccountDao);
+					bankAccountDao,
+					journalEntryDao);
 			velocityEngine.evaluate(new VelocityContext(model), result, massMail.getName(), massMail.getTextTemplate());
 		} catch (Exception e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_TEXT_TEMPLATE, massMail.getTextTemplate(), e.getMessage());
