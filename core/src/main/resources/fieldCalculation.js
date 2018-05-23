@@ -1055,8 +1055,10 @@ var FieldCalculation = FieldCalculation || {};
 			return null;
 		}
 		var regexp = _getLocalizedMessage('customPartialDatePartRegExp',locale);
+		var dayRequired = (typeof(nkDay) == typeof(true) ? nkDay : (nkDay != null && nkDay == "required"));
+		var monthRequired = (typeof(nkMonth) == typeof(true) ? nkMonth : (nkMonth != null && nkMonth == "required"));
 		if (regexp.test(ary[2])) {
-			if (regexp.test(ary[0]) && regexp.test(ary[1]) && "required" != nkMonth && "required" != nkDay) {
+			if (regexp.test(ary[0]) && regexp.test(ary[1]) && !dayRequired && !monthRequired) {
 
 			} else {
 				if (_testFunction(error)) {
@@ -1070,9 +1072,9 @@ var FieldCalculation = FieldCalculation || {};
 		var m_nk = false;
 		var customMonthNameToNumberMap = _getLocalizedMessage('customMonthNameToNumberMap',locale);
 		if (regexp.test(ary[1])) {
-		    if (nkMonth == null || nkMonth.length == 0) {
+		    if (!monthRequired && (nkMonth == null || nkMonth.length == 0)) {
 			    nkMonth = '01';
-		    } else if ("required" == nkMonth) {
+		    } else if (monthRequired) {
 				if (_testFunction(error)) {
 					error('month required');
 				}
@@ -1088,9 +1090,9 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			return null;
 		}
-		if (nkDay == null || nkDay.length == 0) {
+		if (!dayRequired && (nkDay == null || nkDay.length == 0)) {
 		    nkDay = '01';
-		} else if ("required" == nkDay && regexp.test(ary[0])) {
+		} else if (dayRequired && regexp.test(ary[0])) {
 			if (_testFunction(error)) {
 				error('day required');
 			}
@@ -1140,8 +1142,9 @@ var FieldCalculation = FieldCalculation || {};
 			return null;
 	    }
 		var regexp = _getLocalizedMessage('customPartialTimePartRegExp',locale);
+		var minuteRequired = (typeof(minuteRequired) == typeof(true) ? minuteRequired : (minuteRequired != null && minuteRequired == "required"));
 		if (regexp.test(ary[0])) {
-			if (regexp.test(ary[1]) && "required" != nkMinute) {
+			if (regexp.test(ary[1]) && !minuteRequired) {
 
 			} else {
 			    if (_testFunction(error)) {
@@ -1151,9 +1154,9 @@ var FieldCalculation = FieldCalculation || {};
 			return null;
 	    }
 		var h = ary[0];
-		if (nkMinute == null || nkMinute.length == 0) {
+		if (!minuteRequired && (nkMinute == null || nkMinute.length == 0)) {
 		    nkMinute = '00';
-		} else if ("required" == nkMinute && regexp.test(ary[1])) {
+		} else if (minuteRequired && regexp.test(ary[1])) {
 			if (_testFunction(error)) {
 				error('minute required');
 			}

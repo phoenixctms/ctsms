@@ -99,7 +99,7 @@
 							var="massMailRecipient"
 							value="#{recipientOverviewBean.massMailRecipientModel}"
 							id="massmailrecipient_list"
-							rowStyleClass="#{massMail.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMailRecipient.vo.massMail)}#{rowBgColorAlpha}">
+							rowStyleClass="#{massMailRecipient.vo.massMail.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMailRecipient.vo.massMail)}#{rowBgColorAlpha}">
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

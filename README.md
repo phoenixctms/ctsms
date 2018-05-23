@@ -28,7 +28,7 @@ This GitHub repository contains all tiers of the main JEE web application. Trans
 
 Build and Install
 -----
-1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.2.1-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.2.1-amd64-netinst.iso)):
+1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.4.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.4.0-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
   * The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40)
@@ -37,7 +37,7 @@ Build and Install
    ```bash
    sudo apt-get -y install wget ca-certificates
    wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/install.sh -O ~/install.sh
-   chmod 744 ~/install.sh
+   chmod 755 ~/install.sh
    sudo ~/install.sh
    ```
 
