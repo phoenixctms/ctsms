@@ -1173,6 +1173,22 @@ var FieldCalculation = FieldCalculation || {};
 	    }
 	}
 
+	function _setVariable(variable, value, apply) {
+	    var inputFieldVar = _getInputFieldVariable(variable);
+		if (inputFieldVar) {
+		    inputFieldVar.oldValue = _cloneJSON( inputFieldVar.value);
+			_setInputFieldVariableValue(inputFieldVar.value, value);
+			if (debug_level >= 1) {
+			    _debugVariableValue("user code sets variable value ", inputFieldVar);
+			}
+			if (apply) {
+			    _applyCalculatedValue(inputFieldVar);
+			} else {
+			    _refreshInputFieldVariables(inputFieldVar.value.jsVariableName,inputFieldVar.value.index);
+			}
+		}
+	}
+
 	function _setOutput(variable, output) {
 	    var inputFieldVar = _getInputFieldVariable(variable);
 		if (inputFieldVar) {
