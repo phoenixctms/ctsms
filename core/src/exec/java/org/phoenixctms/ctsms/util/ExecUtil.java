@@ -144,6 +144,12 @@ public final class ExecUtil {
 		return department == null ? null : department.getId();
 	}
 
+	public static String formatFileName(String fileName, String fileNameFormat) {
+		FilePathSplitter filePath = new FilePathSplitter(fileName);
+		return filePath.joinFilePath(fileNameFormat);
+
+	}
+
 	public static URI getExportedFileUri(String fileName) throws URISyntaxException {
 		String httpDocumentRoot = Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT);
 		if (!CommonUtil.isEmptyString(httpDocumentRoot) && fileName.startsWith(httpDocumentRoot)) {
@@ -208,6 +214,7 @@ public final class ExecUtil {
 		return new Scanner(System.in);
 	}
 
+
 	public static void lockProcess(String lockFileName) {
 		if (!CommonUtil.isEmptyString(lockFileName)) {
 			// https://stackoverflow.com/questions/7036108/prevent-launching-multiple-instances-of-a-java-application
@@ -226,7 +233,6 @@ public final class ExecUtil {
 			}
 		}
 	}
-
 
 	public static String readPassword(Scanner in, String prompt) throws IOException {
 		System.out.print(prompt);

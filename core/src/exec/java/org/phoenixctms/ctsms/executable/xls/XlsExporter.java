@@ -3,13 +3,13 @@ package org.phoenixctms.ctsms.executable.xls;
 
 import java.io.File;
 
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.write.WritableWorkbook;
-
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.write.WritableWorkbook;
 
 public class XlsExporter {
 
@@ -21,6 +21,7 @@ public class XlsExporter {
 	protected EcrfFieldRowWriter ecrfFieldRowWriter;
 	@Autowired
 	protected EcrfRowWriter ecrfRowWriter;
+
 	private JobOutput jobOutput;
 
 	public XlsExporter() {

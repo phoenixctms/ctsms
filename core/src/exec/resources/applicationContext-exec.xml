@@ -20,9 +20,11 @@
   <bean id="titleLineProcessor" class="org.phoenixctms.ctsms.executable.csv.TitleLineProcessor"/>
   <bean id="zipLineProcessor" class="org.phoenixctms.ctsms.executable.csv.ZipLineProcessor"/>
   <bean id="permissionDefinitionLineProcessor" class="org.phoenixctms.ctsms.executable.csv.PermissionDefinitionLineProcessor"/>
+  <bean id="userIdentityDepartmentPermissionDefinitionLineProcessor" class="org.phoenixctms.ctsms.executable.migration.UserIdentityDepartmentPermissionDefinitionLineProcessor"/>
   <bean id="criterionPropertyLineProcessor" class="org.phoenixctms.ctsms.executable.csv.CriterionPropertyLineProcessor"/>
   <bean id="csvExporter" class="org.phoenixctms.ctsms.executable.csv.CsvExporter"/>
   <bean id="permissionTemplateWriter" class="org.phoenixctms.ctsms.executable.csv.PermissionTemplateWriter"/>
+  <bean id="permissionDefinitionWriter" class="org.phoenixctms.ctsms.executable.csv.PermissionDefinitionWriter"/>
   <bean id="departmentManager" class="org.phoenixctms.ctsms.executable.DepartmentManager">
     <property name="authenticator" ref="authenticator"/>
   </bean>

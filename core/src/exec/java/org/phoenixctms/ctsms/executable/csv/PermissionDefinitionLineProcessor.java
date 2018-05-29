@@ -72,7 +72,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		ArrayList<Permission> result = new ArrayList<Permission>(overrides.size());
 		Iterator<ServiceMethodParameterOverride> overridesIt = overrides.iterator();
 		while (overridesIt.hasNext()) {
-			result.add(Permission.Factory.newInstance(null, ipRanges, null, null, null, null, parameterSetter, overridesIt.next(), null));
+			result.add(Permission.Factory.newInstance(null, ipRanges, null, null, null, null, parameterSetter, overridesIt.next(), new ArrayList<ProfilePermission>()));
 		}
 		return result;
 	}
@@ -86,7 +86,8 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		ArrayList<Permission> result = new ArrayList<Permission>(restrictions.size());
 		Iterator<ServiceMethodParameterRestriction> restrictionsIt = restrictions.iterator();
 		while (restrictionsIt.hasNext()) {
-			result.add(Permission.Factory.newInstance(null, ipRanges, parameterGetter, transformation, restrictionsIt.next(), disjunctionGroup, null, null, null));
+			result.add(Permission.Factory.newInstance(null, ipRanges, parameterGetter, transformation, restrictionsIt.next(), disjunctionGroup, null, null,
+					new ArrayList<ProfilePermission>()));
 		}
 		return result;
 	}
@@ -108,6 +109,10 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private Pattern profileSplitRegexp;
 	private String excludeRestrictionOverrideProfileChar;
 
+	private ArrayList<Permission> allPermissions;
+
+
+
 	public PermissionDefinitionLineProcessor() {
 		super();
 		serviceMethodMap = new TreeMap<String, ArrayList<String[]>>();
@@ -121,7 +126,10 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		ArrayList<ProfilePermission> profilePermissions = new ArrayList<ProfilePermission>();
 		if (permissions.size() == 0) {
-			Permission permission = permissionDao.create(Permission.Factory.newInstance(serviceMethod));
+			Permission permission = Permission.Factory.newInstance(serviceMethod);
+			if (isWrite()) {
+				permission = permissionDao.create(permission);
+			}
 			profilePermissions.addAll(createProfilePermissions(profiles, permission, 0, profileIdentifiers));
 			result.add(permission);
 		} else {
@@ -131,7 +139,9 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 				Permission permission = permissionsIt.next();
 				permission.setId(null);
 				permission.setServiceMethod(serviceMethod);
-				permission = permissionDao.create(permission);
+				if (isWrite()) {
+					permission = permissionDao.create(permission);
+				}
 				profilePermissions.addAll(createProfilePermissions(profiles, permission, i, profileIdentifiers));
 				result.add(permission);
 				i++;
@@ -151,7 +161,11 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 					profilePermission.setActive(true);
 					profilePermission.setProfile(profile);
 					profilePermission.setPermission(permission);
-					result.add(profilePermissionDao.create(profilePermission));
+					permission.addProfilePermissions(profilePermission);// XXX
+					if (isWrite()) {
+						profilePermission = profilePermissionDao.create(profilePermission);
+					}
+					result.add(profilePermission);
 					profiles.add(profile);
 				}
 			}
@@ -183,6 +197,13 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		return values[PARAMETER_SETTER_COLUMN_INDEX];
 	}
 
+	public Collection<Permission> getPermissions() {
+		if (allPermissions == null) {
+			allPermissions = new ArrayList<Permission>();
+		}
+		return allPermissions;
+	}
+
 	private String getProfiles(String[] values) {
 		return values[PROFILES_COLUMN_INDEX];
 	}
@@ -199,6 +220,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		return values[RESTRICTIONS_COLUMN_INDEX];
 	}
 
+
 	private String getServiceMethod(String[] values) {
 		return values[SERVICE_METHOD_COLUMN_INDEX];
 	}
@@ -208,6 +230,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	}
 
 
+
 	@Override
 	public void init() {
 		super.init();
@@ -215,6 +238,19 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		setProfileSplitRegexpPattern(DEFAULT_PROFILE_SPLIT_REGEXP_PATTERN);
 		setExcludeRestrictionOverrideProfileChar(DEFAULT_EXCLUDE_RESTRICTION_OVERRIDE_PROFILE_CHAR);
 		serviceMethodMap.clear();
+	}
+
+	protected void injectOverrides(String serviceMethod, ArrayList<String> profiles, ArrayList<ServiceMethodParameterOverride> overrides) {
+	}
+
+	protected void injectProfiles(String serviceMethod, ArrayList<String> profiles) {
+	}
+
+	protected void injectRestrictions(String serviceMethod, ArrayList<String> profiles, ArrayList<ServiceMethodParameterRestriction> restrictions) {
+	}
+
+	protected boolean isWrite() {
+		return true;
 	}
 
 	@Override
@@ -233,7 +269,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	@Override
 	protected void postProcess() {
 		HashSet<PermissionProfile> allProfileIdentifiers = new HashSet<PermissionProfile>();
-		ArrayList<Permission> allPermissions = new ArrayList<Permission>();
+		getPermissions().clear();
 		Iterator<String> serviceMethodsIt = serviceMethodMap.keySet().iterator();
 		while (serviceMethodsIt.hasNext()) {
 			String serviceMethod = serviceMethodsIt.next();
@@ -249,6 +285,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 				for (int i = 0; i < profileNames.length; i++) {
 					profiles.add(profileNames[i]);
 				}
+				// injectProfiles(serviceMethod, profiles);
 				String parameterGetter = getParameterGetter(values);
 				String parameterSetter = getParameterSetter(values);
 				if (!CommonUtil.isEmptyString(parameterGetter)) {
@@ -262,6 +299,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 									restrictions.add(ServiceMethodParameterRestriction.fromString(restrictionNames[i]));
 								}
 							}
+							injectRestrictions(serviceMethod, profiles, restrictions);
 							if (profiles.size() > restrictions.size()) {
 								throw new IllegalArgumentException("more profiles than restrictions for service method " + serviceMethod + " parameter " + parameterGetter);
 							}
@@ -275,11 +313,14 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 							overrides.add(ServiceMethodParameterOverride.fromString(overrideNames[i]));
 						}
 					}
+					injectOverrides(serviceMethod, profiles, overrides);
 					if (profiles.size() > overrides.size()) {
 						throw new IllegalArgumentException("more profiles than overrides for service method " + serviceMethod + " parameter " + parameterSetter);
 					}
 					permissions.addAll(generatePermissionsFromOverrides(getIpRanges(values), parameterSetter, overrides));
 				} else {
+					// injectNoGetterSetter(serviceMethod, profiles);
+					injectProfiles(serviceMethod, profiles);
 					if (profiles.size() > 1) {
 						throw new IllegalArgumentException("more than one profile for service method " + serviceMethod);
 					}
@@ -287,10 +328,10 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 				serviceMethodPermissions.addAll(createPermissionAndProfilePermissions(serviceMethod, permissions, profiles, serviceMethodProfileIdentifiers));
 			}
 			jobOutput.println(serviceMethod + ": " + serviceMethodPermissions.size() + " permissions created, used in " + serviceMethodProfileIdentifiers.size() + " profiles");
-			allPermissions.addAll(serviceMethodPermissions);
+			getPermissions().addAll(serviceMethodPermissions);
 			allProfileIdentifiers.addAll(serviceMethodProfileIdentifiers);
 		}
-		jobOutput.println(allPermissions.size() + " permissions created overall, used in " + allProfileIdentifiers.size() + " profiles");
+		jobOutput.println(getPermissions().size() + " permissions created overall, used in " + allProfileIdentifiers.size() + " profiles");
 	}
 
 	@Override

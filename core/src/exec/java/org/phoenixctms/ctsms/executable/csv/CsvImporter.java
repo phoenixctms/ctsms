@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.executable.csv;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Collection;
 import java.util.Scanner;
 
 import org.phoenixctms.ctsms.Search;
@@ -12,12 +13,14 @@ import org.phoenixctms.ctsms.domain.CountryDao;
 import org.phoenixctms.ctsms.domain.CriterionPropertyDao;
 import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.OpsCodeDao;
+import org.phoenixctms.ctsms.domain.Permission;
 import org.phoenixctms.ctsms.domain.PermissionDao;
 import org.phoenixctms.ctsms.domain.ProfilePermissionDao;
 import org.phoenixctms.ctsms.domain.StreetDao;
 import org.phoenixctms.ctsms.domain.TitleDao;
 import org.phoenixctms.ctsms.domain.ZipDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.executable.migration.UserIdentityDepartmentPermissionDefinitionLineProcessor;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -61,6 +64,8 @@ public class CsvImporter {
 	protected StreetLineProcessor streetProcessor;
 	@Autowired
 	protected PermissionDefinitionLineProcessor permissionDefinitionLineProcessor;
+	@Autowired
+	protected UserIdentityDepartmentPermissionDefinitionLineProcessor userIdentityDepartmentPermissionDefinitionLineProcessor;
 	@Autowired
 	protected ProfilePermissionDao profilePermissionDao;
 	@Autowired
@@ -235,6 +240,13 @@ public class CsvImporter {
 		processor.postProcess();
 
 		return rowCount;
+	}
+
+	public Collection<Permission> readPermissionDefinitionsPatchUserIdentityDepartmentPermission(String fileName, String encoding) throws Exception {
+
+		userIdentityDepartmentPermissionDefinitionLineProcessor.setJobOutput(jobOutput);
+		readLines(fileName, encoding, userIdentityDepartmentPermissionDefinitionLineProcessor);
+		return userIdentityDepartmentPermissionDefinitionLineProcessor.getPermissions();
 	}
 
 	public void setJobOutput(JobOutput jobOutput) {

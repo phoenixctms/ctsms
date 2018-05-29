@@ -685,11 +685,32 @@ public class DBTool {
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadPermissionDefinitions(line.getOptionValue(DBToolOptions.IMPORT_PERMISSION_DEFINITIONS_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
+
+
+				} else if (line.hasOption(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+
+					if (dbTool.testOverwriteFile(line, ExecUtil.formatFileName(line.getOptionValue(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT),"{0}_new.{1}"))) {
+						sendEmail = dbTool.getFileExporter().exportPermissionDefinitions(
+								ExecUtil.formatFileName(line.getOptionValue(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT), "{0}_new.{1}"),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT), dbTool.getCsvImporter().readPermissionDefinitionsPatchUserIdentityDepartmentPermission(line.getOptionValue(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT),
+										line.getOptionValue(DBToolOptions.ENCODING_OPT))) > 0l;
+					}
+
+
 				} else if (line.hasOption(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT))) {
 						sendEmail = dbTool.getFileExporter().exportPermissionTemplate(line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					if (dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT))) {
+						sendEmail = dbTool.getFileExporter().exportPermissionDefinitions(line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_IMAGE_FIELDS_OPT)) {
@@ -700,8 +721,8 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_COMMENT_FIELDS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandCommentFieldInitializer().update(getAuthenticationOptionValue(line)) > 0l;
-				} else if (line.hasOption(DBToolOptions.INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT);
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getFileDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 					// sendEmail = dbTool.getProbandCommentFieldInitializer().update(getAuthenticationOptionValue(line)) > 0l;
@@ -709,6 +730,7 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJournalSystemMessageCodeInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+
 				} else if (line.hasOption(DBToolOptions.HELP_OPT)) {
 					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.HELP_OPT));
 					HelpFormatter formatter = new HelpFormatter();

@@ -355,6 +355,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							Object blankRootParameterValue = null;
 							Object[] parameterValues = null;
 							boolean write = false;
+							Staff identity;
 							switch (override) {
 								case ANY_DEPARTMENT_ID:
 									write = false;
@@ -363,6 +364,15 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = true;
 									parameterValues = new Object[1];
 									parameterValues[0] = user.getDepartment().getId();
+									break;
+								case IDENTITY_DEPARTMENT_ID:
+									identity = user.getIdentity();
+									if (identity == null) {
+										throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+									}
+									write = true;
+									parameterValues = new Object[1];
+									parameterValues[0] = identity.getDepartment().getId();
 									break;
 								case ANY_DEPARTMENT_ID_FILTER:
 									write = false;
@@ -373,6 +383,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues = new Object[2];
 									parameterValues[0] = "department.id";
 									parameterValues[1] = Long.toString(user.getDepartment().getId());
+									break;
+								case IDENTITY_DEPARTMENT_ID_FILTER:
+									identity = user.getIdentity();
+									if (identity == null) {
+										throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+									}
+									write = true;
+									blankRootParameterValue = new PSFVO();
+									parameterValues = new Object[2];
+									parameterValues[0] = "department.id";
+									parameterValues[1] = Long.toString(identity.getDepartment().getId());
 									break;
 								case INVENTORY_HYPERLINK_ACTIVE:
 									if (HyperlinkModule.INVENTORY_HYPERLINK.equals(((HyperlinkModule) setterRestrictionValues.get(0)))) {
@@ -573,11 +594,33 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
 				break;
+			case IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkDepartmentId((Long) parameterValue, departmentDao);
+				if (!identity.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
 			case ANY_STAFF:
 				break;
 			case STAFF_USER_DEPARTMENT:
 				department = parameterValue == null ? null : CheckIDUtil.checkStaffId((Long) parameterValue, staffDao).getDepartment();
 				if (!user.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
+			case STAFF_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkStaffId((Long) parameterValue, staffDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
@@ -613,6 +656,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
 				break;
+			case INVENTORY_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkInventoryId((Long) parameterValue, inventoryDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
 			case INVENTORY_IDENTITY_OWNER:
 				identity = user.getIdentity();
 				if (identity == null) {
@@ -629,6 +683,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			case COURSE_USER_DEPARTMENT:
 				department = parameterValue == null ? null : CheckIDUtil.checkCourseId((Long) parameterValue, courseDao).getDepartment();
 				if (!user.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
+			case COURSE_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkCourseId((Long) parameterValue, courseDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
@@ -660,6 +725,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			case TRIAL_USER_DEPARTMENT:
 				department = parameterValue == null ? null : CheckIDUtil.checkTrialId((Long) parameterValue, trialDao).getDepartment();
 				if (!user.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
+			case TRIAL_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkTrialId((Long) parameterValue, trialDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
@@ -704,6 +780,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}
 				break;
+			case USER_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkUserId((Long) parameterValue, userDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
 			case ACTIVE_USER:
 				parameterUser = parameterValue == null ? null : CheckIDUtil.checkUserId((Long) parameterValue, userDao);
 				if (!user.equals(parameterUser)) {
@@ -716,6 +803,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			case MASS_MAIL_USER_DEPARTMENT:
 				department = parameterValue == null ? null : CheckIDUtil.checkMassMailId((Long) parameterValue, massMailDao).getDepartment();
 				if (!user.getDepartment().equals(department)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
+				}
+				break;
+			case MASS_MAIL_IDENTITY_DEPARTMENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				department = parameterValue == null ? null : CheckIDUtil.checkMassMailId((Long) parameterValue, massMailDao).getDepartment();
+				if (!identity.getDepartment().equals(department)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), department == null ? null : departmentDao.toDepartmentVO(department).getName());
 				}

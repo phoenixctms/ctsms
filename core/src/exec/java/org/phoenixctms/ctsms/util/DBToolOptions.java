@@ -139,9 +139,11 @@ public final class DBToolOptions {
 	public static final String SCAN_ALL_DEFERRED_DELETE_OPT = "sda";
 	public static final String PERFORM_ALL_DEFERRED_DELETE_OPT = "pda";
 	public static final String IMPORT_PERMISSION_DEFINITIONS_OPT = "ipd";
+	public static final String PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT = "puidp";
 	public static final String EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT = "epdt";
+	public static final String EXPORT_PERMISSION_DEFINITIONS_OPT = "epd";
 	public final static String INITIALIZE_PROBAND_IMAGE_FIELDS_OPT = "ipif";
-	public final static String INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT = "ietdf";
+	public final static String INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT = "idtdf";
 	public final static String INITIALIZE_PROBAND_COMMENT_FIELDS_OPT = "ipcf";
 	public final static String INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT = "ijsmc";
 	public static final String IMPORT_ALPHA_IDS_OPT = "iai";
@@ -282,13 +284,20 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(PERFORM_ALL_DEFERRED_DELETE_OPT, "perform_deferred_delete_all", "perform deferred delete of all items", 0, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_PERMISSION_DEFINITIONS_OPT, "import_permission_definitions", "import permission definitions from csv/text file", 1,
 				allLockIds));
+		tasks.addOption(registerTaskOption(PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT, "patch_user_identity_department_permissions",
+				"(migration) import permission definitions from csv/text file, add the user identity department permission and export as csv/text file", 1,
+				allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT, "export_permission_definition_template",
 				"export permission definition template as csv/text file", 1, allLockIds));
-		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, "initialize_proband_image_fields", "initialize proband image fields", 0, allLockIds));
-		tasks.addOption(registerTaskOption(INITIALIZE_ENCRYPTED_TRIAL_DOCUMENT_FILES_OPT, "initialize_encrypted_trial_documents_files",
-				"initialize encrypted trial documents and files", 0, allLockIds));
-		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "initialize proband comment fields", 0, allLockIds));
-		tasks.addOption(registerTaskOption(INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, "initialize_journal_system_message_codes", "initialize journal system message code fields",
+		tasks.addOption(registerTaskOption(EXPORT_PERMISSION_DEFINITIONS_OPT, "export_permission_definitions",
+				"export permission definitions as csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, "initialize_proband_image_fields", "(migration) initialize proband image fields", 0, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT, "initialize_decrypted_trial_documents_files",
+				"(migration) initialize decrypted trial documents and files", 0, allLockIds));
+		tasks.addOption(
+				registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "(migration) initialize proband comment fields", 0, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, "initialize_journal_system_message_codes",
+				"(migration) initialize journal system message code fields",
 				0, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1, allLockIds));
