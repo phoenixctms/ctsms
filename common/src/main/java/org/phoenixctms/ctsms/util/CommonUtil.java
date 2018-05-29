@@ -1149,8 +1149,9 @@ public final class CommonUtil {
 	public static final String getNameSortable(ProbandOutVO proband) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-			if (proband.isDecrypted()) {
-				if (!proband.isBlinded()) {
+
+			if (!proband.isBlinded()) {
+				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
 						String lastName = proband.getLastName();
 						if (lastName != null && lastName.trim().length() > 0) {
@@ -1170,19 +1171,20 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					appendProbandAlias(sb,proband,null,null);
-					//					String alias = proband.getAlias();
-					//					if (alias != null && alias.trim().length() > 0) {
-					//						sb.append(alias.trim());
-					//					} else if (proband.getId() > 0) {
-					//						sb.append(Long.toString(proband.getId()));
-					//					}
+					if (proband.getId() > 0) {
+						sb.append(Long.toString(proband.getId()));
+					}
 				}
 			} else {
-				if (proband.getId() > 0) {
-					sb.append(Long.toString(proband.getId()));
-				}
+				appendProbandAlias(sb,proband,null,null);
+				//					String alias = proband.getAlias();
+				//					if (alias != null && alias.trim().length() > 0) {
+				//						sb.append(alias.trim());
+				//					} else if (proband.getId() > 0) {
+				//						sb.append(Long.toString(proband.getId()));
+				//					}
 			}
+
 		}
 		return sb.toString();
 	}
@@ -1227,8 +1229,9 @@ public final class CommonUtil {
 	public static final String getProbandInitials(ProbandOutVO proband, String ecryptedProbandNameLabel, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-			if (proband.isDecrypted()) {
-				if (!proband.isBlinded()) {
+
+			if (!proband.isBlinded()) {
+				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
 						String firstName = proband.getFirstName();
 						if (firstName != null && firstName.trim().length() > 0) {
@@ -1245,12 +1248,13 @@ public final class CommonUtil {
 						}
 					}
 				} else {
-					appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
+					sb.append(ecryptedProbandNameLabel);
+					// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
 				}
 			} else {
-				sb.append(ecryptedProbandNameLabel);
-				// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
+				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 			}
+
 		}
 		return sb.toString();
 	}
@@ -1259,8 +1263,9 @@ public final class CommonUtil {
 			String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-			if (proband.isDecrypted()) {
-				if (!proband.isBlinded()) {
+
+			if (!proband.isBlinded()) {
+				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
 						if (withTitles) {
 							CommonUtil.appendString(sb, proband.getPrefixedTitle1(), null);
@@ -1287,12 +1292,13 @@ public final class CommonUtil {
 						CommonUtil.appendString(sb, proband.getAnimalName(), null, "?");
 					}
 				} else {
-					appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
+					sb.append(ecryptedProbandNameLabel);
+					// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
 				}
 			} else {
-				sb.append(ecryptedProbandNameLabel);
-				// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
+				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 			}
+
 		}
 		return sb.toString();
 	}

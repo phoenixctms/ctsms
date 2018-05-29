@@ -38,13 +38,26 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				ProbandContactParticulars app = a.getPersonParticulars();
 				ProbandContactParticulars bpp = b.getPersonParticulars();
 				if (app != null && bpp != null) {
-					int lastnameComparison = comp(getLastName(app), getLastName(bpp));
-					if (lastnameComparison != 0) {
-						return lastnameComparison;
+					if (!a.isBlinded() && !b.isBlinded()) {
+						int lastnameComparison = comp(getLastName(app), getLastName(bpp));
+						if (lastnameComparison != 0) {
+							return lastnameComparison;
+						} else {
+							int firstNameComparison = comp(getFirstName(app), getFirstName(bpp));
+							if (firstNameComparison != 0) {
+								return firstNameComparison;
+							} else {
+								return a.getId().compareTo(b.getId());
+							}
+						}
+					} else if (!a.isBlinded() && b.isBlinded()) {
+						return -1;
+					} else if (a.isBlinded() && !b.isBlinded()) {
+						return 1;
 					} else {
-						int firstNameComparison = comp(getFirstName(app), getFirstName(bpp));
-						if (firstNameComparison != 0) {
-							return firstNameComparison;
+						int aliasComparison = comp(app.getAlias(), bpp.getAlias());
+						if (aliasComparison != 0) {
+							return aliasComparison;
 						} else {
 							return a.getId().compareTo(b.getId());
 						}
@@ -52,6 +65,7 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				} else {
 					return 0;
 				}
+
 			} else if (a.isPerson() && !b.isPerson()) {
 				return -1;
 			} else if (!a.isPerson() && b.isPerson()) {
@@ -60,11 +74,24 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				AnimalContactParticulars aap = a.getAnimalParticulars();
 				AnimalContactParticulars bap = b.getAnimalParticulars();
 				if (aap != null && bap != null) {
-					int animalNameComparison = comp(aap.getAnimalName(), bap.getAnimalName());
-					if (animalNameComparison != 0) {
-						return animalNameComparison;
+					if (!a.isBlinded() && !b.isBlinded()) {
+						int animalNameComparison = comp(aap.getAnimalName(), bap.getAnimalName());
+						if (animalNameComparison != 0) {
+							return animalNameComparison;
+						} else {
+							return a.getId().compareTo(b.getId());
+						}
+					} else if (!a.isBlinded() && b.isBlinded()) {
+						return -1;
+					} else if (a.isBlinded() && !b.isBlinded()) {
+						return 1;
 					} else {
-						return a.getId().compareTo(b.getId());
+						int aliasComparison = comp(aap.getAlias(), bap.getAlias());
+						if (aliasComparison != 0) {
+							return aliasComparison;
+						} else {
+							return a.getId().compareTo(b.getId());
+						}
 					}
 				} else {
 					return 0;

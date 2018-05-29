@@ -972,7 +972,6 @@ public final class CoreUtil {
 
 	}
 
-
 	public static <E> void modifyVersion(E original, E modified, Timestamp now, User modifiedUser) throws Exception {
 		if (original == null) {
 			Long id = CommonUtil.getEntityId(modified);

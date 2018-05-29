@@ -17,7 +17,6 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
-import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryInVO;
@@ -43,7 +42,7 @@ extends ProbandStatusEntryDaoBase
 	@Override
 	protected Collection<ProbandStatusEntry> handleFindByDepartmentCategoryInterval(Long departmentId, Long probandCategoryId, Timestamp from, Timestamp to, Boolean probandActive,
 			Boolean available, Boolean hideAvailability)
-			{
+	{
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (probandActive != null || hideAvailability != null) {
@@ -68,7 +67,7 @@ extends ProbandStatusEntryDaoBase
 			}
 		}
 		return statusEntryCriteria.list();
-			}
+	}
 
 	/**
 	 * @throws Exception
@@ -116,7 +115,7 @@ extends ProbandStatusEntryDaoBase
 	@Override
 	protected Collection<ProbandStatusEntry> handleFindProbandStatus(Timestamp now, Long probandId, Long departmentId, Long probandCategoryId, Boolean probandActive,
 			Boolean hideAvailability, PSFVO psf) throws Exception
-			{
+	{
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandStatusEntry.class, statusEntryCriteria);
 		if (probandId != null) {
@@ -137,7 +136,7 @@ extends ProbandStatusEntryDaoBase
 		CriteriaUtil.applyCurrentStatusCriterion(statusEntryCriteria, now, null);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return statusEntryCriteria.list();
-			}
+	}
 
 	@Override
 	protected long handleGetCount(Long probandId) throws Exception {
@@ -357,9 +356,9 @@ extends ProbandStatusEntryDaoBase
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		try {
-			if (!CoreUtil.isPassDecryption()) {
-				throw new Exception();
-			}
+			// if (!CoreUtil.isPassDecryption()) {
+			// throw new Exception();
+			// }
 			target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
 			target.setDecrypted(true);
 		} catch (Exception e) {
