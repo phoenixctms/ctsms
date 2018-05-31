@@ -116,8 +116,8 @@ public class Authenticator {
 					if (ckeckLocalPassword(lastPassword, auth.getLocalPassword())) {
 						userContext.setPlainPassword(auth.getLocalPassword());
 						PasswordInVO localPassword = new PasswordInVO();
-						ServiceUtil.applyLogonLimitations(localPassword);
-						lastPassword = ServiceUtil.createPassword(passwordDao.passwordInVOToEntity(localPassword), user, now, lastPassword, auth.getPassword(),
+						ServiceUtil.applyLogonLimitations(localPassword, lastPassword);
+						lastPassword = ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(localPassword), user, now, lastPassword, auth.getPassword(),
 								userContext.getPlainDepartmentPassword(), passwordDao); // , this.getJournalEntryDao());
 						userContext.setLastPassword(lastPassword);
 						userContext.setPlainPassword(auth.getPassword());

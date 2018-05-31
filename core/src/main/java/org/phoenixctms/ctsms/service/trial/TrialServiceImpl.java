@@ -6453,7 +6453,7 @@ extends TrialServiceBase
 			CheckIDUtil.checkStaffId(teamMemberStaffId, this.getStaffDao());
 		}
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
-		Collection timelineEvents = timelineEventDao.findTimelineSchedule(today, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, psf);
+		Collection timelineEvents = timelineEventDao.findTimelineSchedule(today, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, true, psf);
 		timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
 		return timelineEvents;
 	}

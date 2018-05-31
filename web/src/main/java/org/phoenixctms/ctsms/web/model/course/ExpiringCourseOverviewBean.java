@@ -22,10 +22,10 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 @ViewScoped
 public class ExpiringCourseOverviewBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
+	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 	private Date today;
 	private ExpiringCourseLazyModel expiringCourseModel;
 	private VariablePeriodSelector reminder;
-	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 
 	public ExpiringCourseOverviewBean() {
 		super();
@@ -94,7 +94,7 @@ public class ExpiringCourseOverviewBean extends ManagedBeanBase implements Varia
 	}
 
 	public boolean isReminderPeriodSpinnerEnabled() {
-		return VariablePeriod.EXPLICIT.equals(expiringCourseModel.getReminderPeriod());
+		return expiringCourseModel.getReminderPeriod() == null || VariablePeriod.EXPLICIT.equals(expiringCourseModel.getReminderPeriod());
 	}
 
 	@Override

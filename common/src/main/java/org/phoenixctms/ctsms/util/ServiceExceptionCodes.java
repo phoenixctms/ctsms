@@ -175,6 +175,7 @@ public interface ServiceExceptionCodes {
 	public final static String PASSWORD_VALIDITY_PERIOD_REQUIRED = "password_validity_period_required";
 	public final static String PASSWORD_VALIDITY_PERIOD_EXPLICIT_DAYS_REQUIRED = "password_validity_period_explicit_days_required";
 	public final static String PASSWORD_VALIDITY_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE = "password_validity_period_explicit_days_less_than_one";
+	public final static String PASSWORD_NOT_EXPIRING = "password_not_expiring";
 	public final static String PASSWORD_NUMBER_OF_MAX_SUCCESSFUL_LOGONS_REQUIRED = "password_number_of_max_successful_logons_required";
 	public final static String PASSWORD_NUMBER_OF_MAX_SUCCESSFUL_LOGONS_LESS_THAN_ONE = "password_number_of_max_successful_logons_less_than_one";
 	public final static String PASSWORD_NUMBER_OF_MAX_WRONG_PASSWORD_ATTEMPTS_REQUIRED = "password_number_of_max_wrong_password_attempts_required";

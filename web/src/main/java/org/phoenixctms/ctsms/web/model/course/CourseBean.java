@@ -738,7 +738,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	}
 
 	public boolean isValidityPeriodSpinnerEnabled() {
-		return (this.in.getExpires() && VariablePeriod.EXPLICIT.equals(this.in.getValidityPeriod()));
+		return (this.in.getExpires() && (this.in.getValidityPeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getValidityPeriod())));
 	}
 
 	@Override

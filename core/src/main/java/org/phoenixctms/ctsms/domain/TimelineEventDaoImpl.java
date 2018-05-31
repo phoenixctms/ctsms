@@ -118,7 +118,7 @@ extends TimelineEventDaoBase
 
 	@Override
 	protected Collection<TimelineEvent> handleFindTimelineSchedule(Date today,
-			Long trialId, Long departmentId, Long teamMemberStaffId, Boolean notify, Boolean ignoreTimelineEvents, PSFVO psf)
+			Long trialId, Long departmentId, Long teamMemberStaffId, Boolean notify, Boolean ignoreTimelineEvents, boolean includeAlreadyPassed, PSFVO psf)
 					throws Exception {
 		Criteria timelineEventCriteria = createTimelineEventCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(TimelineEvent.class, timelineEventCriteria);
@@ -147,7 +147,7 @@ extends TimelineEventDaoBase
 		} else {
 			timelineEventCriteria.setResultTransformer(Criteria.ROOT_ENTITY);
 		}
-		ArrayList<TimelineEvent> resultSet = CriteriaUtil.listReminders(timelineEventCriteria, today, notify, null, null);
+		ArrayList<TimelineEvent> resultSet = CriteriaUtil.listReminders(timelineEventCriteria, today, notify, includeAlreadyPassed, null, null);
 		return (Collection<TimelineEvent>) CriteriaUtil.applyPVO(resultSet, psf, teamMemberStaffId != null); // no dupes here any more
 	}
 

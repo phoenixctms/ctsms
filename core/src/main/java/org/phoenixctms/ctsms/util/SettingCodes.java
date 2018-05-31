@@ -83,6 +83,7 @@ public interface SettingCodes {
 	public static final String DEPARTMENT_PASSWORD_MAX_ALT_SYMBOLS = "department_password_max_alt_symbols";
 	public static final String DEPARTMENT_PASSWORD_MAX_SYMBOLS = "department_password_max_symbols";
 	public static final String LOGON_EXPIRES = "logon_expires";
+	public static final String LOGON_PROLONGABLE = "logon_prolongable";
 	public static final String LOGON_VALIDITY_PERIOD = "logon_validity_period";
 	public static final String LOGON_VALIDITY_PERIOD_DAYS = "logon_validity_period_days";
 	public static final String LOGON_LIMIT_LOGONS = "logon_limit_logons";

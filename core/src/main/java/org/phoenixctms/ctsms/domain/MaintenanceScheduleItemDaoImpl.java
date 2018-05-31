@@ -113,7 +113,7 @@ extends MaintenanceScheduleItemDaoBase
 	protected Collection<MaintenanceScheduleItem> handleFindMaintenanceSchedule(
 			Date today, Long inventoryId, Long departmentId,
 			Long inventoryCategoryId, Long responsiblePersonId,
-			Boolean reminder, PSFVO psf) throws Exception {
+			Boolean reminder, boolean includeAlreadyPassed, PSFVO psf) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MaintenanceScheduleItem.class, maintenanceItemCriteria);
 		if (inventoryId != null) {
@@ -136,7 +136,7 @@ extends MaintenanceScheduleItemDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
-		ArrayList<MaintenanceScheduleItem> resultSet = CriteriaUtil.listReminders(maintenanceItemCriteria, today, reminder, null, null);
+		ArrayList<MaintenanceScheduleItem> resultSet = CriteriaUtil.listReminders(maintenanceItemCriteria, today, reminder, includeAlreadyPassed, null, null);
 		return (Collection<MaintenanceScheduleItem>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 

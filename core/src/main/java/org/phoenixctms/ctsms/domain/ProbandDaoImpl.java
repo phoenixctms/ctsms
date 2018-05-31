@@ -142,6 +142,7 @@ extends ProbandDaoBase
 
 	@Override
 	protected Collection<Proband> handleFindToBeAutoDeleted(Date today, Long departmentId, Long categoryId, VariablePeriod reminderPeriod, Long reminderPeriodDays, Boolean delete,
+			boolean includeAlreadyPassed,
 			PSFVO psf)
 					throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
@@ -168,7 +169,7 @@ extends ProbandDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
-		ArrayList<Proband> resultSet = CriteriaUtil.listExpirations(probandCriteria, today, null, null, null, reminderPeriod, reminderPeriodDays);
+		ArrayList<Proband> resultSet = CriteriaUtil.listExpirations(probandCriteria, today, null, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
 		return (Collection<Proband>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 

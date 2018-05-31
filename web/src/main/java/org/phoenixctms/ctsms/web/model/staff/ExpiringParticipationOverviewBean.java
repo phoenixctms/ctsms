@@ -35,6 +35,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 @ViewScoped
 public class ExpiringParticipationOverviewBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
+	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 	private Date today;
 	private StaffOutVO identity;
 	private VariablePeriodSelector reminder;
@@ -42,7 +43,6 @@ public class ExpiringParticipationOverviewBean extends ManagedBeanBase implement
 	private HashMap<Long, UpcomingRenewalCourseEagerModel> upcomingRenewalCourseModelCache;
 	private HashMap<Long, CourseParticipationStatusEntryOutVO> courseParticipationCache;
 	private HashMap<Long, Long> courseParticipationCountCache;
-	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 
 	public ExpiringParticipationOverviewBean() {
 		super();
@@ -167,7 +167,7 @@ public class ExpiringParticipationOverviewBean extends ManagedBeanBase implement
 	}
 
 	public boolean isReminderPeriodSpinnerEnabled() {
-		return VariablePeriod.EXPLICIT.equals(expiringParticipationModel.getReminderPeriod());
+		return expiringParticipationModel.getReminderPeriod() == null || VariablePeriod.EXPLICIT.equals(expiringParticipationModel.getReminderPeriod());
 	}
 
 	@Override

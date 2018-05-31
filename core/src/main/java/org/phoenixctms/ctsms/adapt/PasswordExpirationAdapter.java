@@ -54,7 +54,7 @@ public class PasswordExpirationAdapter extends ExpirationEntityAdapter {
 
 	@Override
 	public boolean isNotify() {
-		return true;
+		return password.isProlongable();
 	}
 
 	@Override

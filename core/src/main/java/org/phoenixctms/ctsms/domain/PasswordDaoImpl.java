@@ -46,7 +46,7 @@ extends PasswordDaoBase
 	@Override
 	protected Collection<Password> handleFindExpiring(Date today,
 			Long departmentId, AuthenticationType authMethod, VariablePeriod reminderPeriod,
-			Long reminderPeriodDays, PSFVO psf) throws Exception {
+			Long reminderPeriodDays, Boolean notify, boolean includeAlreadyPassed, PSFVO psf) throws Exception {
 		org.hibernate.Criteria passwordCriteria = createPasswordCriteria("password0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Password.class, passwordCriteria);
 		if (departmentId != null) {
@@ -60,6 +60,9 @@ extends PasswordDaoBase
 		subQuery.setProjection(Projections.max("id"));
 		passwordCriteria.add(Subqueries.propertyEq("id", subQuery));
 		passwordCriteria.add(Restrictions.eq("expires", true)); // performance only...
+		if (notify != null) {
+			passwordCriteria.add(Restrictions.eq("prolongable", notify.booleanValue())); // performance only...
+		}
 		if (psf != null) {
 			PSFVO sorterFilter = new PSFVO();
 			sorterFilter.setFilters(psf.getFilters());
@@ -67,7 +70,7 @@ extends PasswordDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
-		ArrayList<Password> resultSet = CriteriaUtil.listExpirations(passwordCriteria, today, null, null, null, reminderPeriod, reminderPeriodDays);
+		ArrayList<Password> resultSet = CriteriaUtil.listExpirations(passwordCriteria, today, notify, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
 		return (Collection<Password>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 

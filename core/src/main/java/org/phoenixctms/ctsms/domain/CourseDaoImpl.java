@@ -303,7 +303,7 @@ extends CourseDaoBase
 	@Override
 	protected Collection<Course> handleFindExpiring(Date today,
 			Long departmentId, Long courseCategoryId,
-			VariablePeriod reminderPeriod, Long reminderPeriodDays, PSFVO psf)
+			VariablePeriod reminderPeriod, Long reminderPeriodDays, boolean includeAlreadyPassed, PSFVO psf)
 					throws Exception {
 		org.hibernate.Criteria courseCriteria = createCourseCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Course.class, courseCriteria);
@@ -321,7 +321,7 @@ extends CourseDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
-		ArrayList<Course> resultSet = CriteriaUtil.listExpirations(courseCriteria, today, null, null, null, reminderPeriod, reminderPeriodDays);
+		ArrayList<Course> resultSet = CriteriaUtil.listExpirations(courseCriteria, today, null, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
 		return (Collection<Course>) CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
 	}
 
@@ -342,7 +342,7 @@ extends CourseDaoBase
 						Restrictions.eq("selfRegistration", true),
 						Restrictions.or(Restrictions.and(Restrictions.isNull("participationDeadline"), Restrictions.ge("stop", new Date(now.getTime()))),
 								Restrictions.ge("participationDeadline", now))),
-								Restrictions.and(Restrictions.ge("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime())))));
+				Restrictions.and(Restrictions.ge("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime())))));
 		if (departmentId != null) {
 			courseCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
@@ -393,13 +393,13 @@ extends CourseDaoBase
 										Restrictions.isNull("participationDeadline"),
 										Restrictions.ge("stop", new Date(now.getTime()))
 										),
-										Restrictions.ge("participationDeadline", now)
+								Restrictions.ge("participationDeadline", now)
 								)
 						),
-						Restrictions.and(
-								Restrictions.and(Restrictions.eq("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime()))),
-								Subqueries.lt(0l, subQuery)
-								)
+				Restrictions.and(
+						Restrictions.and(Restrictions.eq("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime()))),
+						Subqueries.lt(0l, subQuery)
+						)
 				));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf); // unique participant staff per course
 		return courseCriteria.list();

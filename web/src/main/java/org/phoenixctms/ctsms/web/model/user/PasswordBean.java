@@ -34,6 +34,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		if (in != null && out != null) {
 			VariablePeriodVO validityPeriodVO = out.getValidityPeriod();
 			in.setExpires(out.getExpires());
+			in.setProlongable(out.getProlongable());
 			in.setLimitLogons(out.getLimitLogons());
 			in.setLimitWrongPasswordAttempts(out.getLimitWrongPasswordAttempts());
 			in.setMaxSuccessfulLogons(out.getMaxSuccessfulLogons());
@@ -47,6 +48,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		if (in != null) {
 			PasswordInVO newPassword = WebUtil.getNewPassword();
 			in.setExpires(newPassword.getExpires());
+			in.setProlongable(newPassword.getProlongable());
 			in.setLimitLogons(newPassword.getLimitLogons());
 			in.setLimitWrongPasswordAttempts(newPassword.getLimitWrongPasswordAttempts());
 			in.setMaxSuccessfulLogons(newPassword.getMaxSuccessfulLogons());
@@ -246,6 +248,10 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		return this.in.getLimitWrongPasswordAttempts();
 	}
 
+	public boolean isProlongableEnabled() {
+		return this.in.isExpires();
+	}
+
 	@Override
 	public boolean isRemovable() {
 		return false;
@@ -256,7 +262,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	}
 
 	public boolean isValidityPeriodSpinnerEnabled() {
-		return (this.in.getExpires() && VariablePeriod.EXPLICIT.equals(this.in.getValidityPeriod()));
+		return (this.in.getExpires() && (this.in.getValidityPeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getValidityPeriod())));
 	}
 
 	@Override

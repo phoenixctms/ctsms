@@ -216,7 +216,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffCourseRelevantForCourseAppointments(Long staffId, Long courseId, Boolean isRelevantForCourseAppointments)
 			throws Exception
-			{
+	{
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		if (staffId != null) {
 			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
@@ -229,7 +229,7 @@ extends CourseParticipationStatusEntryDaoBase
 					Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
 		}
 		return courseParticipationStatusEntryCriteria.list();
-			}
+	}
 
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffCourseStatus(
@@ -256,7 +256,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffSection(Long staffId, Long sectionId, Boolean showCv, Boolean pass, Boolean showCvPreset, PSFVO psf)
 			throws Exception
-			{
+	{
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
 		if (staffId != null) {
@@ -276,13 +276,13 @@ extends CourseParticipationStatusEntryDaoBase
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return courseParticipationStatusEntryCriteria.list();
-			}
+	}
 
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindExpiring(Date today,
 			Long courseDepartmentId, Long courseCategoryId,
 			Long staffDepartmentId, Long staffCategoryId,
-			Long staffId, Boolean employee, VariablePeriod reminderPeriod, Long reminderPeriodDays, PSFVO psf)
+			Long staffId, Boolean employee, VariablePeriod reminderPeriod, Long reminderPeriodDays, boolean includeAlreadyPassed, PSFVO psf)
 					throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
@@ -313,7 +313,8 @@ extends CourseParticipationStatusEntryDaoBase
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
 		HashMap<Long, Set<Long>> particiaptionCourseIdsMap = new HashMap<Long, Set<Long>>();
-		ArrayList<CourseParticipationStatusEntry> resultSet = CriteriaUtil.listExpirations(courseParticipationStatusEntryCriteria, today, null, null, null, reminderPeriod,
+		ArrayList<CourseParticipationStatusEntry> resultSet = CriteriaUtil.listExpirations(courseParticipationStatusEntryCriteria, today, null, includeAlreadyPassed, null, null,
+				reminderPeriod,
 				reminderPeriodDays, particiaptionCourseIdsMap);
 		return (Collection<CourseParticipationStatusEntry>) CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
 	}

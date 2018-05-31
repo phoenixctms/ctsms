@@ -736,13 +736,19 @@ public class SessionScopeBean {
 				}
 			}
 			if (passwordExpiryShown || logonLimitShown) {
-				result.append(Messages.getString(MessageCodes.PASSWORD_EXPIRATION_INFO_SEPARATOR));
-				if (!announcementShown) {
-					result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
-				} else {
-					result.append(" ");
+				if (logon.getProlongable()) {
+					result.append(Messages.getString(MessageCodes.PASSWORD_EXPIRATION_INFO_SEPARATOR));
+					if (!announcementShown) {
+						result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
+					} else {
+						result.append(" ");
+					}
+					result.append(Messages.getString(MessageCodes.PASSWORD_EXPIRATION_INFO_RENEWAL_ADVICE));
+					// } else {
+					// if (!announcementShown) {
+					// result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
+					// }
 				}
-				result.append(Messages.getString(MessageCodes.PASSWORD_EXPIRATION_INFO_RENEWAL_ADVICE));
 			} else if (announcementShown) {
 				result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
 				result.append(Messages.getMessage(MessageCodes.ANNOUNCEMENT_TIMESTAMP_INFO, DateUtil.getDateTimeFormat().format(announcementVO.getTimestamp())));

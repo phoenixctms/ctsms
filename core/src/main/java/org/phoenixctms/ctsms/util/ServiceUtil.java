@@ -512,6 +512,7 @@ public final class ServiceUtil {
 
 	public static void applyLogonLimitations(PasswordInVO password) {
 		password.setExpires(Settings.getBoolean(SettingCodes.LOGON_EXPIRES, Settings.Bundle.SETTINGS, false));
+		password.setProlongable(password.isExpires() ? Settings.getBoolean(SettingCodes.LOGON_PROLONGABLE, Settings.Bundle.SETTINGS, true) : false);
 		password.setValidityPeriod(password.isExpires() ? Settings.getVariablePeriod(SettingCodes.LOGON_VALIDITY_PERIOD, Settings.Bundle.SETTINGS, VariablePeriod.EXPLICIT) : null);
 		password.setValidityPeriodDays(VariablePeriod.EXPLICIT.equals(password.getValidityPeriod()) ? Settings.getLongNullable(SettingCodes.LOGON_VALIDITY_PERIOD_DAYS,
 				Settings.Bundle.SETTINGS, null) : null);
@@ -520,6 +521,23 @@ public final class ServiceUtil {
 		password.setLimitWrongPasswordAttempts(Settings.getBoolean(SettingCodes.LOGON_LIMIT_WRONG_PASSWORD_ATTEMPTS, Settings.Bundle.SETTINGS, false));
 		password.setMaxWrongPasswordAttemptsSinceLastSuccessfulLogon(password.isLimitWrongPasswordAttempts() ? Settings.getLongNullable(
 				SettingCodes.LOGON_MAX_WRONG_PASSWORD_ATTEMPTS_SINCE_LAST_SUCCESSFUL_LOGON, Settings.Bundle.SETTINGS, null) : null);
+	}
+
+	public static void applyLogonLimitations(PasswordInVO password, Password lastPassword) {
+		password.setExpires(lastPassword.isExpires());
+		password.setProlongable(password.isExpires() ? lastPassword.isProlongable() : false);
+		password.setValidityPeriod(password.isExpires() ? lastPassword.getValidityPeriod() : null);
+		password.setValidityPeriodDays(VariablePeriod.EXPLICIT.equals(password.getValidityPeriod()) ? lastPassword.getValidityPeriodDays() : null);
+		if (lastPassword.isProlongable()) {
+			password.setLimitLogons(false);
+			password.setMaxSuccessfulLogons(null);
+		} else {
+			password.setLimitLogons(lastPassword.isLimitLogons());
+			password.setMaxSuccessfulLogons(password.isLimitLogons() ? lastPassword.getMaxSuccessfulLogons() : null);
+		}
+		password.setLimitWrongPasswordAttempts(lastPassword.isLimitWrongPasswordAttempts());
+		password.setMaxWrongPasswordAttemptsSinceLastSuccessfulLogon(
+				password.isLimitWrongPasswordAttempts() ? lastPassword.getMaxWrongPasswordAttemptsSinceLastSuccessfulLogon() : null);
 	}
 
 	public static void applyOneTimeLogonLimitation(PasswordInVO password) {
@@ -962,6 +980,8 @@ public final class ServiceUtil {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_VALIDITY_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE);
 				}
 			}
+		} else if (password.isProlongable()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_NOT_EXPIRING);
 		}
 		if (password.isLimitLogons()) {
 			if (password.getMaxSuccessfulLogons() == null) {
@@ -1662,25 +1682,28 @@ public final class ServiceUtil {
 
 	}
 
-	public static Password createPassword(Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword, String plainDepartmentPassword,
+	public static Password createPassword(boolean reset, Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword,
+			String plainDepartmentPassword,
 			PasswordDao passwordDao) throws Exception {
 		CryptoUtil.encryptPasswords(password, plainNewPassword, plainDepartmentPassword);
-		password.setSuccessfulLogons(0L);
-		password.setWrongPasswordAttemptsSinceLastSuccessfulLogon(0L);
+		password.setSuccessfulLogons((reset || password.isProlongable() || lastPassword == null) ? 0l : lastPassword.getSuccessfulLogons());
+		// password.setSuccessfulLogons(0l);
+		password.setWrongPasswordAttemptsSinceLastSuccessfulLogon(0l);
 		password.setLastLogonAttemptHost(null);
 		password.setLastLogonAttemptTimestamp(null);
 		password.setLastSuccessfulLogonHost(null);
 		password.setLastSuccessfulLogonTimestamp(null);
-		password.setTimestamp(timestamp);
+		password.setTimestamp((reset || password.isProlongable() || lastPassword == null) ? timestamp : lastPassword.getTimestamp());
 		password.setPreviousPassword(lastPassword);
 		password.setUser(user);
 		user.getPasswords().add(password);
 		return passwordDao.create(password);
 	}
 
-	public static PasswordOutVO createPassword(Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword, String plainDepartmentPassword,
+	public static PasswordOutVO createPassword(boolean reset, Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword,
+			String plainDepartmentPassword,
 			PasswordDao passwordDao, JournalEntryDao journalEntryDao) throws Exception {
-		password = createPassword(password, user, timestamp, lastPassword, plainNewPassword, plainDepartmentPassword, passwordDao);
+		password = createPassword(reset, password, user, timestamp, lastPassword, plainNewPassword, plainDepartmentPassword, passwordDao);
 		PasswordOutVO result = passwordDao.toPasswordOutVO(password);
 		logSystemMessage(user, result.getUser(), timestamp, CoreUtil.getUser(), SystemMessageCodes.PASSWORD_CREATED, result, null, journalEntryDao);
 		return result;

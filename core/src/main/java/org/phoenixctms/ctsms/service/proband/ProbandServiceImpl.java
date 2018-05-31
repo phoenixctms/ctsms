@@ -1500,7 +1500,7 @@ extends ProbandServiceBase
 		}
 		ServiceUtil.checkReminderPeriod(reminderPeriod, reminderPeriodDays);
 		ProbandDao probandDao = this.getProbandDao();
-		Collection autoDeletionProbands = probandDao.findToBeAutoDeleted(today, departmentId, probandCategoryId, reminderPeriod, reminderPeriodDays, null, psf);
+		Collection autoDeletionProbands = probandDao.findToBeAutoDeleted(today, departmentId, probandCategoryId, reminderPeriod, reminderPeriodDays, null, true, psf);
 		probandDao.toProbandOutVOCollection(autoDeletionProbands);
 		return autoDeletionProbands;
 	}

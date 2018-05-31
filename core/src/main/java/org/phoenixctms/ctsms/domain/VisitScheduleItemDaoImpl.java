@@ -134,7 +134,7 @@ extends VisitScheduleItemDaoBase
 	@Override
 	protected Collection<VisitScheduleItem> handleFindByTrialGroupVisitProbandTravel(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, PSFVO psf)
 			throws Exception
-			{
+	{
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(VisitScheduleItem.class, visitScheduleItemCriteria);
 		if (trialId != null) {
@@ -167,12 +167,12 @@ extends VisitScheduleItemDaoBase
 		}
 
 
-			}
+	}
 
 	@Override
 	protected Collection<VisitScheduleItem> handleFindByTrialSorted(Long trialId, boolean sort, PSFVO psf)
 			throws Exception
-			{
+	{
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(VisitScheduleItem.class, visitScheduleItemCriteria);
 		if (trialId != null) {
@@ -196,7 +196,7 @@ extends VisitScheduleItemDaoBase
 			visitScheduleItemCriteria.addOrder(Order.asc("token"));
 		}
 		return visitScheduleItemCriteria.list();
-			}
+	}
 
 
 
@@ -222,7 +222,8 @@ extends VisitScheduleItemDaoBase
 
 	@Override
 	protected Collection<VisitScheduleItem> handleFindVisitScheduleItemSchedule(
-			Date today, Long trialId, Long departmentId, Boolean notify, Boolean ignoreTimelineEvents, VariablePeriod reminderPeriod, Long reminderPeriodDays, PSFVO psf)
+			Date today, Long trialId, Long departmentId, Boolean notify, Boolean ignoreTimelineEvents, VariablePeriod reminderPeriod, Long reminderPeriodDays,
+			boolean includeAlreadyPassed, PSFVO psf)
 					throws Exception {
 
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
@@ -259,7 +260,7 @@ extends VisitScheduleItemDaoBase
 		} else {
 			visitScheduleItemCriteria.setResultTransformer(Criteria.ROOT_ENTITY);
 		}
-		ArrayList<VisitScheduleItem> resultSet = CriteriaUtil.listReminders(visitScheduleItemCriteria, today, notify, reminderPeriod, reminderPeriodDays);
+		ArrayList<VisitScheduleItem> resultSet = CriteriaUtil.listReminders(visitScheduleItemCriteria, today, notify, includeAlreadyPassed, reminderPeriod, reminderPeriodDays);
 		return (Collection<VisitScheduleItem>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes here any more
 
 	}
@@ -267,7 +268,7 @@ extends VisitScheduleItemDaoBase
 	@Override
 	protected long handleGetCount(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel)
 			throws Exception
-			{
+	{
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -303,7 +304,7 @@ extends VisitScheduleItemDaoBase
 		}
 
 
-			}
+	}
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object

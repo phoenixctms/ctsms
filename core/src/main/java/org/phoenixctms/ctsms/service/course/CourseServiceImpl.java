@@ -727,7 +727,7 @@ extends CourseServiceBase
 		}
 		ServiceUtil.checkReminderPeriod(reminderPeriod, reminderPeriodDays);
 		CourseDao courseDao = this.getCourseDao();
-		Collection expiringCourses = courseDao.findExpiring(today, departmentId, courseCategoryId, reminderPeriod, reminderPeriodDays, psf);
+		Collection expiringCourses = courseDao.findExpiring(today, departmentId, courseCategoryId, reminderPeriod, reminderPeriodDays, true, psf);
 		courseDao.toCourseOutVOCollection(expiringCourses);
 		return expiringCourses;
 	}
@@ -753,7 +753,7 @@ extends CourseServiceBase
 		ServiceUtil.checkReminderPeriod(reminderPeriod, reminderPeriodDays);
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		Collection expiringParticipations = courseParticipationStatusEntryDao.findExpiring(today, courseDepartmentId, courseCategoryId, staffDepartmentId, staffCategoryId, null,
-				true, reminderPeriod, reminderPeriodDays, psf);
+				true, reminderPeriod, reminderPeriodDays, true, psf);
 		courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVOCollection(expiringParticipations);
 		return expiringParticipations;
 	}

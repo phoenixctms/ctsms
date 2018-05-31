@@ -37,12 +37,12 @@ import org.primefaces.model.StreamedContent;
 @ViewScoped
 public class AutoDeletionProbandOverviewBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
+	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 	private Date today;
 	private AutoDeletionProbandLazyModel autoDeletionProbandModel;
 	private ArrayList<SelectItem> filterPrivacyConsentStatusTypes;
 	private HashMap<Long, ArrayList<SelectItem>> privacyConsentTransitionsMap;
 	private VariablePeriodSelector reminder;
-	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
 
 	public AutoDeletionProbandOverviewBean() {
 		super();
@@ -206,7 +206,7 @@ public class AutoDeletionProbandOverviewBean extends ManagedBeanBase implements 
 	}
 
 	public boolean isReminderPeriodSpinnerEnabled() {
-		return VariablePeriod.EXPLICIT.equals(autoDeletionProbandModel.getReminderPeriod());
+		return autoDeletionProbandModel.getReminderPeriod() == null || VariablePeriod.EXPLICIT.equals(autoDeletionProbandModel.getReminderPeriod());
 	}
 
 	@Override

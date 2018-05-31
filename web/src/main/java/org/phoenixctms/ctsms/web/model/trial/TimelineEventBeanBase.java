@@ -39,15 +39,8 @@ import org.primefaces.context.RequestContext;
 
 public abstract class TimelineEventBeanBase extends ManagedBeanBase implements VariablePeriodSelectorListener, EventImportanceSelectorListener {
 
-	protected Date today;
-	protected TimelineEventInVO in;
-	protected TimelineEventOutVO out;
-	private TimelineEventTypeVO timelineEventType;
-	private EventImportanceSelector importance;
-	private VariablePeriodSelector reminder;
 	private static final int IMPORTANCE_PROPERTY_ID = 1;
 	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
-
 	public static void copyTimelineEventOutToIn(TimelineEventInVO in, TimelineEventOutVO out, Date today) {
 		if (in != null && out != null) {
 			TrialOutVO trialVO = out.getTrial();
@@ -70,7 +63,6 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			in.setVersion(out.getVersion());
 		}
 	}
-
 	protected static boolean getDismissed(TimelineEventOutVO timelineEvent, Date today) {
 		boolean dismissed = false;
 		Date reminderStart = (timelineEvent == null ? null : timelineEvent.getReminderStart());
@@ -84,7 +76,6 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 		}
 		return dismissed;
 	}
-
 	public static void initTimelineEventDefaultValues(TimelineEventInVO in, Long trialId) {
 		if (in != null) {
 			in.setDescription(Messages.getString(MessageCodes.TIMELINE_EVENT_DESCRIPTION_PRESET));
@@ -105,6 +96,15 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			in.setVersion(null);
 		}
 	}
+	protected Date today;
+	protected TimelineEventInVO in;
+	protected TimelineEventOutVO out;
+
+	private TimelineEventTypeVO timelineEventType;
+
+	private EventImportanceSelector importance;
+
+	private VariablePeriodSelector reminder;
 
 	protected Long trialId;
 	protected TrialOutVO trial;
@@ -325,7 +325,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 	}
 
 	public boolean isReminderPeriodSpinnerEnabled() {
-		return VariablePeriod.EXPLICIT.equals(this.in.getReminderPeriod());
+		return this.in.getReminderPeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getReminderPeriod());
 	}
 
 	@Override

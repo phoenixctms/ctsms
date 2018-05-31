@@ -618,7 +618,7 @@ extends InventoryServiceBase
 	@Override
 	protected InventoryOutVO handleDeleteInventory(AuthenticationVO auth, Long inventoryId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
 			Integer maxParentDepth)
-			throws Exception {
+					throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1241,7 +1241,7 @@ extends InventoryServiceBase
 		}
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
 		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findMaintenanceSchedule(today, inventoryId, departmentId, inventoryCategoryId, responsiblePersonId,
-				reminder, psf);
+				reminder, true, psf);
 		maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVOCollection(maintenanceScheduleItems);
 		return maintenanceScheduleItems;
 	}

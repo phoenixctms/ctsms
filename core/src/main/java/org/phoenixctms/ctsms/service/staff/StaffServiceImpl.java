@@ -1102,7 +1102,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
 			Integer maxParentDepth)
-			throws Exception
+					throws Exception
 	{
 		StaffDao staffDao = this.getStaffDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -1494,7 +1494,8 @@ extends StaffServiceBase
 		}
 		ServiceUtil.checkReminderPeriod(reminderPeriod, reminderPeriodDays);
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
-		Collection expiringParticipations = courseParticipationStatusEntryDao.findExpiring(today, null, null, null, null, staffId, null, reminderPeriod, reminderPeriodDays, psf);
+		Collection expiringParticipations = courseParticipationStatusEntryDao.findExpiring(today, null, null, null, null, staffId, null, reminderPeriod, reminderPeriodDays, true,
+				psf);
 		courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVOCollection(expiringParticipations);
 		return expiringParticipations;
 	}

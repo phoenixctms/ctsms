@@ -95,16 +95,16 @@ public final class CriteriaUtil {
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
 										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
 										),
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
+								Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
 								)
-								, or));
+						, or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(
 						Restrictions.or( // partial interval overlappings:
 								Restrictions.ge("start", from),
 								Restrictions.gt("stop", from)
 								)
-								, or));
+						, or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
 			}
@@ -126,14 +126,14 @@ public final class CriteriaUtil {
 											Restrictions.le("start", now),
 											Restrictions.or(Restrictions.gt("stop", now), Restrictions.isNull("stop"))
 											))
-											,
-											Restrictions.and(Restrictions.isNotNull("stop"),
-													Restrictions.and(
-															Restrictions.or(Restrictions.le("start", now), Restrictions.isNull("start")),
-															Restrictions.gt("stop", now)
-															))
+							,
+							Restrictions.and(Restrictions.isNotNull("stop"),
+									Restrictions.and(
+											Restrictions.or(Restrictions.le("start", now), Restrictions.isNull("start")),
+											Restrictions.gt("stop", now)
+											))
 							)
-							, or));
+					, or));
 		}
 	}
 
@@ -333,12 +333,12 @@ public final class CriteriaUtil {
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
 										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
 										),
-										Restrictions.or( // total inclusions:
-												Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-												Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
-												)
+								Restrictions.or( // total inclusions:
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
+										Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
+										)
 								)
-								, or));
+						, or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.gt("stop", from), or));
 			} else if (from == null && to != null) {
@@ -348,9 +348,9 @@ public final class CriteriaUtil {
 										Restrictions.lt("start", to),
 										Restrictions.le("stop", to)
 										),
-										Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
+								Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
 								)
-								, or));
+						, or));
 			}
 		}
 	}
@@ -369,18 +369,18 @@ public final class CriteriaUtil {
 												Restrictions.le("stop", to)
 										)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("start"),
+						Restrictions.and(
+								Restrictions.isNotNull("start"),
+								Restrictions.or(
+										// partial interval overlappings:
 										Restrictions.or(
-												// partial interval overlappings:
-												Restrictions.or(
-														Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-														Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
-														),
-														// total inclusions:
-														Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
-												)
+												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
+												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
+												),
+										// total inclusions:
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
 										)
+								)
 						), or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
@@ -388,13 +388,13 @@ public final class CriteriaUtil {
 								Restrictions.isNull("start"),
 								includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("start"),
-										Restrictions.or(
-												Restrictions.ge("start", from),
-												includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
-												)
+						Restrictions.and(
+								Restrictions.isNotNull("start"),
+								Restrictions.or(
+										Restrictions.ge("start", from),
+										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
 										)
+								)
 						), or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
@@ -402,13 +402,13 @@ public final class CriteriaUtil {
 								Restrictions.isNull("start"),
 								Restrictions.le("stop", to)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("start"),
-										Restrictions.or(
-												includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-														Restrictions.le("stop", to)
-												)
+						Restrictions.and(
+								Restrictions.isNotNull("start"),
+								Restrictions.or(
+										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
+												Restrictions.le("stop", to)
 										)
+								)
 						), or));
 			}
 		}
@@ -426,12 +426,12 @@ public final class CriteriaUtil {
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
 										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
 										),
-										Restrictions.or( // total inclusions:
-												Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-												Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
-												)
+								Restrictions.or( // total inclusions:
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
+										Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
+										)
 								)
-								, or));
+						, or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(
 						Restrictions.or(
@@ -439,9 +439,9 @@ public final class CriteriaUtil {
 										Restrictions.ge("start", from),
 										Restrictions.gt("stop", from)
 										),
-										Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
+								Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
 								)
-								, or));
+						, or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
 			}
@@ -462,18 +462,18 @@ public final class CriteriaUtil {
 										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)
 										)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("stop"),
+						Restrictions.and(
+								Restrictions.isNotNull("stop"),
+								Restrictions.or(
+										// partial interval overlappings:
 										Restrictions.or(
-												// partial interval overlappings:
-												Restrictions.or(
-														Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-														Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
-														),
-														// total inclusions:
-														Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
-												)
+												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
+												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
+												),
+										// total inclusions:
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
 										)
+								)
 						), or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
@@ -481,13 +481,13 @@ public final class CriteriaUtil {
 								Restrictions.isNull("stop"),
 								Restrictions.ge("start", from)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("stop"),
-										Restrictions.or(
-												Restrictions.ge("start", from),
-												includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
-												)
+						Restrictions.and(
+								Restrictions.isNotNull("stop"),
+								Restrictions.or(
+										Restrictions.ge("start", from),
+										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
 										)
+								)
 						), or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
@@ -495,13 +495,13 @@ public final class CriteriaUtil {
 								Restrictions.isNull("stop"),
 								includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)
 								),
-								Restrictions.and(
-										Restrictions.isNotNull("stop"),
-										Restrictions.or(
-												includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-														Restrictions.le("stop", to)
-												)
+						Restrictions.and(
+								Restrictions.isNotNull("stop"),
+								Restrictions.or(
+										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
+												Restrictions.le("stop", to)
 										)
+								)
 						), or));
 			}
 		}
@@ -658,7 +658,7 @@ public final class CriteriaUtil {
 		return resultSet;
 	}
 
-	public static <T> ArrayList<T> listExpirations(Criteria expirationItemCriteria, Date currentDate, Boolean notify,
+	public static <T> ArrayList<T> listExpirations(Criteria expirationItemCriteria, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
 			VariablePeriod consistentValidityPeriod, Long consistentValidityPeriodDays,
 			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays, Map... caches) {
 		ArrayList<T> resultSet = new ArrayList<T>();
@@ -674,7 +674,8 @@ public final class CriteriaUtil {
 				ExpirationEntityAdapter expirationItem = ExpirationEntityAdapter.getInstance(it.next(), today, caches);
 				if (expirationItem.isActive()) {
 					if (today.compareTo(expirationItem.getReminderStart(consistentValidityPeriod, consistentValidityPeriodDays, consistentReminderPeriod,
-							consistentReminderPeriodDays)) >= 0) {
+							consistentReminderPeriodDays)) >= 0
+							&& (includeAlreadyPassed || today.compareTo(expirationItem.getExpiry(consistentValidityPeriod, consistentValidityPeriodDays)) <= 0)) {
 						if (notify != null) {
 							if (notify.booleanValue() == expirationItem.isNotify()) {
 								resultSet.add((T) expirationItem.getItem());
@@ -689,7 +690,7 @@ public final class CriteriaUtil {
 		return resultSet;
 	}
 
-	public static <T> ArrayList<T> listReminders(Criteria reminderItemCriteria, Date currentDate, Boolean notify,
+	public static <T> ArrayList<T> listReminders(Criteria reminderItemCriteria, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
 			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays) {
 		ArrayList<T> resultSet = new ArrayList<T>();
 		if (reminderItemCriteria != null) {
@@ -704,7 +705,8 @@ public final class CriteriaUtil {
 				ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(it.next());
 				if (reminderItem.isActive()) {
 					Date reminderStart = reminderItem.getReminderStart(today, false, consistentReminderPeriod, consistentReminderPeriodDays);
-					if (today.compareTo(reminderStart) >= 0) {
+					if (today.compareTo(reminderStart) >= 0
+							&& (includeAlreadyPassed || today.compareTo(reminderItem.getNextRecurrence(today, false)) <= 0)) {
 						addReminderItem(resultSet, reminderItem, reminderStart, notify); // , true);
 					}
 				}

@@ -43,6 +43,10 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class InventoryMaintenanceBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
+	private static final int RECURRENCE_PERIOD_PROPERTY_ID = 1;
+
+	private static final int REMINDER_PERIOD_PROPERTY_ID = 2;
+
 	public static void copyMaintenanceItemOutToIn(MaintenanceScheduleItemInVO in, MaintenanceScheduleItemOutVO out, Date today) {
 		if (in != null && out != null) {
 			MaintenanceTypeVO maintenanceTypeVO = out.getType();
@@ -85,7 +89,6 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 		}
 		return dismissed;
 	}
-
 	public static void initMaintenanceItemDefaultValues(MaintenanceScheduleItemInVO in, Long inventoryId, StaffOutVO identity) {
 		if (in != null) {
 			in.setId(null);
@@ -112,7 +115,6 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			in.setComment(Messages.getString(MessageCodes.MAINTENANCE_ITEM_COMMENT_PRESET));
 		}
 	}
-
 	private Date today;
 	private MaintenanceScheduleItemInVO in;
 	private MaintenanceScheduleItemOutVO out;
@@ -122,8 +124,6 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 	private MaintenanceTypeVO maintenanceType;
 	private VariablePeriodSelector recurrence;
 	private VariablePeriodSelector reminder;
-	private static final int RECURRENCE_PERIOD_PROPERTY_ID = 1;
-	private static final int REMINDER_PERIOD_PROPERTY_ID = 2;
 
 	public InventoryMaintenanceBean() {
 		super();
@@ -359,7 +359,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 	}
 
 	public boolean isRecurrencePeriodSpinnerEnabled() {
-		return (this.in.getRecurring() && VariablePeriod.EXPLICIT.equals(this.in.getRecurrencePeriod()));
+		return (this.in.getRecurring() && (this.in.getRecurrencePeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getRecurrencePeriod())));
 	}
 
 	public boolean isReminderPeriodSelectorEnabled() {
@@ -367,7 +367,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 	}
 
 	public boolean isReminderPeriodSpinnerEnabled() {
-		return VariablePeriod.EXPLICIT.equals(this.in.getReminderPeriod());
+		return this.in.getReminderPeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getReminderPeriod());
 	}
 
 	@Override

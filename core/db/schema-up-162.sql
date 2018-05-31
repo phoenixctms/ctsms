@@ -44,6 +44,9 @@ update CONTACT_DETAIL_TYPE set BUSINESS = 'f';
 update CONTACT_DETAIL_TYPE set BUSINESS = 't' where name_l10n_key like 'business%';
 alter table CONTACT_DETAIL_TYPE alter BUSINESS set not null;
 
+alter table PASSWORD add column PROLONGABLE BOOLEAN;
+update PASSWORD set PROLONGABLE = 't';
+alter table PASSWORD alter PROLONGABLE set not null;
 
 
 

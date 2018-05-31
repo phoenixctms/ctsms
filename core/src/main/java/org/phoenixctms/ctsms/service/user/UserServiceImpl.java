@@ -183,7 +183,8 @@ extends UserServiceBase
 			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, getPlainDepartmentPassword());
 		}
 		ServiceUtil.checkLogonLimitations(newPassword);
-		return ServiceUtil.createPassword(passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword, newPassword.getPassword(),
+		return ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
+				newPassword.getPassword(),
 				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
 	}
 
@@ -390,10 +391,10 @@ extends UserServiceBase
 		PasswordPolicy.USER.checkStrength(plainNewPassword);
 		PasswordPolicy.USER.checkHistoryDistance(plainNewPassword, lastPassword, getPlainDepartmentPassword());
 		PasswordInVO newPassword = new PasswordInVO();
-		ServiceUtil.applyLogonLimitations(newPassword);
+		ServiceUtil.applyLogonLimitations(newPassword, lastPassword);
 		ServiceUtil.checkLogonLimitations(newPassword);
 		PasswordDao passwordDao = this.getPasswordDao();
-		return ServiceUtil.createPassword(passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword, plainNewPassword,
+		return ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword, plainNewPassword,
 				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
 	}
 

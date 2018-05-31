@@ -576,7 +576,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	}
 
 	public boolean isBlockingPeriodSpinnerEnabled() {
-		return (this.in.isExclusiveProbands() && VariablePeriod.EXPLICIT.equals(this.in.getBlockingPeriod()));
+		return (this.in.isExclusiveProbands() && (this.in.getBlockingPeriod() == null || VariablePeriod.EXPLICIT.equals(this.in.getBlockingPeriod())));
 	}
 
 	@Override

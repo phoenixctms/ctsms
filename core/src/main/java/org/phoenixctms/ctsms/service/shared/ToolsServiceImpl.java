@@ -231,7 +231,7 @@ extends ToolsServiceBase
 		CoreUtil.modifyVersion(user, now, modified);
 		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
-		ServiceUtil.createPassword(passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,
+		ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,
 				this.getJournalEntryDao());
 		UserOutVO result = userDao.toUserOutVO(user);
 		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, this.getJournalEntryDao());
@@ -644,7 +644,7 @@ extends ToolsServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		long count = 0;
 		final HashMap<Long, Long> countMap = new HashMap<Long, Long>();
-		Iterator<Proband> toBeAutoDeletedIt = this.getProbandDao().findToBeAutoDeleted(today, departmentId, null, null, null, true, psf).iterator();
+		Iterator<Proband> toBeAutoDeletedIt = this.getProbandDao().findToBeAutoDeleted(today, departmentId, null, null, null, true, true, psf).iterator();
 		while (toBeAutoDeletedIt.hasNext()) {
 			Proband proband = toBeAutoDeletedIt.next();
 			Long probandDepartmentId = proband.getDepartment().getId();
@@ -1020,7 +1020,8 @@ extends ToolsServiceBase
 		Date today = new Date();
 		NotificationDao notificationDao = this.getNotificationDao();
 		long count = 0;
-		Iterator<MaintenanceScheduleItem> maintenanceScheduleIt = this.getMaintenanceScheduleItemDao().findMaintenanceSchedule(today, null, departmentId, null, null, true, null)
+		Iterator<MaintenanceScheduleItem> maintenanceScheduleIt = this.getMaintenanceScheduleItemDao()
+				.findMaintenanceSchedule(today, null, departmentId, null, null, true, false, null)
 				.iterator();
 		while (maintenanceScheduleIt.hasNext()) {
 			MaintenanceScheduleItem maintenanceScheduleItem = maintenanceScheduleIt.next();
@@ -1073,7 +1074,7 @@ extends ToolsServiceBase
 				DefaultSettings.NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD);
 		Long expiringCourseReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD_DAYS);
-		Iterator<Course> expiringCourseIt = this.getCourseDao().findExpiring(today, departmentId, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays, null)
+		Iterator<Course> expiringCourseIt = this.getCourseDao().findExpiring(today, departmentId, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays, false, null)
 				.iterator();
 		while (expiringCourseIt.hasNext()) {
 			Course course = expiringCourseIt.next();
@@ -1090,7 +1091,8 @@ extends ToolsServiceBase
 		Long expiringCourseParticipationReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_COURSE_PARTICIPATION_REMINDER_PERIOD_DAYS,
 				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_COURSE_PARTICIPATION_REMINDER_PERIOD_DAYS);
 		Iterator<CourseParticipationStatusEntry> courseParticipationStatusEntryIt = this.getCourseParticipationStatusEntryDao()
-				.findExpiring(today, null, null, departmentId, null, null, true, expiringCourseParticipationReminderPeriod, expiringCourseParticipationReminderPeriodDays, null)
+				.findExpiring(today, null, null, departmentId, null, null, true, expiringCourseParticipationReminderPeriod, expiringCourseParticipationReminderPeriodDays, false,
+						null)
 				.iterator();
 		while (courseParticipationStatusEntryIt.hasNext()) {
 			CourseParticipationStatusEntry courseParticipationStatusEntry = courseParticipationStatusEntryIt.next();
@@ -1106,7 +1108,7 @@ extends ToolsServiceBase
 				}
 			}
 		}
-		Iterator<TimelineEvent> timelineScheduleIt = this.getTimelineEventDao().findTimelineSchedule(today, null, departmentId, null, true, false, null).iterator();
+		Iterator<TimelineEvent> timelineScheduleIt = this.getTimelineEventDao().findTimelineSchedule(today, null, departmentId, null, true, false, false, null).iterator();
 		while (timelineScheduleIt.hasNext()) {
 			TimelineEvent timelineEvent = timelineScheduleIt.next();
 			if (!ServiceUtil.testNotificationExists(timelineEvent.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.TIMELINE_EVENT_REMINDER, false)) {
@@ -1121,7 +1123,8 @@ extends ToolsServiceBase
 		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
 		Iterator<VisitScheduleItem> visitScheduleItemScheduleIt = this.getVisitScheduleItemDao()
-				.findVisitScheduleItemSchedule(today, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, null).iterator();
+				.findVisitScheduleItemSchedule(today, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false, null)
+				.iterator();
 		while (visitScheduleItemScheduleIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemScheduleIt.next();
 			if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER, false)) {
@@ -1136,7 +1139,7 @@ extends ToolsServiceBase
 		Long expiringProbandAutoDeleteReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS,
 				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS);
 		Iterator<Proband> toBeAutoDeletedIt = this.getProbandDao()
-				.findToBeAutoDeleted(today, departmentId, null, expiringProbandAutoDeleteReminderPeriod, expiringProbandAutoDeleteReminderPeriodDays, true, null).iterator();
+				.findToBeAutoDeleted(today, departmentId, null, expiringProbandAutoDeleteReminderPeriod, expiringProbandAutoDeleteReminderPeriodDays, true, false, null).iterator();
 		while (toBeAutoDeletedIt.hasNext()) {
 			Proband proband = toBeAutoDeletedIt.next();
 			if (!ServiceUtil.testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
@@ -1152,7 +1155,7 @@ extends ToolsServiceBase
 		Long expiringPasswordReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_PASSWORD_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_EXPIRING_PASSWORD_REMINDER_PERIOD_DAYS);
 		Iterator<Password> expiringPasswordIt = this.getPasswordDao()
-				.findExpiring(today, departmentId, AuthenticationType.LOCAL, expiringPasswordReminderPeriod, expiringPasswordReminderPeriodDays, null).iterator();
+				.findExpiring(today, departmentId, AuthenticationType.LOCAL, expiringPasswordReminderPeriod, expiringPasswordReminderPeriodDays, true, false, null).iterator();
 		while (expiringPasswordIt.hasNext()) {
 			Password password = expiringPasswordIt.next();
 			if (!ServiceUtil.testNotificationExists(password.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PASSWORD, false)) {
