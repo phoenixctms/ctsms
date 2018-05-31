@@ -2182,9 +2182,11 @@ public final class ServiceUtil {
 				ProbandOutVO probandVO = probandIt.next();
 				if (probandVO.isPerson()) { // && !probandVO.isBlinded()
 					Collection addresses = probandAddressDao.findByProband(probandVO.getId(), true, false, null, null);
-					probandAddressDao.toProbandAddressOutVOCollection(addresses);
-					addressVOMap.put(probandVO.getId(), addresses);
-					VOs.add(probandVO);
+					if (addresses.size() > 0) {
+						probandAddressDao.toProbandAddressOutVOCollection(addresses);
+						addressVOMap.put(probandVO.getId(), addresses);
+						VOs.add(probandVO);
+					}
 				}
 			}
 			painter.setProbandVOs(VOs);

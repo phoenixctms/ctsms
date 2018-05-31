@@ -726,4 +726,12 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN = "mass_mail_attachment_mime_type_unknown";
 	public static final String PROBAND_DELETED_OR_MARKED_FOR_DELETION = "proband_deleted_or_marked_for_deletion";
 	public static final String DEFERRED_DELETE_REASON_REQUIRED = "deferred_delete_reason_required";
+	public static final String MASS_MAIL_NO_MASS_MAIL_FILES_ATTACHMENTS = "mass_mail_no_mass_mail_files_attachments";
+	public static final String MASS_MAIL_NO_TRIAL_FILES_ATTACHMENTS = "mass_mail_no_trial_files_attachments";
+	public static final String MASS_MAIL_NO_PROBAND_FILES_ATTACHMENTS = "mass_mail_no_proband_files_attachments";
+	public static final String MASS_MAIL_NO_INQUIRIES_ATTACHMENT = "mass_mail_no_inquiries_attachment";
+	public static final String MASS_MAIL_NO_PROBAND_LIST_ENTRY_TAGS_ATTACHMENT = "mass_mail_no_proband_list_entry_tags_attachment";
+	public static final String MASS_MAIL_NO_ECRFS_ATTACHMENTS = "mass_mail_no_ecrfs_attachments";
+	public static final String MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT = "mass_mail_no_proband_letter_attachment";
+	public static final String MASS_MAIL_NO_REIMBURSEMENTS_PDF_ATTACHMENT = "mass_mail_no_reimbursements_pdf_attachment";
 }
