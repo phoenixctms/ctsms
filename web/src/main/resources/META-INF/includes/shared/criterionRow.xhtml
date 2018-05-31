@@ -511,6 +511,37 @@
 					type="button"
 					onclick="clearIDAjaxUpdate(':search_form:tabView:inputField#{index}',':search_form:tabView:inputFieldName#{index}','#{applicationScopeBean.noInputFieldPickedMessage}',':search_form:tabView:row#{index}')" />
 			</h:panelGrid>
+			<h:panelGrid
+				columns="3"
+				cellpadding="0"
+				rendered="#{searchBean.isMassMailPicker[index] and searchBean.isCriterionPropertyRendered[index]}">
+				<h:panelGroup>
+					<h:inputHidden
+						id="massMail#{index}"
+						required="false"
+						value="#{searchBean.criterionsIn[index].longValue}">
+						<f:converter converterId="ctsms.ID" />
+					</h:inputHidden>
+					<p:commandButton
+						id="massMailName#{index}"
+						value="#{applicationScopeBean.clipStringPicker(searchBean.massMailName[index])}"
+						title="#{labels.open_mass_mail_button_label}"
+						styleClass="ctsms-picker"
+						icon="ui-icon ui-icon-extlink"
+						type="button"
+						onclick="openPickedMassMail(':search_form:tabView:massMail#{index}')" />
+				</h:panelGroup>
+				<p:commandButton
+					title="#{labels.pick_mass_mail_button_label}"
+					icon="ui-icon ui-icon-search"
+					type="button"
+					onclick="openMassMailPickerAjaxUpdate(':search_form:tabView:massMail#{index}',':search_form:tabView:massMailName#{index}',':search_form:tabView:row#{index}')" />
+				<p:commandButton
+					title="#{labels.clear_mass_mail_button_label}"
+					icon="ui-icon ui-icon-close"
+					type="button"
+					onclick="clearIDAjaxUpdate(':search_form:tabView:massMail#{index}',':search_form:tabView:massMailName#{index}','#{applicationScopeBean.noMassMailPickedMessage}',':search_form:tabView:row#{index}')" />
+			</h:panelGrid>			
 			<p:message for="tie#{index}" />
 		</h:panelGrid>
 	</ui:composition>
