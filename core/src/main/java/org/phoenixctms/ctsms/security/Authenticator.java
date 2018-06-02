@@ -65,6 +65,9 @@ public class Authenticator {
 			if (user == null) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.UNKNOWN_USER, auth.getUsername());
 			}
+			if (user.isDeferredDelete()) {
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.USER_MARKED_FOR_DELETION, auth.getUsername());
+			}
 			if (user.isLocked()) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.USER_LOCKED, auth.getUsername());
 			}
