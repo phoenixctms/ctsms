@@ -42,6 +42,8 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
+import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
@@ -137,6 +139,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
@@ -1366,6 +1369,8 @@ public final class WebUtil {
 		}
 		return visitTypes;
 	}
+
+
 
 	public static AlphaIdVO getAlphaId(Long alphaIdId) {
 		if (alphaIdId != null) {
@@ -4397,6 +4402,89 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static boolean getUserAuthMessages(UserOutVO user, Date now, ArrayList<String> messageCodes) {
+		if (messageCodes == null) {
+			messageCodes = new ArrayList<String>();
+		} else {
+			messageCodes.clear();
+		}
+		if (now == null) {
+			now = new Date();
+		}
+		if (user == null) {
+			return false;
+		}
+		PasswordOutVO password = null;
+		Collection<UserPermissionProfileOutVO> userPermissionProfilesOut = null;
+		try {
+			password = getServiceLocator().getUserService().getPassword(getAuthentication(), user.getId());
+			userPermissionProfilesOut = getServiceLocator().getUserService()
+					.getPermissionProfiles(getAuthentication(), user.getId(), null, true);
+		} catch (ServiceException e) {
+			return false;
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			return false;
+		} catch (AuthorisationException e) {
+			return false;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		boolean warning = false;
+		if (user.getLocked()) {
+			messageCodes.add(AuthenticationExceptionCodes.USER_LOCKED);
+			warning = true;
+		}
+		if (user.getDeferredDelete()) {
+			messageCodes.add(AuthenticationExceptionCodes.USER_MARKED_FOR_DELETION);
+			warning = true;
+		}
+		if (userPermissionProfilesOut == null || userPermissionProfilesOut.size() == 0) {
+			warning = true;
+		}
+		switch (user.getAuthMethod().getMethod()) {
+			case LOCAL:
+				if (password == null) {
+					messageCodes.add(AuthenticationExceptionCodes.NO_PASSWORD_SET);
+					warning = true;
+				}
+				Boolean isPasswordExpired = isPasswordExpired(now, password);
+				if (isPasswordExpired != null && isPasswordExpired) {
+					messageCodes.add(AuthenticationExceptionCodes.PASSWORD_EXPIRED);
+					warning = true;
+				}
+				Boolean isLogonLimitExceeded = isLogonLimitExceeded(password);
+				if (isLogonLimitExceeded != null && isLogonLimitExceeded) {
+					messageCodes.add(AuthenticationExceptionCodes.SUCCESSFUL_LOGON_LIMIT_EXCEEDED);
+					warning = true;
+				}
+				Boolean isWrongPasswordAttemtpsLimitExceeded = isWrongPasswordAttemtpsLimitExceeded(password);
+				if (isWrongPasswordAttemtpsLimitExceeded != null && isWrongPasswordAttemtpsLimitExceeded) {
+					messageCodes.add(AuthenticationExceptionCodes.WRONG_PASSWORD_ATTEMPT_LIMIT_EXCEEDED);
+					warning = true;
+				}
+				if (!warning) {
+					messageCodes.add(MessageCodes.LOCAL_USER_CAN_LOGIN);
+				}
+				break;
+			case LDAP1:
+			case LDAP2:
+				if (password == null) {
+					messageCodes.add(AuthenticationExceptionCodes.NO_LOCAL_PASSWORD_SET);
+					warning = true;
+				}
+				if (!warning) {
+					messageCodes.add(MessageCodes.LDAP_USER_CAN_LOGIN);
+				}
+				break;
+			default:
+		}
+		if (userPermissionProfilesOut == null || userPermissionProfilesOut.size() == 0) {
+			messageCodes.add(AuthorisationExceptionCodes.NO_PERMISSIONS);
+		}
+		return warning;
+	}
+
 	public static StaffOutVO getUserIdentity() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null) {
@@ -4529,6 +4617,7 @@ public final class WebUtil {
 		return categories;
 	}
 
+
 	public static ArrayList<SelectItem> getVisibleMassMailTypes(Long typeId) {
 		ArrayList<SelectItem> massMailTypes;
 		Collection<MassMailTypeVO> massMailTypeVOs = null;
@@ -4553,7 +4642,6 @@ public final class WebUtil {
 		}
 		return massMailTypes;
 	}
-
 
 	public static ArrayList<SelectItem> getVisibleProbandCategories(Boolean person, Boolean animal, Long categoryId) {
 		ArrayList<SelectItem> categories;
@@ -4748,6 +4836,8 @@ public final class WebUtil {
 		return null;
 	}
 
+
+
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4765,8 +4855,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-
 
 	public static VisitTypeVO getVisitType(Long visitTypeId) {
 		// VisitTypeVO visitType = null; // (VisitTypeVO) getSelectionSetServiceCache(VisitTypeVO.class, id);
@@ -4816,6 +4904,10 @@ public final class WebUtil {
 		}
 	}
 
+	// public static String inputFieldVariableValueToJson(Object src) {
+	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
+	// }
+
 	public static String inventoryIdToName(Long id) {
 		if (id == null) {
 			return getNoInventoryPickedMessage();
@@ -4831,10 +4923,6 @@ public final class WebUtil {
 		}
 		return Messages.getString(MessageCodes.INVALID_INVENTORY_PICKED);
 	}
-
-	// public static String inputFieldVariableValueToJson(Object src) {
-	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-	// }
 
 	public static String inventoryOutVOToString(InventoryOutVO inventory) {
 		String result = CommonUtil.inventoryOutVOToString(inventory);
@@ -4877,6 +4965,7 @@ public final class WebUtil {
 		}
 		return true;
 	}
+
 
 	public static Boolean isLocalAuthMethod(UserOutVO user) {
 		if (user != null) {

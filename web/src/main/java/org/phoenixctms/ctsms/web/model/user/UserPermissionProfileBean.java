@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -157,12 +158,28 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 
 	private void initSets() {
 		if (Messages.getMessageList().isEmpty()) {
-			if (!isCreated() && userId != null) {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PERMISSION_PROFILES_SET_YET);
-			} else if (isCreated() && WebUtil.isUserLocked(userId)) {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
-			} else if (WebUtil.isUserIdLoggedIn(userId)) {
+			// if (!isCreated() && userId != null) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PERMISSION_PROFILES_SET_YET);
+			// } else if (isCreated() && WebUtil.isUserLocked(userId)) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
+			// } else if (WebUtil.isUserIdLoggedIn(userId)) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
+			// }
+			if (WebUtil.isUserIdLoggedIn(userId)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
+			}
+			UserOutVO user = WebUtil.getUser(userId, null);
+			ArrayList<String> messageCodes = new ArrayList<String>();
+			if (WebUtil.getUserAuthMessages(user, null, messageCodes)) {
+				Iterator<String> it = messageCodes.iterator();
+				while (it.hasNext()) {
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, it.next());
+				}
+			} else {
+				Iterator<String> it = messageCodes.iterator();
+				while (it.hasNext()) {
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, it.next());
+				}
 			}
 		}
 	}

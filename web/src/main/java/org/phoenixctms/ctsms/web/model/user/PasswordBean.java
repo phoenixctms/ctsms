@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.web.model.user;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,6 +16,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
@@ -215,14 +218,31 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	private void initSets() {
 		now = new Date();
 		if (Messages.getMessageList().isEmpty()) {
-			if (out == null && userId != null) {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PASSWORD_SET_YET);
-			} else if (out != null && out.getUser().getLocked()) {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
-			} else if (WebUtil.isUserIdLoggedIn(userId)) {
+			// if (out == null && userId != null) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PASSWORD_SET_YET);
+			// } else if (out != null && out.getUser().getLocked()) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
+			// } else if (WebUtil.isUserIdLoggedIn(userId)) {
+			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
+			// }
+			if (WebUtil.isUserIdLoggedIn(userId)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 			}
+			UserOutVO user = WebUtil.getUser(userId, null);
+			ArrayList<String> messageCodes = new ArrayList<String>();
+			if (WebUtil.getUserAuthMessages(user, now, messageCodes)) {
+				Iterator<String> it = messageCodes.iterator();
+				while (it.hasNext()) {
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, it.next());
+				}
+			} else {
+				Iterator<String> it = messageCodes.iterator();
+				while (it.hasNext()) {
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, it.next());
+				}
+			}
 		}
+
 	}
 
 	@Override

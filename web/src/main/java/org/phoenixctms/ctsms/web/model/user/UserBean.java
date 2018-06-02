@@ -485,7 +485,20 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
+		ArrayList<String> messageCodes = new ArrayList<String>();
+		if (WebUtil.getUserAuthMessages(out, null, messageCodes)) {
+			Iterator<String> it = messageCodes.iterator();
+			while (it.hasNext()) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, it.next());
+			}
+		} else {
+			Iterator<String> it = messageCodes.iterator();
+			while (it.hasNext()) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, it.next());
+			}
+		}
 	}
+
 
 	@Override
 	public boolean isCreateable() {

@@ -459,9 +459,11 @@ public interface MessageCodes {
 	public static final String EAST_TIME_ZONE_LABEL = "east_time_zone_label";
 	public static final String OFFSET_TIME_ZONE_LABEL = "offset_time_zone_label";
 	public static final String SET_NEW_PASSWORD_TITLE = "set_new_password_title";
-	public static final String USER_LOCKED_LABEL = "user_locked_label";
-	public static final String NO_PASSWORD_SET_YET = "no_password_set_yet";
-	public static final String NO_PERMISSION_PROFILES_SET_YET = "no_permission_profiles_set_yet";
+	// public static final String USER_LOCKED_LABEL = "user_locked_label";
+	// public static final String NO_PASSWORD_SET_YET = "no_password_set_yet";
+	public static final String LOCAL_USER_CAN_LOGIN = "local_user_can_login";
+	public static final String LDAP_USER_CAN_LOGIN = "ldap_user_can_login";
+	// public static final String NO_PERMISSION_PROFILES_SET_YET = "no_permission_profiles_set_yet";
 	public static final String EDITING_ACTIVE_USER = "editing_active_user";
 	public static final String EDITING_ACTIVE_USER_IDENTITY = "editing_active_user_identity";
 	public static final String RECENT_ENTITIES_MENU_LABEL = "recent_entities_menu_label";
