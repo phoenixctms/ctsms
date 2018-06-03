@@ -33,108 +33,245 @@
 					scrollable="#{dataTablesScrollableDefault}"
 					scrollHeight="#{dataTablesScrollHeightDefault}"
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
-					
-
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="fieldStatusEntry"
-					
 					value="#{ecrfFieldStatusBean.ecrfFieldStatusEntryModel}"
 					id="ecrffieldstatus_list"
 					selectionMode="single"
 					selection="#{ecrfFieldStatusBean.selectedEcrfFieldStatusEntry}"
 					rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(fieldStatusEntry.vo)}#{rowBgColorAlpha}">
-					
 					<!-- 					sortBy="#{fieldStatusEntry.vo.id}"
 					sortOrder="descending" -->
-					
 					<p:ajax
 						event="rowSelect"
 						update=":tabView:ecrffieldstatus_form:ecrffieldstatus_input" />
 					<f:facet name="header">
 						<h:outputText value="#{ecrfFieldStatusBean.ecrfFieldStatusEntryModel.rowCount} #{labels.ecrffieldstatus_list_header}" />
 					</f:facet>
-
-					<p:column style="width:16px;">
-						<p:rowToggler />
-					</p:column>
-
-						<p:column sortBy="#{fieldStatusEntry.vo.id}">
-							<f:facet name="header">
-								<h:outputText value="#{labels.id_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.id}" />
-						</p:column>
-						
-						
-						<p:column sortBy="#{fieldStatusEntry.vo.listEntry.proband.id}"
-					        filterBy="#{fieldStatusEntry.vo.listEntry.proband.id}" >
-							<f:facet name="header">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column
+								rowspan="2"
+								style="width:16px;" />
+							<p:column rowspan="2" sortBy="#{fieldStatusEntry.vo.id}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.id_column}" />
+								</f:facet>
+							</p:column>
+							<p:column colspan="2">
+								<f:facet name="header">
+									<h:outputText value="#{labels.ecrffieldstatus_list_proband_group}" />
+								</f:facet>
+							</p:column>
+							<p:column colspan="4">
+								<f:facet name="header">
+									<h:outputText value="#{labels.ecrffieldstatus_list_ecrf_group}" />
+								</f:facet>
+							</p:column>
+							<p:column colspan="4">
+								<f:facet name="header">
+									<h:outputText value="#{labels.ecrffieldstatus_list_ecrf_field_group}" />
+								</f:facet>
+							</p:column>
+							<p:column colspan="5">
+								<f:facet name="header">
+									<h:outputText value="#{labels.ecrffieldstatus_list_ecrf_issue_group}" />
+								</f:facet>
+							</p:column>
+							<p:column
+								rowspan="2"
+								style="width:32px;" />
+						</p:row>
+						<p:row>
+<p:column
+						sortBy="#{fieldStatusEntry.vo.listEntry.proband.id}"
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.id}">
+						 <f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_proband_id_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.listEntry.proband.id}" />
-						</p:column>
-						
-						<p:column filterBy="#{fieldStatusEntry.vo.listEntry.proband.personParticulars.lastNameHash}"
-							rendered="#{ecrfFieldStatusBean.trial.type.person}">
-							<f:facet name="header">
+							</f:facet> 
+					</p:column>
+					<p:column
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.personParticulars.lastNameHash}"
+						rendered="#{ecrfFieldStatusBean.trial.type.person}">
+						<f:facet name="header">
 								<h:outputText
 									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
 									value="#{labels.ecrffieldstatus_proband_name_column}" />
 							</f:facet>
-							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
-								<ui:param
-									name="icon"
-									value="#{fieldStatusEntry.vo.listEntry.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
-									value="#{fieldStatusEntry.vo.listEntry.proband.decrypted}" />
-							</ui:include>
-							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-encrypted" />
-								<ui:param
-									name="rendered"
-									value="#{!fieldStatusEntry.vo.listEntry.proband.decrypted}" />
-							</ui:include>
-						</p:column>
-						
-						<p:column filterBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
-							sortBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
-							rendered="#{!ecrfFieldStatusBean.trial.type.person}">
-							<f:facet name="header">
+					</p:column>
+					<p:column
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
+						sortBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
+						rendered="#{!ecrfFieldStatusBean.trial.type.person}">
+						<f:facet name="header">
 								<h:outputText
 									value="#{labels.ecrffieldstatus_animal_name_column}" />
 							</f:facet>
-							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
-								<ui:param
-									name="icon"
-									value="#{fieldStatusEntry.vo.listEntry.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
-									value="true" />
-							</ui:include>							
-						</p:column>						
-						
-						
-						
-						
-						
-						<p:column style="width:200px;" sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}"
-					        filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}" >
-							<f:facet name="header">
+					</p:column>
+					<p:column
+						style="width:200px;"
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}">
+						<f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_ecrf_name_column}" />
 							</f:facet>
-							<ui:include src="../shared/listIcon.xhtml">
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.id}"
+						filterOptions="#{ecrfFieldStatusBean.filterProbandGroups}">
+						<f:facet name="header">
+				<h:outputText value="#{labels.ecrffieldstatus_group_title_column}" />
+			</f:facet>
+					</p:column>
+					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.position}">
+						<f:facet name="header">
+				<h:outputText value="#{labels.ecrffieldstatus_ecrf_position_column}" />
+			</f:facet>
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.id}"
+						filterOptions="#{ecrfFieldStatusBean.filterVisits}">
+						<f:facet name="header">
+				<h:outputText value="#{labels.ecrffieldstatus_visit_title_column}" />
+			</f:facet>
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.ecrfField.section}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.section}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_section_column}" />
+							</f:facet>
+					</p:column>
+					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.position}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_position_column}" />
+							</f:facet>
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_field_name_column}" />
+							</f:facet>
+					</p:column>
+					<p:column sortBy="#{fieldStatusEntry.vo.index}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_index_column}" />
+							</f:facet>
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.status}"
+						filterBy="#{fieldStatusEntry.vo.status.id}"
+						filterOptions="#{sessionScopeBean.filterEcrfFieldStatusTypes}">
+						<f:facet name="header">
+					<h:outputText value="#{labels.ecrffieldstatus_list_status_column}" />
+				</f:facet>
+					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.status.resolved}"
+						filterBy="#{fieldStatusEntry.vo.status.resolved}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+					<h:outputText value="#{labels.ecrffieldstatus_list_status_resolved_column}" />
+				</f:facet>
+					</p:column>
+					<p:column filterBy="#{fieldStatusEntry.vo.comment}">
+						<f:facet name="header">
+					<h:outputText value="#{labels.ecrffieldstatus_list_comment_column}" />
+				</f:facet>
+					</p:column>
+					<p:column sortBy="#{fieldStatusEntry.vo.modifiedUser.name}">
+						<f:facet name="header">
+					<h:outputText value="#{labels.ecrffieldstatus_list_modified_user_column}" />
+				</f:facet>
+					</p:column>
+					<p:column sortBy="#{fieldStatusEntry.vo.modifiedTimestamp}">
+						<f:facet name="header">
+					<h:outputText value="#{labels.ecrffieldstatus_list_modified_timestamp_column}" />
+				</f:facet>
+					</p:column>
+
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<!--  style="width:16px;"> -->
+						<p:rowToggler />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.id}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.id_column}" />
+							</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.id}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.listEntry.proband.id}"
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.id}">
+						 <f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_proband_id_column}" />
+							</f:facet> -->
+						<h:outputText value="#{fieldStatusEntry.vo.listEntry.proband.id}" />
+					</p:column>
+					<p:column rendered="#{ecrfFieldStatusBean.trial.type.person}"><!--
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.personParticulars.lastNameHash}"
+						
+						<f:facet name="header">
+								<h:outputText
+									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+									value="#{labels.ecrffieldstatus_proband_name_column}" />
+							</f:facet>-->
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
+							<ui:param
+								name="icon"
+								value="#{fieldStatusEntry.vo.listEntry.proband.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="#{fieldStatusEntry.vo.listEntry.proband.decrypted}" />
+						</ui:include>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
+							<ui:param
+								name="icon"
+								value="ctsms-icon-encrypted" />
+							<ui:param
+								name="rendered"
+								value="#{!fieldStatusEntry.vo.listEntry.proband.decrypted}" />
+						</ui:include>
+					</p:column>
+					<p:column rendered="#{!ecrfFieldStatusBean.trial.type.person}"><!--
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
+						sortBy="#{fieldStatusEntry.vo.listEntry.proband.animalParticulars.animalName}"
+						
+						<f:facet name="header">
+								<h:outputText
+									value="#{labels.ecrffieldstatus_animal_name_column}" />
+							</f:facet>-->
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{fieldStatusEntry.vo.listEntry.proband.name}" />
+							<ui:param
+								name="icon"
+								value="#{fieldStatusEntry.vo.listEntry.proband.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
+					<p:column><!--
+						style="width:200px;"
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}">
+						<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_ecrf_name_column}" />
+							</f:facet>-->
+						<ui:include src="../shared/listIcon.xhtml">
 							<ui:param
 								name="label"
 								value="#{fieldStatusEntry.vo.ecrfField.ecrf.name}" />
@@ -148,153 +285,137 @@
 								name="uiicon"
 								value="true" />
 						</ui:include>
-						</p:column>
-						
-					
-								<p:column
-			sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}"
-			filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.id}"
-			filterOptions="#{ecrfFieldStatusBean.filterProbandGroups}">
-			<f:facet name="header">
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.id}"
+						filterOptions="#{ecrfFieldStatusBean.filterProbandGroups}">
+						<f:facet name="header">
 				<h:outputText value="#{labels.ecrffieldstatus_group_title_column}" />
-			</f:facet>
-			<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}" />
-		</p:column>
-		<p:column
-			sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.position}">
-			<f:facet name="header">
+			</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}" />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.position}">
+						<f:facet name="header">
 				<h:outputText value="#{labels.ecrffieldstatus_ecrf_position_column}" />
-			</f:facet>
-			<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.position}" />
-		</p:column>		
-		<p:column
-			sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}"
-			filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.id}"
-			filterOptions="#{ecrfFieldStatusBean.filterVisits}">
-			<f:facet name="header">
+			</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.position}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.id}"
+						filterOptions="#{ecrfFieldStatusBean.filterVisits}">
+						<f:facet name="header">
 				<h:outputText value="#{labels.ecrffieldstatus_visit_title_column}" />
-			</f:facet>
-			<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}" />
-		</p:column>
-						
-						
-						
-						<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.section}"
-					        filterBy="#{fieldStatusEntry.vo.ecrfField.section}" >
-							<f:facet name="header">
+			</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.ecrfField.section}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.section}">
+						<f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_section_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.ecrfField.section}" />
-						</p:column>
-									
-					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.position}" >
-							<f:facet name="header">
+							</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.section}" />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.ecrfField.position}">
+						<f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_position_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.ecrfField.position}" />
-						</p:column>
-					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}"
-					        filterBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}" >
-							<f:facet name="header">
+							</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.position}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}"
+						filterBy="#{fieldStatusEntry.vo.ecrfField.field.nameL10nKey}">
+						<f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_ecrffield_field_name_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.ecrfField.field.name}" />
-						</p:column>
-						<p:column sortBy="#{fieldStatusEntry.vo.index}" >
-							<f:facet name="header">
+							</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.field.name}" />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.index}">
+						<f:facet name="header">
 								<h:outputText value="#{labels.ecrffieldstatus_index_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldStatusEntry.vo.index}" />
-						</p:column>		
-						
-						
-						
-			<p:column sortBy="#{fieldStatusEntry.vo.status}"
-			filterBy="#{fieldStatusEntry.vo.status.id}"
-									filterOptions="#{sessionScopeBean.filterEcrfFieldStatusTypes}">
-				<f:facet name="header">
+							</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.index}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.status}"
+						filterBy="#{fieldStatusEntry.vo.status.id}"
+						filterOptions="#{sessionScopeBean.filterEcrfFieldStatusTypes}">
+						<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_status_column}" />
-				</f:facet>
-				<h:outputText value="#{fieldStatusEntry.vo.status.name}" />
-			</p:column>
-			
-			<p:column sortBy="#{fieldStatusEntry.vo.status.resolved}" 
-			filterBy="#{fieldStatusEntry.vo.status.resolved}"
-									filterOptions="#{sessionScopeBean.filterBooleans}">
-				<f:facet name="header">
+				</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.status.name}" />
+					</p:column>
+					<p:column><!--
+						sortBy="#{fieldStatusEntry.vo.status.resolved}"
+						filterBy="#{fieldStatusEntry.vo.status.resolved}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_status_resolved_column}" />
-				</f:facet>
-				<ui:include src="../shared/listBooleanIcon.xhtml">
-					<ui:param
-						name="value"
-						value="#{fieldStatusEntry.vo.status.resolved}" />
-				</ui:include>
-			</p:column>
-
-			
-			<p:column filterBy="#{fieldStatusEntry.vo.comment}">
-				<f:facet name="header">
+				</f:facet>-->
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{fieldStatusEntry.vo.status.resolved}" />
+						</ui:include>
+					</p:column>
+					<p:column><!-- filterBy="#{fieldStatusEntry.vo.comment}">
+						<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_comment_column}" />
-				</f:facet>
-				<h:outputText value="#{applicationScopeBean.clipStringTrailing(fieldStatusEntry.vo.comment,56)}" />
-			</p:column>
-			
-			<p:column sortBy="#{fieldStatusEntry.vo.modifiedUser.name}">
-				<f:facet name="header">
+				</f:facet>-->
+						<h:outputText value="#{applicationScopeBean.clipStringTrailing(fieldStatusEntry.vo.comment,56)}" />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.modifiedUser.name}">
+						<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_modified_user_column}" />
-				</f:facet>
-				<h:outputText value="#{applicationScopeBean.getIdentityString(fieldStatusEntry.vo.modifiedUser)}" />
-			</p:column>
-			 <p:column sortBy="#{fieldStatusEntry.vo.modifiedTimestamp}">
-				<f:facet name="header">
+				</f:facet>-->
+						<h:outputText value="#{applicationScopeBean.getIdentityString(fieldStatusEntry.vo.modifiedUser)}" />
+					</p:column>
+					<p:column><!-- sortBy="#{fieldStatusEntry.vo.modifiedTimestamp}">
+						<f:facet name="header">
 					<h:outputText value="#{labels.ecrffieldstatus_list_modified_timestamp_column}" />
-				</f:facet>
-				<h:outputText value="#{fieldStatusEntry.vo.modifiedTimestamp}">
-					<f:converter converterId="ctsms.DateTime" />
-				</h:outputText>
-			</p:column>			
-			
-				<p:column
-					style="width:32px;">
-					<p:commandButton
-						type="button"
-						title="#{labels.open_ecrf_section_button_label}"
-						icon="ui-icon ui-icon-extlink"
-						onclick="openEcrfSection(#{fieldStatusEntry.vo.id},#{applicationScopeBean.getEcrfSectionHashCode(fieldStatusEntry.vo.id)})" />
-				</p:column>			
-			
-			<p:rowExpansion>
+				</f:facet>-->
+						<h:outputText value="#{fieldStatusEntry.vo.modifiedTimestamp}">
+							<f:converter converterId="ctsms.DateTime" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<!--style="width:32px;">-->
+						<p:commandButton
+							type="button"
+							title="#{labels.open_ecrf_section_button_label}"
+							icon="ui-icon ui-icon-extlink"
+							onclick="openEcrfSection(#{fieldStatusEntry.vo.id},#{applicationScopeBean.getEcrfSectionHashCode(fieldStatusEntry.vo.id)})" />
+					</p:column>
+					<p:rowExpansion>
 						<ui:include src="../shared/auditTrailEcrfFieldLog.xhtml">
 							<ui:param
 								name="ecrfFieldStatusEntryBean"
 								value="#{ecrfFieldStatusBean}" />
 							<ui:param
 								name="statusEntry"
-								value="#{fieldStatusEntry.vo}" />								
+								value="#{fieldStatusEntry.vo}" />
 						</ui:include>
-					</p:rowExpansion>		
-
+					</p:rowExpansion>
 				</p:dataTable>
 				<p:panel id="ecrffieldstatus_input">
-									<f:facet name="header">
-										<h:outputText value="#{ecrfFieldStatusBean.title}" />
-									</f:facet>
-									<ui:include src="../shared/ecrfFieldStatusEntryInput.xhtml">
-
-										<ui:param
-											name="ecrfFieldStatusEntryBean"
-											value="#{ecrfFieldStatusBean}" />
-										<ui:param
-											name="id_prefix"
-											value="ecrffieldstatus" />
-				<ui:param
-					name="updateOnComplete"
-					value="handleUpdateTrialTabTitles(xhr, status, args)" />											
-									</ui:include>
-
-								</p:panel>
+					<f:facet name="header">
+						<h:outputText value="#{ecrfFieldStatusBean.title}" />
+					</f:facet>
+					<ui:include src="../shared/ecrfFieldStatusEntryInput.xhtml">
+						<ui:param
+							name="ecrfFieldStatusEntryBean"
+							value="#{ecrfFieldStatusBean}" />
+						<ui:param
+							name="id_prefix"
+							value="ecrffieldstatus" />
+						<ui:param
+							name="updateOnComplete"
+							value="handleUpdateTrialTabTitles(xhr, status, args)" />
+					</ui:include>
+				</p:panel>
 			</h:panelGrid>
-
 		</h:form>
 	</ui:composition>
 </h:body>
