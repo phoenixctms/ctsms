@@ -26,6 +26,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 	private final static int JS_VARIABLE_NAME_COLUMN_INDEX = 12;
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 13;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 14;
+	private final static int NOTIFY_COLUMN_INDEX = 15;
 
 	private int ecrfProbandGroupColumnIndex;
 	private int ecrfPositionColumnIndex;
@@ -42,6 +43,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 	private int jsVariableNameColumnIndex;
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
+	private int notifyColumnIndex;
 	private int maxColumnIndex;
 	private HashSet<Long> inputFieldIds;
 	@Autowired
@@ -93,6 +95,8 @@ public class EcrfFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(jsValueExpressionColumnIndex, maxColumnIndex);
 		jsOutputExpressionColumnIndex = JS_OUTPUT_EXPRESSION_COLUMN_INDEX;
 		maxColumnIndex = Math.max(jsOutputExpressionColumnIndex, maxColumnIndex);
+		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
+		maxColumnIndex = Math.max(notifyColumnIndex, maxColumnIndex);
 		inputFieldIds.clear();
 
 		context.getExporter().getInputFieldRowWriter().init();
@@ -128,6 +132,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 			values[jsVariableNameColumnIndex] = ecrfField.getJsVariableName();
 			values[jsValueExpressionColumnIndex] = ecrfField.getJsValueExpression();
 			values[jsOutputExpressionColumnIndex] = ecrfField.getJsOutputExpression();
+			values[notifyColumnIndex] = Boolean.toString(ecrfField.getNotify());
 			printRow(values);
 		}
 	}

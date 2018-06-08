@@ -57,6 +57,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setOptional(out.getOptional());
 			in.setAuditTrail(out.getAuditTrail());
 			in.setReasonForChangeRequired(out.getReasonForChangeRequired());
+			in.setNotify(out.getNotify());
 			in.setPosition(out.getPosition());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setEcrfId(ecrfVO == null ? null : ecrfVO.getId());
@@ -92,6 +93,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setOptional(Settings.getBoolean(SettingCodes.ECRF_FIELD_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_OPTIONAL_PRESET));
 			in.setAuditTrail(Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET));
 			in.setReasonForChangeRequired(Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET));
+			in.setNotify(false);
 			// in.setReasonForChangeRequired(Settings.getBoolean(SettingCodes.ECRF_FIELD_REASON_FOR_CHANGE_REQUIRED_PRESET, Bundle.SETTINGS,
 			// DefaultSettings.ECRF_FIELD_REASON_FOR_CHANGE_REQUIRED_PRESET));
 			in.setPosition(position == null ? CommonUtil.LIST_INITIAL_POSITION : position + 1L);
@@ -123,6 +125,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private boolean bulkAddOptional;
 	private boolean bulkAddSeries;
 	private boolean bulkAddAuditTrail;
+	// private boolean bulkAddNotify;
 	private String oldSection;
 	private String newSection;
 
@@ -171,8 +174,8 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+
+	public String addBulkAction() {
 		try {
 			if (bulkAddSection != null && bulkAddSection.length() > 0) {
 				Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
@@ -233,6 +236,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		bulkAddOptional = Settings.getBoolean(SettingCodes.ECRF_FIELD_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_OPTIONAL_PRESET);
 		bulkAddSeries = Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET);
 		bulkAddAuditTrail = Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET);
+		// bulkAddNotify = Settings.getBoolean(SettingCodes.ECRF_FIELD_NOTIFY_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_NOTIFY_PRESET);
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -287,6 +291,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getBulkAddSection() {
 		return bulkAddSection;
 	}
+
 	private List<String> getCompleteSectionList(String query) {
 		Collection<String> sections = null;
 		if (in.getEcrfId() != null) {
@@ -311,7 +316,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
 	}
-
 	public String getEcrfFieldListHeader() {
 		if (trial != null) {
 			if (ecrf == null) {
@@ -507,6 +511,8 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return bulkAddAuditTrail;
 	}
 
+
+
 	public boolean isBulkAddOptional() {
 		return bulkAddOptional;
 	}
@@ -690,11 +696,16 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		if (!in.getAuditTrail()) {
 			in.setReasonForChangeRequired(false);
 		}
+		//		if (CommonUtil.isEmptyString(in.getJsVariableName()) {
+		//			in.setNotify(false);
+		//		}
 	}
 
 	public void setBulkAddAuditTrail(boolean bulkAddAuditTrail) {
 		this.bulkAddAuditTrail = bulkAddAuditTrail;
 	}
+
+
 
 	public void setBulkAddOptional(boolean bulkAddOptional) {
 		this.bulkAddOptional = bulkAddOptional;

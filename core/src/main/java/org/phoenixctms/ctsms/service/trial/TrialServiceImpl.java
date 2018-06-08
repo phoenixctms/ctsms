@@ -406,7 +406,9 @@ extends TrialServiceBase
 		return result;
 	}
 
-	private ECRFFieldStatusEntryOutVO addEcrfFieldStatusEntry(ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry, ECRFFieldStatusQueue queue, Timestamp now, User user,
+
+	private ECRFFieldStatusEntryOutVO addEcrfFieldStatusEntry(ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry, ECRFStatusEntry statusEntry, ECRFFieldStatusQueue queue,
+			Timestamp now, User user,
 			boolean logTrial,
 			boolean logProband, boolean action
 
@@ -416,7 +418,9 @@ extends TrialServiceBase
 			//JournalEntryDao journalEntryDao
 			) throws Exception {
 
-		ECRFFieldStatusEntry lastStatus = checkAddEcrfFieldStatusEntryInput(newEcrfFieldStatusEntry, queue, now, user, action);
+		Object[] resultItems = checkAddEcrfFieldStatusEntryInput(newEcrfFieldStatusEntry, statusEntry, queue, now, user, action);
+		ECRFFieldStatusEntry lastStatus = (ECRFFieldStatusEntry) resultItems[0];
+		statusEntry = (ECRFStatusEntry) resultItems[1];
 		// ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
@@ -426,7 +430,7 @@ extends TrialServiceBase
 		CoreUtil.modifyVersion(fieldStatus, now, user);
 		fieldStatus = ecrfFieldStatusEntryDao.create(fieldStatus);
 
-		notifyEcrfFieldStatus(lastStatus,fieldStatus,queue,now);
+		notifyEcrfFieldStatus(statusEntry, lastStatus, fieldStatus, queue, now);
 
 		ECRFFieldStatusEntryOutVO result = ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO(fieldStatus);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -978,7 +982,7 @@ extends TrialServiceBase
 					continue;
 				}
 			}
-			addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, ECRFFieldStatusQueue.VALIDATION, now, user, false, false, true);
+			addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, statusEntry, ECRFFieldStatusQueue.VALIDATION, now, user, false, false, true);
 		}
 		// if (statusEntry != null) {
 		statusEntry.setValidationTimestamp(now);
@@ -1028,7 +1032,8 @@ extends TrialServiceBase
 		}
 	}
 
-	private ECRFFieldStatusEntry checkAddEcrfFieldStatusEntryInput(ECRFFieldStatusEntryInVO ecrfFieldStatusEntryIn, ECRFFieldStatusQueue queue, Timestamp now, User user, boolean action)
+	private Object[] checkAddEcrfFieldStatusEntryInput(ECRFFieldStatusEntryInVO ecrfFieldStatusEntryIn, ECRFStatusEntry ecrfStatusEntry, ECRFFieldStatusQueue queue, Timestamp now,
+			User user, boolean action)
 			throws Exception
 	{
 		// referential checks
@@ -1051,16 +1056,18 @@ extends TrialServiceBase
 		}
 		ServiceUtil.checkProbandLocked(listEntry.getProband());
 
-		ECRFStatusEntry ecrfStatusEntry = this.getECRFStatusEntryDao().findByEcrfListEntry(ecrf.getId(), listEntry.getId());
 		if (ecrfStatusEntry == null) {
-			ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
-			this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
-			// ecrf = ServiceUtil.checkEcrfId(ecrf.getId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE); // lock order, field updates
-			Object[] resultItems = addEcrfStatusEntry(ecrf, listEntry, statusType, null, now, user);
-			ecrfStatusEntry = (ECRFStatusEntry) resultItems[0];
-			//			statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
-			//		} else {
-			//			statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+			ecrfStatusEntry = this.getECRFStatusEntryDao().findByEcrfListEntry(ecrf.getId(), listEntry.getId());
+			if (ecrfStatusEntry == null) {
+				ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
+				this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
+				// ecrf = ServiceUtil.checkEcrfId(ecrf.getId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE); // lock order, field updates
+				Object[] resultItems = addEcrfStatusEntry(ecrf, listEntry, statusType, null, now, user);
+				ecrfStatusEntry = (ECRFStatusEntry) resultItems[0];
+				// statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
+				// } else {
+				// statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+			}
 		}
 		if (ecrfStatusEntry.getStatus().isFieldStatusLockdown()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_INPUT_LOCKED_FOR_ECRF_STATUS,
@@ -1149,7 +1156,7 @@ extends TrialServiceBase
 		//			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED,
 		//					CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(probandListEntry.getProband())));
 		//		}
-		return lastStatus;
+		return new Object[] { lastStatus, ecrfStatusEntry };
 	}
 
 
@@ -1275,13 +1282,15 @@ extends TrialServiceBase
 	}
 
 	private void checkEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException {
+		boolean hasJsValueExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsValueExpression()));
+		boolean hasJsOutputExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsOutputExpression()));
 		if (CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsValueExpression()))) {
+			if (hasJsValueExpression || hasJsOutputExpression) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
 			}
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsOutputExpression()))) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
-			}
+			// if (!) {
+			// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
+			// }
 		} else {
 			if (!JS_VARIABLE_NAME_REGEXP.matcher(ecrfFieldIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_INVALID, ecrfFieldIn.getJsVariableName());
@@ -1289,6 +1298,9 @@ extends TrialServiceBase
 			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE);
 			}
+		}
+		if (ecrfFieldIn.getNotify() && !hasJsValueExpression && !hasJsOutputExpression) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_NO_EXPRESSION_FOR_NOTIFY);
 		}
 		if (ecrfFieldIn.getReasonForChangeRequired() && !ecrfFieldIn.getAuditTrail()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_AUDIT_TRAIL_FALSE);
@@ -2475,6 +2487,7 @@ extends TrialServiceBase
 				newEcrfField.setOptional(optional);
 				newEcrfField.setAuditTrail(auditTrail);
 				newEcrfField.setReasonForChangeRequired(auditTrail);
+				newEcrfField.setNotify(false);
 				newEcrfField.setSeries(series);
 				// newEcrfField.s
 				newEcrfField.setEcrfId(ecrf.getId());
@@ -2495,7 +2508,8 @@ extends TrialServiceBase
 			AuthenticationVO auth, ECRFFieldStatusQueue queue, ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		return addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, queue, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND,
+		return addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, null, queue, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL,
+				ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND,
 				false);
 	}
 
@@ -3072,6 +3086,7 @@ extends TrialServiceBase
 			newEcrfField.setOptional(originalEcrfField.isOptional());
 			newEcrfField.setPosition(originalEcrfField.getPosition());
 			newEcrfField.setReasonForChangeRequired(originalEcrfField.isReasonForChangeRequired());
+			newEcrfField.setNotify(originalEcrfField.isNotify());
 			newEcrfField.setSection(originalEcrfField.getSection());
 			newEcrfField.setSeries(originalEcrfField.isSeries());
 			newEcrfField.setExternalId(originalEcrfField.getExternalId());
@@ -7675,7 +7690,8 @@ extends TrialServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(shuffleInfo, null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
-	private void notifyEcrfFieldStatus(ECRFFieldStatusEntry lastStatus, ECRFFieldStatusEntry newStatus, ECRFFieldStatusQueue queue, Date now) throws Exception {
+	private void notifyEcrfFieldStatus(ECRFStatusEntry statusEntry, ECRFFieldStatusEntry lastStatus, ECRFFieldStatusEntry newStatus, ECRFFieldStatusQueue queue, Date now)
+			throws Exception {
 
 		//		if (lastStatus != null) {
 		//			ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
@@ -7691,12 +7707,14 @@ extends TrialServiceBase
 		//			this.getNotificationDao().addNotification(newStatus,now,null);
 		//		}
 
+
 		if (newStatus != null
 				// && (newStatus.getStatus().isInitial() || newStatus.getStatus().isResolved())
-				&& Settings.getEcrfFieldStatusQueueList(SettingCodes.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES, Bundle.SETTINGS,
+				&& (newStatus.getEcrfField().isNotify() || (statusEntry != null && statusEntry.getStatus().isReview()
+						&& Settings.getEcrfFieldStatusQueueList(SettingCodes.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES, Bundle.SETTINGS,
 						DefaultSettings.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES)
 				.contains(
-						queue)) {
+										queue)))) {
 
 			if (lastStatus != null) {
 				ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),

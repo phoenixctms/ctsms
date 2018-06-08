@@ -40,6 +40,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private final static int JS_VARIABLE_NAME_COLUMN_INDEX = 12;
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 13;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 14;
+	private final static int NOTIFY_COLUMN_INDEX = 15;
 	// @Autowired
 	// protected InputFieldService inputFieldService;
 	private int ecrfProbandGroupColumnIndex;
@@ -57,6 +58,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int jsVariableNameColumnIndex;
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
+	private int notifyColumnIndex;
 
 	// private AuthenticationVO auth;
 	// private Long inputFieldId;
@@ -191,6 +193,12 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, jsVariableNameColumnIndex);
 	}
 
+	private String getNotify(String[] values) {
+		return getColumnValue(values, notifyColumnIndex);
+	}
+
+
+
 	// public HashMap<String, Long> getProbandGroupIdMap() {
 	// return probandGroupIdMap;
 	// }
@@ -209,8 +217,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private String getPosition(String[] values) {
 		return getColumnValue(values, positionColumnIndex);
 	}
-
-
 
 	public Long getProbandGroupId(String probandGroupToken) throws Exception {
 		Long probandGroupId = null;
@@ -266,6 +272,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		jsVariableNameColumnIndex = JS_VARIABLE_NAME_COLUMN_INDEX;
 		jsValueExpressionColumnIndex = JS_VALUE_EXPRESSION_COLUMN_INDEX;
 		jsOutputExpressionColumnIndex = JS_OUTPUT_EXPRESSION_COLUMN_INDEX;
+		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
 
 		ecrfFieldMap.clear();
 		probandGroupIdMap.clear();
@@ -277,27 +284,28 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		// .append(getEcrfProbandGroup(values))
-		// .append(getEcrfPosition(values))
-		// .append(getSection(values))
-		// .append(getPosition(values))
-		.append(getEcrfProbandGroup(values))
-		.append(getEcrfPosition(values))
-		.append(getSection(values))
-		.append(getPosition(values))
-		.append(getExternalId(values))
-		.append(getInputFieldName(values))
-		.append(getComment(values))
-		.append(getSeries(values))
-		.append(getOptional(values))
-		.append(getDisabled(values))
-		.append(getAuditTrail(values))
-		.append(getReasonForChangeRequired(values))
-		.append(getJsVariableName(values))
-		.append(getJsValueExpression(values))
-		.append(getJsOutputExpression(values))
+				// .append(getEcrfProbandGroup(values))
+				// .append(getEcrfPosition(values))
+				// .append(getSection(values))
+				// .append(getPosition(values))
+				.append(getEcrfProbandGroup(values))
+				.append(getEcrfPosition(values))
+				.append(getSection(values))
+				.append(getPosition(values))
+				.append(getExternalId(values))
+				.append(getInputFieldName(values))
+				.append(getComment(values))
+				.append(getSeries(values))
+				.append(getOptional(values))
+				.append(getDisabled(values))
+				.append(getAuditTrail(values))
+				.append(getReasonForChangeRequired(values))
+				.append(getJsVariableName(values))
+				.append(getJsValueExpression(values))
+				.append(getJsOutputExpression(values))
+				.append(getNotify(values))
 
-		.toHashCode();
+				.toHashCode();
 	}
 
 	@Override
@@ -340,6 +348,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ecrfFieldIn.setJsVariableName(clearJs ? null : getJsVariableName(values));
 		ecrfFieldIn.setJsValueExpression(clearJs ? null : getJsValueExpression(values));
 		ecrfFieldIn.setJsOutputExpression(clearJs ? null : getJsOutputExpression(values));
+		ecrfFieldIn.setNotify(clearJs ? false : Boolean.parseBoolean(getNotify(values)));
 
 		Set<ECRFFieldInVO> ecrfFields;
 		HashMap<Long, Set<ECRFFieldInVO>> positionMap;

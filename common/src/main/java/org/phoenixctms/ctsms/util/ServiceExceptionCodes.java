@@ -469,6 +469,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED = "ecrf_field_js_variable_name_required";
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_INVALID = "ecrf_field_js_variable_name_invalid";
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE = "ecrf_field_js_variable_name_not_unique";
+	public final static String ECRF_FIELD_NO_EXPRESSION_FOR_NOTIFY = "ecrf_field_no_expression_for_notify";
 	public final static String ECRF_FIELD_POSITION_NOT_UNIQUE = "ecrf_field_position_not_unique";
 	public final static String ECRF_FIELD_SERIES_FLAG_INCONSISTENT = "ecrf_field_series_flag_inconsistent";
 	public final static String ECRF_FIELD_AUDIT_TRAIL_FALSE = "ecrf_field_audit_trail_false";

@@ -1083,6 +1083,7 @@ public class DemoDataProvider {
 		newEcrfField.setOptional(optional);
 		newEcrfField.setPosition(new Long(position));
 		newEcrfField.setReasonForChangeRequired(reasonForChangeRequired);
+		newEcrfField.setNotify(false);
 		newEcrfField.setSection(section);
 		newEcrfField.setSeries(series);
 		newEcrfField.setTrialId(ecrf.getTrial().getId());

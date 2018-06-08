@@ -48,5 +48,9 @@ alter table PASSWORD add column PROLONGABLE BOOLEAN;
 update PASSWORD set PROLONGABLE = 't';
 alter table PASSWORD alter PROLONGABLE set not null;
 
+alter table ECRF_FIELD add column NOTIFY BOOLEAN;
+update ECRF_FIELD set NOTIFY = 'f';
+alter table ECRF_FIELD alter NOTIFY set not null;
+
 
 

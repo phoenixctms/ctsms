@@ -172,6 +172,7 @@
 									value="#{!empty applicationScopeBean.compressJS(ecrfField.vo.jsOutputExpression)}" />
 							</ui:include>
 						</p:column>
+					
 						<p:column sortBy="#{ecrfField.vo.optional}">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_optional_column}" />
@@ -212,6 +213,17 @@
 									value="#{ecrfField.vo.reasonForChangeRequired}" />
 							</ui:include>
 						</p:column>
+						<p:column
+							sortBy="#{ecrfField.vo.notify}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_notify_column}" />
+							</f:facet>
+							<ui:include src="../shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{ecrfField.vo.notify}" />
+							</ui:include>
+						</p:column>							
 						<p:column
 							sortBy="#{ecrfField.vo.externalId}"
 							filterBy="#{ecrfField.vo.externalId}">
@@ -827,6 +839,23 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="jsVariableName" />
+								
+								<h:outputLabel
+									for="ecrfFieldNotify"
+									value="#{triallabels.ecrffield_notify_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="ecrfFieldNotify"
+										value="#{ecrfFieldBean.in.notify}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfFieldNotify">
+										<h:outputText
+											value="#{triallabels.ecrffield_notify_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfFieldNotify" />								
 								
 							</h:panelGrid>
 							<p:fieldset
