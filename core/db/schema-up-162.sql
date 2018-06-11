@@ -52,5 +52,6 @@ alter table ECRF_FIELD add column NOTIFY BOOLEAN;
 update ECRF_FIELD set NOTIFY = 'f';
 alter table ECRF_FIELD alter NOTIFY set not null;
 
+insert into STAFF_CATEGORY values (nextval('hibernate_sequence'), 'retired', 'RED', 't', 'f', 'ctsms-staffcategory-retired');
 
 

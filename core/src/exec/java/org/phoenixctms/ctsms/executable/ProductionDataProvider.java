@@ -48,6 +48,7 @@ public class ProductionDataProvider {
 	private static final String PERSON_STAFF_CATEGORY_NAME_L10N_KEY = "person";
 	private static final String GRADUAND_STAFF_CATEGORY_NAME_L10N_KEY = "graduand";
 	private static final String ORDINATION_STAFF_CATEGORY_NAME_L10N_KEY = "ordination";
+	private static final String RETIRED_STAFF_CATEGORY_NAME_L10N_KEY = "retired";
 	private static final ArrayList<String> ALL_STAFF_CATEGORY_NAME_L10N_KEYS = new ArrayList<String>();
 	static {
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(STUDENT_STAFF_CATEGORY_NAME_L10N_KEY);
@@ -70,6 +71,7 @@ public class ProductionDataProvider {
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(PERSONNEL_STAFF_CATEGORY_NAME_L10N_KEY);
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(PERSON_STAFF_CATEGORY_NAME_L10N_KEY);
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(GRADUAND_STAFF_CATEGORY_NAME_L10N_KEY);
+		// ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(RETIRED_STAFF_CATEGORY_NAME_L10N_KEY);
 	}
 	@Autowired
 	protected DepartmentDao departmentDao;
@@ -2496,6 +2498,7 @@ public class ProductionDataProvider {
 		createStaffCategory(PERSONNEL_STAFF_CATEGORY_NAME_L10N_KEY, Color.THISTLE, true, false, "ctsms-staffcategory-personnel");
 		createStaffCategory(PERSON_STAFF_CATEGORY_NAME_L10N_KEY, Color.LAVENDER, true, false, "ctsms-staffcategory-person");
 		createStaffCategory(GRADUAND_STAFF_CATEGORY_NAME_L10N_KEY, Color.BLUEVIOLET, true, false, "ctsms-staffcategory-graduand");
+		createStaffCategory(RETIRED_STAFF_CATEGORY_NAME_L10N_KEY, Color.RED, false, true, "ctsms-staffcategory-retired");
 		jobOutput.println("staff categories created");
 	}
 
