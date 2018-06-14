@@ -845,8 +845,15 @@ extends TrialServiceBase
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
 		ProbandListEntryOutVO listEntryVO = this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry);
-		if (!listEntryVO.getProband().getDecrypted()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		// edit checks based on subject PII are discouraged:
+		if (listEntryVO.getLastStatus() == null) {
+			if (!listEntryVO.getLastStatus().getDecrypted()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
+			}
+		} else {
+			if (!listEntryVO.getProband().getDecrypted()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			}
 		}
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		Collection visitScheduleItems = null;
@@ -1034,7 +1041,7 @@ extends TrialServiceBase
 
 	private Object[] checkAddEcrfFieldStatusEntryInput(ECRFFieldStatusEntryInVO ecrfFieldStatusEntryIn, ECRFStatusEntry ecrfStatusEntry, ECRFFieldStatusQueue queue, Timestamp now,
 			User user, boolean action)
-			throws Exception
+					throws Exception
 	{
 		// referential checks
 		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
@@ -7606,8 +7613,15 @@ extends TrialServiceBase
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			ECRFStatusEntryVO original = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
-			if (!original.getListEntry().getProband().getDecrypted()) {
-				continue; // prevent unexpected validationcheck ecrf issues, when subject PII fields
+			// prevent unexpected validationcheck ecrf issues, when subject PII fields
+			if (original.getListEntry().getLastStatus() == null) {
+				if (!original.getListEntry().getLastStatus().getDecrypted()) {
+					continue;
+				}
+			} else {
+				if (!original.getListEntry().getProband().getDecrypted()) {
+					continue; // prevent unexpected validationcheck ecrf issues, when subject PII fields
+				}
 			}
 			// CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 			boolean noMissingValues = false;
@@ -7711,10 +7725,10 @@ extends TrialServiceBase
 		if (newStatus != null
 				// && (newStatus.getStatus().isInitial() || newStatus.getStatus().isResolved())
 				&& (newStatus.getEcrfField().isNotify() || (statusEntry != null && statusEntry.getStatus().isReview()
-						&& Settings.getEcrfFieldStatusQueueList(SettingCodes.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES, Bundle.SETTINGS,
+				&& Settings.getEcrfFieldStatusQueueList(SettingCodes.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES, Bundle.SETTINGS,
 						DefaultSettings.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES)
 				.contains(
-										queue)))) {
+						queue)))) {
 
 			if (lastStatus != null) {
 				ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
