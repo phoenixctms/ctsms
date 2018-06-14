@@ -10,6 +10,7 @@ public interface ServiceExceptionCodes {
 	public final static String CANNOT_DECRYPT_PROBAND = "cannot_decrypt_proband";
 	// public final static String REMINDER_ENTITY_NOT_SUPPORTED = "reminder_entity_not_supported";
 	public final static String PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT = "proband_department_not_equal_to_user_department";
+	public final static String PROBAND_DEPARTMENT_CHANGED = "proband_department_changed";
 	public final static String STAFF_ADDRESS_ALREADY_ANOTHER_ADDRESS_MARKED_FOR_CV = "staff_address_already_another_address_marked_for_cv";
 	public final static String CANNOT_DELETE_WIRE_TRANSFER_PROBAND_ADDRESS = "cannot_delete_wire_transfer_proband_address";
 	public final static String PROBAND_ADDRESS_WIRE_TRANSFER_NOT_CHANGED = "proband_address_wire_transfer_not_changed";

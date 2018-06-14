@@ -250,6 +250,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 		if (source.isPerson()) {
 			ProbandContactParticulars personParticulars = source.getPersonParticulars();
 			if (personParticulars != null) {
+
 				try {
 					if (!CoreUtil.isPassDecryption()) {
 						throw new Exception();
@@ -265,11 +266,10 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 							personParticulars.getEncryptedPostpositionedTitle2()));
 					target.setPostpositionedTitle3((String) CryptoUtil.decryptValue(personParticulars.getPostpositionedTitle3Iv(),
 							personParticulars.getEncryptedPostpositionedTitle3()));
-					target.setDateOfBirth((Date) CryptoUtil.decryptValue(personParticulars.getDateOfBirthIv(), personParticulars.getEncryptedDateOfBirth()));
+					// target.setDateOfBirth((Date) CryptoUtil.decryptValue(personParticulars.getDateOfBirthIv(), personParticulars.getEncryptedDateOfBirth()));
 					target.setCitizenship((String) CryptoUtil.decryptValue(personParticulars.getCitizenshipIv(), personParticulars.getEncryptedCitizenship()));
-					target.setComment((String) CryptoUtil.decryptValue(personParticulars.getCommentIv(), personParticulars.getEncryptedComment()));
-					target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
-					target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
+
+
 					target.setDecrypted(true);
 				} catch (Exception e) {
 					target.setPrefixedTitle1(null);
@@ -280,14 +280,27 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 					target.setPostpositionedTitle1(null);
 					target.setPostpositionedTitle2(null);
 					target.setPostpositionedTitle3(null);
-					target.setDateOfBirth(null);
+					// target.setDateOfBirth(null);
 					target.setCitizenship(null);
+
+					// target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
+					// target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1))
+					// .getTime()) : null);
+					target.setDecrypted(false);
+				}
+				target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
+				try {
+					target.setDateOfBirth((Date) CryptoUtil.decryptValue(personParticulars.getDateOfBirthIv(), personParticulars.getEncryptedDateOfBirth()));
+					target.setComment((String) CryptoUtil.decryptValue(personParticulars.getCommentIv(), personParticulars.getEncryptedComment()));
+					target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
+				} catch (Exception e) {
+					target.setDateOfBirth(null);
 					target.setComment(null);
-					target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
 					target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1))
 							.getTime()) : null);
 					target.setDecrypted(false);
 				}
+
 				target.setGender(L10nUtil.createSexVO(Locales.USER, personParticulars.getGender()));
 				target.setAlias(personParticulars.getAlias());
 				target.setName(CommonUtil.getProbandName(target, false, true,

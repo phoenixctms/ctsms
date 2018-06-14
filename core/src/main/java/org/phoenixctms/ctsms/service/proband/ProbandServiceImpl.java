@@ -1223,8 +1223,14 @@ extends ProbandServiceBase
 		if (!force && defer) {
 			Proband originalProband = CheckIDUtil.checkProbandId(probandId, probandDao);
 			ProbandOutVO original = probandDao.toProbandOutVO(originalProband, maxInstances, maxParentsDepth, maxChildrenDepth);
-			if (!original.isDecrypted()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			if (original.getBlinded()) {
+				if (!user.getDepartment().getId().equals(originalProband.getDepartment().getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
+				}
+			} else {
+				if (!original.isDecrypted()) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+				}
 			}
 			probandDao.evict(originalProband);
 			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
@@ -1250,8 +1256,14 @@ extends ProbandServiceBase
 		} else {
 			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
 			result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
-			if (!result.isDecrypted()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			if (result.getBlinded()) {
+				if (!user.getDepartment().getId().equals(result.getDepartment().getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
+				}
+			} else {
+				if (!result.isDecrypted()) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+				}
 			}
 			ServiceUtil.removeProband(proband, result, true,
 					user,
@@ -2748,8 +2760,18 @@ extends ProbandServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		Proband originalProband = CheckIDUtil.checkProbandId(modifiedProband.getId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		ProbandOutVO original = probandDao.toProbandOutVO(originalProband, maxInstances, maxParentsDepth, maxChildrenDepth);
-		if (!original.isDecrypted()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		User user = CoreUtil.getUser();
+		if (modifiedProband.getBlinded()) {
+			if (!user.getDepartment().getId().equals(modifiedProband.getDepartmentId())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
+			}
+			if (!modifiedProband.getDepartmentId().equals(originalProband.getDepartment().getId())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_CHANGED);
+			}
+		} else {
+			if (!original.isDecrypted()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+			}
 		}
 		checkProbandInput(modifiedProband);
 		if (originalProband.isPerson() != modifiedProband.isPerson()) {
@@ -2760,7 +2782,7 @@ extends ProbandServiceBase
 		Proband proband = probandDao.probandInVOToEntity(modifiedProband);
 		checkProbandLoop(proband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		User user = CoreUtil.getUser();
+
 		CoreUtil.modifyVersion(originalProband, proband, now, user);
 		if (!originalPrivacyConsentControl && proband.getCategory().isPrivacyConsentControl()) {
 			resetAutoDeleteDeadline(proband, now);

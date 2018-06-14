@@ -834,7 +834,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
-			if (!out.isDecrypted()) {
+			if (!out.isBlinded() && !out.isDecrypted()) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_ERROR, MessageCodes.ENCRYPTED_PROBAND, Long.toString(out.getId()));
 				out = null;
 				return ERROR_OUTCOME;
