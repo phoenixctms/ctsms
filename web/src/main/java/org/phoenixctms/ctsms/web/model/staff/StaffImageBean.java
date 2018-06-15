@@ -161,8 +161,10 @@ public class StaffImageBean extends PhotoBeanBase {
 	@Override
 	protected void initSpecificSets() {
 		staff = WebUtil.getStaff(in.getId(), null, null);
-		if (!WebUtil.isStaffPerson(staff)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+		if (staff != null) {
+			if (!WebUtil.isStaffPerson(staff)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+			}
 		}
 	}
 

@@ -273,10 +273,12 @@ public class StaffStatusBean extends ManagedBeanBase {
 		}
 		staff = WebUtil.getStaff(in.getStaffId(), null, null);
 		loadSelectedType();
-		if (!WebUtil.isStaffPerson(staff)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
-		} else if (!WebUtil.isStaffEmployee(staff)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_EMPLOYEE);
+		if (staff != null) {
+			if (!WebUtil.isStaffPerson(staff)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+			} else if (!WebUtil.isStaffEmployee(staff)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_EMPLOYEE);
+			}
 		}
 	}
 

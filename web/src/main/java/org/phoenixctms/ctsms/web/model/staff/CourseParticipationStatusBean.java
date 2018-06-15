@@ -211,10 +211,12 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		}
 		staff = WebUtil.getStaff(in.getStaffId(), null, null);
 		loadSelectedSection();
-		if (!WebUtil.isStaffPerson(staff)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
-		} else if (out == null) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.SELECT_COURSE_PARTICIPATION_STATUS_ENTRY);
+		if (staff != null) {
+			if (!WebUtil.isStaffPerson(staff)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+			} else if (out == null) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.SELECT_COURSE_PARTICIPATION_STATUS_ENTRY);
+			}
 		}
 	}
 

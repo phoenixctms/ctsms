@@ -130,10 +130,12 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		staff = WebUtil.getStaff(in.getStaffId(), null, null);
 		filterCalendars = WebUtil.getDutyRosterTurnFilterCalendars(null, null, staffId);
 		filterTitles = WebUtil.getDutyRosterTurnFilterTitles(null, null, staffId);
-		if (!WebUtil.isStaffPerson(staff)) {
-			Messages.addLocalizedMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
-		} else if (!WebUtil.isStaffAllocatable(staff)) {
-			Messages.addLocalizedMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_ALLOCATABLE);
+		if (staff != null) {
+			if (!WebUtil.isStaffPerson(staff)) {
+				Messages.addLocalizedMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+			} else if (!WebUtil.isStaffAllocatable(staff)) {
+				Messages.addLocalizedMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_ALLOCATABLE);
+			}
 		}
 	}
 

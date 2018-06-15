@@ -285,10 +285,12 @@ public class BankAccountBean extends ManagedBeanBase {
 		bankAccountModel.setProbandId(in.getProbandId());
 		bankAccountModel.updateRowCount();
 		proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);
-		if (!WebUtil.isProbandPerson(proband)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.PROBAND_NOT_PERSON);
-		} else if (WebUtil.isProbandLocked(proband)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
+		if (proband != null) {
+			if (!WebUtil.isProbandPerson(proband)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.PROBAND_NOT_PERSON);
+			} else if (WebUtil.isProbandLocked(proband)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
+			}
 		}
 	}
 

@@ -256,8 +256,10 @@ public class CvPositionBean extends ManagedBeanBase {
 		cvSections = WebUtil.getCvSections(this.in.getSectionId());
 		staff = WebUtil.getStaff(in.getStaffId(), null, null);
 		loadSelectedSection();
-		if (!WebUtil.isStaffPerson(staff)) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+		if (staff != null) {
+			if (!WebUtil.isStaffPerson(staff)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
+			}
 		}
 	}
 
