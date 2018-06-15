@@ -1082,7 +1082,7 @@ public final class ServiceUtil {
 	public static void checkUserInput(UserInVO userIn, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
 		Department department = CheckIDUtil.checkDepartmentId(userIn.getDepartmentId(), departmentDao);
 		if (!CryptoUtil.checkDepartmentPassword(department, plainDepartmentPassword)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORT_WRONG);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
 		}
 		if (userIn.getIdentityId() != null) {
 			CheckIDUtil.checkStaffId(userIn.getIdentityId(), staffDao);

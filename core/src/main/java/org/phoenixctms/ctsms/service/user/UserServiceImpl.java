@@ -174,7 +174,7 @@ extends UserServiceBase
 			PasswordInVO newPassword) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
 		if (!CryptoUtil.checkDepartmentPassword(user.getDepartment(), getPlainDepartmentPassword())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORT_WRONG);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
 		}
 		PasswordDao passwordDao = this.getPasswordDao();
 		Password lastPassword = passwordDao.findLastPassword(user.getId());

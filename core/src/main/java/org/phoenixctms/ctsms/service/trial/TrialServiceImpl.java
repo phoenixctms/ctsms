@@ -845,16 +845,10 @@ extends TrialServiceBase
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
 		ProbandListEntryOutVO listEntryVO = this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry);
-		// edit checks based on subject PII are discouraged:
-		if (listEntryVO.getLastStatus() == null) {
-			if (!listEntryVO.getLastStatus().getDecrypted()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
-			}
-		} else {
-			if (!listEntryVO.getProband().getDecrypted()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
-			}
-		}
+		// edit checks based on subject PII are discouraged, if present we raise a mismatch etc. as on screen:
+		// if (!listEntryVO.getProband().getDecrypted()) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		// }
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		Collection visitScheduleItems = null;
 		Collection probandGroups = null;
@@ -3508,9 +3502,9 @@ extends TrialServiceBase
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_NOT_LAST_ENTRY);
 		}
 		ProbandListStatusEntryOutVO result = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
-		if (!result.isDecrypted()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
-		}
+		// if (!result.isDecrypted()) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
+		// }
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		listEntry.setLastStatus(null);
@@ -7613,15 +7607,9 @@ extends TrialServiceBase
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			ECRFStatusEntryVO original = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
-			// prevent unexpected validationcheck ecrf issues, when subject PII fields
-			if (original.getListEntry().getLastStatus() == null) {
-				if (!original.getListEntry().getLastStatus().getDecrypted()) {
-					continue;
-				}
-			} else {
-				if (!original.getListEntry().getProband().getDecrypted()) {
-					continue; // prevent unexpected validationcheck ecrf issues, when subject PII fields
-				}
+			// edit checks based on subject PII are discouraged:
+			if (!original.getListEntry().getProband().getDecrypted()) {
+				continue; // support cron jobs with different department users, so each will not raise/close even if there are edit checks for PII
 			}
 			// CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 			boolean noMissingValues = false;

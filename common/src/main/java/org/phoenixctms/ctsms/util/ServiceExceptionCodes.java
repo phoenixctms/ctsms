@@ -151,7 +151,7 @@ public interface ServiceExceptionCodes {
 	public final static String ENTITY_VERSION_NOT_ZERO = "entity_version_not_zero";
 	public final static String INVALID_LOCALE = "invalid_locale";
 	public final static String INVALID_TIME_ZONE = "invalid_time_zone";
-	public final static String DEPARTMENT_PASSWORT_WRONG = "department_password_wrong";
+	public final static String DEPARTMENT_PASSWORD_WRONG = "department_password_wrong";
 	public final static String INPUT_FIELD_VALUE_REQUIRED = "input_field_value_required";
 	public final static String INPUT_FIELD_INVALID_REGEXP_PATTERN = "input_field_invalid_regexp_pattern";
 	public static final String INPUT_FIELD_TEXT_VALUE_NOT_FOUND = "input_field_text_value_not_found";
@@ -439,7 +439,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_NEW_PROBAND_LIST_STATUS_TYPE = "invalid_new_proband_list_status_type";
 	public final static String PROBAND_LIST_STATUS_REAL_DATE_LESS_THAN_LAST_DATE = "proband_list_status_real_date_less_than_last_date";
 	public final static String PROBAND_LIST_STATUS_ENTRY_REASON_REQUIRED = "proband_list_status_entry_reason_required";
-	public final static String CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY = "cannot_decrypt_proband_list_status_entry";
+	public final static String CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY1 = "cannot_decrypt_proband_list_status_entry";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED = "proband_list_entry_tag_js_variable_name_required";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_INVALID = "proband_list_entry_tag_js_variable_name_invalid";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_NOT_UNIQUE = "proband_list_entry_tag_js_variable_name_not_unique";
