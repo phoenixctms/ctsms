@@ -704,7 +704,9 @@ public interface MessageCodes {
 	public static final String INQUIRY_VALUES_PAGE_BUTTON_LABEL = "inquiry_values_page_button_label";
 	public static final String INQUIRY_VALUES_LOAD_LABEL = "inquiry_values_load_label";
 	public static final String ECRF_FIELD_VALUES_FIRST_PAGE_BUTTON_LABEL = "ecrf_field_values_first_page_button_label";
+	public static final String ECRF_FIELD_VALUES_FIRST_PAGE_INDEX_BUTTON_LABEL = "ecrf_field_values_first_page_index_button_label";
 	public static final String ECRF_FIELD_VALUES_PAGE_BUTTON_LABEL = "ecrf_field_values_page_button_label";
+	public static final String ECRF_FIELD_VALUES_PAGE_INDEX_BUTTON_LABEL = "ecrf_field_values_page_index_button_label";
 	public static final String ECRF_FIELD_VALUES_LOAD_LABEL = "ecrf_field_values_load_label";
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES_FIRST_PAGE_BUTTON_LABEL = "proband_list_entry_tag_values_first_page_button_label";
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES_PAGE_BUTTON_LABEL = "proband_list_entry_tag_values_page_button_label";

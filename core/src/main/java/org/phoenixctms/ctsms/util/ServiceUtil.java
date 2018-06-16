@@ -3985,21 +3985,25 @@ public final class ServiceUtil {
 			ECRFSectionProgressVO sectionProgress;
 			if (sectionProgressMap.containsKey(section)) {
 				sectionProgress = sectionProgressMap.get(section);
-				if (!ecrfField.isSeries()) {
-					sectionProgress.setFieldCount(sectionProgress.getFieldCount() + 1l);
-					sectionProgress.setMandatoryFieldCount(sectionProgress.getMandatoryFieldCount() + (ecrfField.isOptional() ? 0l : 1l));
-				}
+				// if (!ecrfField.isSeries()) {
+				sectionProgress.setFieldCount(sectionProgress.getFieldCount() + 1l);
+				sectionProgress.setMandatoryFieldCount(sectionProgress.getMandatoryFieldCount() + (ecrfField.isOptional() ? 0l : 1l));
+				// }
 			} else {
 				sectionProgress = new ECRFSectionProgressVO();
 				sectionProgress.setSection(section);
 				populateEcrfFieldStatusEntryCount(sectionProgress.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), section, ecrfFieldStatusEntryDao);
 				result.setEcrfFieldStatusQueueCounts(addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),
 						sectionProgress.getEcrfFieldStatusQueueCounts()));
+				sectionProgress.setFieldCount(1l);
+				sectionProgress.setMandatoryFieldCount(ecrfField.isOptional() ? 0l : 1l);
+				sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
+				sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
 				if (!ecrfField.isSeries()) {
-					sectionProgress.setFieldCount(1l);
-					sectionProgress.setMandatoryFieldCount(ecrfField.isOptional() ? 0l : 1l);
-					sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
-					sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
+					// sectionProgress.setFieldCount(1l);
+					// sectionProgress.setMandatoryFieldCount(ecrfField.isOptional() ? 0l : 1l);
+					//sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
+					//sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
 					if (increment) {
 						result.setSavedValueCount(result.getSavedValueCount() + sectionProgress.getSavedValueCount());
 						result.setMandatorySavedValueCount(result.getMandatorySavedValueCount() + sectionProgress.getMandatorySavedValueCount());
@@ -4007,10 +4011,10 @@ public final class ServiceUtil {
 					sectionProgress.setIndex(null);
 					sectionProgress.setSeries(false);
 				} else {
-					sectionProgress.setFieldCount(0l);
-					sectionProgress.setMandatoryFieldCount(0l);
-					sectionProgress.setSavedValueCount(0l);
-					sectionProgress.setMandatorySavedValueCount(0l);
+					// sectionProgress.setFieldCount(0l);
+					// sectionProgress.setMandatoryFieldCount(0l);
+					//					sectionProgress.setSavedValueCount(0l);
+					//					sectionProgress.setMandatorySavedValueCount(0l);
 					sectionProgress.setIndex(ecrfFieldValueDao.getMaxIndex(listEntryVO.getId(), ecrfVO.getId(), section));
 					sectionProgress.setSeries(true);
 				}

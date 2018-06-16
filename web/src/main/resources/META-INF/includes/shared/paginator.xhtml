@@ -84,7 +84,7 @@
 				disabled="#{valueBean.paginator.firstPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
 				update="#{update}" />
 			<p:selectOneButton
-				rendered="#{valueBean.paginator.numOfPages le (pagesLimit gt 0 ? pagesLimit : 15)}"
+				rendered="#{valueBean.paginator.numOfPages le (pagesLimit gt 0 ? pagesLimit : 10)}"
 				required="false"
 				disabled="#{!(valueBean.created or valueBean.paginator.pagesEnabled)}"
 				value="#{valueBean.paginator.selectedPage}">
@@ -100,7 +100,7 @@
 			</p:selectOneButton>
 			<p:selectOneMenu
 				required="false"
-				rendered="#{valueBean.paginator.numOfPages gt (pagesLimit gt 0 ? pagesLimit : 15)}"
+				rendered="#{valueBean.paginator.numOfPages gt (pagesLimit gt 0 ? pagesLimit : 10)}"
 				disabled="#{!(valueBean.created or valueBean.paginator.pagesEnabled)}"
 				value="#{valueBean.paginator.selectedPage}"
 				styleClass="ctsms-control-pageselect">

@@ -224,6 +224,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 			@Override
 			protected String getFirstPageButtonLabel() {
+				ECRFSectionProgressVO sectionProgress = ((EcrfFieldValueBean) bean).getFilterSectionProgress();
+				if (sectionProgress != null && sectionProgress.getSeries()) {
+					return MessageCodes.ECRF_FIELD_VALUES_FIRST_PAGE_INDEX_BUTTON_LABEL;
+				}
 				return MessageCodes.ECRF_FIELD_VALUES_FIRST_PAGE_BUTTON_LABEL;
 			}
 
@@ -241,7 +245,38 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 			@Override
 			protected String getPageButtonLabel() {
+				ECRFSectionProgressVO sectionProgress = ((EcrfFieldValueBean) bean).getFilterSectionProgress();
+				if (sectionProgress != null && sectionProgress.getSeries()) {
+					return MessageCodes.ECRF_FIELD_VALUES_PAGE_INDEX_BUTTON_LABEL;
+				}
 				return MessageCodes.ECRF_FIELD_VALUES_PAGE_BUTTON_LABEL;
+			}
+
+			@Override
+			protected String getPageButtonLabelSeriesIndex(int i, int pageSize) {
+				ECRFSectionProgressVO sectionProgress = ((EcrfFieldValueBean) bean).getFilterSectionProgress();
+				if (sectionProgress != null && sectionProgress.getSeries() && sectionProgress.getFieldCount() > 0l) {
+					long pageStart = (long) (i * pageSize + 1);
+					long pageEnd = (long) ((i + 1) * pageSize);
+					StringBuilder sb = new StringBuilder();
+					Long lastIndex = null;
+					long maxIndex = (sectionProgress.getIndex() != null ? sectionProgress.getIndex() : 0l);
+					for (long j = pageStart; j <= pageEnd; j = j + 1l) {
+						long index = (long) Math.floor((double) (j - 1l) / (double) sectionProgress.getFieldCount());
+						if (index > maxIndex) {
+							break;
+						}
+						if (lastIndex == null || !lastIndex.equals(index)) {
+							if (sb.length() > 0) {
+								sb.append(", ");
+							}
+							sb.append(Long.toString(index));
+							lastIndex = index;
+						}
+					}
+					return sb.toString();
+				}
+				return null;
 			}
 
 			@Override
@@ -1121,6 +1156,13 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			} else {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
 						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection,filterIndex, true, psf));
+				if (filterSectionProgress != null && filterSectionProgress.getSeries()) {
+					try {
+						filterSectionProgress.copy(WebUtil.getServiceLocator().getTrialService()
+								.getEcrfProgress(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), filterSection).getSections().iterator().next());
+					} catch (Exception e) {
+					}
+				}
 			}
 			paginator.initPages(psf, false);
 			ecrfFieldValuesIn = clearFromEcrfFieldValuesIn(section);

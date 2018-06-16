@@ -224,4 +224,10 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 				DefaultSettings.ECRF_FIELD_STATUS_QUEUE));
 		ecrfFieldStatusEntryModel.updateRowCount();
 	}
+
+	public void refresh() {
+		clearCaches();
+		ecrfFieldStatusEntryModel.updateRowCount();
+		//LazyDataModelBase.clearFilters("useractivity_list");
+	}
 }

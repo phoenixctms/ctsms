@@ -46,7 +46,21 @@
 						event="rowSelect"
 						update=":tabView:ecrffieldstatus_form:ecrffieldstatus_input" />
 					<f:facet name="header">
-						<h:outputText value="#{ecrfFieldStatusBean.ecrfFieldStatusEntryModel.rowCount} #{labels.ecrffieldstatus_list_header}" />
+						<h:panelGrid
+							columns="3"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{ecrfFieldStatusBean.ecrfFieldStatusEntryModel.rowCount} #{labels.ecrffieldstatus_list_header}" />
+							<ui:include src="../shared/ajaxStatus.xhtml" />
+							<p:commandButton
+								process="@this"
+								actionListener="#{ecrfFieldStatusBean.refresh}"
+								title="#{labels.update_datatable_button_title}"
+								icon="ui-icon-refresh"
+								styleClass="ctsms-list-header-button"
+								ajax="true"
+								update=":tabView:ecrffieldstatus_form:ecrffieldstatus_list" />
+						</h:panelGrid>						
 					</f:facet>
 					<p:columnGroup type="header">
 						<p:row>

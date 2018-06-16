@@ -2266,6 +2266,7 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static ECRFProgressSummaryVO getEcrfProgressSummary(Long listEntryId, boolean ecrfDetail, boolean sectionDetail) {
 		if (listEntryId != null) {
 			try {

@@ -95,6 +95,10 @@ public abstract class Paginator {
 
 	protected abstract String getPageButtonLabel();
 
+	protected String getPageButtonLabelSeriesIndex(int i, int pageSize) {
+		return "";
+	}
+
 	public ArrayList<SelectItem> getPages() {
 		return pages;
 	}
@@ -145,7 +149,7 @@ public abstract class Paginator {
 						pageEnd = count;
 					}
 					pages.add(new SelectItem(Integer.toString(i), Messages.getMessage(i == 0 ? getFirstPageButtonLabel() : getPageButtonLabel(),
-							Integer.toString(i * pageSize + 1), Long.toString(pageEnd))));
+							Integer.toString(i * pageSize + 1), Long.toString(pageEnd), getPageButtonLabelSeriesIndex(i, pageSize))));
 				}
 			} else {
 				pageCount = 0;
