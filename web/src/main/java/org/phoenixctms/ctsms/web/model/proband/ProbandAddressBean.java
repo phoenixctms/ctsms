@@ -81,13 +81,13 @@ public class ProbandAddressBean extends ManagedBeanBase {
 	}
 
 	private ProbandAddressInVO in;
+
 	private ProbandAddressOutVO out;
 	private Long probandId;
 	private ProbandOutVO proband;
 	private ArrayList<SelectItem> availableTypes;
 	private ProbandAddressLazyModel addressModel;
 	private AddressTypeVO addressType;
-
 	public ProbandAddressBean() {
 		super();
 		addressModel = new ProbandAddressLazyModel();
@@ -310,7 +310,6 @@ public class ProbandAddressBean extends ManagedBeanBase {
 		}
 	}
 
-
 	private void initSets() {
 		addressModel.setProbandId(in.getProbandId());
 		addressModel.updateRowCount();
@@ -321,6 +320,7 @@ public class ProbandAddressBean extends ManagedBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
 	}
+
 
 	@Override
 	public boolean isCreateable() {
@@ -348,6 +348,10 @@ public class ProbandAddressBean extends ManagedBeanBase {
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isProbandLocked(proband);
+	}
+
+	public boolean isStrict() {
+		return Settings.getBoolean(SettingCodes.PROBAND_ADDRESS_STRICT, Bundle.SETTINGS, DefaultSettings.PROBAND_ADDRESS_STRICT);
 	}
 
 	@Override

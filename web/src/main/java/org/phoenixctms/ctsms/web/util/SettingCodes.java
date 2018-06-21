@@ -475,4 +475,6 @@ public interface SettingCodes {
 	public static final String PUBLIC_FILE_SIGNUP_URL = "public_file_signup_url";
 	public static final String RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = "recipient_overview_show_pending_preset";
 	public static final String RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = "recipient_overview_show_scheduled_preset";
+	public static final String PROBAND_ADDRESS_STRICT = "proband_address_strict";
+	public static final String STAFF_ADDRESS_STRICT = "staff_address_strict";
 }

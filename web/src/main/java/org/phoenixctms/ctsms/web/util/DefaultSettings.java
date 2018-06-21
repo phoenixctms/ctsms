@@ -605,7 +605,8 @@ public final class DefaultSettings {
 	public static final boolean RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = true;
 	public static final boolean MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET = false;
 	public static final boolean MASS_MAIL_TRIAL_TEAM_TO_PRESET = false;
-
+	public static final boolean PROBAND_ADDRESS_STRICT = false;
+	public static final boolean STAFF_ADDRESS_STRICT = false;
 
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
 

@@ -295,6 +295,10 @@ public class StaffAddressBean extends ManagedBeanBase {
 		return out != null;
 	}
 
+	public boolean isStrict() {
+		return Settings.getBoolean(SettingCodes.STAFF_ADDRESS_STRICT, Bundle.SETTINGS, DefaultSettings.STAFF_ADDRESS_STRICT);
+	}
+
 	@Override
 	public String loadAction() {
 		return loadAction(in.getId());
