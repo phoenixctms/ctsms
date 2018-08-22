@@ -54,4 +54,5 @@ alter table ECRF_FIELD alter NOTIFY set not null;
 
 insert into STAFF_CATEGORY values (nextval('hibernate_sequence'), 'retired', 'RED', 't', 'f', 'ctsms-staffcategory-retired');
 
-
+update proband_list_status_entry set real_timestamp = date_trunc('second', real_timestamp);
+update journal_entry set real_timestamp = date_trunc('second', real_timestamp);

@@ -431,6 +431,17 @@ public final class DateCalc {
 		return null;
 	}
 
+	public static Date getMillisCleared(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			//cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), cal.get(GregorianCalendar.HOUR), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
+			cal.set(GregorianCalendar.MILLISECOND, 0);
+			return cal.getTime();
+		}
+		return null;
+	}
+
 	public static Integer getMinute(Date date) {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();

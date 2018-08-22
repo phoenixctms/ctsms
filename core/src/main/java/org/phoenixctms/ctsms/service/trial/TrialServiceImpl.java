@@ -526,7 +526,7 @@ extends TrialServiceBase
 				statusEntry.setReasonIv(cipherText.getIv());
 				statusEntry.setEncryptedReason(cipherText.getCipherText());
 				statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
-				statusEntry.setRealTimestamp(now);
+				statusEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 				statusEntry.setStatus(statusType);
 				CoreUtil.modifyVersion(statusEntry, now, user);
 				ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();

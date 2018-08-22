@@ -341,7 +341,7 @@ public final class ServiceUtil {
 				if (!statusType.isReasonRequired() || !CommonUtil.isEmptyString(reason)) {
 					ProbandListStatusEntryInVO newProbandListStatusEntry = new ProbandListStatusEntryInVO();
 					newProbandListStatusEntry.setListEntryId(listEntry.getId());
-					newProbandListStatusEntry.setRealTimestamp(realTimestamp);
+					newProbandListStatusEntry.setRealTimestamp(DateCalc.getMillisCleared(realTimestamp));
 					newProbandListStatusEntry.setReason(reason);
 					newProbandListStatusEntry.setStatusId(statusType.getId());
 					return addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, false, false, probandDao, probandListEntryDao, probandListStatusEntryDao,

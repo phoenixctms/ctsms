@@ -177,7 +177,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setCourse(course);
@@ -194,7 +194,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setCriteria(criteria);
@@ -211,7 +211,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setInputField(inputField);
@@ -228,7 +228,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setInventory(inventory);
@@ -245,7 +245,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setMassMail(massMail);
@@ -262,7 +262,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setProband(proband);
@@ -279,7 +279,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setStaff(staff);
@@ -296,7 +296,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setTrial(trial);
@@ -313,7 +313,7 @@ extends JournalEntryDaoBase
 			return null;
 		}
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
-		journalEntry.setRealTimestamp(now);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
 		journalEntry.setSystemMessageCode(systemMessageCode);
 		journalEntry.setUser(user);
