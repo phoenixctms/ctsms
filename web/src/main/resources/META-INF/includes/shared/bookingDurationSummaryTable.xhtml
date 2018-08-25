@@ -228,6 +228,12 @@
 				</f:facet>
 				<h:outputText value="#{empty bookingDurationSummaryDetail.vo.load ? '' : applicationScopeBean.getPercentageString(bookingDurationSummaryDetail.vo.load)}" />
 			</p:column>
+			<p:column sortBy="#{bookingDurationSummaryDetail.vo.inventoryStatusEntryDuration}" rendered="#{showInventory}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.booking_duration_summary_table_inventory_status_entry_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getStatusEntryDurationString(bookingDurationSummaryDetail.vo.inventoryStatusEntryDuration)}" />
+			</p:column>			
 			<p:columnGroup type="footer">
 				<p:row rendered="#{!showInventory}">
 					<p:column colspan="#{(showInventory ? 2 : 0) + (showProband ? 1 : 0) + (showCourse ? 1 : 0) + (showTrial ? 1 : 0)}">
@@ -282,6 +288,11 @@
 							<h:outputText value="#{empty bookingDurationSummaryModel.summary.load ? '' : applicationScopeBean.getPercentageString(bookingDurationSummaryModel.summary.load)}" />
 						</f:facet>
 					</p:column>
+					<p:column rendered="#{showInventory}">
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getStatusEntryDurationString(bookingDurationSummaryModel.summary.inventoryStatusEntryDuration)}" />
+						</f:facet>
+					</p:column>							
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>

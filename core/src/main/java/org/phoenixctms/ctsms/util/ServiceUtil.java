@@ -3492,8 +3492,9 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static void populateBookingDurationSummary(boolean inventoryBreakDown, InventoryBookingDurationSummaryVO summary, InventoryBookingDao inventoryBookingDao)
-			throws Exception {
+	public static void populateBookingDurationSummary(boolean inventoryBreakDown, InventoryBookingDurationSummaryVO summary, InventoryBookingDao inventoryBookingDao,
+			InventoryStatusEntryDao inventoryStatusEntryDao)
+					throws Exception {
 		ArrayList<InventoryBookingDurationSummaryDetailVO> assigned = new ArrayList<InventoryBookingDurationSummaryDetailVO>();
 		InventoryBookingDurationSummaryDetailVO notAssigned = new InventoryBookingDurationSummaryDetailVO();
 		HashMap<Long, InventoryBookingDurationSummaryDetailVO> durationSummaryDetailsMap = new HashMap<Long, InventoryBookingDurationSummaryDetailVO>();
@@ -3534,11 +3535,15 @@ public final class ServiceUtil {
 			showDurationAndLoad = CommonUtil.isEmptyString(summary.getCalendar()); // true;
 		}
 		boolean fullBookings = Settings.getBoolean(SettingCodes.BOOKING_SUMMARY_FULL_BOOKINGS, Bundle.SETTINGS, DefaultSettings.BOOKING_SUMMARY_FULL_BOOKINGS);
+		boolean fullUnavailabilities = Settings.getBoolean(SettingCodes.BOOKING_SUMMARY_FULL_UNAVAILABILITIES, Bundle.SETTINGS,
+				DefaultSettings.BOOKING_SUMMARY_FULL_UNAVAILABILITIES);
 		boolean mergeOverlapping = Settings.getBoolean(SettingCodes.BOOKING_SUMMARY_MERGE_OVERLAPPING, Bundle.SETTINGS, DefaultSettings.BOOKING_SUMMARY_MERGE_OVERLAPPING);
 		summary.setBookingCount(0);
 		if (!mergeOverlapping) {
 			summary.setTotalDuration(0l);
 		}
+		summary.setInventoryStatusEntryCount(0);
+		summary.setInventoryStatusEntryDuration(0);
 		// Long key;
 		InventoryBookingOutVO booking;
 		HashMap<Long, ArrayList<DateInterval>> inventoryIntervalsMap = new HashMap<Long, ArrayList<DateInterval>>();
@@ -3547,19 +3552,20 @@ public final class ServiceUtil {
 			// InventoryBookingDurationSummaryDetailVO durationSummaryDetail;
 			if (inventoryBreakDown) {
 				inventory = booking.getInventory();
-				updateBookingSummaryDetail(inventory.getId(), durationSummaryDetailsMap, assigned, inventory, null, null, null, booking, summary, fullBookings, mergeOverlapping);
+				updateBookingSummaryDetail(inventory.getId(), durationSummaryDetailsMap, assigned, inventory, null, null, null, booking, summary, fullBookings,
+						fullUnavailabilities, mergeOverlapping, inventoryStatusEntryDao);
 			} else {
 				course = booking.getCourse();
 				boolean isAssigned = updateBookingSummaryDetail(course == null ? null : course.getId(), courseDurationSummaryDetailsMap, assigned, null, course, null, null,
-						booking, summary, fullBookings, mergeOverlapping);
+						booking, summary, fullBookings, fullUnavailabilities, mergeOverlapping, inventoryStatusEntryDao);
 				proband = booking.getProband();
 				isAssigned = isAssigned
 						| updateBookingSummaryDetail(proband == null ? null : proband.getId(), probandDurationSummaryDetailsMap, assigned, null, null, proband, null, booking,
-								summary, fullBookings, mergeOverlapping);
+								summary, fullBookings, fullUnavailabilities, mergeOverlapping, inventoryStatusEntryDao);
 				trial = booking.getTrial();
 				isAssigned = isAssigned
 						| updateBookingSummaryDetail(trial == null ? null : trial.getId(), trialDurationSummaryDetailsMap, assigned, null, null, null, trial, booking, summary,
-								fullBookings, mergeOverlapping);
+								fullBookings, fullUnavailabilities, mergeOverlapping, inventoryStatusEntryDao);
 				if (!isAssigned) {
 					notAssigned.setBookingCount(notAssigned.getBookingCount() + 1);
 					if (!mergeOverlapping) {
@@ -4398,7 +4404,8 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static void populateShiftDurationSummary(boolean trialBreakDown, ShiftDurationSummaryVO summary, DutyRosterTurnDao dutyRosterTurnDao, HolidayDao holidayDao) {
+	public static void populateShiftDurationSummary(boolean trialBreakDown, ShiftDurationSummaryVO summary, DutyRosterTurnDao dutyRosterTurnDao, HolidayDao holidayDao,
+			StaffStatusEntryDao staffStatusEntryDao) {
 		ArrayList<ShiftDurationSummaryDetailVO> assigned = new ArrayList<ShiftDurationSummaryDetailVO>();
 		ShiftDurationSummaryDetailVO notAssigned = new ShiftDurationSummaryDetailVO();
 		HashMap<Long, ShiftDurationSummaryDetailVO> durationSummaryDetailsMap = new HashMap<Long, ShiftDurationSummaryDetailVO>();
@@ -4424,11 +4431,14 @@ public final class ServiceUtil {
 		summary.setTotalNightDuration(0);
 		summary.setTotalDuration(0);
 		summary.setTotalWeightedDuration(0);
+		summary.setStaffStatusEntryCount(0);
+		summary.setStaffStatusEntryDuration(0);
 		int extraShiftIncrement;
 		int nightShiftIncrement;
 		Long key;
 		DutyRosterTurnOutVO dutyRosterTurn;
 		boolean fullShifts = Settings.getBoolean(SettingCodes.SHIFT_SUMMARY_FULL_SHIFTS, Bundle.SETTINGS, DefaultSettings.SHIFT_SUMMARY_FULL_SHIFTS);
+		boolean fullAbsences = Settings.getBoolean(SettingCodes.SHIFT_SUMMARY_FULL_ABSENCES, Bundle.SETTINGS, DefaultSettings.SHIFT_SUMMARY_FULL_ABSENCES);
 		while (it.hasNext()) {
 			dutyRosterTurn = dutyRosterTurnDao.toDutyRosterTurnOutVO(it.next());
 			if (trialBreakDown) {
@@ -4462,6 +4472,33 @@ public final class ServiceUtil {
 					durationSummaryDetail.setTotalNightDuration(0);
 					durationSummaryDetail.setTotalDuration(0);
 					durationSummaryDetail.setTotalWeightedDuration(0);
+					durationSummaryDetail.setStaffStatusEntryCount(0);
+					durationSummaryDetail.setStaffStatusEntryDuration(0);
+					if (!trialBreakDown && staff != null) {
+						Iterator<StaffStatusEntry> statusEntryIt = staffStatusEntryDao.findByStaffInterval(staff.getId(), CommonUtil.dateToTimestamp(summary.getStart()),
+								CommonUtil.dateToTimestamp(summary.getStop()), false, null, false).iterator();
+						while (statusEntryIt.hasNext()) {
+							StaffStatusEntry statusEntry = statusEntryIt.next();
+							Date start = statusEntry.getStart();
+							Date stop = statusEntry.getStop();
+							if (!fullAbsences) {
+								if (summary.getStart() != null && statusEntry.getStart().before(summary.getStart())) {
+									start = summary.getStart();
+								}
+								if (summary.getStop() != null && statusEntry.getStop() != null && statusEntry.getStop().after(summary.getStop())) {
+									stop = summary.getStop();
+								}
+							}
+							DateInterval statusEntryDuration = new DateInterval(start, stop);
+							if (!statusEntryDuration.isInfinite()) {
+								durationSummaryDetail.setStaffStatusEntryCount(durationSummaryDetail.getStaffStatusEntryCount() + 1);
+								durationSummaryDetail
+								.setStaffStatusEntryDuration(durationSummaryDetail.getStaffStatusEntryDuration() + statusEntryDuration.getDuration());
+							}
+						}
+						summary.setStaffStatusEntryCount(summary.getStaffStatusEntryCount() + durationSummaryDetail.getStaffStatusEntryCount());
+						summary.setStaffStatusEntryDuration(summary.getStaffStatusEntryDuration() + durationSummaryDetail.getStaffStatusEntryDuration());
+					}
 				}
 			} else {
 				durationSummaryDetail = notAssigned;
@@ -5685,7 +5722,9 @@ public final class ServiceUtil {
 			InventoryBookingOutVO booking,
 			InventoryBookingDurationSummaryVO summary,
 			boolean fullBookings,
-			boolean mergeOverlapping) {
+			boolean fullUnavailabilities,
+			boolean mergeOverlapping,
+			InventoryStatusEntryDao inventoryStatusEntryDao) {
 		if (key != null) {
 			InventoryBookingDurationSummaryDetailVO durationSummaryDetail = null;
 			if (durationSummaryDetailsMap.containsKey(key)) {
@@ -5701,6 +5740,35 @@ public final class ServiceUtil {
 				durationSummaryDetail.setBookingCount(0);
 				if (!mergeOverlapping) {
 					durationSummaryDetail.setTotalDuration(0l);
+				}
+				durationSummaryDetail.setInventoryStatusEntryCount(0);
+				durationSummaryDetail.setInventoryStatusEntryDuration(0);
+				if (inventory != null) {
+					Iterator<InventoryStatusEntry> statusEntryIt = inventoryStatusEntryDao
+							.findByInventoryInterval(inventory.getId(), CommonUtil.dateToTimestamp(summary.getStart()),
+									CommonUtil.dateToTimestamp(summary.getStop()), false, false)
+							.iterator();
+					while (statusEntryIt.hasNext()) {
+						InventoryStatusEntry statusEntry = statusEntryIt.next();
+						Date start = statusEntry.getStart();
+						Date stop = statusEntry.getStop();
+						if (!fullUnavailabilities) {
+							if (summary.getStart() != null && statusEntry.getStart().before(summary.getStart())) {
+								start = summary.getStart();
+							}
+							if (summary.getStop() != null && statusEntry.getStop() != null && statusEntry.getStop().after(summary.getStop())) {
+								stop = summary.getStop();
+							}
+						}
+						DateInterval statusEntryDuration = new DateInterval(start, stop);
+						if (!statusEntryDuration.isInfinite()) {
+							durationSummaryDetail.setInventoryStatusEntryCount(durationSummaryDetail.getInventoryStatusEntryCount() + 1);
+							durationSummaryDetail
+							.setInventoryStatusEntryDuration(durationSummaryDetail.getInventoryStatusEntryDuration() + statusEntryDuration.getDuration());
+						}
+					}
+					summary.setInventoryStatusEntryCount(summary.getInventoryStatusEntryCount() + durationSummaryDetail.getInventoryStatusEntryCount());
+					summary.setInventoryStatusEntryDuration(summary.getInventoryStatusEntryDuration() + durationSummaryDetail.getInventoryStatusEntryDuration());
 				}
 			}
 			if (!fullBookings) {

@@ -14,6 +14,8 @@ import org.phoenixctms.ctsms.util.MessageCodes;
 
 public class DateInterval {
 
+	private final static DateIntervalComparator COMPARATOR = new DateIntervalComparator(false);
+
 	public static long getIntervalOverlapSecs(Date intervalAStart, Date intervalAStop, Date intervalBStart, Date intervalBStop) throws Exception {
 		if (intervalAStart != null && intervalAStop != null) { // closed interval
 			long durationA = CommonUtil.dateDeltaSecs(intervalAStart, intervalAStop);
@@ -304,10 +306,8 @@ public class DateInterval {
 		}
 		return result;
 	}
-
 	private Date start;
 	private Date stop;
-	private final static DateIntervalComparator COMPARATOR = new DateIntervalComparator(false);
 
 	public DateInterval() {
 	}
@@ -425,6 +425,10 @@ public class DateInterval {
 
 	public Date getStop() {
 		return stop;
+	}
+
+	public boolean isInfinite() {
+		return start == null || stop == null;
 	}
 
 	public boolean isOver(Date now) {

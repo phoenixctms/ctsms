@@ -298,6 +298,9 @@ public interface SettingCodes {
 	public static final String SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "shift_most_significant_duration_unit_of_time";
 	public static final String SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "shift_least_significant_duration_unit_of_time";
 	public static final String SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "shift_least_significant_duration_unit_of_time_decimals";
+	public static final String STATUS_ENTRY_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "status_entry_most_significant_duration_unit_of_time";
+	public static final String STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "status_entry_least_significant_duration_unit_of_time";
+	public static final String STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "status_entry_least_significant_duration_unit_of_time_decimals";
 	public static final String BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "booking_most_significant_duration_unit_of_time";
 	public static final String BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "booking_least_significant_duration_unit_of_time";
 	public static final String BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "booking_least_significant_duration_unit_of_time_decimals";

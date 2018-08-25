@@ -1610,7 +1610,7 @@ extends StaffServiceBase
 		result.setStart(from);
 		result.setStop(to);
 		result.setCalendar(calendar);
-		ServiceUtil.populateShiftDurationSummary(false, result, this.getDutyRosterTurnDao(), this.getHolidayDao());
+		ServiceUtil.populateShiftDurationSummary(false, result, this.getDutyRosterTurnDao(), this.getHolidayDao(), this.getStaffStatusEntryDao());
 		return result;
 	}
 

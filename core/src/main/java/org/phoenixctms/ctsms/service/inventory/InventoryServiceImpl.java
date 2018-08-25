@@ -843,7 +843,7 @@ extends InventoryServiceBase
 		result.setStart(from);
 		result.setStop(to);
 		result.setCalendar(calendar);
-		ServiceUtil.populateBookingDurationSummary(inventoryId == null, result, this.getInventoryBookingDao());
+		ServiceUtil.populateBookingDurationSummary(inventoryId == null, result, this.getInventoryBookingDao(), this.getInventoryStatusEntryDao());
 		return result;
 	}
 

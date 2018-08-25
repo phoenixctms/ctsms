@@ -467,6 +467,10 @@ public class ApplicationScopeBean {
 		return DateUtil.getShiftDurationString(duration);
 	}
 
+	public String getStatusEntryDurationString(long duration) {
+		return DateUtil.getStatusEntryDurationString(duration);
+	}
+
 	// public boolean getTrialParticipationsShowInquiryColumn() {
 	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN);
 	// }

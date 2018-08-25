@@ -231,8 +231,10 @@ public interface SettingCodes {
 	public static final String ENABLE_AUTHORISATION_EXCEPTION_LOGGER = "enable_authorisation_exception_logger";
 	public static final String ENABLE_OTHER_EXCEPTION_LOGGER = "enable_other_exception_logger";
 	public static final String BOOKING_SUMMARY_FULL_BOOKINGS = "booking_summary_full_bookings";
+	public static final String BOOKING_SUMMARY_FULL_UNAVAILABILITIES = "booking_summary_full_unavailabilities";
 	public static final String BOOKING_SUMMARY_MERGE_OVERLAPPING = "booking_summary_merge_overlapping";
 	public static final String SHIFT_SUMMARY_FULL_SHIFTS = "shift_summary_full_shifts";
+	public static final String SHIFT_SUMMARY_FULL_ABSENCES = "shift_summary_full_absences";
 	public static final String RECENT_JOURNAL_ENTRY_PERIOD = "recent_journal_entry_period";
 	public static final String RECENT_JOURNAL_ENTRY_PERIOD_DAYS = "recent_journal_entry_period_days";
 	public static final String EXCEPTION_DATE_TIME_PATTERN = "exception_date_time_pattern";

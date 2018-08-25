@@ -180,8 +180,10 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_AUTHORISATION_EXCEPTION_LOGGER = false;
 	public static final boolean ENABLE_OTHER_EXCEPTION_LOGGER = true;
 	public static final boolean BOOKING_SUMMARY_FULL_BOOKINGS = true;
+	public static final boolean BOOKING_SUMMARY_FULL_UNAVAILABILITIES = false;
 	public static final boolean BOOKING_SUMMARY_MERGE_OVERLAPPING = false;
 	public static final boolean SHIFT_SUMMARY_FULL_SHIFTS = true;
+	public static final boolean SHIFT_SUMMARY_FULL_ABSENCES = false;
 	public static final VariablePeriod RECENT_JOURNAL_ENTRY_PERIOD = VariablePeriod.MONTH;
 	public static final Long RECENT_JOURNAL_ENTRY_PERIOD_DAYS = null;
 	public static final String TRUSTED_IP_RANGES = null;

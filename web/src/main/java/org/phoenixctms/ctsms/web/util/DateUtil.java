@@ -523,6 +523,16 @@ public final class DateUtil {
 						DefaultSettings.SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
 	}
 
+	public static String getStatusEntryDurationString(long duration) {
+		return DateUtil.getDurationString(duration,
+				Settings.getDurationUnitOfTime(SettingCodes.STATUS_ENTRY_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.STATUS_ENTRY_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getDurationUnitOfTime(SettingCodes.STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+	}
+
 	public static DateFormat getTimeFormat() {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();

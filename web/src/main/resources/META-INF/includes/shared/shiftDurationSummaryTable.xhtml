@@ -220,6 +220,12 @@
 				</f:facet>
 				<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryDetail.vo.totalWeightedDuration)}" />
 			</p:column>
+			<p:column sortBy="#{shiftDurationSummaryDetail.vo.staffStatusEntryDuration}" rendered="#{showStaff}">
+				<f:facet name="header">
+					<h:outputText value="#{labels.shift_duration_summary_table_staff_status_entry_duration_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.getStatusEntryDurationString(shiftDurationSummaryDetail.vo.staffStatusEntryDuration)}" />
+			</p:column>			
 			<p:columnGroup type="footer">
 				<p:row>
 					<p:column colspan="2">
@@ -267,6 +273,11 @@
 							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.notAssigned.totalWeightedDuration)}" />
 						</f:facet>
 					</p:column>
+					<p:column rendered="#{showStaff}">
+						<f:facet name="footer">
+							<h:outputText value="" />
+						</f:facet>
+					</p:column>					
 				</p:row>
 				<p:row>
 					<p:column colspan="2">
@@ -307,6 +318,11 @@
 					<p:column>
 						<f:facet name="footer">
 							<h:outputText value="#{applicationScopeBean.getShiftDurationString(shiftDurationSummaryModel.summary.totalWeightedDuration)}" />
+						</f:facet>
+					</p:column>
+					<p:column rendered="#{showStaff}">
+						<f:facet name="footer">
+							<h:outputText value="#{applicationScopeBean.getStatusEntryDurationString(shiftDurationSummaryModel.summary.staffStatusEntryDuration)}" />
 						</f:facet>
 					</p:column>
 				</p:row>

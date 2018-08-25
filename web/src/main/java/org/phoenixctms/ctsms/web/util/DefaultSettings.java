@@ -411,6 +411,9 @@ public final class DefaultSettings {
 	public static final DurationUnitOfTime SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
 	public static final DurationUnitOfTime SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
 	public static final int SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 1;
+	public static final DurationUnitOfTime STATUS_ENTRY_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
+	public static final DurationUnitOfTime STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
+	public static final int STATUS_ENTRY_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 0;
 	public static final DurationUnitOfTime BOOKING_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
 	public static final DurationUnitOfTime BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
 	public static final int BOOKING_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 1;

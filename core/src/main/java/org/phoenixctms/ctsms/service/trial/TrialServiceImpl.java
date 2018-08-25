@@ -4961,7 +4961,7 @@ extends TrialServiceBase
 		result.setStart(from);
 		result.setStop(to);
 		result.setCalendar(calendar);
-		ServiceUtil.populateBookingDurationSummary(true, result, this.getInventoryBookingDao());
+		ServiceUtil.populateBookingDurationSummary(true, result, this.getInventoryBookingDao(), this.getInventoryStatusEntryDao());
 		return result;
 	}
 
@@ -6329,7 +6329,7 @@ extends TrialServiceBase
 		result.setStart(from);
 		result.setStop(to);
 		result.setCalendar(calendar);
-		ServiceUtil.populateShiftDurationSummary(true, result, this.getDutyRosterTurnDao(), this.getHolidayDao());
+		ServiceUtil.populateShiftDurationSummary(true, result, this.getDutyRosterTurnDao(), this.getHolidayDao(), this.getStaffStatusEntryDao());
 		return result;
 	}
 
