@@ -916,19 +916,22 @@ public class SessionScopeBean {
 	}
 
 	public synchronized boolean isShowStatusBarInfo() {
-		if (getAnnouncement() != null) {
-			return true;
-		}
 		if (logon != null) {
-			Boolean isPasswordExpired = WebUtil.isPasswordExpired(
-					DateUtil.addDayMinuteDelta(new Date(), Settings.getInt(SettingCodes.EXPIRATION_INFO_DAYS, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_DAYS), 0), logon);
-			if (isPasswordExpired != null && isPasswordExpired) {
+			if (getAnnouncement() != null) {
 				return true;
 			}
-			if (logon.getLimitLogons()) {
-				long logonsLeft = logon.getMaxSuccessfulLogons() - logon.getSuccessfulLogons();
-				if (logonsLeft <= Settings.getLong(SettingCodes.EXPIRATION_INFO_LOGONS_LEFT, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_LOGONS_LEFT) && logonsLeft >= 0) {
+			if (isLocalAuthMethod()) {
+				Boolean isPasswordExpired = WebUtil.isPasswordExpired(
+						DateUtil.addDayMinuteDelta(new Date(), Settings.getInt(SettingCodes.EXPIRATION_INFO_DAYS, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_DAYS), 0),
+						logon);
+				if (isPasswordExpired != null && isPasswordExpired) {
 					return true;
+				}
+				if (logon.getLimitLogons()) {
+					long logonsLeft = logon.getMaxSuccessfulLogons() - logon.getSuccessfulLogons();
+					if (logonsLeft <= Settings.getLong(SettingCodes.EXPIRATION_INFO_LOGONS_LEFT, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_LOGONS_LEFT) && logonsLeft >= 0) {
+						return true;
+					}
 				}
 			}
 		}
