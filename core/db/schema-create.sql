@@ -56,6 +56,8 @@
         REGISTRATION_NUMBER CHARACTER VARYING(1024) not null,
         PROPRIETOR CHARACTER VARYING(1024),
         REGISTRATION_DATE DATE not null,
+        NARCOTIC BOOLEAN,
+        PSYCHOTROPIC BOOLEAN,
         BATCH_RELEASE BOOLEAN,
         BATCH_TESTING BOOLEAN,
         BATCH_TESTING_EXCLUSION BOOLEAN,
@@ -132,6 +134,7 @@
         STAFF BOOLEAN not null,
         PROBAND BOOLEAN not null,
         ANIMAL BOOLEAN not null,
+        BUSINESS BOOLEAN not null,
         primary key (ID)
     );
 
@@ -161,6 +164,7 @@
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         DEPARTMENT_FK BIGINT not null,
         CATEGORY_FK BIGINT not null,
         TRIAL_FK BIGINT,
@@ -221,6 +225,7 @@
         VERSION BIGINT not null,
         LOAD_BY_DEFAULT BOOLEAN not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         MODIFIED_USER_FK BIGINT not null,
         primary key (ID)
     );
@@ -390,6 +395,7 @@
         COURSE_FK BIGINT,
         TRIAL_FK BIGINT,
         PROBAND_FK BIGINT,
+        MASS_MAIL_FK BIGINT,
         primary key (ID)
     );
 
@@ -517,6 +523,7 @@
         FILE_SIZE BIGINT,
         DATA BYTEA,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         MODIFIED_USER_FK BIGINT not null,
         CONTENT_TYPE_FK BIGINT,
         primary key (ID)
@@ -533,6 +540,7 @@
         INK_REGION BYTEA,
         STROKES_ID CHARACTER VARYING(1024),
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         FIELD_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
         primary key (ID)
@@ -569,6 +577,7 @@
         JS_VALUE_EXPRESSION TEXT,
         JS_OUTPUT_EXPRESSION TEXT,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         FIELD_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
@@ -595,6 +604,7 @@
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         PARENT_FK BIGINT,
         DEPARTMENT_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
@@ -699,6 +709,7 @@
         REAL_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         SYSTEM_MESSAGE BOOLEAN not null,
         SYSTEM_MESSAGE_MODULE CHARACTER VARYING(1024),
+        SYSTEM_MESSAGE_CODE CHARACTER VARYING(1024),
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         ENCRYPTED_COMMENT BYTEA,
@@ -717,6 +728,7 @@
         PROBAND_FK BIGINT,
         CRITERIA_FK BIGINT,
         INPUT_FIELD_FK BIGINT,
+        MASS_MAIL_FK BIGINT,
         primary key (ID)
     );
 
@@ -778,6 +790,97 @@
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
         TITLE_PRESET_L10N_KEY CHARACTER VARYING(1024) not null,
         VISIBLE BOOLEAN not null,
+        primary key (ID)
+    );
+
+    create table MASS_MAIL (
+        ID BIGINT not null,
+        NAME CHARACTER VARYING(1024) not null,
+        DESCRIPTION TEXT,
+        START TIMESTAMP WITHOUT TIME ZONE not null,
+        LOCK_AFTER_SENDING BOOLEAN not null,
+        PROBAND_LIST_STATUS_RESEND BOOLEAN not null,
+        FROM_ADDRESS CHARACTER VARYING(1024) not null,
+        FROM_NAME CHARACTER VARYING(1024),
+        LOCALE CHARACTER VARYING(1024) not null,
+        MALE_SALUTATION CHARACTER VARYING(1024),
+        FEMALE_SALUTATION CHARACTER VARYING(1024),
+        SUBJECT_FORMAT CHARACTER VARYING(1024) not null,
+        TEXT_TEMPLATE TEXT not null,
+        REPLY_TO_ADDRESS CHARACTER VARYING(1024) not null,
+        REPLY_TO_NAME CHARACTER VARYING(1024),
+        PROBAND_TO BOOLEAN not null,
+        PHYSICIAN_TO BOOLEAN not null,
+        TRIAL_TEAM_TO BOOLEAN not null,
+        OTHER_TO CHARACTER VARYING(1024),
+        CC CHARACTER VARYING(1024),
+        BCC CHARACTER VARYING(1024),
+        USE_BEACON BOOLEAN not null,
+        ATTACH_MASS_MAIL_FILES BOOLEAN not null,
+        MASS_MAIL_FILES_LOGICAL_PATH CHARACTER VARYING(1024),
+        ATTACH_TRIAL_FILES BOOLEAN not null,
+        TRIAL_FILES_LOGICAL_PATH CHARACTER VARYING(1024),
+        ATTACH_PROBAND_FILES BOOLEAN not null,
+        PROBAND_FILES_LOGICAL_PATH CHARACTER VARYING(1024),
+        ATTACH_INQUIRIES BOOLEAN not null,
+        ATTACH_PROBAND_LIST_ENTRY_TAGS BOOLEAN not null,
+        ATTACH_ECRFS BOOLEAN not null,
+        ATTACH_PROBAND_LETTER BOOLEAN not null,
+        ATTACH_REIMBURSEMENTS_PDF BOOLEAN not null,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        VERSION BIGINT not null,
+        DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
+        DEPARTMENT_FK BIGINT not null,
+        STATUS_FK BIGINT not null,
+        TYPE_FK BIGINT not null,
+        PROBAND_LIST_STATUS_FK BIGINT,
+        TRIAL_FK BIGINT,
+        MODIFIED_USER_FK BIGINT not null,
+        primary key (ID)
+    );
+
+    create table MASS_MAIL_RECIPIENT (
+        ID BIGINT not null,
+        ENCRYPTED_MIME_MESSAGE_DATA BYTEA,
+        MIME_MESSAGE_DATA_IV BYTEA,
+        MIME_MESSAGE_SIZE BIGINT not null,
+        MIME_MESSAGE_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
+        BEACON CHARACTER VARYING(1024) not null unique,
+        SENT BOOLEAN not null,
+        CANCELLED BOOLEAN not null,
+        TIMES_PROCESSED BIGINT not null,
+        PROCESSED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
+        ERROR_MESSAGE CHARACTER VARYING(1024),
+        READ BIGINT not null,
+        READ_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
+        UNSUBSCRIBED BIGINT not null,
+        UNSUBSCRIBED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        VERSION BIGINT not null,
+        MASS_MAIL_FK BIGINT not null,
+        PROBAND_FK BIGINT,
+        MODIFIED_USER_FK BIGINT not null,
+        primary key (ID)
+    );
+
+    create table MASS_MAIL_STATUS_TYPE (
+        ID BIGINT not null,
+        COLOR CHARACTER VARYING(1024) not null,
+        INITIAL BOOLEAN not null,
+        NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
+        NODE_STYLE_CLASS CHARACTER VARYING(1024),
+        SENDING BOOLEAN not null,
+        LOCKED BOOLEAN not null,
+        primary key (ID)
+    );
+
+    create table MASS_MAIL_TYPE (
+        ID BIGINT not null,
+        NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
+        VISIBLE BOOLEAN not null,
+        TRIAL_REQUIRED BOOLEAN not null,
+        PROBAND_LIST_STAUS_REQUIRED BOOLEAN not null,
         primary key (ID)
     );
 
@@ -960,6 +1063,7 @@
         ENCRYPTED_DEPARTMENT_PASSWORD BYTEA not null unique,
         TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         EXPIRES BOOLEAN not null,
+        PROLONGABLE BOOLEAN not null,
         VALIDITY_PERIOD CHARACTER VARYING(1024),
         VALIDITY_PERIOD_DAYS BIGINT,
         SUCCESSFUL_LOGONS BIGINT not null,
@@ -1028,12 +1132,14 @@
         ID BIGINT not null,
         PERSON BOOLEAN not null,
         BLINDED BOOLEAN not null,
+        BEACON CHARACTER VARYING(1024) not null unique,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         AUTO_DELETE_DEADLINE DATE,
-        DEFERRED_DELETE BOOLEAN not null,
         RATING BIGINT,
         RATING_MAX BIGINT,
+        DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         PERSON_PARTICULARS_FK BIGINT unique,
         MODIFIED_USER_FK BIGINT not null,
         DEPARTMENT_FK BIGINT not null,
@@ -1355,10 +1461,12 @@
         PERSON BOOLEAN not null,
         EMPLOYEE BOOLEAN not null,
         ALLOCATABLE BOOLEAN not null,
+        SUPERVISOR BOOLEAN not null,
         MAX_OVERLAPPING_SHIFTS BIGINT not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         PERSON_PARTICULARS_FK BIGINT unique,
         ORGANISATION_PARTICULARS_FK BIGINT unique,
         PARENT_FK BIGINT,
@@ -1559,10 +1667,11 @@
         DUTY_SELF_ALLOCATION_LOCKED BOOLEAN not null,
         DUTY_SELF_ALLOCATION_LOCKED_UNTIL TIMESTAMP WITHOUT TIME ZONE,
         DUTY_SELF_ALLOCATION_LOCKED_FROM TIMESTAMP WITHOUT TIME ZONE,
-        DEFERRED_DELETE BOOLEAN not null,
         SIGNUP_PROBAND_LIST BOOLEAN not null,
         SIGNUP_INQUIRIES BOOLEAN not null,
         SIGNUP_DESCRIPTION TEXT,
+        DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         DEPARTMENT_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
@@ -1585,6 +1694,7 @@
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
         LOCKDOWN BOOLEAN not null,
         INQUIRY_VALUE_INPUT_ENABLED BOOLEAN not null,
+        ECRF_VALUE_INPUT_ENABLED BOOLEAN not null,
         IGNORE_TIMELINE_EVENTS BOOLEAN not null,
         NODE_STYLE_CLASS CHARACTER VARYING(1024),
         primary key (ID)
@@ -1724,6 +1834,7 @@
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         TRIAL_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
         VISIT_FK BIGINT,
@@ -1742,6 +1853,7 @@
         OPTIONAL BOOLEAN not null,
         AUDIT_TRAIL BOOLEAN not null,
         REASON_FOR_CHANGE_REQUIRED BOOLEAN not null,
+        NOTIFY BOOLEAN not null,
         COMMENT TEXT,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
@@ -1749,6 +1861,7 @@
         JS_VALUE_EXPRESSION TEXT,
         JS_OUTPUT_EXPRESSION TEXT,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         MODIFIED_USER_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
         ECRF_FK BIGINT not null,
@@ -1862,6 +1975,11 @@
         SELECTION_VALUES_FK BIGINT not null
     );
 
+    create table mass_mail_status_transition (
+        MASS_MAIL_STATUS_TYPES_FK BIGINT not null,
+        TRANSITIONS_FK BIGINT not null
+    );
+
     create table medication_ingredient (
         SUBSTANCES_FK BIGINT not null,
         MEDICATIONS_FK BIGINT not null
@@ -1914,7 +2032,9 @@
         THEME CHARACTER VARYING(1024),
         AUTH_METHOD CHARACTER VARYING(1024) not null,
         SHOW_TOOLTIPS BOOLEAN not null,
+        DECRYPT BOOLEAN not null,
         DEFERRED_DELETE BOOLEAN not null,
+        DEFERRED_DELETE_REASON TEXT,
         IDENTITY_FK BIGINT,
         MODIFIED_USER_FK BIGINT,
         DEPARTMENT_FK BIGINT not null,
@@ -1943,24 +2063,24 @@
         references ASP;
 
     alter table BANK_ACCOUNT 
-        add constraint BANK_ACCOUNT_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
-
-    alter table BANK_ACCOUNT 
         add constraint BANK_ACCOUNT_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
-    alter table COURSE 
-        add constraint COURSE_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references COURSE_CATEGORY;
+    alter table BANK_ACCOUNT 
+        add constraint BANK_ACCOUNT_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
 
     alter table COURSE 
-        add constraint COURSE_DEPARTMENT_FKC 
-        foreign key (DEPARTMENT_FK) 
-        references DEPARTMENT;
+        add constraint COURSE_CV_SECTION_PRESET_FKC 
+        foreign key (CV_SECTION_PRESET_FK) 
+        references CV_SECTION;
+
+    alter table COURSE 
+        add constraint COURSE_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table COURSE 
         add constraint COURSE_INSTITUTION_FKC 
@@ -1973,19 +2093,14 @@
         references TRIAL;
 
     alter table COURSE 
-        add constraint COURSE_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint COURSE_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references COURSE_CATEGORY;
 
     alter table COURSE 
-        add constraint COURSE_CV_SECTION_PRESET_FKC 
-        foreign key (CV_SECTION_PRESET_FK) 
-        references CV_SECTION;
-
-    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
-        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_STAFF_FKC 
-        foreign key (STAFF_FK) 
-        references STAFF;
+        add constraint COURSE_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_MODIFIED_USER_FKC 
@@ -1993,9 +2108,9 @@
         references users;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
-        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_SECTION_FKC 
-        foreign key (SECTION_FK) 
-        references CV_SECTION;
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_COURSE_FKC 
+        foreign key (COURSE_FK) 
+        references COURSE;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_STATUS_FKC 
@@ -2003,9 +2118,14 @@
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
-        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_COURSE_FKC 
-        foreign key (COURSE_FK) 
-        references COURSE;
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_STAFF_FKC 
+        foreign key (STAFF_FK) 
+        references STAFF;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_SECTION_FKC 
+        foreign key (SECTION_FK) 
+        references CV_SECTION;
 
     alter table CRITERIA 
         add constraint CRITERIA_MODIFIED_USER_FKC 
@@ -2018,9 +2138,9 @@
         references CRITERIA;
 
     alter table CV_POSITION 
-        add constraint CV_POSITION_STAFF_FKC 
-        foreign key (STAFF_FK) 
-        references STAFF;
+        add constraint CV_POSITION_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table CV_POSITION 
         add constraint CV_POSITION_INSTITUTION_FKC 
@@ -2028,12 +2148,17 @@
         references STAFF;
 
     alter table CV_POSITION 
+        add constraint CV_POSITION_STAFF_FKC 
+        foreign key (STAFF_FK) 
+        references STAFF;
+
+    alter table CV_POSITION 
         add constraint CV_POSITION_SECTION_FKC 
         foreign key (SECTION_FK) 
         references CV_SECTION;
 
-    alter table CV_POSITION 
-        add constraint CV_POSITION_MODIFIED_USER_FKC 
+    alter table DIAGNOSIS 
+        add constraint DIAGNOSIS_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2047,10 +2172,15 @@
         foreign key (CODE_FK) 
         references ALPHA_ID;
 
-    alter table DIAGNOSIS 
-        add constraint DIAGNOSIS_MODIFIED_USER_FKC 
+    alter table DUTY_ROSTER_TURN 
+        add constraint DUTY_ROSTER_TURN_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
+
+    alter table DUTY_ROSTER_TURN 
+        add constraint DUTY_ROSTER_TURN_VISIT_SCHEDULE_ITEM_FKC 
+        foreign key (VISIT_SCHEDULE_ITEM_FK) 
+        references VISIT_SCHEDULE_ITEM;
 
     alter table DUTY_ROSTER_TURN 
         add constraint DUTY_ROSTER_TURN_STAFF_FKC 
@@ -2062,35 +2192,10 @@
         foreign key (TRIAL_FK) 
         references TRIAL;
 
-    alter table DUTY_ROSTER_TURN 
-        add constraint DUTY_ROSTER_TURN_MODIFIED_USER_FKC 
+    alter table FILE 
+        add constraint FILE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table DUTY_ROSTER_TURN 
-        add constraint DUTY_ROSTER_TURN_VISIT_SCHEDULE_ITEM_FKC 
-        foreign key (VISIT_SCHEDULE_ITEM_FK) 
-        references VISIT_SCHEDULE_ITEM;
-
-    alter table FILE 
-        add constraint FILE_CONTENT_TYPE_FKC 
-        foreign key (CONTENT_TYPE_FK) 
-        references MIME_TYPE;
-
-    alter table FILE 
-        add constraint FILE_STAFF_FKC 
-        foreign key (STAFF_FK) 
-        references STAFF;
-
-    alter table FILE 
-        add constraint FILE_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
-
-    alter table FILE 
-        add constraint FILE_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
 
     alter table FILE 
         add constraint FILE_INVENTORY_FKC 
@@ -2098,19 +2203,49 @@
         references INVENTORY;
 
     alter table FILE 
-        add constraint FILE_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint FILE_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table FILE 
+        add constraint FILE_CONTENT_TYPE_FKC 
+        foreign key (CONTENT_TYPE_FK) 
+        references MIME_TYPE;
 
     alter table FILE 
         add constraint FILE_COURSE_FKC 
         foreign key (COURSE_FK) 
         references COURSE;
 
+    alter table FILE 
+        add constraint FILE_STAFF_FKC 
+        foreign key (STAFF_FK) 
+        references STAFF;
+
+    alter table FILE 
+        add constraint FILE_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table FILE 
+        add constraint FILE_MASS_MAIL_FKC 
+        foreign key (MASS_MAIL_FK) 
+        references MASS_MAIL;
+
     alter table HYPERLINK 
-        add constraint HYPERLINK_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references HYPERLINK_CATEGORY;
+        add constraint HYPERLINK_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table HYPERLINK 
+        add constraint HYPERLINK_INVENTORY_FKC 
+        foreign key (INVENTORY_FK) 
+        references INVENTORY;
+
+    alter table HYPERLINK 
+        add constraint HYPERLINK_COURSE_FKC 
+        foreign key (COURSE_FK) 
+        references COURSE;
 
     alter table HYPERLINK 
         add constraint HYPERLINK_STAFF_FKC 
@@ -2123,19 +2258,9 @@
         references TRIAL;
 
     alter table HYPERLINK 
-        add constraint HYPERLINK_INVENTORY_FKC 
-        foreign key (INVENTORY_FK) 
-        references INVENTORY;
-
-    alter table HYPERLINK 
-        add constraint HYPERLINK_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table HYPERLINK 
-        add constraint HYPERLINK_COURSE_FKC 
-        foreign key (COURSE_FK) 
-        references COURSE;
+        add constraint HYPERLINK_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references HYPERLINK_CATEGORY;
 
     alter table ICD_SYST_BLOCK 
         add constraint ICD_SYST_BLOCK_ICD_SYST_FKC 
@@ -2153,12 +2278,17 @@
         references ICD_SYST_CATEGORY;
 
     alter table INPUT_FIELD 
+        add constraint INPUT_FIELD_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table INPUT_FIELD 
         add constraint INPUT_FIELD_CONTENT_TYPE_FKC 
         foreign key (CONTENT_TYPE_FK) 
         references MIME_TYPE;
 
-    alter table INPUT_FIELD 
-        add constraint INPUT_FIELD_MODIFIED_USER_FKC 
+    alter table INPUT_FIELD_SELECTION_SET_VALUE 
+        add constraint INPUT_FIELD_SELECTION_SET_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2167,15 +2297,10 @@
         foreign key (FIELD_FK) 
         references INPUT_FIELD;
 
-    alter table INPUT_FIELD_SELECTION_SET_VALUE 
-        add constraint INPUT_FIELD_SELECTION_SET_VALUE_MODIFIED_USER_FKC 
+    alter table INQUIRY 
+        add constraint INQUIRY_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table INQUIRY 
-        add constraint INQUIRY_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
 
     alter table INQUIRY 
         add constraint INQUIRY_FIELD_FKC 
@@ -2183,19 +2308,14 @@
         references INPUT_FIELD;
 
     alter table INQUIRY 
-        add constraint INQUIRY_MODIFIED_USER_FKC 
+        add constraint INQUIRY_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table INQUIRY_VALUE 
+        add constraint INQUIRY_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table INQUIRY_VALUE 
-        add constraint INQUIRY_VALUE_INQUIRY_FKC 
-        foreign key (INQUIRY_FK) 
-        references INQUIRY;
-
-    alter table INQUIRY_VALUE 
-        add constraint INQUIRY_VALUE_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
 
     alter table INQUIRY_VALUE 
         add constraint INQUIRY_VALUE_VALUE_FKC 
@@ -2203,24 +2323,19 @@
         references INPUT_FIELD_VALUE;
 
     alter table INQUIRY_VALUE 
-        add constraint INQUIRY_VALUE_MODIFIED_USER_FKC 
+        add constraint INQUIRY_VALUE_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table INQUIRY_VALUE 
+        add constraint INQUIRY_VALUE_INQUIRY_FKC 
+        foreign key (INQUIRY_FK) 
+        references INQUIRY;
+
+    alter table INVENTORY 
+        add constraint INVENTORY_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table INVENTORY 
-        add constraint INVENTORY_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references INVENTORY_CATEGORY;
-
-    alter table INVENTORY 
-        add constraint INVENTORY_PARENT_FKC 
-        foreign key (PARENT_FK) 
-        references INVENTORY;
-
-    alter table INVENTORY 
-        add constraint INVENTORY_DEPARTMENT_FKC 
-        foreign key (DEPARTMENT_FK) 
-        references DEPARTMENT;
 
     alter table INVENTORY 
         add constraint INVENTORY_OWNER_FKC 
@@ -2228,29 +2343,19 @@
         references STAFF;
 
     alter table INVENTORY 
-        add constraint INVENTORY_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint INVENTORY_PARENT_FKC 
+        foreign key (PARENT_FK) 
+        references INVENTORY;
 
-    alter table INVENTORY_BOOKING 
-        add constraint INVENTORY_BOOKING_ON_BEHALF_OF_FKC 
-        foreign key (ON_BEHALF_OF_FK) 
-        references STAFF;
+    alter table INVENTORY 
+        add constraint INVENTORY_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references INVENTORY_CATEGORY;
 
-    alter table INVENTORY_BOOKING 
-        add constraint INVENTORY_BOOKING_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
-
-    alter table INVENTORY_BOOKING 
-        add constraint INVENTORY_BOOKING_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
-
-    alter table INVENTORY_BOOKING 
-        add constraint INVENTORY_BOOKING_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+    alter table INVENTORY 
+        add constraint INVENTORY_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
 
     alter table INVENTORY_BOOKING 
         add constraint INVENTORY_BOOKING_INVENTORY_FKC 
@@ -2258,9 +2363,44 @@
         references INVENTORY;
 
     alter table INVENTORY_BOOKING 
+        add constraint INVENTORY_BOOKING_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table INVENTORY_BOOKING 
+        add constraint INVENTORY_BOOKING_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table INVENTORY_BOOKING 
+        add constraint INVENTORY_BOOKING_ON_BEHALF_OF_FKC 
+        foreign key (ON_BEHALF_OF_FK) 
+        references STAFF;
+
+    alter table INVENTORY_BOOKING 
         add constraint INVENTORY_BOOKING_COURSE_FKC 
         foreign key (COURSE_FK) 
         references COURSE;
+
+    alter table INVENTORY_BOOKING 
+        add constraint INVENTORY_BOOKING_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table INVENTORY_STATUS_ENTRY 
+        add constraint INVENTORY_STATUS_ENTRY_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table INVENTORY_STATUS_ENTRY 
+        add constraint INVENTORY_STATUS_ENTRY_INVENTORY_FKC 
+        foreign key (INVENTORY_FK) 
+        references INVENTORY;
+
+    alter table INVENTORY_STATUS_ENTRY 
+        add constraint INVENTORY_STATUS_ENTRY_ORIGINATOR_FKC 
+        foreign key (ORIGINATOR_FK) 
+        references STAFF;
 
     alter table INVENTORY_STATUS_ENTRY 
         add constraint INVENTORY_STATUS_ENTRY_TYPE_FKC 
@@ -2272,18 +2412,13 @@
         foreign key (ADDRESSEE_FK) 
         references STAFF;
 
-    alter table INVENTORY_STATUS_ENTRY 
-        add constraint INVENTORY_STATUS_ENTRY_ORIGINATOR_FKC 
-        foreign key (ORIGINATOR_FK) 
-        references STAFF;
-
-    alter table INVENTORY_STATUS_ENTRY 
-        add constraint INVENTORY_STATUS_ENTRY_INVENTORY_FKC 
+    alter table INVENTORY_TAG_VALUE 
+        add constraint INVENTORY_TAG_VALUE_INVENTORY_FKC 
         foreign key (INVENTORY_FK) 
         references INVENTORY;
 
-    alter table INVENTORY_STATUS_ENTRY 
-        add constraint INVENTORY_STATUS_ENTRY_MODIFIED_USER_FKC 
+    alter table INVENTORY_TAG_VALUE 
+        add constraint INVENTORY_TAG_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2292,45 +2427,10 @@
         foreign key (TAG_FK) 
         references INVENTORY_TAG;
 
-    alter table INVENTORY_TAG_VALUE 
-        add constraint INVENTORY_TAG_VALUE_MODIFIED_USER_FKC 
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table INVENTORY_TAG_VALUE 
-        add constraint INVENTORY_TAG_VALUE_INVENTORY_FKC 
-        foreign key (INVENTORY_FK) 
-        references INVENTORY;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references JOURNAL_CATEGORY;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_STAFF_FKC 
-        foreign key (STAFF_FK) 
-        references STAFF;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_USER_FKC 
-        foreign key (USER_FK) 
-        references users;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
-
-    alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_INPUT_FIELD_FKC 
-        foreign key (INPUT_FIELD_FK) 
-        references INPUT_FIELD;
 
     alter table JOURNAL_ENTRY 
         add constraint JOURNAL_ENTRY_INVENTORY_FKC 
@@ -2338,8 +2438,18 @@
         references INVENTORY;
 
     alter table JOURNAL_ENTRY 
-        add constraint JOURNAL_ENTRY_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
+        add constraint JOURNAL_ENTRY_INPUT_FIELD_FKC 
+        foreign key (INPUT_FIELD_FK) 
+        references INPUT_FIELD;
+
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_USER_FKC 
+        foreign key (USER_FK) 
         references users;
 
     alter table JOURNAL_ENTRY 
@@ -2352,10 +2462,25 @@
         foreign key (CRITERIA_FK) 
         references CRITERIA;
 
-    alter table LECTURER 
-        add constraint LECTURER_STAFF_FKC 
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_STAFF_FKC 
         foreign key (STAFF_FK) 
         references STAFF;
+
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references JOURNAL_CATEGORY;
+
+    alter table JOURNAL_ENTRY 
+        add constraint JOURNAL_ENTRY_MASS_MAIL_FKC 
+        foreign key (MASS_MAIL_FK) 
+        references MASS_MAIL;
 
     alter table LECTURER 
         add constraint LECTURER_MODIFIED_USER_FKC 
@@ -2372,20 +2497,15 @@
         foreign key (COURSE_FK) 
         references COURSE;
 
-    alter table MAINTENANCE_SCHEDULE_ITEM 
-        add constraint MAINTENANCE_SCHEDULE_ITEM_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references MAINTENANCE_TYPE;
-
-    alter table MAINTENANCE_SCHEDULE_ITEM 
-        add constraint MAINTENANCE_SCHEDULE_ITEM_COMPANY_CONTACT_FKC 
-        foreign key (COMPANY_CONTACT_FK) 
+    alter table LECTURER 
+        add constraint LECTURER_STAFF_FKC 
+        foreign key (STAFF_FK) 
         references STAFF;
 
     alter table MAINTENANCE_SCHEDULE_ITEM 
-        add constraint MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_FKC 
-        foreign key (RESPONSIBLE_PERSON_FK) 
-        references STAFF;
+        add constraint MAINTENANCE_SCHEDULE_ITEM_INVENTORY_FKC 
+        foreign key (INVENTORY_FK) 
+        references INVENTORY;
 
     alter table MAINTENANCE_SCHEDULE_ITEM 
         add constraint MAINTENANCE_SCHEDULE_ITEM_MODIFIED_USER_FKC 
@@ -2393,24 +2513,69 @@
         references users;
 
     alter table MAINTENANCE_SCHEDULE_ITEM 
-        add constraint MAINTENANCE_SCHEDULE_ITEM_INVENTORY_FKC 
-        foreign key (INVENTORY_FK) 
-        references INVENTORY;
+        add constraint MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_FKC 
+        foreign key (RESPONSIBLE_PERSON_FK) 
+        references STAFF;
 
-    alter table MEDICATION 
-        add constraint MEDICATION_DIAGNOSIS_FKC 
-        foreign key (DIAGNOSIS_FK) 
-        references DIAGNOSIS;
+    alter table MAINTENANCE_SCHEDULE_ITEM 
+        add constraint MAINTENANCE_SCHEDULE_ITEM_COMPANY_CONTACT_FKC 
+        foreign key (COMPANY_CONTACT_FK) 
+        references STAFF;
 
-    alter table MEDICATION 
-        add constraint MEDICATION_ASP_FKC 
-        foreign key (ASP_FK) 
-        references ASP;
+    alter table MAINTENANCE_SCHEDULE_ITEM 
+        add constraint MAINTENANCE_SCHEDULE_ITEM_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references MAINTENANCE_TYPE;
 
-    alter table MEDICATION 
-        add constraint MEDICATION_PROBAND_FKC 
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC 
+        foreign key (PROBAND_LIST_STATUS_FK) 
+        references PROBAND_LIST_STATUS_TYPE;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_STATUS_FKC 
+        foreign key (STATUS_FK) 
+        references MASS_MAIL_STATUS_TYPE;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references MASS_MAIL_TYPE;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
+
+    alter table MASS_MAIL_RECIPIENT 
+        add constraint MASS_MAIL_RECIPIENT_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table MASS_MAIL_RECIPIENT 
+        add constraint MASS_MAIL_RECIPIENT_PROBAND_FKC 
         foreign key (PROBAND_FK) 
         references PROBAND;
+
+    alter table MASS_MAIL_RECIPIENT 
+        add constraint MASS_MAIL_RECIPIENT_MASS_MAIL_FKC 
+        foreign key (MASS_MAIL_FK) 
+        references MASS_MAIL;
+
+    alter table MEDICATION 
+        add constraint MEDICATION_PROCEDURE_FKC 
+        foreign key (PROCEDURE_FK) 
+        references PROCEDURE;
 
     alter table MEDICATION 
         add constraint MEDICATION_MODIFIED_USER_FKC 
@@ -2418,9 +2583,29 @@
         references users;
 
     alter table MEDICATION 
-        add constraint MEDICATION_PROCEDURE_FKC 
-        foreign key (PROCEDURE_FK) 
-        references PROCEDURE;
+        add constraint MEDICATION_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table MEDICATION 
+        add constraint MEDICATION_ASP_FKC 
+        foreign key (ASP_FK) 
+        references ASP;
+
+    alter table MEDICATION 
+        add constraint MEDICATION_DIAGNOSIS_FKC 
+        foreign key (DIAGNOSIS_FK) 
+        references DIAGNOSIS;
+
+    alter table MONEY_TRANSFER 
+        add constraint MONEY_TRANSFER_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table MONEY_TRANSFER 
+        add constraint MONEY_TRANSFER_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
 
     alter table MONEY_TRANSFER 
         add constraint MONEY_TRANSFER_BANK_ACCOUNT_FKC 
@@ -2432,20 +2617,20 @@
         foreign key (TRIAL_FK) 
         references TRIAL;
 
-    alter table MONEY_TRANSFER 
-        add constraint MONEY_TRANSFER_PROBAND_FKC 
+    alter table NOTIFICATION 
+        add constraint NOTIFICATION_INVENTORY_STATUS_ENTRY_FKC 
+        foreign key (INVENTORY_STATUS_ENTRY_FK) 
+        references INVENTORY_STATUS_ENTRY;
+
+    alter table NOTIFICATION 
+        add constraint NOTIFICATION_PROBAND_FKC 
         foreign key (PROBAND_FK) 
         references PROBAND;
 
-    alter table MONEY_TRANSFER 
-        add constraint MONEY_TRANSFER_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_TRIAL_TAG_FKC 
-        foreign key (TRIAL_TAG_FK) 
-        references TRIAL_TAG;
+        add constraint NOTIFICATION_MAINTENANCE_SCHEDULE_ITEM_FKC 
+        foreign key (MAINTENANCE_SCHEDULE_ITEM_FK) 
+        references MAINTENANCE_SCHEDULE_ITEM;
 
     alter table NOTIFICATION 
         add constraint NOTIFICATION_PASSWORD_FKC 
@@ -2453,29 +2638,44 @@
         references PASSWORD;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references NOTIFICATION_TYPE;
+        add constraint NOTIFICATION_VISIT_SCHEDULE_ITEM_FKC 
+        foreign key (VISIT_SCHEDULE_ITEM_FK) 
+        references VISIT_SCHEDULE_ITEM;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_INVENTORY_STATUS_ENTRY_FKC 
-        foreign key (INVENTORY_STATUS_ENTRY_FK) 
-        references INVENTORY_STATUS_ENTRY;
+        add constraint NOTIFICATION_USER_FKC 
+        foreign key (USER_FK) 
+        references users;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_STAFF_STATUS_ENTRY_FKC 
-        foreign key (STAFF_STATUS_ENTRY_FK) 
-        references STAFF_STATUS_ENTRY;
+        add constraint NOTIFICATION_ECRF_STATUS_ENTRY_FKC 
+        foreign key (ECRF_STATUS_ENTRY_FK) 
+        references ecrf_status_entry;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_DEPARTMENT_FKC 
-        foreign key (DEPARTMENT_FK) 
-        references DEPARTMENT;
+        add constraint NOTIFICATION_COURSE_PARTICIPATION_STATUS_ENTRY_FKC 
+        foreign key (COURSE_PARTICIPATION_STATUS_ENTRY_FK) 
+        references COURSE_PARTICIPATION_STATUS_ENTRY;
 
     alter table NOTIFICATION 
         add constraint NOTIFICATION_ECRF_FIELD_STATUS_ENTRY_FKC 
         foreign key (ECRF_FIELD_STATUS_ENTRY_FK) 
         references ecrf_field_status_entry;
+
+    alter table NOTIFICATION 
+        add constraint NOTIFICATION_STAFF_FKC 
+        foreign key (STAFF_FK) 
+        references STAFF;
+
+    alter table NOTIFICATION 
+        add constraint NOTIFICATION_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table NOTIFICATION 
+        add constraint NOTIFICATION_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references NOTIFICATION_TYPE;
 
     alter table NOTIFICATION 
         add constraint NOTIFICATION_PROBAND_STATUS_ENTRY_FKC 
@@ -2488,9 +2688,9 @@
         references INVENTORY_BOOKING;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_ECRF_STATUS_ENTRY_FKC 
-        foreign key (ECRF_STATUS_ENTRY_FK) 
-        references ecrf_status_entry;
+        add constraint NOTIFICATION_DUTY_ROSTER_TURN_FKC 
+        foreign key (DUTY_ROSTER_TURN_FK) 
+        references DUTY_ROSTER_TURN;
 
     alter table NOTIFICATION 
         add constraint NOTIFICATION_COURSE_FKC 
@@ -2498,14 +2698,9 @@
         references COURSE;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_COURSE_PARTICIPATION_STATUS_ENTRY_FKC 
-        foreign key (COURSE_PARTICIPATION_STATUS_ENTRY_FK) 
-        references COURSE_PARTICIPATION_STATUS_ENTRY;
-
-    alter table NOTIFICATION 
-        add constraint NOTIFICATION_STAFF_FKC 
-        foreign key (STAFF_FK) 
-        references STAFF;
+        add constraint NOTIFICATION_STAFF_STATUS_ENTRY_FKC 
+        foreign key (STAFF_STATUS_ENTRY_FK) 
+        references STAFF_STATUS_ENTRY;
 
     alter table NOTIFICATION 
         add constraint NOTIFICATION_TIMELINE_EVENT_FKC 
@@ -2513,34 +2708,14 @@
         references TIMELINE_EVENT;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_USER_FKC 
-        foreign key (USER_FK) 
-        references users;
+        add constraint NOTIFICATION_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
 
     alter table NOTIFICATION 
-        add constraint NOTIFICATION_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
-
-    alter table NOTIFICATION 
-        add constraint NOTIFICATION_PROBAND_FKC 
-        foreign key (PROBAND_FK) 
-        references PROBAND;
-
-    alter table NOTIFICATION 
-        add constraint NOTIFICATION_DUTY_ROSTER_TURN_FKC 
-        foreign key (DUTY_ROSTER_TURN_FK) 
-        references DUTY_ROSTER_TURN;
-
-    alter table NOTIFICATION 
-        add constraint NOTIFICATION_MAINTENANCE_SCHEDULE_ITEM_FKC 
-        foreign key (MAINTENANCE_SCHEDULE_ITEM_FK) 
-        references MAINTENANCE_SCHEDULE_ITEM;
-
-    alter table NOTIFICATION 
-        add constraint NOTIFICATION_VISIT_SCHEDULE_ITEM_FKC 
-        foreign key (VISIT_SCHEDULE_ITEM_FK) 
-        references VISIT_SCHEDULE_ITEM;
+        add constraint NOTIFICATION_TRIAL_TAG_FKC 
+        foreign key (TRIAL_TAG_FK) 
+        references TRIAL_TAG;
 
     alter table NOTIFICATION_RECIPIENT 
         add constraint NOTIFICATION_RECIPIENT_STAFF_FKC 
@@ -2588,14 +2763,9 @@
         references MIME_TYPE;
 
     alter table PROBAND 
-        add constraint PROBAND_ANIMAL_PARTICULARS_FKC 
-        foreign key (ANIMAL_PARTICULARS_FK) 
-        references ANIMAL_CONTACT_PARTICULARS;
-
-    alter table PROBAND 
-        add constraint PROBAND_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references PROBAND_CATEGORY;
+        add constraint PROBAND_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND 
         add constraint PROBAND_PRIVACY_CONSENT_STATUS_FKC 
@@ -2603,9 +2773,9 @@
         references PRIVACY_CONSENT_STATUS_TYPE;
 
     alter table PROBAND 
-        add constraint PROBAND_DEPARTMENT_FKC 
-        foreign key (DEPARTMENT_FK) 
-        references DEPARTMENT;
+        add constraint PROBAND_ANIMAL_PARTICULARS_FKC 
+        foreign key (ANIMAL_PARTICULARS_FK) 
+        references ANIMAL_CONTACT_PARTICULARS;
 
     alter table PROBAND 
         add constraint PROBAND_PHYSICIAN_FKC 
@@ -2618,14 +2788,19 @@
         references PROBAND_CONTACT_PARTICULARS;
 
     alter table PROBAND 
-        add constraint PROBAND_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint PROBAND_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references PROBAND_CATEGORY;
+
+    alter table PROBAND 
+        add constraint PROBAND_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
 
     alter table PROBAND_ADDRESS 
-        add constraint PROBAND_ADDRESS_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references ADDRESS_TYPE;
+        add constraint PROBAND_ADDRESS_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_ADDRESS 
         add constraint PROBAND_ADDRESS_PROBAND_FKC 
@@ -2633,14 +2808,14 @@
         references PROBAND;
 
     alter table PROBAND_ADDRESS 
-        add constraint PROBAND_ADDRESS_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint PROBAND_ADDRESS_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references ADDRESS_TYPE;
 
     alter table PROBAND_CONTACT_DETAIL_VALUE 
-        add constraint PROBAND_CONTACT_DETAIL_VALUE_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references CONTACT_DETAIL_TYPE;
+        add constraint PROBAND_CONTACT_DETAIL_VALUE_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_CONTACT_DETAIL_VALUE 
         add constraint PROBAND_CONTACT_DETAIL_VALUE_PROBAND_FKC 
@@ -2648,9 +2823,9 @@
         references PROBAND;
 
     alter table PROBAND_CONTACT_DETAIL_VALUE 
-        add constraint PROBAND_CONTACT_DETAIL_VALUE_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint PROBAND_CONTACT_DETAIL_VALUE_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references CONTACT_DETAIL_TYPE;
 
     alter table PROBAND_CONTACT_PARTICULARS 
         add constraint PROBAND_CONTACT_PARTICULARS_CONTENT_TYPE_FKC 
@@ -2658,24 +2833,19 @@
         references MIME_TYPE;
 
     alter table PROBAND_GROUP 
-        add constraint PROBAND_GROUP_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
-
-    alter table PROBAND_GROUP 
         add constraint PROBAND_GROUP_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
-    alter table PROBAND_LIST_ENTRY 
-        add constraint PROBAND_LIST_ENTRY_GROUP_FKC 
-        foreign key (GROUP_FK) 
-        references PROBAND_GROUP;
-
-    alter table PROBAND_LIST_ENTRY 
-        add constraint PROBAND_LIST_ENTRY_TRIAL_FKC 
+    alter table PROBAND_GROUP 
+        add constraint PROBAND_GROUP_TRIAL_FKC 
         foreign key (TRIAL_FK) 
         references TRIAL;
+
+    alter table PROBAND_LIST_ENTRY 
+        add constraint PROBAND_LIST_ENTRY_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_LIST_ENTRY 
         add constraint PROBAND_LIST_ENTRY_PROBAND_FKC 
@@ -2688,14 +2858,19 @@
         references PROBAND_LIST_STATUS_ENTRY;
 
     alter table PROBAND_LIST_ENTRY 
-        add constraint PROBAND_LIST_ENTRY_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table PROBAND_LIST_ENTRY_TAG 
-        add constraint PROBAND_LIST_ENTRY_TAG_TRIAL_FKC 
+        add constraint PROBAND_LIST_ENTRY_TRIAL_FKC 
         foreign key (TRIAL_FK) 
         references TRIAL;
+
+    alter table PROBAND_LIST_ENTRY 
+        add constraint PROBAND_LIST_ENTRY_GROUP_FKC 
+        foreign key (GROUP_FK) 
+        references PROBAND_GROUP;
+
+    alter table PROBAND_LIST_ENTRY_TAG 
+        add constraint PROBAND_LIST_ENTRY_TAG_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_LIST_ENTRY_TAG 
         add constraint PROBAND_LIST_ENTRY_TAG_FIELD_FKC 
@@ -2703,19 +2878,14 @@
         references INPUT_FIELD;
 
     alter table PROBAND_LIST_ENTRY_TAG 
-        add constraint PROBAND_LIST_ENTRY_TAG_MODIFIED_USER_FKC 
+        add constraint PROBAND_LIST_ENTRY_TAG_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table PROBAND_LIST_ENTRY_TAG_VALUE 
+        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table PROBAND_LIST_ENTRY_TAG_VALUE 
-        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_TAG_FKC 
-        foreign key (TAG_FK) 
-        references PROBAND_LIST_ENTRY_TAG;
-
-    alter table PROBAND_LIST_ENTRY_TAG_VALUE 
-        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_LIST_ENTRY_FKC 
-        foreign key (LIST_ENTRY_FK) 
-        references PROBAND_LIST_ENTRY;
 
     alter table PROBAND_LIST_ENTRY_TAG_VALUE 
         add constraint PROBAND_LIST_ENTRY_TAG_VALUE_VALUE_FKC 
@@ -2723,7 +2893,17 @@
         references INPUT_FIELD_VALUE;
 
     alter table PROBAND_LIST_ENTRY_TAG_VALUE 
-        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_MODIFIED_USER_FKC 
+        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_LIST_ENTRY_FKC 
+        foreign key (LIST_ENTRY_FK) 
+        references PROBAND_LIST_ENTRY;
+
+    alter table PROBAND_LIST_ENTRY_TAG_VALUE 
+        add constraint PROBAND_LIST_ENTRY_TAG_VALUE_TAG_FKC 
+        foreign key (TAG_FK) 
+        references PROBAND_LIST_ENTRY_TAG;
+
+    alter table PROBAND_LIST_STATUS_ENTRY 
+        add constraint PROBAND_LIST_STATUS_ENTRY_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2733,19 +2913,14 @@
         references PROBAND_LIST_ENTRY;
 
     alter table PROBAND_LIST_STATUS_ENTRY 
-        add constraint PROBAND_LIST_STATUS_ENTRY_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table PROBAND_LIST_STATUS_ENTRY 
         add constraint PROBAND_LIST_STATUS_ENTRY_STATUS_FKC 
         foreign key (STATUS_FK) 
         references PROBAND_LIST_STATUS_TYPE;
 
     alter table PROBAND_STATUS_ENTRY 
-        add constraint PROBAND_STATUS_ENTRY_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references PROBAND_STATUS_TYPE;
+        add constraint PROBAND_STATUS_ENTRY_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_STATUS_ENTRY 
         add constraint PROBAND_STATUS_ENTRY_PROBAND_FKC 
@@ -2753,14 +2928,14 @@
         references PROBAND;
 
     alter table PROBAND_STATUS_ENTRY 
-        add constraint PROBAND_STATUS_ENTRY_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint PROBAND_STATUS_ENTRY_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references PROBAND_STATUS_TYPE;
 
     alter table PROBAND_TAG_VALUE 
-        add constraint PROBAND_TAG_VALUE_TAG_FKC 
-        foreign key (TAG_FK) 
-        references PROBAND_TAG;
+        add constraint PROBAND_TAG_VALUE_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table PROBAND_TAG_VALUE 
         add constraint PROBAND_TAG_VALUE_PROBAND_FKC 
@@ -2768,7 +2943,12 @@
         references PROBAND;
 
     alter table PROBAND_TAG_VALUE 
-        add constraint PROBAND_TAG_VALUE_MODIFIED_USER_FKC 
+        add constraint PROBAND_TAG_VALUE_TAG_FKC 
+        foreign key (TAG_FK) 
+        references PROBAND_TAG;
+
+    alter table PROCEDURE 
+        add constraint PROCEDURE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2782,20 +2962,10 @@
         foreign key (CODE_FK) 
         references OPS_CODE;
 
-    alter table PROCEDURE 
-        add constraint PROCEDURE_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
     alter table PROFILE_PERMISSION 
         add constraint PROFILE_PERMISSION_PERMISSION_FKC 
         foreign key (PERMISSION_FK) 
         references PERMISSION;
-
-    alter table SIGNATURE 
-        add constraint SIGNATURE_TRIAL_FKC 
-        foreign key (TRIAL_FK) 
-        references TRIAL;
 
     alter table SIGNATURE 
         add constraint SIGNATURE_ECRF_STATUS_ENTRY_FKC 
@@ -2807,20 +2977,15 @@
         foreign key (SIGNEE_FK) 
         references users;
 
-    alter table STAFF 
-        add constraint STAFF_CATEGORY_FKC 
-        foreign key (CATEGORY_FK) 
-        references STAFF_CATEGORY;
+    alter table SIGNATURE 
+        add constraint SIGNATURE_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
 
     alter table STAFF 
-        add constraint STAFF_PARENT_FKC 
-        foreign key (PARENT_FK) 
-        references STAFF;
-
-    alter table STAFF 
-        add constraint STAFF_DEPARTMENT_FKC 
-        foreign key (DEPARTMENT_FK) 
-        references DEPARTMENT;
+        add constraint STAFF_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table STAFF 
         add constraint STAFF_ORGANISATION_PARTICULARS_FKC 
@@ -2833,14 +2998,24 @@
         references PERSON_CONTACT_PARTICULARS;
 
     alter table STAFF 
-        add constraint STAFF_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint STAFF_PARENT_FKC 
+        foreign key (PARENT_FK) 
+        references STAFF;
+
+    alter table STAFF 
+        add constraint STAFF_CATEGORY_FKC 
+        foreign key (CATEGORY_FK) 
+        references STAFF_CATEGORY;
+
+    alter table STAFF 
+        add constraint STAFF_DEPARTMENT_FKC 
+        foreign key (DEPARTMENT_FK) 
+        references DEPARTMENT;
 
     alter table STAFF_ADDRESS 
-        add constraint STAFF_ADDRESS_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references ADDRESS_TYPE;
+        add constraint STAFF_ADDRESS_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table STAFF_ADDRESS 
         add constraint STAFF_ADDRESS_STAFF_FKC 
@@ -2848,14 +3023,14 @@
         references STAFF;
 
     alter table STAFF_ADDRESS 
-        add constraint STAFF_ADDRESS_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint STAFF_ADDRESS_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references ADDRESS_TYPE;
 
     alter table STAFF_CONTACT_DETAIL_VALUE 
-        add constraint STAFF_CONTACT_DETAIL_VALUE_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references CONTACT_DETAIL_TYPE;
+        add constraint STAFF_CONTACT_DETAIL_VALUE_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table STAFF_CONTACT_DETAIL_VALUE 
         add constraint STAFF_CONTACT_DETAIL_VALUE_STAFF_FKC 
@@ -2863,14 +3038,14 @@
         references STAFF;
 
     alter table STAFF_CONTACT_DETAIL_VALUE 
-        add constraint STAFF_CONTACT_DETAIL_VALUE_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint STAFF_CONTACT_DETAIL_VALUE_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references CONTACT_DETAIL_TYPE;
 
     alter table STAFF_STATUS_ENTRY 
-        add constraint STAFF_STATUS_ENTRY_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references STAFF_STATUS_TYPE;
+        add constraint STAFF_STATUS_ENTRY_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table STAFF_STATUS_ENTRY 
         add constraint STAFF_STATUS_ENTRY_STAFF_FKC 
@@ -2878,7 +3053,12 @@
         references STAFF;
 
     alter table STAFF_STATUS_ENTRY 
-        add constraint STAFF_STATUS_ENTRY_MODIFIED_USER_FKC 
+        add constraint STAFF_STATUS_ENTRY_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references STAFF_STATUS_TYPE;
+
+    alter table STAFF_TAG_VALUE 
+        add constraint STAFF_TAG_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2892,8 +3072,8 @@
         foreign key (STAFF_FK) 
         references STAFF;
 
-    alter table STAFF_TAG_VALUE 
-        add constraint STAFF_TAG_VALUE_MODIFIED_USER_FKC 
+    alter table TEAM_MEMBER 
+        add constraint TEAM_MEMBER_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2903,24 +3083,19 @@
         references STAFF;
 
     alter table TEAM_MEMBER 
-        add constraint TEAM_MEMBER_ROLE_FKC 
-        foreign key (ROLE_FK) 
-        references TEAM_MEMBER_ROLE;
-
-    alter table TEAM_MEMBER 
         add constraint TEAM_MEMBER_TRIAL_FKC 
         foreign key (TRIAL_FK) 
         references TRIAL;
 
     alter table TEAM_MEMBER 
-        add constraint TEAM_MEMBER_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
+        add constraint TEAM_MEMBER_ROLE_FKC 
+        foreign key (ROLE_FK) 
+        references TEAM_MEMBER_ROLE;
 
     alter table TIMELINE_EVENT 
-        add constraint TIMELINE_EVENT_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references TIMELINE_EVENT_TYPE;
+        add constraint TIMELINE_EVENT_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table TIMELINE_EVENT 
         add constraint TIMELINE_EVENT_TRIAL_FKC 
@@ -2928,7 +3103,12 @@
         references TRIAL;
 
     alter table TIMELINE_EVENT 
-        add constraint TIMELINE_EVENT_MODIFIED_USER_FKC 
+        add constraint TIMELINE_EVENT_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references TIMELINE_EVENT_TYPE;
+
+    alter table TRIAL 
+        add constraint TRIAL_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2936,6 +3116,11 @@
         add constraint TRIAL_SPONSORING_FKC 
         foreign key (SPONSORING_FK) 
         references SPONSORING_TYPE;
+
+    alter table TRIAL 
+        add constraint TRIAL_STATUS_FKC 
+        foreign key (STATUS_FK) 
+        references TRIAL_STATUS_TYPE;
 
     alter table TRIAL 
         add constraint TRIAL_TYPE_FKC 
@@ -2952,15 +3137,10 @@
         foreign key (DEPARTMENT_FK) 
         references DEPARTMENT;
 
-    alter table TRIAL 
-        add constraint TRIAL_MODIFIED_USER_FKC 
+    alter table TRIAL_TAG_VALUE 
+        add constraint TRIAL_TAG_VALUE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table TRIAL 
-        add constraint TRIAL_STATUS_FKC 
-        foreign key (STATUS_FK) 
-        references TRIAL_STATUS_TYPE;
 
     alter table TRIAL_TAG_VALUE 
         add constraint TRIAL_TAG_VALUE_TAG_FKC 
@@ -2972,8 +3152,8 @@
         foreign key (TRIAL_FK) 
         references TRIAL;
 
-    alter table TRIAL_TAG_VALUE 
-        add constraint TRIAL_TAG_VALUE_MODIFIED_USER_FKC 
+    alter table USER_PERMISSION_PROFILE 
+        add constraint USER_PERMISSION_PROFILE_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -2982,15 +3162,10 @@
         foreign key (USER_FK) 
         references users;
 
-    alter table USER_PERMISSION_PROFILE 
-        add constraint USER_PERMISSION_PROFILE_MODIFIED_USER_FKC 
+    alter table VISIT 
+        add constraint VISIT_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table VISIT 
-        add constraint VISIT_TYPE_FKC 
-        foreign key (TYPE_FK) 
-        references VISIT_TYPE;
 
     alter table VISIT 
         add constraint VISIT_TRIAL_FKC 
@@ -2998,7 +3173,12 @@
         references TRIAL;
 
     alter table VISIT 
-        add constraint VISIT_MODIFIED_USER_FKC 
+        add constraint VISIT_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references VISIT_TYPE;
+
+    alter table VISIT_SCHEDULE_ITEM 
+        add constraint VISIT_SCHEDULE_ITEM_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -3013,33 +3193,28 @@
         references TRIAL;
 
     alter table VISIT_SCHEDULE_ITEM 
-        add constraint VISIT_SCHEDULE_ITEM_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table VISIT_SCHEDULE_ITEM 
         add constraint VISIT_SCHEDULE_ITEM_VISIT_FKC 
         foreign key (VISIT_FK) 
         references VISIT;
-
-    alter table asp_ingredient 
-        add constraint ASP_SUBSTANCES_FKC 
-        foreign key (SUBSTANCES_FK) 
-        references ASP_SUBSTANCE;
 
     alter table asp_ingredient 
         add constraint ASP_SUBSTANCE_ASPS_FKC 
         foreign key (ASPS_FK) 
         references ASP;
 
-    alter table course_participation_admin_self_registration_transition 
-        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUP 
-        foreign key (COURSE_PARTICIPATION_STATUS_TYPES_FK) 
-        references COURSE_PARTICIPATION_STATUS_TYPE;
+    alter table asp_ingredient 
+        add constraint ASP_SUBSTANCES_FKC 
+        foreign key (SUBSTANCES_FK) 
+        references ASP_SUBSTANCE;
 
     alter table course_participation_admin_self_registration_transition 
         add constraint COURSE_PARTICIPATION_STATUS_TYPE_ADMIN_SELF_REGISTRATION_TRC 
         foreign key (ADMIN_SELF_REGISTRATION_TRANSITIONS_FK) 
+        references COURSE_PARTICIPATION_STATUS_TYPE;
+
+    alter table course_participation_admin_self_registration_transition 
+        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUP 
+        foreign key (COURSE_PARTICIPATION_STATUS_TYPES_FK) 
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
     alter table course_participation_admin_transition 
@@ -3053,23 +3228,23 @@
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
     alter table course_participation_user_self_registration_transition 
-        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUT 
-        foreign key (COURSE_PARTICIPATION_STATUS_TYPES_FK) 
-        references COURSE_PARTICIPATION_STATUS_TYPE;
-
-    alter table course_participation_user_self_registration_transition 
         add constraint COURSE_PARTICIPATION_STATUS_TYPE_USER_SELF_REGISTRATION_TRAC 
         foreign key (USER_SELF_REGISTRATION_TRANSITIONS_FK) 
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
-    alter table course_participation_user_transition 
-        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUC 
+    alter table course_participation_user_self_registration_transition 
+        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUT 
         foreign key (COURSE_PARTICIPATION_STATUS_TYPES_FK) 
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
     alter table course_participation_user_transition 
         add constraint COURSE_PARTICIPATION_STATUS_TYPE_USER_TRANSITIONS_FKC 
         foreign key (USER_TRANSITIONS_FK) 
+        references COURSE_PARTICIPATION_STATUS_TYPE;
+
+    alter table course_participation_user_transition 
+        add constraint COURSE_PARTICIPATION_STATUS_TYPE_COURSE_PARTICIPATION_STATUC 
+        foreign key (COURSE_PARTICIPATION_STATUS_TYPES_FK) 
         references COURSE_PARTICIPATION_STATUS_TYPE;
 
     alter table course_renewal 
@@ -3083,9 +3258,9 @@
         references COURSE;
 
     alter table ecrf 
-        add constraint ecrf_GROUP_FKC 
-        foreign key (GROUP_FK) 
-        references PROBAND_GROUP;
+        add constraint ecrf_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table ecrf 
         add constraint ecrf_PROBAND_LIST_STATUS_FKC 
@@ -3098,12 +3273,17 @@
         references TRIAL;
 
     alter table ecrf 
+        add constraint ecrf_GROUP_FKC 
+        foreign key (GROUP_FK) 
+        references PROBAND_GROUP;
+
+    alter table ecrf 
         add constraint ecrf_VISIT_FKC 
         foreign key (VISIT_FK) 
         references VISIT;
 
-    alter table ecrf 
-        add constraint ecrf_MODIFIED_USER_FKC 
+    alter table ecrf_field 
+        add constraint ecrf_field_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -3122,8 +3302,8 @@
         foreign key (TRIAL_FK) 
         references TRIAL;
 
-    alter table ecrf_field 
-        add constraint ecrf_field_MODIFIED_USER_FKC 
+    alter table ecrf_field_status_entry 
+        add constraint ecrf_field_status_entry_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
 
@@ -3136,11 +3316,6 @@
         add constraint ecrf_field_status_entry_ECRF_FIELD_FKC 
         foreign key (ECRF_FIELD_FK) 
         references ecrf_field;
-
-    alter table ecrf_field_status_entry 
-        add constraint ecrf_field_status_entry_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
 
     alter table ecrf_field_status_entry 
         add constraint ecrf_field_status_entry_STATUS_FKC 
@@ -3158,6 +3333,16 @@
         references ecrf_field_status_type;
 
     alter table ecrf_field_value 
+        add constraint ecrf_field_value_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table ecrf_field_value 
+        add constraint ecrf_field_value_VALUE_FKC 
+        foreign key (VALUE_FK) 
+        references INPUT_FIELD_VALUE;
+
+    alter table ecrf_field_value 
         add constraint ecrf_field_value_LIST_ENTRY_FKC 
         foreign key (LIST_ENTRY_FK) 
         references PROBAND_LIST_ENTRY;
@@ -3167,20 +3352,10 @@
         foreign key (ECRF_FIELD_FK) 
         references ecrf_field;
 
-    alter table ecrf_field_value 
-        add constraint ecrf_field_value_VALUE_FKC 
-        foreign key (VALUE_FK) 
-        references INPUT_FIELD_VALUE;
-
-    alter table ecrf_field_value 
-        add constraint ecrf_field_value_MODIFIED_USER_FKC 
+    alter table ecrf_status_entry 
+        add constraint ecrf_status_entry_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table ecrf_status_entry 
-        add constraint ecrf_status_entry_ECRF_FKC 
-        foreign key (ECRF_FK) 
-        references ecrf;
 
     alter table ecrf_status_entry 
         add constraint ecrf_status_entry_LIST_ENTRY_FKC 
@@ -3188,14 +3363,14 @@
         references PROBAND_LIST_ENTRY;
 
     alter table ecrf_status_entry 
-        add constraint ecrf_status_entry_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table ecrf_status_entry 
         add constraint ecrf_status_entry_STATUS_FKC 
         foreign key (STATUS_FK) 
         references ecrf_status_type;
+
+    alter table ecrf_status_entry 
+        add constraint ecrf_status_entry_ECRF_FKC 
+        foreign key (ECRF_FK) 
+        references ecrf;
 
     alter table ecrf_status_transition 
         add constraint ecrf_status_type_TRANSITIONS_FKC 
@@ -3208,53 +3383,63 @@
         references ecrf_status_type;
 
     alter table ecrf_status_type_action 
-        add constraint ecrf_status_action_E_C_R_F_STATUS_TYPES_FKC 
-        foreign key (E_C_R_F_STATUS_TYPES_FK) 
-        references ecrf_status_type;
-
-    alter table ecrf_status_type_action 
         add constraint ecrf_status_type_ACTIONS_FKC 
         foreign key (ACTIONS_FK) 
         references ecrf_status_action;
 
-    alter table input_field_value_selection 
-        add constraint INPUT_FIELD_SELECTION_SET_VALUE_INPUT_FIELD_VALUES_FKC 
-        foreign key (INPUT_FIELD_VALUES_FK) 
-        references INPUT_FIELD_VALUE;
+    alter table ecrf_status_type_action 
+        add constraint ecrf_status_action_E_C_R_F_STATUS_TYPES_FKC 
+        foreign key (E_C_R_F_STATUS_TYPES_FK) 
+        references ecrf_status_type;
 
     alter table input_field_value_selection 
         add constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC 
         foreign key (SELECTION_VALUES_FK) 
         references INPUT_FIELD_SELECTION_SET_VALUE;
 
-    alter table medication_ingredient 
-        add constraint MEDICATION_SUBSTANCES_FKC 
-        foreign key (SUBSTANCES_FK) 
-        references ASP_SUBSTANCE;
+    alter table input_field_value_selection 
+        add constraint INPUT_FIELD_SELECTION_SET_VALUE_INPUT_FIELD_VALUES_FKC 
+        foreign key (INPUT_FIELD_VALUES_FK) 
+        references INPUT_FIELD_VALUE;
+
+    alter table mass_mail_status_transition 
+        add constraint MASS_MAIL_STATUS_TYPE_MASS_MAIL_STATUS_TYPES_FKC 
+        foreign key (MASS_MAIL_STATUS_TYPES_FK) 
+        references MASS_MAIL_STATUS_TYPE;
+
+    alter table mass_mail_status_transition 
+        add constraint MASS_MAIL_STATUS_TYPE_TRANSITIONS_FKC 
+        foreign key (TRANSITIONS_FK) 
+        references MASS_MAIL_STATUS_TYPE;
 
     alter table medication_ingredient 
         add constraint ASP_SUBSTANCE_MEDICATIONS_FKC 
         foreign key (MEDICATIONS_FK) 
         references MEDICATION;
 
-    alter table privacy_consent_status_transition 
-        add constraint PRIVACY_CONSENT_STATUS_TYPE_TRANSITIONS_FKC 
-        foreign key (TRANSITIONS_FK) 
-        references PRIVACY_CONSENT_STATUS_TYPE;
+    alter table medication_ingredient 
+        add constraint MEDICATION_SUBSTANCES_FKC 
+        foreign key (SUBSTANCES_FK) 
+        references ASP_SUBSTANCE;
 
     alter table privacy_consent_status_transition 
         add constraint PRIVACY_CONSENT_STATUS_TYPE_PRIVACY_CONSENT_STATUS_TYPES_FKC 
         foreign key (PRIVACY_CONSENT_STATUS_TYPES_FK) 
         references PRIVACY_CONSENT_STATUS_TYPE;
 
-    alter table proband_children 
-        add constraint PROBAND_CHILDREN_FKC 
-        foreign key (CHILDREN_FK) 
-        references PROBAND;
+    alter table privacy_consent_status_transition 
+        add constraint PRIVACY_CONSENT_STATUS_TYPE_TRANSITIONS_FKC 
+        foreign key (TRANSITIONS_FK) 
+        references PRIVACY_CONSENT_STATUS_TYPE;
 
     alter table proband_children 
         add constraint PROBAND_PARENTS_FKC 
         foreign key (PARENTS_FK) 
+        references PROBAND;
+
+    alter table proband_children 
+        add constraint PROBAND_CHILDREN_FKC 
+        foreign key (CHILDREN_FK) 
         references PROBAND;
 
     alter table proband_list_status_transition 
@@ -3288,12 +3473,17 @@
         references NOTIFICATION_TYPE;
 
     alter table trial_status_transition 
+        add constraint TRIAL_STATUS_TYPE_TRIAL_STATUS_TYPES_FKC 
+        foreign key (TRIAL_STATUS_TYPES_FK) 
+        references TRIAL_STATUS_TYPE;
+
+    alter table trial_status_transition 
         add constraint TRIAL_STATUS_TYPE_TRANSITIONS_FKC 
         foreign key (TRANSITIONS_FK) 
         references TRIAL_STATUS_TYPE;
 
-    alter table trial_status_transition 
-        add constraint TRIAL_STATUS_TYPE_TRIAL_STATUS_TYPES_FKC 
+    alter table trial_status_type_action 
+        add constraint TRIAL_STATUS_ACTION_TRIAL_STATUS_TYPES_FKC 
         foreign key (TRIAL_STATUS_TYPES_FK) 
         references TRIAL_STATUS_TYPE;
 
@@ -3302,10 +3492,15 @@
         foreign key (ACTIONS_FK) 
         references TRIAL_STATUS_ACTION;
 
-    alter table trial_status_type_action 
-        add constraint TRIAL_STATUS_ACTION_TRIAL_STATUS_TYPES_FKC 
-        foreign key (TRIAL_STATUS_TYPES_FK) 
-        references TRIAL_STATUS_TYPE;
+    alter table users 
+        add constraint users_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table users 
+        add constraint users_IDENTITY_FKC 
+        foreign key (IDENTITY_FK) 
+        references STAFF;
 
     alter table users 
         add constraint users_DEPARTMENT_FKC 
@@ -3313,28 +3508,18 @@
         references DEPARTMENT;
 
     alter table users 
-        add constraint users_MODIFIED_USER_FKC 
-        foreign key (MODIFIED_USER_FK) 
-        references users;
-
-    alter table users 
         add constraint users_KEY_PAIR_FKC 
         foreign key (KEY_PAIR_FK) 
         references KEY_PAIR;
-
-    alter table users 
-        add constraint users_IDENTITY_FKC 
-        foreign key (IDENTITY_FK) 
-        references STAFF;
-
-    alter table valid_criterion_property_restriction 
-        add constraint CRITERION_PROPERTY_VALID_RESTRICTIONS_FKC 
-        foreign key (VALID_RESTRICTIONS_FK) 
-        references CRITERION_RESTRICTION;
 
     alter table valid_criterion_property_restriction 
         add constraint CRITERION_RESTRICTION_CRITERION_PROPERTIES_FKC 
         foreign key (CRITERION_PROPERTIES_FK) 
         references CRITERION_PROPERTY;
+
+    alter table valid_criterion_property_restriction 
+        add constraint CRITERION_PROPERTY_VALID_RESTRICTIONS_FKC 
+        foreign key (VALID_RESTRICTIONS_FK) 
+        references CRITERION_RESTRICTION;
 
     create sequence hibernate_sequence;

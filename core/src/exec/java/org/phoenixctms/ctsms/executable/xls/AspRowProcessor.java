@@ -28,13 +28,15 @@ public class AspRowProcessor extends RowProcessor {
 	private static final int REGISTRATION_DATE_COLUMN_INDEX = 5;
 	private static final int SUBSTANCES_COLUMN_INDEX = 6;
 	private static final int ATC_CODE_COLUMN_INDEX = 7;
-	private static final int BATCH_RELEASE_COLUMN_INDEX = 8;
-	private static final int BATCH_TESTING_COLUMN_INDEX = 9;
-	private static final int BATCH_TESTING_EXCLUSION_COLUMN_INDEX = 10;
-	private static final int PRESCRIPTION_COLUMN_INDEX = 11;
-	private static final int DISTRIBUTION_COLUMN_INDEX = 12;
-	private static final int HUMAN_COLUMN_INDEX = 13;
-	private static final int CATEGORY_COLUMN_INDEX = 14;
+	private static final int NARCOTIC_COLUMN_INDEX = 8;
+	private static final int PSYCHOTROPIC_COLUMN_INDEX = 9;
+	private static final int BATCH_RELEASE_COLUMN_INDEX = 10;
+	private static final int BATCH_TESTING_COLUMN_INDEX = 11;
+	private static final int BATCH_TESTING_EXCLUSION_COLUMN_INDEX = 12;
+	private static final int PRESCRIPTION_COLUMN_INDEX = 13;
+	private static final int DISTRIBUTION_COLUMN_INDEX = 14;
+	private static final int HUMAN_COLUMN_INDEX = 15;
+	private static final int CATEGORY_COLUMN_INDEX = 16;
 
 	// private static final int SPECIES_COLUMN_INDEX = 15;
 	// private static final int SPECIES_CATEGORY_COLUMN_INDEX = 16;
@@ -44,6 +46,10 @@ public class AspRowProcessor extends RowProcessor {
 	// private static final int DEPLETION_TIME_VALUE_COLUMN_INDEX = 20;
 	// private static final int DEPLETION_TIME_UNIT_COLUMN_INDEX = 21;
 	// private static final int NOTE_COLUMN_INDEX = 22;
+
+	private final static Pattern SUBSTANCES_SEPARATOR_REGEXP = Pattern.compile(";");
+
+	private final static Pattern ATC_CODES_SEPARATOR_REGEXP = Pattern.compile(";");
 
 	private static boolean isAsp(String value) {
 		return "arzneispezialität".equals(value.toLowerCase());
@@ -62,7 +68,6 @@ public class AspRowProcessor extends RowProcessor {
 			throw new IllegalArgumentException("cannot parse boolean value " + value);
 		}
 	}
-
 	private static java.util.Date parseDate(String value) {
 		SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -72,7 +77,6 @@ public class AspRowProcessor extends RowProcessor {
 			throw new IllegalArgumentException("cannot parse date value " + value, e);
 		}
 	}
-
 	private int nameColumnIndex;
 	private int typeColumnIndex;
 	private int labelingColumnIndex;
@@ -81,12 +85,16 @@ public class AspRowProcessor extends RowProcessor {
 	private int registrationDateColumnIndex;
 	private int substancesColumnIndex;
 	private int atcCodeColumnIndex;
+	private int narcoticColumnIndex;
+	private int psychotropicColumnIndex;
 	private int batchReleaseColumnIndex;
 	private int batchTestingColumnIndex;
 	private int batchTestingExclusionColumnIndex;
 	private int prescriptionColumnIndex;
 	private int distributionColumnIndex;
+
 	private int humanColumnIndex;
+
 	private int categoryColumnIndex;
 	// private int speciesColumnIndex;
 	// private int speciesCategoryColumnIndex;
@@ -96,12 +104,8 @@ public class AspRowProcessor extends RowProcessor {
 	// private int depletionTimeValueColumnIndex;
 	// private int depletionTimeUnitColumnIndex;
 	// private int noteColumnIndex;
-
 	private TreeMap<String, ArrayList<Asp>> substancesMap;
 	// private TreeMap<String, ArrayList<Asp>> atcCodesMap;
-
-	private final static Pattern SUBSTANCES_SEPARATOR_REGEXP = Pattern.compile(";");
-	private final static Pattern ATC_CODES_SEPARATOR_REGEXP = Pattern.compile(";");
 
 	@Autowired
 	protected AspDao aspDao;
@@ -131,6 +135,8 @@ public class AspRowProcessor extends RowProcessor {
 		asp.setProprietor(getProprietor(values));
 		asp.setRegistrationDate(parseDate(getRegistrationDate(values)));
 		// asp.setAtcCode(getAtcCode(values));
+		asp.setNarcotic(CommonUtil.isEmptyString(getNarcotic(values)) ? null : parseBoolean(getNarcotic(values)));
+		asp.setPsychotropic(CommonUtil.isEmptyString(getPsychotropic(values)) ? null : parseBoolean(getPsychotropic(values)));
 		asp.setBatchRelease(CommonUtil.isEmptyString(getBatchRelease(values)) ? null : parseBoolean(getBatchRelease(values)));
 		asp.setBatchTesting(CommonUtil.isEmptyString(getBatchTesting(values)) ? null : parseBoolean(getBatchTesting(values)));
 		asp.setBatchTestingExclusion(CommonUtil.isEmptyString(getBatchTestingExclusion(values)) ? null : parseBoolean(getBatchTestingExclusion(values)));
@@ -176,6 +182,7 @@ public class AspRowProcessor extends RowProcessor {
 		return getColumnValue(values, atcCodeColumnIndex);
 	}
 
+
 	private String getBatchRelease(String[] values) {
 		return getColumnValue(values, batchReleaseColumnIndex);
 	}
@@ -196,6 +203,14 @@ public class AspRowProcessor extends RowProcessor {
 		return getColumnValue(values, distributionColumnIndex);
 	}
 
+	private String getHuman(String[] values) {
+		return getColumnValue(values, humanColumnIndex);
+	}
+
+	private String getLabeling(String[] values) {
+		return getColumnValue(values, labelingColumnIndex);
+	}
+
 	// private String getDepletionTimeUnit(String[] values) {
 	// return getColumnValue(values, depletionTimeUnitColumnIndex);
 	// }
@@ -208,28 +223,28 @@ public class AspRowProcessor extends RowProcessor {
 	// return getColumnValue(values, dosingColumnIndex);
 	// }
 
-	private String getHuman(String[] values) {
-		return getColumnValue(values, humanColumnIndex);
-	}
-
-	private String getLabeling(String[] values) {
-		return getColumnValue(values, labelingColumnIndex);
-	}
-
 	private String getName(String[] values) {
 		return getColumnValue(values, nameColumnIndex);
+	}
+
+	private String getNarcotic(String[] values) {
+		return getColumnValue(values, narcoticColumnIndex);
+	}
+
+	private String getPrescription(String[] values) {
+		return getColumnValue(values, prescriptionColumnIndex);
 	}
 
 	// private String getNote(String[] values) {
 	// return getColumnValue(values, noteColumnIndex);
 	// }
 
-	private String getPrescription(String[] values) {
-		return getColumnValue(values, prescriptionColumnIndex);
-	}
-
 	private String getProprietor(String[] values) {
 		return getColumnValue(values, proprietorColumnIndex);
+	}
+
+	private String getPsychotropic(String[] values) {
+		return getColumnValue(values, psychotropicColumnIndex);
 	}
 
 	private String getRegistrationDate(String[] values) {
@@ -275,6 +290,8 @@ public class AspRowProcessor extends RowProcessor {
 		registrationDateColumnIndex = REGISTRATION_DATE_COLUMN_INDEX;
 		substancesColumnIndex = SUBSTANCES_COLUMN_INDEX;
 		atcCodeColumnIndex = ATC_CODE_COLUMN_INDEX;
+		narcoticColumnIndex = NARCOTIC_COLUMN_INDEX;
+		psychotropicColumnIndex = PSYCHOTROPIC_COLUMN_INDEX;
 		batchReleaseColumnIndex = BATCH_RELEASE_COLUMN_INDEX;
 		batchTestingColumnIndex = BATCH_TESTING_COLUMN_INDEX;
 		batchTestingExclusionColumnIndex = BATCH_TESTING_EXCLUSION_COLUMN_INDEX;
@@ -297,31 +314,33 @@ public class AspRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		// .append(getRegistrationNumber(values))
-		.append(getName(values))
-		.append(getType(values))
-		.append(getLabeling(values))
-		.append(getRegistrationNumber(values))
-		.append(getProprietor(values))
-		.append(getRegistrationDate(values))
-		.append(getSubstances(values))
-		.append(getAtcCode(values))
-		.append(getBatchRelease(values))
-		.append(getBatchTesting(values))
-		.append(getBatchTestingExclusion(values))
-		.append(getPrescription(values))
-		.append(getDistribution(values))
-		.append(getHuman(values))
-		.append(getCategory(values))
-		// .append(getSpecies(values))
-		// .append(getSpeciesCategory(values))
-		// .append(getApplication(values))
-		// .append(getDosing(values))
-		// .append(getTissue(values))
-		// .append(getDepletionTimeValue(values))
-		// .append(getDepletionTimeUnit(values))
-		// .append(getNote(values))
-		.toHashCode();
+				// .append(getRegistrationNumber(values))
+				.append(getName(values))
+				.append(getType(values))
+				.append(getLabeling(values))
+				.append(getRegistrationNumber(values))
+				.append(getProprietor(values))
+				.append(getRegistrationDate(values))
+				.append(getSubstances(values))
+				.append(getAtcCode(values))
+				.append(getNarcotic(values))
+				.append(getPsychotropic(values))
+				.append(getBatchRelease(values))
+				.append(getBatchTesting(values))
+				.append(getBatchTestingExclusion(values))
+				.append(getPrescription(values))
+				.append(getDistribution(values))
+				.append(getHuman(values))
+				.append(getCategory(values))
+				// .append(getSpecies(values))
+				// .append(getSpeciesCategory(values))
+				// .append(getApplication(values))
+				// .append(getDosing(values))
+				// .append(getTissue(values))
+				// .append(getDepletionTimeValue(values))
+				// .append(getDepletionTimeUnit(values))
+				// .append(getNote(values))
+				.toHashCode();
 	}
 
 	@Override
