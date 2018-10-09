@@ -204,6 +204,9 @@ public final class DefaultSettings {
 	public static final boolean INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
 	public static final boolean PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
 	public static final boolean ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
+	public static final boolean ECRF_CHARGE_DUE_ANNUAL = false;
+	public static final VariablePeriod ECRF_CHARGE_DUE_PERIOD = VariablePeriod.MONTH;
+	public static final Long ECRF_CHARGE_DUE_PERIOD_DAYS = null;
 
 	public static final ArrayList<String> NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = new ArrayList<String>();
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();

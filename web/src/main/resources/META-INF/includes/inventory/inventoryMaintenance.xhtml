@@ -479,9 +479,11 @@
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="charge">
-									<h:outputText
+									<h:outputFormat 
 										value="#{inventorylabels.inventory_maintenance_charge_tooltip}"
-										escape="false" />
+										escape="false">
+										<f:param value="#{applicationScopeBean.currencySymbol}" />
+									</h:outputFormat>
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="charge" />

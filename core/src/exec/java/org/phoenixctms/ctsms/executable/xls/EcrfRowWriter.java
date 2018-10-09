@@ -20,6 +20,7 @@ public class EcrfRowWriter extends RowWriter {
 	private final static int TITLE_COLUMN_INDEX = 7; // 6;
 	private final static int DESCRIPTION_COLUMN_INDEX = 8; // 7;
 	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9; // 8;
+	private final static int CHARGE_COLUMN_INDEX = 10; // 8;
 	private int probandGroupColumnIndex;
 	private int positionColumnIndex;
 	private int visitColumnIndex;
@@ -30,6 +31,7 @@ public class EcrfRowWriter extends RowWriter {
 	private int titleColumnIndex;
 	private int descriptionColumnIndex;
 	private int enrollmentStatusColumnIndex;
+	private int chargeColumnIndex;
 	private int maxColumnIndex;
 	@Autowired
 	protected TrialService trialService;
@@ -69,6 +71,8 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(descriptionColumnIndex, maxColumnIndex);
 		enrollmentStatusColumnIndex = ENROLLMENT_STATUS_COLUMN_INDEX;
 		maxColumnIndex = Math.max(enrollmentStatusColumnIndex, maxColumnIndex);
+		chargeColumnIndex = CHARGE_COLUMN_INDEX;
+		maxColumnIndex = Math.max(chargeColumnIndex, maxColumnIndex);
 
 		context.getExporter().getEcrfFieldRowWriter().init();
 		context.getSpreadSheet(this);
@@ -96,6 +100,7 @@ public class EcrfRowWriter extends RowWriter {
 			values[titleColumnIndex] = ecrf.getTitle();
 			values[descriptionColumnIndex] = ecrf.getDescription();
 			values[enrollmentStatusColumnIndex] = (ecrf.getProbandListStatus() != null ? ecrf.getProbandListStatus().getNameL10nKey() : null);
+			values[chargeColumnIndex] = Float.toString(ecrf.getCharge());
 			printRow(values);
 		}
 	}

@@ -250,6 +250,17 @@ public final class DateCalc {
 		return null;
 	}
 
+	public static Date getEndOfYear(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), 11, 31, 23, 59, 59);
+			cal.set(GregorianCalendar.MILLISECOND, 999);
+			return cal.getTime();
+		}
+		return null;
+	}
+
 	public static Collection<HolidayVO> getHolidays(Date start, Date stop, Boolean isHoliday, HolidayDao holidayDao) throws Exception {
 		GregorianCalendar calStart = new GregorianCalendar();
 		calStart.setTime(start);
@@ -502,6 +513,15 @@ public final class DateCalc {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
 			return (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+		}
+		return null;
+	}
+
+	public static Date getStartOfYear(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			return (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), 0, 1, 0, 0, 0)).getTime();
 		}
 		return null;
 	}

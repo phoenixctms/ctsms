@@ -60,6 +60,7 @@ public class EcrfBean extends ManagedBeanBase {
 			in.setDescription(out.getDescription());
 			in.setDisabled(out.getDisabled());
 			in.setEnableBrowserFieldCalculation(out.getEnableBrowserFieldCalculation());
+			in.setCharge(out.getCharge());
 			in.setName(out.getName());
 			in.setPosition(out.getPosition());
 			in.setTitle(out.getTitle());
@@ -95,6 +96,7 @@ public class EcrfBean extends ManagedBeanBase {
 			in.setDisabled(Settings.getBoolean(SettingCodes.ECRF_DISABLED_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_DISABLED_PRESET));
 			in.setEnableBrowserFieldCalculation(Settings.getBoolean(SettingCodes.ECRF_ENABLE_BROWSER_FIELD_CALCULATION_PRESET, Bundle.SETTINGS,
 					DefaultSettings.ECRF_ENABLE_BROWSER_FIELD_CALCULATION_PRESET));
+			in.setCharge(Settings.getFloatNullable(SettingCodes.ECRF_CHARGE_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_CHARGE_PRESET));
 			in.setName(Messages.getString(MessageCodes.ECRF_NAME_PRESET));
 			in.setTitle(Messages.getString(MessageCodes.ECRF_TITLE_PRESET));
 			in.setExternalId(Messages.getString(MessageCodes.ECRF_EXTERNAL_ID_PRESET));

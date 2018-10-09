@@ -64,8 +64,9 @@ public class MoneyTransferOverviewBean extends ManagedBeanBase {
 			StaffOutVO user = WebUtil.getUserIdentity();
 			departments = WebUtil.getVisibleDepartments(user == null ? null : user.getDepartment().getId());
 		}
-		filterCostTypes = WebUtil.getMoneyTransferFilterCostTypes(trialMoneyTransferSummaryModel.getDepartmentId(), null, null, null);
-		Collection<PaymentMethodVO> paymentMethodVOs = null;
+		filterCostTypes = WebUtil.getMoneyTransferFilterCostTypes(trialMoneyTransferSummaryModel.getDepartmentId(), null, trialMoneyTransferSummaryModel.getProbandDepartmentId(),
+				null);
+		// Collection<PaymentMethodVO> paymentMethodVOs = null;
 		if (paymentMethods == null) {
 			try {
 				paymentMethods = WebUtil.getServiceLocator().getSelectionSetService().getPaymentMethods(WebUtil.getAuthentication());

@@ -46,104 +46,7 @@ import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
-import org.phoenixctms.ctsms.vo.AddressTypeVO;
-import org.phoenixctms.ctsms.vo.AlphaIdVO;
-import org.phoenixctms.ctsms.vo.AspAtcCodeVO;
-import org.phoenixctms.ctsms.vo.AspSubstanceVO;
-import org.phoenixctms.ctsms.vo.AspVO;
-import org.phoenixctms.ctsms.vo.AuthenticationTypeVO;
-import org.phoenixctms.ctsms.vo.AuthenticationVO;
-import org.phoenixctms.ctsms.vo.BooleanVO;
-import org.phoenixctms.ctsms.vo.CalendarWeekVO;
-import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
-import org.phoenixctms.ctsms.vo.CourseCategoryVO;
-import org.phoenixctms.ctsms.vo.CourseInVO;
-import org.phoenixctms.ctsms.vo.CourseOutVO;
-import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
-import org.phoenixctms.ctsms.vo.CriteriaOutVO;
-import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
-import org.phoenixctms.ctsms.vo.CvPDFVO;
-import org.phoenixctms.ctsms.vo.CvPositionOutVO;
-import org.phoenixctms.ctsms.vo.CvSectionVO;
-import org.phoenixctms.ctsms.vo.DBModuleVO;
-import org.phoenixctms.ctsms.vo.DepartmentVO;
-import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
-import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
-import org.phoenixctms.ctsms.vo.ECRFOutVO;
-import org.phoenixctms.ctsms.vo.ECRFProgressSummaryVO;
-import org.phoenixctms.ctsms.vo.ECRFProgressVO;
-import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
-import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
-import org.phoenixctms.ctsms.vo.EmailMessageVO;
-import org.phoenixctms.ctsms.vo.EventImportanceVO;
-import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
-import org.phoenixctms.ctsms.vo.InputFieldOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
-import org.phoenixctms.ctsms.vo.InquiryOutVO;
-import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
-import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
-import org.phoenixctms.ctsms.vo.InventoryCategoryVO;
-import org.phoenixctms.ctsms.vo.InventoryOutVO;
-import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.InventoryStatusTypeVO;
-import org.phoenixctms.ctsms.vo.JournalCategoryVO;
-import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.vo.JournalModuleVO;
-import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
-import org.phoenixctms.ctsms.vo.LecturerOutVO;
-import org.phoenixctms.ctsms.vo.LocaleVO;
-import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
-import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
-import org.phoenixctms.ctsms.vo.MassMailOutVO;
-import org.phoenixctms.ctsms.vo.MassMailProgressVO;
-import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
-import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
-import org.phoenixctms.ctsms.vo.MassMailTypeVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
-import org.phoenixctms.ctsms.vo.NotificationTypeVO;
-import org.phoenixctms.ctsms.vo.OpsCodeVO;
-import org.phoenixctms.ctsms.vo.PasswordInVO;
-import org.phoenixctms.ctsms.vo.PasswordOutVO;
-import org.phoenixctms.ctsms.vo.PaymentMethodVO;
-import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
-import org.phoenixctms.ctsms.vo.ProbandCategoryVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
-import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
-import org.phoenixctms.ctsms.vo.ProbandOutVO;
-import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.ProbandStatusTypeVO;
-import org.phoenixctms.ctsms.vo.ProcedureOutVO;
-import org.phoenixctms.ctsms.vo.SexVO;
-import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
-import org.phoenixctms.ctsms.vo.StaffCategoryVO;
-import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.StaffStatusTypeVO;
-import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
-import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
-import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
-import org.phoenixctms.ctsms.vo.TimeZoneVO;
-import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
-import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
-import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
-import org.phoenixctms.ctsms.vo.TrialTypeVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
-import org.phoenixctms.ctsms.vo.VariablePeriodVO;
-import org.phoenixctms.ctsms.vo.VisitOutVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
-import org.phoenixctms.ctsms.vo.VisitTypeVO;
+import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.web.model.ApplicationScopeBean;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
@@ -2266,7 +2169,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static ECRFProgressSummaryVO getEcrfProgressSummary(Long listEntryId, boolean ecrfDetail, boolean sectionDetail) {
 		if (listEntryId != null) {
 			try {
@@ -2331,6 +2233,31 @@ public final class WebUtil {
 		return null;
 		// }
 		// return statusType;
+	}
+
+	public static Collection<ECRFStatusTypeVO> getEcrfStatusTypes() {
+		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
+		try {
+
+			return getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
+
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		return new ArrayList<ECRFStatusTypeVO>();
+		//		if (statusTypeVOs != null) {
+		//			statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
+		//			Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
+		//			while (it.hasNext()) {
+		//				ECRFStatusTypeVO typeVO = it.next();
+		//				statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
+		//			}
+		//		} else {
+		//			statusTypes = new ArrayList<SelectItem>();
+		//		}
 	}
 
 	public static String getEmailDomainName() {
@@ -2426,13 +2353,13 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static Boolean getExpired(Date today, Date date, VariablePeriod validityPeriod, Long validityPeriodDays) {
 		if (today != null && date != null && validityPeriod != null) {
 			return getExpired(today, addIntervals(date, validityPeriod, validityPeriodDays, 1));
 		}
 		return null;
 	}
+
 
 	public static String getHttpBaseUrl() {
 		try {
@@ -2987,6 +2914,21 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static Long getMaintenanceScheduleItemCount(Long inventoryId) {
+		if (inventoryId != null) {
+			try {
+				return getServiceLocator().getInventoryService().getMaintenanceScheduleItemCount(getAuthentication(), inventoryId, null);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
 	// public static ArrayList<SelectItem> getSupportedLocales() {
 	// return getLocales(getLocale());
 	// }
@@ -3013,21 +2955,6 @@ public final class WebUtil {
 	// }
 	// return locales;
 	// }
-
-	public static Long getMaintenanceScheduleItemCount(Long inventoryId) {
-		if (inventoryId != null) {
-			try {
-				return getServiceLocator().getInventoryService().getMaintenanceScheduleItemCount(getAuthentication(), inventoryId, null);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				publishException(e);
-			} catch (AuthorisationException e) {
-
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return null;
-	}
 
 	public static MaintenanceTypeVO getMaintenanceType(Long maintenanceTypeId) {
 		if (maintenanceTypeId != null) {
@@ -3541,7 +3468,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static ProbandListEntryOutVO getProbandListEntry(Long probandListEntryId) {
 		if (probandListEntryId != null) {
 			try {
@@ -3555,6 +3481,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
 
 	public static Long getProbandListEntryCount(Long trialId, Long probandId, boolean total) {
 		if (trialId != null || probandId != null) {
@@ -3701,7 +3628,6 @@ public final class WebUtil {
 		// return statusType;
 	}
 
-
 	public static Long getProbandTagValueCount(Long probandId) {
 		if (probandId != null) {
 			try {
@@ -3716,6 +3642,7 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static Long getProcedureCount(Long probandId) {
 		if (probandId != null) {
 			try {
@@ -3729,14 +3656,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
 
 	public static ArrayList<SelectItem> getProcedures(Long probandId) {
 		ArrayList<SelectItem> procedures;
@@ -3765,8 +3684,12 @@ public final class WebUtil {
 		return procedures;
 	}
 
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
+	// public static Object getSelectionSetServiceCache(Class type, Object key) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
+	// }
+	// return null;
 	// }
 
 	public static String getRefererBase64(HttpServletRequest request) {
@@ -3780,6 +3703,10 @@ public final class WebUtil {
 		}
 		return "";
 	}
+
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
@@ -4033,7 +3960,6 @@ public final class WebUtil {
 		// return statusType;
 	}
 
-
 	public static Long getStaffTagValueCount(Long staffId) {
 		if (staffId != null) {
 			try {
@@ -4047,6 +3973,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
 
 	public static String getTabTitleString(
 			String tabTitleMsgCode,
@@ -4146,6 +4073,14 @@ public final class WebUtil {
 		// return eventType;
 	}
 
+	public static TimeZone getTimeZone() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			return sessionScopeBean.getTimeZone();
+		}
+		return null;
+	}
+
 	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;
 	// if (counts != null) {
@@ -4156,14 +4091,6 @@ public final class WebUtil {
 	// }
 	// return result;
 	// }
-
-	public static TimeZone getTimeZone() {
-		SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		if (sessionScopeBean != null) {
-			return sessionScopeBean.getTimeZone();
-		}
-		return null;
-	}
 
 	public static ArrayList<SelectItem> getTimeZones() {
 		Collection<TimeZoneVO> timeZoneVOs = null;
@@ -4190,7 +4117,6 @@ public final class WebUtil {
 		return timeZones;
 	}
 
-
 	public static Long getTotalFileCount(FileModule module, Long id) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4208,6 +4134,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
 
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
@@ -4227,6 +4154,20 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getDutyRosterCount(getAuthentication(), trialId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static TrialECRFProgressSummaryVO getTrialEcrfProgressSummary(Long trialId, Long probandDepartmentId, Date from, Date to) {
+		if (trialId != null) {
+			try {
+				return getServiceLocator().getTrialService().getTrialEcrfProgressSummary(getAuthentication(), trialId, probandDepartmentId, from, to);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);

@@ -329,9 +329,33 @@ public class DateInterval {
 		this.stop = stop.getTime();
 	}
 
-	public DateInterval(Date start, Date stop) {
-		this.start = start;
-		this.stop = stop;
+	public DateInterval(Date from, Date to) {
+		this(from, to, false);
+	}
+
+	public DateInterval(Date from, Date to, boolean truncate) {
+		if (truncate) {
+			if (from != null) {
+				GregorianCalendar start = new GregorianCalendar();
+				start.setTime(from);
+				start = new GregorianCalendar(start.get(GregorianCalendar.YEAR), start.get(GregorianCalendar.MONTH), start.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+				this.start = start.getTime();
+			} else {
+				this.start = null;
+			}
+			if (to != null) {
+				GregorianCalendar stop = new GregorianCalendar();
+				stop.setTime(to);
+				stop = new GregorianCalendar(stop.get(GregorianCalendar.YEAR), stop.get(GregorianCalendar.MONTH), stop.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+				stop.add(GregorianCalendar.DAY_OF_MONTH, 1);
+				this.stop = stop.getTime();
+			} else {
+				this.stop = null;
+			}
+		} else {
+			this.start = from;
+			this.stop = to;
+		}
 	}
 
 	public DateInterval(GregorianCalendar date) {

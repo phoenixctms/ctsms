@@ -73,8 +73,6 @@ extends ProbandListEntryDaoBase
 		return listEntryCriteria.list();
 	}
 
-
-
 	@Override
 	protected Collection<ProbandListEntry> handleFindByTrialPosition(
 			Long trialId, Long position) throws Exception {
@@ -87,6 +85,8 @@ extends ProbandListEntryDaoBase
 		}
 		return listEntryCriteria.list();
 	}
+
+
 
 	@Override
 	protected ProbandListEntry handleFindByTrialProband(
@@ -101,6 +101,19 @@ extends ProbandListEntryDaoBase
 		// return it.next();
 		// }
 		// return null;
+	}
+
+	@Override
+	protected Collection<ProbandListEntry> handleFindByTrialProbandDepartment(
+			Long trialId, Long probandDepartmentId) throws Exception {
+		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandDepartmentId != null) {
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add( Restrictions.eq("department.id", probandDepartmentId.longValue()));
+		}
+		return listEntryCriteria.list();
 	}
 
 	@Override

@@ -534,6 +534,13 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 					moneyTransferOverviewMenuItem.setUrl("#");
 					moneyTransferOverviewMenuItem.setId("moneyTransferOverviewMenuItem");
 					subMenu.getChildren().add(moneyTransferOverviewMenuItem);
+					MenuItem ecrfProgressOverviewMenuItem = new MenuItem();
+					ecrfProgressOverviewMenuItem.setValue(Messages.getString(MessageCodes.ECRF_PROGRESS_OVERVIEW_MENU_ITEM_LABEL));
+					ecrfProgressOverviewMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-ecrfprogress");
+					ecrfProgressOverviewMenuItem.setOnclick("openEcrfProgressOverview()");
+					ecrfProgressOverviewMenuItem.setUrl("#");
+					ecrfProgressOverviewMenuItem.setId("ecrfProgressOverviewMenuItem");
+					subMenu.getChildren().add(ecrfProgressOverviewMenuItem);
 				}
 			}
 

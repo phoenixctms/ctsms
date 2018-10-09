@@ -21,9 +21,9 @@
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
 						<h:panelGrid
-							columns="9"
+							columns="12"
 							cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<h:outputLabel
 								for="department_filter"
 								value="#{triallabels.money_transfer_summary_department_filter_label}" />
@@ -56,6 +56,40 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="department_filter" />
+							
+														<h:outputLabel
+								for="proband_department_filter"
+								value="#{triallabels.money_transfer_summary_proband_department_filter_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="proband_department_filter"
+									value="#{moneyTransferOverviewBean.trialMoneyTransferSummaryModel.probandDepartmentId}"
+									required="false"
+									label="#{triallabels.money_transfer_summary_proband_department_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{moneyTransferOverviewBean.departments}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{moneyTransferOverviewBean.handleDepartmentCostTypeChange}"
+										update="costtype_filter,moneytransfersummary_list" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="proband_department_filter">
+									<h:outputText
+										value="#{triallabels.money_transfer_summary_proband_department_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="proband_department_filter" />
+							
 							<h:outputLabel
 								for="costtype_filter"
 								value="#{triallabels.money_transfer_summary_cost_type_filter_label}" />

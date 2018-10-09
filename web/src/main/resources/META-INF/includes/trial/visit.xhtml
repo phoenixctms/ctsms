@@ -205,9 +205,11 @@
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="reimbursement">
-									<h:outputText
+									<h:outputFormat 
 										value="#{triallabels.visit_reimbursement_tooltip}"
-										escape="false" />
+										escape="false">
+										<f:param value="#{applicationScopeBean.currencySymbol}" />
+									</h:outputFormat>									
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="reimbursement" />

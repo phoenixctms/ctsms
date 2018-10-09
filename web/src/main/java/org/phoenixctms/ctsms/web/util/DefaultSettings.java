@@ -226,6 +226,7 @@ public final class DefaultSettings {
 	public static final Boolean PROBAND_MONEY_TRANSFER_SUMMARY_SHOW_PAID_PRESET = false;
 	public static final Boolean TRIAL_MONEY_TRANSFER_SUMMARY_SHOW_PAID_PRESET = null;
 	public static final boolean TRIAL_MONEY_TRANSFER_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = true;
+	public static final boolean ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = true;
 	public static final boolean INPUT_FIELD_LOCALIZED_PRESET = false;
 	public static final InputFieldType INPUT_FIELD_FIELD_TYPE_PRESET = null;
 	public static final boolean INPUT_FIELD_BOOLEAN_PRESET_PRESET = false;
@@ -341,6 +342,7 @@ public final class DefaultSettings {
 	public static final boolean ECRF_ACTIVE_PRESET = true;
 	public static final boolean ECRF_DISABLED_PRESET = false;
 	public static final boolean ECRF_ENABLE_BROWSER_FIELD_CALCULATION_PRESET = true;
+	public static final float ECRF_CHARGE_PRESET = 0.0f;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_HOLIDAYS_PRESET = true;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_DUTY_ROSTER_PRESET = true;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_STAFF_STATUS_PRESET = false;

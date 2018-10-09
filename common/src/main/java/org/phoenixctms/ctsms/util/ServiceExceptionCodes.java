@@ -495,6 +495,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";
+	public final static String ECRF_CHARGE_NEGATIVE = "ecrf_charge_negative";
 	public final static String ECRF_NAME_NOT_UNIQUE = "ecrf_name_not_unique";
 	public final static String USER_DEPARTMENT_CHANGED = "user_department_changed";
 	public final static String CANNOT_DELETE_ACTIVE_USER = "cannot_delete_active_user";

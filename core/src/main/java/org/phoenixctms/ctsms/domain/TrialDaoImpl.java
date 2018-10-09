@@ -89,6 +89,25 @@ extends TrialDaoBase
 	}
 
 	@Override
+	protected Collection<Trial> handleFindByEcrfs(Long departmentId, boolean withChargeOnly, PSFVO psf) throws Exception {
+		org.hibernate.Criteria trialCriteria = createTrialCriteria("trial0");
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(Trial.class, trialCriteria);
+		if (departmentId != null) {
+			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFImpl.class, "ecrf"); // IMPL!!!!
+		subQuery.setProjection(Projections.rowCount());
+		subQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
+		if (withChargeOnly) {
+			subQuery.add(Restrictions.gt("charge", 0.0f));
+		}
+		trialCriteria.add(Subqueries.lt(0l, subQuery));
+
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return trialCriteria.list();
+	}
+
+	@Override
 	protected Collection<Trial> handleFindByIdDepartment(Long trialId,
 			Long departmentId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria trialCriteria = createTrialCriteria(null);

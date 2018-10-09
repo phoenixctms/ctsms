@@ -170,7 +170,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		filterSections = new ArrayList<SelectItem>();
 		// ecrfStatus = null;
 		statusTypes = new ArrayList<ECRFStatusTypeVO>();
-		allStatusTypes = loadAllEcrfStatusTypes();
+		allStatusTypes = WebUtil.getEcrfStatusTypes();
 		password = null;
 	}
 
@@ -1057,30 +1057,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return LOAD_OUTCOME;
 	}
 
-	private Collection<ECRFStatusTypeVO> loadAllEcrfStatusTypes() {
-		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
-		try {
 
-			return WebUtil.getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(WebUtil.getAuthentication());
-
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		return new ArrayList<ECRFStatusTypeVO>();
-		//		if (statusTypeVOs != null) {
-		//			statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
-		//			Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
-		//			while (it.hasNext()) {
-		//				ECRFStatusTypeVO typeVO = it.next();
-		//				statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-		//			}
-		//		} else {
-		//			statusTypes = new ArrayList<SelectItem>();
-		//		}
-	}
 
 	private Collection<ECRFStatusTypeVO> loadEcrfStatusTypes() {
 		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;

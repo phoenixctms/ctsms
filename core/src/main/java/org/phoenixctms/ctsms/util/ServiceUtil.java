@@ -1214,6 +1214,79 @@ public final class ServiceUtil {
 		return painter;
 	}
 
+	public static ECRFProgressVO createEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, Date from, Date to,
+			ECRFStatusEntryDao ecrfStatusEntryDao,
+			ECRFStatusTypeDao ecrfStatusTypeDao,
+			VisitScheduleItemDao visitScheduleItemDao) throws Exception {
+		Timestamp ecrfVisitScheduleItemDate = null;
+		if (from != null || to != null) {
+			if (Settings.getBoolean(SettingCodes.ECRF_CHARGE_DUE_ANNUAL, Bundle.SETTINGS,
+					DefaultSettings.ECRF_CHARGE_DUE_ANNUAL)) {
+				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
+						listEntryVO.getTrial().getId(),
+						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+								ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+			} else {
+				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
+						listEntryVO.getTrial().getId(),
+						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+								ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf");
+			}
+			if (ecrfVisitScheduleItemDate == null || !(new DateInterval(from, to, true)).contains(ecrfVisitScheduleItemDate)) {
+				return null;
+			}
+		}
+		ECRFProgressVO result = new ECRFProgressVO();
+		result.setEcrf(ecrfVO);
+		result.setListEntry(listEntryVO);
+		result.setStatus(null);
+		result.setCharge(0.0f);
+		result.setOverdue(false);
+		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrfVO.getId(), listEntryVO.getId());
+		if (statusEntry != null) {
+			result.setStatus(ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus()));
+			if (result.getStatus().isDone()) { // ecrfVO.getCharge() > 0.0f
+				result.setCharge(ecrfVO.getCharge());
+				if (dueDetail) {
+					Date dueDate = null;
+					// https://github.com/phoenixctms/ctsms/issues/4#issuecomment-427608029
+					if (Settings.getBoolean(SettingCodes.ECRF_CHARGE_DUE_ANNUAL, Bundle.SETTINGS,
+							DefaultSettings.ECRF_CHARGE_DUE_ANNUAL)) {
+						// "annual compliance bonus" mode: an ecrf is overdue, if it is not done until the year end
+						// of the start timestamp of the first visit schedule
+						if (from == null && to == null) {
+							ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
+									listEntryVO.getTrial().getId(),
+									listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+											ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+						}
+						dueDate = DateCalc.getEndOfYear(ecrfVisitScheduleItemDate); // "ecrf")
+					} else {
+						VariablePeriod ecrfChargeDuePeriod = Settings.getVariablePeriod(SettingCodes.ECRF_CHARGE_DUE_PERIOD, Bundle.SETTINGS,
+								DefaultSettings.ECRF_CHARGE_DUE_PERIOD);
+						if (ecrfChargeDuePeriod != null) {
+							// "period" mode: an ecrf is overdue, if it is not done until some period after
+							// then stop timestamp of the last visit schedule
+							if (from == null && to == null) {
+								ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
+										listEntryVO.getTrial().getId(),
+										listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+												ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf")
+							}
+							dueDate = DateCalc.addInterval(ecrfVisitScheduleItemDate,
+									ecrfChargeDuePeriod, Settings.getLongNullable(SettingCodes.ECRF_CHARGE_DUE_PERIOD_DAYS, Bundle.SETTINGS,
+											DefaultSettings.ECRF_CHARGE_DUE_PERIOD_DAYS));
+						}
+					}
+					if (dueDate != null && statusEntry.getModifiedTimestamp().compareTo(dueDate) > 0) {
+						result.setOverdue(true);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	public static void createKeyPair(User user, String plainDepartmentPassword, KeyPairDao keyPairDao) throws Exception {
 		KeyPair keyPair = KeyPair.Factory.newInstance();
 		java.security.KeyPair keys = CryptoUtil.createKeyPair();
@@ -2172,6 +2245,7 @@ public final class ServiceUtil {
 
 	}
 
+
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(Collection<ProbandOutVO> probandVOs, ProbandAddressDao probandAddressDao) throws Exception {
 		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
 		if (probandVOs != null) {
@@ -2195,7 +2269,6 @@ public final class ServiceUtil {
 		return painter;
 	}
 
-
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(ProbandAddressOutVO probandAddress) throws Exception {
 		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
 		if (probandAddress != null) {
@@ -2213,6 +2286,7 @@ public final class ServiceUtil {
 		}
 		return painter;
 	}
+
 
 	public static ReimbursementsExcelVO createReimbursementsExcel(Collection<MoneyTransfer> moneyTransfers, Collection<String> costTypes, TrialOutVO trialVO,
 			ProbandOutVO probandVO, String costType, PaymentMethod method, Boolean paid,
@@ -2354,7 +2428,6 @@ public final class ServiceUtil {
 		(new ExcelExporter(writer, writer)).write();
 		return writer.getExcelVO();
 	}
-
 
 	public static VisitScheduleExcelVO creatVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
 			TrialOutVO trialVO,
@@ -3062,6 +3135,8 @@ public final class ServiceUtil {
 		return DateCalc.getStartOfDay(password.getTimestamp());
 	}
 
+
+
 	public static Collection<PermissionProfileVO> getPermissionProfiles(PermissionProfileGroup profileGroup, Locales locale) {
 		Collection<PermissionProfileVO> result; // = new ArrayList<VariablePeriodVO>();
 		PermissionProfile[] permissionProfiles = PermissionProfile.values();
@@ -3078,8 +3153,6 @@ public final class ServiceUtil {
 		}
 		return result;
 	}
-
-
 
 	public static Collection<ProbandListEntryTagValueJsonVO> getProbandListEntryTagJsonValues(Collection<Map> probandListEntryTagValues, boolean filterJsValues,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
@@ -3379,12 +3452,12 @@ public final class ServiceUtil {
 		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
+
 	public static JournalEntry logSystemMessage(MassMail massMail, MassMailOutVO massMailVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null)) });
 	}
-
 
 	public static JournalEntry logSystemMessage(MassMail massMail, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -3449,17 +3522,17 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
+
+
+
+
+
+
 	public static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
-
-
-
-
-
-
 
 	private static JournalEntry logSystemMessage(User user, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, ProbandOutVO result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -3916,30 +3989,38 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean sectionDetail,
+	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, boolean sectionDetail, Date from, Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
-			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
-		ECRFProgressVO result = new ECRFProgressVO();
-		result.setEcrf(ecrfVO);
-		result.setListEntry(listEntryVO);
-		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrfVO.getId(), listEntryVO.getId());
-		if (statusEntry != null) {
-			result.setStatus(ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus()));
-		} else {
-			result.setStatus(null);
+			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
+					throws Exception {
+		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail,from,to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		if (result != null) {
+			// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+			// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			if (sectionDetail) {
+				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), ecrfVO, listEntryVO, result, true, ecrfFieldValueDao,
+						ecrfFieldStatusEntryDao);
+			} else {
+				populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+			}
+			// result.setUnresolvedValidationLastFieldStatusCount(result.getUnresolvedValidationLastFieldStatusCount()
+			// + ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), ecrfVO.getId(), true, false));
+			// result.setUnresolvedQueryLastFieldStatusCount(result.getUnresolvedQueryLastFieldStatusCount()
+			// + ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), ecrfVO.getId(), true, false));
 		}
-		// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
-		// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
-		if (sectionDetail) {
-			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), ecrfVO, listEntryVO, result, true, ecrfFieldValueDao,
-					ecrfFieldStatusEntryDao);
-		} else {
-			populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+		return result;
+	}
+
+	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, Date from, Date to, String section,
+			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
+			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
+					throws Exception {
+		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail,from,to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		if (result != null) {
+			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(),section, true, null, null, null),ecrfVO,listEntryVO,result,false,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
+
+			populateEcrfProgress(ecrfVO,listEntryVO,result,ecrfFieldDao,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
 		}
-		// result.setUnresolvedValidationLastFieldStatusCount(result.getUnresolvedValidationLastFieldStatusCount()
-		// + ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), ecrfVO.getId(), true, false));
-		// result.setUnresolvedQueryLastFieldStatusCount(result.getUnresolvedQueryLastFieldStatusCount()
-		// + ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), ecrfVO.getId(), true, false));
 		return result;
 	}
 
@@ -3950,26 +4031,6 @@ public final class ServiceUtil {
 		result.setMandatoryFieldCount(ecrfFieldDao.getCount(null, ecrfVO.getId(), false, false));
 		result.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), true, false, false));
 		populateEcrfFieldStatusEntryCount(result.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), ecrfFieldStatusEntryDao);
-	}
-
-	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, String section,
-			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
-			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
-		ECRFProgressVO result = new ECRFProgressVO();
-		result.setEcrf(ecrfVO);
-		result.setListEntry(listEntryVO);
-		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrfVO.getId(), listEntryVO.getId());
-		if (statusEntry != null) {
-			result.setStatus(ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus()));
-		} else {
-			result.setStatus(null);
-		}
-
-		populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(),section, true, null, null, null),ecrfVO,listEntryVO,result,false,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
-
-		populateEcrfProgress(ecrfVO,listEntryVO,result,ecrfFieldDao,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
-
-		return result;
 	}
 
 	private static void populateEcrfSectionProgress(Collection<ECRFField> ecrfFields, ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, ECRFProgressVO result,

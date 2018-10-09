@@ -19,6 +19,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 
 	private Long departmentId;
+	private Long probandDepartmentId;
 	private String costType;
 	private Boolean paid;
 
@@ -46,7 +47,7 @@ public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 	@Override
 	protected Collection<MoneyTransferSummaryVO> getLazyResult(PSFVO psf) {
 		try {
-			return WebUtil.getServiceLocator().getTrialService().getTrialMoneyTransferSummaryList(WebUtil.getAuthentication(), departmentId, costType, null, paid, psf);
+			return WebUtil.getServiceLocator().getTrialService().getTrialMoneyTransferSummaryList(WebUtil.getAuthentication(), departmentId,probandDepartmentId, costType, null, paid, psf);
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -58,6 +59,10 @@ public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 
 	public Boolean getPaid() {
 		return paid;
+	}
+
+	public Long getProbandDepartmentId() {
+		return probandDepartmentId;
 	}
 
 	@Override
@@ -75,5 +80,9 @@ public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 
 	public void setPaid(Boolean paid) {
 		this.paid = paid;
+	}
+
+	public void setProbandDepartmentId(Long probandDepartmentId) {
+		this.probandDepartmentId = probandDepartmentId;
 	}
 }

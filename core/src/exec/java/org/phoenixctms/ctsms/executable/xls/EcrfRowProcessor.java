@@ -36,6 +36,7 @@ public class EcrfRowProcessor extends RowProcessor {
 	private final static int TITLE_COLUMN_INDEX = 7; // 6;
 	private final static int DESCRIPTION_COLUMN_INDEX = 8; // 7;
 	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9; // 8;
+	private final static int CHARGE_COLUMN_INDEX = 10; // 8;
 	private int probandGroupColumnIndex;
 	private int positionColumnIndex;
 	private int visitColumnIndex;
@@ -46,6 +47,7 @@ public class EcrfRowProcessor extends RowProcessor {
 	private int titleColumnIndex;
 	private int descriptionColumnIndex;
 	private int enrollmentStatusColumnIndex;
+	private int chargeColumnIndex;
 	private HashMap<String, Long> visitIdMap;
 	private HashMap<String, Long> probandListStatusTypeIdMap;
 	private VisitType defaultVisitType;
@@ -86,6 +88,10 @@ public class EcrfRowProcessor extends RowProcessor {
 	// }
 	private String getActive(String[] values) {
 		return getColumnValue(values, activeColumnIndex);
+	}
+
+	private String getCharge(String[] values) {
+		return getColumnValue(values, chargeColumnIndex);
 	}
 
 	private String getDescription(String[] values) {
@@ -179,6 +185,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		titleColumnIndex = TITLE_COLUMN_INDEX;
 		descriptionColumnIndex = DESCRIPTION_COLUMN_INDEX;
 		enrollmentStatusColumnIndex = ENROLLMENT_STATUS_COLUMN_INDEX;
+		chargeColumnIndex = CHARGE_COLUMN_INDEX;
 		defaultVisitType = visitTypeDao.searchUniqueNameL10nKey(DEFAULT_VISIT_TYPE_NAME_L10N_KEY);
 		visitIdMap.clear();
 		probandListStatusTypeIdMap.clear();
@@ -188,19 +195,20 @@ public class EcrfRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		// .append(getProbandGroup(values))
-		// .append(getPosition(values))
-		.append(getProbandGroup(values))
-		.append(getPosition(values))
-		.append(getVisit(values))
-		.append(getActive(values))
-		.append(getEnableBrowserFieldCalculation(values))
-		.append(getExternalId(values))
-		.append(getName(values))
-		.append(getTitle(values))
-		.append(getDescription(values))
-		.append(getEnrollmentStatus(values))
-		.toHashCode();
+				// .append(getProbandGroup(values))
+				// .append(getPosition(values))
+				.append(getProbandGroup(values))
+				.append(getPosition(values))
+				.append(getVisit(values))
+				.append(getActive(values))
+				.append(getEnableBrowserFieldCalculation(values))
+				.append(getExternalId(values))
+				.append(getName(values))
+				.append(getTitle(values))
+				.append(getDescription(values))
+				.append(getEnrollmentStatus(values))
+				.append(getCharge(values))
+				.toHashCode();
 	}
 
 	@Override
@@ -228,7 +236,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		ecrfIn.setTitle(getTitle(values));
 		ecrfIn.setDescription(getDescription(values));
 		ecrfIn.setProbandListStatusId(getProbandListStatusTypeId(getEnrollmentStatus(values)));
-
+		ecrfIn.setCharge(CommonUtil.isEmptyString(getCharge(values)) ? 0.0f : Float.parseFloat(getCharge(values)));
 
 		ECRFOutVO ecrfVO = trialService.addUpdateEcrf(context.getAuth(), ecrfIn,
 				context.getImporter().getEcrfFieldRowProcessor().getEcrfFields(probandGroupToken, position));

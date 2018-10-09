@@ -684,6 +684,7 @@ public interface MessageCodes {
 	public static final String STAFF_AVAILABILITY_STATUS_MENU_ITEM_LABEL = "staff_availability_status_menu_item_label";
 	public static final String STAFF_SHIFT_SUMMARY_OVERVIEW_MENU_ITEM_LABEL = "staff_shift_summary_overview_menu_item_label";
 	public static final String MONEY_TRANSFER_OVERVIEW_MENU_ITEM_LABEL = "money_transfer_overview_menu_item_label";
+	public static final String ECRF_PROGRESS_OVERVIEW_MENU_ITEM_LABEL = "ecrf_progress_overview_menu_item_label";
 	public final static String MY_COURSES_MENU_ITEM_LABEL = "my_courses_menu_item_label";
 	public static final String MY_UPCOMING_COURSES_MENU_ITEM_LABEL = "my_upcoming_courses_menu_item_label";
 	public final static String MY_EXPIRING_PARTICIPATIONS_MENU_ITEM_LABEL = "my_expiring_participations_menu_item_label";

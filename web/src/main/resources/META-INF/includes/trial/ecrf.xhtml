@@ -80,6 +80,9 @@
 							name="showActive"
 							value="true" />
 						<ui:param
+							name="showCharge"
+							value="true" />							
+						<ui:param
 							name="showExternalId"
 							value="true" />							
 						<ui:param
@@ -444,8 +447,30 @@
 				</p:tooltip>
 			</h:panelGroup>
 			<p:message for="probandListStatus" />								
+
+								<h:outputLabel
+									for="charge"
+									value="#{triallabels.ecrf_charge_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="charge"
+										value="#{ecrfBean.in.charge}"
+										required="true"
+										label="#{triallabels.ecrf_charge}"
+										styleClass="ctsms-control-float" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="charge">
+										<h:outputFormat 
+											value="#{triallabels.ecrf_charge_tooltip}"
+											escape="false">
+											<f:param value="#{applicationScopeBean.currencySymbol}" />
+										</h:outputFormat>
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="charge" />
 								
-<h:outputLabel
+								<h:outputLabel
 									for="ecrfexternalid"
 									value="#{triallabels.ecrf_externalid_label}" />
 								<h:panelGroup>
@@ -464,7 +489,7 @@
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfexternalid" />								
+								<p:message for="ecrfexternalid" />	
 								
 								<h:outputLabel
 									for="ecrfEnableBrowserFieldCalculation"
@@ -482,7 +507,7 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfEnableBrowserFieldCalculation" />
-								
+																
 							</h:panelGrid>
 							<h:panelGrid
 								rendered="#{ecrfBean.inputVisible}"

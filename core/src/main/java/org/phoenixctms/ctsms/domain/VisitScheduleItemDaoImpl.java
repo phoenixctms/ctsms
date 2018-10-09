@@ -37,6 +37,39 @@ extends VisitScheduleItemDaoBase
 
 	private final static String TOKEN_SEPARATOR_STRING = ":";
 
+	private static final void applyTrialGroupVisitCriterions(org.hibernate.Criteria visitScheduleItemCriteria, Long trialId, Long groupId, Long visitId) {
+		if (trialId != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		//		if (groupId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
+		//					Restrictions.isNull("group.id")));
+		//		}
+		//		if (visitId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
+		//					Restrictions.isNull("visit.id")));
+		//		}
+		if (groupId != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
+		} else {
+			visitScheduleItemCriteria.add(Restrictions.isNull("group.id"));
+		}
+		if (visitId != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			visitScheduleItemCriteria.add(Restrictions.isNull("visit.id"));
+		}
+	}
+
+	private static final void applyTrialGroupVisitTokenCriterions(org.hibernate.Criteria visitScheduleItemCriteria, Long trialId, Long groupId, Long visitId, String token) {
+		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
+		if (token != null && token.length() > 0) {
+			visitScheduleItemCriteria.add(Restrictions.eq("token", token));
+		} else {
+			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("token", ""), Restrictions.isNull("token")));
+		}
+	}
+
 	private static final String getVisitScheduleItemName(Visit visit, ProbandGroup group, String token) {
 		StringBuilder sb = new StringBuilder();
 		if (group != null) {
@@ -171,8 +204,7 @@ extends VisitScheduleItemDaoBase
 
 	@Override
 	protected Collection<VisitScheduleItem> handleFindByTrialSorted(Long trialId, boolean sort, PSFVO psf)
-			throws Exception
-	{
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(VisitScheduleItem.class, visitScheduleItemCriteria);
 		if (trialId != null) {
@@ -198,26 +230,95 @@ extends VisitScheduleItemDaoBase
 		return visitScheduleItemCriteria.list();
 	}
 
-
-
 	@Override
 	protected Collection<VisitScheduleItem> handleFindCollidingTrialGroupVisit(Long trialId, Long groupId, Long visitId) throws Exception
 	{
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
-		if (trialId != null) {
-			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		}
-		if (groupId != null) {
-			visitScheduleItemCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
-		} else {
-			visitScheduleItemCriteria.add(Restrictions.isNull("group.id"));
-		}
-		if (visitId != null) {
-			visitScheduleItemCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
-		} else {
-			visitScheduleItemCriteria.add(Restrictions.isNull("visit.id"));
-		}
+		// if (trialId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		// }
+		// if (groupId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
+		// } else {
+		// visitScheduleItemCriteria.add(Restrictions.isNull("group.id"));
+		// }
+		// if (visitId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		// } else {
+		// visitScheduleItemCriteria.add(Restrictions.isNull("visit.id"));
+		// }
+		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
 		return visitScheduleItemCriteria.list();
+	}
+
+	protected Timestamp handleFindMaxStop(Long trialId, Long groupId, Long visitId)
+			throws Exception
+	{
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
+		//		if (groupId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
+		//					Restrictions.isNull("group.id")));
+		//		}
+		//		if (visitId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
+		//					Restrictions.isNull("visit.id")));
+		//		}
+
+		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
+		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
+	}
+
+
+
+	protected Timestamp handleFindMaxStop(Long trialId, Long groupId, Long visitId, String token)
+			throws Exception
+	{
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		applyTrialGroupVisitTokenCriterions(visitScheduleItemCriteria, trialId, groupId, visitId, token);
+		//		if (groupId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
+		//					Restrictions.isNull("group.id")));
+		//		}
+		//		if (visitId != null) {
+		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
+		//					Restrictions.isNull("visit.id")));
+		//		}
+
+		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
+		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
+	}
+
+	protected Timestamp handleFindMinStart(Long trialId, Long groupId, Long visitId)
+			throws Exception {
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
+		// if (groupId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
+		// Restrictions.isNull("group.id")));
+		// }
+		// if (visitId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
+		// Restrictions.isNull("visit.id")));
+		// }
+		visitScheduleItemCriteria.setProjection(Projections.min("start"));
+		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
+	}
+
+	protected Timestamp handleFindMinStart(Long trialId, Long groupId, Long visitId, String token)
+			throws Exception {
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		applyTrialGroupVisitTokenCriterions(visitScheduleItemCriteria, trialId, groupId, visitId, token);
+		// if (groupId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
+		// Restrictions.isNull("group.id")));
+		// }
+		// if (visitId != null) {
+		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
+		// Restrictions.isNull("visit.id")));
+		// }
+		visitScheduleItemCriteria.setProjection(Projections.min("start"));
+		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
 
 	@Override

@@ -56,3 +56,7 @@ insert into STAFF_CATEGORY values (nextval('hibernate_sequence'), 'retired', 'RE
 
 update proband_list_status_entry set real_timestamp = date_trunc('second', real_timestamp);
 update journal_entry set real_timestamp = date_trunc('second', real_timestamp);
+
+alter table ECRF add column CHARGE REAL;
+update ECRF set CHARGE = 0.0;
+alter table ECRF alter CHARGE set not null;

@@ -63,6 +63,7 @@ public enum Urls {
 	TRIAL_SHIFT_SUMMARY_OVERVIEW("/trial/trialShiftSummaryOverview.jsf"),
 	RECIPIENT_OVERVIEW("/massmail/recipientOverview.jsf"),
 	MONEY_TRANSFER_OVERVIEW("/trial/moneyTransferOverview.jsf"),
+	ECRF_PROGRESS_OVERVIEW("/trial/ecrfProgressOverview.jsf"),
 	DUTY_ROSTER_SCHEDULE("/trial/dutyRosterSchedule.jsf");
 
 	private static Urls fromValue(String viewId) {

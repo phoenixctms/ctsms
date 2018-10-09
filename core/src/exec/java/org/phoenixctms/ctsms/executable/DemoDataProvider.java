@@ -867,7 +867,8 @@ public class DemoDataProvider {
 	}
 
 	private ArrayList<ECRFFieldOutVO> createDemoEcrfMedicalHistory(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, int position, Long visitId) throws Throwable {
-		ECRFOutVO ecrf = createEcrf(auth, trial, "medical history", "eCRF to capture ICD-10 coded medical history", probandGroupId, position, visitId, true, false, true, null);
+		ECRFOutVO ecrf = createEcrf(auth, trial, "medical history", "eCRF to capture ICD-10 coded medical history", probandGroupId, position, visitId, true, false, true, 0.0f,
+				null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
 		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_COUNT, ecrf, "summary", 1, false, false, false, true, true, null, "count",
 				"function(alphaid) {\n" +
@@ -911,7 +912,7 @@ public class DemoDataProvider {
 
 	private ArrayList<ECRFFieldOutVO> createDemoEcrfSum(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, int position, Long visitId) throws Throwable {
 		ECRFOutVO ecrf = createEcrf(auth, trial, "some eCRF", "demo eCRF to show field calculations with series sections", probandGroupId, position, visitId, true, false, true,
-				null);
+				0.0f, null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
 		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #1", 1, true, false, false, true, true, "some name", null, null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #1", 2, true, false, false, true, true, "some repeatable value 1", "value1", null, null));
@@ -1050,7 +1051,7 @@ public class DemoDataProvider {
 	}
 
 	private ECRFOutVO createEcrf(AuthenticationVO auth, TrialOutVO trial, String name, String title, Long probandGroupId, int position, Long visitId, boolean active,
-			boolean disabled, boolean enableBrowserFieldCalculation,
+			boolean disabled, boolean enableBrowserFieldCalculation, float charge,
 			String description) throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ECRFInVO newEcrf = new ECRFInVO();
@@ -1062,6 +1063,7 @@ public class DemoDataProvider {
 		newEcrf.setDescription(description);
 		newEcrf.setDisabled(disabled);
 		newEcrf.setEnableBrowserFieldCalculation(enableBrowserFieldCalculation);
+		newEcrf.setCharge(charge);
 		newEcrf.setGroupId(probandGroupId);
 		newEcrf.setVisitId(visitId);
 		ECRFOutVO out = trialService.addEcrf(auth, newEcrf);

@@ -1831,6 +1831,7 @@
         POSITION BIGINT not null,
         DISABLED BOOLEAN not null,
         ENABLE_BROWSER_FIELD_CALCULATION BOOLEAN not null,
+        CHARGE REAL not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         DEFERRED_DELETE BOOLEAN not null,

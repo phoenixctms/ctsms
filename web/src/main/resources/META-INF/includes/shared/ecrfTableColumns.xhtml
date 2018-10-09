@@ -68,6 +68,18 @@
 					value="#{!ecrf.vo.disabled}" />
 			</ui:include>
 		</p:column>
+
+		<p:column 
+			sortBy="#{ecrf.vo.charge}"
+			rendered="#{showCharge}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_charge_column}" />
+			</f:facet>
+			<h:outputFormat value="#{labels.currency_format}">
+				<f:param value="#{ecrf.vo.charge}" />
+				<f:param value="#{applicationScopeBean.currencySymbol}" />
+			</h:outputFormat>
+		</p:column>
 		
 		<p:column
 		    rendered="#{showExternalId}"

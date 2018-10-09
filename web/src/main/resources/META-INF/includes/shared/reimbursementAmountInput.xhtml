@@ -460,9 +460,11 @@
 					<p:tooltip
 						rendered="#{enableTooltips}"
 						for="moneyTransferAmount">
-						<h:outputText
+						<h:outputFormat 
 							value="#{probandlabels.money_transfer_amount_tooltip}"
-							escape="false" />
+							escape="false">
+							<f:param value="#{applicationScopeBean.currencySymbol}" />
+						</h:outputFormat>							
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAmount" />

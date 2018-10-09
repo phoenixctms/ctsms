@@ -108,6 +108,7 @@ public interface SettingCodes {
 	public final static String ECRF_ACTIVE_PRESET = "ecrf_active_preset";
 	public final static String ECRF_DISABLED_PRESET = "ecrf_disabled_preset";
 	public final static String ECRF_ENABLE_BROWSER_FIELD_CALCULATION_PRESET = "ecrf_enable_browser_field_calculation_preset";
+	public final static String ECRF_CHARGE_PRESET = "ecrf_charge_preset";
 	public final static String ECRF_FIELD_OPTIONAL_PRESET = "ecrf_field_optional_preset";
 	public final static String ECRF_FIELD_SERIES_PRESET = "ecrf_field_series_preset";
 	public final static String ECRF_FIELD_DISABLED_PRESET = "ecrf_field_disabled_preset";
@@ -163,6 +164,7 @@ public interface SettingCodes {
 	public final static String PROBAND_MONEY_TRANSFER_SUMMARY_SHOW_PAID_PRESET = "proband_money_transfer_summary_show_paid_preset";
 	public final static String TRIAL_MONEY_TRANSFER_SUMMARY_SHOW_PAID_PRESET = "trial_money_transfer_summary_show_paid_preset";
 	public final static String TRIAL_MONEY_TRANSFER_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = "trial_money_transfer_summary_active_identity_department_preset";
+	public final static String ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = "ecrf_progress_summary_active_identity_department_preset";
 	public final static String PROBAND_ADDRESS_AFNUS_PRESET = "proband_address_afnus_preset";
 	public final static String PROBAND_ADDRESS_DELIVER_PRESET = "proband_address_deliver_preset";
 	public final static String PROBAND_CONTACT_NOTIFY_PRESET = "proband_contact_notify_preset";
