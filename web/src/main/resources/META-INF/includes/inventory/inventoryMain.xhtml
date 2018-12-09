@@ -430,7 +430,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="inventoryDeleteConfirmation.show()"
+									onclick="if(inventoryDeleteReason){inventoryDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inventoryBean.deferredDeleteReason)});}inventoryDeleteConfirmation.show()"
 									disabled="#{!inventoryBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -478,6 +478,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="inventoryDeleteReason"
 									value="#{inventoryBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

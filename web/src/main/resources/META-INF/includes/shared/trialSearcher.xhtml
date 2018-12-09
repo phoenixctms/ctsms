@@ -79,7 +79,7 @@
 					<p:commandButton
 						process="@this"
 						value="#{labels.delete_button_label}"
-						onclick="criteriaDeleteConfirmation.show()"
+						onclick="if(criteriaDeleteReason){criteriaDeleteReason.setValue(#{applicationScopeBean.quoteJsString(trialSearchBean.deferredDeleteReason)});}criteriaDeleteConfirmation.show()"
 						disabled="#{!trialSearchBean.removable}"
 						icon="ui-icon ui-icon-trash"
 						type="button" />
@@ -349,6 +349,7 @@
 						<h:panelGroup>
 							<p:inputTextarea
 								id="deferredDeleteReason"
+								widgetVar="criteriaDeleteReason"
 								value="#{trialSearchBean.deferredDeleteReason}"
 								required="false"
 								autoResize="false"

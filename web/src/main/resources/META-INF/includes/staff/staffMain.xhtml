@@ -920,7 +920,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="staffDeleteConfirmation.show()"
+									onclick="if(staffDeleteReason){staffDeleteReason.setValue(#{applicationScopeBean.quoteJsString(staffBean.deferredDeleteReason)});}staffDeleteConfirmation.show()"
 									disabled="#{!staffBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -968,6 +968,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="staffDeleteReason"
 									value="#{staffBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

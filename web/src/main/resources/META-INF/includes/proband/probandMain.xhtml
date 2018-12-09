@@ -1195,7 +1195,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="probandDeleteConfirmation.show()"
+									onclick="if(probandDeleteReason){probandDeleteReason.setValue(#{applicationScopeBean.quoteJsString(probandBean.deferredDeleteReason)});}probandDeleteConfirmation.show()"
 									disabled="#{!probandBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -1244,6 +1244,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="probandDeleteReason"
 									value="#{probandBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

@@ -901,7 +901,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="courseDeleteConfirmation.show()"
+									onclick="if(courseDeleteReason){courseDeleteReason.setValue(#{applicationScopeBean.quoteJsString(courseBean.deferredDeleteReason)});}courseDeleteConfirmation.show()"
 									disabled="#{!courseBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -967,6 +967,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="courseDeleteReason"
 									value="#{courseBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

@@ -546,7 +546,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="userDeleteConfirmation.show()"
+									onclick="if(userDeleteReason){userDeleteReason.setValue(#{applicationScopeBean.quoteJsString(userBean.deferredDeleteReason)});}userDeleteConfirmation.show()"
 									disabled="#{!userBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -594,6 +594,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="userDeleteReason"
 									value="#{userBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

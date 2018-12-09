@@ -1259,7 +1259,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="massMailDeleteConfirmation.show()"
+									onclick="if(massMailDeleteReason){massMailDeleteReason.setValue(#{applicationScopeBean.quoteJsString(massMailBean.deferredDeleteReason)});}massMailDeleteConfirmation.show()"
 									disabled="#{!massMailBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -1307,6 +1307,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="massMailDeleteReason"
 									value="#{massMailBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

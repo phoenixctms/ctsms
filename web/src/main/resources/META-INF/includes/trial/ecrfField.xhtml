@@ -982,7 +982,7 @@
 									<p:commandButton
 										process="@this"
 										value="#{labels.delete_button_label}"
-										onclick="ecrfFieldDeleteConfirmation.show()"
+										onclick="if(ecrfFieldDeleteReason){ecrfFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfFieldBean.deferredDeleteReason)});}ecrfFieldDeleteConfirmation.show()"
 										disabled="#{!ecrfFieldBean.removable}"
 										icon="ui-icon ui-icon-trash"
 										type="button" />
@@ -1031,6 +1031,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="ecrfFieldDeleteReason"
 									value="#{ecrfFieldBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"

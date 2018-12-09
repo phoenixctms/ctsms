@@ -842,7 +842,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="trialDeleteConfirmation.show()"
+									onclick="if(trialDeleteReason){trialDeleteReason.setValue(#{applicationScopeBean.quoteJsString(trialBean.deferredDeleteReason)});}trialDeleteConfirmation.show()"
 									disabled="#{!trialBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
@@ -898,6 +898,7 @@
 							<h:panelGroup>
 								<p:inputTextarea
 									id="deferredDeleteReason"
+									widgetVar="trialDeleteReason"
 									value="#{trialBean.deferredDeleteReason}"
 									required="false"
 									autoResize="false"
