@@ -129,6 +129,9 @@ extends InventoryDaoBase
 			target.setCategory(null);
 		}
 		if (parentId != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
 			Inventory parent = this.load(parentId);
 			target.setParent(parent);
 			parent.addChildren(target);
@@ -189,6 +192,9 @@ extends InventoryDaoBase
 			target.setDepartment(null);
 		}
 		if (parentVO != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
 			Inventory parent = this.inventoryOutVOToEntity(parentVO);
 			target.setParent(parent);
 			parent.addChildren(target);

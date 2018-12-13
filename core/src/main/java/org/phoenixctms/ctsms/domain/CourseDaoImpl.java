@@ -152,6 +152,10 @@ extends CourseDaoBase
 		}
 		if (copyIfNull || source.getPrecedingCourseIds().size() > 0)
 		{
+			Iterator<Course> it = target.getPrecedingCourses().iterator();
+			while (it.hasNext()) {
+				it.next().removeRenewals(target);
+			}
 			target.setPrecedingCourses(toCourseSet(source.getPrecedingCourseIds()));
 		}
 	}

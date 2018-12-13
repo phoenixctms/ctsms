@@ -447,6 +447,10 @@ extends ProbandDaoBase
 
 		if (copyIfNull || source.getChildIds().size() > 0)
 		{
+			Iterator<Proband> it = target.getChildren().iterator();
+			while (it.hasNext()) {
+				it.next().removeParents(target);
+			}
 			target.setChildren(toProbandSet(source.getChildIds()));
 		}
 

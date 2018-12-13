@@ -369,6 +369,9 @@ extends StaffDaoBase
 			target.setCategory(null);
 		}
 		if (parentId != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
 			Staff parent = this.load(parentId);
 			target.setParent(parent);
 			parent.addChildren(target);
@@ -483,6 +486,9 @@ extends StaffDaoBase
 			target.setDepartment(null);
 		}
 		if (parentVO != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
 			Staff parent = this.staffOutVOToEntity(parentVO);
 			target.setParent(parent);
 			parent.addChildren(target);
