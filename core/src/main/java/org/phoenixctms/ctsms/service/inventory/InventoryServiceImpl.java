@@ -504,7 +504,7 @@ extends InventoryServiceBase
 	 * @see org.phoenixctms.ctsms.service.InventoryService#addInventoryCategory(InventoryInVO)
 	 */
 	@Override
-	protected InventoryOutVO handleAddInventory(AuthenticationVO auth, InventoryInVO newInventory, Integer maxInstances, Integer maxParentDepth)
+	protected InventoryOutVO handleAddInventory(AuthenticationVO auth, InventoryInVO newInventory, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception
 	{
 		checkInventoryInput(newInventory);
@@ -514,7 +514,7 @@ extends InventoryServiceBase
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(inventory, now, user);
 		inventory = inventoryDao.create(inventory);
-		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
+		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(inventory, result, now, user, SystemMessageCodes.INVENTORY_CREATED, result, null, journalEntryDao);
 		Staff owner = inventory.getOwner();
@@ -617,7 +617,7 @@ extends InventoryServiceBase
 
 	@Override
 	protected InventoryOutVO handleDeleteInventory(AuthenticationVO auth, Long inventoryId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
-			Integer maxParentDepth)
+			Integer maxParentDepth, Integer maxChildrenDepth)
 					throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -626,7 +626,7 @@ extends InventoryServiceBase
 		InventoryOutVO result;
 		if (!force && defer) {
 			Inventory originalInventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao);
-			InventoryOutVO original = inventoryDao.toInventoryOutVO(originalInventory, maxInstances, maxParentDepth);
+			InventoryOutVO original = inventoryDao.toInventoryOutVO(originalInventory, maxInstances, maxParentDepth, maxChildrenDepth);
 			inventoryDao.evict(originalInventory);
 			Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao, LockMode.PESSIMISTIC_WRITE);
 			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
@@ -636,7 +636,7 @@ extends InventoryServiceBase
 			inventory.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(inventory, originalInventory.getVersion(), now, user); // no opt. locking
 			inventoryDao.update(inventory);
-			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
+			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 			logSystemMessage(inventory, result, now, user, SystemMessageCodes.INVENTORY_MARKED_FOR_DELETION, result, original, journalEntryDao);
 			Staff owner = inventory.getOwner();
 			if (owner != null) {
@@ -644,7 +644,7 @@ extends InventoryServiceBase
 			}
 		} else {
 			Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao);
-			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
+			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 			deleteInventoryHelper(inventory, true, user, now);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.INVENTORY_DELETED, result, null, journalEntryDao);
 		}
@@ -997,11 +997,11 @@ extends InventoryServiceBase
 	}
 
 	@Override
-	protected InventoryOutVO handleGetInventory(AuthenticationVO auth, Long inventoryId, Integer maxInstances, Integer maxParentDepth)
+	protected InventoryOutVO handleGetInventory(AuthenticationVO auth, Long inventoryId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao);
-		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
+		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 		return result;
 	}
 
@@ -1305,13 +1305,13 @@ extends InventoryServiceBase
 	 * @see org.phoenixctms.ctsms.service.InventoryService#updateInventoryCategory(InventoryInVO)
 	 */
 	@Override
-	protected InventoryOutVO handleUpdateInventory(AuthenticationVO auth, InventoryInVO modifiedInventory, Integer maxInstances, Integer maxParentDepth)
+	protected InventoryOutVO handleUpdateInventory(AuthenticationVO auth, InventoryInVO modifiedInventory, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception
 	{
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory originalInventory = CheckIDUtil.checkInventoryId(modifiedInventory.getId(), inventoryDao, LockMode.PESSIMISTIC_WRITE);
 		checkInventoryInput(modifiedInventory);
-		InventoryOutVO original = inventoryDao.toInventoryOutVO(originalInventory, maxInstances, maxParentDepth);
+		InventoryOutVO original = inventoryDao.toInventoryOutVO(originalInventory, maxInstances, maxParentDepth, maxChildrenDepth);
 		inventoryDao.evict(originalInventory);
 		Inventory inventory = inventoryDao.inventoryInVOToEntity(modifiedInventory);
 		checkInventoryLoop(inventory);
@@ -1319,7 +1319,7 @@ extends InventoryServiceBase
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalInventory, inventory, now, user);
 		inventoryDao.update(inventory);
-		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth);
+		InventoryOutVO result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(inventory, result, now, user, SystemMessageCodes.INVENTORY_UPDATED, result, original, journalEntryDao);
 		Staff owner = inventory.getOwner();

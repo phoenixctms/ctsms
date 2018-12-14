@@ -382,12 +382,14 @@ public final class DefaultSettings {
 	public static final Integer GRAPH_MAX_STAFF_INSTANCES = 100;
 	public static final boolean GRAPH_STAFF_BREADTH_FIRST = true;
 	public static final Integer GRAPH_MAX_STAFF_PARENT_DEPTH = 5;
+	public static final Integer GRAPH_MAX_STAFF_CHILDREN_DEPTH = 5;
 	public static final Integer GRAPH_MAX_COURSE_INSTANCES = 100;
 	public static final Integer GRAPH_MAX_RENEWALS_DEPTH = 2;
 	public static final Integer GRAPH_MAX_PRECEDING_DEPTH = 2;
 	public static final boolean GRAPH_COURSE_BREADTH_FIRST = true;
 	public static final Integer GRAPH_MAX_INVENTORY_INSTANCES = 100;
 	public static final Integer GRAPH_MAX_INVENTORY_PARENT_DEPTH = 5;
+	public static final Integer GRAPH_MAX_INVENTORY_CHILDREN_DEPTH = 5;
 	public static final boolean GRAPH_INVENTORY_BREADTH_FIRST = true;
 	public static final boolean GRAPH_PROBAND_BREADTH_FIRST = true;
 	public static final Integer GRAPH_MAX_PROBAND_INSTANCES = 100;
@@ -395,8 +397,10 @@ public final class DefaultSettings {
 	public static final Integer GRAPH_MAX_PROBAND_CHILDREN_DEPTH = 2;
 	public static final Integer API_GRAPH_MAX_STAFF_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_STAFF_PARENT_DEPTH = 5;
+	public static final Integer API_GRAPH_MAX_STAFF_CHILDREN_DEPTH = 5;
 	public static final Integer API_GRAPH_MAX_INVENTORY_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_INVENTORY_PARENT_DEPTH = 5;
+	public static final Integer API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH = 5;
 	public static final Integer API_GRAPH_MAX_COURSE_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_RENEWALS_DEPTH = 2;
 	public static final Integer API_GRAPH_MAX_PRECEDING_DEPTH = 2;

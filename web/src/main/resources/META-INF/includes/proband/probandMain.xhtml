@@ -302,7 +302,7 @@
 								<span
 									class="#{proband.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-proband-tree-node-parent"
 									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{proband.id}'}));"> <h:outputText
-										value="#{applicationScopeBean.clipStringMid(proband.name)} (#{applicationScopeBean.getListSize(proband.children)})" />
+										value="#{applicationScopeBean.clipStringMid(proband.name)} (#{proband.childrenCount})" />
 								</span>
 							</p:treeNode>
 							<p:treeNode type="#{applicationScopeBean.leafNodeType}">

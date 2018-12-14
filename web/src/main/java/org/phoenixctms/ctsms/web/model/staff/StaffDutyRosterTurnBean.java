@@ -127,7 +127,7 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		collidingInventoryBookingModelCache.clear();
 		dutyRosterTurnModel.setStaffId(in.getStaffId());
 		dutyRosterTurnModel.updateRowCount();
-		staff = WebUtil.getStaff(in.getStaffId(), null, null);
+		staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		filterCalendars = WebUtil.getDutyRosterTurnFilterCalendars(null, null, staffId);
 		filterTitles = WebUtil.getDutyRosterTurnFilterTitles(null, null, staffId);
 		if (staff != null) {

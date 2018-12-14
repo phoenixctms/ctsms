@@ -225,7 +225,7 @@ public class ServiceMethodExecutor {
 	}
 
 	public void deleteInventory(AuthenticationVO auth, Long id) throws Exception {
-		InventoryOutVO inventory = inventoryService.deleteInventory(auth, id, false, true, null, null, null);
+		InventoryOutVO inventory = inventoryService.deleteInventory(auth, id, false, true, null, null, null, null);
 		jobOutput.println("inventory ID " + Long.toString(inventory.getId()) + " '" + CommonUtil.inventoryOutVOToString(inventory) + "' removed");
 	}
 
@@ -260,7 +260,7 @@ public class ServiceMethodExecutor {
 	}
 
 	public void deleteStaff(AuthenticationVO auth, Long id) throws Exception {
-		StaffOutVO staff = staffService.deleteStaff(auth, id, false, true, null, null, null);
+		StaffOutVO staff = staffService.deleteStaff(auth, id, false, true, null, null, null, null);
 		jobOutput.println("person/organisation ID " + Long.toString(staff.getId()) + " '" + CommonUtil.staffOutVOToString(staff) + "' removed");
 	}
 

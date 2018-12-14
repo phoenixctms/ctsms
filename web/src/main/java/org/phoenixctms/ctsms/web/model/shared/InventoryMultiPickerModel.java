@@ -12,6 +12,6 @@ public class InventoryMultiPickerModel extends MultiPickerModelBase<InventoryOut
 
 	@Override
 	protected InventoryOutVO loadSelectionElement(Long id) {
-		return WebUtil.getInventory(id, null, null);
+		return WebUtil.getInventory(id, null, null, null);
 	}
 }

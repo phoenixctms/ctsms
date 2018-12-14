@@ -257,12 +257,14 @@ public interface SettingCodes {
 	public static final String GRAPH_MAX_STAFF_INSTANCES = "graph_max_staff_instances";
 	public static final String GRAPH_STAFF_BREADTH_FIRST = "graph_staff_breadth_first";
 	public static final String GRAPH_MAX_STAFF_PARENT_DEPTH = "graph_max_staff_parent_depth";
+	public static final String GRAPH_MAX_STAFF_CHILDREN_DEPTH = "graph_max_staff_children_depth";
 	public static final String GRAPH_MAX_COURSE_INSTANCES = "graph_max_course_instances";
 	public static final String GRAPH_MAX_RENEWALS_DEPTH = "graph_max_renewals_depth";
 	public static final String GRAPH_MAX_PRECEDING_DEPTH = "graph_max_preceding_depth";
 	public static final String GRAPH_COURSE_BREADTH_FIRST = "graph_course_breadth_first";
 	public static final String GRAPH_MAX_INVENTORY_INSTANCES = "graph_max_inventory_instances";
 	public static final String GRAPH_MAX_INVENTORY_PARENT_DEPTH = "graph_max_inventory_parent_depth";
+	public static final String GRAPH_MAX_INVENTORY_CHILDREN_DEPTH = "graph_max_inventory_children_depth";
 	public static final String GRAPH_INVENTORY_BREADTH_FIRST = "graph_inventory_breadth_first";
 	public static final String GRAPH_MAX_PROBAND_INSTANCES = "graph_max_proband_instances";
 	public static final String GRAPH_PROBAND_BREADTH_FIRST = "graph_proband_breadth_first";
@@ -270,8 +272,10 @@ public interface SettingCodes {
 	public static final String GRAPH_MAX_PROBAND_CHILDREN_DEPTH = "graph_max_proband_children_depth";
 	public static final String API_GRAPH_MAX_STAFF_INSTANCES = "api_graph_max_staff_instances";
 	public static final String API_GRAPH_MAX_STAFF_PARENT_DEPTH = "api_graph_max_staff_parent_depth";
+	public static final String API_GRAPH_MAX_STAFF_CHILDREN_DEPTH = "api_graph_max_staff_children_depth";
 	public static final String API_GRAPH_MAX_INVENTORY_INSTANCES = "api_graph_max_inventory_instances";
 	public static final String API_GRAPH_MAX_INVENTORY_PARENT_DEPTH = "api_graph_max_inventory_parent_depth";
+	public static final String API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH = "api_graph_max_inventory_children_depth";
 	public static final String API_GRAPH_MAX_COURSE_INSTANCES = "api_graph_max_course_instances";
 	public static final String API_GRAPH_MAX_RENEWALS_DEPTH = "api_graph_max_renewals_depth";
 	public static final String API_GRAPH_MAX_PRECEDING_DEPTH = "api_graph_max_preceding_depth";

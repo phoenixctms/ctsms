@@ -78,7 +78,8 @@ public class StaffResource extends ServiceResourceBase {
 	public StaffOutVO addStaff(StaffInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getStaffService()
 				.addStaff(auth, in, Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 	}
 
 	@GET
@@ -113,7 +114,8 @@ public class StaffResource extends ServiceResourceBase {
 				.deleteStaff(auth, id, Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE),
 						false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 	}
 
 	@Override
@@ -127,7 +129,9 @@ public class StaffResource extends ServiceResourceBase {
 	public Collection<StaffOutVO> getChildren(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getStaffService()
 				.getStaff(auth, id, Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH)).getChildren();
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH))
+				.getChildren();
 	}
 
 	// @GET
@@ -205,7 +209,8 @@ public class StaffResource extends ServiceResourceBase {
 	public StaffOutVO getStaff(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getStaffService()
 				.getStaff(auth, id, Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 	}
 
 	@GET
@@ -269,7 +274,8 @@ public class StaffResource extends ServiceResourceBase {
 	public StaffOutVO updateStaff(StaffInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getStaffService()
 				.updateStaff(auth, in, Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 	}
 	// @OPTIONS
 	// public javax.ws.rs.core.Response davOptionsModuleRoot() {

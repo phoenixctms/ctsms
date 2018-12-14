@@ -20,10 +20,10 @@ import org.primefaces.model.ScheduleEvent;
 
 public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 
-	private StaffStatusEntryOutVO out;
 	private final static String EVENT_STYLECLASS = "ctsms-staff-schedule-status-event";
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String EVENT_TITLE_SEPARATOR = "\n";
+	private StaffStatusEntryOutVO out;
 
 	public StaffStatusEvent() {
 		super();
@@ -83,7 +83,7 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		// if (in.getStaffId() != null) {
-		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null);
+		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		if (staff != null) {
 			sb.append(CommonUtil.staffOutVOToString(staff));
 			if (in.getTypeId() != null || !CommonUtil.isEmptyString(in.getComment())) {

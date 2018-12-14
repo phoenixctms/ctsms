@@ -209,7 +209,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
 		}
-		staff = WebUtil.getStaff(in.getStaffId(), null, null);
+		staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		loadSelectedSection();
 		if (staff != null) {
 			if (!WebUtil.isStaffPerson(staff)) {

@@ -903,7 +903,7 @@ extends StaffServiceBase
 	 * @see org.phoenixctms.ctsms.service.staff.StaffService#addStaff(StaffInVO)
 	 */
 	@Override
-	protected StaffOutVO handleAddStaff(AuthenticationVO auth, StaffInVO newStaff, Integer maxInstances, Integer maxParentDepth)
+	protected StaffOutVO handleAddStaff(AuthenticationVO auth, StaffInVO newStaff, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception
 	{
 		checkStaffInput(newStaff);
@@ -921,7 +921,7 @@ extends StaffServiceBase
 			this.getOrganisationContactParticularsDao().create(organisationParticulars);
 		}
 		staff = staffDao.create(staff);
-		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
+		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_CREATED, result, null, journalEntryDao);
 		return result;
@@ -1101,7 +1101,7 @@ extends StaffServiceBase
 	 */
 	@Override
 	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
-			Integer maxParentDepth)
+			Integer maxParentDepth, Integer maxChildrenDepth)
 					throws Exception
 	{
 		StaffDao staffDao = this.getStaffDao();
@@ -1115,7 +1115,7 @@ extends StaffServiceBase
 			if (identity != null && identity.equals(originalStaff)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_ACTIVE_IDENTITY);
 			}
-			StaffOutVO original = staffDao.toStaffOutVO(originalStaff, maxInstances, maxParentDepth);
+			StaffOutVO original = staffDao.toStaffOutVO(originalStaff, maxInstances, maxParentDepth, maxChildrenDepth);
 			staffDao.evict(originalStaff);
 			Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao, LockMode.PESSIMISTIC_WRITE);
 			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
@@ -1125,14 +1125,14 @@ extends StaffServiceBase
 			staff.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(staff, originalStaff.getVersion(), now, user); // no opt. locking
 			staffDao.update(staff);
-			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
+			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth, maxChildrenDepth);
 			logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_MARKED_FOR_DELETION, result, original, journalEntryDao);
 		} else {
 			Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao, LockMode.PESSIMISTIC_WRITE);
 			if (identity != null && identity.equals(staff)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_ACTIVE_IDENTITY);
 			}
-			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
+			result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth, maxChildrenDepth);
 			deleteStaffHelper(staff, true, user, now);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.STAFF_DELETED, result, null, journalEntryDao);
 		}
@@ -1618,10 +1618,10 @@ extends StaffServiceBase
 	 * @see org.phoenixctms.ctsms.service.staff.StaffService#getStaff(Long)
 	 */
 	@Override
-	protected StaffOutVO handleGetStaff(AuthenticationVO auth, Long staffId, Integer maxInstances, Integer maxParentDepth) throws Exception {
+	protected StaffOutVO handleGetStaff(AuthenticationVO auth, Long staffId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		StaffDao staffDao = this.getStaffDao();
 		Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao);
-		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
+		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth, maxChildrenDepth);
 		return result;
 	}
 
@@ -2086,7 +2086,7 @@ extends StaffServiceBase
 	 * @see org.phoenixctms.ctsms.service.staff.StaffService#updateStaff(StaffInVO)
 	 */
 	@Override
-	protected StaffOutVO handleUpdateStaff(AuthenticationVO auth, StaffInVO modifiedStaff, Integer maxInstances, Integer maxParentDepth)
+	protected StaffOutVO handleUpdateStaff(AuthenticationVO auth, StaffInVO modifiedStaff, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception
 	{
 		StaffDao staffDao = this.getStaffDao();
@@ -2095,7 +2095,7 @@ extends StaffServiceBase
 		if (originalStaff.isPerson() != modifiedStaff.isPerson()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_PERSON_FLAG_CHANGED);
 		}
-		StaffOutVO original = staffDao.toStaffOutVO(originalStaff, maxInstances, maxParentDepth);
+		StaffOutVO original = staffDao.toStaffOutVO(originalStaff, maxInstances, maxParentDepth, maxChildrenDepth);
 		staffDao.evict(originalStaff);
 		Staff staff = staffDao.staffInVOToEntity(modifiedStaff);
 		checkStaffLoop(staff);
@@ -2103,7 +2103,7 @@ extends StaffServiceBase
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalStaff, staff, now, user);
 		staffDao.update(staff);
-		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth);
+		StaffOutVO result = staffDao.toStaffOutVO(staff, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(staff, result, now, user, SystemMessageCodes.STAFF_UPDATED, result, original, journalEntryDao);
 		return result;

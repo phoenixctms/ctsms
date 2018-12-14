@@ -134,7 +134,7 @@
 							<span
 								class="#{inventory.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-inventory-tree-node-parent"
 								onclick="changeInventoryByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
-									value="#{applicationScopeBean.clipStringMid(inventory.name)} (#{applicationScopeBean.getListSize(inventory.children)})" />
+									value="#{applicationScopeBean.clipStringMid(inventory.name)} (#{inventory.childrenCount})" />
 							</span>
 						</p:treeNode>
 						<p:treeNode type="#{applicationScopeBean.leafNodeType}">

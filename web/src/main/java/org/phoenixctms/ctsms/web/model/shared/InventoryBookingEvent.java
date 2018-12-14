@@ -24,6 +24,7 @@ import org.primefaces.model.ScheduleEvent;
 
 public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInVO> {
 
+	private final static String EVENT_TITLE_SEPARATOR = "\n";
 	private InventoryBookingOutVO out;
 	private int collidingInventoryStatusEntryCount = 0;
 	private int collidingStaffStatusEntryCount = 0;
@@ -31,7 +32,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 	private int collidingProbandStatusEntryCount = 0;
 	private int collidingCourseParticipationStatusEntryCount = 0;
 	private Map<Long, Color> trialColorMap = null;
-	private final static String EVENT_TITLE_SEPARATOR = "\n";
 
 	public InventoryBookingEvent() {
 		super();
@@ -85,7 +85,7 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 	@Override
 	public String getStyleClass() {
 		// if (in.getInventoryId() != null) {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null);
+		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
 			if (in.getTrialId() != null && trialColorMap != null && trialColorMap.size() > 0) {
@@ -148,7 +148,7 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 		}
 		// }
 		// if (in.getInventoryId() != null) {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null);
+		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

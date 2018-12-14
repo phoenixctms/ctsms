@@ -38,6 +38,6 @@ public class StaffSearchResultLazyModel extends SearchResultLazyModel {
 
 	@Override
 	protected StaffOutVO getRowElement(Long id) {
-		return WebUtil.getStaff(id, null, null);
+		return WebUtil.getStaff(id, null, null, null);
 	}
 }

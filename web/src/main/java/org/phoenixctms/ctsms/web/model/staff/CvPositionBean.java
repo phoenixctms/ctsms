@@ -254,7 +254,7 @@ public class CvPositionBean extends ManagedBeanBase {
 		cvPositionModel.setStaffId(in.getStaffId());
 		cvPositionModel.updateRowCount();
 		cvSections = WebUtil.getCvSections(this.in.getSectionId());
-		staff = WebUtil.getStaff(in.getStaffId(), null, null);
+		staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		loadSelectedSection();
 		if (staff != null) {
 			if (!WebUtil.isStaffPerson(staff)) {

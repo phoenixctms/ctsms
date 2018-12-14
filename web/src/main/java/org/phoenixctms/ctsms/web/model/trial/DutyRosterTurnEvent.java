@@ -24,11 +24,11 @@ import org.primefaces.model.ScheduleEvent;
 
 public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 
+	private final static String EVENT_TITLE_HEAD_SEPARATOR = " ";
+	private final static String EVENT_TITLE_SEPARATOR = "\n";
 	private DutyRosterTurnOutVO out;
 	int collidingStaffStatusEntryCount = 0;
 	int collidingInventoryBookingCount = 0;
-	private final static String EVENT_TITLE_HEAD_SEPARATOR = " ";
-	private final static String EVENT_TITLE_SEPARATOR = "\n";
 
 	public DutyRosterTurnEvent() {
 		super();
@@ -86,7 +86,7 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			isDutySelfAllocationLocked = WebUtil.isDutySelfAllocationLocked(WebUtil.getTrial(in.getTrialId()), in.getStart(), in.getStaffId() != null);
 		}
 		if (in.getStaffId() != null) {
-			StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null);
+			StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 			if (staff != null) {
 				StringBuilder sb = new StringBuilder();
 				if (isDutySelfAllocationLocked) {
@@ -146,7 +146,7 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			appended = true;
 		}
 		// if (in.getStaffId() != null) {
-		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null);
+		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		if (staff != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

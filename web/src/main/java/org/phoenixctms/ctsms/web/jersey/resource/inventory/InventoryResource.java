@@ -72,7 +72,8 @@ public class InventoryResource extends ServiceResourceBase {
 				.getInventoryService()
 				.addInventory(auth, in,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 	}
 
 	@GET
@@ -107,7 +108,8 @@ public class InventoryResource extends ServiceResourceBase {
 				.deleteInventory(auth, id, Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE),
 						false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 	}
 
 	@Override
@@ -124,7 +126,8 @@ public class InventoryResource extends ServiceResourceBase {
 				.getInventoryService()
 				.getInventory(auth, id,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH))
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH))
 				.getChildren();
 	}
 
@@ -182,7 +185,8 @@ public class InventoryResource extends ServiceResourceBase {
 				.getInventoryService()
 				.getInventory(auth, id,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 	}
 
 	@GET
@@ -241,6 +245,7 @@ public class InventoryResource extends ServiceResourceBase {
 				.getInventoryService()
 				.updateInventory(auth, in,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 	}
 }

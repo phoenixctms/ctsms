@@ -809,8 +809,8 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		inventory = (FileModule.INVENTORY_DOCUMENT.equals(module) ? WebUtil.getInventory(entityId, null, null) : null);
-		staff = (FileModule.STAFF_DOCUMENT.equals(module) ? WebUtil.getStaff(entityId, null, null) : null);
+		inventory = (FileModule.INVENTORY_DOCUMENT.equals(module) ? WebUtil.getInventory(entityId, null, null, null) : null);
+		staff = (FileModule.STAFF_DOCUMENT.equals(module) ? WebUtil.getStaff(entityId, null, null, null) : null);
 		course = (FileModule.COURSE_DOCUMENT.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
 		trial = (FileModule.TRIAL_DOCUMENT.equals(module) ? WebUtil.getTrial(entityId) : null);
 		proband = (FileModule.PROBAND_DOCUMENT.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);

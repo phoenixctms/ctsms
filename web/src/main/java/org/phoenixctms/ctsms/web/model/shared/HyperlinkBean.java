@@ -334,8 +334,8 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		inventory = (HyperlinkModule.INVENTORY_HYPERLINK.equals(module) ? WebUtil.getInventory(entityId, null, null) : null);
-		staff = (HyperlinkModule.STAFF_HYPERLINK.equals(module) ? WebUtil.getStaff(entityId, null, null) : null);
+		inventory = (HyperlinkModule.INVENTORY_HYPERLINK.equals(module) ? WebUtil.getInventory(entityId, null, null, null) : null);
+		staff = (HyperlinkModule.STAFF_HYPERLINK.equals(module) ? WebUtil.getStaff(entityId, null, null, null) : null);
 		course = (HyperlinkModule.COURSE_HYPERLINK.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
 		trial = (HyperlinkModule.TRIAL_HYPERLINK.equals(module) ? WebUtil.getTrial(entityId) : null);
 		hyperlinkModel.setEntityId(entityId);

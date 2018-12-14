@@ -185,7 +185,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().addStaff(WebUtil.getAuthentication(), in,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
@@ -255,7 +256,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			try {
 				out = WebUtil.getServiceLocator().getStaffService().getStaff(WebUtil.getAuthentication(), id,
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			} catch (ServiceException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
@@ -336,7 +338,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE),
 					false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -419,14 +422,17 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	public String getStaffTreeLabel() {
 		Integer graphMaxStaffInstances = Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES);
 		Integer graphMaxStaffParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH);
-		if (graphMaxStaffInstances == null && graphMaxStaffParentDepth == null) {
+		Integer graphMaxStaffChildrenDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH);
+		if (graphMaxStaffInstances == null && graphMaxStaffParentDepth == null && graphMaxStaffChildrenDepth == null) {
 			return Messages.getString(MessageCodes.STAFF_TREE_LABEL);
-		} else if (graphMaxStaffInstances != null && graphMaxStaffParentDepth == null) {
+		} else if (graphMaxStaffInstances != null && graphMaxStaffParentDepth == null && graphMaxStaffChildrenDepth == null) {
 			return Messages.getMessage(MessageCodes.STAFF_TREE_MAX_LABEL, graphMaxStaffInstances);
-		} else if (graphMaxStaffInstances == null && graphMaxStaffParentDepth != null) {
-			return Messages.getMessage(MessageCodes.STAFF_TREE_LEVELS_LABEL, graphMaxStaffParentDepth);
+		} else if (graphMaxStaffInstances == null && (graphMaxStaffParentDepth != null || graphMaxStaffChildrenDepth != null)) {
+			return Messages.getMessage(MessageCodes.STAFF_TREE_LEVELS_LABEL, graphMaxStaffParentDepth != null ? graphMaxStaffParentDepth : "\u221E",
+					graphMaxStaffChildrenDepth != null ? graphMaxStaffChildrenDepth : "\u221E");
 		} else {
-			return Messages.getMessage(MessageCodes.STAFF_TREE_MAX_LEVELS_LABEL, graphMaxStaffInstances, graphMaxStaffParentDepth);
+			return Messages.getMessage(MessageCodes.STAFF_TREE_MAX_LEVELS_LABEL, graphMaxStaffInstances, graphMaxStaffParentDepth != null ? graphMaxStaffParentDepth : "\u221E",
+					graphMaxStaffChildrenDepth != null ? graphMaxStaffChildrenDepth : "\u221E");
 		}
 	}
 
@@ -601,10 +607,15 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 				WebUtil.getTabTitleString(MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT, count));
 		staffRoot.getChildren().clear();
 		if (out != null) {
+			Integer maxDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH);
+			try {
+				maxDepth += Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH);
+			} catch (NullPointerException e) {
+				maxDepth = null;
+			}
 			staffOutVOtoTreeNode(findStaffRoot(out), staffRoot, out, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
-					null, 0);
+					maxDepth, null, 0);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createStaffOutFromIn(in), staffRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
@@ -659,7 +670,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().getStaff(WebUtil.getAuthentication(), id,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
 		} catch (ServiceException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -793,7 +805,8 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().updateStaff(WebUtil.getAuthentication(), in,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

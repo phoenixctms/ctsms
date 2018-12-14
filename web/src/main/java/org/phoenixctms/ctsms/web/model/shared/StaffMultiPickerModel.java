@@ -12,6 +12,6 @@ public class StaffMultiPickerModel extends MultiPickerModelBase<StaffOutVO> {
 
 	@Override
 	protected StaffOutVO loadSelectionElement(Long id) {
-		return WebUtil.getStaff(id, null, null);
+		return WebUtil.getStaff(id, null, null, null);
 	}
 }

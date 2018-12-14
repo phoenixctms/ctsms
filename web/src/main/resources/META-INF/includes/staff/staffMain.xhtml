@@ -181,7 +181,7 @@
 							<span
 								class="#{staff.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-staff-tree-node-parent"
 								onclick="changeStaffByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));"> <h:outputText
-									value="#{applicationScopeBean.clipStringMid(staff.name)} (#{applicationScopeBean.getListSize(staff.children)})" />
+									value="#{applicationScopeBean.clipStringMid(staff.name)} (#{staff.childrenCount})" />
 							</span>
 						</p:treeNode>
 						<p:treeNode type="#{applicationScopeBean.leafNodeType}">

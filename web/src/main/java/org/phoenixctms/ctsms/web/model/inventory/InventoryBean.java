@@ -123,7 +123,8 @@ public class InventoryBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().addInventory(WebUtil.getAuthentication(), in,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
@@ -182,7 +183,8 @@ public class InventoryBean extends ManagedBeanBase {
 			try {
 				out = WebUtil.getServiceLocator().getInventoryService().getInventory(WebUtil.getAuthentication(), id,
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			} catch (ServiceException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
@@ -223,7 +225,8 @@ public class InventoryBean extends ManagedBeanBase {
 					Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE),
 					false, deferredDeleteReason,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -276,14 +279,19 @@ public class InventoryBean extends ManagedBeanBase {
 		Integer graphMaxInventoryInstances = Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES);
 		Integer graphMaxInventoryParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS,
 				DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH);
-		if (graphMaxInventoryInstances == null && graphMaxInventoryParentDepth == null) {
+		Integer graphMaxInventoryChildrenDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS,
+				DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH);
+		if (graphMaxInventoryInstances == null && graphMaxInventoryParentDepth == null && graphMaxInventoryChildrenDepth == null) {
 			return Messages.getString(MessageCodes.INVENTORY_TREE_LABEL);
-		} else if (graphMaxInventoryInstances != null && graphMaxInventoryParentDepth == null) {
+		} else if (graphMaxInventoryInstances != null && graphMaxInventoryParentDepth == null && graphMaxInventoryChildrenDepth == null) {
 			return Messages.getMessage(MessageCodes.INVENTORY_TREE_MAX_LABEL, graphMaxInventoryInstances);
-		} else if (graphMaxInventoryInstances == null && graphMaxInventoryParentDepth != null) {
-			return Messages.getMessage(MessageCodes.INVENTORY_TREE_LEVELS_LABEL, graphMaxInventoryParentDepth);
+		} else if (graphMaxInventoryInstances == null && (graphMaxInventoryParentDepth != null || graphMaxInventoryChildrenDepth != null)) {
+			return Messages.getMessage(MessageCodes.INVENTORY_TREE_LEVELS_LABEL, graphMaxInventoryParentDepth != null ? graphMaxInventoryParentDepth : "\u221E",
+					graphMaxInventoryChildrenDepth != null ? graphMaxInventoryChildrenDepth : "\u221E");
 		} else {
-			return Messages.getMessage(MessageCodes.INVENTORY_TREE_MAX_LEVELS_LABEL, graphMaxInventoryInstances, graphMaxInventoryParentDepth);
+			return Messages.getMessage(MessageCodes.INVENTORY_TREE_MAX_LEVELS_LABEL, graphMaxInventoryInstances,
+					graphMaxInventoryParentDepth != null ? graphMaxInventoryParentDepth : "\u221E",
+					graphMaxInventoryChildrenDepth != null ? graphMaxInventoryChildrenDepth : "\u221E");
 		}
 	}
 
@@ -407,10 +415,15 @@ public class InventoryBean extends ManagedBeanBase {
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_JOURNAL_TAB_TITLE, MessageCodes.INVENTORY_JOURNAL_TAB_TITLE_WITH_COUNT, count));
 		inventoryRoot.getChildren().clear();
 		if (out != null) {
+			Integer maxDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH);
+			try {
+				maxDepth += Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH);
+			} catch (NullPointerException e) {
+				maxDepth = null;
+			}
 			inventoryOutVOtoTreeNode(findInventoryRoot(out), inventoryRoot, out, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
-					null, 0);
+					maxDepth, null, 0);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createInventoryOutFromIn(in), inventoryRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
@@ -509,7 +522,8 @@ public class InventoryBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().getInventory(WebUtil.getAuthentication(), id,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
 		} catch (ServiceException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -551,7 +565,8 @@ public class InventoryBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().updateInventory(WebUtil.getAuthentication(), in,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH));
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

@@ -148,7 +148,7 @@ public class InventoryBookingBean extends InventoryBookingBeanBase {
 		collidingCourseParticipationStatusEntryModelCache.clear();
 		bookingModel.setInventoryId(in.getInventoryId());
 		bookingModel.updateRowCount();
-		inventory = WebUtil.getInventory(in.getInventoryId(), null, null);
+		inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		filterCalendars = WebUtil.getInventoryBookingFilterCalendars(null, inventoryId, null, null, null);
 		if (!WebUtil.isInventoryBookable(inventory)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.INVENTORY_NOT_BOOKABLE);

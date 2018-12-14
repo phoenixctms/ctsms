@@ -1482,7 +1482,7 @@ public class DemoDataProvider {
 		newInventory.setCategoryId(getRandomElement(selectionSetService.getInventoryCategories(auth, null)).getId());
 		newInventory.setName("inventory_" + (departmentNum + 1) + "_" + (inventoryNum + 1));
 		newInventory.setPieces(random.nextInt(5) + 1L);
-		InventoryOutVO out = inventoryService.addInventory(auth, newInventory, null, null);
+		InventoryOutVO out = inventoryService.addInventory(auth, newInventory, null, null, null);
 		jobOutput.println("inventory created: " + out.getName());
 		return out;
 	}
@@ -1806,7 +1806,7 @@ public class DemoDataProvider {
 		newStaff.setDepartmentId(getDepartmentId(departmentNum));
 		newStaff.setCategoryId(getRandomElement(selectionSetService.getStaffCategories(auth, false, true, null)).getId());
 		newStaff.setOrganisationName("organisation_" + (departmentNum + 1) + "_" + (organisationNum + 1));
-		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null);
+		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null, null);
 		jobOutput.println("organisation created: " + staff.getName());
 		assignUser(staff);
 		return staff;
@@ -1842,7 +1842,7 @@ public class DemoDataProvider {
 		newStaff.setLastName(getRandomElement(GermanPersonNames.LAST_NAMES));
 		newStaff.setCitizenship(getRandomBoolean(5) ? "Deutschland" : "österreich");
 		newStaff.setDateOfBirth(getRandomDateOfBirth());
-		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null);
+		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null, null);
 		jobOutput.println("person created: " + staff.getName());
 		assignUser(staff);
 		return staff;

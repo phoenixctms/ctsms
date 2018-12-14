@@ -14,11 +14,11 @@ import org.primefaces.model.ScheduleEvent;
 
 public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleItemInVO> {
 
-	private MaintenanceScheduleItemOutVO out;
-	private Date date;
 	private final static String EVENT_STYLECLASS = "ctsms-inventory-schedule-maintenance-event";
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String EVENT_TITLE_SEPARATOR = " | ";
+	private MaintenanceScheduleItemOutVO out;
+	private Date date;
 
 	public MaintenanceItemEvent() {
 		super();
@@ -85,7 +85,7 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		// if (in.getInventoryId() != null) {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null);
+		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
 			if (in.getTypeId() != null || !CommonUtil.isEmptyString(in.getTitle())) {

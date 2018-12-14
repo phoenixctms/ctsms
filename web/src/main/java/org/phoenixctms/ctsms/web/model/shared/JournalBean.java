@@ -482,8 +482,8 @@ public class JournalBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		inventory = (JournalModule.INVENTORY_JOURNAL.equals(module) ? WebUtil.getInventory(entityId, null, null) : null);
-		staff = (JournalModule.STAFF_JOURNAL.equals(module) ? WebUtil.getStaff(entityId, null, null) : null);
+		inventory = (JournalModule.INVENTORY_JOURNAL.equals(module) ? WebUtil.getInventory(entityId, null, null, null) : null);
+		staff = (JournalModule.STAFF_JOURNAL.equals(module) ? WebUtil.getStaff(entityId, null, null, null) : null);
 		course = (JournalModule.COURSE_JOURNAL.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
 		trial = (JournalModule.TRIAL_JOURNAL.equals(module) ? WebUtil.getTrial(entityId) : null);
 		proband = (JournalModule.PROBAND_JOURNAL.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);

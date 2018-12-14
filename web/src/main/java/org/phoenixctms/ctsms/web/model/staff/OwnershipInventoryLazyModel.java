@@ -32,7 +32,7 @@ public class OwnershipInventoryLazyModel extends LazyDataModelBase {
 
 	@Override
 	protected InventoryOutVO getRowElement(Long id) {
-		return WebUtil.getInventory(id, null, null);
+		return WebUtil.getInventory(id, null, null, null);
 	}
 
 	public Long getStaffId() {

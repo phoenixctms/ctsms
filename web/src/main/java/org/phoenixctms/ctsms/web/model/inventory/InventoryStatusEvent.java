@@ -20,10 +20,10 @@ import org.primefaces.model.ScheduleEvent;
 
 public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntryInVO> {
 
-	private InventoryStatusEntryOutVO out;
 	private final static String EVENT_STYLECLASS = "ctsms-inventory-schedule-status-event";
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String EVENT_TITLE_SEPARATOR = "\n";
+	private InventoryStatusEntryOutVO out;
 
 	public InventoryStatusEvent() {
 		super();
@@ -83,7 +83,7 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		// if (in.getInventoryId() != null) {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null);
+		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
 			if (in.getTypeId() != null || in.getAddresseeId() != null || !CommonUtil.isEmptyString(in.getComment())) {
@@ -103,7 +103,7 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 		}
 		// }
 		// if (in.getAddresseeId() != null) {
-		StaffOutVO addressee = WebUtil.getStaff(in.getAddresseeId(), null, null);
+		StaffOutVO addressee = WebUtil.getStaff(in.getAddresseeId(), null, null, null);
 		if (addressee != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

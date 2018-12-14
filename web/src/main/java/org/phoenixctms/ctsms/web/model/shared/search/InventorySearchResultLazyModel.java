@@ -38,6 +38,6 @@ public class InventorySearchResultLazyModel extends SearchResultLazyModel {
 
 	@Override
 	protected InventoryOutVO getRowElement(Long id) {
-		return WebUtil.getInventory(id, null, null);
+		return WebUtil.getInventory(id, null, null, null);
 	}
 }

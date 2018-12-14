@@ -2598,10 +2598,10 @@ public final class WebUtil {
 		return "";
 	}
 
-	public static InventoryOutVO getInventory(Long inventoryId, Integer maxInstances, Integer maxParentDepth) {
+	public static InventoryOutVO getInventory(Long inventoryId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) {
 		if (inventoryId != null) {
 			try {
-				return getServiceLocator().getInventoryService().getInventory(getAuthentication(), inventoryId, maxInstances, maxParentDepth);
+				return getServiceLocator().getInventoryService().getInventory(getAuthentication(), inventoryId, maxInstances, maxParentDepth, maxChildrenDepth);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -3838,10 +3838,10 @@ public final class WebUtil {
 		return sexes;
 	}
 
-	public static StaffOutVO getStaff(Long staffId, Integer maxInstances, Integer maxParentDepth) {
+	public static StaffOutVO getStaff(Long staffId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) {
 		if (staffId != null) {
 			try {
-				return getServiceLocator().getStaffService().getStaff(getAuthentication(), staffId, maxInstances, maxParentDepth);
+				return getServiceLocator().getStaffService().getStaff(getAuthentication(), staffId, maxInstances, maxParentDepth, maxChildrenDepth);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -4855,7 +4855,7 @@ public final class WebUtil {
 			return getNoInventoryPickedMessage();
 		}
 		try {
-			InventoryOutVO inventory = getServiceLocator().getInventoryService().getInventory(getAuthentication(), id, null, null);
+			InventoryOutVO inventory = getServiceLocator().getInventoryService().getInventory(getAuthentication(), id, null, null, null);
 			return inventoryOutVOToString(inventory);
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
@@ -5239,7 +5239,7 @@ public final class WebUtil {
 			return getNoStaffPickedMessage();
 		}
 		try {
-			StaffOutVO staff = getServiceLocator().getStaffService().getStaff(getAuthentication(), id, null, null);
+			StaffOutVO staff = getServiceLocator().getStaffService().getStaff(getAuthentication(), id, null, null, null);
 			return staffOutVOToString(staff);
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
