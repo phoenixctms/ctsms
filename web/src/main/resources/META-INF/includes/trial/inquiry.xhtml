@@ -766,7 +766,7 @@
 									<p:commandButton
 										process="@this"
 										value="#{labels.delete_button_label}"
-										onclick="if(inquiryDeleteReason){inquiryDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inquiryBean.deferredDeleteReason)});}inquiryDeleteConfirmation.show()"
+										onclick="if('inquiryDeleteReason' in window){inquiryDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inquiryBean.deferredDeleteReason)});}inquiryDeleteConfirmation.show()"
 										disabled="#{!inquiryBean.removable}"
 										icon="ui-icon ui-icon-trash"
 										type="button" />

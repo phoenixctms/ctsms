@@ -1259,7 +1259,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(massMailDeleteReason){massMailDeleteReason.setValue(#{applicationScopeBean.quoteJsString(massMailBean.deferredDeleteReason)});}massMailDeleteConfirmation.show()"
+									onclick="if('massMailDeleteReason' in window){massMailDeleteReason.setValue(#{applicationScopeBean.quoteJsString(massMailBean.deferredDeleteReason)});}massMailDeleteConfirmation.show()"
 									disabled="#{!massMailBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />

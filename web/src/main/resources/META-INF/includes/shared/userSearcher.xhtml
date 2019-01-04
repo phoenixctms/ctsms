@@ -79,7 +79,7 @@
 					<p:commandButton
 						process="@this"
 						value="#{labels.delete_button_label}"
-						onclick="if(criteriaDeleteReason){criteriaDeleteReason.setValue(#{applicationScopeBean.quoteJsString(userSearchBean.deferredDeleteReason)});}criteriaDeleteConfirmation.show()"
+						onclick="if('criteriaDeleteReason' in window){criteriaDeleteReason.setValue(#{applicationScopeBean.quoteJsString(userSearchBean.deferredDeleteReason)});}criteriaDeleteConfirmation.show()"
 						disabled="#{!userSearchBean.removable}"
 						icon="ui-icon ui-icon-trash"
 						type="button" />

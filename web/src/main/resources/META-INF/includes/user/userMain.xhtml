@@ -546,7 +546,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(userDeleteReason){userDeleteReason.setValue(#{applicationScopeBean.quoteJsString(userBean.deferredDeleteReason)});}userDeleteConfirmation.show()"
+									onclick="if('userDeleteReason' in window){userDeleteReason.setValue(#{applicationScopeBean.quoteJsString(userBean.deferredDeleteReason)});}userDeleteConfirmation.show()"
 									disabled="#{!userBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />

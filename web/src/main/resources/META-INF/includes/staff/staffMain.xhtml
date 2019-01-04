@@ -920,7 +920,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(staffDeleteReason){staffDeleteReason.setValue(#{applicationScopeBean.quoteJsString(staffBean.deferredDeleteReason)});}staffDeleteConfirmation.show()"
+									onclick="if('staffDeleteReason' in window){staffDeleteReason.setValue(#{applicationScopeBean.quoteJsString(staffBean.deferredDeleteReason)});}staffDeleteConfirmation.show()"
 									disabled="#{!staffBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />

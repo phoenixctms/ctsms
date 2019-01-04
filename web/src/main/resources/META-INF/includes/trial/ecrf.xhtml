@@ -617,7 +617,7 @@
 									<p:commandButton
 										process="@this"
 										value="#{labels.delete_button_label}"
-										onclick="if(ecrfDeleteReason){ecrfDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfBean.deferredDeleteReason)});}ecrfDeleteConfirmation.show()"
+										onclick="if('ecrfDeleteReason' in window){ecrfDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfBean.deferredDeleteReason)});}ecrfDeleteConfirmation.show()"
 										disabled="#{!ecrfBean.removable}"
 										icon="ui-icon ui-icon-trash"
 										type="button" />

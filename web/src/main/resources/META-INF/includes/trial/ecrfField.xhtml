@@ -982,7 +982,7 @@
 									<p:commandButton
 										process="@this"
 										value="#{labels.delete_button_label}"
-										onclick="if(ecrfFieldDeleteReason){ecrfFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfFieldBean.deferredDeleteReason)});}ecrfFieldDeleteConfirmation.show()"
+										onclick="if('ecrfFieldDeleteReason' in window){ecrfFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfFieldBean.deferredDeleteReason)});}ecrfFieldDeleteConfirmation.show()"
 										disabled="#{!ecrfFieldBean.removable}"
 										icon="ui-icon ui-icon-trash"
 										type="button" />

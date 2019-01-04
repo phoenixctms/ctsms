@@ -1195,7 +1195,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(probandDeleteReason){probandDeleteReason.setValue(#{applicationScopeBean.quoteJsString(probandBean.deferredDeleteReason)});}probandDeleteConfirmation.show()"
+									onclick="if('probandDeleteReason' in window){probandDeleteReason.setValue(#{applicationScopeBean.quoteJsString(probandBean.deferredDeleteReason)});}probandDeleteConfirmation.show()"
 									disabled="#{!probandBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />

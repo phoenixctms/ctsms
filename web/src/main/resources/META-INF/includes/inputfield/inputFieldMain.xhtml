@@ -1011,7 +1011,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(inputFieldDeleteReason){inputFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inputFieldBean.deferredDeleteReason)});}inputFieldDeleteConfirmation.show()"
+									onclick="if('inputFieldDeleteReason' in window){inputFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inputFieldBean.deferredDeleteReason)});}inputFieldDeleteConfirmation.show()"
 									disabled="#{!inputFieldBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />

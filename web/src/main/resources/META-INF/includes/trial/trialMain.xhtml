@@ -842,7 +842,7 @@
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
-									onclick="if(trialDeleteReason){trialDeleteReason.setValue(#{applicationScopeBean.quoteJsString(trialBean.deferredDeleteReason)});}trialDeleteConfirmation.show()"
+									onclick="if('trialDeleteReason' in window){trialDeleteReason.setValue(#{applicationScopeBean.quoteJsString(trialBean.deferredDeleteReason)});}trialDeleteConfirmation.show()"
 									disabled="#{!trialBean.removable}"
 									icon="ui-icon ui-icon-trash"
 									type="button" />
