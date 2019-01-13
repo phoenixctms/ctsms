@@ -2,10 +2,8 @@ package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
 
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,6 +24,8 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValuesOutVO;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+
+import io.swagger.annotations.Api;
 
 @Api
 @Path("/ecrffieldvalue")
@@ -53,7 +53,7 @@ public class EcrfFieldValuesResource {
 	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> setEcrfFieldValues(Collection<ECRFFieldValueInVO> in)
 			throws AuthenticationException, AuthorisationException,
 			ServiceException {
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new HashSet<ECRFFieldValueInVO>(in), null, null);
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null, null);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in), null);
 		// return WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in);

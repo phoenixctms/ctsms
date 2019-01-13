@@ -1,9 +1,7 @@
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,6 +22,8 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValuesOutVO;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+
+import io.swagger.annotations.Api;
 
 @Api
 @Path("/probandlistentrytagvalue")
@@ -51,7 +51,8 @@ public class ProbandListEntryTagValuesResource {
 	public JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO> setProbandListEntryTagValues(Collection<ProbandListEntryTagValueInVO> in)
 			throws AuthenticationException, AuthorisationException,
 			ServiceException {
-		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, new HashSet<ProbandListEntryTagValueInVO>(in));
+		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth,
+				new LinkedHashSet<ProbandListEntryTagValueInVO>(in));
 		return new JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in), null);
 		// return WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in);

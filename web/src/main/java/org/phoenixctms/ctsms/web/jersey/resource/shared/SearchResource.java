@@ -1,7 +1,7 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -59,7 +59,7 @@ public class SearchResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public CriteriaOutVO addCriteria(CriterionInVOWrapper criteria) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getSearchService().addCriteria(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()));
+		return WebUtil.getServiceLocator().getSearchService().addCriteria(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()));
 	}
 
 	@DELETE
@@ -180,7 +180,8 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<CourseOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchCourse(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_COURSE_INSTANCES, psf = new PSFUriPart(uriInfo)),
+				.searchCourse(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_COURSE_INSTANCES,
+						psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
@@ -203,7 +204,7 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<InputFieldOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchInputField(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()), psf = new PSFUriPart(uriInfo)), psf);
+				.searchInputField(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET
@@ -223,7 +224,7 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<InventoryOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchInventory(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()),
+				.searchInventory(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()),
 						ResourceUtils.LIST_GRAPH_MAX_INVENTORY_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
@@ -245,7 +246,7 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<ProbandOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchProband(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()),
+				.searchProband(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()),
 						ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
@@ -267,7 +268,8 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<StaffOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchStaff(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_STAFF_INSTANCES, psf = new PSFUriPart(uriInfo)),
+				.searchStaff(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_STAFF_INSTANCES,
+						psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
@@ -289,7 +291,7 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<TrialOutVO>(WebUtil.getServiceLocator().getSearchService()
-				.searchTrial(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()), psf = new PSFUriPart(uriInfo)), psf);
+				.searchTrial(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET
@@ -309,7 +311,7 @@ public class SearchResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf = new PSFUriPart(uriInfo);
 		Collection result = WebUtil.getServiceLocator().getSearchService()
-				.searchUser(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_USER_INSTANCES, psf);
+				.searchUser(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_USER_INSTANCES, psf);
 		NoShortcutSerializationWrapper.transformVoCollection(result);
 		NoShortcutSerializationWrapper.transformVoCollection(result);
 		return new Page<NoShortcutSerializationWrapper<UserOutVO>>(result, psf);
@@ -330,7 +332,7 @@ public class SearchResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public CriteriaOutVO updateCriteria(CriterionInVOWrapper criteria) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getSearchService().updateCriteria(auth, criteria, new HashSet<CriterionInVO>(criteria.getCriterions()));
+		return WebUtil.getServiceLocator().getSearchService().updateCriteria(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()));
 	}
 	// @GET
 	// @Produces({MediaType.APPLICATION_JSON})

@@ -1,9 +1,7 @@
 package org.phoenixctms.ctsms.web.jersey.resource.proband;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,6 +22,8 @@ import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+
+import io.swagger.annotations.Api;
 
 @Api
 @Path("/inquiryvalue")
@@ -51,7 +51,7 @@ public class InquiryValuesResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO> setInquiryValues(Collection<InquiryValueInVO> in) throws AuthenticationException, AuthorisationException,
 	ServiceException {
-		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, new HashSet<InquiryValueInVO>(in));
+		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, new LinkedHashSet<InquiryValueInVO>(in));
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 		// return new InquiryValuesOutVOPage(WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, in), null);
 		// return WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, in);
