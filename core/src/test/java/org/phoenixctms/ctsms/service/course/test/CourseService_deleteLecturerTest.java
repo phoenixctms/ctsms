@@ -27,7 +27,7 @@ public class CourseService_deleteLecturerTest extends CourseServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.deleteLecturer]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.deleteLecturer]()' service method.
    */
 
   /**

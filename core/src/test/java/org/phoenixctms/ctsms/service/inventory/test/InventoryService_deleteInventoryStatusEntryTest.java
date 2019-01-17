@@ -27,7 +27,7 @@ public class InventoryService_deleteInventoryStatusEntryTest extends InventorySe
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.deleteInventoryStatusEntry]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.deleteInventoryStatusEntry]()' service method.
    */
 
   /**

@@ -14,23 +14,23 @@ import org.testng.annotations.Test;
 public class MassMailTypeDaoTransformTest extends DaoTransformTestBase {
 
   /**
-   * Test for method MassMailTypeDao.toMassMailTypVO
+   * Test for method MassMailTypeDao.toMassMailTypeVO
    *
-   * @see org.phoenixctms.ctsms.domain.MassMailTypeDao#toMassMailTypVO(org.phoenixctms.ctsms.domain.MassMailType source, org.phoenixctms.ctsms.vo.MassMailTypVO target)
+   * @see org.phoenixctms.ctsms.domain.MassMailTypeDao#toMassMailTypeVO(org.phoenixctms.ctsms.domain.MassMailType source, org.phoenixctms.ctsms.vo.MassMailTypeVO target)
    */
   @Test
-  public void testToMassMailTypVO() {
-    Assert.fail("Test 'MassMailTypeDaoTransformTest.testToMassMailTypVO' not implemented!");
+  public void testToMassMailTypeVO() {
+    Assert.fail("Test 'MassMailTypeDaoTransformTest.testToMassMailTypeVO' not implemented!");
   }
 
     /**
-   * Test for method massMailTypVOToEntity
+   * Test for method massMailTypeVOToEntity
    *
-   * @see org.phoenixctms.ctsms.domain.MassMailTypeDao#massMailTypVOToEntity(org.phoenixctms.ctsms.vo.MassMailTypVO source, org.phoenixctms.ctsms.domain.MassMailType target, boolean copyIfNull)
+   * @see org.phoenixctms.ctsms.domain.MassMailTypeDao#massMailTypeVOToEntity(org.phoenixctms.ctsms.vo.MassMailTypeVO source, org.phoenixctms.ctsms.domain.MassMailType target, boolean copyIfNull)
    */
   @Test
-  public void testMassMailTypVOToEntity() {
-    Assert.fail("Test 'MassMailTypeDaoTransformTest.testMassMailTypVOToEntity' not implemented!");
+  public void testMassMailTypeVOToEntity() {
+    Assert.fail("Test 'MassMailTypeDaoTransformTest.testMassMailTypeVOToEntity' not implemented!");
   }
 
 }

@@ -27,7 +27,7 @@ public class CourseService_getExpiringCoursesTest extends CourseServiceBaseTest 
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.getExpiringCourses]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.getExpiringCourses]()' service method.
    */
 
   /**

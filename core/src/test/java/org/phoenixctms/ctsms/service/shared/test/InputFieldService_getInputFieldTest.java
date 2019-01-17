@@ -27,7 +27,7 @@ public class InputFieldService_getInputFieldTest extends InputFieldServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getInputField]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getInputField]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class TrialService_getEcrfFieldStatusEntryListTest extends TrialServiceBa
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getEcrfFieldStatusEntryList]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldStatusEntryList]()' service method.
    */
 
   /**

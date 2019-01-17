@@ -27,7 +27,7 @@ public class UserService_setPermissionProfilesTest extends UserServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.setPermissionProfiles]()' service method.
+   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.setPermissionProfiles]()' service method.
    */
 
   /**

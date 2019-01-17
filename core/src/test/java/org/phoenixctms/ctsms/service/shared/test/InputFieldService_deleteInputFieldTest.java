@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteInputField</code> of service <code>InputFieldService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.InputFieldService#deleteInputField(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean)
+ * @see org.phoenixctms.ctsms.service.shared.InputFieldService#deleteInputField(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String)
  */
 @Test(groups={"service","InputFieldService"})
 public class InputFieldService_deleteInputFieldTest extends InputFieldServiceBaseTest {
@@ -27,7 +27,7 @@ public class InputFieldService_deleteInputFieldTest extends InputFieldServiceBas
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.deleteInputField]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.deleteInputField]()' service method.
    */
 
   /**

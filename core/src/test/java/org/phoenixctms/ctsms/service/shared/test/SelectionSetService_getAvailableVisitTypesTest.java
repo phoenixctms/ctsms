@@ -27,7 +27,7 @@ public class SelectionSetService_getAvailableVisitTypesTest extends SelectionSet
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAvailableVisitTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAvailableVisitTypes]()' service method.
    */
 
   /**

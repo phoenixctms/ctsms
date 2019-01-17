@@ -27,7 +27,7 @@ public class SelectionSetService_getVariablePeriodsWoExplicitTest extends Select
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getVariablePeriodsWoExplicit]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getVariablePeriodsWoExplicit]()' service method.
    */
 
   /**

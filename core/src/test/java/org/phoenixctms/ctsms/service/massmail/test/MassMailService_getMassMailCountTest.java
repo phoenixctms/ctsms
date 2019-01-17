@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getMassMailCount</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getMassMailCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Boolean)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getMassMailCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Boolean, java.lang.Long)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_getMassMailCountTest extends MassMailServiceBaseTest {

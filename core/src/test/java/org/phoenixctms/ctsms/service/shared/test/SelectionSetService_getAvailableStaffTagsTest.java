@@ -27,7 +27,7 @@ public class SelectionSetService_getAvailableStaffTagsTest extends SelectionSetS
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAvailableStaffTags]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAvailableStaffTags]()' service method.
    */
 
   /**

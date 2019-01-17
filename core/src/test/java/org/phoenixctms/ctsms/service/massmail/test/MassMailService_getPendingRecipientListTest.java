@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getPendingRecipientList</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getPendingRecipientList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getPendingRecipientList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_getPendingRecipientListTest extends MassMailServiceBaseTest {

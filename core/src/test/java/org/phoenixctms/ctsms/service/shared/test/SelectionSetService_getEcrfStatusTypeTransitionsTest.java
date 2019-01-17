@@ -27,7 +27,7 @@ public class SelectionSetService_getEcrfStatusTypeTransitionsTest extends Select
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getEcrfStatusTypeTransitions]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getEcrfStatusTypeTransitions]()' service method.
    */
 
   /**

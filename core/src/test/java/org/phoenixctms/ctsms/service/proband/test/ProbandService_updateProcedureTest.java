@@ -27,7 +27,7 @@ public class ProbandService_updateProcedureTest extends ProbandServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.updateProcedure]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.updateProcedure]()' service method.
    */
 
   /**

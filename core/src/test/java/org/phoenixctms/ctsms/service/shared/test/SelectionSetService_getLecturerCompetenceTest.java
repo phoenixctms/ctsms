@@ -27,7 +27,7 @@ public class SelectionSetService_getLecturerCompetenceTest extends SelectionSetS
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getLecturerCompetence]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getLecturerCompetence]()' service method.
    */
 
   /**

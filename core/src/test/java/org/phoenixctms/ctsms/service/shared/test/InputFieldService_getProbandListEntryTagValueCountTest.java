@@ -27,7 +27,7 @@ public class InputFieldService_getProbandListEntryTagValueCountTest extends Inpu
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getProbandListEntryTagValueCount]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getProbandListEntryTagValueCount]()' service method.
    */
 
   /**

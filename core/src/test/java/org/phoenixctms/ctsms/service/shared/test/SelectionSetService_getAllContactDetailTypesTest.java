@@ -27,7 +27,7 @@ public class SelectionSetService_getAllContactDetailTypesTest extends SelectionS
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllContactDetailTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllContactDetailTypes]()' service method.
    */
 
   /**

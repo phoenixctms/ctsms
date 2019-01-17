@@ -27,7 +27,7 @@ public class ProbandService_getProbandTagValueCountTest extends ProbandServiceBa
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getProbandTagValueCount]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getProbandTagValueCount]()' service method.
    */
 
   /**

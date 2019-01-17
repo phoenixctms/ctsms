@@ -27,7 +27,7 @@ public class SelectionSetService_getAllCourseParticipationStatusTypesTest extend
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllCourseParticipationStatusTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllCourseParticipationStatusTypes]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class SelectionSetService_getAllSurveyStatusTypesTest extends SelectionSe
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllSurveyStatusTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllSurveyStatusTypes]()' service method.
    */
 
   /**

@@ -3692,6 +3692,35 @@ public final class WebUtil {
 	// return null;
 	// }
 
+	public static ArrayList<SelectItem> getRandomizationModes() {
+		ArrayList<SelectItem> modes;
+		Collection<RandomizationModeVO> modeVOs = null;
+		try {
+			modeVOs = getServiceLocator().getSelectionSetService().getRandomizationModes(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (modeVOs != null) {
+			modes = new ArrayList<SelectItem>(modeVOs.size());
+			Iterator<RandomizationModeVO> it = modeVOs.iterator();
+			while (it.hasNext()) {
+				RandomizationModeVO modeVO = it.next();
+				modes.add(new SelectItem(modeVO.getMode().name(), modeVO.getName()));
+				// putSelectionSetServiceCache(sexVO.getSex(), sexVO);
+			}
+		} else {
+			modes = new ArrayList<SelectItem>();
+		}
+		return modes;
+	}
+
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
+
 	public static String getRefererBase64(HttpServletRequest request) {
 		if (request != null) {
 			String headerValue = request.getHeader(REFERER_HEADER_NAME);
@@ -3703,10 +3732,6 @@ public final class WebUtil {
 		}
 		return "";
 	}
-
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
-	// }
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;

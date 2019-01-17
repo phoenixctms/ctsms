@@ -27,7 +27,7 @@ public class TrialService_getInquiryListTest extends TrialServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getInquiryList]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getInquiryList]()' service method.
    */
 
   /**

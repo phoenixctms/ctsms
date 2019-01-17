@@ -27,7 +27,7 @@ public class InventoryService_getInventoryStatusEntryListTest extends InventoryS
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getInventoryStatusEntryList]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getInventoryStatusEntryList]()' service method.
    */
 
   /**

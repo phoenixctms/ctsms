@@ -27,7 +27,7 @@ public class InventoryService_getCollidingDutyRosterTurnsTest extends InventoryS
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getCollidingDutyRosterTurns]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getCollidingDutyRosterTurns]()' service method.
    */
 
   /**

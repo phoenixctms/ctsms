@@ -27,7 +27,7 @@ public class ProbandService_getInquiryValueByIdTest extends ProbandServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getInquiryValueById]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getInquiryValueById]()' service method.
    */
 
   /**

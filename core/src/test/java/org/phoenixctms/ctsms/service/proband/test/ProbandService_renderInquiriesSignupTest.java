@@ -27,7 +27,7 @@ public class ProbandService_renderInquiriesSignupTest extends ProbandServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.renderInquiriesSignup]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.renderInquiriesSignup]()' service method.
    */
 
   /**

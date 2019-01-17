@@ -27,7 +27,7 @@ public class SelectionSetService_getAvailableTrialTagsTest extends SelectionSetS
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAvailableTrialTags]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAvailableTrialTags]()' service method.
    */
 
   /**

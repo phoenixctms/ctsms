@@ -27,7 +27,7 @@ public class HyperlinkService_getHyperlinksTest extends HyperlinkServiceBaseTest
   }
 
   /*
-   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getHyperlinks]()' service method.
+   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.HyperlinkService.getHyperlinks]()' service method.
    */
 
   /**

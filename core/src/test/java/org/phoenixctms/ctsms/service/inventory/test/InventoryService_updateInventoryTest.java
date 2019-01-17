@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>updateInventory</code> of service <code>InventoryService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.inventory.InventoryService#updateInventory(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.InventoryInVO, java.lang.Integer, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.inventory.InventoryService#updateInventory(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.InventoryInVO, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","InventoryService"})
 public class InventoryService_updateInventoryTest extends InventoryServiceBaseTest {
@@ -27,7 +27,7 @@ public class InventoryService_updateInventoryTest extends InventoryServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.updateInventory]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.updateInventory]()' service method.
    */
 
   /**

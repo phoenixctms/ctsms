@@ -27,7 +27,7 @@ public class InputFieldService_getEcrfFieldMaxSelectionSetValueCountTest extends
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getEcrfFieldMaxSelectionSetValueCount]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getEcrfFieldMaxSelectionSetValueCount]()' service method.
    */
 
   /**

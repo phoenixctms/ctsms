@@ -27,7 +27,7 @@ public class ToolsService_getLocalizedInputFieldTypeTest extends ToolsServiceBas
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getLocalizedInputFieldType]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getLocalizedInputFieldType]()' service method.
    */
 
   /**

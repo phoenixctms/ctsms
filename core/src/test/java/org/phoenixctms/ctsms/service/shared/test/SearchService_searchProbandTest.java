@@ -27,7 +27,7 @@ public class SearchService_searchProbandTest extends SearchServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.searchProband]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchProband]()' service method.
    */
 
   /**

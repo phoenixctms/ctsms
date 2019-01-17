@@ -27,7 +27,7 @@ public class InventoryService_getInventoryStatusEntryIntervalTest extends Invent
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getInventoryStatusEntryInterval]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getInventoryStatusEntryInterval]()' service method.
    */
 
   /**

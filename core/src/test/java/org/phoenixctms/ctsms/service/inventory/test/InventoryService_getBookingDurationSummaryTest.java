@@ -27,7 +27,7 @@ public class InventoryService_getBookingDurationSummaryTest extends InventorySer
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getBookingDurationSummary]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getBookingDurationSummary]()' service method.
    */
 
   /**

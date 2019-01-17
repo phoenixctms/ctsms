@@ -27,7 +27,7 @@ public class StaffService_userUpdateCourseParticipationStatusEntryTest extends S
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.userUpdateCourseParticipationStatusEntry]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.userUpdateCourseParticipationStatusEntry]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>exportInventoryBookings</code> of service <code>InventoryService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.inventory.InventoryService#exportInventoryBookings(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.util.Date, java.util.Date)
+ * @see org.phoenixctms.ctsms.service.inventory.InventoryService#exportInventoryBookings(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.String, java.util.Date, java.util.Date, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
  */
 @Test(groups={"service","InventoryService"})
 public class InventoryService_exportInventoryBookingsTest extends InventoryServiceBaseTest {
@@ -27,7 +27,7 @@ public class InventoryService_exportInventoryBookingsTest extends InventoryServi
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.exportInventoryBookings]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.exportInventoryBookings]()' service method.
    */
 
   /**

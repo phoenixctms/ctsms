@@ -27,7 +27,7 @@ public class ProbandService_getWireTransferProbandAddressTest extends ProbandSer
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getWireTransferProbandAddress]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getWireTransferProbandAddress]()' service method.
    */
 
   /**

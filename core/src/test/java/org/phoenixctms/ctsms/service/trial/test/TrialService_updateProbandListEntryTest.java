@@ -27,7 +27,7 @@ public class TrialService_updateProbandListEntryTest extends TrialServiceBaseTes
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.updateProbandListEntry]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.updateProbandListEntry]()' service method.
    */
 
   /**

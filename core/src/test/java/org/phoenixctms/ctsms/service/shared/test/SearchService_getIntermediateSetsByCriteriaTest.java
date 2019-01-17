@@ -27,7 +27,7 @@ public class SearchService_getIntermediateSetsByCriteriaTest extends SearchServi
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getIntermediateSetsByCriteria]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.getIntermediateSetsByCriteria]()' service method.
    */
 
   /**

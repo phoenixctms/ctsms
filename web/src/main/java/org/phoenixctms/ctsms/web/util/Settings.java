@@ -19,6 +19,7 @@ import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -218,6 +219,15 @@ public final class Settings {
 					CommonUtil.getValueStringList(SettingCodes.PROBAND_AUTO_DELETE_DUE_IN_COLORS, getBundle(Bundle.SETTINGS), DefaultSettings.PROBAND_AUTO_DELETE_DUE_IN_COLORS));
 		}
 		return probandAutoDeleteDueInColorMap;
+	}
+
+	public static RandomizationMode getRandomizationMode(String key, Bundle bundle, RandomizationMode defaultValue) {
+		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
+		if (value != null && value.length() > 0) {
+			return RandomizationMode.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
 	}
 
 	public static Sex getSex(String key, Bundle bundle, Sex defaultValue) {

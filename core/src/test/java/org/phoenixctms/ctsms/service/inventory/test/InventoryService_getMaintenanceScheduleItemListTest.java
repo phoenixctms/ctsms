@@ -27,7 +27,7 @@ public class InventoryService_getMaintenanceScheduleItemListTest extends Invento
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getMaintenanceScheduleItemList]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getMaintenanceScheduleItemList]()' service method.
    */
 
   /**

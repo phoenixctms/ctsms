@@ -27,7 +27,7 @@ public class SelectionSetService_getInitialProbandListStatusTypesTest extends Se
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getInitialProbandListStatusTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getInitialProbandListStatusTypes]()' service method.
    */
 
   /**

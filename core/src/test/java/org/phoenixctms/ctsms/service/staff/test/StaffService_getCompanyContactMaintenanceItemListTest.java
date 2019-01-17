@@ -27,7 +27,7 @@ public class StaffService_getCompanyContactMaintenanceItemListTest extends Staff
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getCompanyContactMaintenanceItemList]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCompanyContactMaintenanceItemList]()' service method.
    */
 
   /**

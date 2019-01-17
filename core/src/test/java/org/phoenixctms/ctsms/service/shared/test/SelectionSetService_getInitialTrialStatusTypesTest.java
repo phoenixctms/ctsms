@@ -27,7 +27,7 @@ public class SelectionSetService_getInitialTrialStatusTypesTest extends Selectio
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getInitialTrialStatusTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getInitialTrialStatusTypes]()' service method.
    */
 
   /**

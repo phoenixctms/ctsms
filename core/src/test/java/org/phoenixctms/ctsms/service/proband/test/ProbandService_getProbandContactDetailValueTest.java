@@ -27,7 +27,7 @@ public class ProbandService_getProbandContactDetailValueTest extends ProbandServ
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getProbandContactDetailValue]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getProbandContactDetailValue]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getCollidingVisitScheduleItems</code> of service <code>StaffService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.staff.StaffService#getCollidingVisitScheduleItems(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.staff.StaffService#getCollidingVisitScheduleItems(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long)
  */
 @Test(groups={"service","StaffService"})
 public class StaffService_getCollidingVisitScheduleItemsTest extends StaffServiceBaseTest {

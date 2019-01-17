@@ -27,7 +27,7 @@ public class StaffService_getCollidingStaffStatusEntriesIntervalTest extends Sta
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getCollidingStaffStatusEntriesInterval]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingStaffStatusEntriesInterval]()' service method.
    */
 
   /**

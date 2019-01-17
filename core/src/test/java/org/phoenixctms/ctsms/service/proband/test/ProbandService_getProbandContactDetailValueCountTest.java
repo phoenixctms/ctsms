@@ -27,7 +27,7 @@ public class ProbandService_getProbandContactDetailValueCountTest extends Proban
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getProbandContactDetailValueCount]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getProbandContactDetailValueCount]()' service method.
    */
 
   /**

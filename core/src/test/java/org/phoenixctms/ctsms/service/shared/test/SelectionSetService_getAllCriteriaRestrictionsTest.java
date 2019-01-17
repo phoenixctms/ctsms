@@ -27,7 +27,7 @@ public class SelectionSetService_getAllCriteriaRestrictionsTest extends Selectio
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllCriteriaRestrictions]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllCriteriaRestrictions]()' service method.
    */
 
   /**

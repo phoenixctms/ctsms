@@ -27,7 +27,7 @@ public class SelectionSetService_getProbandJournalCategoriesTest extends Selecti
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getProbandJournalCategories]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getProbandJournalCategories]()' service method.
    */
 
   /**

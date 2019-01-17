@@ -27,7 +27,7 @@ public class SearchService_searchInputFieldTest extends SearchServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.searchInputField]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchInputField]()' service method.
    */
 
   /**

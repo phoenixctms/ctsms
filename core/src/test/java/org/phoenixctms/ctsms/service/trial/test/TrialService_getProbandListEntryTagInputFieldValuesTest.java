@@ -27,7 +27,7 @@ public class TrialService_getProbandListEntryTagInputFieldValuesTest extends Tri
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandListEntryTagInputFieldValues]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandListEntryTagInputFieldValues]()' service method.
    */
 
   /**

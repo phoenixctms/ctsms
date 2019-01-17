@@ -27,7 +27,7 @@ public class TrialService_getProbandGroupTest extends TrialServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandGroup]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandGroup]()' service method.
    */
 
   /**

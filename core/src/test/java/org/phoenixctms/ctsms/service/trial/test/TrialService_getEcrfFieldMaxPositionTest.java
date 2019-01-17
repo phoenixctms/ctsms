@@ -27,7 +27,7 @@ public class TrialService_getEcrfFieldMaxPositionTest extends TrialServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getEcrfFieldMaxPosition]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldMaxPosition]()' service method.
    */
 
   /**

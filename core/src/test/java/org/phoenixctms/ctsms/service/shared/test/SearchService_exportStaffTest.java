@@ -27,7 +27,7 @@ public class SearchService_exportStaffTest extends SearchServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.exportStaff]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.exportStaff]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class SelectionSetService_getTrialStatusTypeTransitionsTest extends Selec
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getTrialStatusTypeTransitions]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getTrialStatusTypeTransitions]()' service method.
    */
 
   /**

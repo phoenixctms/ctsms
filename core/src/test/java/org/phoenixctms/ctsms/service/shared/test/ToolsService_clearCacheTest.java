@@ -27,7 +27,7 @@ public class ToolsService_clearCacheTest extends ToolsServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.clearCache]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.clearCache]()' service method.
    */
 
   /**

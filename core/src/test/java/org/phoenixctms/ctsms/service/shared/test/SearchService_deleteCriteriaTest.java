@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteCriteria</code> of service <code>SearchService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.SearchService#deleteCriteria(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean)
+ * @see org.phoenixctms.ctsms.service.shared.SearchService#deleteCriteria(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String)
  */
 @Test(groups={"service","SearchService"})
 public class SearchService_deleteCriteriaTest extends SearchServiceBaseTest {
@@ -27,7 +27,7 @@ public class SearchService_deleteCriteriaTest extends SearchServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.deleteCriteria]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.deleteCriteria]()' service method.
    */
 
   /**

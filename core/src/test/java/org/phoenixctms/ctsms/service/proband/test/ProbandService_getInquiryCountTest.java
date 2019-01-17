@@ -27,7 +27,7 @@ public class ProbandService_getInquiryCountTest extends ProbandServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getInquiryCount]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getInquiryCount]()' service method.
    */
 
   /**

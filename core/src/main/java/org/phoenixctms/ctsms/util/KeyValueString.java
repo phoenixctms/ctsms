@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -73,6 +74,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.StaffCategoryVO;
@@ -390,6 +392,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getSexName(locale, ((Sex) value).name());
+			} else if (valueClass.equals(RandomizationMode.class)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getRandomizationModeName(locale, ((RandomizationMode) value).name());
 			} else if (valueClass.equals(AuthenticationType.class)) {
 				if (value == null) {
 					return "";
@@ -585,6 +592,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getSexName(locale, ((SexVO) value).getNameL10nKey());
+			} else if (RandomizationModeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getRandomizationModeName(locale, ((RandomizationModeVO) value).getNameL10nKey());
 			} else if (StaffCategoryVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";

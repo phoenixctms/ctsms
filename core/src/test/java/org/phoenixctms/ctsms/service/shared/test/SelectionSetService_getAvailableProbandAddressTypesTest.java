@@ -27,7 +27,7 @@ public class SelectionSetService_getAvailableProbandAddressTypesTest extends Sel
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAvailableProbandAddressTypes]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAvailableProbandAddressTypes]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class ProbandService_exportReimbursementsTest extends ProbandServiceBaseT
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.exportReimbursements]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.exportReimbursements]()' service method.
    */
 
   /**

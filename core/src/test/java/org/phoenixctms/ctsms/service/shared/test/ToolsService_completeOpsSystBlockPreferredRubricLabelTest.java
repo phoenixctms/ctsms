@@ -27,7 +27,7 @@ public class ToolsService_completeOpsSystBlockPreferredRubricLabelTest extends T
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.completeOpsSystBlockPreferredRubricLabel]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeOpsSystBlockPreferredRubricLabel]()' service method.
    */
 
   /**

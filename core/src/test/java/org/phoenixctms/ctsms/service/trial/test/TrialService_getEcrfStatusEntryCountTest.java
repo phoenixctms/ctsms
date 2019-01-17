@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfStatusEntryCount</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfStatusEntryCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfStatusEntryCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getEcrfStatusEntryCountTest extends TrialServiceBaseTest {
@@ -27,7 +27,7 @@ public class TrialService_getEcrfStatusEntryCountTest extends TrialServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getEcrfStatusEntryCount]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfStatusEntryCount]()' service method.
    */
 
   /**

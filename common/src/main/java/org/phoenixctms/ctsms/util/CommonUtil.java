@@ -49,6 +49,7 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.vo.AspSubstanceVO;
@@ -1869,6 +1870,8 @@ public final class CommonUtil {
 			return ((AuthenticationType) value).name();
 		} else if (valueClass.equals(Sex.class)) {
 			return ((Sex) value).name();
+		} else if (valueClass.equals(RandomizationMode.class)) {
+			return ((RandomizationMode) value).name();
 		} else if (valueClass.equals(DBModule.class)) {
 			return ((DBModule) value).name();
 		} else if (valueClass.equals(HyperlinkModule.class)) {

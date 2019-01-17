@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteCourse</code> of service <code>CourseService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.course.CourseService#deleteCourse(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.Integer, java.lang.Integer, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.course.CourseService#deleteCourse(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","CourseService"})
 public class CourseService_deleteCourseTest extends CourseServiceBaseTest {
@@ -27,7 +27,7 @@ public class CourseService_deleteCourseTest extends CourseServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.deleteCourse]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.deleteCourse]()' service method.
    */
 
   /**

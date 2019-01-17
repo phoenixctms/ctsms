@@ -27,7 +27,7 @@ public class CourseService_getCourseInventoryBookingCountTest extends CourseServ
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.getCourseInventoryBookingCount]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.getCourseInventoryBookingCount]()' service method.
    */
 
   /**

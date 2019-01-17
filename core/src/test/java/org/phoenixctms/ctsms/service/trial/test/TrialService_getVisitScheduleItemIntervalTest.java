@@ -27,7 +27,7 @@ public class TrialService_getVisitScheduleItemIntervalTest extends TrialServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getVisitScheduleItemInterval]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getVisitScheduleItemInterval]()' service method.
    */
 
   /**

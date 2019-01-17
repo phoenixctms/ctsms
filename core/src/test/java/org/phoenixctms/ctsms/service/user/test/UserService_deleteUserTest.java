@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteUser</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#deleteUser(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.user.UserService#deleteUser(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String, java.lang.Integer)
  */
 @Test(groups={"service","UserService"})
 public class UserService_deleteUserTest extends UserServiceBaseTest {
@@ -27,7 +27,7 @@ public class UserService_deleteUserTest extends UserServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.deleteUser]()' service method.
+   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.deleteUser]()' service method.
    */
 
   /**

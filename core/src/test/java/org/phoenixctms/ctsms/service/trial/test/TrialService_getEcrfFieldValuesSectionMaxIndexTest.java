@@ -27,7 +27,7 @@ public class TrialService_getEcrfFieldValuesSectionMaxIndexTest extends TrialSer
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getEcrfFieldValuesSectionMaxIndex]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldValuesSectionMaxIndex]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class TrialService_getTimelineEventIntervalTest extends TrialServiceBaseT
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getTimelineEventInterval]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getTimelineEventInterval]()' service method.
    */
 
   /**

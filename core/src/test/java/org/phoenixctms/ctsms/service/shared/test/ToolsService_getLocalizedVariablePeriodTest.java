@@ -27,7 +27,7 @@ public class ToolsService_getLocalizedVariablePeriodTest extends ToolsServiceBas
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getLocalizedVariablePeriod]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getLocalizedVariablePeriod]()' service method.
    */
 
   /**

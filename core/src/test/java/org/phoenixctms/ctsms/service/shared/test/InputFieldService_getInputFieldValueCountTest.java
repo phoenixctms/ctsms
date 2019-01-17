@@ -27,7 +27,7 @@ public class InputFieldService_getInputFieldValueCountTest extends InputFieldSer
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getInputFieldValueCount]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getInputFieldValueCount]()' service method.
    */
 
   /**

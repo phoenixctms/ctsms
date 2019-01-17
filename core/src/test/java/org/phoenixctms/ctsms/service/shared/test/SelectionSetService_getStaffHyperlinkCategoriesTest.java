@@ -27,7 +27,7 @@ public class SelectionSetService_getStaffHyperlinkCategoriesTest extends Selecti
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getStaffHyperlinkCategories]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getStaffHyperlinkCategories]()' service method.
    */
 
   /**

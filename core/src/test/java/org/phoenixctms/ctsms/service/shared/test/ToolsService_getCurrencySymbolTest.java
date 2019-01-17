@@ -27,7 +27,7 @@ public class ToolsService_getCurrencySymbolTest extends ToolsServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getCurrencySymbol]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getCurrencySymbol]()' service method.
    */
 
   /**

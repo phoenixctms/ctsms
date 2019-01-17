@@ -27,7 +27,7 @@ public class TrialService_normalizeInquiryPositionsTest extends TrialServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.normalizeInquiryPositions]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.normalizeInquiryPositions]()' service method.
    */
 
   /**

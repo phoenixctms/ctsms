@@ -27,7 +27,7 @@ public class InventoryService_updateInventoryBookingTest extends InventoryServic
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.updateInventoryBooking]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.updateInventoryBooking]()' service method.
    */
 
   /**

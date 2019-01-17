@@ -27,7 +27,7 @@ public class SearchService_renderCourseParticipantListPDFsTest extends SearchSer
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.renderCourseParticipantListPDFs]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.renderCourseParticipantListPDFs]()' service method.
    */
 
   /**

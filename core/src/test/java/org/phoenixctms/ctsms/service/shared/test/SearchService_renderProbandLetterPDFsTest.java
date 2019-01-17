@@ -27,7 +27,7 @@ public class SearchService_renderProbandLetterPDFsTest extends SearchServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.renderProbandLetterPDFs]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.renderProbandLetterPDFs]()' service method.
    */
 
   /**

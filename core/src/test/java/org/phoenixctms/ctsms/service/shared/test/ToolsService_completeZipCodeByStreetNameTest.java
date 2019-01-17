@@ -27,7 +27,7 @@ public class ToolsService_completeZipCodeByStreetNameTest extends ToolsServiceBa
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.completeZipCodeByStreetName]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeZipCodeByStreetName]()' service method.
    */
 
   /**

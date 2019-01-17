@@ -27,7 +27,7 @@ public class StaffService_getOnBehalfOfInventoryBookingListTest extends StaffSer
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getOnBehalfOfInventoryBookingList]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getOnBehalfOfInventoryBookingList]()' service method.
    */
 
   /**

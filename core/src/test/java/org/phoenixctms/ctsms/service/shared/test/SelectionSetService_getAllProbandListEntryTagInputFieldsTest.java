@@ -27,7 +27,7 @@ public class SelectionSetService_getAllProbandListEntryTagInputFieldsTest extend
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllProbandListEntryTagInputFields]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllProbandListEntryTagInputFields]()' service method.
    */
 
   /**

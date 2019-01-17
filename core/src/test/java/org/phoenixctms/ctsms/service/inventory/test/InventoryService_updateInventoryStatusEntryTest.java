@@ -27,7 +27,7 @@ public class InventoryService_updateInventoryStatusEntryTest extends InventorySe
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.updateInventoryStatusEntry]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.updateInventoryStatusEntry]()' service method.
    */
 
   /**

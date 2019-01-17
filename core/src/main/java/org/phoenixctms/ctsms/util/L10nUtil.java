@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -33,6 +34,7 @@ import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileGroupVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -105,6 +107,7 @@ public final class L10nUtil {
 	private static String inputFieldTypeNamesBundleBasename;
 	private static String eventImportanceNamesBundleBasename;
 	private static String sexNamesBundleBasename;
+	private static String randomizationModeNamesBundleBasename;
 	private static String exportStatusNamesBundleBasename;
 	private static String ecrfValidationStatusNamesBundleBasename;
 	private static String paymentMethodNamesBundleBasename;
@@ -306,6 +309,19 @@ public final class L10nUtil {
 			permissionProfileVO = null;
 		}
 		return permissionProfileVO;
+	}
+
+	public static RandomizationModeVO createRandomizationModeVO(Locales locale, RandomizationMode mode) {
+		RandomizationModeVO modeVO;
+		if (mode != null) {
+			modeVO = new RandomizationModeVO();
+			modeVO.setMode(mode);
+			modeVO.setNameL10nKey(mode.name());
+			modeVO.setName(getRandomizationModeName(locale, mode.name()));
+		} else {
+			modeVO = null;
+		}
+		return modeVO;
 	}
 
 	public static SexVO createSexVO(Locales locale, Sex sex) {
@@ -719,6 +735,10 @@ public final class L10nUtil {
 
 	public static String getProbandTagName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, probandTagsBundleBasename), DefaultMessages.PROBAND_TAG_NAME);
+	}
+
+	public static String getRandomizationModeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, randomizationModeNamesBundleBasename), DefaultMessages.RANDOMIZATION_MODE_NAME);
 	}
 
 	public static ArrayList<String> getReimbursementsExcelColumns(Locales locale, String l10nKey, ArrayList<String> defaultValue) {
@@ -1417,6 +1437,13 @@ public final class L10nUtil {
 			String probandTagsBundleBasename) {
 		L10nUtil.probandTagsBundleBasename = probandTagsBundleBasename;
 		getBundle(Locales.DEFAULT, probandTagsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setRandomizationModeNamesBundleBasename(
+			String randomizationModeNamesBundleBasename) {
+		L10nUtil.randomizationModeNamesBundleBasename = randomizationModeNamesBundleBasename;
+		getBundle(Locales.DEFAULT, randomizationModeNamesBundleBasename);
 	}
 
 	@Autowired(required = true)

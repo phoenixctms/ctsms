@@ -27,7 +27,7 @@ public class ToolsService_getEmailDomainNameTest extends ToolsServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getEmailDomainName]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getEmailDomainName]()' service method.
    */
 
   /**

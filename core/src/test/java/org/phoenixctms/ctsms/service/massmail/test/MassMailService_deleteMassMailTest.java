@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteMassMail</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#deleteMassMail(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#deleteMassMail(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_deleteMassMailTest extends MassMailServiceBaseTest {

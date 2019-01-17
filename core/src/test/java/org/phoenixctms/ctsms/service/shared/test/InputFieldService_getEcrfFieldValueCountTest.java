@@ -27,7 +27,7 @@ public class InputFieldService_getEcrfFieldValueCountTest extends InputFieldServ
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getEcrfFieldValueCount]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getEcrfFieldValueCount]()' service method.
    */
 
   /**

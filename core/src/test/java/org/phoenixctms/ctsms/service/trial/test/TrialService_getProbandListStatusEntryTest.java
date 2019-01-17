@@ -27,7 +27,7 @@ public class TrialService_getProbandListStatusEntryTest extends TrialServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandListStatusEntry]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandListStatusEntry]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getTrialMoneyTransferSummaryList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getTrialMoneyTransferSummaryList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, org.phoenixctms.ctsms.enumeration.PaymentMethod, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getTrialMoneyTransferSummaryList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.String, org.phoenixctms.ctsms.enumeration.PaymentMethod, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getTrialMoneyTransferSummaryListTest extends TrialServiceBaseTest {
@@ -27,7 +27,7 @@ public class TrialService_getTrialMoneyTransferSummaryListTest extends TrialServ
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getTrialMoneyTransferSummaryList]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getTrialMoneyTransferSummaryList]()' service method.
    */
 
   /**

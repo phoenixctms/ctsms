@@ -27,7 +27,7 @@ public class TrialService_getTrialInventoryBookingListTest extends TrialServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getTrialInventoryBookingList]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getTrialInventoryBookingList]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>updateMassMail</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#updateMassMail(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.TrialInVO)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#updateMassMail(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.MassMailInVO)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_updateMassMailTest extends MassMailServiceBaseTest {

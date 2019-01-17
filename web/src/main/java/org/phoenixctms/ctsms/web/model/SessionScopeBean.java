@@ -152,6 +152,7 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterInverseBooleans;
 	private ArrayList<SelectItem> filterInputFieldTypes;
 	private ArrayList<SelectItem> filterSexes;
+	private ArrayList<SelectItem> filterRandomizationModes;
 	private ArrayList<SelectItem> filterVariablePeriods;
 	private ArrayList<SelectItem> filterEventImportances;
 	private ArrayList<SelectItem> filterPaymentMethods;
@@ -478,6 +479,14 @@ public class SessionScopeBean {
 			filterProbandStatusTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterProbandStatusTypes;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterRandomizationModes() {
+		if (filterRandomizationModes == null) {
+			filterRandomizationModes = WebUtil.getRandomizationModes();
+			filterRandomizationModes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterRandomizationModes;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterSexes() {
@@ -845,6 +854,7 @@ public class SessionScopeBean {
 		filterInverseBooleans = null;
 		filterInputFieldTypes = null;
 		filterSexes = null;
+		filterRandomizationModes = null;
 		filterVariablePeriods = null;
 		filterEventImportances = null;
 		filterPaymentMethods = null;

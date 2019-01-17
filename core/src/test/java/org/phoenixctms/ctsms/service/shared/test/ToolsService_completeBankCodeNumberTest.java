@@ -27,7 +27,7 @@ public class ToolsService_completeBankCodeNumberTest extends ToolsServiceBaseTes
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.completeBankCodeNumber]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeBankCodeNumber]()' service method.
    */
 
   /**

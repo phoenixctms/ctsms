@@ -27,7 +27,7 @@ public class UserService_updateLocaleTest extends UserServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.updateLocale]()' service method.
+   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.updateLocale]()' service method.
    */
 
   /**

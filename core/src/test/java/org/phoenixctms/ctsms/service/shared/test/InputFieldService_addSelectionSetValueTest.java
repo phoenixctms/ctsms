@@ -27,7 +27,7 @@ public class InputFieldService_addSelectionSetValueTest extends InputFieldServic
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.addSelectionSetValue]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.addSelectionSetValue]()' service method.
    */
 
   /**

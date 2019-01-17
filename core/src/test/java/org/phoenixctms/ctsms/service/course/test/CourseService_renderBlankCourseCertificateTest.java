@@ -27,7 +27,7 @@ public class CourseService_renderBlankCourseCertificateTest extends CourseServic
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.renderBlankCourseCertificate]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.renderBlankCourseCertificate]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class ProbandService_getProbandStatusEntryTest extends ProbandServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getProbandStatusEntry]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getProbandStatusEntry]()' service method.
    */
 
   /**

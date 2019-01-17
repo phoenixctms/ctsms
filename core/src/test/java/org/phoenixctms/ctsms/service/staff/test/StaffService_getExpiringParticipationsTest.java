@@ -27,7 +27,7 @@ public class StaffService_getExpiringParticipationsTest extends StaffServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getExpiringParticipations]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getExpiringParticipations]()' service method.
    */
 
   /**

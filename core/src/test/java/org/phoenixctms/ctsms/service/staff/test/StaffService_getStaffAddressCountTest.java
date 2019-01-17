@@ -27,7 +27,7 @@ public class StaffService_getStaffAddressCountTest extends StaffServiceBaseTest 
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getStaffAddressCount]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getStaffAddressCount]()' service method.
    */
 
   /**

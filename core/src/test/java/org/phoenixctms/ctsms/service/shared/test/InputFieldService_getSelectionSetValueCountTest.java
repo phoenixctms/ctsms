@@ -27,7 +27,7 @@ public class InputFieldService_getSelectionSetValueCountTest extends InputFieldS
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getSelectionSetValueCount]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getSelectionSetValueCount]()' service method.
    */
 
   /**

@@ -123,6 +123,7 @@ import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -185,6 +186,7 @@ import org.phoenixctms.ctsms.vo.ProbandCategoryVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.StaffCategoryVO;
@@ -1422,6 +1424,21 @@ extends SelectionSetServiceBase
 		ProbandTagDao probandTagDao = this.getProbandTagDao();
 		ProbandTag tag = CheckIDUtil.checkProbandTagId(tagId, probandTagDao);
 		return probandTagDao.toProbandTagVO(tag);
+	}
+
+	@Override
+	protected Collection<RandomizationModeVO> handleGetRandomizationModes(AuthenticationVO auth) throws Exception {
+		Collection<RandomizationModeVO> result;
+		RandomizationMode[] modes = RandomizationMode.values();
+		if (modes != null) {
+			result = new ArrayList<RandomizationModeVO>(modes.length);
+			for (int i = 0; i < modes.length; i++) {
+				result.add(L10nUtil.createRandomizationModeVO(Locales.USER, modes[i]));
+			}
+		} else {
+			result = new ArrayList<RandomizationModeVO>();
+		}
+		return result;
 	}
 
 	@Override

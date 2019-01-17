@@ -83,6 +83,7 @@ import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -128,6 +129,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -877,6 +879,12 @@ extends ToolsServiceBase
 	protected JournalModuleVO handleGetLocalizedJournalModule(AuthenticationVO auth, JournalModule module) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return L10nUtil.createJournalModuleVO(Locales.USER, module);
+	}
+
+	@Override
+	protected RandomizationModeVO handleGetLocalizedRandomizationMode(AuthenticationVO auth, RandomizationMode mode) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return L10nUtil.createRandomizationModeVO(Locales.USER, mode);
 	}
 
 	@Override

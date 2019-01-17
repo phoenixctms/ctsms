@@ -27,7 +27,7 @@ public class ToolsService_isStreamUploadEnabledTest extends ToolsServiceBaseTest
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.isStreamUploadEnabled]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.isStreamUploadEnabled]()' service method.
    */
 
   /**

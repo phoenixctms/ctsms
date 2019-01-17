@@ -27,7 +27,7 @@ public class StaffService_getShiftDurationSummaryTest extends StaffServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getShiftDurationSummary]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getShiftDurationSummary]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class ToolsService_getLdapEntry2Test extends ToolsServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getLdapEntry2]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getLdapEntry2]()' service method.
    */
 
   /**

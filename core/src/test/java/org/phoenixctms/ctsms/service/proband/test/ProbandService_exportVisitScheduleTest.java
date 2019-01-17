@@ -27,7 +27,7 @@ public class ProbandService_exportVisitScheduleTest extends ProbandServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.exportVisitSchedule]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.exportVisitSchedule]()' service method.
    */
 
   /**

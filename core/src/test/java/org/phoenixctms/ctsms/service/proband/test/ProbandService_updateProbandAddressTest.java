@@ -27,7 +27,7 @@ public class ProbandService_updateProbandAddressTest extends ProbandServiceBaseT
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.updateProbandAddress]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.updateProbandAddress]()' service method.
    */
 
   /**

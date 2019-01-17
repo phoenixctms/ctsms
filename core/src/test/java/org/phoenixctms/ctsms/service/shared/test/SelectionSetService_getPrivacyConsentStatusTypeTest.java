@@ -27,7 +27,7 @@ public class SelectionSetService_getPrivacyConsentStatusTypeTest extends Selecti
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getPrivacyConsentStatusType]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getPrivacyConsentStatusType]()' service method.
    */
 
   /**

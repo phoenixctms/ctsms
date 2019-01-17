@@ -27,7 +27,7 @@ public class ProbandService_getParticipationTrialsTest extends ProbandServiceBas
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getParticipationTrials]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getParticipationTrials]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>updateStaff</code> of service <code>StaffService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.staff.StaffService#updateStaff(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.StaffInVO, java.lang.Integer, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.staff.StaffService#updateStaff(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.StaffInVO, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","StaffService"})
 public class StaffService_updateStaffTest extends StaffServiceBaseTest {
@@ -27,7 +27,7 @@ public class StaffService_updateStaffTest extends StaffServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.updateStaff]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.updateStaff]()' service method.
    */
 
   /**

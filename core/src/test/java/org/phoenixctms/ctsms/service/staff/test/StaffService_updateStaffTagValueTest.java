@@ -27,7 +27,7 @@ public class StaffService_updateStaffTagValueTest extends StaffServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.updateStaffTagValue]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.updateStaffTagValue]()' service method.
    */
 
   /**

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteInquiry</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#deleteInquiry(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#deleteInquiry(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_deleteInquiryTest extends TrialServiceBaseTest {
@@ -27,7 +27,7 @@ public class TrialService_deleteInquiryTest extends TrialServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.deleteInquiry]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.deleteInquiry]()' service method.
    */
 
   /**

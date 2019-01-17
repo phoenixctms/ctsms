@@ -27,7 +27,7 @@ public class ProbandService_getBankAccountCountTest extends ProbandServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.getBankAccountCount]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getBankAccountCount]()' service method.
    */
 
   /**

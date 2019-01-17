@@ -29,6 +29,7 @@ import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
@@ -351,6 +352,7 @@ extends TrialDaoBase
 			target.setSurveyStatus(this.getSurveyStatusTypeDao().toSurveyStatusTypeVO(surveyStatus));
 		}
 		target.setBlockingPeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getBlockingPeriod()));
+		target.setRandomizationMode(x);
 	}
 
 	@Override
@@ -427,6 +429,7 @@ extends TrialDaoBase
 		SponsoringTypeVO sponsoringVO = source.getSponsoring();
 		SurveyStatusTypeVO surveyStatusVO = source.getSurveyStatus();
 		VariablePeriodVO blockingPeriodVO = source.getBlockingPeriod();
+		RandomizationModeVO randomizationModeVO = source.getRandomizationMode();
 		if (statusVO != null) {
 			target.setStatus(this.getTrialStatusTypeDao().trialStatusTypeVOToEntity(statusVO));
 		} else if (copyIfNull) {
@@ -461,6 +464,11 @@ extends TrialDaoBase
 			target.setBlockingPeriod(blockingPeriodVO.getPeriod());
 		} else if (copyIfNull) {
 			target.setBlockingPeriod(null);
+		}
+		if (randomizationModeVO != null) {
+			target.setRandomizationMode(randomizationModeVO.getMode());
+		} else if (copyIfNull) {
+			target.setRandomizationMode(null);
 		}
 	}
 }

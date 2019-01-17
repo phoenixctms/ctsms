@@ -27,7 +27,7 @@ public class InventoryService_getCollidingCourseParticipationStatusEntriesTest e
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getCollidingCourseParticipationStatusEntries]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getCollidingCourseParticipationStatusEntries]()' service method.
    */
 
   /**

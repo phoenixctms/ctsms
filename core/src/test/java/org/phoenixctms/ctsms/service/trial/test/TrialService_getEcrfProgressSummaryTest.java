@@ -27,7 +27,7 @@ public class TrialService_getEcrfProgressSummaryTest extends TrialServiceBaseTes
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getEcrfProgressSummary]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfProgressSummary]()' service method.
    */
 
   /**

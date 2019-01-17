@@ -27,7 +27,7 @@ public class TrialService_getProbandListStatusEntryAtVisitScheduleItemTest exten
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandListStatusEntryAtVisitScheduleItem]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandListStatusEntryAtVisitScheduleItem]()' service method.
    */
 
   /**

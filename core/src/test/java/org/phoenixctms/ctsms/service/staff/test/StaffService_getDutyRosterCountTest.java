@@ -27,7 +27,7 @@ public class StaffService_getDutyRosterCountTest extends StaffServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getDutyRosterCount]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getDutyRosterCount]()' service method.
    */
 
   /**

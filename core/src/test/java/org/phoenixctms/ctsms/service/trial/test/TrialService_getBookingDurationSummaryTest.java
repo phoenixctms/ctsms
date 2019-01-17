@@ -27,7 +27,7 @@ public class TrialService_getBookingDurationSummaryTest extends TrialServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getBookingDurationSummary]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getBookingDurationSummary]()' service method.
    */
 
   /**

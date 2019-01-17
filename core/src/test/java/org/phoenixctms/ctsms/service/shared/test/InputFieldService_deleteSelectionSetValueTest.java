@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteSelectionSetValue</code> of service <code>InputFieldService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.InputFieldService#deleteSelectionSetValue(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean)
+ * @see org.phoenixctms.ctsms.service.shared.InputFieldService#deleteSelectionSetValue(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String)
  */
 @Test(groups={"service","InputFieldService"})
 public class InputFieldService_deleteSelectionSetValueTest extends InputFieldServiceBaseTest {
@@ -27,7 +27,7 @@ public class InputFieldService_deleteSelectionSetValueTest extends InputFieldSer
   }
 
   /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.deleteSelectionSetValue]()' service method.
+   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.deleteSelectionSetValue]()' service method.
    */
 
   /**

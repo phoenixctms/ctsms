@@ -27,7 +27,7 @@ public class ProbandService_deleteProbandAddressTest extends ProbandServiceBaseT
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.deleteProbandAddress]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.deleteProbandAddress]()' service method.
    */
 
   /**

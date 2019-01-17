@@ -27,7 +27,7 @@ public class StaffService_getCollidingStaffStatusEntriesTest extends StaffServic
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getCollidingStaffStatusEntries]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingStaffStatusEntries]()' service method.
    */
 
   /**

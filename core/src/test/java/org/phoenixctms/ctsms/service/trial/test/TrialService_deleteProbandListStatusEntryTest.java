@@ -27,7 +27,7 @@ public class TrialService_deleteProbandListStatusEntryTest extends TrialServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.deleteProbandListStatusEntry]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.deleteProbandListStatusEntry]()' service method.
    */
 
   /**

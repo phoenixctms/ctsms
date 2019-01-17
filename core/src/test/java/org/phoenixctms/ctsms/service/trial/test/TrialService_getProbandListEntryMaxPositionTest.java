@@ -27,7 +27,7 @@ public class TrialService_getProbandListEntryMaxPositionTest extends TrialServic
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandListEntryMaxPosition]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandListEntryMaxPosition]()' service method.
    */
 
   /**

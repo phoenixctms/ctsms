@@ -27,7 +27,7 @@ public class TrialService_renderReimbursementsTest extends TrialServiceBaseTest 
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.renderReimbursements]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.renderReimbursements]()' service method.
    */
 
   /**

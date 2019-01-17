@@ -27,7 +27,7 @@ public class SelectionSetService_getAllProbandListEntryTagsTest extends Selectio
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAllProbandListEntryTags]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllProbandListEntryTags]()' service method.
    */
 
   /**

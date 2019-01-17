@@ -119,6 +119,7 @@ public interface DefaultMessages {
 	public static final String INPUT_FIELD_TYPE_NAME = "<field type>";
 	public static final String EVENT_IMPORTANCE_NAME = "<event importance>";
 	public static final String SEX_NAME = "<sex>";
+	public static final String RANDOMIZATION_MODE_NAME = "<randomization mode>";
 	public static final String EXPORT_STATUS_NAME = "<export status>";
 	public static final String ECRF_VALIDATION_STATUS_NAME = "<eCRF validation status>";
 	public static final String PAYMENT_METHOD_NAME = "<payment method>";

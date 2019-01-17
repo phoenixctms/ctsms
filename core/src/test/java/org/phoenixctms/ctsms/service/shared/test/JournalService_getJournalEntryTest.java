@@ -27,7 +27,7 @@ public class JournalService_getJournalEntryTest extends JournalServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'JournalService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getJournalEntry]()' service method.
+   * Add test methods for each test case of the 'JournalService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.JournalService.getJournalEntry]()' service method.
    */
 
   /**

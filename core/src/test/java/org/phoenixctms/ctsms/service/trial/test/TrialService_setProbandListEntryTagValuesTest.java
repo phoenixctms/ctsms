@@ -27,7 +27,7 @@ public class TrialService_setProbandListEntryTagValuesTest extends TrialServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.setProbandListEntryTagValues]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.setProbandListEntryTagValues]()' service method.
    */
 
   /**

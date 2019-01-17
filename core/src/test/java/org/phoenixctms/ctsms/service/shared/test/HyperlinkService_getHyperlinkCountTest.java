@@ -27,7 +27,7 @@ public class HyperlinkService_getHyperlinkCountTest extends HyperlinkServiceBase
   }
 
   /*
-   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getHyperlinkCount]()' service method.
+   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.HyperlinkService.getHyperlinkCount]()' service method.
    */
 
   /**

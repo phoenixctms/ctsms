@@ -27,7 +27,7 @@ public class ProbandService_deleteBankAccountTest extends ProbandServiceBaseTest
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.deleteBankAccount]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.deleteBankAccount]()' service method.
    */
 
   /**

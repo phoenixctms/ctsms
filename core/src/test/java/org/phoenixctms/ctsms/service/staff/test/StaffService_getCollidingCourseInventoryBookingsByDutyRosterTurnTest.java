@@ -27,7 +27,7 @@ public class StaffService_getCollidingCourseInventoryBookingsByDutyRosterTurnTes
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getCollidingCourseInventoryBookingsByDutyRosterTurn]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingCourseInventoryBookingsByDutyRosterTurn]()' service method.
    */
 
   /**

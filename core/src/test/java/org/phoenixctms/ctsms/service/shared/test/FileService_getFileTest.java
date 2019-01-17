@@ -27,7 +27,7 @@ public class FileService_getFileTest extends FileServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'FileService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getFile]()' service method.
+   * Add test methods for each test case of the 'FileService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.FileService.getFile]()' service method.
    */
 
   /**

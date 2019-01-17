@@ -27,7 +27,7 @@ public class SearchService_getCriteriaCategoriesTest extends SearchServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getCriteriaCategories]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.getCriteriaCategories]()' service method.
    */
 
   /**

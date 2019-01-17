@@ -27,7 +27,7 @@ public class StaffService_getTrialMembershipListTest extends StaffServiceBaseTes
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getTrialMembershipList]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getTrialMembershipList]()' service method.
    */
 
   /**

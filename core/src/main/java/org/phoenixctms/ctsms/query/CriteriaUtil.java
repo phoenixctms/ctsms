@@ -29,6 +29,7 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.security.CryptoUtil;
@@ -175,6 +176,8 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, AuthenticationType.fromString(value)),or);
 		} else if (propertyClass.equals(Sex.class)) {
 			return applyOr(Restrictions.eq(propertyName, Sex.fromString(value)),or);
+		} else if (propertyClass.equals(RandomizationMode.class)) {
+			return applyOr(Restrictions.eq(propertyName, RandomizationMode.fromString(value)), or);
 		} else if (propertyClass.equals(DBModule.class)) {
 			return applyOr(Restrictions.eq(propertyName, DBModule.fromString(value)),or);
 		} else if (propertyClass.equals(HyperlinkModule.class)) {

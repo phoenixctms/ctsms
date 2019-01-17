@@ -27,7 +27,7 @@ public class CourseService_getCourseParticipationStatusEntryTest extends CourseS
   }
 
   /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.getCourseParticipationStatusEntry]()' service method.
+   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.getCourseParticipationStatusEntry]()' service method.
    */
 
   /**

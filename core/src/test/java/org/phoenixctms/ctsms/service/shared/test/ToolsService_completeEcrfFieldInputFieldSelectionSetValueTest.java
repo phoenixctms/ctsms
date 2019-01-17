@@ -27,7 +27,7 @@ public class ToolsService_completeEcrfFieldInputFieldSelectionSetValueTest exten
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.completeEcrfFieldInputFieldSelectionSetValue]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeEcrfFieldInputFieldSelectionSetValue]()' service method.
    */
 
   /**

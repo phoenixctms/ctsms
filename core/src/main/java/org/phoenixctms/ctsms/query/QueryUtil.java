@@ -50,6 +50,7 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.query.QueryParameterValue.NamedParameterValues;
@@ -356,6 +357,10 @@ public final class QueryUtil {
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
 		} else if (propertyClass.equals(Sex.class)) {
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" = ?");
+			queryValues.add(new QueryParameterValue(propertyClass, value));
+		} else if (propertyClass.equals(RandomizationMode.class)) {
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
@@ -1520,6 +1525,8 @@ public final class QueryUtil {
 			query.setString(pos, AuthenticationType.fromString(value).name());
 		} else if (propertyClass.equals(Sex.class)) {
 			query.setString(pos, Sex.fromString(value).name());
+		} else if (propertyClass.equals(RandomizationMode.class)) {
+			query.setString(pos, RandomizationMode.fromString(value).name());
 		} else if (propertyClass.equals(DBModule.class)) {
 			query.setString(pos, DBModule.fromString(value).name());
 		} else if (propertyClass.equals(HyperlinkModule.class)) {

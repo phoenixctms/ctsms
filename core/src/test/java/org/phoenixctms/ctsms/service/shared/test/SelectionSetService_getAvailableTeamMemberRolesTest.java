@@ -27,7 +27,7 @@ public class SelectionSetService_getAvailableTeamMemberRolesTest extends Selecti
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getAvailableTeamMemberRoles]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAvailableTeamMemberRoles]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class StaffService_getResponsiblePersonMaintenanceItemListTest extends St
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getResponsiblePersonMaintenanceItemList]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getResponsiblePersonMaintenanceItemList]()' service method.
    */
 
   /**

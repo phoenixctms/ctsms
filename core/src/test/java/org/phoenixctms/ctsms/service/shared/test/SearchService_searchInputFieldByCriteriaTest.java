@@ -27,7 +27,7 @@ public class SearchService_searchInputFieldByCriteriaTest extends SearchServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.searchInputFieldByCriteria]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchInputFieldByCriteria]()' service method.
    */
 
   /**

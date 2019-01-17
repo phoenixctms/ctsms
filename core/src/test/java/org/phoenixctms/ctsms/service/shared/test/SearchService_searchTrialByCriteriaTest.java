@@ -27,7 +27,7 @@ public class SearchService_searchTrialByCriteriaTest extends SearchServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.searchTrialByCriteria]()' service method.
+   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchTrialByCriteria]()' service method.
    */
 
   /**

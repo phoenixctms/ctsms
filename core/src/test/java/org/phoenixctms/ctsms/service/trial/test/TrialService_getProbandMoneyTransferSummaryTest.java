@@ -27,7 +27,7 @@ public class TrialService_getProbandMoneyTransferSummaryTest extends TrialServic
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandMoneyTransferSummary]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandMoneyTransferSummary]()' service method.
    */
 
   /**

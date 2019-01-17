@@ -9,6 +9,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.SimpleTimeZone;
 
+import org.phoenixctms.ctsms.enumeration.AuthenticationType;
+import org.phoenixctms.ctsms.enumeration.Color;
+import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.EventImportance;
+import org.phoenixctms.ctsms.enumeration.ExportStatus;
+import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
+import org.phoenixctms.ctsms.enumeration.Sex;
+import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.date.DateCalc;
+
 import jxl.Cell;
 import jxl.biff.DisplayFormat;
 import jxl.format.CellFormat;
@@ -19,21 +35,6 @@ import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
-
-import org.phoenixctms.ctsms.enumeration.AuthenticationType;
-import org.phoenixctms.ctsms.enumeration.Color;
-import org.phoenixctms.ctsms.enumeration.DBModule;
-import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
-import org.phoenixctms.ctsms.enumeration.FileModule;
-import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
-import org.phoenixctms.ctsms.enumeration.InputFieldType;
-import org.phoenixctms.ctsms.enumeration.JournalModule;
-import org.phoenixctms.ctsms.enumeration.Sex;
-import org.phoenixctms.ctsms.enumeration.VariablePeriod;
-import org.phoenixctms.ctsms.util.AssociationPath;
-import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.date.DateCalc;
 
 public final class ExcelUtil {
 
@@ -332,6 +333,19 @@ public final class ExcelUtil {
 						return new jxl.write.Blank(c, r);
 					}
 					return new jxl.write.Label(c, r, ((Sex) value).name());
+				}
+			} else if (returnType.equals(RandomizationMode.class)) {
+				if (f.isOverrideFormat()) {
+					WritableCellFormat cellFormat = getRowCellFormat(NumberFormats.TEXT, f, cellFormats);
+					if (value == null) {
+						return new jxl.write.Blank(c, r, cellFormat);
+					}
+					return new jxl.write.Label(c, r, ((RandomizationMode) value).name(), cellFormat);
+				} else {
+					if (value == null) {
+						return new jxl.write.Blank(c, r);
+					}
+					return new jxl.write.Label(c, r, ((RandomizationMode) value).name());
 				}
 			} else if (returnType.equals(DBModule.class)) {
 				if (f.isOverrideFormat()) {

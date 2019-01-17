@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>addProbandListEntries</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#addProbandListEntries(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, boolean, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#addProbandListEntries(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long, boolean, java.lang.Long)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_addProbandListEntriesTest extends TrialServiceBaseTest {
@@ -27,7 +27,7 @@ public class TrialService_addProbandListEntriesTest extends TrialServiceBaseTest
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.addProbandListEntries]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addProbandListEntries]()' service method.
    */
 
   /**

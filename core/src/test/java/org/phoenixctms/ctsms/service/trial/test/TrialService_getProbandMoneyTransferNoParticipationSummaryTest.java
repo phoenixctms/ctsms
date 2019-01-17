@@ -27,7 +27,7 @@ public class TrialService_getProbandMoneyTransferNoParticipationSummaryTest exte
   }
 
   /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.getProbandMoneyTransferNoParticipationSummary]()' service method.
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getProbandMoneyTransferNoParticipationSummary]()' service method.
    */
 
   /**

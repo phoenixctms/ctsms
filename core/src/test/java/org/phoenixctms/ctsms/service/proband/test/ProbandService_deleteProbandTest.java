@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteProband</code> of service <code>ProbandService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.proband.ProbandService#deleteProband(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.Integer, java.lang.Integer, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.proband.ProbandService#deleteProband(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","ProbandService"})
 public class ProbandService_deleteProbandTest extends ProbandServiceBaseTest {
@@ -27,7 +27,7 @@ public class ProbandService_deleteProbandTest extends ProbandServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.deleteProband]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.deleteProband]()' service method.
    */
 
   /**

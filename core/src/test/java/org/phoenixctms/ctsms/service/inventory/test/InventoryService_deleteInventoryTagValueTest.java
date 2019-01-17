@@ -27,7 +27,7 @@ public class InventoryService_deleteInventoryTagValueTest extends InventoryServi
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.deleteInventoryTagValue]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.deleteInventoryTagValue]()' service method.
    */
 
   /**

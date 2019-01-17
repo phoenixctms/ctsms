@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>deleteInventory</code> of service <code>InventoryService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.inventory.InventoryService#deleteInventory(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.Integer, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.inventory.InventoryService#deleteInventory(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","InventoryService"})
 public class InventoryService_deleteInventoryTest extends InventoryServiceBaseTest {
@@ -27,7 +27,7 @@ public class InventoryService_deleteInventoryTest extends InventoryServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.deleteInventory]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.deleteInventory]()' service method.
    */
 
   /**

@@ -27,7 +27,7 @@ public class ToolsService_completeAspSubstanceNameTest extends ToolsServiceBaseT
   }
 
   /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.completeAspSubstanceName]()' service method.
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeAspSubstanceName]()' service method.
    */
 
   /**

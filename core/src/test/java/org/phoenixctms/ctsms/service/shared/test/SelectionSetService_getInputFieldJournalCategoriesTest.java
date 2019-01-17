@@ -27,7 +27,7 @@ public class SelectionSetService_getInputFieldJournalCategoriesTest extends Sele
   }
 
   /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.getInputFieldJournalCategories]()' service method.
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getInputFieldJournalCategories]()' service method.
    */
 
   /**

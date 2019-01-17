@@ -27,7 +27,7 @@ public class InventoryService_deleteMaintenanceScheduleItemTest extends Inventor
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.deleteMaintenanceScheduleItem]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.deleteMaintenanceScheduleItem]()' service method.
    */
 
   /**

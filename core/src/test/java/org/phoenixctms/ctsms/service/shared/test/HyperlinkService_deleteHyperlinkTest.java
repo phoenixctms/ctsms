@@ -27,7 +27,7 @@ public class HyperlinkService_deleteHyperlinkTest extends HyperlinkServiceBaseTe
   }
 
   /*
-   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.deleteHyperlink]()' service method.
+   * Add test methods for each test case of the 'HyperlinkService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.HyperlinkService.deleteHyperlink]()' service method.
    */
 
   /**

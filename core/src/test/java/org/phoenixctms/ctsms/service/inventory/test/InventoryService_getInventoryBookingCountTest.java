@@ -27,7 +27,7 @@ public class InventoryService_getInventoryBookingCountTest extends InventoryServ
   }
 
   /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.getInventoryBookingCount]()' service method.
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getInventoryBookingCount]()' service method.
    */
 
   /**

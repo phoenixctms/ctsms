@@ -27,7 +27,7 @@ public class StaffService_getCollidingDutyRosterTurnsTest extends StaffServiceBa
   }
 
   /*
-   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.getCollidingDutyRosterTurns]()' service method.
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingDutyRosterTurns]()' service method.
    */
 
   /**

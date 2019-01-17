@@ -27,7 +27,7 @@ public class JournalService_exportJournalTest extends JournalServiceBaseTest {
   }
 
   /*
-   * Add test methods for each test case of the 'JournalService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.exportJournal]()' service method.
+   * Add test methods for each test case of the 'JournalService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.JournalService.exportJournal]()' service method.
    */
 
   /**

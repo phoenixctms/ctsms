@@ -27,7 +27,7 @@ public class ProbandService_setAllMoneyTransfersPaidTest extends ProbandServiceB
   }
 
   /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.setAllMoneyTransfersPaid]()' service method.
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid]()' service method.
    */
 
   /**
