@@ -49,3 +49,36 @@ Build and Install
    ```bash
    sudo -u ctsms /ctsms/dbtool.sh --load_demo_data
    ```
+
+Eclipse IDE
+-----
+The following was tested on a vanilla Windows 8 VM.
+
+1. Prerequisites:
+* download and install a recent JDK (eg. Oracle JDK1.8.0 u201 64bit)
+* download and install git
+* download a recent Apache Maven (eg. apache-maven-3.6.0-bin.zip, extract to C:\apache-maven-3.6.0)
+
+2. Setup environment variables:
+- add C:\Program Files\Java\jdk1.8.0_201\bin and C:\apache-maven-3.6.0\bin to "Path" variable
+- add new environment variable "JAVA_HOME" and set it to C:\Program Files\Java\jdk1.8.0_201
+
+3. Check out the Phoenix CTMS java webapp:
+* create folder C:\workspaces
+* open Command Prompt, change to C:\workspaces and run
+```
+git clone https://github.com/phoenixctms/ctsms.git
+```
+* open C:\workspaces\ctsms\pom.xml and update the java.home property to <java.home>C:\Program Files\Java\jdk1.8.0_201</java.home>
+* change to C:\workspaces\ctsms and run
+```
+mvn -Peclipse -Dmaven.test.skip=true
+```
+
+4. Eclipse IDE:
+* download and run Eclipse Installer (2018-12 R), choose flavour "Eclipse IDE for Java EE Developers"
+* launch Eclipse IDE and select workspace C:\workspaces
+* goto File -> Open Projects from File System..., select C:\workspaces\ctsms folder, untick "Search for nested projects" and press "Finish"
+* in the Project Explorer tree, right-click "ctsms" -> Build Path -> Configure Build Path
+* in the dialog, switch to "Source" tab and press "Add Folder...", add core/src/exec/java and core/target/src/test/java, then press "Apply and Close"
+* done. you can now start debugging, ie. select DBTool.java and goto Run -> Debug
