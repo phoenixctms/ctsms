@@ -263,7 +263,8 @@ var FieldCalculation = FieldCalculation || {};
 					if (index in series) {
 						var inputFieldVariable = series[index];
 						_updateInputFieldVariableOutput(inputFieldVariable, null);
-						if (_printInputFieldVariableOutput(inputFieldVariable) && errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
+						_printInputFieldVariableOutput(inputFieldVariable);
+						if (errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
 							_deltaErrorMsg(errorMsgs,inputFieldVariable);
 						}
 					}
@@ -271,7 +272,8 @@ var FieldCalculation = FieldCalculation || {};
 			} else {
 				var inputFieldVariable = series;
 				_updateInputFieldVariableOutput(inputFieldVariable, null);
-				if (_printInputFieldVariableOutput(inputFieldVariable) && errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
+				_printInputFieldVariableOutput(inputFieldVariable);
+				if (errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
 					_deltaErrorMsg(errorMsgs,inputFieldVariable);
 				}
 			}
@@ -327,13 +329,11 @@ var FieldCalculation = FieldCalculation || {};
 					outputElement.html(inputFieldVariable.valueErrorMessage);
 					//if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
 						outputElement.addClass('ctsms-inputfield-output-valueerror');
-						return 1;
 					//}
 				} else if (inputFieldVariable.outputErrorMessage != null && inputFieldVariable.outputErrorMessage.length > 0) {
 					outputElement.html(inputFieldVariable.outputErrorMessage);
 					if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
 						outputElement.addClass('ctsms-inputfield-output-outputerror');
-						return 1;
 					}
 				} else if (inputFieldVariable.output != null && inputFieldVariable.output.length > 0) {
 					outputElement.html(inputFieldVariable.output);
@@ -344,7 +344,6 @@ var FieldCalculation = FieldCalculation || {};
     						} else {
     							outputElement.addClass('ctsms-inputfield-output-nodelta');
     						}
-    						return 1;
     					}
 					} else {
 						outputElement.addClass('ctsms-inputfield-output');
@@ -353,9 +352,7 @@ var FieldCalculation = FieldCalculation || {};
 					outputElement.html("");
 				}
 			}
-			return 1;
 		}
-		return 0;
 	}
 
 	function _processInputFieldVariableValue(inputFieldVariable, cycleCheckMap) {
