@@ -117,6 +117,9 @@ function openInputField() {
 function openUser() {
 	//no-op
 }
+function openMassMail() {
+	//no-op
+}
 
 function showErrorMessage(error_message_id) {
 

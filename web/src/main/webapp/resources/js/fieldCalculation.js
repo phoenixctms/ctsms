@@ -263,8 +263,7 @@ var FieldCalculation = FieldCalculation || {};
 					if (index in series) {
 						var inputFieldVariable = series[index];
 						_updateInputFieldVariableOutput(inputFieldVariable, null);
-						_printInputFieldVariableOutput(inputFieldVariable);
-						if (errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
+						if (_printInputFieldVariableOutput(inputFieldVariable) && errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
 							_deltaErrorMsg(errorMsgs,inputFieldVariable);
 						}
 					}
@@ -272,8 +271,7 @@ var FieldCalculation = FieldCalculation || {};
 			} else {
 				var inputFieldVariable = series;
 				_updateInputFieldVariableOutput(inputFieldVariable, null);
-				_printInputFieldVariableOutput(inputFieldVariable);
-				if (errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
+				if (_printInputFieldVariableOutput(inputFieldVariable) && errorMsgs != null && (INPUT_FIELD_DELTA_SUMMARY_MAX == null || errorMsgs.length < INPUT_FIELD_DELTA_SUMMARY_MAX)) {
 					_deltaErrorMsg(errorMsgs,inputFieldVariable);
 				}
 			}
@@ -324,21 +322,30 @@ var FieldCalculation = FieldCalculation || {};
 			var outputElement = _getElement(inputFieldVariable.outputId);
 			if (outputElement != null) {
 
-				outputElement.removeClass();
+				outputElement.removeClass('ctsms-inputfield-output-valueerror ctsms-inputfield-output-outputerror ctsms-inputfield-output-delta ctsms-inputfield-output-nodelta ctsms-inputfield-output');
 				if (inputFieldVariable.valueErrorMessage != null && inputFieldVariable.valueErrorMessage.length > 0) {
 					outputElement.html(inputFieldVariable.valueErrorMessage);
-					outputElement.addClass('ctsms-inputfield-output-valueerror');
+					//if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
+						outputElement.addClass('ctsms-inputfield-output-valueerror');
+						return 1;
+					//}
 				} else if (inputFieldVariable.outputErrorMessage != null && inputFieldVariable.outputErrorMessage.length > 0) {
 					outputElement.html(inputFieldVariable.outputErrorMessage);
-					outputElement.addClass('ctsms-inputfield-output-outputerror');
+					if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
+						outputElement.addClass('ctsms-inputfield-output-outputerror');
+						return 1;
+					}
 				} else if (inputFieldVariable.output != null && inputFieldVariable.output.length > 0) {
 					outputElement.html(inputFieldVariable.output);
 					if (inputFieldVariable.value.jsValueExpression != null && inputFieldVariable.value.jsValueExpression.length > 0) {
-						if (inputFieldVariable.delta) {
-							outputElement.addClass('ctsms-inputfield-output-delta');
-						} else {
-							outputElement.addClass('ctsms-inputfield-output-nodelta');
-						}
+						if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
+    						if (inputFieldVariable.delta) {
+    							outputElement.addClass('ctsms-inputfield-output-delta');
+    						} else {
+    							outputElement.addClass('ctsms-inputfield-output-nodelta');
+    						}
+    						return 1;
+    					}
 					} else {
 						outputElement.addClass('ctsms-inputfield-output');
 					}
@@ -347,6 +354,7 @@ var FieldCalculation = FieldCalculation || {};
 				}
 			}
 		}
+		return 0;
 	}
 
 	function _processInputFieldVariableValue(inputFieldVariable, cycleCheckMap) {
@@ -834,6 +842,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["openProband"] = openProband;
 		mask["openInputField"] = openInputField;
 		mask["openUser"] = openUser;
+		mask["openMassMail"] = openMassMail;
 
 		mask["Date"] = Date;
 		mask["INPUT_DATE_PATTERN"] = INPUT_DATE_PATTERN;
@@ -2083,3 +2092,4 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 })(window.FieldCalculation);
+ 

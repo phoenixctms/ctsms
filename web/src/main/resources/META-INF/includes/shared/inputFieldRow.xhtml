@@ -551,7 +551,7 @@
 						value="#{!fieldInput.fieldCommentEmpty}" />
 					<ui:param
 						name="multiLineTextClass"
-						value="" />
+						value="#{(!enabled or fieldInput.disabled) ? 'ctsms-inputfield-output-disabled' : ''}" />
 					<ui:param
 						name="escapeHtml"
 						value="true" />
