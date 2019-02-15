@@ -46,8 +46,6 @@ public class GroupListRandomization extends Randomization {
 
 	}
 
-
-
 	@Override
 	protected void checkTrialRandomizationInput(Trial trial, TrialInVO trialIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(trialIn.getRandomizationList())) {
@@ -77,6 +75,11 @@ public class GroupListRandomization extends Randomization {
 			result += CommonUtil.safeLongToInt(probandListEntryDao.getTrialGroupStratificationTagValuesCount(null, group.getId(), null, excludeListEntryId));
 		}
 		return result;
+	}
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.GROUP;
 	}
 
 

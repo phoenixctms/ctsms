@@ -44,8 +44,6 @@ public class GroupStratifiedRandomization extends Randomization {
 				null);
 	}
 
-
-
 	@Override
 	protected TreeSet<String> getRandomizationListItems(Trial trial) throws Exception {
 		return getRandomizationListGroups(trial);
@@ -65,6 +63,11 @@ public class GroupStratifiedRandomization extends Randomization {
 			result += CommonUtil.safeLongToInt(probandListEntryDao.getTrialGroupStratificationTagValuesCount(null, group.getId(), selectionSetValueIds, excludeListEntryId));
 		}
 		return result;
+	}
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.GROUP;
 	}
 
 	@Override

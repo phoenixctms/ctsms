@@ -55,6 +55,10 @@ import org.phoenixctms.ctsms.vo.TrialInVO;
 
 public abstract class Randomization {
 
+	public enum RandomizationType {
+		GROUP, TAG_SELECT, TAG_TEXT
+	}
+
 	private final static String RANDOMIZATION_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static String RANDOMIZATION_LIST_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static String RANDOMIZATION_BLOCK_LINE_SEPARATOR = "\n";
@@ -573,8 +577,9 @@ public abstract class Randomization {
 				sb.append(selectionSetValue.getNameL10nKey());
 			}
 			StratificationRandomizationList result;
-			result = stratificationRandomizationListDao.findByTrialTagValues(trial.getId(), selectionSetValueIds).iterator().next();
-			if (result == null) {
+			try {
+				result = stratificationRandomizationListDao.findByTrialTagValues(trial.getId(), selectionSetValueIds).iterator().next();
+			} catch (NoSuchElementException e) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MISSING_STRATIFICATION_RANDOMIZATION_LIST, sb.toString());
 			}
 			return result;
@@ -583,6 +588,12 @@ public abstract class Randomization {
 		}
 	}
 
+	public abstract RandomizationType getType();
+
+	// protected abstract InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception;
+	// protected abstract String randomizeInputFieldTextValue(Trial trial, ProbandListEntry exclude) throws Exception;
+	// protected abstract ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception;
+
 	protected final void initGroupsInfo(Collection<ProbandGroup> probandGroups) {
 		randomizationInfo.setSizes(new HashMap<String, Long>());
 		Iterator<ProbandGroup> it = probandGroups.iterator();
@@ -590,10 +601,6 @@ public abstract class Randomization {
 			randomizationInfo.getSizes().put(it.next().getToken(), null);
 		}
 	}
-
-	// protected abstract InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception;
-	// protected abstract String randomizeInputFieldTextValue(Trial trial, ProbandListEntry exclude) throws Exception;
-	// protected abstract ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception;
 
 	protected final void initValuesInfo(Collection<InputFieldSelectionSetValue> values) {
 		randomizationInfo.setSizes(new HashMap<String, Long>());

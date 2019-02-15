@@ -55,8 +55,6 @@ public class TagSelectListRandomization extends Randomization {
 				getInputFieldSelectionSetValueValueMap(getRandomizationInputFieldSelectionSetValues(trial)), null);
 	}
 
-
-
 	@Override
 	protected void checkTrialRandomizationInput(Trial trial, TrialInVO trialIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(trialIn.getRandomizationList())) {
@@ -87,6 +85,11 @@ public class TagSelectListRandomization extends Randomization {
 			result += CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTagValueCount(null, value.getId(), excludeListEntryId));
 		}
 		return result;
+	}
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_SELECT;
 	}
 
 	@Override

@@ -46,8 +46,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 				getInputFieldSelectionSetValueValueMap(getRandomizationInputFieldSelectionSetValues(trial)), null);
 	}
 
-
-
 	@Override
 	protected TreeSet<String> getRandomizationListItems(Trial trial) throws Exception {
 		return getRandomizationListInputFieldSelectionSetValueValues(trial);
@@ -56,6 +54,11 @@ public class TagSelectStratifiedRandomization extends Randomization {
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_SELECT_STRATIFIED;
+	}
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_SELECT;
 	}
 
 

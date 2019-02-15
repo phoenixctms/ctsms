@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -65,104 +66,7 @@ import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.TeamMemberOutVOComparator;
 import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
-import org.phoenixctms.ctsms.domain.AddressTypeDao;
-import org.phoenixctms.ctsms.domain.BankAccountDao;
-import org.phoenixctms.ctsms.domain.ContactDetailTypeDao;
-import org.phoenixctms.ctsms.domain.Course;
-import org.phoenixctms.ctsms.domain.CourseDao;
-import org.phoenixctms.ctsms.domain.DutyRosterTurn;
-import org.phoenixctms.ctsms.domain.DutyRosterTurnDao;
-import org.phoenixctms.ctsms.domain.ECRF;
-import org.phoenixctms.ctsms.domain.ECRFDao;
-import org.phoenixctms.ctsms.domain.ECRFField;
-import org.phoenixctms.ctsms.domain.ECRFFieldDao;
-import org.phoenixctms.ctsms.domain.ECRFFieldStatusEntry;
-import org.phoenixctms.ctsms.domain.ECRFFieldStatusEntryDao;
-import org.phoenixctms.ctsms.domain.ECRFFieldStatusType;
-import org.phoenixctms.ctsms.domain.ECRFFieldValue;
-import org.phoenixctms.ctsms.domain.ECRFFieldValueDao;
-import org.phoenixctms.ctsms.domain.ECRFStatusAction;
-import org.phoenixctms.ctsms.domain.ECRFStatusEntry;
-import org.phoenixctms.ctsms.domain.ECRFStatusEntryDao;
-import org.phoenixctms.ctsms.domain.ECRFStatusType;
-import org.phoenixctms.ctsms.domain.ECRFStatusTypeDao;
-import org.phoenixctms.ctsms.domain.File;
-import org.phoenixctms.ctsms.domain.FileDao;
-import org.phoenixctms.ctsms.domain.Hyperlink;
-import org.phoenixctms.ctsms.domain.HyperlinkDao;
-import org.phoenixctms.ctsms.domain.InputField;
-import org.phoenixctms.ctsms.domain.InputFieldDao;
-import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
-import org.phoenixctms.ctsms.domain.InputFieldValue;
-import org.phoenixctms.ctsms.domain.InputFieldValueDao;
-import org.phoenixctms.ctsms.domain.Inquiry;
-import org.phoenixctms.ctsms.domain.InquiryDao;
-import org.phoenixctms.ctsms.domain.InquiryValue;
-import org.phoenixctms.ctsms.domain.InquiryValueDao;
-import org.phoenixctms.ctsms.domain.Inventory;
-import org.phoenixctms.ctsms.domain.InventoryBooking;
-import org.phoenixctms.ctsms.domain.InventoryBookingDao;
-import org.phoenixctms.ctsms.domain.JournalEntry;
-import org.phoenixctms.ctsms.domain.JournalEntryDao;
-import org.phoenixctms.ctsms.domain.MassMail;
-import org.phoenixctms.ctsms.domain.MassMailDao;
-import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
-import org.phoenixctms.ctsms.domain.MoneyTransfer;
-import org.phoenixctms.ctsms.domain.MoneyTransferDao;
-import org.phoenixctms.ctsms.domain.NotificationDao;
-import org.phoenixctms.ctsms.domain.NotificationRecipientDao;
-import org.phoenixctms.ctsms.domain.Proband;
-import org.phoenixctms.ctsms.domain.ProbandAddress;
-import org.phoenixctms.ctsms.domain.ProbandAddressDao;
-import org.phoenixctms.ctsms.domain.ProbandContactDetailValue;
-import org.phoenixctms.ctsms.domain.ProbandContactDetailValueDao;
-import org.phoenixctms.ctsms.domain.ProbandDao;
-import org.phoenixctms.ctsms.domain.ProbandGroup;
-import org.phoenixctms.ctsms.domain.ProbandGroupDao;
-import org.phoenixctms.ctsms.domain.ProbandListEntry;
-import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
-import org.phoenixctms.ctsms.domain.ProbandListEntryTag;
-import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
-import org.phoenixctms.ctsms.domain.ProbandListEntryTagValue;
-import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
-import org.phoenixctms.ctsms.domain.ProbandListStatusEntry;
-import org.phoenixctms.ctsms.domain.ProbandListStatusEntryDao;
-import org.phoenixctms.ctsms.domain.ProbandListStatusType;
-import org.phoenixctms.ctsms.domain.ProbandStatusEntryDao;
-import org.phoenixctms.ctsms.domain.ProbandTagDao;
-import org.phoenixctms.ctsms.domain.ProbandTagValue;
-import org.phoenixctms.ctsms.domain.ProbandTagValueDao;
-import org.phoenixctms.ctsms.domain.Signature;
-import org.phoenixctms.ctsms.domain.SignatureDao;
-import org.phoenixctms.ctsms.domain.Staff;
-import org.phoenixctms.ctsms.domain.StaffAddress;
-import org.phoenixctms.ctsms.domain.StaffAddressDao;
-import org.phoenixctms.ctsms.domain.StaffContactDetailValue;
-import org.phoenixctms.ctsms.domain.StaffContactDetailValueDao;
-import org.phoenixctms.ctsms.domain.StaffDao;
-import org.phoenixctms.ctsms.domain.StaffStatusEntryDao;
-import org.phoenixctms.ctsms.domain.StaffTagDao;
-import org.phoenixctms.ctsms.domain.StaffTagValue;
-import org.phoenixctms.ctsms.domain.StaffTagValueDao;
-import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
-import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
-import org.phoenixctms.ctsms.domain.TeamMember;
-import org.phoenixctms.ctsms.domain.TeamMemberDao;
-import org.phoenixctms.ctsms.domain.TimelineEvent;
-import org.phoenixctms.ctsms.domain.TimelineEventDao;
-import org.phoenixctms.ctsms.domain.Trial;
-import org.phoenixctms.ctsms.domain.TrialDao;
-import org.phoenixctms.ctsms.domain.TrialStatusAction;
-import org.phoenixctms.ctsms.domain.TrialStatusType;
-import org.phoenixctms.ctsms.domain.TrialStatusTypeDao;
-import org.phoenixctms.ctsms.domain.TrialTag;
-import org.phoenixctms.ctsms.domain.TrialTagValue;
-import org.phoenixctms.ctsms.domain.TrialTagValueDao;
-import org.phoenixctms.ctsms.domain.User;
-import org.phoenixctms.ctsms.domain.Visit;
-import org.phoenixctms.ctsms.domain.VisitDao;
-import org.phoenixctms.ctsms.domain.VisitScheduleItem;
-import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
+import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
@@ -215,6 +119,7 @@ import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.util.randomization.Randomization;
+import org.phoenixctms.ctsms.util.randomization.Randomization.RandomizationType;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -523,12 +428,24 @@ extends TrialServiceBase
 		Trial trial = listEntry.getTrial();
 		listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		if (randomization != null) {
-			if (listEntry.getGroup() != null) {
-				listEntry.getGroup().removeProbandListEntries(listEntry);
-			}
-			listEntry.setGroup(randomization.getRandomizedProbandGroup(trial, null));
-			if (listEntry.getGroup() != null) {
-				listEntry.getGroup().addProbandListEntries(listEntry);
+			// if (listEntry.getGroup() != null) {
+			// listEntry.getGroup().removeProbandListEntries(listEntry);
+			// }
+			switch (randomization.getType()) {
+				case GROUP:
+					ProbandGroup group = randomization.getRandomizedProbandGroup(trial, null);
+					group.addProbandListEntries(listEntry);
+					// listEntry.setGroup(randomization.getRandomizedProbandGroup(trial, null));
+					// if (listEntry.getGroup() != null) {
+					// listEntry.getGroup().addProbandListEntries(listEntry);
+					// }
+					break;
+				case TAG_SELECT:
+				case TAG_TEXT:
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_PROBAND_LIST_ENTRY_REQUIRED);
+				default:
+					throw new IllegalArgumentException(
+							L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_TYPE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
 			}
 		}
 		if (signup) {
@@ -2611,15 +2528,52 @@ extends TrialServiceBase
 		return false;
 	}
 
-	private Randomization getGroupRandomization(Trial trial, boolean randomize, Long groupId) throws ServiceException {
+	private Randomization getRandomization(Trial trial, boolean randomize, Long groupId, Long probandListEntryId) throws ServiceException {
 		if (randomize) {
-			if (groupId != null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
-			}
+
 			if (trial.getRandomization() != null) {
-				return Randomization.getInstance(trial.getRandomization(), this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				Randomization randomization = Randomization.getInstance(trial.getRandomization(), this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
 						this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(),
 						this.getProbandListEntryTagValueDao());
+				switch (randomization.getType()) {
+					case GROUP:
+						if (groupId != null) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
+						}
+						break;
+					case TAG_SELECT:
+						if (probandListEntryId != null) {
+							Collection<InputFieldSelectionSetValue> values = null;
+							try {
+								values = this.getProbandListEntryTagValueDao().findByListEntryListEntryTag(probandListEntryId, this.getProbandListEntryTagDao()
+										.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next().getId()).iterator().next().getValue()
+										.getSelectionValues();
+							} catch (NoSuchElementException e) {
+							}
+							if (values != null && values.size() > 0) {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY);
+							}
+						}
+						break;
+					case TAG_TEXT:
+						if (probandListEntryId != null) {
+							String textValue = null;
+							try {
+								textValue = this.getProbandListEntryTagValueDao().findByListEntryListEntryTag(probandListEntryId, this.getProbandListEntryTagDao()
+										.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next().getId()).iterator().next().getValue()
+										.getStringValue();
+							} catch (NoSuchElementException e) {
+							}
+							if (textValue != null && textValue.length() > 0) {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TEXT_VALUE_NOT_EMPTY);
+							}
+						}
+						break;
+					default:
+						throw new IllegalArgumentException(
+								L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_MODE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
+				}
+				return randomization;
 			} else {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
 			}
@@ -2789,7 +2743,7 @@ extends TrialServiceBase
 		ArrayList<ProbandListEntryOutVO> result = new ArrayList<ProbandListEntryOutVO>();
 		ShuffleInfoVO shuffleInfo = new ShuffleInfoVO();
 		shuffleInfo.setLimit(limit);
-		Randomization randomization = getGroupRandomization(trial, randomize, groupId);
+		Randomization randomization = getRandomization(trial, randomize, groupId, null);
 		if (probandIds != null) {
 			Iterator<Long> probandIt;
 			ArrayList<Long> ids = new ArrayList<Long>(probandIds);
@@ -2832,8 +2786,8 @@ extends TrialServiceBase
 			AuthenticationVO auth, boolean signup, boolean randomize, ProbandListEntryInVO newProbandListEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Randomization randomization = getGroupRandomization(CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao()), randomize,
-				newProbandListEntry.getGroupId());
+		Randomization randomization = getRandomization(CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao()), randomize,
+				newProbandListEntry.getGroupId(), null);
 		return addProbandListEntry(newProbandListEntry, signup, randomization, now, user); // statusType
 	}
 
@@ -7680,9 +7634,10 @@ extends TrialServiceBase
 		boolean probandChanged = !modifiedProbandListEntry.getProbandId().equals(originalProbandListEntry.getProband().getId());
 		boolean groupChanged;
 		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
-		Randomization randomization = getGroupRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
-		ProbandGroup group = (randomization != null ? randomization.getRandomizedProbandGroup(trial, originalProbandListEntry)
-				: (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null));
+		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId(), modifiedProbandListEntry.getId());
+		ProbandGroup group = ((randomization != null && RandomizationType.GROUP.equals(randomization.getType()))
+				? randomization.getRandomizedProbandGroup(trial, originalProbandListEntry)
+						: (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null));
 		if (group != null && originalProbandListEntry.getGroup() != null) {
 			groupChanged = !group.equals(originalProbandListEntry.getGroup());
 		} else if (group == null && originalProbandListEntry.getGroup() != null) {
@@ -7695,17 +7650,44 @@ extends TrialServiceBase
 		ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(originalProbandListEntry);
 		probandListEntryDao.evict(originalProbandListEntry);
 		ProbandListEntry probandListEntry = probandListEntryDao.probandListEntryInVOToEntity(modifiedProbandListEntry);
-		if (randomization != null) {
-			if (probandListEntry.getGroup() != null) {
-				probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
-			}
-			probandListEntry.setGroup(group);
-			if (probandListEntry.getGroup() != null) {
-				probandListEntry.getGroup().addProbandListEntries(probandListEntry);
-			}
-		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		if (randomization != null) {
+			ProbandListEntryTag randomizationTag;
+			ProbandListEntryTagValueInVO tagIn;
+			switch (randomization.getType()) {
+				case GROUP:
+					if (probandListEntry.getGroup() != null) {
+						probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
+					}
+					probandListEntry.setGroup(group);
+					group.addProbandListEntries(probandListEntry);
+					// if (probandListEntry.getGroup() != null) {
+					// probandListEntry.getGroup().addProbandListEntries(probandListEntry);
+					// }
+					break;
+				case TAG_SELECT:
+					InputFieldSelectionSetValue selectionSetValue = randomization.getRandomizedInputFieldSelectionSetValue(trial, originalProbandListEntry);
+					randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+					tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
+					tagIn.getSelectionValueIds().clear();
+					tagIn.getSelectionValueIds().add(selectionSetValue.getId());
+					addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+					break;
+				case TAG_TEXT:
+					String textValue = randomization.getRandomizedInputFieldTextValue(trial, originalProbandListEntry);
+					randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+					tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
+					tagIn.setTextValue(textValue);
+					addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+					break;
+				default:
+					throw new IllegalArgumentException(
+							L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_TYPE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
+			}
+		}
 		CoreUtil.modifyVersion(originalProbandListEntry, probandListEntry, now, user);
 		probandListEntryDao.update(probandListEntry);
 		if (probandChanged || groupChanged) {

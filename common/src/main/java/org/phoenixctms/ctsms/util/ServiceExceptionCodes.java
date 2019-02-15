@@ -516,6 +516,8 @@ public interface ServiceExceptionCodes {
 	public final static String NO_INPUT_FIELD_TEXT_VALUE_RANDOMIZED = "no_input_field_text_value_randomized";
 	public final static String RANDOMIZATION_NOT_DEFINED_FOR_TRIAL = "randomization_not_defined_for_trial";
 	public final static String PROBAND_GROUP_NOT_NULL = "proband_group_not_null";
+	public final static String INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "input_field_selection_set_value_not_empty";
+	public final static String INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "input_field_text_value_not_empty";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";

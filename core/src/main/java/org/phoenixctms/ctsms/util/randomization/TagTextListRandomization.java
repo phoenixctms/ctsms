@@ -34,11 +34,14 @@ public class TagTextListRandomization extends Randomization {
 	}
 
 
-
-
-
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_TEXT_LIST;
+	}
+
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_TEXT;
 	}
 }

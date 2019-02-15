@@ -540,7 +540,7 @@
 					<p:message for="sketchpad#{index}" />
 				</h:panelGrid>
 				<h:panelGroup rendered="#{fieldInput.hasOutput}">
-					<div id="#{fieldInput.outputId}"></div>
+					<div class="#{(!enabled or fieldInput.disabled) ? 'ctsms-inputfield-output-disabled' : ''}" id="#{fieldInput.outputId}"></div>
 				</h:panelGroup>
 				<ui:include src="multiLineOutputText.xhtml">
 					<ui:param
@@ -551,7 +551,7 @@
 						value="#{!fieldInput.fieldCommentEmpty}" />
 					<ui:param
 						name="multiLineTextClass"
-						value="#{(!enabled or fieldInput.disabled) ? 'ctsms-inputfield-output-disabled' : ''}" />
+						value="" />
 					<ui:param
 						name="escapeHtml"
 						value="true" />

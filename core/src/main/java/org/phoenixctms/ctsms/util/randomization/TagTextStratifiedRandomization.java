@@ -34,10 +34,13 @@ public class TagTextStratifiedRandomization extends Randomization {
 	}
 
 
-
-
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_TEXT_STRATIFIED;
+	}
+
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_TEXT;
 	}
 }

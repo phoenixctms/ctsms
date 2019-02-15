@@ -47,7 +47,10 @@ public class GroupCoinRandomization extends Randomization {
 		return RandomizationMode.GROUP_COIN;
 	}
 
-
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.GROUP;
+	}
 
 
 	@Override

@@ -51,6 +51,11 @@ public class TagCoinRandomization extends Randomization {
 	}
 
 	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_SELECT;
+	}
+
+	@Override
 	protected InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception {
 		Collection<InputFieldSelectionSetValue> values = getRandomizationInputFieldSelectionSetValues(trial);
 		initValuesInfo(values);
@@ -59,6 +64,5 @@ public class TagCoinRandomization extends Randomization {
 		return value;
 
 	}
-
 
 }

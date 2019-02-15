@@ -124,6 +124,11 @@ public class GroupAdaptiveRandomization extends Randomization {
 
 
 	@Override
+	public RandomizationType getType() {
+		return RandomizationType.GROUP;
+	}
+
+	@Override
 	protected ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception {
 		Collection<ProbandGroup> probandGroups = getRandomizationGroups(trial);
 		HashMap<Long, ProbandGroup> probandGroupMap = getProbandGroupIdMap(probandGroups);

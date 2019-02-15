@@ -104,6 +104,11 @@ public class TagAdaptiveRandomization extends Randomization {
 		return null;
 	}
 
+	@Override
+	public RandomizationType getType() {
+		return RandomizationType.TAG_SELECT;
+	}
+
 	private HashMap<Long, Long> getValueSizes(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) { // long trialId,
 		HashMap<Long, Long> result = new HashMap<Long, Long>();
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();
@@ -143,7 +148,5 @@ public class TagAdaptiveRandomization extends Randomization {
 		saveRandom(trial);
 		return value;
 	}
-
-
 
 }
