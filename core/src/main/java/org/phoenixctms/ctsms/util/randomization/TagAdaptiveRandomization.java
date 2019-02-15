@@ -114,7 +114,7 @@ public class TagAdaptiveRandomization extends Randomization {
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValue value = it.next();
-			result.put(value.getId(), probandListEntryDao.getTrialRandomizeTagValueCount(null, value.getId(), excludeListEntryId));
+			result.put(value.getId(), probandListEntryDao.getTrialRandomizeSelectStratificationTagValuesCount(null, value.getId(), null, excludeListEntryId));
 		}
 		// result.put(null, probandListEntryDao.getTrialGroupCount(trialId, null, excludeListEntryId));
 		return result;

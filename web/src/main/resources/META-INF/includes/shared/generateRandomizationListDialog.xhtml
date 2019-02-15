@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>generate randomization list dialog</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<!-- id="add_reimbursement_dialog" -->
+		<!-- styleClass="ctsms-addreimbursement-dialog" -->
+		<p:dialog
+			widgetVar="#{generateRandomizationListDialog}"
+			modal="true"
+			header="#{triallabels.xxxx}"
+			showEffect="#{effect}"
+			hideEffect="#{effect}">
+			<h:panelGrid
+				id="generate_randomization_list_input"
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+				<h:panelGrid
+					columns="3"
+					cellpadding="2"
+					columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+					<h:outputLabel
+						for="generate_randomization_list_n"
+						value="#{triallabels.generate_randomization_list_n_label}" />
+					<h:panelGroup>
+						<p:spinner
+							id="generate_randomization_list_n"
+							value="#{generateRandomizationListBean.n}"
+							styleClass="ctsms-spinner"
+							required="true"
+							label="#{triallabels.generate_randomization_list_n}" />
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="generate_randomization_list_n">
+							<h:outputText
+								value="#{triallabels.generate_randomization_list_n_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+					<p:message for="generate_randomization_list_n" />
+				</h:panelGrid>
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+					<h:outputLabel
+						for="generate_randomization_list_randomization_list"
+						value="#{triallabels.generate_randomization_list_randomization_list_label}" />
+					<h:panelGroup>
+						<p:inputTextarea
+							id="generate_randomization_list_randomization_list"
+							value="#{generateRandomizationListBean.randomizationList}"
+							required="false"
+							disabled="true"
+							autoResize="false"
+							styleClass="ctsms-textarea"
+							label="#{triallabels.generate_randomization_list_randomization_list}">
+						</p:inputTextarea>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="generate_randomization_list_randomization_list">
+							<h:outputText
+								value="#{triallabels.generate_randomization_list_randomization_list_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+				</h:panelGrid>
+				<p:messages />
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton
+							process="@this,generate_randomization_list_n"
+							id="updateRandomizationList"
+							value="#{triallabels.generate_randomization_list_randomization_list_tooltip}"
+							actionListener="#{generateRandomizationListBean.updateRandomizationList}"
+							icon="ui-icon ui-icon-arrowreturn-1-n"
+							ajax="true"
+							update="generate_randomization_list_input" />
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:panelGrid>
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

@@ -35,11 +35,11 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
-import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
+import org.phoenixctms.ctsms.web.model.shared.GenerateRandomListBean;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -53,7 +53,7 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean
 @ViewScoped
-public class TrialBean extends ManagedBeanBase implements VariablePeriodSelectorListener, RandomizationModeSelectorListener {
+public class TrialBean extends GenerateRandomListBean implements VariablePeriodSelectorListener, RandomizationModeSelectorListener {
 
 	private static final int BLOCKING_PERIOD_PROPERTY_ID = 1;
 	private static final int RANDOMIZATION_MODE_PROPERTY_ID = 1;
@@ -71,6 +71,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			in.setDescription(out.getDescription());
 			in.setSignupProbandList(out.getSignupProbandList());
 			in.setSignupInquiries(out.getSignupInquiries());
+			in.setSignupRandomize(out.getSignupRandomize());
 			in.setSignupDescription(out.getSignupDescription());
 			in.setId(out.getId());
 			in.setName(out.getName());
@@ -97,6 +98,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			in.setDescription(Messages.getString(MessageCodes.TRIAL_DESCRIPTION_PRESET));
 			in.setSignupProbandList(Settings.getBoolean(SettingCodes.TRIAL_SIGNUP_PROBAND_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_SIGNUP_PROBAND_LIST_PRESET));
 			in.setSignupInquiries(Settings.getBoolean(SettingCodes.TRIAL_SIGNUP_INQUIRIES_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_SIGNUP_INQUIRIES_PRESET));
+			in.setSignupRandomize(Settings.getBoolean(SettingCodes.TRIAL_SIGNUP_RANDOMIZE_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_SIGNUP_RANDOMIZE_PRESET));
 			in.setSignupDescription(Messages.getString(MessageCodes.TRIAL_SIGNUP_DESCRIPTION_PRESET));
 			in.setId(null);
 			in.setName(Messages.getString(MessageCodes.TRIAL_NAME_PRESET));
@@ -352,6 +354,11 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	}
 
 	@Override
+	protected RandomizationMode getRandomizationMode() {
+		return this.in.getRandomization();
+	}
+
+	@Override
 	public RandomizationMode getRandomizationMode(int property) {
 		switch (property) {
 			case RANDOMIZATION_MODE_PROPERTY_ID:
@@ -415,6 +422,11 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		} else {
 			return Messages.getString(operationSuccess ? MessageCodes.CREATE_NEW_TRIAL : MessageCodes.ERROR_LOADING_TRIAL);
 		}
+	}
+
+	@Override
+	protected Long getTrialId() {
+		return this.in.getId();
 	}
 
 	public TrialStatusTypeVO getTrialStatusType() {
@@ -633,6 +645,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB) && super.isRemovable();
 	}
 
+	public boolean isSignupRandomizeEnabled() {
+		return this.in.getSignupProbandList();
+	}
+
 	public boolean isTabEmphasized(String tab) {
 		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));
 	}
@@ -702,7 +718,6 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			}
 		}
 	}
-
 	private void loadTrialStatusType() {
 		trialStatusType = WebUtil.getTrialStatusType(in.getStatusId());
 	}
@@ -722,6 +737,9 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		}
 		if (in.getRandomization() == null) {
 			in.setRandomizationList(null);
+		}
+		if (!in.getSignupProbandList()) {
+			in.setSignupRandomize(false);
 		}
 		// signup...
 	}

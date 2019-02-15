@@ -515,7 +515,7 @@ public interface ServiceExceptionCodes {
 	public final static String NO_INPUT_FIELD_SELECTION_SET_VALUE_RANDOMIZED = "no_input_field_selection_set_value_randomized";
 	public final static String NO_INPUT_FIELD_TEXT_VALUE_RANDOMIZED = "no_input_field_text_value_randomized";
 	public final static String RANDOMIZATION_NOT_DEFINED_FOR_TRIAL = "randomization_not_defined_for_trial";
-	public final static String PROBAND_GROUP_NOT_NULL = "proband_group_not_null";
+	// public final static String PROBAND_GROUP_NOT_NULL = "proband_group_not_null";
 	public final static String INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "input_field_selection_set_value_not_empty";
 	public final static String INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "input_field_text_value_not_empty";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
@@ -726,6 +726,8 @@ public interface ServiceExceptionCodes {
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_REQUIRED = "trial_blocking_period_explicit_days_required";
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE = "trial_blocking_period_explicit_days_less_than_one";
 	public static final String TRIAL_SIGNUP_DESCRIPTION_EMPTY = "trial_signup_description_empty";
+	public static final String TRIAL_SIGNUP_PROBAND_LIST_DISABLED = "trial_signup_proband_list_disabled";
+	public static final String TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED = "trial_signup_randomization_not_defined";
 	public static final String TRIAL_RANDOMIZATION_LIST_REQUIRED = "trial_randomization_list_required";
 	public static final String PROBAND_LIST_ENTRY_PROBAND_BLOCKED = "proband_list_entry_proband_blocked";
 	public static final String ZERO_LDAP_USERS = "zero_ldap_users";

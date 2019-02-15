@@ -1,17 +1,23 @@
 package org.phoenixctms.ctsms.util.randomization;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
+import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 
@@ -39,8 +45,30 @@ public class TagTextStratifiedRandomization extends Randomization {
 		return RandomizationMode.TAG_TEXT_STRATIFIED;
 	}
 
+	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId,StratificationRandomizationList randomizationList) { // long trialId,
+		Set<Long> selectionSetValueIds = getInputFieldSelectionSetValueIdMap(randomizationList.getSelectionSetValues()).keySet();
+		return CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTextStratificationTagValuesCount(trial.getId(), false, selectionSetValueIds, excludeListEntryId));
+
+	}
+
 	@Override
 	public RandomizationType getType() {
 		return RandomizationType.TAG_TEXT;
+	}
+
+	@Override
+	protected String randomizeInputFieldTextValue(Trial trial, ProbandListEntry exclude) throws Exception {
+		ArrayList<String> textValues = new ArrayList<String>();
+		StratificationRandomizationList randomizationList = getStratificationRandomizationList(trial, exclude);
+		splitInputFieldTextValues(randomizationList.getRandomizationList(), textValues);
+		String value = null;
+		if (textValues.size() > 0) {
+			int totalNonEmtpyTextsSize = getTotalNonEmptyTextsSize(trial, exclude != null ? exclude.getId() : null, randomizationList);
+			value = textValues.get(totalNonEmtpyTextsSize % textValues.size());
+			randomizationInfo.setTotalSize(totalNonEmtpyTextsSize);
+		}
+		randomizationInfo.setRandomizationListItems(textValues);
+		initStratificationValuesInfo(randomizationList);
+		return value;
 	}
 }

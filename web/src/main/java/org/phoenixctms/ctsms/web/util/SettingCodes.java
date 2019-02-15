@@ -364,6 +364,7 @@ public interface SettingCodes {
 	public static final String TRIAL_EXCLUSIVE_PROBANDS_PRESET = "trial_exclusive_probands_preset";
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_PRESET = "trial_signup_proband_list_preset";
 	public static final String TRIAL_SIGNUP_INQUIRIES_PRESET = "trial_signup_inquiries_preset";
+	public static final String TRIAL_SIGNUP_RANDOMIZE_PRESET = "trial_signup_randomize_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_PRESET = "trial_blocking_period_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_DAYS_PRESET = "trial_blocking_period_days_preset";
 	public static final String PROBAND_LIST_BULK_ADD_SHUFFLE = "proband_list_bulk_add_shuffle";

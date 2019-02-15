@@ -76,6 +76,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PositionMovement;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelDefaultSettings;
@@ -428,24 +429,13 @@ extends TrialServiceBase
 		Trial trial = listEntry.getTrial();
 		listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		if (randomization != null) {
-			// if (listEntry.getGroup() != null) {
-			// listEntry.getGroup().removeProbandListEntries(listEntry);
-			// }
-			switch (randomization.getType()) {
-				case GROUP:
-					ProbandGroup group = randomization.getRandomizedProbandGroup(trial, null);
-					group.addProbandListEntries(listEntry);
-					// listEntry.setGroup(randomization.getRandomizedProbandGroup(trial, null));
-					// if (listEntry.getGroup() != null) {
-					// listEntry.getGroup().addProbandListEntries(listEntry);
-					// }
-					break;
-				case TAG_SELECT:
-				case TAG_TEXT:
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_PROBAND_LIST_ENTRY_REQUIRED);
-				default:
-					throw new IllegalArgumentException(
-							L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_TYPE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
+			if (RandomizationType.GROUP.equals(randomization.getType())) {
+				ProbandGroup group = randomization.getRandomizedProbandGroup(trial, null);
+				if (listEntry.getGroup() != null) {
+					listEntry.getGroup().removeProbandListEntries(listEntry);
+				}
+				listEntry.setGroup(group);
+				group.addProbandListEntries(listEntry);
 			}
 		}
 		if (signup) {
@@ -459,6 +449,11 @@ extends TrialServiceBase
 		}
 		CoreUtil.modifyVersion(listEntry, now, user);
 		listEntry = probandListEntryDao.create(listEntry);
+		if (randomization != null) {
+			if (!RandomizationType.GROUP.equals(randomization.getType())) { // when created
+				applyListEntryTagRandomization(trial, listEntry, null, randomization, now, user);
+			}
+		}
 		ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
 		if (statusType != null && statusType.isInitial()) { // && !statusType.isReasonRequired()) {
 			if (statusType.isSignup() && !trial.isSignupProbandList()) {
@@ -971,6 +966,62 @@ extends TrialServiceBase
 	}
 
 
+	private void applyListEntryTagRandomization(Trial trial, ProbandListEntry probandListEntry, ProbandListEntry originalProbandListEntry, Randomization randomization,
+			Timestamp now, User user) throws Exception {
+		ProbandListEntryTag randomizationTag;
+		ProbandListEntryTagValueInVO tagIn;
+		ProbandListEntryTagValue originalTagValue = null;
+		if (originalProbandListEntry != null) {
+			try {
+				originalTagValue = this.getProbandListEntryTagValueDao().findByListEntryListEntryTag(originalProbandListEntry.getId(), this.getProbandListEntryTagDao()
+						.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next().getId()).iterator().next();
+			} catch (NoSuchElementException e) {
+			}
+		}
+		switch (randomization.getType()) {
+			case TAG_SELECT:
+				if (originalTagValue != null) {
+					Collection<InputFieldSelectionSetValue> values = originalTagValue.getValue().getSelectionValues();
+					if (values != null && values.size() > 0) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY);
+					}
+				}
+				InputFieldSelectionSetValue selectionSetValue = randomization.getRandomizedInputFieldSelectionSetValue(trial, originalProbandListEntry);
+				randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
+				tagIn.getSelectionValueIds().clear();
+				tagIn.getSelectionValueIds().add(selectionSetValue.getId());
+				if (originalTagValue != null) {
+					tagIn.setId(originalTagValue.getId());
+					tagIn.setVersion(originalTagValue.getVersion());
+				}
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+				break;
+			case TAG_TEXT:
+				if (originalTagValue != null) {
+					String textValue = originalTagValue.getValue().getStringValue();
+					if (textValue != null && textValue.length() > 0) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TEXT_VALUE_NOT_EMPTY);
+					}
+				}
+				String textValue = randomization.getRandomizedInputFieldTextValue(trial, originalProbandListEntry);
+				randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
+				tagIn.setTextValue(textValue);
+				if (originalTagValue != null) {
+					tagIn.setId(originalTagValue.getId());
+					tagIn.setVersion(originalTagValue.getVersion());
+				}
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+				break;
+			default:
+				throw new IllegalArgumentException(
+						L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_TYPE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
+		}
+	}
+
 	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException
 	{
 		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
@@ -1177,30 +1228,6 @@ extends TrialServiceBase
 		checkProbandListEntryTagInput(listTagIn, trial, field);
 	}
 
-	private void checkAddTrialInput(TrialInVO trialIn) throws ServiceException
-	{
-		checkTrialInput(trialIn);
-		TrialStatusTypeDao trialStatusTypeDao = this.getTrialStatusTypeDao();
-		TrialStatusType state = CheckIDUtil.checkTrialStatusTypeId(trialIn.getStatusId(), trialStatusTypeDao);
-		boolean validState = false;
-		Iterator<TrialStatusType> statesIt = trialStatusTypeDao.findInitialStates().iterator();
-		while (statesIt.hasNext()) {
-			if (state.equals(statesIt.next())) {
-				validState = true;
-				break;
-			}
-		}
-		if (!validState) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_TRIAL_STATUS_TYPE, L10nUtil.getTrialStatusTypeName(Locales.USER, state.getNameL10nKey()));
-		}
-		// //entering signed:
-		// if (hasTrialStatusAction(state, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
-		// checkTeamMemberSign(trial, user);
-		// }
-		Randomization.checkTrialInput(null, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(), this.getStratificationRandomizationListDao(),
-				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
-	}
-
 	// private void checkEcrfFieldValueInputIndex(ECRFFieldValueInVO ecrfFieldValueIn, ECRFField ecrfField) throws ServiceException { // , ECRFFieldOutVO ecrfFieldVO
 	// // InputFieldOutVO inputFieldVO = ecrfFieldVO.getField();
 	// InputFieldDao inputFieldDao = this.getInputFieldDao();
@@ -1231,6 +1258,30 @@ extends TrialServiceBase
 	// }
 	// }
 	// }
+
+	private void checkAddTrialInput(TrialInVO trialIn) throws ServiceException
+	{
+		checkTrialInput(trialIn);
+		TrialStatusTypeDao trialStatusTypeDao = this.getTrialStatusTypeDao();
+		TrialStatusType state = CheckIDUtil.checkTrialStatusTypeId(trialIn.getStatusId(), trialStatusTypeDao);
+		boolean validState = false;
+		Iterator<TrialStatusType> statesIt = trialStatusTypeDao.findInitialStates().iterator();
+		while (statesIt.hasNext()) {
+			if (state.equals(statesIt.next())) {
+				validState = true;
+				break;
+			}
+		}
+		if (!validState) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_TRIAL_STATUS_TYPE, L10nUtil.getTrialStatusTypeName(Locales.USER, state.getNameL10nKey()));
+		}
+		// //entering signed:
+		// if (hasTrialStatusAction(state, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
+		// checkTeamMemberSign(trial, user);
+		// }
+		Randomization.checkTrialInput(null, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(), this.getStratificationRandomizationListDao(),
+				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+	}
 
 	private ProbandListEntry checkClearEcrfFieldValues(Long ecrfId, Long probandListEntryId, Timestamp now, User user) throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
@@ -1444,6 +1495,8 @@ extends TrialServiceBase
 		}
 	}
 
+
+
 	private void checkEcrfFieldValueInputUnlockedForFieldStatus(ECRFFieldValueInVO ecrfFieldValueIn, ECRFStatusEntry statusEntry, ECRFField ecrfField) throws Exception {
 		if (statusEntry.getStatus().isValueLockdown()) {
 			// ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(null, listEntry.getId(), ecrfField.getId(), index);
@@ -1466,8 +1519,6 @@ extends TrialServiceBase
 			}
 		}
 	}
-
-
 
 	private void checkEcrfInput(ECRFInVO ecrfIn) throws ServiceException {
 		Trial trial = CheckIDUtil.checkTrialId(ecrfIn.getTrialId(), this.getTrialDao());
@@ -1828,6 +1879,8 @@ extends TrialServiceBase
 		(new TimelineEventTypeTagAdapter(this.getTrialDao(), this.getTimelineEventTypeDao())).checkTagValueInput(timelineEventIn);
 	}
 
+
+
 	private void checkTrialInput(TrialInVO trialIn) throws ServiceException {
 		CheckIDUtil.checkDepartmentId(trialIn.getDepartmentId(), this.getDepartmentDao());
 		CheckIDUtil.checkTrialTypeId(trialIn.getTypeId(), this.getTrialTypeDao());
@@ -1847,9 +1900,15 @@ extends TrialServiceBase
 		if ((trialIn.getSignupProbandList() || trialIn.getSignupInquiries()) && CommonUtil.isEmptyString(trialIn.getSignupDescription())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_DESCRIPTION_EMPTY);
 		}
+		if (trialIn.getSignupRandomize()) {
+			if (!trialIn.getSignupProbandList()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_PROBAND_LIST_DISABLED);
+			}
+			if (trialIn.getRandomization() == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED);
+			}
+		}
 	}
-
-
 
 	private void checkTrialTagValueInput(TrialTagValueInVO tagValueIn) throws ServiceException
 	{
@@ -2104,6 +2163,9 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
 	private ArrayList<ECRFFieldValueOutVO> clearEcrfFieldValues(ProbandListEntry listEntry, Collection<ECRFFieldValue> values,
 			Timestamp now, User user) throws Exception {
 
@@ -2128,9 +2190,6 @@ extends TrialServiceBase
 
 		return result;
 	}
-
-
-
 
 	private ECRFProgressSummaryVO createEcrfProgessSummary(ProbandListEntryOutVO listEntryVO, boolean ecrfDetail, boolean sectionDetail, boolean dueDetail, Date from, Date to)
 			throws Exception {
@@ -2248,6 +2307,21 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
+	// private SignatureVO getVerifiedEcrfSignatureVO(Signature signature) throws Exception {
+	// SignatureVO result = this.getSignatureDao().toSignatureVO(signature);
+	// StringBuilder comment = new StringBuilder();
+	// result.setVerificationTimestamp(new Date());
+	// result.setValid(EcrfSignature.verify(signature, comment, this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao()));
+	// result.setVerified(true);
+	// result.setComment(comment.toString());
+	// result.setDescription(EntitySignature.getDescription(result));
+	// return result;
+	// }
+
 	private ECRFFieldOutVO deleteEcrfFieldHelper(ECRF ecrf, Long ecrfFieldId, boolean deleteCascade, boolean checkTrialLocked, boolean checkEcrfLocked,
 			Timestamp now, User user) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -2277,21 +2351,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_DELETED, result, null, journalEntryDao);
 		return result;
 	}
-
-
-
-
-
-	// private SignatureVO getVerifiedEcrfSignatureVO(Signature signature) throws Exception {
-	// SignatureVO result = this.getSignatureDao().toSignatureVO(signature);
-	// StringBuilder comment = new StringBuilder();
-	// result.setVerificationTimestamp(new Date());
-	// result.setValid(EcrfSignature.verify(signature, comment, this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao()));
-	// result.setVerified(true);
-	// result.setComment(comment.toString());
-	// result.setDescription(EntitySignature.getDescription(result));
-	// return result;
-	// }
 
 	private void execEcrfStatusActions(ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception { // ECRFStatusType oldStatus,
 		ECRFStatusType newState = statusEntry.getStatus();
@@ -2528,7 +2587,7 @@ extends TrialServiceBase
 		return false;
 	}
 
-	private Randomization getRandomization(Trial trial, boolean randomize, Long groupId, Long probandListEntryId) throws ServiceException {
+	private Randomization getRandomization(Trial trial, boolean randomize, Long groupId) throws ServiceException {
 		if (randomize) {
 
 			if (trial.getRandomization() != null) {
@@ -2537,37 +2596,13 @@ extends TrialServiceBase
 						this.getProbandListEntryTagValueDao());
 				switch (randomization.getType()) {
 					case GROUP:
-						if (groupId != null) {
-							throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
-						}
+						// if (groupId != null) {
+						// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
+						// }
 						break;
 					case TAG_SELECT:
-						if (probandListEntryId != null) {
-							Collection<InputFieldSelectionSetValue> values = null;
-							try {
-								values = this.getProbandListEntryTagValueDao().findByListEntryListEntryTag(probandListEntryId, this.getProbandListEntryTagDao()
-										.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next().getId()).iterator().next().getValue()
-										.getSelectionValues();
-							} catch (NoSuchElementException e) {
-							}
-							if (values != null && values.size() > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY);
-							}
-						}
 						break;
 					case TAG_TEXT:
-						if (probandListEntryId != null) {
-							String textValue = null;
-							try {
-								textValue = this.getProbandListEntryTagValueDao().findByListEntryListEntryTag(probandListEntryId, this.getProbandListEntryTagDao()
-										.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next().getId()).iterator().next().getValue()
-										.getStringValue();
-							} catch (NoSuchElementException e) {
-							}
-							if (textValue != null && textValue.length() > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TEXT_VALUE_NOT_EMPTY);
-							}
-						}
 						break;
 					default:
 						throw new IllegalArgumentException(
@@ -2743,7 +2778,7 @@ extends TrialServiceBase
 		ArrayList<ProbandListEntryOutVO> result = new ArrayList<ProbandListEntryOutVO>();
 		ShuffleInfoVO shuffleInfo = new ShuffleInfoVO();
 		shuffleInfo.setLimit(limit);
-		Randomization randomization = getRandomization(trial, randomize, groupId, null);
+		Randomization randomization = getRandomization(trial, randomize, groupId);
 		if (probandIds != null) {
 			Iterator<Long> probandIt;
 			ArrayList<Long> ids = new ArrayList<Long>(probandIds);
@@ -2783,11 +2818,12 @@ extends TrialServiceBase
 
 	@Override
 	protected ProbandListEntryOutVO handleAddProbandListEntry(
-			AuthenticationVO auth, boolean signup, boolean randomize, ProbandListEntryInVO newProbandListEntry) throws Exception {
+			AuthenticationVO auth, boolean signup, Boolean randomize, ProbandListEntryInVO newProbandListEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Randomization randomization = getRandomization(CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao()), randomize,
-				newProbandListEntry.getGroupId(), null);
+		Trial trial = CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao());
+		Randomization randomization = getRandomization(trial, randomize != null ? randomize : signup && trial.isSignupRandomize(),
+				newProbandListEntry.getGroupId());
 		return addProbandListEntry(newProbandListEntry, signup, randomization, now, user); // statusType
 	}
 
@@ -5152,13 +5188,13 @@ extends TrialServiceBase
 	}
 
 	@Override
-	protected String handleGenerateRandomizationList(AuthenticationVO auth, Long trialId, Integer n) throws Exception {
+	protected String handleGenerateRandomizationList(AuthenticationVO auth, Long trialId,RandomizationMode mode, Integer n) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
-		if (trial.getRandomization() == null) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
-		}
-		Randomization randomization = Randomization.getInstance(trial.getRandomization(), trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
+//		if (trial.getRandomization() == null) {
+//			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
+//		}
+		Randomization randomization = Randomization.getInstance(mode, trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -6600,6 +6636,7 @@ extends TrialServiceBase
 		return timelineEvents;
 	}
 
+
 	@Override
 	protected Collection<TimelineEventOutVO> handleGetTimelineEventList(
 			AuthenticationVO auth, Long trialId, PSFVO psf) throws Exception {
@@ -6611,7 +6648,6 @@ extends TrialServiceBase
 		timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
 		return timelineEvents;
 	}
-
 
 	@Override
 	protected Collection<TimelineEventOutVO> handleGetTimelineInterval(
@@ -7082,6 +7118,7 @@ extends TrialServiceBase
 		return (new ProbandListEntryTagMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryTagDao(), this.getTrialDao())).normalizePositions(trialId);
 	}
 
+
 	@Override
 	protected ECRFPDFVO handleRenderEcrf(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId, boolean blank) throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
@@ -7148,6 +7185,10 @@ extends TrialServiceBase
 	}
 
 
+
+
+
+
 	@Override
 	protected ECRFPDFVO handleRenderEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, boolean blank) throws Exception {
 
@@ -7205,11 +7246,6 @@ extends TrialServiceBase
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
-
-
-
-
-
 
 	@Override
 	protected ProbandListEntryTagsPDFVO handleRenderProbandListEntryTags(AuthenticationVO auth, Long trialId, Long probandId, boolean blank) throws Exception {
@@ -7295,6 +7331,10 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, PSFVO psf) throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
@@ -7312,9 +7352,6 @@ extends TrialServiceBase
 	}
 
 
-
-
-
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index, Boolean addSeries,
 			PSFVO psf)
@@ -7330,7 +7367,6 @@ extends TrialServiceBase
 		}
 		return result;
 	}
-
 
 	@Override
 	protected ECRFStatusEntryVO handleSetEcrfStatusEntry(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, Long version, Long ecrfStatusTypeId,
@@ -7351,6 +7387,9 @@ extends TrialServiceBase
 		}
 		return result;
 	}
+
+
+
 
 	@Override
 	protected ProbandListEntryTagValuesOutVO handleSetProbandListEntryTagValues(
@@ -7415,8 +7454,6 @@ extends TrialServiceBase
 	}
 
 
-
-
 	@Override
 	protected TimelineEventOutVO handleSetTimelineEventDismissed(
 			AuthenticationVO auth, Long timelineEventId, Long version, boolean dismissed) throws Exception {
@@ -7435,6 +7472,8 @@ extends TrialServiceBase
 				: SystemMessageCodes.TIMELINE_EVENT_DISMISSED_UNSET, result, original, this.getJournalEntryDao());
 		return result;
 	}
+
+
 
 
 	@Override
@@ -7470,9 +7509,6 @@ extends TrialServiceBase
 		}
 		return results;
 	}
-
-
-
 
 	@Override
 	protected ECRFOutVO handleUpdateEcrf(AuthenticationVO auth, ECRFInVO modifiedEcrf) throws Exception {
@@ -7634,7 +7670,7 @@ extends TrialServiceBase
 		boolean probandChanged = !modifiedProbandListEntry.getProbandId().equals(originalProbandListEntry.getProband().getId());
 		boolean groupChanged;
 		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
-		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId(), modifiedProbandListEntry.getId());
+		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
 		ProbandGroup group = ((randomization != null && RandomizationType.GROUP.equals(randomization.getType()))
 				? randomization.getRandomizedProbandGroup(trial, originalProbandListEntry)
 						: (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null));
@@ -7653,43 +7689,21 @@ extends TrialServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		if (randomization != null) {
-			ProbandListEntryTag randomizationTag;
-			ProbandListEntryTagValueInVO tagIn;
-			switch (randomization.getType()) {
-				case GROUP:
-					if (probandListEntry.getGroup() != null) {
-						probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
-					}
-					probandListEntry.setGroup(group);
-					group.addProbandListEntries(probandListEntry);
-					// if (probandListEntry.getGroup() != null) {
-					// probandListEntry.getGroup().addProbandListEntries(probandListEntry);
-					// }
-					break;
-				case TAG_SELECT:
-					InputFieldSelectionSetValue selectionSetValue = randomization.getRandomizedInputFieldSelectionSetValue(trial, originalProbandListEntry);
-					randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
-					tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
-					tagIn.getSelectionValueIds().clear();
-					tagIn.getSelectionValueIds().add(selectionSetValue.getId());
-					addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
-							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
-					break;
-				case TAG_TEXT:
-					String textValue = randomization.getRandomizedInputFieldTextValue(trial, originalProbandListEntry);
-					randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
-					tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
-					tagIn.setTextValue(textValue);
-					addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
-							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
-					break;
-				default:
-					throw new IllegalArgumentException(
-							L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_TYPE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_TYPE, randomization.getType()));
+			if (RandomizationType.GROUP.equals(randomization.getType())) {
+				if (probandListEntry.getGroup() != null) {
+					probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
+				}
+				probandListEntry.setGroup(group);
+				group.addProbandListEntries(probandListEntry);
 			}
 		}
 		CoreUtil.modifyVersion(originalProbandListEntry, probandListEntry, now, user);
 		probandListEntryDao.update(probandListEntry);
+		if (randomization != null) {
+			if (!RandomizationType.GROUP.equals(randomization.getType())) {
+				applyListEntryTagRandomization(trial, probandListEntry, originalProbandListEntry, randomization, now, user);
+			}
+		}
 		if (probandChanged || groupChanged) {
 			addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED, ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
 					probandListEntry, probandListStatusTypeId, now, user);

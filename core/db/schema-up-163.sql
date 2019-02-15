@@ -10,3 +10,7 @@ alter table PROBAND_LIST_ENTRY_TAG alter STRATIFICATION set not null;
 alter table PROBAND_LIST_ENTRY_TAG add column RANDOMIZE BOOLEAN;
 update PROBAND_LIST_ENTRY_TAG set RANDOMIZE = 'f';
 alter table PROBAND_LIST_ENTRY_TAG alter RANDOMIZE set not null;
+
+alter table TRIAL add column SIGNUP_RANDOMIZE BOOLEAN;
+update TRIAL set SIGNUP_RANDOMIZE = 'f';
+alter table TRIAL alter SIGNUP_RANDOMIZE set not null;

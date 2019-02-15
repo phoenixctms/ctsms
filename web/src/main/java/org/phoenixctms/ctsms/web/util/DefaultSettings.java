@@ -473,6 +473,7 @@ public final class DefaultSettings {
 	public static final boolean TRIAL_EXCLUSIVE_PROBANDS_PRESET = false;
 	public static final boolean TRIAL_SIGNUP_PROBAND_LIST_PRESET = false;
 	public static final boolean TRIAL_SIGNUP_INQUIRIES_PRESET = false;
+	public static final boolean TRIAL_SIGNUP_RANDOMIZE_PRESET = false;
 	public static final VariablePeriod TRIAL_BLOCKING_PERIOD_PRESET = VariablePeriod.THREE_MONTHS;
 	public static final RandomizationMode TRIAL_RANDOMIZATION_PRESET = RandomizationMode.GROUP_COIN;
 	public static final String TRIAL_RANDOMIZATION_LIST_PRESET = "";

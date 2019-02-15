@@ -67,6 +67,7 @@ public abstract class Randomization {
 	private final static Pattern RANDOMIZATION_BLOCK_SPLIT_REGEXP = Pattern.compile(RANDOMIZATION_BLOCK_SPLIT_REGEX_PATTERN);
 	private final static boolean TRIM_PROBAND_GROUP_TOKEN = true;
 	private final static boolean TRIM_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = true;
+	private final static boolean TRIM_INPUT_FIELD_TEXT_VALUE = true;
 
 	public final static void checkInputFieldSelectionSetValueInput(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueIn, ProbandListEntryTagDao probandListEntryTagDao) throws ServiceException {
 		if ( probandListEntryTagDao.getCountByFieldStratificationRandomize(inputFieldSelectionSetValueIn.getFieldId(), null, true) > 0) {
@@ -257,6 +258,12 @@ public abstract class Randomization {
 			case TAG_SELECT_STRATIFIED:
 				return new TagSelectStratifiedRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
 						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+			case TAG_TEXT_LIST:
+				return new TagTextListRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+			case TAG_TEXT_STRATIFIED:
+				return new TagTextStratifiedRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
 			default:
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_MODE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_MODE, mode));
 		}
@@ -292,12 +299,33 @@ public abstract class Randomization {
 				String value = (TRIM_INPUT_FIELD_SELECTION_SET_VALUE_VALUE ? block[i].trim() : block[i]);
 				if (!CommonUtil.isEmptyString(value)) {
 					if (inputFieldSelectionSetValueMap.containsKey(value)) {
-						if (value != null) {
+						if (values != null) {
 							values.add(value);
 						}
 					} else {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
 					}
+				}
+			}
+		}
+		// return result;
+	}
+
+	protected final static void splitInputFieldTextValues(String randomizationBlock, ArrayList<String> values)
+			throws ServiceException {
+		// ArrayList<String> result = new ArrayList<String>();
+		if (!CommonUtil.isEmptyString(randomizationBlock)) {
+			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
+			for (int i = 0; i < block.length; i++) {
+				String value = (TRIM_INPUT_FIELD_TEXT_VALUE ? block[i].trim() : block[i]);
+				if (!CommonUtil.isEmptyString(value)) {
+					// if (inputFieldSelectionSetValueMap.containsKey(value)) {
+					if (values != null) {
+						values.add(value);
+					}
+					// } else {
+					// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
+					// }
 				}
 			}
 		}
@@ -396,14 +424,17 @@ public abstract class Randomization {
 			for (int i = 0; i < blocks; i++) {
 				ArrayList<String> permutation = new ArrayList<String>(items);
 				Collections.shuffle(permutation, random);
-				if (sb.length() > 0) {
-					sb.append(RANDOMIZATION_BLOCK_LINE_SEPARATOR);
-				}
+				boolean newLine = true;
 				Iterator<String> itemIt = permutation.iterator();
 				while (itemIt.hasNext() && count < n) {
 					if (sb.length() > 0) {
-						sb.append(RANDOMIZATION_BLOCK_SPLIT_SEPARATOR);
+						if (newLine) {
+							sb.append(RANDOMIZATION_BLOCK_LINE_SEPARATOR);
+						} else {
+							sb.append(RANDOMIZATION_BLOCK_SPLIT_SEPARATOR);
+						}
 					}
+					newLine = false;
 					String item = itemIt.next();
 					sb.append(item);
 					count++;
@@ -600,6 +631,14 @@ public abstract class Randomization {
 		while (it.hasNext()) {
 			randomizationInfo.getSizes().put(it.next().getToken(), null);
 		}
+	}
+
+	protected final void initStratificationValuesInfo(StratificationRandomizationList randomizationList) {
+		Iterator<InputFieldSelectionSetValue> it = randomizationList.getSelectionSetValues().iterator();
+		while (it.hasNext()) {
+			randomizationInfo.getStratificationValues().add(it.next().getValue());
+		}
+
 	}
 
 	protected final void initValuesInfo(Collection<InputFieldSelectionSetValue> values) {

@@ -324,8 +324,8 @@ public class DBTool {
 
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.LOAD_DEMO_DATA_OPT);
 					dbTool.getJobOutput().printPrelude(job);
-					if (dbTool.testForced(line, "DB will be modified - created test data records will not be cleaned up!")) {
-						// dbTool.getDemoDataProvider().createDepartmentsAndUsers(1,1);
+					if (dbTool.testForced(line, "DB will be modified - created test data records will remain!")) {
+						// dbTool.getDemoDataProvider().createDepartmentsAndUsers(1, 1);
 						dbTool.getDemoDataProvider().createDepartmentsAndUsers(3, 5);
 						dbTool.getDemoDataProvider().createStaff(10);
 						dbTool.getDemoDataProvider().createInventory(10);
@@ -337,6 +337,7 @@ public class DBTool {
 								new Integer[] { 2 }, // 8, 10 },
 								new Integer[] { 2 }); // 5, 6 });
 						dbTool.getDemoDataProvider().createFormScriptingTrial();
+						dbTool.getDemoDataProvider().createGroupCoinRandomizationTrial(5, 100);
 						dbTool.getDemoDataProvider().createCriterias();
 					}
 					// } else if (line.hasOption(DBToolOptions.CREATE_DEMO_INPUT_FIELDS_OPT)) {

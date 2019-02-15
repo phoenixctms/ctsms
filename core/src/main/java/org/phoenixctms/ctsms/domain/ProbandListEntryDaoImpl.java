@@ -38,6 +38,23 @@ public class ProbandListEntryDaoImpl
 extends ProbandListEntryDaoBase
 {
 
+	private static Criteria applyStratificationTagValuesCriterions(org.hibernate.Criteria listEntryCriteria,Set<Long> selectionSetValueIds) {
+		org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
+		tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("stratification", true));
+		org.hibernate.Criteria selectionValuesCriteria = tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", // "selectionValues0",
+				CriteriaSpecification.INNER_JOIN);
+		selectionValuesCriteria.add(Restrictions.in("id", selectionSetValueIds));
+		ProjectionList proj = Projections.projectionList();
+		proj.add(Projections.id());
+		proj.add(Projections.sqlGroupProjection(
+				"count(*) as selectionValuesCount",
+				"{alias}.id having count(*) = " + selectionSetValueIds.size(),
+				new String[] { "selectionValuesCount" },
+				new org.hibernate.type.Type[] { Hibernate.LONG }));
+		listEntryCriteria.setProjection(proj);
+		return listEntryCriteria;
+	}
+
 	private org.hibernate.Criteria createListEntryCriteria() {
 		org.hibernate.Criteria listEntryCriteria = this.getSession().createCriteria(ProbandListEntry.class);
 		return listEntryCriteria;
@@ -77,6 +94,8 @@ extends ProbandListEntryDaoBase
 		return listEntryCriteria.list();
 	}
 
+
+
 	@Override
 	protected Collection<ProbandListEntry> handleFindByTrialPosition(
 			Long trialId, Long position) throws Exception {
@@ -89,8 +108,6 @@ extends ProbandListEntryDaoBase
 		}
 		return listEntryCriteria.list();
 	}
-
-
 
 	@Override
 	protected ProbandListEntry handleFindByTrialProband(
@@ -145,6 +162,8 @@ extends ProbandListEntryDaoBase
 		return (Long) listEntryCriteria.uniqueResult();
 	}
 
+
+
 	@Override
 	protected Collection<ProbandListEntry> handleGetProbandList(
 			Long trialId, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel logLevel, boolean last)
@@ -185,8 +204,6 @@ extends ProbandListEntryDaoBase
 		}
 	}
 
-
-
 	@Override
 	protected long handleGetTrialGroupProbandCount(
 			Long trialId, Long probandGroupId, Long probandId, boolean total) throws Exception {
@@ -224,19 +241,7 @@ extends ProbandListEntryDaoBase
 			listEntryCriteria.add(Restrictions.ne("id", excludeId.longValue()));
 		}
 		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
-			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
-			tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("stratification", true));
-			org.hibernate.Criteria selectionValuesCriteria = tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", // "selectionValues0",
-					CriteriaSpecification.INNER_JOIN);
-			selectionValuesCriteria.add(Restrictions.in("id", selectionSetValueIds));
-			ProjectionList proj = Projections.projectionList();
-			proj.add(Projections.id());
-			proj.add(Projections.sqlGroupProjection(
-					"count(*) as selectionValuesCount",
-					"{alias}.id having count(*) = " + selectionSetValueIds.size(),
-					new String[] { "selectionValuesCount" },
-					new org.hibernate.type.Type[] { Hibernate.LONG }));
-			listEntryCriteria.setProjection(proj);
+			applyStratificationTagValuesCriterions(listEntryCriteria, selectionSetValueIds);
 			Iterator it = listEntryCriteria.list().iterator();
 			long result = 0l;
 			while (it.hasNext()) {
@@ -251,25 +256,80 @@ extends ProbandListEntryDaoBase
 	}
 
 	@Override
-	protected long handleGetTrialRandomizeTagValueCount(
-			Long trialId, Long selectionSetValueId, Long excludeId) throws Exception {
+	protected long handleGetTrialRandomizeSelectStratificationTagValuesCount(
+			Long trialId, Long randomizeSelectionSetValueId, Set<Long> selectionSetValueIds, Long excludeId) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		if (excludeId != null) {
-			listEntryCriteria.add(Restrictions.ne("id", excludeId.longValue()));
-		}
-		if (selectionSetValueId != null) {
+		if (randomizeSelectionSetValueId != null) {
 			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues",  CriteriaSpecification.INNER_JOIN);
 			tagValuesCriteria.createCriteria("tag",  CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("randomize", true));
-			tagValuesCriteria.createCriteria("value",  CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues",  CriteriaSpecification.INNER_JOIN).add(Restrictions.idEq( selectionSetValueId.longValue()));
+			tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", CriteriaSpecification.INNER_JOIN)
+			.add(Restrictions.idEq(randomizeSelectionSetValueId.longValue()));
 		} else {
 			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues",  CriteriaSpecification.LEFT_JOIN);
 			tagValuesCriteria.createCriteria("tag",  CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.isNull("randomize"),Restrictions.eq("randomize", true)));
 			tagValuesCriteria.createCriteria("value",  CriteriaSpecification.LEFT_JOIN).add(Restrictions.isEmpty("selectionValues"));
 		}
-		return (Long) listEntryCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
+		if (excludeId != null) {
+			listEntryCriteria.add(Restrictions.ne("id", excludeId.longValue()));
+		}
+		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
+			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
+			listEntryCriteria.setProjection(Projections.distinct(projectionList));
+			Iterator it = listEntryCriteria.list().iterator();
+			long result = 0l;
+			while (it.hasNext()) {
+				if (applyStratificationTagValuesCriterions(createListEntryCriteria().add(Restrictions.idEq(it.next())), selectionSetValueIds).list().iterator()
+						.hasNext()) {
+					result++;
+				}
+			}
+			return result;
+		} else {
+			return (Long) listEntryCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
+		}
+	}
+
+	@Override
+	protected long handleGetTrialRandomizeTextStratificationTagValuesCount(
+			Long trialId, Boolean randomizeTextValueEmpty, Set<Long> selectionSetValueIds, Long excludeId) throws Exception {
+		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (randomizeTextValueEmpty != null) {
+			if (!randomizeTextValueEmpty) {
+				org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
+				tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("randomize", true));
+				tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN)
+						.add(Restrictions.not(Restrictions.or(Restrictions.isNull("stringValue"), Restrictions.eq("stringValue", ""))));
+			} else {
+				org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.LEFT_JOIN);
+				tagValuesCriteria.createCriteria("tag", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.isNull("randomize"), Restrictions.eq("randomize", true)));
+				tagValuesCriteria.createCriteria("value", CriteriaSpecification.LEFT_JOIN)
+				.add(Restrictions.or(Restrictions.isNull("stringValue"), Restrictions.eq("stringValue", "")));
+			}
+		}
+		if (excludeId != null) {
+			listEntryCriteria.add(Restrictions.ne("id", excludeId.longValue()));
+		}
+		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
+			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
+			listEntryCriteria.setProjection(Projections.distinct(projectionList));
+			Iterator it = listEntryCriteria.list().iterator();
+			long result = 0l;
+			while (it.hasNext()) {
+				if (applyStratificationTagValuesCriterions(createListEntryCriteria().add(Restrictions.idEq(it.next())), selectionSetValueIds).list().iterator()
+						.hasNext()) {
+					result++;
+				}
+			}
+			return result;
+		} else {
+			return (Long) listEntryCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
+		}
 	}
 
 	/**

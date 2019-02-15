@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.executable;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -67,6 +69,7 @@ import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -1192,6 +1195,7 @@ public class DemoDataProvider {
 		newTrial.setDescription("");
 		newTrial.setSignupProbandList(false);
 		newTrial.setSignupInquiries(false);
+		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
 		newTrial.setDutySelfAllocationLocked(false);
@@ -1415,6 +1419,88 @@ public class DemoDataProvider {
 	}
 
 
+	public TrialOutVO createGroupCoinRandomizationTrial(int probandGroupCount, int probandCount)
+			throws Throwable {
+		int departmentNum = 0;
+		AuthenticationVO auth = getRandomAuth(departmentNum);
+		TrialInVO newTrial = new TrialInVO();
+		newTrial.setStatusId(trialStatusTypeDao.searchUniqueNameL10nKey("migration_started").getId());
+		newTrial.setDepartmentId(getDepartmentId(departmentNum));
+		newTrial.setName("demo:group coin randomization");
+		newTrial.setTitle("Group coin randomization testcase.");
+		newTrial.setDescription("");
+		newTrial.setRandomization(RandomizationMode.GROUP_COIN);
+		newTrial.setSignupProbandList(false);
+		newTrial.setSignupInquiries(false);
+		newTrial.setSignupRandomize(false);
+		newTrial.setSignupDescription("");
+		newTrial.setExclusiveProbands(false);
+		newTrial.setDutySelfAllocationLocked(false);
+		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
+		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
+		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
+		TrialOutVO trial = trialService.addTrial(auth, newTrial);
+		jobOutput.println("trial created: " + trial.getName());
+
+		ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
+		newProbandGroup.setTitle("Screeninggruppe");
+		newProbandGroup.setToken("SG");
+		newProbandGroup.setTrialId(trial.getId());
+		newProbandGroup.setRandomize(false);
+		ProbandGroupOutVO screeningGroup = trialService.addProbandGroup(auth, newProbandGroup);
+		jobOutput.println("proband group created: " + screeningGroup.getTitle());
+
+		LinkedHashMap<Long,ProbandGroupOutVO> probandGroupMap = new LinkedHashMap<Long,ProbandGroupOutVO>();
+		for (int i = 0; i < probandGroupCount; i++) {
+			newProbandGroup = new ProbandGroupInVO();
+			newProbandGroup.setTitle("Gruppe " + (i + 1));
+			newProbandGroup.setToken("G" + (i + 1));
+			newProbandGroup.setTrialId(trial.getId());
+			newProbandGroup.setRandomize(true);
+			ProbandGroupOutVO probandGroup = trialService.addProbandGroup(auth, newProbandGroup);
+			jobOutput.println("proband group created: " + probandGroup.getTitle());
+			probandGroupMap.put(probandGroup.getId(), probandGroup);
+		}
+
+		ProbandCategory probandCategory = probandCategoryDao.search(new Search(new SearchParameter[] {
+				new SearchParameter("nameL10nKey", "test", SearchParameter.EQUAL_COMPARATOR) })).iterator().next();
+		HashMap<Long,Long> groupSizes = new HashMap<Long,Long>();
+		for (int i = 0; i < probandCount; i++) {
+			ProbandInVO newProband = new ProbandInVO();
+			newProband.setDepartmentId(getDepartmentId(departmentNum));
+			newProband.setCategoryId(probandCategory.getId());
+			newProband.setPerson(true);
+			newProband.setBlinded(true);
+			newProband.setAlias(MessageFormat.format("{0} {1}", trial.getName(), i + 1));
+			newProband.setGender(getRandomBoolean(50) ? Sex.MALE : Sex.FEMALE);
+			newProband.setDateOfBirth(getRandomDateOfBirth());
+			ProbandOutVO proband = probandService.addProband(auth, newProband, null, null, null);
+			jobOutput.println("proband created: " + proband.getName());
+
+			ProbandListEntryInVO newProbandListEntry = new ProbandListEntryInVO();
+			//newProbandListEntry.setGroupId(null); //getRandomElement(probandGroups).getId());
+			newProbandListEntry.setPosition(i + 1l);
+			newProbandListEntry.setTrialId(trial.getId());
+			newProbandListEntry.setProbandId(proband.getId());
+			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, true, newProbandListEntry);
+			jobOutput.println("proband list entry created - trial: " + probandListEntry.getTrial().getName() + " position: " + probandListEntry.getPosition() + " proband: "
+					+ probandListEntry.getProband().getName());
+
+			if (groupSizes.containsKey(probandListEntry.getGroup().getId())) {
+				groupSizes.put(probandListEntry.getGroup().getId(), groupSizes.get(probandListEntry.getGroup().getId()) + 1l);
+			} else {
+				groupSizes.put(probandListEntry.getGroup().getId(),1l);
+			}
+
+		}
+		Iterator<Long> probandGroupIdsIt = probandGroupMap.keySet().iterator();
+		while (probandGroupIdsIt.hasNext()) {
+			Long probandGroupId = probandGroupIdsIt.next();
+			jobOutput.println(probandGroupMap.get(probandGroupId).getToken() + ": " + groupSizes.get(probandGroupId) + " probands");
+		}
+		return trial;
+	}
+
 	public ArrayList<InputFieldOutVO> createInputFields() throws Throwable {
 		AuthenticationVO auth = getRandomAuth();
 		ArrayList<InputFieldOutVO> inputFields = new ArrayList<InputFieldOutVO>();
@@ -1589,7 +1675,6 @@ public class DemoDataProvider {
 		jobOutput.println("proband created: " + out.getName());
 		return out;
 	}
-
 	private ProbandListEntryTagOutVO createProbandListEntryTag(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, int position, boolean optional, boolean disabled,
 			boolean excelValue, boolean excelDate, boolean ecrfValue, boolean stratification, boolean randomize, String comment, String jsVariableName, String jsValueExpression,
 			String jsOutputExpression)
@@ -1614,6 +1699,7 @@ public class DemoDataProvider {
 		jobOutput.println("proband list entry tag created: " + out.getUniqueName());
 		return out;
 	}
+
 	public void createProbands(int probandCountPerDepartment) throws Exception {
 
 		int grandChildrenCount = (int) (0.5 * probandCountPerDepartment);
@@ -1919,6 +2005,7 @@ public class DemoDataProvider {
 		newTrial.setDescription("");
 		newTrial.setSignupProbandList(false);
 		newTrial.setSignupInquiries(false);
+		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
 		newTrial.setDutySelfAllocationLocked(false);
@@ -2176,11 +2263,11 @@ public class DemoDataProvider {
 		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
+		.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
+		.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
+		.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
 
 		// HashMap<Long, HashMap<Long, ArrayList<ECRFFieldOutVO>>> ecrfFieldsPerVisitPerGroupMap = new HashMap<Long, HashMap<Long,
 		// ArrayList<ECRFFieldOutVO>>>(probandGroups.size());
@@ -2301,50 +2388,6 @@ public class DemoDataProvider {
 		}
 		return trial;
 	}
-
-	// private TrialOutVO createTrialCoinRandomization(AuthenticationVO auth, int departmentNum, SearchCriteria criteria)
-	// throws Throwable {
-	// auth = (auth == null ? getRandomAuth() : auth);
-	// TrialInVO newTrial = new TrialInVO();
-	// newTrial.setStatusId(getRandomElement(selectionSetService.getInitialTrialStatusTypes(auth)).getId());
-	// newTrial.setDepartmentId(getDepartmentId(departmentNum));
-	// newTrial.setName("COIN RANDOMIZATION " + (departmentNum + 1));
-	// newTrial.setTitle(newTrial.getName());
-	// newTrial.setDescription("");
-	// newTrial.setRandomization(RandomizationMode.COIN);
-	// newTrial.setSignupProbandList(false);
-	// newTrial.setSignupInquiries(false);
-	// newTrial.setSignupDescription("");
-	// newTrial.setExclusiveProbands(false);
-	// newTrial.setDutySelfAllocationLocked(false);
-	// newTrial.setTypeId(getRandomElement(selectionSetService.getTrialTypes(auth, null)).getId());
-	// newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
-	// newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
-	// TrialOutVO trial = trialService.addTrial(auth, newTrial);
-	// jobOutput.println("trial created: " + trial.getName());
-	//
-	// ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
-	// newProbandGroup.setTitle("Screeninggruppe");
-	// newProbandGroup.setToken("SG");
-	// newProbandGroup.setTrialId(trial.getId());
-	// newProbandGroup.setRandomize(false);
-	// ProbandGroupOutVO screeningGroup = trialService.addProbandGroup(auth, newProbandGroup);
-	// jobOutput.println("proband group created: " + screeningGroup.getTitle());
-	// ArrayList<ProbandGroupOutVO> probandGroups = new ArrayList<ProbandGroupOutVO>();
-	// for (int i = 0; i < probandGroupCount; i++) {
-	// newProbandGroup = new ProbandGroupInVO();
-	// newProbandGroup.setTitle("Gruppe " + (i + 1));
-	// newProbandGroup.setToken("G" + (i + 1));
-	// newProbandGroup.setTrialId(trial.getId());
-	// newProbandGroup.setRandomize(true);
-	// ProbandGroupOutVO probandGroup = trialService.addProbandGroup(auth, newProbandGroup);
-	// jobOutput.println("proband group created: " + probandGroup.getTitle());
-	// probandGroups.add(probandGroup);
-	// }
-	//
-	//
-	//
-	// }
 
 	public void createTrials(int trialCountPerDepartment, SearchCriteria[] eligibilityCriterias, Integer[] visitCounts, Integer[] probandGroupCounts, Integer[] avgProbandGroupSizes)
 			throws Throwable {

@@ -77,12 +77,12 @@ public class TagSelectListRandomization extends Randomization {
 		return RandomizationMode.TAG_SELECT_LIST;
 	}
 
-	private int getTotalValuesSize(Trial trial, Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) { // long trialId,
+	private int getTotalValuesSize(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) { // long trialId,
 		int result = 0;
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValue value = it.next();
-			result += CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTagValueCount(null, value.getId(), excludeListEntryId));
+			result += CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeSelectStratificationTagValuesCount(null, value.getId(), null, excludeListEntryId));
 		}
 		return result;
 	}
@@ -101,7 +101,7 @@ public class TagSelectListRandomization extends Randomization {
 		splitInputFieldSelectionSetValueValues(trial.getRandomizationList(), valueMap, valueValues);
 		InputFieldSelectionSetValue value = null;
 		if (valueValues.size() > 0) {
-			int totalValuesSize = getTotalValuesSize(trial, exclude != null ? exclude.getId() : null, values);
+			int totalValuesSize = getTotalValuesSize(exclude != null ? exclude.getId() : null, values);
 			String valueValue = valueValues.get(totalValuesSize % valueValues.size());
 			value = valueMap.get(valueValue);
 			randomizationInfo.setTotalSize(totalValuesSize);

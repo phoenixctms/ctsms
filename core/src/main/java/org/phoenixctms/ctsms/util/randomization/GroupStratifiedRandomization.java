@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.ProbandGroup;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
@@ -86,10 +85,7 @@ public class GroupStratifiedRandomization extends Randomization {
 			randomizationInfo.setTotalSize(totalGroupsSize);
 		}
 		randomizationInfo.setRandomizationListItems(tokens);
-		Iterator<InputFieldSelectionSetValue> it = randomizationList.getSelectionSetValues().iterator();
-		while (it.hasNext()) {
-			randomizationInfo.getStratificationValues().add(it.next().getValue());
-		}
+		initStratificationValuesInfo(randomizationList);
 		return group;
 	}
 

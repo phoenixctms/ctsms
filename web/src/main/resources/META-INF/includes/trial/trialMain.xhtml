@@ -767,6 +767,14 @@
 									styleClass="ctsms-textarea"
 									label="#{triallabels.trial_randomization_list_title}">
 								</p:inputTextarea>
+								
+								<p:commandButton
+							title="#{blah}"
+							icon="ui-icon ui-icon-suitcase"
+							type="button"
+							disabled="false"
+							onclick="trialGenerateRandomizationListDialog.show()" />
+								
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="trialrandomizationlist">
@@ -808,6 +816,7 @@
 								<p:selectBooleanCheckbox
 									id="signupprobandlist"
 									value="#{trialBean.in.signupProbandList}">
+									<p:ajax update="signuprandomize" />
 								</p:selectBooleanCheckbox>
 								<p:tooltip
 									rendered="#{enableTooltips}"
@@ -818,6 +827,25 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="signupprobandlist" />
+							
+							<h:outputLabel
+								for="signuprandomize"
+								value="#{triallabels.trial_signup_randomize_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="signuprandomize"
+									disabled="#{!trialBean.signupRandomizeEnabled}"
+									value="#{trialBean.in.signupRandomize}">
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="signuprandomize">
+									<h:outputText
+										value="#{triallabels.trial_signup_randomize_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="signuprandomize" />
 							
 							<h:outputLabel
 								for="signupinquiries"
@@ -964,6 +992,29 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
+			
+			
+			
+			
+			<ui:include src="../shared/generateRandomizationListDialog.xhtml">
+				<!-- <ui:param
+					name="openAuditTrailRemoteCommand"
+					value="openEcrfAuditTrail" />  -->
+				<ui:param
+					name="generateRandomizationListDialog"
+					value="trialGenerateRandomizationListDialog" />			
+				<ui:param
+					name="generateRandomizationListBean"
+					value="#{trialBean}" />
+				<!-- <ui:param
+					name="namingContainer"
+					value=":tabView:trial_form" />							
+				<ui:param
+					name="refreshEcrfProgressRemoteCommand"
+					value="refreshProbandEcrfsProgress" />	-->					
+			</ui:include>			
+			
+			
 			<p:confirmDialog
 				appendToBody="false"
 				severity="alert"
