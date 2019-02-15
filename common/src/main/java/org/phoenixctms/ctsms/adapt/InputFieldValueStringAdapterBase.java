@@ -46,7 +46,7 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract Date getTimeValue(VALUEVO value);
 
-	private String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
+	public String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
 		StringBuilder sb = new StringBuilder();
 		if (selectionSetValues != null && selectionSetValues.size() > 0) {
 			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();

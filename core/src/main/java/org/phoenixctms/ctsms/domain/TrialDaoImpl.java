@@ -352,7 +352,7 @@ extends TrialDaoBase
 			target.setSurveyStatus(this.getSurveyStatusTypeDao().toSurveyStatusTypeVO(surveyStatus));
 		}
 		target.setBlockingPeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getBlockingPeriod()));
-		target.setRandomizationMode(x);
+		target.setRandomization(L10nUtil.createRandomizationModeVO(Locales.USER, source.getRandomization()));
 	}
 
 	@Override
@@ -429,7 +429,7 @@ extends TrialDaoBase
 		SponsoringTypeVO sponsoringVO = source.getSponsoring();
 		SurveyStatusTypeVO surveyStatusVO = source.getSurveyStatus();
 		VariablePeriodVO blockingPeriodVO = source.getBlockingPeriod();
-		RandomizationModeVO randomizationModeVO = source.getRandomizationMode();
+		RandomizationModeVO randomizationVO = source.getRandomization();
 		if (statusVO != null) {
 			target.setStatus(this.getTrialStatusTypeDao().trialStatusTypeVOToEntity(statusVO));
 		} else if (copyIfNull) {
@@ -465,10 +465,10 @@ extends TrialDaoBase
 		} else if (copyIfNull) {
 			target.setBlockingPeriod(null);
 		}
-		if (randomizationModeVO != null) {
-			target.setRandomizationMode(randomizationModeVO.getMode());
+		if (randomizationVO != null) {
+			target.setRandomization(randomizationVO.getMode());
 		} else if (copyIfNull) {
-			target.setRandomizationMode(null);
+			target.setRandomization(null);
 		}
 	}
 }

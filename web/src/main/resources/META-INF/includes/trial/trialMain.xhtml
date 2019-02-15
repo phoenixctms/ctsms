@@ -66,7 +66,13 @@
 				name="changeProbandListEntryTag"
 				actionListener="#{probandListEntryTagBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update=":tabView:probandlistentrytag_form:probandlistentrytag_list,:tabView:probandlistentrytag_form:probandlistentrytag_bulkadd,:tabView:probandlistentrytag_form:probandlistentrytag_input" />				
+				update=":tabView:probandlistentrytag_form:probandlistentrytag_list,:tabView:probandlistentrytag_form:probandlistentrytag_bulkadd,:tabView:probandlistentrytag_form:probandlistentrytag_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeStratificationRandomizationList"
+				actionListener="#{randomizationListBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:randomizationlist_form:randomizationlist_list,:tabView:randomizationlist_form:randomizationlist_input" />
 			<p:remoteCommand
 				process="@this"
 				name="changeInquiry"
@@ -205,6 +211,12 @@
 				update="trial_input" />
 			<p:remoteCommand
 				process="@this"
+				name="changeTrialByStratificationRandomizationList"
+				actionListener="#{trialBean.change(randomizationListBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />				
+			<p:remoteCommand
+				process="@this"
 				name="changeTrialByInquiry"
 				actionListener="#{trialBean.change(inquiryBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
@@ -265,7 +277,7 @@
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-input-tied-row,ctsms-input-row,ctsms-signature-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-row,ctsms-signature-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
 							columns="6"
 							cellpadding="2"
@@ -418,6 +430,8 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="surveyStatusType" />
+
+						
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
@@ -688,6 +702,84 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
+
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{triallabels.trial_randomization_field_set}" />
+							</f:facet>
+						
+							<h:panelGrid
+
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
+
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+	
+								<h:outputLabel
+									for="randomization"
+									value="#{triallabels.randomization_label}" />
+								<p:selectOneMenu
+									id="randomization"
+									value="#{trialBean.randomization.randomizationMode}"
+									required="false"
+									label="#{triallabels.randomization}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{trialBean.randomization.randomizationModes}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="randomization">
+									<h:outputText
+										value="#{triallabels.randomization_tooltip}"
+										escape="false" />
+								</p:tooltip>							
+							</h:panelGrid>
+
+<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="trialrandomizationlist"
+								value="#{triallabels.trial_randomization_list_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="trialrandomizationlist"
+									value="#{trialBean.in.randomizationList}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{triallabels.trial_randomization_list_title}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="trialrandomizationlist">
+									<h:outputText
+										value="#{triallabels.trial_randomization_list_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+</h:panelGrid>
+
+							</h:panelGrid>
+						</p:fieldset>
+								
 						
 						<p:fieldset
 						toggleable="true"

@@ -102,7 +102,9 @@ extends ProbandListEntryTagDaoBase
 	}
 
 	@Override
-	protected Collection<ProbandListEntryTag> handleFindByTrialExcelEcrfProbandSorted(Long trialId, Boolean excel, Boolean ecrf, Long probandId) throws Exception {
+	protected Collection<ProbandListEntryTag> handleFindByTrialExcelEcrfStratificationProbandSorted(Long trialId, Boolean excel, Boolean ecrf, Boolean stratification,
+			Long probandId)
+					throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
 		if (trialId != null) {
 			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -113,6 +115,9 @@ extends ProbandListEntryTagDaoBase
 		}
 		if (ecrf != null) {
 			listEntryTagCriteria.add(Restrictions.eq("ecrfValue", ecrf.booleanValue()));
+		}
+		if (stratification != null) {
+			listEntryTagCriteria.add(Restrictions.eq("stratification", stratification.booleanValue()));
 		}
 		if (probandId != null) {
 			listEntryTagCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN).createCriteria("listEntry", CriteriaSpecification.INNER_JOIN)
@@ -146,6 +151,26 @@ extends ProbandListEntryTagDaoBase
 		if (sort) {
 			applySortOrders(listEntryTagCriteria);
 		}
+		return listEntryTagCriteria.list();
+	}
+
+	@Override
+	protected Collection<ProbandListEntryTag> handleFindByTrialFieldStratificationRandomize(
+			Long trialId, Long inputFieldId, Boolean stratification, Boolean randomize) throws Exception {
+		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		if (trialId != null) {
+			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (inputFieldId != null) {
+			listEntryTagCriteria.add(Restrictions.eq("field.id", inputFieldId.longValue()));
+		}
+		if (stratification != null) {
+			listEntryTagCriteria.add(Restrictions.eq("stratification", stratification.booleanValue()));
+		}
+		if (randomize != null) {
+			listEntryTagCriteria.add(Restrictions.eq("randomize", randomize.booleanValue()));
+		}
+		// applySortOrders(listEntryTagCriteria);
 		return listEntryTagCriteria.list();
 	}
 
@@ -193,10 +218,16 @@ extends ProbandListEntryTagDaoBase
 	}
 
 	@Override
-	protected long handleGetCountByField(Long inputFieldId) throws Exception {
+	protected long handleGetCountByFieldStratificationRandomize(Long inputFieldId, Boolean stratification, Boolean randomize) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
 		if (inputFieldId != null) {
 			listEntryTagCriteria.add(Restrictions.eq("field.id", inputFieldId.longValue()));
+		}
+		if (stratification != null) {
+			listEntryTagCriteria.add(Restrictions.eq("stratification", stratification.booleanValue()));
+		}
+		if (randomize != null) {
+			listEntryTagCriteria.add(Restrictions.eq("randomize", randomize.booleanValue()));
 		}
 		return (Long) listEntryTagCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}

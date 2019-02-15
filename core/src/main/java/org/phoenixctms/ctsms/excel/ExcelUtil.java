@@ -5,8 +5,10 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.SimpleTimeZone;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -24,6 +26,7 @@ import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
 import jxl.Cell;
 import jxl.biff.DisplayFormat;
@@ -516,6 +519,26 @@ public final class ExcelUtil {
 
 	public static boolean isWriteableType(Class returnType, HashMap<String, WritableCellFormat> cellFormats) {
 		return createCell(returnType, 0, 0, null, ExcelCellFormat.getDefaultRowFormat(), cellFormats) != null;
+	}
+
+	public static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
+		StringBuilder sb = new StringBuilder();
+		if (selectionSetValues != null && selectionSetValues.size() > 0) {
+			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
+			while (it.hasNext()) {
+				InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
+				if (sb.length() > 0) {
+					sb.append(EXCEL_LINE_BREAK);
+				}
+				if (selectionSetValue != null) {
+					String value = selectionSetValue.getValue();
+					if (value != null && value.length() > 0) {
+						sb.append(value);
+					}
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	private static void setBgColor(WritableCellFormat cellFormat, Color bgColor) {

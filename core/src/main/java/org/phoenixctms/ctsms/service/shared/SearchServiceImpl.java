@@ -1661,14 +1661,14 @@ extends SearchServiceBase
 								case SELECT_ONE_DROPDOWN:
 								case SELECT_ONE_RADIO_H:
 								case SELECT_ONE_RADIO_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case AUTOCOMPLETE:
 									fieldValue = inquiryValueVO.getTextValue();
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:
 									fieldValue = inquiryValueVO.getBooleanValue();
@@ -1689,7 +1689,7 @@ extends SearchServiceBase
 									fieldValue = inquiryValueVO.getTimestampValue();
 									break;
 								case SKETCH:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								default:
 							}

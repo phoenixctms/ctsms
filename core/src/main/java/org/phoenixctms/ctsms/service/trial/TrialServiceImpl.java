@@ -144,6 +144,8 @@ import org.phoenixctms.ctsms.domain.StaffStatusEntryDao;
 import org.phoenixctms.ctsms.domain.StaffTagDao;
 import org.phoenixctms.ctsms.domain.StaffTagValue;
 import org.phoenixctms.ctsms.domain.StaffTagValueDao;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.TeamMember;
 import org.phoenixctms.ctsms.domain.TeamMemberDao;
 import org.phoenixctms.ctsms.domain.TimelineEvent;
@@ -212,6 +214,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.util.randomization.Randomization;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -268,6 +271,8 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationInfoVO;
+import org.phoenixctms.ctsms.vo.RandomizationListInfoVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.ShiftDurationSummaryVO;
@@ -279,6 +284,8 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
+import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberInVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMembersExcelVO;
@@ -303,7 +310,7 @@ public class TrialServiceImpl
 extends TrialServiceBase
 {
 
-	private final static String SHUFFLE_SEED_RANDOM_ALGORITHM = "SHA1PRNG";
+	private final static String SHUFFLE_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static java.util.regex.Pattern JS_VARIABLE_NAME_REGEXP = Pattern.compile("^[A-Za-z0-9_]+$");
 
 	private static void copyInquiryValueInToOut(InquiryValueOutVO out, InquiryValueInVO in, InquiryOutVO inquiryVO, ProbandOutVO probandVO, UserOutVO modifiedUserVO, Date now) {
@@ -383,6 +390,29 @@ extends TrialServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null)) });
 	}
 
+	private static JournalEntry logSystemMessage(Proband proband, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			RandomizationInfoVO randomizationInfo, JournalEntryDao journalEntryDao) throws Exception {
+		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)),
+						CoreUtil.getSystemMessageCommentContent(randomizationInfo, null, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null))
+		});
+	}
+
+
+
+
+	private static JournalEntry logSystemMessage(Trial trial, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			RandomizationInfoVO randomizationInfo, JournalEntryDao journalEntryDao) throws Exception {
+		// we don't print proband name etc...
+		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null);
+		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
+		: new Object[] { Long.toString(probandVO.getId()) },
+		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted),
+				CoreUtil.getSystemMessageCommentContent(randomizationInfo, null, !journalEncrypted)
+		});
+	}
+
+
 	private static JournalEntry logSystemMessage(User user, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -391,9 +421,6 @@ extends TrialServiceBase
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
-
-
-
 
 	private ECRFFieldOutVO addEcrfField(ECRFFieldInVO newEcrfField, Timestamp now, User user) throws Exception {
 		checkAddEcrfFieldInput(newEcrfField);
@@ -405,7 +432,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(ecrfField.getTrial(), result.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_CREATED, result, null, this.getJournalEntryDao());
 		return result;
 	}
-
 
 	private ECRFFieldStatusEntryOutVO addEcrfFieldStatusEntry(ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry, ECRFStatusEntry statusEntry, ECRFFieldStatusQueue queue,
 			Timestamp now, User user,
@@ -486,7 +512,7 @@ extends TrialServiceBase
 	}
 
 	private ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO newProbandListEntry, boolean signup, // ProbandListStatusType statusType,
-			Timestamp now, User user) throws Exception {
+			Randomization randomization, Timestamp now, User user) throws Exception {
 		checkProbandListEntryInput(newProbandListEntry, signup, now);
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -496,6 +522,15 @@ extends TrialServiceBase
 		ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(signup, proband.isPerson()).iterator().next();
 		Trial trial = listEntry.getTrial();
 		listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
+		if (randomization != null) {
+			if (listEntry.getGroup() != null) {
+				listEntry.getGroup().removeProbandListEntries(listEntry);
+			}
+			listEntry.setGroup(randomization.getRandomizedProbandGroup(trial, null));
+			if (listEntry.getGroup() != null) {
+				listEntry.getGroup().addProbandListEntries(listEntry);
+			}
+		}
 		if (signup) {
 			Long position = probandListEntryDao.findMaxPosition(trial.getId());
 			if (position == null) {
@@ -545,9 +580,17 @@ extends TrialServiceBase
 			}
 		}
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(listEntry);
-		ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
-		// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
-		ServiceUtil.logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+		if (randomization != null) {
+			logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_CREATED, result, null,
+					randomization.getRandomizationInfoVO(), journalEntryDao);
+			// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+			logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_CREATED, result, null,
+					randomization.getRandomizationInfoVO(), journalEntryDao);
+		} else {
+			ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+			// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
+		}
 		if (probandListStatusEntryVO != null) {
 			ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, probandListStatusEntryVO, null,
 					journalEntryDao);
@@ -751,6 +794,8 @@ extends TrialServiceBase
 			outJsEcrfFieldValues.add(resultJs);
 		}
 	}
+
+
 
 	private void addUpdateProbandListEntryTagValue(ProbandListEntryTagValueInVO probandListEntryTagValueIn, ProbandListEntry listEntry, ProbandListEntryTag listEntryTag,
 			Timestamp now, User user, boolean logTrial,
@@ -1009,7 +1054,6 @@ extends TrialServiceBase
 	}
 
 
-
 	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException
 	{
 		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
@@ -1160,7 +1204,6 @@ extends TrialServiceBase
 		return new Object[] { lastStatus, ecrfStatusEntry };
 	}
 
-
 	private void checkAddEcrfInput(ECRFInVO ecrfIn) throws ServiceException {
 		checkEcrfInput(ecrfIn);
 	}
@@ -1214,7 +1257,7 @@ extends TrialServiceBase
 		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
-		checkProbandListEntryTagInput(listTagIn);
+		checkProbandListEntryTagInput(listTagIn, trial, field);
 	}
 
 	private void checkAddTrialInput(TrialInVO trialIn) throws ServiceException
@@ -1237,7 +1280,40 @@ extends TrialServiceBase
 		// if (hasTrialStatusAction(state, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
 		// checkTeamMemberSign(trial, user);
 		// }
+		Randomization.checkTrialInput(null, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(), this.getStratificationRandomizationListDao(),
+				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 	}
+
+	// private void checkEcrfFieldValueInputIndex(ECRFFieldValueInVO ecrfFieldValueIn, ECRFField ecrfField) throws ServiceException { // , ECRFFieldOutVO ecrfFieldVO
+	// // InputFieldOutVO inputFieldVO = ecrfFieldVO.getField();
+	// InputFieldDao inputFieldDao = this.getInputFieldDao();
+	// if (!ecrfField.isSeries()) {
+	// if (ecrfFieldValueIn.getIndex() != null) {
+	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_NULL,
+	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+	// }
+	// } else {
+	// if (ecrfFieldValueIn.getIndex() == null) {
+	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
+	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+	// }
+	// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId());
+	// if (maxIndex == null) {
+	// if (!ecrfFieldValueIn.getIndex().equals(0l)) {
+	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_ZERO,
+	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+	// }
+	// } else {
+	// if (ecrfFieldValueIn.getIndex() < 0l) {
+	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO,
+	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+	// } else if (ecrfFieldValueIn.getIndex() > (maxIndex + 1l)) {
+	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_GAP,
+	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
+	// }
+	// }
+	// }
+	// }
 
 	private ProbandListEntry checkClearEcrfFieldValues(Long ecrfId, Long probandListEntryId, Timestamp now, User user) throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
@@ -1319,37 +1395,6 @@ extends TrialServiceBase
 		// valuesLockedEcrfCount);
 		// }
 	}
-
-	// private void checkEcrfFieldValueInputIndex(ECRFFieldValueInVO ecrfFieldValueIn, ECRFField ecrfField) throws ServiceException { // , ECRFFieldOutVO ecrfFieldVO
-	// // InputFieldOutVO inputFieldVO = ecrfFieldVO.getField();
-	// InputFieldDao inputFieldDao = this.getInputFieldDao();
-	// if (!ecrfField.isSeries()) {
-	// if (ecrfFieldValueIn.getIndex() != null) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_NULL,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// } else {
-	// if (ecrfFieldValueIn.getIndex() == null) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId());
-	// if (maxIndex == null) {
-	// if (!ecrfFieldValueIn.getIndex().equals(0l)) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_ZERO,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// } else {
-	// if (ecrfFieldValueIn.getIndex() < 0l) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// } else if (ecrfFieldValueIn.getIndex() > (maxIndex + 1l)) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_GAP,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
-	// }
-	// }
-	// }
-	// }
 
 	private  void checkEcrfFieldStatusIndex(ECRFField ecrfField, Long probandListEntryId,Long ecrfFieldId, Long index) throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
@@ -1505,6 +1550,8 @@ extends TrialServiceBase
 		}
 	}
 
+
+
 	private void checkEcrfInput(ECRFInVO ecrfIn) throws ServiceException {
 		Trial trial = CheckIDUtil.checkTrialId(ecrfIn.getTrialId(), this.getTrialDao());
 		ProbandGroup group = null;
@@ -1549,8 +1596,6 @@ extends TrialServiceBase
 		}
 		return statusEntry;
 	}
-
-
 
 	private void checkInquiryInput(InquiryInVO inquiryIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(inquiryIn.getJsVariableName())) {
@@ -1672,6 +1717,7 @@ extends TrialServiceBase
 		if ((new ProbandGroupTokenCollisionFinder(this.getTrialDao(), this.getProbandGroupDao())).collides(probandGroupIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_TOKEN_ALREADY_EXISTS);
 		}
+		Randomization.checkProbandGroupInput(trial, probandGroupIn);
 	}
 
 	private void checkProbandListEntryInput(ProbandListEntryInVO probandListEntryIn, boolean signup, Timestamp now) throws ServiceException {
@@ -1730,7 +1776,7 @@ extends TrialServiceBase
 		}
 	}
 
-	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn) throws ServiceException {
+	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field) throws ServiceException {
 		if (CommonUtil.isEmptyString(listTagIn.getJsVariableName())) {
 			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(listTagIn.getJsValueExpression()))) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED);
@@ -1749,6 +1795,8 @@ extends TrialServiceBase
 		if ((new ProbandListEntryTagPositionCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_POSITION_NOT_UNIQUE);
 		}
+		Randomization.checkProbandListEntryTagInput(trial, field, listTagIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 	}
 
 	private void checkProbandListEntryTagValueInput(ProbandListEntryTagValueInVO probandListEntryTagValueIn, ProbandListEntry listEntry, ProbandListEntryTag listEntryTag)
@@ -1774,6 +1822,14 @@ extends TrialServiceBase
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUE_ALREADY_EXISTS,
 					CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
 		}
+	}
+
+	private void checkStratificationRandomizationListInput(StratificationRandomizationListInVO randomizationListIn) throws ServiceException
+	{
+		Trial trial = CheckIDUtil.checkTrialId(randomizationListIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
+		ServiceUtil.checkTrialLocked(trial);
+		Randomization.checkStratificationRandomizationListInput(trial, randomizationListIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 	}
 
 	private void checkTeamMemberInput(TeamMemberInVO teamMemberIn) throws ServiceException
@@ -1876,6 +1932,8 @@ extends TrialServiceBase
 		}
 	}
 
+
+
 	private void checkTrialTagValueInput(TrialTagValueInVO tagValueIn) throws ServiceException
 	{
 		(new TrialTagAdapter(this.getTrialDao(), this.getTrialTagDao())).checkTagValueInput(tagValueIn);
@@ -1947,8 +2005,6 @@ extends TrialServiceBase
 
 		}
 	}
-
-
 
 	private void checkUpdateEcrfInput(ECRFInVO modifiedEcrf, ECRF originalEcrf) throws ServiceException {
 		checkEcrfInput(modifiedEcrf);
@@ -2033,11 +2089,12 @@ extends TrialServiceBase
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		checkProbandListEntryTagInput(listTagIn);
+		checkProbandListEntryTagInput(listTagIn, trial, field);
 		if (!field.equals(originalProbandListEntryTag.getField()) && this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) { // originalProbandListEntryTag.getTagValues().Xsize()
 			// > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_CHANGED);
 		}
+
 	}
 
 	private void checkUpdateTrialInput(Trial originalTrial, TrialInVO trialIn, User user) throws ServiceException
@@ -2063,6 +2120,8 @@ extends TrialServiceBase
 		} else if (hasTrialStatusAction(originalTrial.getStatus(), org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
 			checkTeamMemberSign(originalTrial, user);
 		}
+		Randomization.checkTrialInput(originalTrial, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 	}
 
 	private void checkVisitInput(VisitInVO visitIn) throws ServiceException {
@@ -2152,6 +2211,9 @@ extends TrialServiceBase
 
 		return result;
 	}
+
+
+
 
 	private ECRFProgressSummaryVO createEcrfProgessSummary(ProbandListEntryOutVO listEntryVO, boolean ecrfDetail, boolean sectionDetail, boolean dueDetail, Date from, Date to)
 			throws Exception {
@@ -2299,6 +2361,21 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
+	// private SignatureVO getVerifiedEcrfSignatureVO(Signature signature) throws Exception {
+	// SignatureVO result = this.getSignatureDao().toSignatureVO(signature);
+	// StringBuilder comment = new StringBuilder();
+	// result.setVerificationTimestamp(new Date());
+	// result.setValid(EcrfSignature.verify(signature, comment, this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao()));
+	// result.setVerified(true);
+	// result.setComment(comment.toString());
+	// result.setDescription(EntitySignature.getDescription(result));
+	// return result;
+	// }
+
 	private void execEcrfStatusActions(ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception { // ECRFStatusType oldStatus,
 		ECRFStatusType newState = statusEntry.getStatus();
 		// if (oldStatus == null || !oldStatus.equals(newState)) {
@@ -2396,9 +2473,6 @@ extends TrialServiceBase
 		}
 		// }
 	}
-
-
-
 
 	private void execTrialStatusActions(TrialStatusType oldStatus, Trial trial, Date now, User user) throws Exception {
 		TrialStatusType newState = trial.getStatus();
@@ -2522,21 +2596,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
-
-
-
-	// private SignatureVO getVerifiedEcrfSignatureVO(Signature signature) throws Exception {
-	// SignatureVO result = this.getSignatureDao().toSignatureVO(signature);
-	// StringBuilder comment = new StringBuilder();
-	// result.setVerificationTimestamp(new Date());
-	// result.setValid(EcrfSignature.verify(signature, comment, this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao()));
-	// result.setVerified(true);
-	// result.setComment(comment.toString());
-	// result.setDescription(EntitySignature.getDescription(result));
-	// return result;
-	// }
-
 	private boolean getEcrfSectionUnlockValue(Long probandListEntryId, Long index, Long ecrfId, String section) throws Exception {
 		Iterator<ECRFField> ecrfFieldIt = this.getECRFFieldDao().findByTrialEcrfSectionSeriesJs(null, ecrfId, section, false, true, null, null).iterator();
 		ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
@@ -2550,6 +2609,22 @@ extends TrialServiceBase
 			}
 		}
 		return false;
+	}
+
+	private Randomization getGroupRandomization(Trial trial, boolean randomize, Long groupId) throws ServiceException {
+		if (randomize) {
+			if (groupId != null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
+			}
+			if (trial.getRandomization() != null) {
+				return Randomization.getInstance(trial.getRandomization(), this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+						this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(),
+						this.getProbandListEntryTagValueDao());
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
+			}
+		}
+		return null;
 	}
 
 	private SignatureVO getVerifiedTrialSignatureVO(Signature signature) throws Exception {
@@ -2699,7 +2774,7 @@ extends TrialServiceBase
 
 	@Override
 	protected Collection<ProbandListEntryOutVO> handleAddProbandListEntries(
-			AuthenticationVO auth, Long trialId, Long groupId, Long rating, Long ratingMax, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
+			AuthenticationVO auth, Long trialId, boolean randomize, Long groupId, Long rating, Long ratingMax, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		// ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(false).iterator().next();
@@ -2714,6 +2789,7 @@ extends TrialServiceBase
 		ArrayList<ProbandListEntryOutVO> result = new ArrayList<ProbandListEntryOutVO>();
 		ShuffleInfoVO shuffleInfo = new ShuffleInfoVO();
 		shuffleInfo.setLimit(limit);
+		Randomization randomization = getGroupRandomization(trial, randomize, groupId);
 		if (probandIds != null) {
 			Iterator<Long> probandIt;
 			ArrayList<Long> ids = new ArrayList<Long>(probandIds);
@@ -2738,7 +2814,7 @@ extends TrialServiceBase
 				newProbandListEntry.setRating(rating);
 				newProbandListEntry.setRatingMax(ratingMax);
 				try {
-					result.add(addProbandListEntry(newProbandListEntry, false, now, user)); // statusType
+					result.add(addProbandListEntry(newProbandListEntry, false, randomization, now, user)); // statusType
 					shuffleInfo.getResultIds().add(probandId);
 				} catch (ServiceException e) {
 					// ignore; due to existent proband....
@@ -2753,12 +2829,12 @@ extends TrialServiceBase
 
 	@Override
 	protected ProbandListEntryOutVO handleAddProbandListEntry(
-			AuthenticationVO auth, boolean signup, ProbandListEntryInVO newProbandListEntry) throws Exception {
+			AuthenticationVO auth, boolean signup, boolean randomize, ProbandListEntryInVO newProbandListEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-
-		// ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(signup).iterator().next();
-		return addProbandListEntry(newProbandListEntry, signup, now, user); // statusType
+		Randomization randomization = getGroupRandomization(CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao()), randomize,
+				newProbandListEntry.getGroupId());
+		return addProbandListEntry(newProbandListEntry, signup, randomization, now, user); // statusType
 	}
 
 	@Override
@@ -2771,7 +2847,7 @@ extends TrialServiceBase
 
 	@Override
 	protected Collection<ProbandListEntryTagOutVO> handleAddProbandListEntryTags(
-			AuthenticationVO auth, Long trialId, boolean optional, boolean excel, boolean ecrf, Set<Long> inputFieldIds)
+			AuthenticationVO auth, Long trialId, boolean optional, boolean excel, boolean ecrf, boolean stratification, boolean randomize, Set<Long> inputFieldIds)
 					throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		Long position = this.getProbandListEntryTagDao().findMaxPosition(trialId);
@@ -2793,6 +2869,8 @@ extends TrialServiceBase
 				newProbandListEntryTag.setExcelValue(excel);
 				newProbandListEntryTag.setExcelDate(excel);
 				newProbandListEntryTag.setEcrfValue(ecrf);
+				newProbandListEntryTag.setStratification(stratification);
+				newProbandListEntryTag.setRandomize(randomize);
 				newProbandListEntryTag.setFieldId(inputFieldId);
 				newProbandListEntryTag.setTrialId(trial.getId());
 				try {
@@ -2815,6 +2893,21 @@ extends TrialServiceBase
 				this.getProbandDao(), this.getProbandListEntryDao(), this.getProbandListStatusEntryDao(), this.getProbandListStatusTypeDao(),
 				this.getTrialDao(), this.getMassMailDao(), this.getMassMailRecipientDao(),
 				this.getJournalEntryDao());
+	}
+
+	@Override
+	protected StratificationRandomizationListOutVO handleAddStratificationRandomizationList(AuthenticationVO auth,
+			StratificationRandomizationListInVO newStratificationRandomizationList) throws Exception {
+		checkStratificationRandomizationListInput(newStratificationRandomizationList);
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		StratificationRandomizationList randomizationList = stratificationRandomizationListDao.stratificationRandomizationListInVOToEntity(newStratificationRandomizationList);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		CoreUtil.modifyVersion(randomizationList, now, user);
+		randomizationList = stratificationRandomizationListDao.create(randomizationList);
+		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+		ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_CREATED, result, null, this.getJournalEntryDao());
+		return result;
 	}
 
 	@Override
@@ -3602,6 +3695,15 @@ extends TrialServiceBase
 		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InputField field = probandListEntryTag.getField();
+		// StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		// Long randomizationListsIt = stratificationRandomizationListDao.findyb().iterator();
+		// while (randomizationListsIt.hasNext()) {
+		// StratificationRandomizationList randomizationList = randomizationListsIt.next();
+		// StratificationRandomizationListOutVO randomizationListVO = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+		// logSystemMessage(trial, result, now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null, journalEntryDao);
+		// trial.removeRandomizationListss(randomizationList);
+		// ServiceUtil.removeStratificationRandomizationList(randomizationList,true,stratificationRandomizationListDao);
+		// }
 		trial.removeListEntryTags(probandListEntryTag);
 		field.removeListEntryTags(probandListEntryTag);
 		ServiceUtil.removeProbandListEntryTag(probandListEntryTag, true, Settings.getBoolean(SettingCodes.REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
@@ -3643,6 +3745,22 @@ extends TrialServiceBase
 		// null,journalEntryDao);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_DELETED, result, null,
 				journalEntryDao);
+		return result;
+	}
+
+	@Override
+	protected StratificationRandomizationListOutVO handleDeleteStratificationRandomizationList(AuthenticationVO auth, Long stratificationRandomizationListId) throws Exception {
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		StratificationRandomizationList randomizationList = CheckIDUtil.checkStratificationRandomizationListId(stratificationRandomizationListId,
+				stratificationRandomizationListDao);
+		Trial trial = randomizationList.getTrial();
+		ServiceUtil.checkTrialLocked(trial);
+		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+		trial.removeRandomizationLists(randomizationList);
+		ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_DELETED, result, null, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -3770,6 +3888,13 @@ extends TrialServiceBase
 						probandListEntryTagDao);
 			}
 			trial.getListEntryTags().clear();
+			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+			Iterator<StratificationRandomizationList> randomizationListsIt = trial.getRandomizationLists().iterator();
+			while (randomizationListsIt.hasNext()) {
+				StratificationRandomizationList randomizationList = randomizationListsIt.next();
+				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+			}
+			trial.getRandomizationLists().clear();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -4404,8 +4529,8 @@ extends TrialServiceBase
 					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_SCREENING_REASON);
 		}
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
-		Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfProbandSorted(trialId, showAllProbandListEntryTags
-				|| showAllProbandListEntryTagDates ? null : true, null, null) : new ArrayList();
+		Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(trialId, showAllProbandListEntryTags
+				|| showAllProbandListEntryTagDates ? null : true, null, null, null) : new ArrayList();
 		probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listEntryTags);
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Collection inquiries = showInquiries ? inquiryDao.findByTrialActiveExcelProbandSorted(trialId, null, null, showAllInquiries || showAllInquiryDates ? null : true, null)
@@ -4603,14 +4728,14 @@ extends TrialServiceBase
 								case SELECT_ONE_DROPDOWN:
 								case SELECT_ONE_RADIO_H:
 								case SELECT_ONE_RADIO_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								case AUTOCOMPLETE:
 									fieldValue = listEntryTagValueVO.getTextValue();
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:
 									fieldValue = listEntryTagValueVO.getBooleanValue();
@@ -4631,7 +4756,7 @@ extends TrialServiceBase
 									fieldValue = listEntryTagValueVO.getTimestampValue();
 									break;
 								case SKETCH:
-									fieldValue = ServiceUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
 								default:
 							}
@@ -4684,14 +4809,14 @@ extends TrialServiceBase
 								case SELECT_ONE_DROPDOWN:
 								case SELECT_ONE_RADIO_H:
 								case SELECT_ONE_RADIO_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case AUTOCOMPLETE:
 									fieldValue = inquiryValueVO.getTextValue();
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:
 									fieldValue = inquiryValueVO.getBooleanValue();
@@ -4712,7 +4837,7 @@ extends TrialServiceBase
 									fieldValue = inquiryValueVO.getTimestampValue();
 									break;
 								case SKETCH:
-									fieldValue = ServiceUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								default:
 							}
@@ -5069,6 +5194,22 @@ extends TrialServiceBase
 			default:
 		}
 		// result.setDocumentDatas(documentDataBackup);
+		return result;
+	}
+
+	@Override
+	protected String handleGenerateRandomizationList(AuthenticationVO auth, Long trialId, Integer n) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		if (trial.getRandomization() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
+		}
+		Randomization randomization = Randomization.getInstance(trial.getRandomization(), trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		String result = randomization.generateRandomizationList(trial, n);
+		logSystemMessage(trial, trialDao.toTrialOutVO(trial), now, user, randomization.getRandomizationListInfoVO());
 		return result;
 	}
 
@@ -6120,7 +6261,7 @@ extends TrialServiceBase
 
 	@Override
 	protected Collection<ProbandListEntryTagOutVO> handleGetProbandListEntryTagList(
-			AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandId, Boolean stratification) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6128,7 +6269,7 @@ extends TrialServiceBase
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
-		Collection listTagValues = probandListEntryTagDao.findByTrialExcelEcrfProbandSorted(trialId, null, null, probandId);
+		Collection listTagValues = probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(trialId, null, null, stratification, probandId);
 		probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listTagValues);
 		return listTagValues;
 	}
@@ -6401,6 +6542,34 @@ extends TrialServiceBase
 	}
 
 	@Override
+	protected StratificationRandomizationListOutVO handleGetStratificationRandomizationList(AuthenticationVO auth, Long stratificationRandomizationListId) throws Exception {
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		StratificationRandomizationList randomizationList = CheckIDUtil.checkStratificationRandomizationListId(stratificationRandomizationListId,
+				stratificationRandomizationListDao);
+		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+		return result;
+	}
+
+	@Override
+	protected long handleGetStratificationRandomizationListCount(AuthenticationVO auth, Long trialId) throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		return this.getStratificationRandomizationListDao().getCount(trialId);
+	}
+
+	@Override
+	protected Collection<StratificationRandomizationListOutVO> handleGetStratificationRandomizationListList(AuthenticationVO auth, Long trialId, PSFVO psf) throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		Collection randomizationLists = stratificationRandomizationListDao.findByTrial(trialId, psf);
+		stratificationRandomizationListDao.toStratificationRandomizationListOutVOCollection(randomizationLists);
+		return randomizationLists;
+	}
+
+	@Override
 	protected TeamMemberOutVO handleGetTeamMember(AuthenticationVO auth, Long teamMemberId)
 			throws Exception {
 		TeamMemberDao teamMemberDao = this.getTeamMemberDao();
@@ -6488,6 +6657,7 @@ extends TrialServiceBase
 		timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
 		return timelineEvents;
 	}
+
 
 	@Override
 	protected Collection<TimelineEventOutVO> handleGetTimelineInterval(
@@ -6629,7 +6799,6 @@ extends TrialServiceBase
 		trialDao.toTrialOutVOCollection(trials);
 		return trials;
 	}
-
 
 	@Override
 	protected Collection<MassMailOutVO> handleGetTrialMassMailList(AuthenticationVO auth, Long trialId, PSFVO psf) throws Exception {
@@ -7024,6 +7193,7 @@ extends TrialServiceBase
 		return result;
 	}
 
+
 	@Override
 	protected ECRFPDFVO handleRenderEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, boolean blank) throws Exception {
 
@@ -7081,6 +7251,11 @@ extends TrialServiceBase
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
+
+
+
+
+
 
 	@Override
 	protected ProbandListEntryTagsPDFVO handleRenderProbandListEntryTags(AuthenticationVO auth, Long trialId, Long probandId, boolean blank) throws Exception {
@@ -7182,6 +7357,10 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index, Boolean addSeries,
 			PSFVO psf)
@@ -7197,6 +7376,7 @@ extends TrialServiceBase
 		}
 		return result;
 	}
+
 
 	@Override
 	protected ECRFStatusEntryVO handleSetEcrfStatusEntry(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, Long version, Long ecrfStatusTypeId,
@@ -7280,6 +7460,9 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
 	@Override
 	protected TimelineEventOutVO handleSetTimelineEventDismissed(
 			AuthenticationVO auth, Long timelineEventId, Long version, boolean dismissed) throws Exception {
@@ -7333,8 +7516,6 @@ extends TrialServiceBase
 		}
 		return results;
 	}
-
-
 
 
 
@@ -7447,10 +7628,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
-
-
-
 	@Override
 	protected InquiryOutVO handleUpdateInquiry(AuthenticationVO auth, InquiryInVO modifiedInquiry)
 			throws Exception {
@@ -7468,7 +7645,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.INQUIRY_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
-
 
 	@Override
 	protected ProbandGroupOutVO handleUpdateProbandGroup(
@@ -7493,7 +7669,7 @@ extends TrialServiceBase
 
 	@Override
 	protected ProbandListEntryOutVO handleUpdateProbandListEntry(
-			AuthenticationVO auth, ProbandListEntryInVO modifiedProbandListEntry, Long probandListStatusTypeId) throws Exception {
+			AuthenticationVO auth, ProbandListEntryInVO modifiedProbandListEntry, Long probandListStatusTypeId, boolean randomize) throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry originalProbandListEntry = CheckIDUtil.checkProbandListEntryId(modifiedProbandListEntry.getId(), probandListEntryDao);
 		ProbandListStatusEntry lastStatus = originalProbandListEntry.getLastStatus();
@@ -7503,11 +7679,15 @@ extends TrialServiceBase
 		}
 		boolean probandChanged = !modifiedProbandListEntry.getProbandId().equals(originalProbandListEntry.getProband().getId());
 		boolean groupChanged;
-		if (modifiedProbandListEntry.getGroupId() != null && originalProbandListEntry.getGroup() != null) {
-			groupChanged = !modifiedProbandListEntry.getGroupId().equals(originalProbandListEntry.getGroup().getId());
-		} else if (modifiedProbandListEntry.getGroupId() == null && originalProbandListEntry.getGroup() != null) {
+		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
+		Randomization randomization = getGroupRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
+		ProbandGroup group = (randomization != null ? randomization.getRandomizedProbandGroup(trial, originalProbandListEntry)
+				: (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null));
+		if (group != null && originalProbandListEntry.getGroup() != null) {
+			groupChanged = !group.equals(originalProbandListEntry.getGroup());
+		} else if (group == null && originalProbandListEntry.getGroup() != null) {
 			groupChanged = true;
-		} else if (modifiedProbandListEntry.getGroupId() != null && originalProbandListEntry.getGroup() == null) {
+		} else if (group != null && originalProbandListEntry.getGroup() == null) {
 			groupChanged = true;
 		} else {
 			groupChanged = false;
@@ -7515,6 +7695,15 @@ extends TrialServiceBase
 		ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(originalProbandListEntry);
 		probandListEntryDao.evict(originalProbandListEntry);
 		ProbandListEntry probandListEntry = probandListEntryDao.probandListEntryInVOToEntity(modifiedProbandListEntry);
+		if (randomization != null) {
+			if (probandListEntry.getGroup() != null) {
+				probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
+			}
+			probandListEntry.setGroup(group);
+			if (probandListEntry.getGroup() != null) {
+				probandListEntry.getGroup().addProbandListEntries(probandListEntry);
+			}
+		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalProbandListEntry, probandListEntry, now, user);
@@ -7525,16 +7714,25 @@ extends TrialServiceBase
 		}
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
-
-		ServiceUtil.logSystemMessage(probandListEntry.getProband(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original, journalEntryDao);
-		// ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
-		// journalEntryDao);
-		ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original, journalEntryDao);
+		if (randomization != null) {
+			logSystemMessage(probandListEntry.getProband(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_UPDATED, result,
+					original,
+					randomization.getRandomizationInfoVO(), journalEntryDao);
+			// ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
+			// journalEntryDao);
+			logSystemMessage(probandListEntry.getTrial(), result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_UPDATED, result,
+					original,
+					randomization.getRandomizationInfoVO(), journalEntryDao);
+		} else {
+			ServiceUtil.logSystemMessage(probandListEntry.getProband(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
+					journalEntryDao);
+			// ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
+			// journalEntryDao);
+			ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
+					journalEntryDao);
+		}
 		return result;
 	}
-
-
-
 
 	@Override
 	protected ProbandListEntryTagOutVO handleUpdateProbandListEntryTag(
@@ -7556,6 +7754,25 @@ extends TrialServiceBase
 		return result;
 	}
 
+	@Override
+	protected StratificationRandomizationListOutVO handleUpdateStratificationRandomizationList(AuthenticationVO auth,
+			StratificationRandomizationListInVO modifiedStratificationRandomizationList)
+					throws Exception {
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		StratificationRandomizationList originalRandomizationList = CheckIDUtil.checkStratificationRandomizationListId(modifiedStratificationRandomizationList.getId(),
+				stratificationRandomizationListDao);
+		checkStratificationRandomizationListInput(modifiedStratificationRandomizationList);
+		StratificationRandomizationListOutVO original = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(originalRandomizationList);
+		stratificationRandomizationListDao.evict(originalRandomizationList);
+		StratificationRandomizationList randomizationList = stratificationRandomizationListDao.stratificationRandomizationListInVOToEntity(modifiedStratificationRandomizationList);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		CoreUtil.modifyVersion(originalRandomizationList, randomizationList, now, user);
+		stratificationRandomizationListDao.update(randomizationList);
+		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+		ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_UPDATED, result, original, this.getJournalEntryDao());
+		return result;
+	}
 
 	@Override
 	protected TeamMemberOutVO handleUpdateTeamMember(
@@ -7575,9 +7792,6 @@ extends TrialServiceBase
 		ServiceUtil.logSystemMessage(teamMember.getStaff(), result.getTrial(), now, user, SystemMessageCodes.TEAM_MEMBER_UPDATED, result, original, journalEntryDao);
 		return result;
 	}
-
-
-
 
 	@Override
 	protected TimelineEventOutVO handleUpdateTimelineEvent(
@@ -7615,6 +7829,14 @@ extends TrialServiceBase
 		Trial trial = trialDao.trialInVOToEntity(modifiedTrial);
 		// Timestamp now = new Timestamp(System.currentTimeMillis());
 		// User user = CoreUtil.getUser();
+		// restart random:
+		if (modifiedTrial.getRandomization() == null) {
+			trial.setRandom(null);
+		} else if (original.getRandomization() == null) {
+			trial.setRandom(null);
+		} else if (original.getRandomization().getMode().equals(modifiedTrial.getRandomization())) {
+			trial.setRandom(null);
+		}
 		CoreUtil.modifyVersion(originalTrial, trial, now, user);
 		trialDao.update(trial);
 		execTrialStatusActions(originalTrialStatusType, trial, now, user);
@@ -7685,6 +7907,10 @@ extends TrialServiceBase
 				this.getJournalEntryDao());
 		return result;
 	}
+
+
+
+
 
 	@Override
 	protected Collection<ECRFStatusEntryVO> handleValidatePendingEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId) throws Exception {
@@ -7785,32 +8011,36 @@ extends TrialServiceBase
 		return index;
 	}
 
+	private void logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User user, RandomizationListInfoVO randomizationListInfo) throws Exception {
+		this.getJournalEntryDao().addSystemMessage(trial, now, user, SystemMessageCodes.RANDOMIZATION_LIST_GENERATED,
+				new Object[] { CommonUtil.trialOutVOToString(trialVO), Integer.toString(randomizationListInfo.getN()),
+						Integer.toString(randomizationListInfo.getItems().size()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(randomizationListInfo, null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
+	}
+
 	private void logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User user, ShuffleInfoVO shuffleInfo, String systemMessageCode) throws Exception {
 		this.getJournalEntryDao().addSystemMessage(trial, now, user, systemMessageCode,
 				new Object[] { CommonUtil.trialOutVOToString(trialVO), shuffleInfo != null ? Integer.toString(shuffleInfo.getResultIds().size()) : null,
 						shuffleInfo != null ? Integer.toString(shuffleInfo.getInputIds().size()) : null },
-
 				new Object[] { CoreUtil.getSystemMessageCommentContent(shuffleInfo, null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
 	private void notifyEcrfFieldStatus(ECRFStatusEntry statusEntry, ECRFFieldStatusEntry lastStatus, ECRFFieldStatusEntry newStatus, ECRFFieldStatusQueue queue, Date now)
 			throws Exception {
-
-		//		if (lastStatus != null) {
-		//			ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
-		//					org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_);
-		//			}
+		// if (lastStatus != null) {
+		// ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
+		// org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_);
+		// }
 		//
-		//		if (ECRFFieldStatusQueue.QUERY.equals(newStatus.getQueue())) {
+		// if (ECRFFieldStatusQueue.QUERY.equals(newStatus.getQueue())) {
 		//
-		//		}
+		// }
 		//
-		//		if (Arrays.asList(Settings.getEcrfFieldStatusQueueList(SettingCodes.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES)).contains(queue)) {
+		// if (Arrays.asList(Settings.getEcrfFieldStatusQueueList(SettingCodes.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES, Bundle.SETTINGS,
+		// DefaultSettings.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES)).contains(queue)) {
 		//
-		//			this.getNotificationDao().addNotification(newStatus,now,null);
-		//		}
-
-
+		// this.getNotificationDao().addNotification(newStatus,now,null);
+		// }
 		if (newStatus != null
 				// && (newStatus.getStatus().isInitial() || newStatus.getStatus().isResolved())
 				&& (newStatus.getEcrfField().isNotify() || (statusEntry != null && statusEntry.getStatus().isReview()
@@ -7818,7 +8048,6 @@ extends TrialServiceBase
 						DefaultSettings.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES)
 				.contains(
 						queue)))) {
-
 			if (lastStatus != null) {
 				ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
 						org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_FIELD_STATUS);
@@ -7832,7 +8061,6 @@ extends TrialServiceBase
 							this.getECRFFieldStatusEntryDao()));
 			this.getNotificationDao().addNotification(newStatus, now, messageParameters);
 		}
-
 	}
 
 	private void notifyTimelineEventReminder(TimelineEvent timelineEvent, Date now) throws Exception {
@@ -7846,10 +8074,6 @@ extends TrialServiceBase
 			.cancelNotifications(timelineEvent.getNotifications(), this.getNotificationDao(), org.phoenixctms.ctsms.enumeration.NotificationType.TIMELINE_EVENT_REMINDER);
 		}
 	}
-
-
-
-
 
 	private void notifyVisitScheduleItemReminder(VisitScheduleItem visitScheduleItem, Date now) throws Exception {
 		ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(visitScheduleItem);
@@ -7977,7 +8201,6 @@ extends TrialServiceBase
 				} else if (!listEntry.getId().equals(ecrfFieldValueIn.getListEntryId())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_DIFFERENT_PROBAND_LIST_ENTRIES);
 				}
-
 				try {
 					addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
 							ServiceUtil.LOG_ECRF_FIELD_VALUE_PROBAND, sectionIndexMap, ecrfFieldValues, jsEcrfFieldValues);

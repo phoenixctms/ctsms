@@ -2,10 +2,14 @@ package org.phoenixctms.ctsms.util;
 
 import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
@@ -65,6 +69,7 @@ import com.thoughtworks.xstream.XStream;
 
 public final class CoreUtil {
 
+	public final static String RANDOM_ALGORITHM = "SHA1PRNG";
 	private final static String JAVASCRIPT_ENGINE_NAME = "JavaScript";
 	public static final String PDF_FILENAME_EXTENSION = "pdf";
 	public static final String PDF_MIMETYPE_STRING = "application/pdf"; // public for demodataprovider
@@ -304,6 +309,15 @@ public final class CoreUtil {
 			}
 		}
 		return codes;
+	}
+
+	public static Object deserialize(byte[] serialized) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream buffer = new ByteArrayInputStream(serialized);
+		ObjectInputStream objectStream = new ObjectInputStream(buffer);
+		Object value = objectStream.readObject();
+		objectStream.close();
+		buffer.close();
+		return value;
 	}
 
 	private static String dumpAuditTrailVo(ArrayList<KeyValueString> voFields, Object vo, boolean enumerateEntities, boolean omitFields) throws Exception {
@@ -687,6 +701,18 @@ public final class CoreUtil {
 		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
+	// public static String getHex(byte[] data) {
+	// if (data == null) {
+	// return null;
+	// }
+	// final StringBuilder hex = new StringBuilder(2 * data.length);
+	// for (final byte b : data) {
+	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
+	// HEX_DIGITS.charAt((b & 0x0F)));
+	// }
+	// return hex.toString();
+	// }
+
 	public static <E> long getNewVersionChecked(E original, long modifiedVersion) throws Exception {
 		if (original != null) {
 			long originalVersion = ((Long) original.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(original)).longValue();
@@ -702,18 +728,6 @@ public final class CoreUtil {
 			return 0;
 		}
 	}
-
-	// public static String getHex(byte[] data) {
-	// if (data == null) {
-	// return null;
-	// }
-	// final StringBuilder hex = new StringBuilder(2 * data.length);
-	// for (final byte b : data) {
-	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
-	// HEX_DIGITS.charAt((b & 0x0F)));
-	// }
-	// return hex.toString();
-	// }
 
 	public static String getOutVOClassNameFromEntityName(String entityName) {
 		return getValueObjectClassNameFromEntityName(entityName, OUT_VO_CLASS_SUFFIX);
@@ -991,6 +1005,15 @@ public final class CoreUtil {
 
 	public static void modifyVersion(Object newEntity, Timestamp now, User modifiedUser) throws Exception {
 		modifyVersion(null, newEntity, now, modifiedUser);
+	}
+
+	public static byte[] serialize(Serializable value) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		ObjectOutputStream objectStream = new ObjectOutputStream(buffer);
+		objectStream.writeObject(value);
+		// buffer.flush();
+		objectStream.close();
+		return buffer.toByteArray();
 	}
 
 	public static void setUser(AuthenticationVO auth, UserDao userDao) {

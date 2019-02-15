@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EcrfFieldRowProcessor extends RowProcessor {
 
 	private final static String DEFAULT_PROBAND_GROUP_DESCRIPTION = "";
+	private final static boolean DEFAULT_PROBAND_GROUP_RANDOMIZE = false;
 	private final static String SHEET_NAME = "ecrffields";
 	private final static int ECRF_PROBAND_GROUP_COLUMN_INDEX = 0;
 	private final static int ECRF_POSITION_COLUMN_INDEX = 1;
@@ -104,6 +105,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		newProbandGroup.setToken(probandGroupToken);
 		newProbandGroup.setTitle(probandGroupToken);
 		newProbandGroup.setDescription(DEFAULT_PROBAND_GROUP_DESCRIPTION);
+		newProbandGroup.setRandomize(DEFAULT_PROBAND_GROUP_RANDOMIZE);
 		newProbandGroup.setTrialId(context.getEntityId());
 		return trialService.addProbandGroup(context.getAuth(), newProbandGroup);
 	}

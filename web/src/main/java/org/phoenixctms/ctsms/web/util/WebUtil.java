@@ -3642,7 +3642,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static Long getProcedureCount(Long probandId) {
 		if (probandId != null) {
 			try {
@@ -3656,6 +3655,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
 
 	public static ArrayList<SelectItem> getProcedures(Long probandId) {
 		ArrayList<SelectItem> procedures;
@@ -3684,14 +3684,6 @@ public final class WebUtil {
 		return procedures;
 	}
 
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
-
 	public static ArrayList<SelectItem> getRandomizationModes() {
 		ArrayList<SelectItem> modes;
 		Collection<RandomizationModeVO> modeVOs = null;
@@ -3717,8 +3709,12 @@ public final class WebUtil {
 		return modes;
 	}
 
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
+	// public static Object getSelectionSetServiceCache(Class type, Object key) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
+	// }
+	// return null;
 	// }
 
 	public static String getRefererBase64(HttpServletRequest request) {
@@ -3732,6 +3728,10 @@ public final class WebUtil {
 		}
 		return "";
 	}
+
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
@@ -3993,6 +3993,20 @@ public final class WebUtil {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public static Long getStratificationRandomizationListCount(Long trialId) {
+		if (trialId != null) {
+			try {
+				return getServiceLocator().getTrialService().getStratificationRandomizationListCount(getAuthentication(), trialId);
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (ServiceException e) {
 			} catch (IllegalArgumentException e) {
 			}
 		}

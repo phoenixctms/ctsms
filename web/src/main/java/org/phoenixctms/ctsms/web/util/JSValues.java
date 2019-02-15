@@ -127,6 +127,8 @@ public enum JSValues {
 	AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT("trialDutyRosterTurnCount"),
 	AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64("probandListEntryTagTabTitleBase64"),
 	AJAX_PROBAND_LIST_ENTRY_TAG_COUNT("probandListEntryTagCount"),
+	AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64("stratificationRandomzationListTabTitleBase64"), AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT(
+			"stratificationRandomizationListCount"),
 	AJAX_INQUIRY_TAB_TITLE_BASE64("inquiryTabTitleBase64"),
 	AJAX_INQUIRY_COUNT("inquiryCount"),
 	AJAX_ECRF_TAB_TITLE_BASE64("ecrfTabTitleBase64"),

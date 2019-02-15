@@ -107,6 +107,7 @@ public interface MessageCodes {
 	public static final String ECRF_SIGNATURE_VALID_DESCRIPTION = "ecrf_signature_valid_description";
 	public static final String ECRF_SIGNATURE_INVALID_DESCRIPTION = "ecrf_signature_invalid_description";
 	public static final String ECRF_SIGNATURE_AVAILABLE = "ecrf_signature_available";
+	public static final String UNSUPPORTED_RANDOMIZATION_MODE = "unsupported_randomization_mode";
 
 	public static final String ECRF_VALIDATION_FAILED_RESPONSE = "ecrf_validation_failed_response";
 	public static final String ECRF_VALIDATION_OK_ERRORS_RESPONSE = "ecrf_validation_ok_errors_response";

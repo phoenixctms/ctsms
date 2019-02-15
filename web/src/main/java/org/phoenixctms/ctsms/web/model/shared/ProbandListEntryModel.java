@@ -490,7 +490,7 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		Collection<ProbandListEntryTagOutVO> probandListEntryTagVOs = null;
 		if (showProbandListEntryTagColumn && (trialId != null || probandId != null)) {
 			try {
-				probandListEntryTagVOs = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagList(WebUtil.getAuthentication(), trialId, probandId);
+				probandListEntryTagVOs = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagList(WebUtil.getAuthentication(), trialId, probandId, null);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

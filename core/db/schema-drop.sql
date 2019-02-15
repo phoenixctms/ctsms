@@ -614,6 +614,12 @@
     alter table STAFF_TAG_VALUE 
         drop constraint STAFF_TAG_VALUE_STAFF_FKC;
 
+    alter table STRATIFICATION_RANDOMIZATION_LIST 
+        drop constraint STRATIFICATION_RANDOMIZATION_LIST_MODIFIED_USER_FKC;
+
+    alter table STRATIFICATION_RANDOMIZATION_LIST 
+        drop constraint STRATIFICATION_RANDOMIZATION_LIST_TRIAL_FKC;
+
     alter table TEAM_MEMBER 
         drop constraint TEAM_MEMBER_MODIFIED_USER_FKC;
 
@@ -854,6 +860,12 @@
     alter table send_department_staff_category 
         drop constraint STAFF_CATEGORY_SEND_DEPARTMENT_NOTIFICATION_TYPES_FKC;
 
+    alter table stratification_randomization_list_selection_set_value 
+        drop constraint INPUT_FIELD_SELECTION_SET_VALUE_RANDOMIZATION_LISTS_FKC;
+
+    alter table stratification_randomization_list_selection_set_value 
+        drop constraint STRATIFICATION_RANDOMIZATION_LIST_SELECTION_SET_VALUES_FKC;
+
     alter table trial_status_transition 
         drop constraint TRIAL_STATUS_TYPE_TRIAL_STATUS_TYPES_FKC;
 
@@ -1088,6 +1100,8 @@
 
     drop table STAFF_TAG_VALUE cascade;
 
+    drop table STRATIFICATION_RANDOMIZATION_LIST cascade;
+
     drop table STREET cascade;
 
     drop table SURVEY_STATUS_TYPE cascade;
@@ -1173,6 +1187,8 @@
     drop table proband_list_status_type_log_level cascade;
 
     drop table send_department_staff_category cascade;
+
+    drop table stratification_randomization_list_selection_set_value cascade;
 
     drop table trial_status_transition cascade;
 

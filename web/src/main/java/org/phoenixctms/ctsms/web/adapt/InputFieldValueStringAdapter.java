@@ -16,7 +16,7 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 
 	private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
 
-	protected static Collection<InputFieldSelectionSetValueOutVO> getSelectionSetValuesFromIds(Collection<Long> selectionValueIds) {
+	public static Collection<InputFieldSelectionSetValueOutVO> getSelectionSetValuesFromIds(Collection<Long> selectionValueIds) {
 		ArrayList<InputFieldSelectionSetValueOutVO> result;
 		if (selectionValueIds != null && selectionValueIds.size() > 0) {
 			result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValueIds.size());

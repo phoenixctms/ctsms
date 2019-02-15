@@ -98,6 +98,13 @@
 						<ui:include src="/META-INF/includes/trial/probandListEntryTag.xhtml" />
 					</p:tab>
 					<p:tab
+						id="randomizationlists"
+						disabled="#{!trialBean.created}"
+						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT'))}">
+						<ui:include src="/META-INF/includes/trial/randomizationList.xhtml" />
+					</p:tab>
+					<p:tab
 						id="inquiries"
 						disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INQUIRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

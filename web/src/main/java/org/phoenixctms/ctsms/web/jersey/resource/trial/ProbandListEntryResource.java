@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
-import io.swagger.annotations.Api;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,6 +28,8 @@ import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import io.swagger.annotations.Api;
+
 @Api
 @Path("/probandlistentry")
 public class ProbandListEntryResource {
@@ -40,16 +40,18 @@ public class ProbandListEntryResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, false, in);
+	public ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, false, randomize, in);
 	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("signup")
-	public ProbandListEntryOutVO addProbandListEntrySignup(ProbandListEntryInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, true, in);
+	public ProbandListEntryOutVO addProbandListEntrySignup(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, true, randomize, in);
 	}
 
 	@DELETE
@@ -120,8 +122,9 @@ public class ProbandListEntryResource {
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ProbandListEntryOutVO updateProbandListEntry(ProbandListEntryInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(auth, in, null);
+	public ProbandListEntryOutVO updateProbandListEntry(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(auth, in, null, randomize);
 	}
 	// @GET
 	// @Produces({MediaType.APPLICATION_JSON})

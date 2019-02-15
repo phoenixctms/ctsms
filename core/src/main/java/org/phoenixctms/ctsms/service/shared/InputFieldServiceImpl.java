@@ -54,6 +54,8 @@ import org.phoenixctms.ctsms.domain.ProbandListEntryTag;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValue;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.FileModule;
@@ -75,6 +77,7 @@ import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.util.randomization.Randomization;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
@@ -85,6 +88,7 @@ import org.phoenixctms.ctsms.vo.InputFieldValueVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
 
 /**
  * @see org.phoenixctms.ctsms.service.shared.InputFieldService
@@ -155,6 +159,13 @@ extends InputFieldServiceBase
 	private static JournalEntry logSystemMessage(Trial trial, InputFieldOutVO inputFieldVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
+	}
+
+	private static JournalEntry logSystemMessage(Trial trial, InputFieldSelectionSetValueOutVO selectionSetValueVO, Timestamp now, User modified, String systemMessageCode,
+			Object result, Object original,
+			JournalEntryDao journalEntryDao) throws Exception {
+		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { selectionSetValueVO.getUniqueName() },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
 	}
 
@@ -255,7 +266,7 @@ extends InputFieldServiceBase
 				inputFieldIn.getTextPreset() != null)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_REGEXP_OR_TEXT_PRESET_NOT_NULL);
 		}
-		if (!(InputFieldType.SELECT_MANY_H.equals(fieldType) || InputFieldType.SELECT_MANY_V.equals(fieldType) || InputFieldType.SKETCH.equals(fieldType)) && (
+		if (!ServiceUtil.isInputFieldTypeSelectManySketch(fieldType) && (
 				inputFieldIn.getMinSelections() != null ||
 				inputFieldIn.getMaxSelections() != null)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_LIMITS_NOT_NULL);
@@ -349,6 +360,16 @@ extends InputFieldServiceBase
 						break;
 				}
 			}
+			if (ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType)
+					&& this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, true,null) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TYPE_CHANGED_STRATIFICATION);
+			}
+			if ((ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType) ||
+					InputFieldType.MULTI_LINE_TEXT.equals(newFieldType) ||
+					InputFieldType.AUTOCOMPLETE.equals(newFieldType))
+					&& this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, true) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TYPE_CHANGED_RANDOMIZE);
+			}
 		}
 	}
 
@@ -436,6 +457,7 @@ extends InputFieldServiceBase
 			default:
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUES_ALLOWED_FOR_SELECTION_INPUTS_ONLY);
 		}
+		Randomization.checkInputFieldSelectionSetValueInput(selectionSetValueIn, this.getProbandListEntryTagDao());
 	}
 
 	private void checkSketchParameters(InputFieldInVO inputFieldIn) throws ServiceException {
@@ -513,6 +535,15 @@ extends InputFieldServiceBase
 						ServiceUtil.checkProbandLocked(inquiryValue.getProband());
 					}
 				}
+				// Iterator<InputFieldSelectionSetValue> selectionSetValueIt = this.getInputFieldSelectionSetValueDao().find.getSelectionSetValue().iterator();
+				// while (selectionSetValueIt.hasNext()) {
+				// InputFieldSelectionSetValue selectionSetValue = selectionSetValueIt.next();
+				// Iterator<Stratum> strataIt = selectionSetValue.getStratas().iterator();
+				// while (strataIt.hasNext()) {
+				// Stratum stratum = strataIt.next();
+				// ServiceUtil.checkTrialLocked(stratum.getTrial());
+				// }
+				// }
 				Iterator<ProbandListEntryTag> listEntryTagsIt = originalInputField.getListEntryTags().iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = listEntryTagsIt.next();
@@ -573,6 +604,11 @@ extends InputFieldServiceBase
 						}
 					}
 				}
+				// Iterator<Stratum> strataIt = originalSelectionSetValue.getStratas().iterator();
+				// while (strataIt.hasNext()) {
+				// Stratum stratum = strataIt.next();
+				// ServiceUtil.checkTrialLocked(stratum.getTrial());
+				// }
 				Iterator<ProbandListEntryTag> listEntryTagsIt = inputField.getListEntryTags().iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = listEntryTagsIt.next();
@@ -662,6 +698,21 @@ extends InputFieldServiceBase
 					logSystemMessage(inquiry.getTrial(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null, journalEntryDao);
 				}
 			}
+			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+			Iterator<StratificationRandomizationList> randomizationListsIt = selectionSetValue.getRandomizationLists().iterator();
+			while (randomizationListsIt.hasNext()) {
+				StratificationRandomizationList randomizationList = randomizationListsIt.next();
+				Trial trial = randomizationList.getTrial();
+				if (checkProbandTrialLocked) {
+					ServiceUtil.checkTrialLocked(trial);
+				}
+				StratificationRandomizationListOutVO randomizationListVO = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+				logSystemMessage(trial, result, now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null,
+						journalEntryDao);
+				trial.removeRandomizationLists(randomizationList);
+				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+			}
+			selectionSetValue.getRandomizationLists().clear();
 			ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 			Iterator<ProbandListEntryTag> listEntryTagsIt = inputField.getListEntryTags().iterator();
 			while (listEntryTagsIt.hasNext()) {
@@ -720,6 +771,7 @@ extends InputFieldServiceBase
 					logSystemMessage(ecrfField.getTrial(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null, journalEntryDao);
 				}
 			}
+
 		}
 		inputField.removeSelectionSetValues(selectionSetValue);
 		selectionSetValue.setField(null);
@@ -1022,7 +1074,7 @@ extends InputFieldServiceBase
 		InputFieldOutVO result;
 		if (!force && (defer
 				|| this.getInquiryDao().getCountByField(inputFieldId) > 0
-				|| this.getProbandListEntryTagDao().getCountByField(inputFieldId) > 0
+				|| this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, null) > 0
 				|| this.getECRFFieldDao().getCountByField(inputFieldId) > 0)) {
 			InputField originalInputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
 			// if (originalInputField.isLocalized()) {
@@ -1108,10 +1160,25 @@ extends InputFieldServiceBase
 			}
 			inputField.getEcrfFields().clear();
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
+			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
 			Iterator<InputFieldSelectionSetValue> selectionSetValuesit = inputField.getSelectionSetValues().iterator();
 			while (selectionSetValuesit.hasNext()) {
 				InputFieldSelectionSetValue selectionSetValue = selectionSetValuesit.next();
 				selectionSetValue.setField(null);
+				Iterator<StratificationRandomizationList> randomizationListsIt = selectionSetValue.getRandomizationLists().iterator();
+				while (randomizationListsIt.hasNext()) {
+					StratificationRandomizationList randomizationList = randomizationListsIt.next();
+					Trial trial = randomizationList.getTrial();
+					if (checkProbandTrialLocked) {
+						ServiceUtil.checkTrialLocked(trial);
+					}
+					StratificationRandomizationListOutVO randomizationListVO = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+					logSystemMessage(trial, result, now, user, SystemMessageCodes.INPUT_FIELD_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null,
+							journalEntryDao);
+					trial.removeRandomizationLists(randomizationList);
+					ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+				}
+				selectionSetValue.getRandomizationLists().clear();
 				inputFieldSelectionSetValueDao.remove(selectionSetValue);
 			}
 			inputField.getSelectionSetValues().clear();

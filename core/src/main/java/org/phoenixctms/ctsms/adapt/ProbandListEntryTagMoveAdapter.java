@@ -62,7 +62,7 @@ public class ProbandListEntryTagMoveAdapter extends MoveAdapter<Trial, ProbandLi
 	@Override
 	protected ArrayList<ProbandListEntryTag> getItemsSorted(Long rootId, ProbandListEntryTag item)
 			throws Exception {
-		return new ArrayList<ProbandListEntryTag>(probandListEntryTagDao.findByTrialExcelEcrfProbandSorted(rootId, null, null, null));
+		return new ArrayList<ProbandListEntryTag>(probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(rootId, null, null, null, null));
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class ProbandListEntryTagMoveAdapter extends MoveAdapter<Trial, ProbandLi
 				new Object[] { CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(root)), Integer.toString(updated.size()) },
 
 				new Object[] {
-				CoreUtil.getSystemMessageCommentContent(createUpdatedInfo(updated), null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null))
+						CoreUtil.getSystemMessageCommentContent(createUpdatedInfo(updated), null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null))
 		});
 	}
 

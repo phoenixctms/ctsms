@@ -1591,13 +1591,17 @@ public class DemoDataProvider {
 	}
 
 	private ProbandListEntryTagOutVO createProbandListEntryTag(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, int position, boolean optional, boolean disabled,
-			boolean excelValue, boolean excelDate, boolean ecrfValue, String comment, String jsVariableName, String jsValueExpression, String jsOutputExpression) throws Throwable {
+			boolean excelValue, boolean excelDate, boolean ecrfValue, boolean stratification, boolean randomize, String comment, String jsVariableName, String jsValueExpression,
+			String jsOutputExpression)
+					throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ProbandListEntryTagInVO newProbandListEntryTag = new ProbandListEntryTagInVO();
 		newProbandListEntryTag.setOptional(optional);
 		newProbandListEntryTag.setDisabled(disabled);
 		newProbandListEntryTag.setExcelValue(excelValue);
 		newProbandListEntryTag.setEcrfValue(ecrfValue);
+		newProbandListEntryTag.setStratification(stratification);
+		newProbandListEntryTag.setRandomize(randomize);
 		newProbandListEntryTag.setExcelDate(excelDate);
 		newProbandListEntryTag.setFieldId(getInputField(auth, inputField).getId());
 		newProbandListEntryTag.setTrialId(trial.getId());
@@ -2166,14 +2170,17 @@ public class DemoDataProvider {
 					null));
 			inquiries.add(createInquiry(auth, InputFields.NOTE, trial, "03 - Krankheitsgeschichte", 34, true, true, true, false, true, true, null, null, null, null));
 		}
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SUBJECT_NUMBER, trial, 1, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.IC_DATE, trial, 2, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SCREENING_DATE, trial, 3, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SUBJECT_NUMBER, trial, 1, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.IC_DATE, trial, 2, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SCREENING_DATE, trial, 3, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags
+				.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags
+				.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags
+				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
 
 		// HashMap<Long, HashMap<Long, ArrayList<ECRFFieldOutVO>>> ecrfFieldsPerVisitPerGroupMap = new HashMap<Long, HashMap<Long,
 		// ArrayList<ECRFFieldOutVO>>>(probandGroups.size());
@@ -2241,7 +2248,7 @@ public class DemoDataProvider {
 			newProbandListEntry.setPosition(i + 1l);
 			newProbandListEntry.setTrialId(trial.getId());
 			newProbandListEntry.setProbandId(probands.get(i).getId());
-			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, newProbandListEntry);
+			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, false, newProbandListEntry);
 			jobOutput.println("proband list entry created - trial: " + probandListEntry.getTrial().getName() + " position: " + probandListEntry.getPosition() + " proband: "
 					+ probandListEntry.getProband().getName());
 			updateProbandListStatusEntryRealTimestamp(probandListEntry.getLastStatus(), screeningGroup, visitScheduleItemPerGroupMap, 0);
@@ -2294,6 +2301,50 @@ public class DemoDataProvider {
 		}
 		return trial;
 	}
+
+	// private TrialOutVO createTrialCoinRandomization(AuthenticationVO auth, int departmentNum, SearchCriteria criteria)
+	// throws Throwable {
+	// auth = (auth == null ? getRandomAuth() : auth);
+	// TrialInVO newTrial = new TrialInVO();
+	// newTrial.setStatusId(getRandomElement(selectionSetService.getInitialTrialStatusTypes(auth)).getId());
+	// newTrial.setDepartmentId(getDepartmentId(departmentNum));
+	// newTrial.setName("COIN RANDOMIZATION " + (departmentNum + 1));
+	// newTrial.setTitle(newTrial.getName());
+	// newTrial.setDescription("");
+	// newTrial.setRandomization(RandomizationMode.COIN);
+	// newTrial.setSignupProbandList(false);
+	// newTrial.setSignupInquiries(false);
+	// newTrial.setSignupDescription("");
+	// newTrial.setExclusiveProbands(false);
+	// newTrial.setDutySelfAllocationLocked(false);
+	// newTrial.setTypeId(getRandomElement(selectionSetService.getTrialTypes(auth, null)).getId());
+	// newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
+	// newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
+	// TrialOutVO trial = trialService.addTrial(auth, newTrial);
+	// jobOutput.println("trial created: " + trial.getName());
+	//
+	// ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
+	// newProbandGroup.setTitle("Screeninggruppe");
+	// newProbandGroup.setToken("SG");
+	// newProbandGroup.setTrialId(trial.getId());
+	// newProbandGroup.setRandomize(false);
+	// ProbandGroupOutVO screeningGroup = trialService.addProbandGroup(auth, newProbandGroup);
+	// jobOutput.println("proband group created: " + screeningGroup.getTitle());
+	// ArrayList<ProbandGroupOutVO> probandGroups = new ArrayList<ProbandGroupOutVO>();
+	// for (int i = 0; i < probandGroupCount; i++) {
+	// newProbandGroup = new ProbandGroupInVO();
+	// newProbandGroup.setTitle("Gruppe " + (i + 1));
+	// newProbandGroup.setToken("G" + (i + 1));
+	// newProbandGroup.setTrialId(trial.getId());
+	// newProbandGroup.setRandomize(true);
+	// ProbandGroupOutVO probandGroup = trialService.addProbandGroup(auth, newProbandGroup);
+	// jobOutput.println("proband group created: " + probandGroup.getTitle());
+	// probandGroups.add(probandGroup);
+	// }
+	//
+	//
+	//
+	// }
 
 	public void createTrials(int trialCountPerDepartment, SearchCriteria[] eligibilityCriterias, Integer[] visitCounts, Integer[] probandGroupCounts, Integer[] avgProbandGroupSizes)
 			throws Throwable {

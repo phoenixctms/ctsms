@@ -190,4 +190,5 @@ public interface DefaultMessages {
 	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
 	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
 	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "invalid proband/no email addresses";
+	public static final String UNSUPPORTED_RANDOMIZATION_MODE = "unsupported randomization method {0}";
 }

@@ -1,11 +1,7 @@
 package org.phoenixctms.ctsms.security;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.security.KeyFactory;
@@ -49,7 +45,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 
 public final class CryptoUtil {
 
-	private static final String SALT_ALGORITHM = "SHA1PRNG";
+	private static final String SALT_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM; // "SHA1PRNG";
 	private static final int PBE_KEY_ITERATIONS = 1; // 1000;
 	private static final String PBE_KEY_ALGORITHM = "PBKDF2WithHmacSHA1";
 	private static final String SYMMETRIC_ALGORITHM = "AES";
@@ -121,7 +117,7 @@ public final class CryptoUtil {
 	}
 
 	public static byte[] createSalt() throws NoSuchAlgorithmException {
-		SecureRandom rand = SecureRandom.getInstance(SALT_ALGORITHM);
+		SecureRandom rand = SecureRandom.getInstance(SALT_RANDOM_ALGORITHM);
 		byte[] salt = new byte[SALT_LENGTH];
 		rand.nextBytes(salt);
 		return salt;
@@ -161,21 +157,14 @@ public final class CryptoUtil {
 	}
 
 	public static Object decryptValue(byte[] iv, byte[] encryptedValue) throws Exception {
-		return deserialize(decrypt(iv, encryptedValue));
+		return CoreUtil.deserialize(decrypt(iv, encryptedValue));
 	}
 
 	public static Object decryptValue(byte[] iv, byte[] salt, String password, byte[] encryptedValue) throws Exception {
-		return deserialize(decrypt(iv, salt, password, encryptedValue));
+		return CoreUtil.deserialize(decrypt(iv, salt, password, encryptedValue));
 	}
 
-	public static Object deserialize(byte[] serialized) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream buffer = new ByteArrayInputStream(serialized);
-		ObjectInputStream objectStream = new ObjectInputStream(buffer);
-		Object value = objectStream.readObject();
-		objectStream.close();
-		buffer.close();
-		return value;
-	}
+
 
 	public static CipherText encrypt(byte[] plainText) throws Exception {
 		Cipher cipher = getEncryptionCipher();
@@ -259,21 +248,21 @@ public final class CryptoUtil {
 	}
 
 	private static byte[] encryptValue(byte[] iv, byte[] salt, String password, Serializable value) throws Exception {
-		return encrypt(iv, salt, password, serialize(value));
+		return encrypt(iv, salt, password, CoreUtil.serialize(value));
 	}
 
 	private static byte[] encryptValue(byte[] iv, Serializable value) throws Exception {
-		return encrypt(iv, serialize(value));
+		return encrypt(iv, CoreUtil.serialize(value));
 	}
 
 	public static CipherText encryptValue(byte[] salt, String password, Serializable value) throws Exception {
 		Cipher cipher = getEncryptionCipher(salt, password);
-		return new CipherText(cipher.getIV(), encrypt(cipher, serialize(value)));
+		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
 	}
 
 	public static CipherText encryptValue(Serializable value) throws Exception {
 		Cipher cipher = getEncryptionCipher();
-		return new CipherText(cipher.getIV(), encrypt(cipher, serialize(value)));
+		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
 	}
 
 	private static Cipher getDecryptionCipher(byte[] iv) throws Exception {
@@ -366,25 +355,18 @@ public final class CryptoUtil {
 	}
 
 	public static byte[] hashForSearch(byte[] salt, String password, Serializable value) throws Exception {
-		return hashForSearch(salt, password, serialize(value));
+		return hashForSearch(salt, password, CoreUtil.serialize(value));
 	}
 
 	public static byte[] hashForSearch(Serializable value) throws Exception {
-		return hashForSearch(serialize(value));
+		return hashForSearch(CoreUtil.serialize(value));
 	}
 
 	private static byte[] hashPassword(byte[] salt, String password) throws Exception {
 		return createPBEKey(salt, password).getEncoded();
 	}
 
-	public static byte[] serialize(Serializable value) throws IOException {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		ObjectOutputStream objectStream = new ObjectOutputStream(buffer);
-		objectStream.writeObject(value);
-		// buffer.flush();
-		objectStream.close();
-		return buffer.toByteArray();
-	}
+
 
 	public static byte[] verifyMD5(byte[] data, String md5) throws NoSuchAlgorithmException, IOException {
 		if (!CommonUtil.getHex(getMD5Digest(data)).equalsIgnoreCase(md5)) {

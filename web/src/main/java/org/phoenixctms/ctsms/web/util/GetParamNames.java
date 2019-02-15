@@ -48,6 +48,7 @@ public enum GetParamNames {
 	PROBAND_GROUP_ID("probandgroupid"),
 	VISIT_SCHEDULE_ITEM_ID("visitscheduleitemid"),
 	PROBAND_LIST_ENTRY_TAG_ID("probandlistentrytagid"),
+	STRATIFICATION_RANDOMIZATION_LIST_ID("stratificationrandomizationid"),
 	INQUIRY_ID("inquiryid"),
 	ECRF_ID("ecrfid"),
 	ECRF_FIELD_ID("ecrffieldid"),

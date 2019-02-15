@@ -1810,11 +1810,7 @@ public final class ServiceUtil {
 			} else {
 				ecrfFieldValueIn.setTextValue(inputField.getTextPresetL10nKey());
 			}
-			if (InputFieldType.SELECT_ONE_DROPDOWN.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_V.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_V.equals(inputField.getFieldType())) {
+			if (isInputFieldTypeSelect(inputField.getFieldType())) {
 				Iterator<InputFieldSelectionSetValue> it = inputFieldSelectionSetValueDao.findByFieldPreset(inputField.getId(), true, null).iterator();
 				while (it.hasNext()) {
 					ecrfFieldValueIn.getSelectionValueIds().add(it.next().getId());
@@ -1994,11 +1990,7 @@ public final class ServiceUtil {
 			} else {
 				inquiryValueIn.setTextValue(inputField.getTextPresetL10nKey());
 			}
-			if (InputFieldType.SELECT_ONE_DROPDOWN.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_V.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_V.equals(inputField.getFieldType())) {
+			if (isInputFieldTypeSelect(inputField.getFieldType())) {
 				Iterator<InputFieldSelectionSetValue> it = inputFieldSelectionSetValueDao.findByFieldPreset(inputField.getId(), true, null).iterator();
 				while (it.hasNext()) {
 					inquiryValueIn.getSelectionValueIds().add(it.next().getId());
@@ -2129,11 +2121,7 @@ public final class ServiceUtil {
 			} else {
 				probandListEntryTagValueIn.setTextValue(inputField.getTextPresetL10nKey());
 			}
-			if (InputFieldType.SELECT_ONE_DROPDOWN.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_ONE_RADIO_V.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_H.equals(inputField.getFieldType())
-					|| InputFieldType.SELECT_MANY_V.equals(inputField.getFieldType())) {
+			if (isInputFieldTypeSelect(inputField.getFieldType())) {
 				Iterator<InputFieldSelectionSetValue> it = inputFieldSelectionSetValueDao.findByFieldPreset(inputField.getId(), true, null).iterator();
 				while (it.hasNext()) {
 					probandListEntryTagValueIn.getSelectionValueIds().add(it.next().getId());
@@ -3384,13 +3372,27 @@ public final class ServiceUtil {
 		return false;
 	}
 
-	public static boolean isLoadSelectionSet(InputFieldType fieldType) {
+	public static boolean isInputFieldTypeSelect(InputFieldType fieldType) {
+		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectMany(fieldType);
+	}
+
+	public static boolean isInputFieldTypeSelectMany(InputFieldType fieldType) {
+		return InputFieldType.SELECT_MANY_H.equals(fieldType)
+				|| InputFieldType.SELECT_MANY_V.equals(fieldType);
+	}
+
+	public static boolean isInputFieldTypeSelectManySketch(InputFieldType fieldType) {
+		return isInputFieldTypeSelectMany(fieldType) || InputFieldType.SKETCH.equals(fieldType);
+	}
+
+	public static boolean isInputFieldTypeSelectOne(InputFieldType fieldType) {
 		return InputFieldType.SELECT_ONE_DROPDOWN.equals(fieldType)
 				|| InputFieldType.SELECT_ONE_RADIO_H.equals(fieldType)
-				|| InputFieldType.SELECT_ONE_RADIO_V.equals(fieldType)
-				|| InputFieldType.SELECT_MANY_H.equals(fieldType)
-				|| InputFieldType.SELECT_MANY_V.equals(fieldType)
-				|| InputFieldType.SKETCH.equals(fieldType);
+				|| InputFieldType.SELECT_ONE_RADIO_V.equals(fieldType);
+	}
+
+	public static boolean isLoadSelectionSet(InputFieldType fieldType) {
+		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectManySketch(fieldType);
 	}
 
 	public static boolean isMassMailRecipientPending(MassMailRecipient recipient) {
@@ -3862,9 +3864,10 @@ public final class ServiceUtil {
 			}
 			ecrfVOs.add(ecrfVO);
 			if (!listEntryTagValuesVOMap.containsKey(listEntry.getId())) {
-				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfProbandSorted(listEntry.getTrial().getId(),
+				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(listEntry.getTrial().getId(),
 						null, showAllProbandListEntryTags
-						? null : true, null) : new ArrayList();
+						? null : true,
+								null, null) : new ArrayList();
 				// probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listEntryTags);
 				Collection<ProbandListEntryTagValueOutVO> listEntryTagValueVOs = new ArrayList<ProbandListEntryTagValueOutVO>(listEntryTags.size());
 				listEntryTagValuesVOMap.put(listEntry.getId(), listEntryTagValueVOs);
@@ -5339,6 +5342,19 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void removeStratificationRandomizationList(StratificationRandomizationList randomizationList, boolean deleteCascade,
+			StratificationRandomizationListDao stratificationRandomizationListDao) throws Exception {
+		if (deleteCascade) {
+			Iterator<InputFieldSelectionSetValue> selectionSetValuesIt = randomizationList.getSelectionSetValues().iterator();
+			while (selectionSetValuesIt.hasNext()) {
+				selectionSetValuesIt.next().removeRandomizationLists(randomizationList);
+			}
+			randomizationList.getSelectionSetValues().clear();
+		}
+		randomizationList.setTrial(null);
+		stratificationRandomizationListDao.remove(randomizationList);
+	}
+
 	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, boolean blank, ArrayList<ProbandListEntryOutVO> listEntryVOs,
 			ProbandListEntryDao probandListEntryDao,
 			ECRFDao ecrfDao,
@@ -5663,25 +5679,7 @@ public final class ServiceUtil {
 		recipient.setTimesProcessed(0l);
 	}
 
-	public static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
-		StringBuilder sb = new StringBuilder();
-		if (selectionSetValues != null && selectionSetValues.size() > 0) {
-			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
-			while (it.hasNext()) {
-				InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
-				if (sb.length() > 0) {
-					sb.append(ExcelUtil.EXCEL_LINE_BREAK);
-				}
-				if (selectionSetValue != null) {
-					String value = selectionSetValue.getValue();
-					if (value != null && value.length() > 0) {
-						sb.append(value);
-					}
-				}
-			}
-		}
-		return sb.toString();
-	}
+
 
 	public static boolean testNotificationExists(Collection<Notification> notifications, org.phoenixctms.ctsms.enumeration.NotificationType notificationType, Boolean obsolete)
 			throws Exception {

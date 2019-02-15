@@ -151,7 +151,27 @@
 									name="value"
 									value="#{probandListEntryTag.vo.ecrfValue}" />
 							</ui:include>
-						</p:column>						
+						</p:column>		
+						<p:column sortBy="#{probandListEntryTag.vo.stratification}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_stratification_column}" />
+							</f:facet>
+							<ui:include src="../shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{probandListEntryTag.vo.stratification}" />
+							</ui:include>
+						</p:column>	
+						<p:column sortBy="#{probandListEntryTag.vo.randomize}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_randomize_column}" />
+							</f:facet>
+							<ui:include src="../shared/listBooleanIcon.xhtml">
+								<ui:param
+									name="value"
+									value="#{probandListEntryTag.vo.randomize}" />
+							</ui:include>
+						</p:column>				
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_number_of_values_column}" />
@@ -339,7 +359,45 @@
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="bulkAddProbandListEntryTagEcrf" />								
+								<p:message for="bulkAddProbandListEntryTagEcrf" />	
+								
+								<h:outputLabel
+									for="bulkAddProbandListEntryTagStratification"
+									value="#{triallabels.bulkadd_proband_list_entry_tag_stratification_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddProbandListEntryTagStratification"
+										value="#{probandListEntryTagBean.bulkAddStratification}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddProbandListEntryTagStratification">
+										<h:outputText
+											value="#{triallabels.bulkadd_proband_list_entry_tag_stratification_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddProbandListEntryTagStratification" />		
+								
+								<h:outputLabel
+									for="bulkAddProbandListEntryTagRandomize"
+									value="#{triallabels.bulkadd_proband_list_entry_tag_randomize_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddProbandListEntryTagRandomize"
+										value="#{probandListEntryTagBean.bulkAddRandomize}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddProbandListEntryTagRandomize">
+										<h:outputText
+											value="#{triallabels.bulkadd_proband_list_entry_tag_randomize_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddProbandListEntryTagRandomize" />
 								
 							</h:panelGrid>
 							<!-- <h:outputLabel rendered="#{!probandListEntryTagBean.inputVisible}" /> -->
@@ -347,7 +405,7 @@
 							<p:toolbar>
 								<p:toolbarGroup align="right">
 									<p:commandButton
-										process="@this,bulkAddProbandListEntryTagOptional,bulkAddProbandListEntryTagExcel,bulkAddProbandListEntryTagEcrf"
+										process="@this,bulkAddProbandListEntryTagOptional,bulkAddProbandListEntryTagExcel,bulkAddProbandListEntryTagEcrf,bulkAddProbandListEntryTagStratification,bulkAddProbandListEntryTagRandomize"
 										id="bulkAdd"
 										value="#{labels.add_button_label}"
 										actionListener="#{probandListEntryTagBean.addBulk}"
@@ -499,25 +557,7 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="probandListEntryTagExcelDate" />
-								<h:outputLabel
-									for="jsVariableName"
-									value="#{triallabels.proband_list_entry_tag_js_variable_name_label}" />
-								<h:panelGroup>
-									<p:inputText
-										id="jsVariableName"
-										value="#{probandListEntryTagBean.in.jsVariableName}"
-										required="false"
-										label="#{triallabels.proband_list_entry_tag_js_variable_name}"
-										styleClass="ctsms-control-codeline" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="jsVariableName">
-										<h:outputText
-											value="#{triallabels.proband_list_entry_tag_js_variable_name_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="jsVariableName" />
+								
 								
 								
 								
@@ -541,6 +581,62 @@
 								</h:panelGroup>
 								<p:message for="probandListEntryTagEcrfValue" />
 								
+								<h:outputLabel
+									for="probandListEntryTagStratification"
+									value="#{triallabels.proband_list_entry_tag_stratification_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="probandListEntryTagStratification"
+										value="#{probandListEntryTagBean.in.stratification}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="probandListEntryTagStratification">
+										<h:outputText
+											value="#{triallabels.proband_list_entry_tag_stratification_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="probandListEntryTagStratification" />
+								
+																<h:outputLabel
+									for="probandListEntryTagRandomize"
+									value="#{triallabels.proband_list_entry_tag_randomize_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="probandListEntryTagRandomize"
+										value="#{probandListEntryTagBean.in.randomize}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="probandListEntryTagRandomize">
+										<h:outputText
+											value="#{triallabels.proband_list_entry_tag_randomize_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="probandListEntryTagRandomize" />
+								
+								
+								
+								<h:outputLabel
+									for="jsVariableName"
+									value="#{triallabels.proband_list_entry_tag_js_variable_name_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="jsVariableName"
+										value="#{probandListEntryTagBean.in.jsVariableName}"
+										required="false"
+										label="#{triallabels.proband_list_entry_tag_js_variable_name}"
+										styleClass="ctsms-control-codeline" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="jsVariableName">
+										<h:outputText
+											value="#{triallabels.proband_list_entry_tag_js_variable_name_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="jsVariableName" />
+								
 								
 								<h:outputLabel
 									for="probandListEntryTagExternalId"
@@ -562,7 +658,6 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="probandListEntryTagExternalId" />
-								
 								
 							</h:panelGrid>
 													<p:fieldset

@@ -40,38 +40,41 @@ function handleTrialTabChange(index) {
 			changeTrialByProbandListEntryTag();
 			break;
 		case 10:
+			changeTrialByStratificationRandomizationList();
+			break;			
+		case 11:
 			changeTrialByInquiry();
 			break;
-		case 11:
-			break;
 		case 12:
-			changeTrialByEcrf();
 			break;
 		case 13:
-			changeTrialByEcrfField();
+			changeTrialByEcrf();
 			break;
 		case 14:
-			changeTrialByProbandListEntry();
+			changeTrialByEcrfField();
 			break;
 		case 15:
+			changeTrialByProbandListEntry();
 			break;
 		case 16:
 			break;
-//		case 17:
-//			break;
 		case 17:
 			break;
-
+//		case 18:
+//			break;
 		case 18:
 			break;
 
 		case 19:
+			break;
+
+		case 20:
 			changeTrialByHyperlink();
 			break;
-		case 20:
+		case 21:
 			changeTrialByFile();
 			break;
-		case 21:
+		case 22:
 			changeTrialByJournalEntry();
 			break;
 		default:
@@ -117,54 +120,58 @@ function handleTrialTabChange(index) {
 		break;
 
 	case 10:
+		changeStratificationRandomizationList();
+		break;
+		
+	case 11:
 		changeInquiry();
 		break;
 
-	case 11:
+	case 12:
 		changeInquiryValueDummy();
 		break;
 
-	case 12:
+	case 13:
 		changeEcrf();
 		break;
 
-	case 13:
+	case 14:
 		changeEcrfField();
 		break;
 
-	case 14:
+	case 15:
 		changeProbandListEntry();
 		break;
 
-	case 15:
+	case 16:
 		changeTrialEcrfStatusEntry();
 		break;
 
-	case 16:
+	case 17:
 		changeEcrfFieldStatus();
 		break;
 
-	case 17:
+	case 18:
 		changeReimbursements();
 		break;
 
-	//case 17:
+	//case 18:
 	//	changeEnrollmentChart();
 	//	break;
 
-	case 18:
+	case 19:
 		changeTrialAssociation();
 		break;
 
-	case 19:
+	case 20:
 		changeTrialHyperlink();
 		break;
 
-	case 20:
+	case 21:
 		changeTrialFile();
 		break;
 
-	case 21:
+	case 22:
 		changeTrialJournalEntry();
 		break;
 
@@ -240,39 +247,43 @@ function handleUpdateTrialTabTitles(xhr, status, args) {
 		trialTabView.setTabTitle(9, decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64]));
 		trialTabView.emphasizeTab(9, args[AJAX_PROBAND_LIST_ENTRY_TAG_COUNT] == 0);
 	}
+	if (_testPropertyExists(args, AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT)) {
+		trialTabView.setTabTitle(10, decodeBase64(args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(10, args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT] == 0);
+	}	
 	if (_testPropertyExists(args, AJAX_INQUIRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INQUIRY_COUNT)) {
-		trialTabView.setTabTitle(10, decodeBase64(args[AJAX_INQUIRY_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(10, args[AJAX_INQUIRY_COUNT] == 0);
+		trialTabView.setTabTitle(11, decodeBase64(args[AJAX_INQUIRY_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(11, args[AJAX_INQUIRY_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_ECRF_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_COUNT)) {
-		trialTabView.setTabTitle(12, decodeBase64(args[AJAX_ECRF_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(12, args[AJAX_ECRF_COUNT] == 0);
+		trialTabView.setTabTitle(13, decodeBase64(args[AJAX_ECRF_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(13, args[AJAX_ECRF_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_ECRF_FIELD_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_FIELD_COUNT)) {
-		trialTabView.setTabTitle(13, decodeBase64(args[AJAX_ECRF_FIELD_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(13, args[AJAX_ECRF_FIELD_COUNT] == 0);
+		trialTabView.setTabTitle(14, decodeBase64(args[AJAX_ECRF_FIELD_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(14, args[AJAX_ECRF_FIELD_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_COUNT)) {
-		trialTabView.setTabTitle(14, decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(14, args[AJAX_PROBAND_LIST_ENTRY_COUNT] == 0);
+		trialTabView.setTabTitle(15, decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(15, args[AJAX_PROBAND_LIST_ENTRY_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_FIELD_STATUS_COUNT)) {
-		trialTabView.setTabTitle(16, decodeBase64(args[AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(16, args[AJAX_ECRF_FIELD_STATUS_COUNT] == 0);
+		trialTabView.setTabTitle(17, decodeBase64(args[AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(17, args[AJAX_ECRF_FIELD_STATUS_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_HYPERLINK_COUNT)) {
-		trialTabView.setTabTitle(19, decodeBase64(args[AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(19, args[AJAX_TRIAL_HYPERLINK_COUNT] == 0);
+		trialTabView.setTabTitle(20, decodeBase64(args[AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(20, args[AJAX_TRIAL_HYPERLINK_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_FILE_COUNT)) {
-		trialTabView.setTabTitle(20, decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(20, args[AJAX_TRIAL_FILE_COUNT] == 0);
+		trialTabView.setTabTitle(21, decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(21, args[AJAX_TRIAL_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_JOURNAL_ENTRY_COUNT)) {
-		trialTabView.setTabTitle(21, decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(21, args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
+		trialTabView.setTabTitle(22, decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(22, args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

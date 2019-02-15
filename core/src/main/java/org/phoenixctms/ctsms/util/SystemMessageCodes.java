@@ -155,7 +155,10 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_CREATED = "proband_list_entry_created";
 	public final static String PROBAND_LIST_ENTRY_UPDATED = "proband_list_entry_updated";
 	public final static String PROBAND_LIST_ENTRY_DELETED = "proband_list_entry_deleted";
+	public final static String PROBAND_LIST_ENTRY_RANDOMIZED_AND_CREATED = "proband_list_entry_randomized_and_created";
+	public final static String PROBAND_LIST_ENTRY_RANDOMIZED_AND_UPDATED = "proband_list_entry_randomized_and_updated";
 	public final static String PROBAND_LIST_ENTRIES_SHUFFLED_AND_CREATED = "proband_list_entries_shuffled_and_created";
+	public final static String RANDOMIZATION_LIST_GENERATED = "randomization_list_generated";
 	public final static String PROBAND_LIST_ENTRIES_CREATED = "proband_list_entries_created";
 	public final static String PROBAND_LIST_ENTRIES_SHUFFLED_AND_DELETED = "proband_list_entries_shuffled_and_deleted";
 	public final static String PROBAND_LIST_ENTRIES_DELETED = "proband_list_entries_deleted";
@@ -164,6 +167,9 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_CREATED = "proband_list_entry_tag_value_created";
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_UPDATED = "proband_list_entry_tag_value_updated";
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DELETED = "proband_list_entry_tag_value_deleted";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_CREATED = "stratification_randomization_list_created";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_UPDATED = "stratification_randomization_list_updated";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_DELETED = "stratification_randomization_list_deleted";
 	public final static String PROBAND_LIST_EXPORTED = "proband_list_exported";
 	public final static String INQUIRY_MOVED_TO_FIRST_POSITION = "inquiry_moved_to_first_position";
 	public final static String INQUIRY_MOVED_UP = "inquiry_moved_up";
@@ -279,11 +285,13 @@ public interface SystemMessageCodes {
 	public final static String INPUT_FIELD_CREATED = "input_field_created";
 	public final static String INPUT_FIELD_UPDATED = "input_field_updated";
 	public final static String INPUT_FIELD_DELETED = "input_field_deleted";
+	public final static String INPUT_FIELD_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED = "input_field_deleted_stratification_randomization_list_deleted";
 	public final static String INPUT_FIELD_CLONED = "input_field_cloned";
 	public final static String INPUT_FIELD_MARKED_FOR_DELETION = "input_field_marked_for_deletion";
 	public final static String SELECTION_SET_VALUE_CREATED = "selection_set_value_created";
 	public final static String SELECTION_SET_VALUE_UPDATED = "selection_set_value_updated";
 	public final static String SELECTION_SET_VALUE_DELETED = "selection_set_value_deleted";
+	public final static String SELECTION_SET_VALUE_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED = "selection_set_value_deleted_stratification_randomization_list_deleted";
 	public final static String SELECTION_SET_VALUE_CLONED = "selection_set_value_cloned";
 	public final static String SELECTION_SET_VALUE_MARKED_FOR_DELETION = "selection_set_value_marked_for_deletion";
 	public final static String USER_CREATED = "user_created";

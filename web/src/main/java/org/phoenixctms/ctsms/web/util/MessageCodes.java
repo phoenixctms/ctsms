@@ -397,6 +397,8 @@ public interface MessageCodes {
 	public static final String TRIAL_CREATE_NEW_DUTY_ROSTER_TURN = "trial_create_new_duty_roster_turn";
 	public static final String PROBAND_LIST_ENTRY_TAG_TITLE = "proband_list_entry_tag_title";
 	public static final String CREATE_NEW_PROBAND_LIST_ENTRY_TAG = "create_new_proband_list_entry_tag";
+	public static final String STRATIFICATION_RANDOMIZATION_LIST_TITLE = "stratification_randomization_list_title";
+	public static final String CREATE_NEW_STRATIFICATION_RANDOMIZATION_LIST = "create_new_stratification_randomization_list";
 	public static final String INQUIRY_TITLE = "inquiry_title";
 	public static final String CREATE_NEW_INQUIRY = "create_new_inquiry";
 	public static final String ECRF_TITLE = "ecrf_title";
@@ -589,6 +591,8 @@ public interface MessageCodes {
 	public final static String TRIAL_DUTY_ROSTER_TURNS_TAB_TITLE_WITH_COUNT = "trial_duty_roster_turns_tab_title_with_count";
 	public final static String PROBAND_LIST_ENTRY_TAGS_TAB_TITLE = "proband_list_entry_tags_tab_title";
 	public final static String PROBAND_LIST_ENTRY_TAGS_TAB_TITLE_WITH_COUNT = "proband_list_entry_tags_tab_title_with_count";
+	public final static String STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE = "stratification_randomization_lists_tab_title";
+	public final static String STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT = "stratification_randomization_lists_tab_title_with_count";
 	public final static String INQUIRIES_TAB_TITLE = "inquiries_tab_title";
 	public final static String INQUIRIES_TAB_TITLE_WITH_COUNT = "inquiries_tab_title_with_count";
 	public final static String ECRFS_TAB_TITLE = "ecrfs_tab_title";

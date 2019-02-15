@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.phoenixctms.ctsms.domain.Password;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -29,28 +30,13 @@ public class PasswordPolicy {
 		SYMBOLS
 	}
 
-	private final static String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+	private final static String STRING_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM; // "SHA1PRNG";
 	private final static HashMap<CharacterClasses, Character[]> CHARACTER_CLASSES = new HashMap<CharacterClasses, Character[]>();
 	private final static HashMap<CharacterClasses, String> CHARACTER_CLASS_L10NKEYS = new HashMap<CharacterClasses, String>();
 	private final static HashMap<CharacterClasses, String> CHARACTER_CLASS_NAME_DEFAULTS = new HashMap<CharacterClasses, String>();
 
-	private static String charactersToString(Character[] characters) {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < characters.length; i++) {
-			result.append(characters[i]);
-		}
-		return result.toString();
-	}
-
-	private int maxLength;
-	private int minLength;
-	private int maxPossibleLength;
-	private int minRequiredLength;
-	private CharacterSet characterSet;
-	private int minLevenshteinDistance;
-	private int distancePasswordHistory; // <= 0 all
-	private boolean adminIgnorePolicy;
 	public final static PasswordPolicy USER;
+
 	public final static PasswordPolicy DEPARTMENT;
 	static {
 		CHARACTER_CLASSES.put(CharacterClasses.SMALL_LETTERS, new Character[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
@@ -80,7 +66,13 @@ public class PasswordPolicy {
 		USER = PasswordPolicy.createPasswordPolicy();
 		DEPARTMENT = PasswordPolicy.createDepartmentPasswordPolicy();
 	}
-
+	private static String charactersToString(Character[] characters) {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < characters.length; i++) {
+			result.append(characters[i]);
+		}
+		return result.toString();
+	}
 	private static int countCharacters(String input, Character[] characters) {
 		int count = 0;
 		if (input != null) {
@@ -94,7 +86,6 @@ public class PasswordPolicy {
 		}
 		return count;
 	}
-
 	private static PasswordPolicy createDepartmentPasswordPolicy() {
 		CharacterSet characterSet = new CharacterSet();
 		int maxLength = Settings.getInt(SettingCodes.DEPARTMENT_PASSWORD_MAX_LENGTH, Settings.Bundle.SETTINGS, DefaultSettings.MAX_LENGTH);
@@ -135,7 +126,6 @@ public class PasswordPolicy {
 		}
 		return new PasswordPolicy(Settings.getInt(SettingCodes.DEPARTMENT_PASSWORD_MIN_LENGTH, Settings.Bundle.SETTINGS, DefaultSettings.MIN_LENGTH), maxLength, characterSet);
 	}
-
 	private static PasswordPolicy createPasswordPolicy() {
 		CharacterSet characterSet = new CharacterSet();
 		int maxLength = Settings.getInt(SettingCodes.PASSWORD_MAX_LENGTH, Settings.Bundle.SETTINGS, DefaultSettings.MAX_LENGTH);
@@ -180,12 +170,10 @@ public class PasswordPolicy {
 		policy.adminIgnorePolicy = Settings.getBoolean(SettingCodes.PASSWORD_ADMIN_IGNORE_POLICY, Settings.Bundle.SETTINGS, DefaultSettings.ADMIN_IGNORE_POLICY);
 		return policy;
 	}
-
 	private static String getCharacterClassName(CharacterClasses characterClass) {
 		return L10nUtil.getMessage(CHARACTER_CLASS_L10NKEYS.get(characterClass), CHARACTER_CLASS_NAME_DEFAULTS.get(characterClass),
 				charactersToString(CHARACTER_CLASSES.get(characterClass)));
 	}
-
 	// http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance
 	private static int getLevenshteinDistance(String a, String b) {
 		if (a == null && b == null) {
@@ -215,14 +203,27 @@ public class PasswordPolicy {
 			return distance[a.length()][b.length()];
 		}
 	}
-
 	private static Character getRandomCharacter(Character[] characters, SecureRandom random) {
 		return characters[random.nextInt(characters.length)]; // - 1)];
 	}
-
 	private static int minimum(int a, int b, int c) {
 		return Math.min(Math.min(a, b), c);
 	}
+	private int maxLength;
+
+	private int minLength;
+
+	private int maxPossibleLength;
+
+	private int minRequiredLength;
+
+	private CharacterSet characterSet;
+
+	private int minLevenshteinDistance;
+
+	private int distancePasswordHistory; // <= 0 all
+
+	private boolean adminIgnorePolicy;
 
 	public PasswordPolicy(int minLength, int maxLength, CharacterSet characterSet) {
 		if (minLength >= 0 && maxLength >= minLength) {
@@ -335,7 +336,7 @@ public class PasswordPolicy {
 		if (length > maxPossibleLength) {
 			length = maxPossibleLength;
 		}
-		SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+		SecureRandom random = SecureRandom.getInstance(STRING_RANDOM_ALGORITHM);
 		ArrayList<Character> resultChars = new ArrayList<Character>(length);
 		StringBuilder result = new StringBuilder(length);
 		HashMap<CharacterClasses, Integer> used = new HashMap<CharacterClasses, Integer>();

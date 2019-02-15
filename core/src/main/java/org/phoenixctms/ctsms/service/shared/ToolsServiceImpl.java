@@ -117,6 +117,7 @@ import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.LdapEntryVO;
@@ -458,7 +459,18 @@ extends ToolsServiceBase
 	}
 
 	@Override
-	protected Collection<String> handleCompleteInputFieldSelectionSetValue(AuthenticationVO auth, String valueInfix, Long inputFieldId, Integer limit
+	protected Collection<InputFieldSelectionSetValueOutVO> handleCompleteInputFieldSelectionSetValue(AuthenticationVO auth, String nameInfix, Long inputFieldId, Integer limit
+			) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for inputFieldId for performance reasons...
+		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
+		Collection selectionSetValues = inputFieldSelectionSetValueDao.findSelectionSetValues(inputFieldId, nameInfix, limit);
+		inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVOCollection(selectionSetValues);
+		return selectionSetValues;
+	}
+
+	@Override
+	protected Collection<String> handleCompleteInputFieldSelectionSetValueValue(AuthenticationVO auth, String valueInfix, Long inputFieldId, Integer limit
 			) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		// no check for inputFieldId for performance reasons...

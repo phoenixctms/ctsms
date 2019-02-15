@@ -13,6 +13,7 @@ import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -183,6 +184,7 @@ public final class DefaultSettings {
 	public static final boolean TIMELINE_EVENT_SHOW_PRESET = true;
 	public static final VariablePeriod TIMELINE_EVENT_REMINDER_PERIOD_PRESET = VariablePeriod.EXPLICIT;
 	public static final Long TIMELINE_EVENT_REMINDER_PERIOD_DAYS_PRESET = 7l;
+	public static final boolean PROBAND_GROUP_RANDOMIZE_PRESET = false;
 	public static final float VISIT_REIMBURSEMENT_PRESET = 0.0f;
 	public static final VariablePeriod SHIFT_DURATION_SUMMARY_PERIOD_AFTER = VariablePeriod.EXPLICIT;
 	public static final Long SHIFT_DURATION_SUMMARY_PERIOD_AFTER_DAYS = 14l;
@@ -313,6 +315,8 @@ public final class DefaultSettings {
 	public static final boolean PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET = false;
 	public static final boolean PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET = true;
 	public static final boolean PROBAND_LIST_ENTRY_TAG_ECRF_PRESET = true;
+	public static final boolean PROBAND_LIST_ENTRY_TAG_STRATIFICATION_PRESET = false;
+	public static final boolean PROBAND_LIST_ENTRY_TAG_RANDOMIZE_PRESET = false;
 	public static final boolean PROBAND_CONTACT_NOTIFY_PRESET = true;
 	public static final boolean PROBAND_CONTACT_NA_PRESET = false;
 	public final static boolean PROBAND_ADDRESS_AFNUS_PRESET = false;
@@ -470,8 +474,12 @@ public final class DefaultSettings {
 	public static final boolean TRIAL_SIGNUP_PROBAND_LIST_PRESET = false;
 	public static final boolean TRIAL_SIGNUP_INQUIRIES_PRESET = false;
 	public static final VariablePeriod TRIAL_BLOCKING_PERIOD_PRESET = VariablePeriod.THREE_MONTHS;
+	public static final RandomizationMode TRIAL_RANDOMIZATION_PRESET = RandomizationMode.GROUP_COIN;
+	public static final String TRIAL_RANDOMIZATION_LIST_PRESET = "";
+	public static final String STRATIFICATION_RANDOMIZATION_LIST_RANDOMIZATION_LIST_PRESET = "";
 	public static final Long TRIAL_BLOCKING_PERIOD_DAYS_PRESET = null;
 	public static final boolean PROBAND_LIST_BULK_ADD_SHUFFLE = true;
+	public static final boolean PROBAND_LIST_BULK_ADD_RANDOMIZE = false;
 	public static final Long PROBAND_LIST_BULK_ADD_LIMIT = null;
 	public static final VariablePeriod TIMELINE_RANGE_START_PERIOD_BEFORE = VariablePeriod.THREE_MONTHS;
 	public static final Long TIMELINE_RANGE_START_PERIOD_BEFORE_DAYS = null;

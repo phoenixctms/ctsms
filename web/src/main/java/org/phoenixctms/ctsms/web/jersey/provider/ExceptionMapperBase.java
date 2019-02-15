@@ -5,6 +5,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 
 abstract class ExceptionMapperBase {
@@ -23,14 +24,18 @@ abstract class ExceptionMapperBase {
 		public ExceptionJs(Throwable t) {
 			if (t != null) {
 				type = t.getClass().getName();
-				message = t.getMessage();
-				try {
-					code = (String) t.getClass().getMethod(EXCEPTION_ERROR_CODE_GETTER_METHOD_NAME).invoke(t);
-				} catch (Exception e) {
-				}
-				try {
-					data = t.getClass().getMethod(EXCEPTION_DATA_GETTER_METHOD_NAME).invoke(t);
-				} catch (Exception e) {
+				if (t instanceof JsonSyntaxException && ((JsonSyntaxException) t).getCause() != null) {
+					message = ((JsonSyntaxException) t).getCause().getMessage();
+				} else {
+					message = t.getMessage();
+					try {
+						code = (String) t.getClass().getMethod(EXCEPTION_ERROR_CODE_GETTER_METHOD_NAME).invoke(t);
+					} catch (Exception e) {
+					}
+					try {
+						data = t.getClass().getMethod(EXCEPTION_DATA_GETTER_METHOD_NAME).invoke(t);
+					} catch (Exception e) {
+					}
 				}
 			}
 		}

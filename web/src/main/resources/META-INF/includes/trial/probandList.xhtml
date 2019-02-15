@@ -471,6 +471,26 @@
 								columns="3"
 								cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								
+								<h:outputLabel
+									for="bulkAddRandomize"
+									value="#{triallabels.bulkadd_randomize_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddRandomize"
+										value="#{probandListEntryBean.bulkAddRandomize}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="bulkAddRandomize">
+										<h:outputText
+											value="#{triallabels.bulkadd_randomize_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddRandomize" />
+								
 								<h:outputLabel
 									for="bulkAddProbandListEntryProbandGroup"
 									value="#{triallabels.bulkadd_proband_list_proband_group_label}" />
@@ -582,7 +602,7 @@
 										icon="ui-icon ui-icon-minusthick"
 										type="button" />										
 									<p:commandButton
-										process="@this,bulkAddProbandListEntryProbandGroup,bulkAddShuffle,bulkAddLimit"
+										process="@this,bulkAddRandomize,bulkAddProbandListEntryProbandGroup,bulkAddShuffle,bulkAddLimit"
 										id="bulkAddProbandListEntry"
 										value="#{labels.add_button_label}"
 										actionListener="#{probandListEntryBean.addBulk}"
@@ -654,6 +674,7 @@
 												update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandListTabView" />
 											<p:commandButton
 												process="@this,probandlistentry_input"
+												rendered="#{not probandListEntryBean.randomization}"
 												id="addProbandListEntry"
 												value="#{labels.add_button_label}"
 												actionListener="#{probandListEntryBean.add}"
@@ -662,7 +683,33 @@
 												ajax="true"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView" />
+												
+											<p:splitButton
+												ajax="true"
+												rendered="#{probandListEntryBean.randomization}"
+												process="@this,probandlistentry_input"
+												id="addProbandListEntryNotRandomized"
+												actionListener="#{probandListEntryBean.add}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												disabled="#{!probandListEntryBean.createable}"
+												update=":tabView:probandlist_form:probandListTabView"
+												value="#{labels.add_button_label}"
+												icon="ui-icon ui-icon-plusthick">
+												<p:menuitem
+													ajax="true"
+													process="@this,probandlistentry_input"
+													id="addProbandListEntryRandomized"
+													actionListener="#{probandListEntryBean.addRandomized}"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													disabled="#{!probandListEntryBean.createable}"
+													update=":tabView:probandlist_form:probandListTabView"
+													value="#{labels.add_randomize_button_label}"
+													icon="ctsms-menubar-icon ui-icon-gear">
+												</p:menuitem>
+											</p:splitButton>												
+												
 											<p:commandButton
+											    rendered="#{not probandListEntryBean.randomization}"
 												process="@this,probandlistentry_input"
 												id="updateProbandListEntry"
 												value="#{labels.update_button_label}"
@@ -672,6 +719,31 @@
 												ajax="true"
 												disabled="#{!probandListEntryBean.editable}"
 												update=":tabView:probandlist_form:probandListTabView" />
+												
+											<p:splitButton
+												ajax="true"
+												rendered="#{probandListEntryBean.randomization}"
+												process="@this,probandlistentry_input"
+												id="updateProbandListEntryNotRandomized"
+												actionListener="#{probandListEntryBean.update}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												disabled="#{!probandListEntryBean.editable}"
+												update=":tabView:probandlist_form:probandListTabView"
+												value="#{labels.update_button_label}"
+												icon="ui-icon ui-icon-disk">
+												<p:menuitem
+													ajax="true"
+													process="@this,probandlistentry_input"
+													id="updateProbandListEntryRandomized"
+													actionListener="#{probandListEntryBean.updateRandomized}"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													disabled="#{!probandListEntryBean.editable}"
+													update=":tabView:probandlist_form:probandListTabView"
+													value="#{labels.update_randomize_button_label}"
+													icon="ctsms-menubar-icon ui-icon-gear">
+												</p:menuitem>
+											</p:splitButton>												
+												
 											<p:commandButton
 												process="@this"
 												value="#{labels.normalize_positions_button_label}"
@@ -935,7 +1007,7 @@
 				</f:facet>
 				
 				<p:commandButton
-					process="@this,:tabView:probandlist_form:bulkAddShuffle,:tabView:probandlist_form:bulkAddLimit"
+					process="@this,:tabView:probandlist_form:bulkAddRandomize,:tabView:probandlist_form:bulkAddShuffle,:tabView:probandlist_form:bulkAddLimit"
 					id="bulkDeleteProbandListEntry"
 					value="#{labels.yes_button_label}"
 					actionListener="#{probandListEntryBean.deleteBulk}"

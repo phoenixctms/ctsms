@@ -82,7 +82,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		Collection<String> values = null;
 		if (inputField != null && isAutocomplete()) {
 			try {
-				values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(WebUtil.getAuthentication(), query, inputField.getId(), null);
+				values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValueValue(WebUtil.getAuthentication(), query, inputField.getId(), null);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

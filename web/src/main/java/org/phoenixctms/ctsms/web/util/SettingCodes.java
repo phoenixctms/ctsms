@@ -118,6 +118,9 @@ public interface SettingCodes {
 	public final static String PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET = "proband_list_entry_tag_optional_preset";
 	public final static String PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET = "proband_list_entry_tag_excel_preset";
 	public final static String PROBAND_LIST_ENTRY_TAG_ECRF_PRESET = "proband_list_entry_tag_ecrf_preset";
+	public final static String PROBAND_LIST_ENTRY_TAG_STRATIFICATION_PRESET = "proband_list_entry_tag_stratification_preset";
+	public final static String PROBAND_LIST_ENTRY_TAG_RANDOMIZE_PRESET = "proband_list_entry_tag_randomize_preset";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_RANDOMIZATION_LIST_PRESET = "stratification_randomization_list_randomization_list_preset";
 	public final static String DUTY_ROSTER_TURN_DURATION_MINUTES_PRESET = "duty_roster_turn_duration_minutes_preset";
 	public final static String TEAM_MEMBER_ACCESS_PRESET = "team_member_access_preset";
 	public final static String TEAM_MEMBER_SIGN_PRESET = "team_member_sign_preset";
@@ -135,6 +138,7 @@ public interface SettingCodes {
 	public final static String TIMELINE_EVENT_SHOW_PRESET = "timeline_event_show_preset";
 	public final static String TIMELINE_EVENT_REMINDER_PERIOD_PRESET = "timeline_event_reminder_period_preset";
 	public final static String TIMELINE_EVENT_REMINDER_PERIOD_DAYS_PRESET = "timeline_event_reminder_period_days_preset";
+	public final static String PROBAND_GROUP_RANDOMIZE_PRESET = "proband_group_randomize_preset";
 	public final static String VISIT_REIMBURSEMENT_PRESET = "visit_reimbursement_preset";
 	public final static String CV_POSITION_SHOW_COMMENT_CV_PRESET = "cv_position_show_comment_cv_preset";
 	public final static String CV_POSITION_SHOW_CV_PRESET = "cv_position_show_cv_preset";
@@ -355,12 +359,15 @@ public interface SettingCodes {
 	public static final String PROBAND_STATUS_SHOW_INACTIVE_ONLY_PRESET = "proband_status_show_inactive_only_preset";
 	public static final String PROBAND_STATUS_IGNORE_OBSOLETE_PRESET = "proband_status_ignore_obsolete_preset";
 	public static final String TRIAL_DUTY_SELF_ALLOCATION_LOCKED_PRESET = "trial_duty_self_allocation_locked_preset";
+	public static final String TRIAL_RANDOMIZATION_PRESET = "trial_randomization_preset";
+	public static final String TRIAL_RANDOMIZATION_LIST_PRESET = "trial_randomization_list_preset";
 	public static final String TRIAL_EXCLUSIVE_PROBANDS_PRESET = "trial_exclusive_probands_preset";
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_PRESET = "trial_signup_proband_list_preset";
 	public static final String TRIAL_SIGNUP_INQUIRIES_PRESET = "trial_signup_inquiries_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_PRESET = "trial_blocking_period_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_DAYS_PRESET = "trial_blocking_period_days_preset";
 	public static final String PROBAND_LIST_BULK_ADD_SHUFFLE = "proband_list_bulk_add_shuffle";
+	public static final String PROBAND_LIST_BULK_ADD_RANDOMIZE = "proband_list_bulk_add_randomize";
 	public static final String PROBAND_LIST_BULK_ADD_LIMIT = "proband_list_bulk_add_limit";
 	public static final String TIMELINE_RANGE_START_PERIOD_BEFORE = "timeline_range_start_period_before";
 	public static final String TIMELINE_RANGE_START_PERIOD_BEFORE_DAYS = "timeline_range_start_period_before_days";

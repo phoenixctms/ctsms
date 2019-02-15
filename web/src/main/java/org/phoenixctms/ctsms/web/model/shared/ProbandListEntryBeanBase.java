@@ -82,6 +82,10 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	@Override
 	public String addAction()
 	{
+		return addAction(false);
+	}
+
+	private String addAction(boolean randomize) {
 		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -89,7 +93,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, in);
+			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, randomize, in);
 			initIn();
 			// initSets(true, false, false);
 			initSets(false, false, false);
@@ -110,6 +114,14 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public final void addRandomized() {
+		actionPostProcess(addRandomizedAction());
+	}
+
+	public String addRandomizedAction() {
+		return addAction(true);
 	}
 
 	@Override
@@ -237,6 +249,10 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return WebUtil.isProbandLocked(proband);
 	}
 
+	public boolean isRandomization() {
+		return (trial != null ? trial.getRandomization() !=null : false);
+	}
+
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !isTrialLocked() && !isProbandLocked();
@@ -277,6 +293,9 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
+	// public void onTabViewChange(TabChangeEvent event) {
+	// }
+
 	@Override
 	public String resetAction() {
 		out = null;
@@ -284,9 +303,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		initSets(true, false, false);
 		return RESET_OUTCOME;
 	}
-
-	// public void onTabViewChange(TabChangeEvent event) {
-	// }
 
 	private void sanitizeInVals() {
 		if (in.getRatingMax() != null) {
@@ -314,10 +330,14 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	@Override
 	public String updateAction() {
+		return updateAction(false);
+	}
+
+	private String updateAction(boolean randomize) {
 		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(WebUtil.getAuthentication(), in, null);
+			out = WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(WebUtil.getAuthentication(), in, null, randomize);
 			initIn();
 			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -337,5 +357,13 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public final void updateRandomized() {
+		actionPostProcess(updateRandomizedAction());
+	}
+
+	public String updateRandomizedAction() {
+		return updateAction(true);
 	}
 }

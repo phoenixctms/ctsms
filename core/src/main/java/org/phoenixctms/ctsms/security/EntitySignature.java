@@ -294,9 +294,9 @@ public abstract class EntitySignature extends GraphEnumerator {
 
 	private static void updateSignature(Object entity, ArrayList<EntitySignature> entitySignatures, Signature signature, User signee, Timestamp timestamp, StringBuilder comment)
 			throws Exception {
-		signature.update(CryptoUtil.serialize(entityToSerializable(User.class, signee)));
-		signature.update(CryptoUtil.serialize(entityToSerializable(Staff.class, signee.getIdentity())));
-		signature.update(CryptoUtil.serialize(timestamp));
+		signature.update(CoreUtil.serialize(entityToSerializable(User.class, signee)));
+		signature.update(CoreUtil.serialize(entityToSerializable(Staff.class, signee.getIdentity())));
+		signature.update(CoreUtil.serialize(timestamp));
 		AlphanumStringComparator stringComparator = new AlphanumStringComparator(true);
 		TreeMap<String, Serializable> referenceFieldMap = new TreeMap<String, Serializable>(stringComparator);
 		TreeMap<String, Serializable> deferredCollectionMapFieldMap = new TreeMap<String, Serializable>(stringComparator);
@@ -337,8 +337,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 				comment.append(keyValueSeparator);
 				comment.append(ReflectionToStringBuilder.toString(value,COMMENT_VALUE_TO_STRING_STYLE));
 			}
-			signature.update(CryptoUtil.serialize(key));
-			signature.update(CryptoUtil.serialize(value));
+			signature.update(CoreUtil.serialize(key));
+			signature.update(CoreUtil.serialize(value));
 		}
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFieldMap.keySet().iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
@@ -352,8 +352,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 				comment.append(keyValueSeparator);
 				comment.append(ReflectionToStringBuilder.toString(value,COMMENT_VALUE_TO_STRING_STYLE));
 			}
-			signature.update(CryptoUtil.serialize(key));
-			signature.update(CryptoUtil.serialize(value));
+			signature.update(CoreUtil.serialize(key));
+			signature.update(CoreUtil.serialize(value));
 		}
 	}
 

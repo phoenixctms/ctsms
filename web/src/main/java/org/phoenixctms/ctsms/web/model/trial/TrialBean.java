@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.TrialStatusAction;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -23,6 +24,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
@@ -34,6 +36,8 @@ import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
+import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -49,9 +53,10 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean
 @ViewScoped
-public class TrialBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
+public class TrialBean extends ManagedBeanBase implements VariablePeriodSelectorListener, RandomizationModeSelectorListener {
 
 	private static final int BLOCKING_PERIOD_PROPERTY_ID = 1;
+	private static final int RANDOMIZATION_MODE_PROPERTY_ID = 1;
 
 	public static void copyTrialOutToIn(TrialInVO in, TrialOutVO out) {
 		if (in != null && out != null) {
@@ -61,6 +66,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			SponsoringTypeVO sponsoringVO = out.getSponsoring();
 			SurveyStatusTypeVO surveyStatusVO = out.getSurveyStatus();
 			VariablePeriodVO blockingPeriodVO = out.getBlockingPeriod();
+			RandomizationModeVO randomizationVO = out.getRandomization();
 			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
 			in.setDescription(out.getDescription());
 			in.setSignupProbandList(out.getSignupProbandList());
@@ -80,6 +86,8 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			in.setDutySelfAllocationLocked(out.getDutySelfAllocationLocked());
 			in.setDutySelfAllocationLockedUntil(out.getDutySelfAllocationLockedUntil());
 			in.setDutySelfAllocationLockedFrom(out.getDutySelfAllocationLockedFrom());
+			in.setRandomization(randomizationVO == null ? null : randomizationVO.getMode());
+			in.setRandomizationList(out.getRandomizationList());
 		}
 	}
 
@@ -105,6 +113,8 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 					DefaultSettings.TRIAL_DUTY_SELF_ALLOCATION_LOCKED_PRESET));
 			in.setDutySelfAllocationLockedUntil(null);
 			in.setDutySelfAllocationLockedFrom(null);
+			in.setRandomization(Settings.getRandomizationMode(SettingCodes.TRIAL_RANDOMIZATION_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_PRESET));
+			in.setRandomizationList(Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
 		}
 	}
 
@@ -138,6 +148,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	private VariablePeriodSelector blocking;
 	private Collection<TrialStatusTypeVO> allStatusTypes;
 	private String deferredDeleteReason;
+	private RandomizationModeSelector randomizationMode;
 
 	public TrialBean() {
 		super();
@@ -145,11 +156,11 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		tabTitleMap = new HashMap<String, String>();
 		allStatusTypes = loadAllTrialStatusTypes();
 		setBlocking(new VariablePeriodSelector(this, BLOCKING_PERIOD_PROPERTY_ID));
+		setRandomization(new RandomizationModeSelector(this, RANDOMIZATION_MODE_PROPERTY_ID));
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		TrialInVO backup = new TrialInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -213,7 +224,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT,
 					MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE, MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE_WITH_COUNT,
 					tabCountMap.get(JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT.toString()));
-
+			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64,
+					JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT,
+					MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE, MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT,
+					tabCountMap.get(JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INQUIRY_TAB_TITLE_BASE64, JSValues.AJAX_INQUIRY_COUNT, MessageCodes.INQUIRIES_TAB_TITLE,
 					MessageCodes.INQUIRIES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_INQUIRY_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_ECRF_TAB_TITLE_BASE64, JSValues.AJAX_ECRF_COUNT,
@@ -233,6 +247,7 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 					MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString()));
 		}
 	}
+
 	@Override
 	protected String changeAction(Long id) {
 		out = null;
@@ -259,7 +274,6 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 	public String deleteAction() {
 		return deleteAction(in.getId());
 	}
-
 	@Override
 	public String deleteAction(Long id) {
 		try {
@@ -330,6 +344,20 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 				return this.in.getBlockingPeriod();
 			default:
 				return VariablePeriodSelectorListener.NO_SELECTION_VARIABLE_PERIOD;
+		}
+	}
+
+	public RandomizationModeSelector getRandomization() {
+		return randomizationMode;
+	}
+
+	@Override
+	public RandomizationMode getRandomizationMode(int property) {
+		switch (property) {
+			case RANDOMIZATION_MODE_PROPERTY_ID:
+				return this.in.getRandomization();
+			default:
+				return RandomizationModeSelectorListener.NO_SELECTION_RANDOMIZATION_MODE;
 		}
 	}
 
@@ -497,6 +525,10 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		tabCountMap.put(JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE, MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE_WITH_COUNT, count));
+		count = (out == null ? null : WebUtil.getStratificationRandomizationListCount(in.getId()));
+		tabCountMap.put(JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE, MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getInquiryCount(in.getId(), null, null));
 		tabCountMap.put(JSValues.AJAX_INQUIRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INQUIRY_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.INQUIRIES_TAB_TITLE, MessageCodes.INQUIRIES_TAB_TITLE_WITH_COUNT, count));
@@ -688,6 +720,9 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 			in.setDutySelfAllocationLockedUntil(null);
 			in.setDutySelfAllocationLockedFrom(null);
 		}
+		if (in.getRandomization() == null) {
+			in.setRandomizationList(null);
+		}
 		// signup...
 	}
 
@@ -708,6 +743,20 @@ public class TrialBean extends ManagedBeanBase implements VariablePeriodSelector
 		switch (property) {
 			case BLOCKING_PERIOD_PROPERTY_ID:
 				this.in.setBlockingPeriod(period);
+				break;
+			default:
+		}
+	}
+
+	public void setRandomization(RandomizationModeSelector randomizationMode) {
+		this.randomizationMode = randomizationMode;
+	}
+
+	@Override
+	public void setRandomizationMode(int property, RandomizationMode mode) {
+		switch (property) {
+			case RANDOMIZATION_MODE_PROPERTY_ID:
+				this.in.setRandomization(mode);
 				break;
 			default:
 		}

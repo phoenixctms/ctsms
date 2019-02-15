@@ -1272,6 +1272,7 @@
         TOKEN CHARACTER VARYING(1024) not null,
         TITLE CHARACTER VARYING(1024) not null,
         DESCRIPTION TEXT,
+        RANDOMIZE BOOLEAN not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
@@ -1311,6 +1312,7 @@
         JS_VALUE_EXPRESSION TEXT,
         JS_OUTPUT_EXPRESSION TEXT,
         ECRF_VALUE BOOLEAN not null,
+        STRATIFICATION BOOLEAN not null,
         EXTERNAL_ID CHARACTER VARYING(1024),
         FIELD_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
@@ -1566,6 +1568,16 @@
         primary key (ID)
     );
 
+    create table STRATIFICATION_RANDOMIZATION_LIST (
+        ID BIGINT not null,
+        RANDOMIZATION_LIST TEXT not null,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        VERSION BIGINT not null,
+        TRIAL_FK BIGINT not null,
+        MODIFIED_USER_FK BIGINT not null,
+        primary key (ID)
+    );
+
     create table STREET (
         ID BIGINT not null,
         COUNTRY_NAME CHARACTER VARYING(1024) not null,
@@ -1661,6 +1673,9 @@
         DESCRIPTION TEXT,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
+        RANDOM BYTEA,
+        RANDOMIZATION CHARACTER VARYING(1024),
+        RANDOMIZATION_LIST TEXT,
         EXCLUSIVE_PROBANDS BOOLEAN not null,
         BLOCKING_PERIOD CHARACTER VARYING(1024),
         BLOCKING_PERIOD_DAYS BIGINT,
@@ -2010,6 +2025,11 @@
     create table send_department_staff_category (
         SEND_DEPARTMENT_NOTIFICATION_TYPES_FK BIGINT not null,
         SEND_DEPARTMENT_STAFF_CATEGORIES_FK BIGINT not null
+    );
+
+    create table stratification_randomization_list_selection_set_value (
+        SELECTION_SET_VALUES_FK BIGINT not null,
+        RANDOMIZATION_LISTS_FK BIGINT not null
     );
 
     create table trial_status_transition (
@@ -3073,6 +3093,16 @@
         foreign key (STAFF_FK) 
         references STAFF;
 
+    alter table STRATIFICATION_RANDOMIZATION_LIST 
+        add constraint STRATIFICATION_RANDOMIZATION_LIST_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table STRATIFICATION_RANDOMIZATION_LIST 
+        add constraint STRATIFICATION_RANDOMIZATION_LIST_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
     alter table TEAM_MEMBER 
         add constraint TEAM_MEMBER_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
@@ -3472,6 +3502,16 @@
         add constraint STAFF_CATEGORY_SEND_DEPARTMENT_NOTIFICATION_TYPES_FKC 
         foreign key (SEND_DEPARTMENT_NOTIFICATION_TYPES_FK) 
         references NOTIFICATION_TYPE;
+
+    alter table stratification_randomization_list_selection_set_value 
+        add constraint INPUT_FIELD_SELECTION_SET_VALUE_RANDOMIZATION_LISTS_FKC 
+        foreign key (RANDOMIZATION_LISTS_FK) 
+        references STRATIFICATION_RANDOMIZATION_LIST;
+
+    alter table stratification_randomization_list_selection_set_value 
+        add constraint STRATIFICATION_RANDOMIZATION_LIST_SELECTION_SET_VALUES_FKC 
+        foreign key (SELECTION_SET_VALUES_FK) 
+        references INPUT_FIELD_SELECTION_SET_VALUE;
 
     alter table trial_status_transition 
         add constraint TRIAL_STATUS_TYPE_TRIAL_STATUS_TYPES_FKC 

@@ -194,6 +194,7 @@
 											update=":tabView:trialparticipation_form:trialparticipation_list,:tabView:trialparticipation_form:trialParticipationListTabView" />
 										<p:commandButton
 											process="@this,probandlistentry_input"
+											rendered="#{not trialParticipationBean.randomization}"
 											id="addProbandListEntry"
 											value="#{labels.add_button_label}"
 											actionListener="#{trialParticipationBean.add}"
@@ -202,8 +203,34 @@
 											ajax="true"
 											disabled="#{!trialParticipationBean.createable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
+											
+											<p:splitButton
+												ajax="true"
+												rendered="#{trialParticipationBean.randomization}"
+												process="@this,probandlistentry_input"
+												id="addProbandListEntryNotRandomized"
+												actionListener="#{trialParticipationBean.add}"
+												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+												disabled="#{!trialParticipationBean.createable}"
+												update=":tabView:trialparticipation_form:trialParticipationListTabView"
+												value="#{labels.add_button_label}"
+												icon="ui-icon ui-icon-plusthick">
+												<p:menuitem
+													ajax="true"
+													process="@this,probandlistentry_input"
+													id="addProbandListEntryRandomized"
+													actionListener="#{trialParticipationBean.addRandomized}"
+													oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+													disabled="#{!trialParticipationBean.createable}"
+													update=":tabView:trialparticipation_form:trialParticipationListTabView"
+													value="#{labels.add_randomize_button_label}"
+													icon="ctsms-menubar-icon ui-icon-gear">
+												</p:menuitem>
+											</p:splitButton>											
+											
 										<p:commandButton
 											process="@this,probandlistentry_input"
+											rendered="#{not trialParticipationBean.randomization}"
 											id="updateProbandListEntry"
 											value="#{labels.update_button_label}"
 											actionListener="#{trialParticipationBean.update}"
@@ -212,6 +239,31 @@
 											ajax="true"
 											disabled="#{!trialParticipationBean.editable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
+											
+										<p:splitButton
+												ajax="true"
+												rendered="#{trialParticipationBean.randomization}"
+												process="@this,probandlistentry_input"
+												id="updateProbandListEntryNotRandomized"
+												actionListener="#{trialParticipationBean.update}"
+												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+												disabled="#{!trialParticipationBean.editable}"
+												update=":tabView:trialparticipation_form:trialParticipationListTabView"
+												value="#{labels.update_button_label}"
+												icon="ui-icon ui-icon-disk">
+												<p:menuitem
+													ajax="true"
+													process="@this,probandlistentry_input"
+													id="updateProbandListEntryRandomized"
+													actionListener="#{trialParticipationBean.updateRandomized}"
+													oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+													disabled="#{!trialParticipationBean.editable}"
+													update=":tabView:trialparticipation_form:trialParticipationListTabView"
+													value="#{labels.update_randomize_button_label}"
+													icon="ctsms-menubar-icon ui-icon-gear">
+												</p:menuitem>
+											</p:splitButton>												
+											
 										<p:commandButton
 											process="@this"
 											value="#{labels.delete_button_label}"
@@ -296,6 +348,8 @@
 												ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.createable}"
 												update="probandliststatus_list,probandliststatus_input" />
+																								
+												
 											<p:commandButton
 												process="@this"
 												value="#{labels.delete_button_label}"

@@ -128,6 +128,20 @@ extends InputFieldSelectionSetValueDaoBase
 	}
 
 	@Override
+	protected Collection<InputFieldSelectionSetValue> handleFindSelectionSetValues(Long fieldId, String nameInfix, Integer limit)
+			throws Exception {
+		org.hibernate.Criteria selectionSetValueCriteria = createSelectionSetValueCriteria();
+		if (fieldId != null) {
+			selectionSetValueCriteria.add(Restrictions.eq("field.id", fieldId.longValue()));
+		}
+		CategoryCriterion.apply(selectionSetValueCriteria, new CategoryCriterion(nameInfix, "nameL10nKey", MatchMode.ANYWHERE));
+		selectionSetValueCriteria.addOrder(Order.asc("nameL10nKey"));
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), selectionSetValueCriteria);
+		return selectionSetValueCriteria.list();
+	}
+
+	@Override
 	protected Collection<InputFieldSelectionSetValue> handleFindUsedByEcrfFieldsSorted() throws Exception {
 		org.hibernate.Criteria selectionSetValueCriteria = createSelectionSetValueCriteria();
 		applyUsedByCriterions(selectionSetValueCriteria, null, "ecrfFields");

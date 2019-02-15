@@ -73,6 +73,7 @@ import org.phoenixctms.ctsms.domain.StaffContactDetailValueDao;
 import org.phoenixctms.ctsms.domain.StaffDao;
 import org.phoenixctms.ctsms.domain.StaffStatusEntryDao;
 import org.phoenixctms.ctsms.domain.StaffTagValueDao;
+import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.TeamMember;
 import org.phoenixctms.ctsms.domain.TeamMemberDao;
 import org.phoenixctms.ctsms.domain.TimelineEventDao;
@@ -233,6 +234,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private DutyRosterTurnDao dutyRosterTurnDao;
 	private LecturerDao lecturerDao;
 	private TrialTagValueDao trialTagValueDao;
+	private StratificationRandomizationListDao stratificationRandomizationListDao;
 	private TeamMemberDao teamMemberDao;
 	private TimelineEventDao timelineEventDao;
 	private ProbandGroupDao probandGroupDao;
@@ -1091,6 +1093,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		this.staffTagValueDao = staffTagValueDao;
 	}
 
+	public void setStratificationRandomizationListDao(StratificationRandomizationListDao stratificationRandomizationListDao) {
+		this.stratificationRandomizationListDao = stratificationRandomizationListDao;
+	}
 	public void setTeamMemberDao(TeamMemberDao teamMemberDao) {
 		this.teamMemberDao = teamMemberDao;
 	}
@@ -1209,6 +1214,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return parameterValue == null ? null : CheckIDUtil.checkLecturerId((Long) parameterValue, lecturerDao).getStaff().getId();
 				case TRIAL_TAG_VALUE_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkTrialTagValueId((Long) parameterValue, trialTagValueDao).getTrial().getId();
+				case STRATIFICATION_RANDOMIZATION_LIST_ID_TO_TRIAL_ID:
+					return parameterValue == null ? null
+							: CheckIDUtil.checkStratificationRandomizationListId((Long) parameterValue, stratificationRandomizationListDao).getTrial().getId();
 				case TRIAL_TEAM_MEMBER_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkTeamMemberId((Long) parameterValue, teamMemberDao).getTrial().getId();
 				case TRIAL_TEAM_MEMBER_ID_TO_STAFF_ID:
@@ -1253,7 +1261,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryId((Long) parameterValue, probandListEntryDao).getTrial().getId();
 				case PROBAND_LIST_ENTRY_ID_TO_PROBAND_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryId((Long) parameterValue, probandListEntryDao).getProband().getId();
-
 				case PROBAND_LIST_STATUS_ENTRY_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getTrial()
 							.getId();
@@ -1594,7 +1601,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						}
 					}
 					return null;
-
 				case FILE_ID_TO_PROBAND_ID:
 					if (parameterValue != null) {
 						Proband proband = CheckIDUtil.checkFileId((Long) parameterValue, fileDao).getProband();

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>randomization lists</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="randomizationlist_form">
+			<!-- <p:remoteCommand
+				process="@this"
+				name="changeStratificationRandomizationList"
+				actionListener="#{randomizationListBean.change(randomizationListBean.in.id)}"
+				update="randomizationlist_list,randomizationlist_input" /> -->
+			<h:panelGrid
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable
+					styleClass="ctsms-datatable"
+					lazy="true"
+					rows="#{dataTablesRowsDefault}"
+					paginator="#{dataTablesPaginatorDefault}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+					paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+					pageLinks="#{dataTablesPageLinksDefault}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+					scrollable="#{dataTablesScrollableDefault}"
+					scrollHeight="#{dataTablesScrollHeightDefault}"
+					resizableColumns="#{dataTablesResizableColumnsDefault}"
+					sortBy="#{stratificationRandomizationList.vo.id}"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="stratificationRandomizationList"
+					value="#{randomizationListBean.randomizationListModel}"
+					id="randomizationlist_list"
+					selectionMode="single"
+					selection="#{randomizationListBean.selectedStratificationRandomizationList}">
+					<p:ajax
+						event="rowSelect"
+						update=":tabView:randomizationlist_form:randomizationlist_input" />
+					<f:facet name="header">
+						<h:outputText value="#{randomizationListBean.randomizationListModel.rowCount} #{triallabels.randomizationlist_randomizationlist_list_header}" />
+					</f:facet>
+					<p:column sortBy="#{stratificationRandomizationList.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{stratificationRandomizationList.vo.id}" />
+					</p:column>
+					<!-- <p:column sortBy="#{stratificationRandomizationList.vo.tag}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.stratificationRandomizationList_randomizationlist_list_tag_name_column}" />
+						</f:facet>
+						<h:outputText value="#{stratificationRandomizationList.vo.tag.name}" />
+					</p:column>
+					<p:column sortBy="#{stratificationRandomizationList.vo.value}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.stratificationRandomizationList_randomizationlist_list_value_column}" />
+						</f:facet>
+						<h:outputText value="#{stratificationRandomizationList.vo.value}" />
+					</p:column> -->
+				</p:dataTable>
+				<p:panel id="randomizationlist_input">
+					<f:facet name="header">
+						<h:outputText value="#{randomizationListBean.title}" />
+					</f:facet>
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						<h:panelGrid
+							rendered="#{randomizationListBean.inputVisible}"
+							columns="9"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							
+							<h:outputLabel
+								for="selectionsetvalues"
+								value="#{triallabels.randomizationlist_selectionsetvalues_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="selectionsetvalues"
+									required="false"
+									value="#{randomizationListBean.selectionSetValues}"
+									label="#{triallabels.randomizationlist_selectionsetvalues}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthInputField}"
+							maxResults="#{autoCompleteMaxResultsInputField}"
+							queryDelay="#{autoCompleteQueryDelayInputField}"
+									
+									global="#{autoCompleteGlobalInputField}"
+									scrollHeight="#{autoCompleteScrollHeightInputField}"
+									completeMethod="#{randomizationListBean.completeSelectionSetValue}"
+									
+									multiple="true"
+									var="selectionSetValue"
+									itemValue="#{selectionSetValue}"
+									itemLabel="#{selectionSetValue.vo.name}"
+									converter="ctsms.InputFieldSelectionSetValue"> <!-- dropdown="#{autoCompleteDropdownCode}" forceSelection="true" -->
+									<p:ajax
+									    process="@this"
+										event="itemSelect"
+										listener="#{randomizationListBean.handleSelectionSetValueSelect}"
+										 /> <!-- update="asp" -->
+									<p:ajax
+									    process="@this"
+										event="itemUnselect"
+										listener="#{randomizationListBean.handleSelectionSetValueUnselect}"
+										 /> <!-- update="asp" -->
+									<p:column>
+										<h:outputText value="#{applicationScopeBean.clipStringTrailing(selectionSetValue.vo.name,128)}" />
+									</p:column>
+									<!-- <f:facet name="itemtip">
+										<h:panelGrid
+											columns="1"
+											cellpadding="0"
+											styleClass="ctsms-code-itemtip-panelgrid">
+											
+										</h:panelGrid>
+									</f:facet> -->
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="selectionsetvalues">
+									<h:outputText
+										value="#{triallabels.randomizationlist_selectionsetvalues_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="selectionsetvalues" />							
+							
+						</h:panelGrid>
+						<h:panelGrid
+							rendered="#{randomizationListBean.inputVisible}"
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="stratificationRandomizationListRandomizationList"
+								value="#{triallabels.randomizationlist_randomization_list_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="stratificationRandomizationListRandomizationList"
+									value="#{randomizationListBean.in.randomizationList}"
+									required="true"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{triallabels.randomizationlist_randomization_list}">
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="stratificationRandomizationListRandomizationList">
+									<h:outputText
+										value="#{triallabels.randomizationlist_randomization_list_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:outputLabel rendered="#{!randomizationListBean.inputVisible}" />
+						<h:outputLabel rendered="#{!randomizationListBean.inputVisible}" />
+						<p:messages />
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<h:outputText
+									styleClass="ctsms-toolbar-text"
+									value="#{randomizationListBean.created ? randomizationListBean.modifiedAnnotation : ''}" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<p:commandButton
+									process="@this"
+									value="#{labels.reset_button_label}"
+									actionListener="#{randomizationListBean.reset}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-close"
+									ajax="true"
+									disabled="false"
+									update="randomizationlist_list,randomizationlist_input" />
+								<p:commandButton
+									process="@this,randomizationlist_input"
+									id="add"
+									value="#{labels.add_button_label}"
+									actionListener="#{randomizationListBean.add}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-plusthick"
+									ajax="true"
+									disabled="#{!randomizationListBean.createable}"
+									update="randomizationlist_list,randomizationlist_input" />
+								<p:commandButton
+									process="@this,randomizationlist_input"
+									id="update"
+									value="#{labels.update_button_label}"
+									actionListener="#{randomizationListBean.update}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk"
+									ajax="true"
+									disabled="#{!randomizationListBean.editable}"
+									update="randomizationlist_list,randomizationlist_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.delete_button_label}"
+									actionListener="#{randomizationListBean.delete}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-trash"
+									ajax="true"
+									disabled="#{!randomizationListBean.removable}"
+									update="randomizationlist_list,randomizationlist_input" />
+								<p:commandButton
+									process="@this"
+									value="#{labels.load_button_label}"
+									actionListener="#{randomizationListBean.load}"
+									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon-refresh"
+									ajax="true"
+									disabled="#{!randomizationListBean.created}"
+									update="randomizationlist_list,randomizationlist_input" />
+							</p:toolbarGroup>
+							<p:separator />
+							<p:toolbarGroup align="right">
+								<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</h:panelGrid>
+					
+				</p:panel>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

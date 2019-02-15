@@ -69,6 +69,19 @@ extends ProbandGroupDaoBase
 	}
 
 	@Override
+	protected Collection<ProbandGroup> handleFindByTrialRandomize(Long trialId,
+			Boolean randomize) throws Exception {
+		org.hibernate.Criteria probandGroupCriteria = createProbandGroupCriteria();
+		if (trialId != null) {
+			probandGroupCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (randomize != null) {
+			probandGroupCriteria.add(Restrictions.eq("randomize", randomize.booleanValue()));
+		}
+		return probandGroupCriteria.list();
+	}
+
+	@Override
 	protected Collection<ProbandGroup> handleFindByTrialTitleToken(Long trialId,
 			String title, String token) throws Exception {
 		org.hibernate.Criteria probandGroupCriteria = createProbandGroupCriteria();

@@ -40,6 +40,7 @@ public class ProbandGroupBean extends ManagedBeanBase {
 			in.setTitle(out.getTitle());
 			in.setToken(out.getToken());
 			in.setDescription(out.getDescription());
+			in.setRandomize(out.getRandomize());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setVersion(out.getVersion());
 		}
@@ -51,6 +52,7 @@ public class ProbandGroupBean extends ManagedBeanBase {
 			in.setTitle(Messages.getString(MessageCodes.PROBAND_GROUP_TITLE_PRESET));
 			in.setToken(Messages.getString(MessageCodes.PROBAND_GROUP_TOKEN_PRESET));
 			in.setDescription(Messages.getString(MessageCodes.PROBAND_GROUP_DESCRIPTION_PRESET));
+			in.setRandomize(Settings.getBoolean(SettingCodes.PROBAND_GROUP_RANDOMIZE_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUP_RANDOMIZE_PRESET));
 			in.setTrialId(trialId);
 			in.setVersion(null);
 		}
@@ -182,7 +184,7 @@ public class ProbandGroupBean extends ManagedBeanBase {
 		return ProbandListEntryModel.getCachedProbandListEntryModel(group, probandListEntryModelCache,
 				Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
 						DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN),
-						Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN), true);
+				Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN), true);
 	}
 
 	public IDVO getSelectedProbandGroup() {

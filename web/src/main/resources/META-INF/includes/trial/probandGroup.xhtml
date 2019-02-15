@@ -76,6 +76,19 @@
 						</f:facet>
 						<h:outputText value="#{applicationScopeBean.clipStringTrailing(probandGroup.vo.description)}" />
 					</p:column>					
+					<p:column
+						sortBy="#{probandGroup.vo.randomize}"
+						filterBy="#{probandGroup.vo.randomize}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.proband_group_probandgroup_list_randomize_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{probandGroup.vo.randomize}" />
+						</ui:include>
+					</p:column>					
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{triallabels.proband_group_probandgroup_list_proband_group_size_column}" />
@@ -247,6 +260,23 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="probandgrouptitle" />
+							
+							<h:outputLabel
+									for="probandgrouprandomize"
+									value="#{triallabels.proband_group_randomize_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="probandgrouprandomize"
+										value="#{probandGroupBean.in.randomize}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="probandgrouprandomize">
+										<h:outputText
+											value="#{triallabels.proband_group_randomize_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="probandgrouprandomize" />
 						</h:panelGrid>
 						<h:panelGrid
 							rendered="#{probandGroupBean.inputVisible}"
