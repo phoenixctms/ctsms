@@ -696,9 +696,9 @@ function ajaxRequest(source, process, update, oncomplete) {
 
 function _getElement(pickTargetField) {
 
-	if (pickTargetField != null && pickTargetField.length > 0 && targetField.length) {
+	if (pickTargetField != null && pickTargetField.length > 0) {
 		var targetField = jQuery(PrimeFaces.escapeClientId(_stripLeadingColons(pickTargetField)));
-		if (typeof targetField !== 'undefined' && targetField != null) {
+		if (typeof targetField !== 'undefined' && targetField != null && targetField.length) {
 			return targetField;
 		}
 	}
