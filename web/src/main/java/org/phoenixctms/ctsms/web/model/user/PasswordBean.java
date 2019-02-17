@@ -77,6 +77,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	@Override
 	public String addAction()
 	{
+	    sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in);
 			initIn();
@@ -334,5 +335,11 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 
 	public void setValidity(VariablePeriodSelector validity) {
 		this.validity = validity;
+	}
+	
+	private void sanitizeInVals() {
+		if (!in.getExpires()) {
+			in.setProlongable(false);
+		}
 	}
 }
