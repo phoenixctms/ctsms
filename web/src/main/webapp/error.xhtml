@@ -39,7 +39,7 @@
 						<ul>
 							<li><h:outputText value="#{labels.error_page} #{requestScope['javax.servlet.forward.request_uri']}" /></li>
 							<li><h:outputText
-									value="#{labels.error_type} #{requestScope['javax.servlet.error.status_code'] == '404' ? labels.error_404 : (requestScope['javax.servlet.error.status_code'] == '500' ? labels.error_500 : '')}" /></li>
+									value="#{labels.error_type} #{requestScope['javax.servlet.error.status_code'] == '403' ? labels.error_403 : (requestScope['javax.servlet.error.status_code'] == '404' ? labels.error_404 : (requestScope['javax.servlet.error.status_code'] == '500' ? labels.error_500 : ''))}" /></li>
 						</ul>
 					</h:panelGroup>
 					<ui:include src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
