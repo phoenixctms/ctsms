@@ -699,7 +699,7 @@ public final class CoreUtil {
 			if (modifiedVersion != 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO); // or null");
 			}
-			return 0;
+			return 0l;
 		}
 	}
 

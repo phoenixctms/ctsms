@@ -893,7 +893,7 @@ extends InputFieldServiceBase
 				}
 			}
 		}
-
+		CoreUtil.getUserContext().voMapClear();
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
 		if (!update || ServiceUtil.LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF || !InputFieldOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 			ServiceUtil.logSystemMessage(inputField, result, now, user, update ? SystemMessageCodes.INPUT_FIELD_UPDATED : SystemMessageCodes.INPUT_FIELD_CREATED, result,

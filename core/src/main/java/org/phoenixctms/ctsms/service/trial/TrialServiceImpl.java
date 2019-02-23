@@ -3022,6 +3022,7 @@ extends TrialServiceBase
 				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, false, now, user);
 			}
 		}
+		CoreUtil.getUserContext().voMapClear();
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
 		if (!update || ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 			ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, update ? SystemMessageCodes.ECRF_UPDATED : SystemMessageCodes.ECRF_CREATED, result,
