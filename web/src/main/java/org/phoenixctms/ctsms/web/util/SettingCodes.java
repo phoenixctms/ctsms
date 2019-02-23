@@ -84,6 +84,7 @@ public interface SettingCodes {
 	public final static String PROBAND_LIST_INQUIRY_ACTIVE = "proband_list_inquiry_active";
 	public final static String PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH = "proband_list_inquiry_value_text_clip_max_length";
 	public final static String PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH = "proband_list_proband_list_entry_tag_value_text_clip_max_length";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH = "stratification_randomization_list_proband_list_entry_tag_value_text_clip_max_length";
 	public final static String COURSE_SELF_REGISTRATION_PRESET = "course_self_registration_preset";
 	public final static String COURSE_EXPIRES_PRESET = "course_expires_preset";
 	public final static String COURSE_MAX_NUMBER_OF_PARTICIPANTS_PRESET = "course_max_number_of_participant_preset";
@@ -367,6 +368,7 @@ public interface SettingCodes {
 	public static final String TRIAL_SIGNUP_RANDOMIZE_PRESET = "trial_signup_randomize_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_PRESET = "trial_blocking_period_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_DAYS_PRESET = "trial_blocking_period_days_preset";
+	public static final String GENERATE_RANDOMIZATION_LIST_N_PRESET = "generate_randomization_list_n_preset";
 	public static final String PROBAND_LIST_BULK_ADD_SHUFFLE = "proband_list_bulk_add_shuffle";
 	public static final String PROBAND_LIST_BULK_ADD_RANDOMIZE = "proband_list_bulk_add_randomize";
 	public static final String PROBAND_LIST_BULK_ADD_LIMIT = "proband_list_bulk_add_limit";
@@ -494,4 +496,5 @@ public interface SettingCodes {
 	public static final String RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = "recipient_overview_show_scheduled_preset";
 	public static final String PROBAND_ADDRESS_STRICT = "proband_address_strict";
 	public static final String STAFF_ADDRESS_STRICT = "staff_address_strict";
+
 }

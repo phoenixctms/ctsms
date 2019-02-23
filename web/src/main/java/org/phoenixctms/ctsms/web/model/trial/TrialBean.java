@@ -39,7 +39,6 @@ import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
-import org.phoenixctms.ctsms.web.model.shared.GenerateRandomListBean;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -198,6 +197,21 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	}
 
 	@Override
+	protected void addGenerateRandomizationListWarnMessage() {
+		if (getRandomizationMode() != null) {
+			switch (getRandomizationMode()) {
+				case GROUP_STRATIFIED:
+				case TAG_SELECT_STRATIFIED:
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_USED);
+					break;
+				default:
+					break;
+			}
+		}
+
+	}
+
+	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
@@ -271,11 +285,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		initSets();
 		return CHANGE_OUTCOME;
 	}
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
 	}
+
 	@Override
 	public String deleteAction(Long id) {
 		try {
@@ -351,6 +365,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	public RandomizationModeSelector getRandomization() {
 		return randomizationMode;
+	}
+
+	@Override
+	protected String getRandomizationList() {
+		return in.getRandomizationList();
 	}
 
 	@Override
@@ -495,6 +514,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			initTrialDefaultValues(in, WebUtil.getUser());
 		}
 	}
+
 
 	private void initSets() {
 		password = null;
@@ -679,7 +699,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		}
 		return ERROR_OUTCOME;
 	}
-
 	private Collection<TrialStatusTypeVO> loadAllTrialStatusTypes() {
 		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
@@ -718,6 +737,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			}
 		}
 	}
+
 	private void loadTrialStatusType() {
 		trialStatusType = WebUtil.getTrialStatusType(in.getStatusId());
 	}
@@ -768,6 +788,12 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	public void setRandomization(RandomizationModeSelector randomizationMode) {
 		this.randomizationMode = randomizationMode;
+	}
+
+	@Override
+	protected void setRandomizationList(String randomizationList) {
+		in.setRandomizationList(randomizationList);
+
 	}
 
 	@Override

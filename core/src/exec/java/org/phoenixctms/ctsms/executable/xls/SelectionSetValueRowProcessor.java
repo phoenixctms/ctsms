@@ -186,7 +186,7 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 			selectionSetValueMap.put(fieldName, selectionSetValues);
 		}
 		if (selectionSetValues.add(selectionSetValueIn)) {
-			jobOutput.println("selection set value for field '" + fieldName + "' added: " + value);
+			jobOutput.println("selection set value for field '" + fieldName + "' read: " + value);
 			return 1;
 		} else {
 			jobOutput.println("selection set value for field '" + fieldName + "' SKIPPED: " + value);

@@ -10,12 +10,30 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<!-- id="add_reimbursement_dialog" -->
-		<!-- styleClass="ctsms-addreimbursement-dialog" -->
+		<p:remoteCommand
+			process="@this"
+			name="#{openGenerateRandomizationListCommand}"
+			actionListener="#{generateRandomizationListBean.clearGenerateRandomizationList()}"
+			oncomplete="#{generateRandomizationListDialog}.show();"
+			update="generate_randomizationlist_dialog" />
+		<p:remoteCommand
+			process="@this"
+			name="copy_#{openGenerateRandomizationListCommand}"
+			actionListener="#{generateRandomizationListBean.copyGenerateRandomizationList()}"
+			oncomplete="#{generateRandomizationListDialog}.hide();"
+			update="#{randomizationListTarget}" />
+		<p:remoteCommand
+			process="@this"
+			name="append_#{openGenerateRandomizationListCommand}"
+			actionListener="#{generateRandomizationListBean.appendGenerateRandomizationList()}"
+			oncomplete="#{generateRandomizationListDialog}.hide();"
+			update="#{randomizationListTarget}" />
 		<p:dialog
 			widgetVar="#{generateRandomizationListDialog}"
 			modal="true"
-			header="#{triallabels.xxxx}"
+			id="generate_randomizationlist_dialog"
+		    styleClass="ctsms-generaterandomizationlist-dialog"			
+			header="#{generateRandomizationListBean.generateRandomizationListDialogTitle}"
 			showEffect="#{effect}"
 			hideEffect="#{effect}">
 			<h:panelGrid
@@ -59,9 +77,10 @@
 					<h:panelGroup>
 						<p:inputTextarea
 							id="generate_randomization_list_randomization_list"
-							value="#{generateRandomizationListBean.randomizationList}"
+							value="#{generateRandomizationListBean.generatedRandomizationList}"
 							required="false"
-							disabled="true"
+							disabled="false"
+							readonly="true"
 							autoResize="false"
 							styleClass="ctsms-textarea"
 							label="#{triallabels.generate_randomization_list_randomization_list}">
@@ -79,13 +98,28 @@
 				<p:toolbar>
 					<p:toolbarGroup align="right">
 						<p:commandButton
+							process="@this"
+							value="#{labels.reset_button_label}"
+							actionListener="#{generateRandomizationListBean.clearGenerateRandomizationList}"
+							icon="ui-icon ui-icon-close"
+							ajax="true"
+							disabled="false"
+							update="generate_randomization_list_input" />					
+						<p:commandButton
 							process="@this,generate_randomization_list_n"
 							id="updateRandomizationList"
-							value="#{triallabels.generate_randomization_list_randomization_list_tooltip}"
+							value="#{triallabels.generate_randomization_list_button_label}"
 							actionListener="#{generateRandomizationListBean.updateRandomizationList}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							ajax="true"
 							update="generate_randomization_list_input" />
+						<p:commandButton
+							title="#{triallabels.copy_over_and_close}"
+							icon="ui-icon ui-icon-copy"
+							value="#{triallabels.copy_randomization_list_button_label}"
+							type="button"
+							disabled="#{empty generateRandomizationListBean.generatedRandomizationList}"
+							onclick="copy_#{openGenerateRandomizationListCommand}()" />
 					</p:toolbarGroup>
 					<p:separator />
 					<p:toolbarGroup align="right">

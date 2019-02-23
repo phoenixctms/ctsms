@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
@@ -161,6 +162,7 @@ public final class CoreUtil {
 	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
 	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
 	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
+	private static String PRNG_CLASS_DESCRIPTION = "{0} ({1})";
 
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
 		if (fieldMap.containsKey(vo)) {
@@ -701,18 +703,6 @@ public final class CoreUtil {
 		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
-	// public static String getHex(byte[] data) {
-	// if (data == null) {
-	// return null;
-	// }
-	// final StringBuilder hex = new StringBuilder(2 * data.length);
-	// for (final byte b : data) {
-	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
-	// HEX_DIGITS.charAt((b & 0x0F)));
-	// }
-	// return hex.toString();
-	// }
-
 	public static <E> long getNewVersionChecked(E original, long modifiedVersion) throws Exception {
 		if (original != null) {
 			long originalVersion = ((Long) original.getClass().getMethod(ENTITY_VERSION_GETTER_METHOD_NAME).invoke(original)).longValue();
@@ -725,9 +715,21 @@ public final class CoreUtil {
 			if (modifiedVersion != 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO); // or null");
 			}
-			return 0;
+			return 0l;
 		}
 	}
+
+	// public static String getHex(byte[] data) {
+	// if (data == null) {
+	// return null;
+	// }
+	// final StringBuilder hex = new StringBuilder(2 * data.length);
+	// for (final byte b : data) {
+	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
+	// HEX_DIGITS.charAt((b & 0x0F)));
+	// }
+	// return hex.toString();
+	// }
 
 	public static String getOutVOClassNameFromEntityName(String entityName) {
 		return getValueObjectClassNameFromEntityName(entityName, OUT_VO_CLASS_SUFFIX);
@@ -742,6 +744,10 @@ public final class CoreUtil {
 			pdf.setFileNameExtensions("*." + PDF_FILENAME_EXTENSION);
 		}
 		return pdf;
+	}
+
+	public static String getPrngClassDescription(Random random) {
+		return MessageFormat.format(PRNG_CLASS_DESCRIPTION,random.getClass().getCanonicalName(),System.getProperty("java.version"));
 	}
 
 	public static Class getPropertyClass(Class entity, String propertyName) {

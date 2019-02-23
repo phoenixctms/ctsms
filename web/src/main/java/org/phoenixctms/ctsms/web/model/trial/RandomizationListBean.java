@@ -13,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -26,7 +27,6 @@ import org.phoenixctms.ctsms.web.adapt.ProbandListEntryTagValueOutVOStringAdapte
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
-import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -42,7 +42,7 @@ import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
-public class RandomizationListBean extends ManagedBeanBase {
+public class RandomizationListBean extends GenerateRandomListBean {
 
 	public static void copyStratificationRandomizationListOutToIn(StratificationRandomizationListInVO in, StratificationRandomizationListOutVO out) {
 		if (in != null && out != null) {
@@ -119,6 +119,12 @@ public class RandomizationListBean extends ManagedBeanBase {
 	}
 
 	@Override
+	protected void addGenerateRandomizationListWarnMessage() {
+
+
+	}
+
+	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null,
 				JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64, JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT,
@@ -130,6 +136,7 @@ public class RandomizationListBean extends ManagedBeanBase {
 		}
 	}
 
+
 	@Override
 	protected String changeAction(Long id) {
 		LazyDataModelBase.clearFilters("stratificationlist_list");
@@ -137,9 +144,9 @@ public class RandomizationListBean extends ManagedBeanBase {
 		this.trialId = id;
 		initIn();
 		initSets();
+		resetGenerateRandomizationList();
 		return CHANGE_OUTCOME;
 	}
-
 
 	public List<IDVO> completeSelectionSetValue(String query) {
 		Iterator<Long> it = requiredFields.iterator();
@@ -194,6 +201,7 @@ public class RandomizationListBean extends ManagedBeanBase {
 		return in;
 	}
 
+
 	@Override
 	public String getModifiedAnnotation() {
 		if (out != null) {
@@ -203,13 +211,22 @@ public class RandomizationListBean extends ManagedBeanBase {
 		}
 	}
 
-
 	public StratificationRandomizationListOutVO getOut() {
 		return out;
 	}
 
+	@Override
+	protected String getRandomizationList() {
+		return this.in.getRandomizationList();
+	}
+
 	public RandomizationListLazyModel getRandomizationListModel() {
 		return randomizationListModel;
+	}
+
+	@Override
+	protected RandomizationMode getRandomizationMode() {
+		return (   (trial != null && trial.getRandomization() != null) ? trial.getRandomization().getMode() : null);
 	}
 
 	public IDVO getSelectedStratificationRandomizationList() {
@@ -228,12 +245,15 @@ public class RandomizationListBean extends ManagedBeanBase {
 	public String getTitle() {
 		if (out != null) {
 			return Messages.getMessage(MessageCodes.STRATIFICATION_RANDOMIZATION_LIST_TITLE, Long.toString(out.getId()),
-					(new ProbandListEntryTagValueOutVOStringAdapter(Settings.getInt(SettingCodes.PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
-							DefaultSettings.PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH)))
-					.selectionSetValuesToString(out.getSelectionSetValues()));
+					stratificationRandomizationListSelectionSetValuesToString(out));
 		} else {
 			return Messages.getString(MessageCodes.CREATE_NEW_STRATIFICATION_RANDOMIZATION_LIST);
 		}
+	}
+
+	@Override
+	protected Long getTrialId() {
+		return trialId;
 	}
 
 	public void handleSelectionSetValueSelect( SelectEvent event) {
@@ -290,6 +310,19 @@ public class RandomizationListBean extends ManagedBeanBase {
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
+		}
+		if (getRandomizationMode() != null) {
+			switch (getRandomizationMode()) {
+				case GROUP_STRATIFIED:
+				case TAG_SELECT_STRATIFIED:
+				case TAG_TEXT_STRATIFIED:
+					break;
+				default:
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
+					break;
+			}
+		} else {
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
 		}
 	}
 
@@ -375,6 +408,11 @@ public class RandomizationListBean extends ManagedBeanBase {
 		}
 	}
 
+	@Override
+	protected void setRandomizationList(String randomizationList) {
+		this.in.setRandomizationList(randomizationList);
+	}
+
 	public void setSelectedStratificationRandomizationList(IDVO randomizationList) {
 		if (randomizationList != null) {
 			this.out = (StratificationRandomizationListOutVO) randomizationList.getVo();
@@ -398,6 +436,16 @@ public class RandomizationListBean extends ManagedBeanBase {
 		} else {
 			this.selectionSetValues.clear();
 		}
+	}
+
+	public String stratificationRandomizationListSelectionSetValuesToString(StratificationRandomizationListOutVO randomizationList) {
+		if (randomizationList != null) {
+			return (new ProbandListEntryTagValueOutVOStringAdapter(
+					Settings.getInt(SettingCodes.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
+							DefaultSettings.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH)))
+					.selectionSetValuesToString(randomizationList.getSelectionSetValues(), true);
+		}
+		return null;
 	}
 
 	@Override

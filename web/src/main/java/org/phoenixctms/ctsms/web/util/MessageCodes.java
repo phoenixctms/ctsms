@@ -128,6 +128,7 @@ public interface MessageCodes {
 	public final static String NO_FILE_FILTERS = "no_file_filters";
 	public final static String WEBCAM_FILE_NAME = "webcam_file_name";
 	public final static String UPLOAD_OPERATION_SUCCESSFUL = "upload_operation_successfull";
+	public final static String GENERATE_RANDOMIZATION_LIST_OPERATION_SUCCESSFUL = "generate_randomization_list_operation_successful";
 	public final static String LOGICAL_FILE_SYSTEM_STATS_LABEL = "logical_file_system_stats_label";
 	public final static String FOLDER_LABEL = "folder_label";
 	public final static String STAFF_TREE_LABEL = "staff_tree_label";
@@ -857,5 +858,9 @@ public interface MessageCodes {
 	public static final String HOST_NOT_ALLOWED_OR_UNKNOWN_HOST = AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST;
 	public static final String REQUEST_FROM_TRUSTED_REFERER = "request_from_trusted_referer";
 	public static final String MASS_MAIL_PROGRESS_LABEL = "mass_mail_progress_label";
+	public static final String GENERATE_GROUP_RANDOMIZATION_LIST_TITLE = "generate_group_randomization_list_title";
+	public static final String GENERATE_TAG_RANDOMIZATION_LIST_TITLE = "generate_tag_randomization_list_title";
+	public static final String STRATIFICATION_RANDOMISATION_LIST_NOT_USED = "stratification_randomisation_list_not_used";
+	public static final String STRATIFICATION_RANDOMISATION_LIST_USED = "stratification_randomisation_list_used";
 
 }

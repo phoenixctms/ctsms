@@ -64,6 +64,13 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 		return sb.toString();
 	}
 
+	public String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues, boolean clip) {
+		Integer textClipMaxLength = getTextClipMaxLength();
+		return clip && textClipMaxLength != null ? CommonUtil.clipString(selectionSetValuesToString(selectionSetValues), textClipMaxLength,
+				CommonUtil.DEFAULT_ELLIPSIS,
+				EllipsisPlacement.MID) : selectionSetValuesToString(selectionSetValues);
+	}
+
 	public String toString(InputFieldOutVO inputField, VALUEVO value) {
 		if (inputField != null && value != null) {
 			InputFieldTypeVO fieldTypeVO = inputField.getFieldType();

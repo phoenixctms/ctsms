@@ -428,6 +428,7 @@ extends TrialServiceBase
 		ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(signup, proband.isPerson()).iterator().next();
 		Trial trial = listEntry.getTrial();
 		listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
+		boolean randomized = false;
 		if (randomization != null) {
 			if (RandomizationType.GROUP.equals(randomization.getType())) {
 				ProbandGroup group = randomization.getRandomizedProbandGroup(trial, null);
@@ -436,6 +437,7 @@ extends TrialServiceBase
 				}
 				listEntry.setGroup(group);
 				group.addProbandListEntries(listEntry);
+				randomized = true;
 			}
 		}
 		if (signup) {
@@ -450,8 +452,9 @@ extends TrialServiceBase
 		CoreUtil.modifyVersion(listEntry, now, user);
 		listEntry = probandListEntryDao.create(listEntry);
 		if (randomization != null) {
-			if (!RandomizationType.GROUP.equals(randomization.getType())) { // when created
+			if (!RandomizationType.GROUP.equals(randomization.getType())) { // when created, not possible..
 				applyListEntryTagRandomization(trial, listEntry, null, randomization, now, user);
+				randomized = true;
 			}
 		}
 		ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
@@ -460,11 +463,15 @@ extends TrialServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_DISABLED);
 			}
 			String reason = (listEntry.getGroup() != null ?
-					L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, ProbandListStatusReasonCodes.LIST_ENTRY_CREATED,
-							DefaultProbandListStatusReasons.LIST_ENTRY_CREATED, new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)),
-									listEntry.getGroup().getTitle() }) :
-										L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, ProbandListStatusReasonCodes.LIST_ENTRY_CREATED_NO_GROUP,
-												DefaultProbandListStatusReasons.LIST_ENTRY_CREATED_NO_GROUP, new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)) }));
+					L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
+							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED,
+							randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED,
+							new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)),
+									listEntry.getGroup().getTitle() })
+					: L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
+							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED_NO_GROUP,
+								randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED_NO_GROUP,
+							new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)) }));
 			if (!statusType.isReasonRequired() || !CommonUtil.isEmptyString(reason)) {
 				ProbandListStatusEntry statusEntry = ProbandListStatusEntry.Factory.newInstance();
 				statusEntry.setListEntry(listEntry);
@@ -2786,7 +2793,7 @@ extends TrialServiceBase
 			if (shuffle) {
 				long seed = SecureRandom.getInstance(SHUFFLE_SEED_RANDOM_ALGORITHM).nextLong();
 				Random random = new Random(seed); // reproducable
-				shuffleInfo.setPrngClass(random.getClass().getCanonicalName());
+				shuffleInfo.setPrngClass(CoreUtil.getPrngClassDescription(random));
 				shuffleInfo.setSeed(seed);
 				Collections.shuffle(ids, random);
 				probandIt = ids.iterator();
@@ -3105,6 +3112,7 @@ extends TrialServiceBase
 				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, false, now, user);
 			}
 		}
+		CoreUtil.getUserContext().voMapClear();
 		ECRFOutVO result = ecrfDao.toECRFOutVO(ecrf);
 		if (!update || ServiceUtil.LOG_ADD_UPDATE_ECRF_NO_DIFF || !ECRFOutVO.equalsExcluding(original, result, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
 			ServiceUtil.logSystemMessage(ecrf.getTrial(), result.getTrial(), now, user, update ? SystemMessageCodes.ECRF_UPDATED : SystemMessageCodes.ECRF_CREATED, result,
@@ -3619,7 +3627,7 @@ extends TrialServiceBase
 			if (shuffle) {
 				long seed = SecureRandom.getInstance(SHUFFLE_SEED_RANDOM_ALGORITHM).nextLong();
 				Random random = new Random(seed); // reproducable
-				shuffleInfo.setPrngClass(random.getClass().getCanonicalName());
+				shuffleInfo.setPrngClass(CoreUtil.getPrngClassDescription(random));
 				shuffleInfo.setSeed(seed);
 				Collections.shuffle(ids, random);
 				probandIt = ids.iterator();
@@ -5191,9 +5199,9 @@ extends TrialServiceBase
 	protected String handleGenerateRandomizationList(AuthenticationVO auth, Long trialId,RandomizationMode mode, Integer n) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
-//		if (trial.getRandomization() == null) {
-//			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
-//		}
+		//		if (trial.getRandomization() == null) {
+		//			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
+		//		}
 		Randomization randomization = Randomization.getInstance(mode, trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -7671,9 +7679,14 @@ extends TrialServiceBase
 		boolean groupChanged;
 		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
 		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
-		ProbandGroup group = ((randomization != null && RandomizationType.GROUP.equals(randomization.getType()))
-				? randomization.getRandomizedProbandGroup(trial, originalProbandListEntry)
-						: (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null));
+		ProbandGroup group;
+		boolean randomized = false;
+		if (randomization != null && RandomizationType.GROUP.equals(randomization.getType())) {
+			group = randomization.getRandomizedProbandGroup(trial, originalProbandListEntry);
+			randomized = true;
+		} else {
+			group = (modifiedProbandListEntry.getGroupId() != null ? CheckIDUtil.checkProbandGroupId(modifiedProbandListEntry.getGroupId(), this.getProbandGroupDao()) : null);
+		}
 		if (group != null && originalProbandListEntry.getGroup() != null) {
 			groupChanged = !group.equals(originalProbandListEntry.getGroup());
 		} else if (group == null && originalProbandListEntry.getGroup() != null) {
@@ -7702,10 +7715,13 @@ extends TrialServiceBase
 		if (randomization != null) {
 			if (!RandomizationType.GROUP.equals(randomization.getType())) {
 				applyListEntryTagRandomization(trial, probandListEntry, originalProbandListEntry, randomization, now, user);
+				randomized = true;
 			}
 		}
-		if (probandChanged || groupChanged) {
-			addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED, ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
+		if (probandChanged || groupChanged || randomized) {
+			addProbandListEntryUpdatedProbandListStatusEntry(
+					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED,
+					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
 					probandListEntry, probandListStatusTypeId, now, user);
 		}
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();

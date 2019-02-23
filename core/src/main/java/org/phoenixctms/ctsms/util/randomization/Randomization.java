@@ -419,7 +419,7 @@ public abstract class Randomization {
 			int count = 0;
 			long seed = SecureRandom.getInstance(RANDOMIZATION_LIST_SEED_RANDOM_ALGORITHM).nextLong();
 			Random random = new Random(seed); // reproducable
-			randomizationListInfo.setPrngClass(random.getClass().getCanonicalName());
+			randomizationListInfo.setPrngClass(CoreUtil.getPrngClassDescription(random));
 			randomizationListInfo.setSeed(seed);
 			for (int i = 0; i < blocks; i++) {
 				ArrayList<String> permutation = new ArrayList<String>(items);
@@ -457,7 +457,7 @@ public abstract class Randomization {
 			} else {
 				long seed = SecureRandom.getInstance(RANDOMIZATION_SEED_RANDOM_ALGORITHM).nextLong();
 				random = new Random(seed); // reproducable (securerandom cannot be initialized with a dedicated seed)
-				randomizationInfo.setPrngClass(random.getClass().getCanonicalName());
+				randomizationInfo.setPrngClass(CoreUtil.getPrngClassDescription(random));
 				randomizationInfo.setSeed(seed);
 			}
 		}

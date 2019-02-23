@@ -76,8 +76,9 @@ extends StratificationRandomizationListDaoBase
 		if (trialId != null) {
 			stratificationRandomizationListCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		return stratificationRandomizationListCriteria.list();
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); // support filter by selection set value
+		// CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		// return stratificationRandomizationListCriteria.list();
 	}
 
 	@Override

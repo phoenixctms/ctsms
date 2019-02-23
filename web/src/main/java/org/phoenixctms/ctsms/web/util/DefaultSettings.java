@@ -294,6 +294,7 @@ public final class DefaultSettings {
 	public static final Boolean PROBAND_LIST_INQUIRY_ACTIVE = true;
 	public static final int PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH = 30;
 	public static final int PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH = 30;
+	public static final int STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH = 200;
 	public static final boolean DUTY_ROSTER_SELF_ALLOCATABLE_PRESET = true;
 	public static final boolean TIMELINE_SCHEDULE_IDENTITY_TEAM_MEMBER_PRESET = true;
 	public static final boolean TEAM_MEMBER_ACCESS_PRESET = true;
@@ -478,6 +479,7 @@ public final class DefaultSettings {
 	public static final RandomizationMode TRIAL_RANDOMIZATION_PRESET = RandomizationMode.GROUP_COIN;
 	public static final String TRIAL_RANDOMIZATION_LIST_PRESET = "";
 	public static final String STRATIFICATION_RANDOMIZATION_LIST_RANDOMIZATION_LIST_PRESET = "";
+	public static final int GENERATE_RANDOMIZATION_LIST_N_PRESET = 100;
 	public static final Long TRIAL_BLOCKING_PERIOD_DAYS_PRESET = null;
 	public static final boolean PROBAND_LIST_BULK_ADD_SHUFFLE = true;
 	public static final boolean PROBAND_LIST_BULK_ADD_RANDOMIZE = false;

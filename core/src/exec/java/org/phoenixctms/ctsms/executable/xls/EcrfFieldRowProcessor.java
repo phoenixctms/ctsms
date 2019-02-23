@@ -369,7 +369,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		String label = "ecrf for proband group " + (CommonUtil.isEmptyString(probandGroupToken) ? "<no group>" : probandGroupToken) + ", position " + ecrfPosition
 				+ ": field section " + section + ", position " + position + ", field '" + inputFieldName + "'";
 		if (ecrfFields.add(ecrfFieldIn)) {
-			jobOutput.println(label + " added");
+			jobOutput.println(label + " read");
 			return 1;
 		} else {
 			jobOutput.println(label + " SKIPPED");

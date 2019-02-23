@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>generateRandomizationList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#generateRandomizationList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#generateRandomizationList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.enumeration.RandomizationMode, java.lang.Integer)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_generateRandomizationListTest extends TrialServiceBaseTest {
