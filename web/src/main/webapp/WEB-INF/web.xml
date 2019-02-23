@@ -161,6 +161,10 @@
     <location>/error.jsf</location>
 </error-page>  
 <error-page>
+    <error-code>403</error-code>
+    <location>/error.jsf</location>
+</error-page>  
+<error-page>
     <error-code>500</error-code>
     <location>/error.jsf</location>
 </error-page>    
@@ -225,6 +229,12 @@
 <context-param>
       <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
       <param-value>true</param-value>
+   </context-param>
+   
+    
+   <context-param>
+      <param-name>javax.faces.RENDER_VIEWSTATE_ID</param-name>
+      <param-value>false</param-value>
    </context-param>
 
 <!-- <context-param>

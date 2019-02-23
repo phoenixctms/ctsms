@@ -34,37 +34,39 @@ public class InputFieldImageServlet extends FileServletBase {
 			return null;
 		} catch (IllegalArgumentException e) {
 		}
-		final MimeTypeVO contentTypeVO;
-		final Long fileSize;
-		final String fileName;
-		final byte[] data;
-		if (image != null && (contentTypeVO = image.getContentType()) != null && (fileSize = image.getFileSize()) != null && (fileName = image.getFileName()) != null
-				&& (data = image.getDatas()) != null) {
-			return new FileStream() {
+		final MimeTypeVO contentTypeVO = (image != null ? image.getContentType() : null);
+		final Long fileSize = (image != null ? image.getFileSize() : null);
+		final String fileName = (image != null ? image.getFileName() : null);
+		final byte[] data = (image != null ? image.getDatas() : null);
+		final boolean found = (contentTypeVO != null && fileSize != null && fileName != null && data != null);
+		return new FileStream() {
 
-				@Override
-				public String getFileName() {
-					return fileName;
-				}
+			@Override
+			public String getFileName() {
+				return fileName;
+			}
 
-				@Override
-				public Long getFileSize() {
-					return fileSize;
-				}
+			@Override
+			public Long getFileSize() {
+				return fileSize;
+			}
 
-				@Override
-				public String getMimeType() {
-					return contentTypeVO.getMimeType();
-				}
+			@Override
+			public String getMimeType() {
+				return contentTypeVO.getMimeType();
+			}
 
-				@Override
-				public InputStream getStream() {
-					return new ByteArrayInputStream(data);
-				}
+			@Override
+			public InputStream getStream() {
+				return new ByteArrayInputStream(data);
+			}
 
+			@Override
+			public boolean isNotFound() {
+				// TODO Auto-generated method stub
+				return !found;
+			}
+		};
 
-			};
-		}
-		return null;
 	}
 }

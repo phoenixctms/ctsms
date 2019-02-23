@@ -22,6 +22,8 @@ public abstract class FileServletBase extends HttpServlet {
 		public String getMimeType();
 
 		public InputStream getStream();
+
+		public boolean isNotFound();
 	}
 
 	private static final int DEFAULT_BUFFER_SIZE = 96 * 1024; // 100KB.
@@ -42,31 +44,34 @@ public abstract class FileServletBase extends HttpServlet {
 			throws ServletException, IOException {
 		FileStream stream = createFileStream(request, response);
 		if (stream != null) {
-			response.reset();
-			response.setBufferSize(DEFAULT_BUFFER_SIZE);
-			response.setContentType(stream.getMimeType());
-			response.setHeader("Content-Length", stream.getFileSize().toString());
-			response.setHeader("Content-Disposition", "inline; filename=\"" + stream.getFileName() + "\"");
-			// Prepare streams.
-			BufferedInputStream input = null;
-			BufferedOutputStream output = null;
-			try {
-				// Open streams.
-				input = new BufferedInputStream(stream.getStream(), DEFAULT_BUFFER_SIZE);
-				output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
-				// Write file contents to response.
-				byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-				int length;
-				while ((length = input.read(buffer)) > 0) {
-					output.write(buffer, 0, length);
+			if (stream.isNotFound()) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+			} else {
+				response.reset();
+				response.setBufferSize(DEFAULT_BUFFER_SIZE);
+				response.setContentType(stream.getMimeType());
+				response.setHeader("Content-Length", stream.getFileSize().toString());
+				response.setHeader("Content-Disposition", "inline; filename=\"" + stream.getFileName() + "\"");
+				// Prepare streams.
+				BufferedInputStream input = null;
+				BufferedOutputStream output = null;
+				try {
+					// Open streams.
+					input = new BufferedInputStream(stream.getStream(), DEFAULT_BUFFER_SIZE);
+					output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
+					// Write file contents to response.
+					byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+					int length;
+					while ((length = input.read(buffer)) > 0) {
+						output.write(buffer, 0, length);
+					}
+				} finally {
+					// Gently close streams.
+					close(output);
+					close(input);
 				}
-			} finally {
-				// Gently close streams.
-				close(output);
-				close(input);
 			}
-		} else {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+
 		}
 	}
 }

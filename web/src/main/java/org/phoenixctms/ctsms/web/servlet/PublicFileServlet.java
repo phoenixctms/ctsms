@@ -35,35 +35,39 @@ public class PublicFileServlet extends FileServletBase {
 			return null;
 		} catch (IllegalArgumentException e) {
 		}
-		final MimeTypeVO contentTypeVO;
-		final Long fileSize;
-		final String fileName;
-		final InputStream inputStream;
-		if (stream != null && (contentTypeVO = stream.getContentType()) != null && (fileSize = stream.getSize()) != null && (fileName = stream.getFileName()) != null
-				&& (inputStream = stream.getStream()) != null) {
-			return new FileStream() {
+		final MimeTypeVO contentTypeVO = (stream != null ? stream.getContentType() : null);
+		final Long fileSize = (stream != null ? stream.getSize() : null);
+		final String fileName = (stream != null ? stream.getFileName() : null);
+		final InputStream inputStream = (stream != null ? stream.getStream() : null);
+		final boolean found = (contentTypeVO != null && fileSize != null && fileName != null && inputStream != null);
+		return new FileStream() {
 
-				@Override
-				public String getFileName() {
-					return fileName;
-				}
+			@Override
+			public String getFileName() {
+				return fileName;
+			}
 
-				@Override
-				public Long getFileSize() {
-					return fileSize;
-				}
+			@Override
+			public Long getFileSize() {
+				return fileSize;
+			}
 
-				@Override
-				public String getMimeType() {
-					return contentTypeVO.getMimeType();
-				}
+			@Override
+			public String getMimeType() {
+				return contentTypeVO.getMimeType();
+			}
 
-				@Override
-				public InputStream getStream() {
-					return inputStream;
-				}
-			};
-		}
-		return null;
+			@Override
+			public InputStream getStream() {
+				return inputStream;
+			}
+
+			@Override
+			public boolean isNotFound() {
+				// TODO Auto-generated method stub
+				return !found;
+			}
+		};
+
 	}
 }

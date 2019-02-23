@@ -70,6 +70,12 @@ public class BeaconServlet extends FileServletBase {
 			public InputStream getStream() {
 				return new ByteArrayInputStream(BEACON_IMAGE);
 			}
+
+			@Override
+			public boolean isNotFound() {
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
 	}
 }
