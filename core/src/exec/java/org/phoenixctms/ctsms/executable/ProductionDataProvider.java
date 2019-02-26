@@ -956,21 +956,22 @@ public class ProductionDataProvider {
 				validationDataNaEcrfFieldStatusType,
 				validationClosedEcrfFieldStatusType
 				));
-		updateEcrfFieldStatusType(validationCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				validationSuccessEcrfFieldStatusType,
-				validationFailedEcrfFieldStatusType,
-				validationErrorEcrfFieldStatusType
-				));
-		updateEcrfFieldStatusType(validationDataNaEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				validationSuccessEcrfFieldStatusType,
-				validationFailedEcrfFieldStatusType,
-				validationErrorEcrfFieldStatusType
-				));
-		updateEcrfFieldStatusType(validationClosedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				validationSuccessEcrfFieldStatusType,
-				validationFailedEcrfFieldStatusType,
-				validationErrorEcrfFieldStatusType
-				));
+		//never re-raise once closed:
+		//updateEcrfFieldStatusType(validationCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
+		//		validationSuccessEcrfFieldStatusType,
+		//		validationFailedEcrfFieldStatusType,
+		//		validationErrorEcrfFieldStatusType
+		//		));
+		//updateEcrfFieldStatusType(validationDataNaEcrfFieldStatusType, getEcrfFieldStatusTransitions(
+		//		validationSuccessEcrfFieldStatusType,
+		//		validationFailedEcrfFieldStatusType,
+		//		validationErrorEcrfFieldStatusType
+		//		));
+		//updateEcrfFieldStatusType(validationClosedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
+		//		validationSuccessEcrfFieldStatusType,
+		//		validationFailedEcrfFieldStatusType,
+		//		validationErrorEcrfFieldStatusType
+		//		));
 
 		ECRFFieldStatusType queryNewEcrfFieldStatusType = createEcrfFieldStatusType(
 				"query_new",

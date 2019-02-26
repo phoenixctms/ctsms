@@ -200,6 +200,7 @@ import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TrialECRFProgressSummaryVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueInVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -465,13 +466,13 @@ extends TrialServiceBase
 			String reason = (listEntry.getGroup() != null ?
 					L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
 							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED,
-							randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED,
-							new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)),
-									listEntry.getGroup().getTitle() })
+									randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED,
+											new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)),
+													listEntry.getGroup().getTitle() })
 					: L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
 							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED_NO_GROUP,
-								randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED_NO_GROUP,
-							new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)) }));
+									randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED_NO_GROUP,
+											new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)) }));
 			if (!statusType.isReasonRequired() || !CommonUtil.isEmptyString(reason)) {
 				ProbandListStatusEntry statusEntry = ProbandListStatusEntry.Factory.newInstance();
 				statusEntry.setListEntry(listEntry);
@@ -975,7 +976,7 @@ extends TrialServiceBase
 
 	private void applyListEntryTagRandomization(Trial trial, ProbandListEntry probandListEntry, ProbandListEntry originalProbandListEntry, Randomization randomization,
 			Timestamp now, User user) throws Exception {
-		ProbandListEntryTag randomizationTag;
+		ProbandListEntryTag randomizationTag = randomization.checkRandomizeProbandListEntryTag(trial);
 		ProbandListEntryTagValueInVO tagIn;
 		ProbandListEntryTagValue originalTagValue = null;
 		if (originalProbandListEntry != null) {
@@ -990,11 +991,11 @@ extends TrialServiceBase
 				if (originalTagValue != null) {
 					Collection<InputFieldSelectionSetValue> values = originalTagValue.getValue().getSelectionValues();
 					if (values != null && values.size() > 0) {
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY);
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZE_INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY);
 					}
 				}
 				InputFieldSelectionSetValue selectionSetValue = randomization.getRandomizedInputFieldSelectionSetValue(trial, originalProbandListEntry);
-				randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+				// randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
 				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
 				tagIn.getSelectionValueIds().clear();
 				tagIn.getSelectionValueIds().add(selectionSetValue.getId());
@@ -1009,11 +1010,11 @@ extends TrialServiceBase
 				if (originalTagValue != null) {
 					String textValue = originalTagValue.getValue().getStringValue();
 					if (textValue != null && textValue.length() > 0) {
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TEXT_VALUE_NOT_EMPTY);
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY);
 					}
 				}
 				String textValue = randomization.getRandomizedInputFieldTextValue(trial, originalProbandListEntry);
-				randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+				// randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
 				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
 				tagIn.setTextValue(textValue);
 				if (originalTagValue != null) {
@@ -6863,6 +6864,14 @@ extends TrialServiceBase
 	}
 
 	@Override
+	protected TrialRandomizationListVO handleGetTrialRandomizationList(AuthenticationVO auth, Long trialId) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		TrialRandomizationListVO result = trialDao.toTrialRandomizationListVO(trial);
+		return result;
+	}
+
+	@Override
 	protected SignatureVO handleGetTrialSignature(AuthenticationVO auth, Long trialId)
 			throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
@@ -7120,11 +7129,16 @@ extends TrialServiceBase
 		return (new ProbandListEntryMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).normalizePositions(trialId);
 	}
 
+
 	@Override
 	protected Collection<ProbandListEntryTagOutVO> handleNormalizeProbandListEntryTagPositions(
 			AuthenticationVO auth, Long trialId) throws Exception {
 		return (new ProbandListEntryTagMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryTagDao(), this.getTrialDao())).normalizePositions(trialId);
 	}
+
+
+
+
 
 
 	@Override
@@ -7191,11 +7205,6 @@ extends TrialServiceBase
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
-
-
-
-
-
 
 	@Override
 	protected ECRFPDFVO handleRenderEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, boolean blank) throws Exception {
@@ -7289,6 +7298,10 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
 	@Override
 	protected ReimbursementsPDFVO handleRenderReimbursements(
 			AuthenticationVO auth, Long trialId, Long probandId, PaymentMethod method, Boolean paid)
@@ -7340,9 +7353,6 @@ extends TrialServiceBase
 	}
 
 
-
-
-
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, PSFVO psf) throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
@@ -7359,7 +7369,6 @@ extends TrialServiceBase
 		return result;
 	}
 
-
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index, Boolean addSeries,
 			PSFVO psf)
@@ -7375,6 +7384,9 @@ extends TrialServiceBase
 		}
 		return result;
 	}
+
+
+
 
 	@Override
 	protected ECRFStatusEntryVO handleSetEcrfStatusEntry(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, Long version, Long ecrfStatusTypeId,
@@ -7395,8 +7407,6 @@ extends TrialServiceBase
 		}
 		return result;
 	}
-
-
 
 
 	@Override
@@ -7462,6 +7472,8 @@ extends TrialServiceBase
 	}
 
 
+
+
 	@Override
 	protected TimelineEventOutVO handleSetTimelineEventDismissed(
 			AuthenticationVO auth, Long timelineEventId, Long version, boolean dismissed) throws Exception {
@@ -7480,9 +7492,6 @@ extends TrialServiceBase
 				: SystemMessageCodes.TIMELINE_EVENT_DISMISSED_UNSET, result, original, this.getJournalEntryDao());
 		return result;
 	}
-
-
-
 
 	@Override
 	protected Collection<ECRFStatusEntryVO> handleSignVerifiedEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, boolean signAll) throws Exception {
@@ -7721,8 +7730,8 @@ extends TrialServiceBase
 		if (probandChanged || groupChanged || randomized) {
 			addProbandListEntryUpdatedProbandListStatusEntry(
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED,
-					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
-					probandListEntry, probandListStatusTypeId, now, user);
+							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
+									probandListEntry, probandListStatusTypeId, now, user);
 		}
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
@@ -7897,6 +7906,10 @@ extends TrialServiceBase
 		return result;
 	}
 
+
+
+
+
 	@Override
 	protected VisitScheduleItemOutVO handleUpdateVisitScheduleItem(
 			AuthenticationVO auth, VisitScheduleItemInVO modifiedVisitScheduleItem) throws Exception {
@@ -7919,10 +7932,6 @@ extends TrialServiceBase
 				this.getJournalEntryDao());
 		return result;
 	}
-
-
-
-
 
 	@Override
 	protected Collection<ECRFStatusEntryVO> handleValidatePendingEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId) throws Exception {

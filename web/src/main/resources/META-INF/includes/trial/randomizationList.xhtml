@@ -54,13 +54,13 @@
 					</p:column>
 					<p:column filterBy="#{stratificationRandomizationList.vo.selectionSetValues.nameL10nKey}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.stratificationRandomizationList_randomizationlist_list_selection_set_values_column}" />
+							<h:outputText value="#{triallabels.randomizationlist_randomizationlist_list_selection_set_values_column}" />
 						</f:facet>
 						<h:outputText value="#{randomizationListBean.stratificationRandomizationListSelectionSetValuesToString(stratificationRandomizationList.vo)}" />
 					</p:column>
 					<p:column filterBy="#{stratificationRandomizationList.vo.randomizationList}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.stratificationRandomizationList_randomizationlist_list_list_column}" />
+							<h:outputText value="#{triallabels.randomizationlist_randomizationlist_list_list_column}" />
 						</f:facet>
 						<h:outputText value="#{applicationScopeBean.clipStringTrailing(stratificationRandomizationList.vo.randomizationList,96)}" />
 					</p:column>

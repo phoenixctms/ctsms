@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
+import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 
 public class TagTextStratifiedRandomization extends Randomization {
 
@@ -32,13 +33,17 @@ public class TagTextStratifiedRandomization extends Randomization {
 		// TODO Auto-generated constructor stub
 	}
 
-
+	@Override
 	protected void checkProbandListEntryTagField(Trial trial, InputField field) throws ServiceException {
 		if (!InputFieldType.SINGLE_LINE_TEXT.equals(field.getFieldType())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_FIELD_NOT_SINGLE_LINE_TEXT);
 		}
 	}
 
+	@Override
+	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
+		checkRandomizeProbandListEntryTag(trial);
+	}
 
 	@Override
 	protected RandomizationMode getRandomizationMode() {

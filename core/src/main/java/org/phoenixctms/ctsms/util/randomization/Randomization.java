@@ -395,6 +395,17 @@ public abstract class Randomization {
 		}
 	}
 
+	public ProbandListEntryTag checkRandomizeProbandListEntryTag(Trial trial) throws ServiceException {
+		ProbandListEntryTag randomizationTag;
+		try {
+			randomizationTag = probandListEntryTagDao.findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
+		} catch (NoSuchElementException e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_RANDOMIZE_PROBAND_LIST_ENTRY_TAG);
+		}
+		checkProbandListEntryTagField(trial, randomizationTag.getField());
+		return randomizationTag;
+	}
+
 	// protected abstract void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException;
 
 	// protected abstract void checkProbandListEntryTagInputFieldSelectionSetValueValuesInput() throws ServiceException ;

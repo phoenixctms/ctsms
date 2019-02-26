@@ -311,18 +311,20 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
-		if (getRandomizationMode() != null) {
-			switch (getRandomizationMode()) {
-				case GROUP_STRATIFIED:
-				case TAG_SELECT_STRATIFIED:
-				case TAG_TEXT_STRATIFIED:
-					break;
-				default:
-					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
-					break;
+		if (trial != null) {
+			if (getRandomizationMode() != null) {
+				switch (getRandomizationMode()) {
+					case GROUP_STRATIFIED:
+					case TAG_SELECT_STRATIFIED:
+					case TAG_TEXT_STRATIFIED:
+						break;
+					default:
+						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
+						break;
+				}
+			} else {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
 			}
-		} else {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
 		}
 	}
 

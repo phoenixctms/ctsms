@@ -98,7 +98,9 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		try {
 			Set<Long> ids = this.probandMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryOutVO> it = WebUtil.getServiceLocator().getTrialService()
-					.addProbandListEntries(WebUtil.getAuthentication(), trialId, randomize, bulkAddGroupId, bulkAddRating, bulkAddRatingMax, ids, shuffle, limit).iterator();
+					.addProbandListEntries(WebUtil.getAuthentication(), trialId, randomize && isRandomization(), bulkAddGroupId, bulkAddRating, bulkAddRatingMax, ids, shuffle,
+							limit)
+					.iterator();
 			while (it.hasNext()) {
 				this.probandMultiPicker.removeId(it.next().getProband().getId());
 			}

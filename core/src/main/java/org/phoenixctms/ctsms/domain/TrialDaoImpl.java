@@ -34,6 +34,7 @@ import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -272,6 +273,18 @@ extends TrialDaoBase
 		return trial;
 	}
 
+	private Trial loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO trialRandomizationListVO)
+	{
+		// TODO implement loadTrialFromTrialRandomizationListVO
+		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO) not yet implemented.");
+		Trial trial = this.load(trialRandomizationListVO.getId());
+		if (trial == null)
+		{
+			trial = Trial.Factory.newInstance();
+		}
+		return trial;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -355,6 +368,29 @@ extends TrialDaoBase
 		target.setRandomization(L10nUtil.createRandomizationModeVO(Locales.USER, source.getRandomization()));
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public TrialRandomizationListVO toTrialRandomizationListVO(final Trial entity)
+	{
+		return super.toTrialRandomizationListVO(entity);
+	}
+
+	@Override
+	public void toTrialRandomizationListVO(
+			Trial source,
+			TrialRandomizationListVO target)
+	{
+		super.toTrialRandomizationListVO(source, target);
+		User modifiedUser = source.getModifiedUser();
+
+		if (modifiedUser != null) {
+			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
+		}
+
+	}
+
 	@Override
 	public Trial trialInVOToEntity(TrialInVO trialInVO) {
 		Trial entity = this.loadTrialFromTrialInVO(trialInVO);
@@ -366,8 +402,7 @@ extends TrialDaoBase
 	public void trialInVOToEntity(
 			TrialInVO source,
 			Trial target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long statusId = source.getStatusId();
@@ -405,8 +440,7 @@ extends TrialDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Trial trialOutVOToEntity(TrialOutVO trialOutVO)
-	{
+	public Trial trialOutVOToEntity(TrialOutVO trialOutVO) {
 		Trial entity = this.loadTrialFromTrialOutVO(trialOutVO);
 		this.trialOutVOToEntity(trialOutVO, entity, true);
 		return entity;
@@ -419,8 +453,7 @@ extends TrialDaoBase
 	public void trialOutVOToEntity(
 			TrialOutVO source,
 			Trial target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialOutVOToEntity(source, target, copyIfNull);
 		TrialStatusTypeVO statusVO = source.getStatus();
 		DepartmentVO departmentVO = source.getDepartment();
@@ -469,6 +502,27 @@ extends TrialDaoBase
 			target.setRandomization(randomizationVO.getMode());
 		} else if (copyIfNull) {
 			target.setRandomization(null);
+		}
+	}
+
+	@Override
+	public Trial trialRandomizationListVOToEntity(TrialRandomizationListVO trialRandomizationListVO) {
+		Trial entity = this.loadTrialFromTrialRandomizationListVO(trialRandomizationListVO);
+		this.trialRandomizationListVOToEntity(trialRandomizationListVO, entity, true);
+		return entity;
+	}
+
+	@Override
+	public void trialRandomizationListVOToEntity(
+			TrialRandomizationListVO source,
+			Trial target,
+			boolean copyIfNull) {
+		super.trialRandomizationListVOToEntity(source, target, copyIfNull);
+		UserOutVO modifiedUserVO = source.getModifiedUser();
+		if (modifiedUserVO != null) {
+			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
+		} else if (copyIfNull) {
+			target.setModifiedUser(null);
 		}
 	}
 }

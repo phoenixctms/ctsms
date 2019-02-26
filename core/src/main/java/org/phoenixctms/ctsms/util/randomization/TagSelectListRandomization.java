@@ -38,7 +38,8 @@ public class TagSelectListRandomization extends Randomization {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected  void checkProbandListEntryTagField(Trial trial,InputField field) throws ServiceException {
+	@Override
+	protected void checkProbandListEntryTagField(Trial trial, InputField field) throws ServiceException {
 		if (!ServiceUtil.isInputFieldTypeSelectOne(field.getFieldType())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_FIELD_NOT_SELECT_ONE);
 		}
@@ -51,6 +52,7 @@ public class TagSelectListRandomization extends Randomization {
 
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
+		checkRandomizeProbandListEntryTag(trial);
 		splitInputFieldSelectionSetValueValues(randomizationListIn.getRandomizationList(),
 				getInputFieldSelectionSetValueValueMap(getRandomizationInputFieldSelectionSetValues(trial)), null);
 	}

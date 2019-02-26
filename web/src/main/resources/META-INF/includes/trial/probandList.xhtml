@@ -474,8 +474,9 @@
 								
 								<h:outputLabel
 									for="bulkAddRandomize"
+									rendered="#{probandListEntryBean.randomization}"
 									value="#{triallabels.bulkadd_randomize_label}" />
-								<h:panelGroup>
+								<h:panelGroup rendered="#{probandListEntryBean.randomization}">
 									<p:selectBooleanCheckbox
 										id="bulkAddRandomize"
 										value="#{probandListEntryBean.bulkAddRandomize}">
@@ -489,7 +490,7 @@
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="bulkAddRandomize" />
+								<p:message for="bulkAddRandomize" rendered="#{probandListEntryBean.randomization}"/>
 								
 								<h:outputLabel
 									for="bulkAddProbandListEntryProbandGroup"
@@ -602,7 +603,7 @@
 										icon="ui-icon ui-icon-minusthick"
 										type="button" />										
 									<p:commandButton
-										process="@this,bulkAddRandomize,bulkAddProbandListEntryProbandGroup,bulkAddShuffle,bulkAddLimit"
+										process="@this,#{probandListEntryBean.randomization ? 'bulkAddRandomize,' : ''}bulkAddProbandListEntryProbandGroup,bulkAddShuffle,bulkAddLimit"
 										id="bulkAddProbandListEntry"
 										value="#{labels.add_button_label}"
 										actionListener="#{probandListEntryBean.addBulk}"
@@ -1007,7 +1008,7 @@
 				</f:facet>
 				
 				<p:commandButton
-					process="@this,:tabView:probandlist_form:bulkAddRandomize,:tabView:probandlist_form:bulkAddShuffle,:tabView:probandlist_form:bulkAddLimit"
+					process="@this,#{probandListEntryBean.randomization ? ':tabView:probandlist_form:bulkAddRandomize,' : ''}:tabView:probandlist_form:bulkAddShuffle,:tabView:probandlist_form:bulkAddLimit"
 					id="bulkDeleteProbandListEntry"
 					value="#{labels.yes_button_label}"
 					actionListener="#{probandListEntryBean.deleteBulk}"

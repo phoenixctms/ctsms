@@ -30,6 +30,7 @@ import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
@@ -87,7 +88,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setDutySelfAllocationLockedUntil(out.getDutySelfAllocationLockedUntil());
 			in.setDutySelfAllocationLockedFrom(out.getDutySelfAllocationLockedFrom());
 			in.setRandomization(randomizationVO == null ? null : randomizationVO.getMode());
-			in.setRandomizationList(out.getRandomizationList());
+			in.setRandomizationList(null); // out.getRandomizationList());
 		}
 	}
 
@@ -115,7 +116,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setDutySelfAllocationLockedUntil(null);
 			in.setDutySelfAllocationLockedFrom(null);
 			in.setRandomization(Settings.getRandomizationMode(SettingCodes.TRIAL_RANDOMIZATION_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_PRESET));
-			in.setRandomizationList(Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
+			in.setRandomizationList(null); // Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
 		}
 	}
 
@@ -628,6 +629,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			statusTypes = new ArrayList<SelectItem>();
 		}
 		loadTrialStatusType();
+		loadTrialRandomizationList();
 		loadSignature();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE)) {
@@ -734,6 +736,24 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 				WebUtil.publishException(e);
 			} catch (AuthorisationException e) {
 			} catch (IllegalArgumentException e) {
+			}
+		}
+	}
+
+	private void loadTrialRandomizationList() {
+		TrialRandomizationListVO trialRandomizationList = null;
+		in.setRandomizationList(Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
+		if (in.getId() != null) {
+			try {
+				trialRandomizationList = WebUtil.getServiceLocator().getTrialService().getTrialRandomizationList(WebUtil.getAuthentication(), in.getId());
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+			if (trialRandomizationList != null) {
+				in.setRandomizationList(trialRandomizationList.getRandomizationList());
 			}
 		}
 	}
