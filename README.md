@@ -9,7 +9,7 @@ Phoenix CTMS is a large web application combining capabilities of database softw
 
 This unmatched feature set is geared to support all operational and regulatory requirements of the clinical front end in academic research, at CROs (Contract Research Organisations) and hospitals conducting clinical studies of any phase.
 
-![alt text](http://phoenixctms.org/wp-content/uploads/2018/04/modules_en.png)
+![alt text](https://www.phoenixctms.org/wp-content/uploads/2019/03/modules_en.png)
 
 After years of collaborative development with trial sites at the Medical University of Graz, the Phoenix CTMS now becomes publicly available (LGPL 2.1). It could be the perfect choice if you e.g.
 
