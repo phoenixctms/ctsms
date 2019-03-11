@@ -1171,36 +1171,39 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 
 	public void setSelectedProbandListEntry(IDVO probandListEntry) {
+		LazyDataModelBase.clearFilters(getEcrfDataTableId());
 		if (probandListEntry != null) {
-			LazyDataModelBase.clearFilters(getEcrfDataTableId());
 			this.probandListEntry = (ProbandListEntryOutVO) probandListEntry.getVo();
-			// out = null;
-			ecrf = null;
-			if (this.probandListEntry != null) {
-				ecrfModel.setProbandListEntryId(probandListEntry.getId());
-				// ecrfModel.setTrialId(this.probandListEntry.getTrial().getId());
-				// if (this.probandListEntry.getGroup() != null) {
-				// ecrfModel.setProbandGroupId(this.probandListEntry.getGroup().getId());
-				// } else {
-				// ecrfModel.setProbandGroupId(null);
-				// }
-				filterVisits = WebUtil.getVisits(this.probandListEntry.getTrial().getId());
-				filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
-			} else {
-				ecrfModel.setProbandListEntryId(null);
-				// ecrfModel.setTrialId(null);
-				// ecrfModel.setProbandGroupId(null);
-				filterVisits.clear();
-			}
-			ecrfModel.updateRowCount();
-			// this.initIn();
-			initSets(false);
-			// this.probandListEntryTagValueBean.appendRequestContextCallbackArgs(true);
-			// RequestContext requestContext = RequestContext.getCurrentInstance();
-			// if (requestContext != null) {
-			// requestContext.addCallbackParam(JSValues.AJAX_PROBAND_LIST_TAB_TITLE_BASE64.toString(), WebUtil.encodeBase64(getMainTabTitle(), false));
-			// }
+		} else {
+			this.probandListEntry = null;
 		}
+		// out = null;
+		ecrf = null;
+		if (this.probandListEntry != null) {
+			ecrfModel.setProbandListEntryId(probandListEntry.getId());
+			// ecrfModel.setTrialId(this.probandListEntry.getTrial().getId());
+			// if (this.probandListEntry.getGroup() != null) {
+			// ecrfModel.setProbandGroupId(this.probandListEntry.getGroup().getId());
+			// } else {
+			// ecrfModel.setProbandGroupId(null);
+			// }
+			filterVisits = WebUtil.getVisits(this.probandListEntry.getTrial().getId());
+			filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		} else {
+			ecrfModel.setProbandListEntryId(null);
+			// ecrfModel.setTrialId(null);
+			// ecrfModel.setProbandGroupId(null);
+			filterVisits.clear();
+		}
+		ecrfModel.updateRowCount();
+		// this.initIn();
+		initSets(false);
+		// this.probandListEntryTagValueBean.appendRequestContextCallbackArgs(true);
+		// RequestContext requestContext = RequestContext.getCurrentInstance();
+		// if (requestContext != null) {
+		// requestContext.addCallbackParam(JSValues.AJAX_PROBAND_LIST_TAB_TITLE_BASE64.toString(), WebUtil.encodeBase64(getMainTabTitle(), false));
+		// }
+
 	}
 
 	public void signAllEcrfs() {
