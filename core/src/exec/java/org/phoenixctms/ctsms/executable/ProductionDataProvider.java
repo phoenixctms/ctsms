@@ -1130,7 +1130,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				false, // true, -> slow page saving
+				true, // true, -> slow page saving. now only changed fields will be saved, perf ok
 				false,
 				false,
 				false,

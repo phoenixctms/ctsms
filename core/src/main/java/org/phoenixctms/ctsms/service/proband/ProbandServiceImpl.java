@@ -216,7 +216,8 @@ extends ProbandServiceBase
 			}
 		} else {
 			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, inquiryValueDao);
-			if (!inquiry.isDisabled()) {
+			if (!inquiry.isDisabled()
+					&& !ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue())) {
 				checkInquiryValueInput(inquiryValueIn, proband, inquiry); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);

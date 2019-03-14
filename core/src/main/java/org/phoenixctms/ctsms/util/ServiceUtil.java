@@ -27,8 +27,11 @@ import java.util.regex.PatternSyntaxException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.adapt.EcrfFieldValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
+import org.phoenixctms.ctsms.adapt.InquiryValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
+import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.BankAccountOutVOComparator;
@@ -206,6 +209,12 @@ public final class ServiceUtil {
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
 
 	private final static String DUUMY_BEACON = "dummy";
+	private final static boolean SAVE_UNCHANGED_ECRF_FIELD_VALUES = false;
+	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
+	private final static boolean SAVE_UNCHANGED_PROBAND_LIST_ENTRY_TAG_VALUES = false;
+	private final static ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER = new ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter();
+	private final static boolean SAVE_UNCHANGED_INQUIRY_VALUES = false;
+	private final static InquiryValueInVOInputFieldValueEqualsAdapter INQUIRY_VALUE_EQUALS_ADAPTER = new InquiryValueInVOInputFieldValueEqualsAdapter();
 
 	public static InputFieldSelectionSetValueOutVO addAutocompleteSelectionSetValue(InputField inputField, String textValue, Timestamp now, User user,
 			InputFieldSelectionSetValueDao selectionSetValueDao, JournalEntryDao journalEntryDao) throws Exception {
@@ -506,10 +515,6 @@ public final class ServiceUtil {
 		}
 	}
 
-
-
-
-
 	public static void applyLogonLimitations(PasswordInVO password) {
 		password.setExpires(Settings.getBoolean(SettingCodes.LOGON_EXPIRES, Settings.Bundle.SETTINGS, false));
 		password.setProlongable(password.isExpires() ? Settings.getBoolean(SettingCodes.LOGON_PROLONGABLE, Settings.Bundle.SETTINGS, true) : false);
@@ -544,6 +549,10 @@ public final class ServiceUtil {
 		password.setLimitLogons(true);
 		password.setMaxSuccessfulLogons(1L);
 	}
+
+
+
+
 
 	public static String aspSubstanceIDsToString(Collection<Long> aspSubstanceIds, AspSubstanceDao aspSubstanceDao) {
 		Collection<AspSubstanceVO> result = new ArrayList<AspSubstanceVO>(aspSubstanceIds.size());
@@ -621,7 +630,6 @@ public final class ServiceUtil {
 					L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
 	}
-
 
 	private static void checkAddMassMailRecipientInput(MassMailRecipientInVO massMailRecipientIn, MassMailDao massMailDao, ProbandDao probandDao, TrialDao trialDao,
 			MassMailRecipientDao massMailRecipientDao) throws ServiceException {
@@ -701,6 +709,7 @@ public final class ServiceUtil {
 			}
 		}
 	}
+
 
 	public static void checkInputFieldDateValue(InputField inputField, boolean optional, Date dateValue, InputFieldDao inputFieldDao) throws ServiceException {
 		if (inputField != null) {
@@ -900,7 +909,6 @@ public final class ServiceUtil {
 		}
 	}
 
-
 	public static void checkInputFieldTimestampValue(InputField inputField, boolean optional, Date timestampValue, InputFieldDao inputFieldDao) throws ServiceException {
 		if (inputField != null) {
 			InputFieldType fieldType = inputField.getFieldType();
@@ -961,13 +969,13 @@ public final class ServiceUtil {
 		}
 	}
 
+
 	public static void checkLockedEcrfs(ECRF ecrf, ECRFStatusEntryDao ecrfStatusEntryDao, ECRFDao ecrfDao) throws ServiceException {
 		long valuesLockedEcrfCount = ecrfStatusEntryDao.getCount(null, ecrf.getId(), null, true, null, null, null, null); // row lock order
 		if (valuesLockedEcrfCount > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, ecrfDao.toECRFOutVO(ecrf).getUniqueName(), valuesLockedEcrfCount);
 		}
 	}
-
 
 	public static void checkLogonLimitations(PasswordInVO password) throws ServiceException {
 		if (password.isExpires()) {
@@ -1012,6 +1020,7 @@ public final class ServiceUtil {
 					L10nUtil.getProbandCategoryName(Locales.USER, proband.getCategory().getNameL10nKey()));
 		}
 	}
+
 
 	public static void checkReminderPeriod(VariablePeriod reminderPeriod, Long reminderPeriodDays) throws ServiceException {
 		if (VariablePeriod.EXPLICIT.equals(reminderPeriod)) {
@@ -1137,8 +1146,6 @@ public final class ServiceUtil {
 		painter.setAllCompetenceVOs(allCompetences);
 		return painter;
 	}
-
-
 
 	public static CourseParticipantListPDFPainter createCourseParticipantListPDFPainter(Collection<CourseOutVO> courseVOs, boolean blank, LecturerDao lecturerDao,
 			LecturerCompetenceDao competenceDao, CourseParticipationStatusEntryDao courseParticipationDao, InventoryBookingDao bookingDao) throws Exception {
@@ -1286,6 +1293,8 @@ public final class ServiceUtil {
 		}
 		return result;
 	}
+
+
 
 	public static void createKeyPair(User user, String plainDepartmentPassword, KeyPairDao keyPairDao) throws Exception {
 		KeyPair keyPair = KeyPair.Factory.newInstance();
@@ -2233,7 +2242,6 @@ public final class ServiceUtil {
 
 	}
 
-
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(Collection<ProbandOutVO> probandVOs, ProbandAddressDao probandAddressDao) throws Exception {
 		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
 		if (probandVOs != null) {
@@ -2274,7 +2282,6 @@ public final class ServiceUtil {
 		}
 		return painter;
 	}
-
 
 	public static ReimbursementsExcelVO createReimbursementsExcel(Collection<MoneyTransfer> moneyTransfers, Collection<String> costTypes, TrialOutVO trialVO,
 			ProbandOutVO probandVO, String costType, PaymentMethod method, Boolean paid,
@@ -2416,6 +2423,7 @@ public final class ServiceUtil {
 		(new ExcelExporter(writer, writer)).write();
 		return writer.getExcelVO();
 	}
+
 
 	public static VisitScheduleExcelVO creatVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
 			TrialOutVO trialVO,
@@ -2643,6 +2651,11 @@ public final class ServiceUtil {
 		(new ExcelExporter(writer, writer)).write();
 		return writer.getExcelVO();
 	}
+
+	public final static boolean ecrfFieldValueEquals(ECRFFieldValueInVO modified, InputFieldValue original) {
+		return !SAVE_UNCHANGED_ECRF_FIELD_VALUES && ECRF_FIELD_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
+	}
+
 
 	private static StaffAddressOutVO findOrganisationCvAddress(StaffOutVO staffVO, boolean first, StaffAddressDao staffAddressDao) {
 		StaffAddressOutVO addressVO;
@@ -3123,8 +3136,6 @@ public final class ServiceUtil {
 		return DateCalc.getStartOfDay(password.getTimestamp());
 	}
 
-
-
 	public static Collection<PermissionProfileVO> getPermissionProfiles(PermissionProfileGroup profileGroup, Locales locale) {
 		Collection<PermissionProfileVO> result; // = new ArrayList<VariablePeriodVO>();
 		PermissionProfile[] permissionProfiles = PermissionProfile.values();
@@ -3162,6 +3173,8 @@ public final class ServiceUtil {
 		}
 		return result;
 	}
+
+
 
 	public static ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(ProbandListEntryOutVO listEntryVO, boolean jsValues, boolean loadAllJsValues, boolean sort, PSFVO psf,
 			ProbandListEntryTagDao probandListEntryTagDao,ProbandListEntryTagValueDao probandListEntryTagValueDao,InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
@@ -3322,6 +3335,10 @@ public final class ServiceUtil {
 		}
 	}
 
+	public final static boolean inquiryValueEquals(InquiryValueInVO modified, InputFieldValue original) {
+		return !SAVE_UNCHANGED_INQUIRY_VALUES && INQUIRY_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
+	}
+
 	public static boolean isInputFieldType(ECRFFieldOutVO ecrfField, InputFieldType type) {
 		if (ecrfField != null) {
 			return isInputFieldType(ecrfField.getField(), type);
@@ -3454,12 +3471,12 @@ public final class ServiceUtil {
 		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
-
 	public static JournalEntry logSystemMessage(MassMail massMail, MassMailOutVO massMailVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null)) });
 	}
+
 
 	public static JournalEntry logSystemMessage(MassMail massMail, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -3524,17 +3541,17 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
-
-
-
-
-
-
 	public static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
+
+
+
+
+
+
 
 	private static JournalEntry logSystemMessage(User user, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, ProbandOutVO result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -4607,6 +4624,10 @@ public final class ServiceUtil {
 		}
 		summary.setAssigneds(assigned);
 		summary.setNotAssigned(notAssigned);
+	}
+
+	public final static boolean probandListEntryTagValueEquals(ProbandListEntryTagValueInVO modified, InputFieldValue original) {
+		return !SAVE_UNCHANGED_PROBAND_LIST_ENTRY_TAG_VALUES && PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
 	}
 
 	public static void removeEcrfField(ECRFField ecrfField, boolean deleteCascade, boolean checkProbandLocked, Timestamp now, User user,
@@ -5862,6 +5883,8 @@ public final class ServiceUtil {
 		}
 		return false;
 	}
+
+
 
 	private ServiceUtil() {
 	}

@@ -634,12 +634,14 @@ extends TrialServiceBase
 			// }
 		} else {
 			ECRFFieldValue originalEcrfFieldValue = null;
-			if (!CheckIDUtil.checkEcrfFieldValueId(id, ecrfFieldValueDao).equals(
+			if (!CheckIDUtil.checkEcrfFieldValueId(id, ecrfFieldValueDao).equals( // modified check when new record was created meanwhile
 					originalEcrfFieldValue = ecrfFieldValueDao.getByListEntryEcrfFieldIndex(ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId(),
 							ecrfFieldValueIn.getIndex()))) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, originalEcrfFieldValue.getModifiedUser().getName());
 			}
-			if (!ecrfField.isDisabled()) {
+			if (!ecrfField.isDisabled()
+					&& (!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
+							|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue()))) {
 				checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField); // , ecrfFieldVO); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
@@ -655,7 +657,7 @@ extends TrialServiceBase
 					ecrfFieldValueIn.setId(null); // arg must not be manipulated
 				}
 				ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
-				CoreUtil.modifyVersion(originalEcrfFieldValue, ecrfFieldValue, now, user);
+				CoreUtil.modifyVersion(originalEcrfFieldValue, ecrfFieldValue, now, user); // modified check when record was updated meanwhile
 				if (isAuditTrail) {
 					ecrfFieldValue.setChangeComment(CoreUtil.getAuditTrailChangeCommentContent(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue), original, true));
 					InputFieldValue inputFieldValue = ecrfFieldValue.getValue();
@@ -757,7 +759,8 @@ extends TrialServiceBase
 			}
 		} else {
 			ProbandListEntryTagValue originalListEntryTagValue = CheckIDUtil.checkProbandListEntryTagValueId(id, probandListEntryTagValueDao);
-			if (!listEntryTag.isDisabled()) {
+			if (!listEntryTag.isDisabled()
+					&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue())) {
 				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user,
 						this.getInputFieldSelectionSetValueDao(),

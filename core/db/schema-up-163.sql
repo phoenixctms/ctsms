@@ -19,3 +19,5 @@ alter table TRIAL add column SIGNUP_RANDOMIZE BOOLEAN;
 update TRIAL set SIGNUP_RANDOMIZE = 'f';
 alter table TRIAL alter SIGNUP_RANDOMIZE set not null;
 
+update ecrf_status_type set audit_trail = 't' where name_l10n_key = 'in_progress';
+
