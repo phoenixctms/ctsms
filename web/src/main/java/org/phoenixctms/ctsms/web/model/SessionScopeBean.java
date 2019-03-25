@@ -975,84 +975,95 @@ public class SessionScopeBean {
 				identityMenuItem.setId("identityMenuItem");
 				userMenu.getChildren().add(identityMenuItem);
 			}
-			Locale userLocale = getLocale();
-			Submenu localesMenu = new Submenu();
-			localesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_LOCALE_LABEL, CommonUtil.localeToDisplayString(userLocale, userLocale)));
-			localesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-locale");
-			localesMenu.setId("localesMenu");
-			userMenu.getChildren().add(localesMenu);
-			int i = 0;
-			Iterator<LocaleVO> localesIt = getLocales().iterator();
-			while (localesIt.hasNext()) {
-				LocaleVO locale = localesIt.next();
-				MenuItem localeMenuItem = new MenuItem();
-				localeMenuItem.setValue(CommonUtil.clipString(locale.getName(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
-						EllipsisPlacement.TRAILING));
-				localeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" +locale.getLanguage() + "')}"));
-				localeMenuItem.setOncomplete("handleReload(xhr, status, args)");
-				localeMenuItem.setId("localeMenuItem_" + Integer.toString(i));
-				if (CommonUtil.localeFromString( locale.getLanguage()).equals(userLocale)) {
-					localeMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
+			int i;
+			Locale userLocale = null;
+			if (Settings.getBoolean(SettingCodes.SHOW_LOCALE_MENU, Bundle.SETTINGS, DefaultSettings.SHOW_LOCALE_MENU)) {
+				if (userLocale == null) {
+					userLocale = getLocale();
 				}
-				localesMenu.getChildren().add(localeMenuItem);
-				i++;
-			}
-			TimeZone userTimeZone = getTimeZone();
-			Submenu timeZonesMenu = new Submenu();
-			timeZonesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_TIME_ZONE_LABEL, CommonUtil.timeZoneToDisplayString(userTimeZone, userLocale))); // .getDisplayName(false,TimeZone.LONG,userLocale)));
-			timeZonesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-timezone");
-			timeZonesMenu.setId("timeZonesMenu");
-			userMenu.getChildren().add(timeZonesMenu);
-			Submenu westTimeZonesMenu = new Submenu();
-			westTimeZonesMenu.setLabel(Messages.getString(MessageCodes.WEST_TIME_ZONE_LABEL));
-			westTimeZonesMenu.setId("westTimeZonesMenu");
-			timeZonesMenu.getChildren().add(westTimeZonesMenu);
-			Submenu eastTimeZonesMenu = new Submenu();
-			eastTimeZonesMenu.setLabel(Messages.getString(MessageCodes.EAST_TIME_ZONE_LABEL));
-			eastTimeZonesMenu.setId("eastTimeZonesMenu");
-			timeZonesMenu.getChildren().add(eastTimeZonesMenu);
-			i = 0;
-			Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(getTimeZones());
-			Iterator<Integer> it = timeZonesByOffset.keySet().iterator();
-			while (it.hasNext()) {
-				Integer timeZoneOffset = it.next();
-				Submenu offsetTimeZonesMenu = new Submenu();
-				offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, timeZoneOffset < 0 ? "-" : (timeZoneOffset > 0 ? "+" : ""),
-						DateUtil.getDurationString(timeZoneOffset / 1000, DurationUnitOfTime.HOURS, DurationUnitOfTime.MINUTES, 0)));
-				offsetTimeZonesMenu.setId("offsetTimeZonesMenu_" + Integer.toString(i));
-				int j = 0;
-				boolean timeZoneFound = false;
-				Iterator<TimeZoneVO> timeZonesIt = timeZonesByOffset.get(timeZoneOffset).iterator();
-				while (timeZonesIt.hasNext()) {
-					TimeZoneVO timeZone = timeZonesIt.next();
-					MenuItem timeZoneMenuItem = new MenuItem();
-					timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
-							CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
-					timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
-					+ "')}"));
-					timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
-					timeZoneMenuItem.setId("timeZoneMenuItem_" + Integer.toString(i) + "_" + Integer.toString(j));
-					if (CommonUtil.timeZoneFromString(timeZone.getTimeZoneID()).equals(userTimeZone)) {
-						timeZoneMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
-						timeZoneFound = true;
+				Submenu localesMenu = new Submenu();
+				localesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_LOCALE_LABEL, CommonUtil.localeToDisplayString(userLocale, userLocale)));
+				localesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-locale");
+				localesMenu.setId("localesMenu");
+				userMenu.getChildren().add(localesMenu);
+				i = 0;
+				Iterator<LocaleVO> localesIt = getLocales().iterator();
+				while (localesIt.hasNext()) {
+					LocaleVO locale = localesIt.next();
+					MenuItem localeMenuItem = new MenuItem();
+					localeMenuItem.setValue(CommonUtil.clipString(locale.getName(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
+							EllipsisPlacement.TRAILING));
+					localeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" + locale.getLanguage() + "')}"));
+					localeMenuItem.setOncomplete("handleReload(xhr, status, args)");
+					localeMenuItem.setId("localeMenuItem_" + Integer.toString(i));
+					if (CommonUtil.localeFromString(locale.getLanguage()).equals(userLocale)) {
+						localeMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
 					}
-					offsetTimeZonesMenu.getChildren().add(timeZoneMenuItem);
-					j++;
+					localesMenu.getChildren().add(localeMenuItem);
+					i++;
 				}
-				if (timeZoneFound) {
-					offsetTimeZonesMenu.setIcon(MENUITEM_CHECKED_STYLECLASS);
+			}
+			if (Settings.getBoolean(SettingCodes.SHOW_TIMEZONE_MENU, Bundle.SETTINGS, DefaultSettings.SHOW_TIMEZONE_MENU)) {
+				if (userLocale == null) {
+					userLocale = getLocale();
 				}
-				Submenu hemispehreTimeZoneMenu = null;
-				if (timeZoneOffset < 0) {
-					hemispehreTimeZoneMenu = westTimeZonesMenu;
-				} else { // if (timeZoneOffset >= 0) {
-					hemispehreTimeZoneMenu = eastTimeZonesMenu;
+				TimeZone userTimeZone = getTimeZone();
+				Submenu timeZonesMenu = new Submenu();
+				timeZonesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_TIME_ZONE_LABEL, CommonUtil.timeZoneToDisplayString(userTimeZone, userLocale))); // .getDisplayName(false,TimeZone.LONG,userLocale)));
+				timeZonesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-timezone");
+				timeZonesMenu.setId("timeZonesMenu");
+				userMenu.getChildren().add(timeZonesMenu);
+				Submenu westTimeZonesMenu = new Submenu();
+				westTimeZonesMenu.setLabel(Messages.getString(MessageCodes.WEST_TIME_ZONE_LABEL));
+				westTimeZonesMenu.setId("westTimeZonesMenu");
+				timeZonesMenu.getChildren().add(westTimeZonesMenu);
+				Submenu eastTimeZonesMenu = new Submenu();
+				eastTimeZonesMenu.setLabel(Messages.getString(MessageCodes.EAST_TIME_ZONE_LABEL));
+				eastTimeZonesMenu.setId("eastTimeZonesMenu");
+				timeZonesMenu.getChildren().add(eastTimeZonesMenu);
+				i = 0;
+				Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(getTimeZones());
+				Iterator<Integer> it = timeZonesByOffset.keySet().iterator();
+				while (it.hasNext()) {
+					Integer timeZoneOffset = it.next();
+					Submenu offsetTimeZonesMenu = new Submenu();
+					offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, timeZoneOffset < 0 ? "-" : (timeZoneOffset > 0 ? "+" : ""),
+							DateUtil.getDurationString(timeZoneOffset / 1000, DurationUnitOfTime.HOURS, DurationUnitOfTime.MINUTES, 0)));
+					offsetTimeZonesMenu.setId("offsetTimeZonesMenu_" + Integer.toString(i));
+					int j = 0;
+					boolean timeZoneFound = false;
+					Iterator<TimeZoneVO> timeZonesIt = timeZonesByOffset.get(timeZoneOffset).iterator();
+					while (timeZonesIt.hasNext()) {
+						TimeZoneVO timeZone = timeZonesIt.next();
+						MenuItem timeZoneMenuItem = new MenuItem();
+						timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
+								CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
+						timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
+						+ "')}"));
+						timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
+						timeZoneMenuItem.setId("timeZoneMenuItem_" + Integer.toString(i) + "_" + Integer.toString(j));
+						if (CommonUtil.timeZoneFromString(timeZone.getTimeZoneID()).equals(userTimeZone)) {
+							timeZoneMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
+							timeZoneFound = true;
+						}
+						offsetTimeZonesMenu.getChildren().add(timeZoneMenuItem);
+						j++;
+					}
+					if (timeZoneFound) {
+						offsetTimeZonesMenu.setIcon(MENUITEM_CHECKED_STYLECLASS);
+					}
+					Submenu hemispehreTimeZoneMenu = null;
+					if (timeZoneOffset < 0) {
+						hemispehreTimeZoneMenu = westTimeZonesMenu;
+					} else { // if (timeZoneOffset >= 0) {
+						hemispehreTimeZoneMenu = eastTimeZonesMenu;
+					}
+					hemispehreTimeZoneMenu.getChildren().add(offsetTimeZonesMenu);
+					if (timeZoneFound) {
+						hemispehreTimeZoneMenu.setIcon(MENUITEM_CHECKED_STYLECLASS);
+					}
+					i++;
 				}
-				hemispehreTimeZoneMenu.getChildren().add(offsetTimeZonesMenu);
-				if (timeZoneFound) {
-					hemispehreTimeZoneMenu.setIcon(MENUITEM_CHECKED_STYLECLASS);
-				}
-				i++;
 			}
 			String userTheme = getTheme();
 			Submenu themesMenu = new Submenu();

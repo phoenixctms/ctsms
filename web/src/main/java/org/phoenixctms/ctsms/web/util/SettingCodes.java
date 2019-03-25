@@ -496,5 +496,7 @@ public interface SettingCodes {
 	public static final String RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = "recipient_overview_show_scheduled_preset";
 	public static final String PROBAND_ADDRESS_STRICT = "proband_address_strict";
 	public static final String STAFF_ADDRESS_STRICT = "staff_address_strict";
+	public static final String SHOW_LOCALE_MENU = "show_locale_menu";
+	public static final String SHOW_TIMEZONE_MENU = "show_timezone_menu";
 
 }
