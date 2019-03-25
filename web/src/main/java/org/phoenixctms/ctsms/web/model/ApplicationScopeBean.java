@@ -293,13 +293,13 @@ public class ApplicationScopeBean {
 		return Settings.getString(SettingCodes.IBAN_MASK, Bundle.SETTINGS, DefaultSettings.IBAN_MASK);
 	}
 
-	// public String getInputTimePattern() {
-	// return CommonUtil.INPUT_TIME_PATTERN;
-	// }
-
 	public String getIdentityString(UserOutVO user) {
 		return WebUtil.getIdentityString(user);
 	}
+
+	// public String getInputTimePattern() {
+	// return CommonUtil.INPUT_TIME_PATTERN;
+	// }
 
 	public String getInputDatePattern() {
 		return CommonUtil.INPUT_DATE_PATTERN;
@@ -410,6 +410,13 @@ public class ApplicationScopeBean {
 		return WebUtil.PARENT_NODE_TYPE;
 	}
 
+	public String getPercentageString(Float value) {
+		if (value != null) {
+			return Messages.getMessage(MessageCodes.PERCENTAGE_LABEL, 100.0f * value);
+		}
+		return "";
+	}
+
 	// public boolean getProbandGroupsShowInquiryColumn() {
 	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
 	// }
@@ -420,11 +427,8 @@ public class ApplicationScopeBean {
 	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
 
-	public String getPercentageString(Float value) {
-		if (value != null) {
-			return Messages.getMessage(MessageCodes.PERCENTAGE_LABEL, 100.0f * value);
-		}
-		return "";
+	public Long getProbandListEntryTagValueCount(ProbandListEntryTagOutVO probandListEntryTag) {
+		return WebUtil.getProbandListEntryTagValueCount(probandListEntryTag);
 	}
 
 	// public boolean getProbandListShowInquiryColumn() {
@@ -435,10 +439,6 @@ public class ApplicationScopeBean {
 	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
 
-
-	public Long getProbandListEntryTagValueCount(ProbandListEntryTagOutVO probandListEntryTag) {
-		return WebUtil.getProbandListEntryTagValueCount(probandListEntryTag);
-	}
 
 	public String getProbandStatusEntryStartStopString(ProbandStatusEntryOutVO statusEntry) {
 		if (statusEntry != null) {
@@ -451,13 +451,13 @@ public class ApplicationScopeBean {
 		return WebUtil.getRemoteHost();
 	}
 
-	// public String getSignatureDescription(SignatureVO signature) {
-	// x
-	// }
-
 	public String getScheduleRightHeaderTemplate() {
 		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
 	}
+
+	// public String getSignatureDescription(SignatureVO signature) {
+	// x
+	// }
 
 	public String getScheduleTimePattern() {
 		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
@@ -471,6 +471,14 @@ public class ApplicationScopeBean {
 		return DateUtil.getStatusEntryDurationString(duration);
 	}
 
+	public String getStringDigest(String string) throws NoSuchAlgorithmException {
+		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+		if (string != null) {
+			messageDigest.update(string.getBytes());
+		}
+		return CommonUtil.getHex(messageDigest.digest());
+	}
+
 	// public boolean getTrialParticipationsShowInquiryColumn() {
 	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN);
 	// }
@@ -479,14 +487,6 @@ public class ApplicationScopeBean {
 	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
 	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
-
-	public String getStringDigest(String string) throws NoSuchAlgorithmException {
-		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-		if (string != null) {
-			messageDigest.update(string.getBytes());
-		}
-		return CommonUtil.getHex(messageDigest.digest());
-	}
 
 	public int getTimePickerIntervalMinutes() {
 		return Settings.getInt(SettingCodes.TIME_PICKER_INTERVAL_MINUTES, Bundle.SETTINGS, DefaultSettings.TIME_PICKER_INTERVAL_MINUTES);
@@ -535,6 +535,10 @@ public class ApplicationScopeBean {
 
 	public boolean isEnableTooltips() {
 		return Settings.getBoolean(SettingCodes.ENABLE_TOOLTIPS, Bundle.SETTINGS, DefaultSettings.ENABLE_TOOLTIPS);
+	}
+
+	public boolean isHighlightTextInput() {
+		return Settings.getBoolean(SettingCodes.HIGHLIGHT_TEXT_INPUT, Bundle.SETTINGS, DefaultSettings.HIGHLIGHT_TEXT_INPUT);
 	}
 
 	public boolean isHtmlAuditTrailChangeComments() {
