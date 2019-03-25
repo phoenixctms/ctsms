@@ -503,6 +503,7 @@ public final class DefaultSettings {
 	public final static PaymentMethod PAYOFF_PAYMENT_METHOD = null;
 	public final static boolean ENABLE_GEOLOCATION_SERVICES = false;
 	public final static boolean FORCE_DEFAULT_GEOLOCATION = false;
+	public final static boolean HIGHLIGHT_TEXT_INPUT = false;
 	public static final float DEFAULT_GEOLOCATION_LATITUDE = 47.081424f;
 	public static final float DEFAULT_GEOLOCATION_LONGITUDE = 15.468107f;
 	public static final String GOOGLE_API_URL = "https://maps.google.at/maps/api/js?sensor=false";

@@ -391,6 +391,7 @@ public interface SettingCodes {
 	public final static String PAYOFF_PAYMENT_METHOD = "payoff_payment_method";
 	public final static String FORCE_DEFAULT_GEOLOCATION = "force_default_geolocation";
 	public final static String ENABLE_GEOLOCATION_SERVICES = "enable_geolocation_services";
+	public final static String HIGHLIGHT_TEXT_INPUT = "highlight_text_input";
 	public static final String DEFAULT_GEOLOCATION_LONGITUDE = "default_geolocation_longitude";
 	public static final String DEFAULT_GEOLOCATION_LATITUDE = "default_geolocation_latitude";
 	public static final String GOOGLE_API_URL = "google_api_url";

@@ -322,6 +322,7 @@ public enum JSValues {
 	DEFAULT_GEOLOCATION_LATITUDE(""), // ("defaultGeolocationLatitude"),
 	DEFAULT_GEOLOCATION_LONGITUDE(""), // ("defaultGeolocationLongitude"),
 	ENABLE_GEOLOCATION_SERVICES(""), // ("enableGeolocationServices"),
+	HIGHLIGHT_TEXT_INPUT(""),
 	FORCE_DEFAULT_GEOLOCATION(""),
 	CURRENCY_SYMBOL(""),
 	PF_LOCALE_STRING(""),
@@ -347,6 +348,7 @@ public enum JSValues {
 			case FORCE_DEFAULT_GEOLOCATION:
 			case DEFAULT_GEOLOCATION_LATITUDE:
 			case DEFAULT_GEOLOCATION_LONGITUDE:
+			case HIGHLIGHT_TEXT_INPUT:
 			case LIST_INITIAL_POSITION:
 			case FIELD_CALCULATION_DECODE_BASE64:
 				return this.toString();
@@ -448,6 +450,8 @@ public enum JSValues {
 				return Float.toString(Settings.getFloat(SettingCodes.DEFAULT_GEOLOCATION_LONGITUDE, Bundle.SETTINGS, DefaultSettings.DEFAULT_GEOLOCATION_LONGITUDE));
 			case LIST_INITIAL_POSITION:
 				return Long.toString(CommonUtil.LIST_INITIAL_POSITION);
+			case HIGHLIGHT_TEXT_INPUT:
+				return Boolean.toString(Settings.getBoolean(SettingCodes.HIGHLIGHT_TEXT_INPUT, Bundle.SETTINGS, DefaultSettings.HIGHLIGHT_TEXT_INPUT));
 			case TRUSTED_REFERER_HOSTS:
 				return Settings.getTrustedRefererHostsString((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
 			case CONTEXT_PATH:

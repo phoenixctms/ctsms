@@ -494,9 +494,11 @@ PrimeFaces.widget.InputText = PrimeFaces.widget.BaseWidget.extend({
     //Visuals
     PrimeFaces.skinInput(this.jq);
 
-    //setTimeout(_highlightText.bind(null,this.jq),highlightDelay);
-    var jq = this.jq;
-    setTimeout(function(){_highlightText(jq);},highlightDelay);
+    if (HIGHLIGHT_TEXT_INPUT) {
+	    //setTimeout(_highlightText.bind(null,this.jq),highlightDelay);
+	    var jq = this.jq;
+	    setTimeout(function(){_highlightText(jq);},highlightDelay);
+    }
   }
 });
 
@@ -907,7 +909,7 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
                   //visuals
                   PrimeFaces.skinInput(this.input);
 
-                  if (this.dropdown.length == 0) {
+                  if (this.dropdown.length == 0 && HIGHLIGHT_TEXT_INPUT) {
                     //setTimeout(_highlightText.bind(null,this.input),highlightDelay);
                 	var jq = this.input;
                 	setTimeout(function(){_highlightText(jq);},highlightDelay);
