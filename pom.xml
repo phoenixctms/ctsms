@@ -1243,14 +1243,14 @@
         <updatePolicy>never</updatePolicy>
     </repository> -->
 
-    <!-- </repositories>
+    </repositories>
     <pluginRepositories>
 
-    	    <pluginRepository>
-	        <id>maven-repo</id>
-	        <name>repo1 maven.org</name>
-	        <url>http://repo1.maven.org/maven2</url>
-	    </pluginRepository> -->
+        <repository>
+            <id>artifactory</id>
+            <name>Artifactory Repository</name>
+            <url>http://artifactory:8081/artifactory</url>
+        </repository>
        <!--  <pluginRepository>
             <id>sonatype</id>
             <name>Sonatype AndroMDA Repository</name>
