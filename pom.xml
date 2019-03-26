@@ -1185,13 +1185,17 @@
         </profile>
     </profiles>
     <repositories>
-
+        <repository>
+            <id>artifactory</id>
+            <name>Artifactory Repository</name>
+            <url>http://artifactory:8081/artifactory</url>
+        </repository>
       <!--   <repository>
             <id>sonatype</id>
             <name>Sonatype AndroMDA Repository</name>
             <url>http://oss.sonatype.org/content/groups/public</url>
         </repository> -->
-        <repository>
+        <!-- <repository>
             <id>jboss-public</id>
             <name>JBoss Repository</name>
             <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
@@ -1200,7 +1204,7 @@
             <id>download</id>
             <name>Java.Net Download</name>
             <url>http://download.java.net/maven/2</url>
-        </repository>
+        </repository> -->
         <!-- JR HEALTH maven repository containing custom AndroMDA release builds -->
        <!--  <repository>
             <id>jr-andromda-releases</id>
@@ -1214,7 +1218,7 @@
             </snapshots>
         </repository> -->
 
-	    <repository>
+	    <!-- <repository>
 	        <id>prime-repo</id>
 	        <name>PrimeFaces Maven Repository</name>
 	        <url>http://repository.primefaces.org</url>
@@ -1237,7 +1241,7 @@
         <name>Maven Java Net Snapshots and Releases</name>
         <url>https://maven.java.net/content/groups/public</url>
         <!-- <updatePolicy>never</updatePolicy> -->
-    </repository>
+    </repository> -->
 
     </repositories>
     <pluginRepositories>
