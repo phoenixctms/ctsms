@@ -1190,85 +1190,14 @@
             <name>Artifactory Repository</name>
             <url>http://artifactory:8081/artifactory</url>
         </repository>
-      <!--   <repository>
-            <id>sonatype</id>
-            <name>Sonatype AndroMDA Repository</name>
-            <url>http://oss.sonatype.org/content/groups/public</url>
-        </repository> -->
-        <!-- <repository>
-            <id>jboss-public</id>
-            <name>JBoss Repository</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
-        </repository>
-        <repository>
-            <id>download</id>
-            <name>Java.Net Download</name>
-            <url>http://download.java.net/maven/2</url>
-        </repository> -->
-        <!-- JR HEALTH maven repository containing custom AndroMDA release builds -->
-       <!--  <repository>
-            <id>jr-andromda-releases</id>
-            <name>JR HEALTH AndroMDA Releases</name>
-            <url>http://nexus.healthgate.at/content/repositories/jr-andromda-releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository> -->
-
-	    <!-- <repository>
-	        <id>prime-repo</id>
-	        <name>PrimeFaces Maven Repository</name>
-	        <url>http://repository.primefaces.org</url>
-	        <layout>default</layout>
-	    </repository>
-
-	    <repository>
-	        <id>maven-repo</id>
-	        <name>repo1 maven.org</name>
-	        <url>http://repo1.maven.org/maven2</url>
-	    </repository>
-
-<repository>
-        <id>maven2-repository.dev.java.net</id>
-        <name>Java.net Repository for Maven</name>
-        <url>http://download.java.net/maven/2/</url>
-</repository> -->
-<!-- <repository>
-        <id>java.net-Public</id>
-        <name>Maven Java Net Snapshots and Releases</name>
-        <url>https://maven.java.net/content/groups/public</url>
-        <updatePolicy>never</updatePolicy>
-    </repository> -->
-
     </repositories>
     <pluginRepositories>
 
-        <repository>
+        <pluginRepository>
             <id>artifactory</id>
             <name>Artifactory Repository</name>
             <url>http://artifactory:8081/artifactory</url>
-        </repository>
-       <!--  <pluginRepository>
-            <id>sonatype</id>
-            <name>Sonatype AndroMDA Repository</name>
-            <url>http://oss.sonatype.org/content/groups/public</url>
-        </pluginRepository> -->
-
-        <!-- JR HEALTH maven repository containing custom AndroMDA release builds -->
-        <!-- <pluginRepository>
-            <id>jr-andromda-releases</id>
-            <name>JR HEALTH AndroMDA Releases</name>
-            <url>http://nexus.healthgate.at/content/repositories/jr-andromda-releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository> -->
+        </pluginRepository>
     </pluginRepositories>
     <prerequisites>
         <maven>2.0.10</maven>
