@@ -556,13 +556,13 @@
                 <artifactId>postgresql</artifactId>
                 <version>9.1-901.jdbc4</version>
             </dependency> -->
-            
+
             <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <version>42.2.2.jre7</version>
 </dependency>
-            
+
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -739,6 +739,11 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.andromda.maven.plugins</groupId>
