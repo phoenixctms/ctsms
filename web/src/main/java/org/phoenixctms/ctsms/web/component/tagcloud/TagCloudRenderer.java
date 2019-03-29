@@ -27,10 +27,10 @@ import javax.faces.render.FacesRenderer;
 import org.primefaces.renderkit.CoreRenderer;
 
 @ResourceDependencies({
-		@ResourceDependency(library = "primefaces", name = "primefaces.css"),
-		@ResourceDependency(library = "css", name = "tagCloud.css"),
-		@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
-		@ResourceDependency(library = "primefaces", name = "primefaces.js")
+	@ResourceDependency(library = "primefaces", name = "primefaces.css"),
+	@ResourceDependency(library = "css", name = "tagCloud.min.css"),
+	@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
+	@ResourceDependency(library = "primefaces", name = "primefaces.js")
 })
 @FacesRenderer(componentFamily = "javax.faces.Output", rendererType = "ctsms.TagCloud")
 public class TagCloudRenderer extends CoreRenderer {
@@ -51,8 +51,9 @@ public class TagCloudRenderer extends CoreRenderer {
 		writer.startElement("div", tagCloud);
 		writer.writeAttribute("id", tagCloud.getClientId(context), "id");
 		writer.writeAttribute("class", styleClass, "styleClass");
-		if (style != null)
+		if (style != null) {
 			writer.writeAttribute("style", style, "style");
+		}
 		writer.startElement("ul", null);
 		for (TagCloudItem item : model.getTags()) {
 			writer.startElement("li", null);

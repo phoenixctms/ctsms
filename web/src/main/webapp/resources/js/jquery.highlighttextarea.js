@@ -8,7 +8,7 @@
     "use strict";
 
     var mouseOverElement = null;
-    var isNumeric = function( n ) {
+    var isNumeric = function(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
@@ -124,9 +124,9 @@
                 text = Utilities.strInsert(text, range.end, '</mark>');
 
                 var mark = '<mark style="background-color:'+ range.color +';"';
-                if (range.class != null)
+                if (range["class"] !== null)
                 {
-                    mark += 'class="' + range.class + '"';
+                    mark += 'class="' + range["class"] + '"';
                 }
                 mark += ">";
 
@@ -624,7 +624,7 @@
                         if ($.isArray(range.ranges[j])) {
                             out.push({
                                 color: range.color,
-                                class: range.class,
+                                "class": range["class"],
                                 start: range.ranges[j][0],
                                 end: range.ranges[j][1]
                             });
