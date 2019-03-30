@@ -277,8 +277,9 @@
 							autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}">
-							<p:ajax />
-							<p:ajax event="keyup" />
+							<p:ajax
+												event="blur"
+												process="@this" />
 						</p:spinner> 
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.integer}"

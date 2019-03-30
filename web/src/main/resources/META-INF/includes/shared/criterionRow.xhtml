@@ -156,8 +156,9 @@
 				label="#{labels.criterion_long} #{searchBean.criterionsIn[index].position}"
 				rendered="#{searchBean.isInteger[index] and searchBean.isCriterionPropertyRendered[index]}"
 				styleClass="ctsms-spinner">
-				<p:ajax />
-				<p:ajax event="keyup" />
+				<p:ajax
+												event="blur"
+												process="@this" />
 			</p:spinner>
 			<p:selectBooleanCheckbox
 				id="boolean#{index}"

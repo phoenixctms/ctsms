@@ -794,8 +794,9 @@
 									required="true"
 									disabled="#{!staffBean.in.allocatable}"
 									label="#{stafflabels.staff_max_overlapping_shifts}">
-									<p:ajax />
-									<p:ajax event="keyup" />
+									<p:ajax
+												event="blur"
+												process="@this" />
 								</p:spinner>
 								<p:tooltip
 									rendered="#{enableTooltips}"
