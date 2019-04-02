@@ -216,11 +216,13 @@ public enum JSValues {
 	INPUT_FIELD_OUTPUT_ID_INDEX_SEPARATOR("_"),
 	INPUT_FIELD_WIDGET_VAR_PREFIX("inputFieldWidget_"),
 	INPUT_FIELD_WIDGET_VAR_INDEX_SEPARATOR("_"),
-	INPUT_DATETIME_PATTERN(CommonUtil.INPUT_DATETIME_PATTERN),
-	INPUT_TIME_PATTERN(CommonUtil.INPUT_TIME_PATTERN),
-	INPUT_DATE_PATTERN(CommonUtil.INPUT_DATE_PATTERN),
+	INPUT_DATETIME_PATTERN(""), // CommonUtil.INPUT_DATETIME_PATTERN),
+	INPUT_TIME_PATTERN(""), // CommonUtil.INPUT_TIME_PATTERN),
+	INPUT_DATE_PATTERN(""), // CommonUtil.INPUT_DATE_PATTERN),
+	INPUT_DECIMAL_SEPARATOR(""),
+	INPUT_TIMEZONE_ID(""), SYSTEM_TIMEZONE_ID(""),
 	JQPLOT_DATE_PATTERN(DateUtil.JQPLOT_DATE_PATTERN),
-	JSON_DATETIME_PATTERN(JsUtil.JSON_DATETIME_PATTERN),
+	INPUT_JSON_DATETIME_PATTERN(JsUtil.INPUT_JSON_DATETIME_PATTERN),
 	AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64("criteriaJournalTabTitleBase64"),
 	AJAX_CRITERIA_JOURNAL_ENTRY_COUNT("criteriaJournalEntryCount"),
 	INVENTORY_PICKER_URL(Urls.INVENTORY_PICKER.value()),
@@ -470,6 +472,22 @@ public enum JSValues {
 				}
 			case CURRENCY_SYMBOL:
 				return WebUtil.getCurrencySymbol();
+			case INPUT_DATETIME_PATTERN:
+				return CommonUtil.getInputDateTimePattern(WebUtil.getDateFormat());
+			case INPUT_TIME_PATTERN:
+				return CommonUtil.getInputTimePattern(WebUtil.getDateFormat());
+			case INPUT_DATE_PATTERN:
+				return CommonUtil.getInputDatePattern(WebUtil.getDateFormat());
+			case INPUT_DECIMAL_SEPARATOR:
+				try {
+					return WebUtil.getDecimalSeparator().toString();
+				} catch (NullPointerException e) {
+					return WebUtil.JS_NULL;
+				}
+			case INPUT_TIMEZONE_ID:
+				return WebUtil.getTimeZone().getID();
+			case SYSTEM_TIMEZONE_ID:
+				return WebUtil.getDefaultTimeZone().getID();
 			case PF_LOCALE_STRING:
 				try {
 					return LocaleConverter.getLocaleString(WebUtil.getLocale(), '_');

@@ -53,4 +53,24 @@ public class TrialDaoTransformTest extends DaoTransformTestBase {
     Assert.fail("Test 'TrialDaoTransformTest.testTrialInVOToEntity' not implemented!");
   }
 
+  /**
+   * Test for method TrialDao.toTrialRandomizationListVO
+   *
+   * @see org.phoenixctms.ctsms.domain.TrialDao#toTrialRandomizationListVO(org.phoenixctms.ctsms.domain.Trial source, org.phoenixctms.ctsms.vo.TrialRandomizationListVO target)
+   */
+  @Test
+  public void testToTrialRandomizationListVO() {
+    Assert.fail("Test 'TrialDaoTransformTest.testToTrialRandomizationListVO' not implemented!");
+  }
+
+    /**
+   * Test for method trialRandomizationListVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.TrialDao#trialRandomizationListVOToEntity(org.phoenixctms.ctsms.vo.TrialRandomizationListVO source, org.phoenixctms.ctsms.domain.Trial target, boolean copyIfNull)
+   */
+  @Test
+  public void testTrialRandomizationListVOToEntity() {
+    Assert.fail("Test 'TrialDaoTransformTest.testTrialRandomizationListVOToEntity' not implemented!");
+  }
+
 }

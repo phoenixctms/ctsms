@@ -65,7 +65,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private void appendRequestContextCallbackArgs(Object out) {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
-			requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
+			requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
+					JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
 		}
 	}
 
@@ -333,17 +334,29 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		//InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			String validationErrorMsg = inputField.getValidationErrorMsg();
+			String fieldTypeName;
+			if (isTimestamp()) {
+				if (inputField.getUserTimeZone()) {
+					fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE_USER_TIMEZONE, inputField.getFieldType().getName(),
+							WebUtil.getTimeZone().getID());
+				} else {
+					fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE_SYSTEM_TIMEZONE, inputField.getFieldType().getName(),
+							WebUtil.getDefaultTimeZone().getID());
+				}
+			} else {
+				fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE, inputField.getFieldType().getName());
+			}
 			if (this.isOptional()) {
 				if (validationErrorMsg != null && validationErrorMsg.length() > 0) {
-					return Messages.getMessage(MessageCodes.INPUT_FIELD_OPTIONAL_VALIDATION_TOOLTIP, inputField.getFieldType().getName(), validationErrorMsg);
+					return Messages.getMessage(MessageCodes.INPUT_FIELD_OPTIONAL_VALIDATION_TOOLTIP, fieldTypeName, validationErrorMsg);
 				} else {
-					return Messages.getMessage(MessageCodes.INPUT_FIELD_OPTIONAL_NO_VALIDATION_TOOLTIP, inputField.getFieldType().getName());
+					return Messages.getMessage(MessageCodes.INPUT_FIELD_OPTIONAL_NO_VALIDATION_TOOLTIP, fieldTypeName);
 				}
 			} else {
 				if (validationErrorMsg != null && validationErrorMsg.length() > 0) {
-					return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_VALIDATION_TOOLTIP, inputField.getFieldType().getName(), validationErrorMsg);
+					return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_VALIDATION_TOOLTIP, fieldTypeName, validationErrorMsg);
 				} else {
-					return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_NO_VALIDATION_TOOLTIP, inputField.getFieldType().getName());
+					return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_NO_VALIDATION_TOOLTIP, fieldTypeName);
 				}
 			}
 		}

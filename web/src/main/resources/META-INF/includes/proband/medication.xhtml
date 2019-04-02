@@ -383,7 +383,9 @@
 									value="#{medicationBean.in.doseValue}"
 									required="false"
 									label="#{probandlabels.medication_dose_value}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="doseValue">
@@ -509,13 +511,15 @@
 									value="#{medicationBean.in.start}"
 									required="false"
 									label="#{probandlabels.medication_start}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="start">
@@ -534,13 +538,15 @@
 									value="#{medicationBean.in.stop}"
 									required="false"
 									label="#{probandlabels.medication_stop}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="stop">

@@ -113,14 +113,10 @@
 			name="jquery.base64.min.js"
 			library="js"
 			target="head" />
-		<h:outputScript
-			name="date.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
+		<!-- <h:outputScript
 			name="time.min.js"
 			library="js"
-			target="head" />
+			target="head" /> -->
 		<h:outputScript
 			name="numerals.min.js"
 			library="js"
@@ -412,6 +408,26 @@
 		<ui:param
 			name="autoCompleteScrollHeightCoding"
 			value="220" />
+			
+			<ui:param
+			name="autoCompleteMinQueryLengthTimeZone"
+			value="1" />
+		<ui:param
+			name="autoCompleteMaxResultsTimeZone"
+			value="#{applicationScopeBean.integerMaxValue}" />
+		<ui:param
+			name="autoCompleteQueryDelayTimeZone"
+			value="300" />
+		<ui:param
+			name="autoCompleteDropdownTimeZone"
+			value="true" />
+		<ui:param
+			name="autoCompleteGlobalTimeZone"
+			value="true" />
+		<ui:param
+			name="autoCompleteScrollHeightTimeZone"
+			value="220" />
+			
 		<ui:param
 			name="autoCompleteMinQueryLengthLdapEntry"
 			value="3" />

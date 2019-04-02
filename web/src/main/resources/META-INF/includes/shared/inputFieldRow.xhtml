@@ -301,6 +301,7 @@
 							autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}">
+							<f:converter converterId="ctsms.Float" />
 							<p:ajax />
 						</p:inputText>
 						<p:tooltip
@@ -319,15 +320,16 @@
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							pattern="#{applicationScopeBean.inputDatePattern}"
+							pattern="#{sessionScopeBean.inputDatePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
 							showWeek="true"
 							navigator="true"
 							locale="#{sessionScopeBean.locale}"
-							timeZone="#{sessionScopeBean.timeZone}"
+							
 							styleClass="ctsms-calendar-date"
 							autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.dateOnChange')}">
+							<!-- timeZone="#{applicationScopeBean.defaultTimeZone}" -->
 							<p:ajax
 								event="blur"
 								process="@this"
@@ -353,16 +355,19 @@
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							pattern="#{applicationScopeBean.inputDateTimePattern}"
+							pattern="#{sessionScopeBean.inputDateTimePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
 							showWeek="true"
 							navigator="true"
 							locale="#{sessionScopeBean.locale}"
-							timeZone="#{sessionScopeBean.timeZone}"
+							
 							styleClass="ctsms-calendar-datetime"
 							autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.timestampOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.timestampOnChange')}">
+							<!-- timeZone="#{fieldInput.inputField.userTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" -->
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{fieldInput.inputField.userTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							<p:ajax
 								event="blur"
 								process="@this" />
@@ -394,10 +399,10 @@
 							locale="#{sessionScopeBean.locale}"
 							styleClass="ctsms-timepicker"
 							autocomplete="off">
-							<p:ajax
+							<!-- <p:ajax
 								event="keyup"
 								process="@this"
-								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.timeOnChange')}" />
+								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.timeOnChange')}" /> -->
 							<p:ajax
 								event="blur"
 								process="@this"

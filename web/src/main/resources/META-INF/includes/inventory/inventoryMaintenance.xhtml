@@ -229,13 +229,15 @@
 									value="#{inventoryMaintenanceBean.in.date}"
 									required="true"
 									label="#{inventorylabels.inventory_maintenance_date}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="maintenancedate">
@@ -475,7 +477,9 @@
 									value="#{inventoryMaintenanceBean.in.charge}"
 									required="true"
 									label="#{inventorylabels.inventory_maintenance_charge}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="charge">

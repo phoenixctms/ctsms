@@ -26,6 +26,7 @@ import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.LdapEntryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
@@ -42,6 +43,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
@@ -65,6 +68,8 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
 			in.setName(out.getName());
 			in.setTimeZone(out.getTimeZone());
+			in.setDateFormat(out.getDateFormat());
+			in.setDecimalSeparator(out.getDecimalSeparator());
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
 		}
@@ -81,6 +86,8 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setAuthMethod(Settings.getAuthenticationType(SettingCodes.USER_AUTH_METHOD_PRESET, Bundle.SETTINGS, DefaultSettings.USER_AUTH_METHOD_PRESET));
 			in.setName(Messages.getString(MessageCodes.USER_NAME_PRESET));
 			in.setTimeZone(Settings.getString(SettingCodes.USER_TIME_ZONE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TIME_ZONE_PRESET));
+			in.setDateFormat(Messages.getString(MessageCodes.USER_DATE_FORMAT_PRESET));
+			in.setDecimalSeparator(Messages.getString(MessageCodes.USER_DECIMAL_SEPARATOR_PRESET));
 			in.setVersion(null);
 			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
 		}
@@ -93,9 +100,12 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private LdapEntryVO ldapEntry2;
 	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> locales;
-	private ArrayList<SelectItem> timeZones;
+	private TimeZoneVO timeZone;
+	private Collection<TimeZoneVO> timeZones;
 	private ArrayList<SelectItem> themes;
 
+	private ArrayList<SelectItem> dateFormats;
+	private ArrayList<SelectItem> decimalSeparators;
 	private AuthenticationTypeSelector authMethod;
 
 	private HashMap<String, Long> tabCountMap;
@@ -112,6 +122,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		remoteUserOk = null;
 		ldapEntry1 = null;
 		ldapEntry2 = null;
+		timeZone = null;
 	}
 
 	@Override
@@ -122,6 +133,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getUserService().addUser(WebUtil.getAuthentication(), in, MAX_GRAPH_USER_INSTANCES);
 			initIn();
@@ -213,6 +225,22 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return new ArrayList<LdapEntryVO>();
 	}
 
+	public List<TimeZoneVO> completeTimeZone(String query) {
+		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>();
+		if (timeZones != null) {
+			Iterator<TimeZoneVO> it = timeZones.iterator();
+			String q = query.toLowerCase();
+			while (it.hasNext()) {
+				TimeZoneVO tz = it.next();
+				if (tz.getName().toLowerCase().contains(q)
+						|| tz.getTimeZoneID().toLowerCase().contains(q)) {
+					result.add(tz);
+				}
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -257,6 +285,14 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public AuthenticationTypeSelector getAuthMethod() {
 		return authMethod;
+	}
+
+	public ArrayList<SelectItem> getDateFormats() {
+		return dateFormats;
+	}
+
+	public ArrayList<SelectItem> getDecimalSeparators() {
+		return decimalSeparators;
 	}
 
 	public String getDeferredDeleteReason() {
@@ -316,14 +352,18 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return themes;
 	}
 
-	public ArrayList<SelectItem> getTimeZones() {
-		return timeZones;
+	public TimeZoneVO getTimeZone() {
+		return timeZone;
 	}
 
 	@Override
 	public String getTitle() {
 		return getTitle(WebUtil.getLongParamValue(GetParamNames.USER_ID) == null);
 	}
+
+	// public ArrayList<SelectItem> getTimeZones() {
+	// return timeZones;
+	// }
 
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
@@ -378,6 +418,19 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public void handleNameKeyUp() {
 		loadRemoteUserInfo();
+	}
+
+	//	public void handleTimeZoneSelect() {
+	//		if (timeZone != null) {
+	//			in.setTimeZone(timeZone.getTimeZoneID());
+	//		}
+	//	}
+	public void handleTimeZoneSelect( SelectEvent event) {
+
+	}
+
+	public void handleTimeZoneUnselect( UnselectEvent event) {
+
 	}
 
 	@PostConstruct
@@ -457,6 +510,8 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			// this.locales.add(new SelectItem(CommonUtil.localeToString(locale), CommonUtil.localeToDisplayString(locale, userLocale)));
 			// }
 		}
+		//timeZone = null;
+		loadTimeZone();
 		if (this.timeZones == null) {
 			// if (userLocale == null) {
 			// userLocale = WebUtil.getLocale();
@@ -478,6 +533,12 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 				this.themes.add(new SelectItem(themeName, themeMap.get(themeName)));
 			}
 		}
+
+		this.dateFormats = WebUtil.getDateFormats(this.in.getDateFormat());
+		if (this.decimalSeparators == null) {
+			this.decimalSeparators = WebUtil.getDecimalSeparators();
+		}
+
 		if (WebUtil.isUserIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
@@ -498,7 +559,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			}
 		}
 	}
-
 
 	@Override
 	public boolean isCreateable() {
@@ -600,12 +660,30 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		}
 	}
 
+	private void loadTimeZone() {
+		this.timeZone = WebUtil.getTimeZone(in.getTimeZone());
+	}
+
 	@Override
 	public String resetAction() {
 		out = null;
 		initIn();
 		initSets();
 		return RESET_OUTCOME;
+	}
+
+	private void sanitizeInVals() {
+		if (timeZone != null) {
+			in.setTimeZone(timeZone.getTimeZoneID());
+		} else {
+			in.setTimeZone(null);
+		}
+		if (CommonUtil.NO_SELECTION_VALUE.equals(in.getDateFormat())) {
+			in.setDateFormat(null);
+		}
+		if (CommonUtil.NO_SELECTION_VALUE.equals(in.getDecimalSeparator())) {
+			in.setDecimalSeparator(null);
+		}
 	}
 
 	@Override
@@ -642,8 +720,14 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		this.remoteUserOk = remoteUserOk;
 	}
 
+	public void setTimeZone(TimeZoneVO timeZone) {
+		this.timeZone = timeZone;
+	}
+
 	@Override
 	public String updateAction() {
+		UserInVO backup = new UserInVO(in);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, MAX_GRAPH_USER_INSTANCES);
 			initIn();
@@ -651,13 +735,17 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		} catch (AuthorisationException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (IllegalArgumentException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

@@ -329,6 +329,7 @@
 									required="true"
 									label="#{probandlabels.money_transfer_amount}"
 									styleClass="ctsms-control-float">
+									<f:converter converterId="ctsms.Float" />
 									<p:ajax />
 								</p:inputText>
 								<p:tooltip
@@ -351,13 +352,14 @@
 									value="#{moneyTransferBean.in.transactionTimestamp}"
 									required="true"
 									label="#{probandlabels.money_transfer_transaction_timestamp}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
 									styleClass="ctsms-calendar-datetime">
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									<p:ajax />
 								</p:calendar>
 								<p:tooltip

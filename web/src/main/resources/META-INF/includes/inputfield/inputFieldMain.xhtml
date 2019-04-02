@@ -455,7 +455,9 @@
 									value="#{inputFieldBean.in.floatLowerLimit}"
 									required="false"
 									label="#{inputfieldlabels.input_field_float_lower_limit}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="floatLowerLimit">
@@ -477,7 +479,9 @@
 									value="#{inputFieldBean.in.floatUpperLimit}"
 									required="false"
 									label="#{inputfieldlabels.input_field_float_upper_limit}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="floatUpperLimit">
@@ -499,7 +503,9 @@
 									value="#{inputFieldBean.in.floatPreset}"
 									required="false"
 									label="#{inputfieldlabels.input_field_float_preset}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="floatPreset">
@@ -521,13 +527,15 @@
 									value="#{inputFieldBean.in.minDate}"
 									required="false"
 									label="#{inputfieldlabels.input_field_min_date}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="minDate">
@@ -549,13 +557,15 @@
 									value="#{inputFieldBean.in.maxDate}"
 									required="false"
 									label="#{inputfieldlabels.input_field_max_date}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="maxDate">
@@ -577,12 +587,15 @@
 									value="#{inputFieldBean.in.datePreset}"
 									required="false"
 									label="#{inputfieldlabels.input_field_date_preset}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="datePreset">
@@ -604,13 +617,15 @@
 									value="#{inputFieldBean.in.minTimestamp}"
 									required="false"
 									label="#{inputfieldlabels.input_field_min_timestamp}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-datetime" />
+									styleClass="ctsms-calendar-datetime" >
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="minTimestamp">
@@ -632,13 +647,15 @@
 									value="#{inputFieldBean.in.maxTimestamp}"
 									required="false"
 									label="#{inputfieldlabels.input_field_max_timestamp}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-datetime" />
+									styleClass="ctsms-calendar-datetime" >
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="maxTimestamp">
@@ -660,13 +677,15 @@
 									value="#{inputFieldBean.in.timestampPreset}"
 									required="false"
 									label="#{inputfieldlabels.input_field_timestamp_preset}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-datetime" />
+									styleClass="ctsms-calendar-datetime" >
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="timestampPreset">
@@ -679,15 +698,27 @@
 								for="timestampPreset"
 								rendered="#{inputFieldBean.config.timestamp}" />
 								
-
-
-
-
-
-
-
-
-
+							<h:outputLabel
+								for="usertimezone"
+								rendered="#{inputFieldBean.config.timestamp}"
+								value="#{inputfieldlabels.input_field_usertimezone_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.timestamp}">
+								<p:selectBooleanCheckbox
+									id="usertimezone"
+									value="#{inputFieldBean.in.userTimeZone}"/>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="usertimezone">
+									<h:outputFormat
+										value="#{inputfieldlabels.input_field_usertimezone_tooltip}"
+										escape="false" >
+										<f:param value="#{applicationScopeBean.defaultTimeZone.ID}" />
+									</h:outputFormat>
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="usertimezone"
+								rendered="#{inputFieldBean.config.timestamp}" />
 							<h:outputLabel
 								for="minTime"
 								rendered="#{inputFieldBean.config.time}"

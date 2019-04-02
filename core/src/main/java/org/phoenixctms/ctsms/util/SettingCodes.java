@@ -150,6 +150,7 @@ public interface SettingCodes {
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "notification_template_model_datetime_pattern";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "notification_template_model_date_pattern";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN = "notification_template_model_time_pattern";
+	public static final String NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR = "notification_template_model_decimal_separator";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "notification_template_model_omit_encrypted_fields";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "notification_template_model_enumerate_references";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "notification_template_model_enumerate_collections";
@@ -276,6 +277,7 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "mass_mail_template_model_datetime_pattern";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "mass_mail_template_model_date_pattern";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "mass_mail_template_model_time_pattern";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR = "mass_mail_template_model_decimal_separator";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "mass_mail_template_model_omit_encrypted_fields";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "mass_mail_template_model_enumerate_references";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "mass_mail_template_model_enumerate_collections";

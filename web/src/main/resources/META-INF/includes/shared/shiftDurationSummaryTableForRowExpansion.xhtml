@@ -41,13 +41,14 @@
 						value="#{shiftDurationSummaryModel.startRe}"
 						required="false"
 						label="#{labels.shift_duration_summary_table_header_start}"
-						pattern="#{applicationScopeBean.inputDateTimePattern}"
+						pattern="#{sessionScopeBean.inputDateTimePattern}"
 						yearRange="#{applicationScopeBean.calendarYearRange}"
 						showWeek="true"
 						navigator="true"
 						locale="#{sessionScopeBean.locale}"
-						timeZone="#{sessionScopeBean.timeZone}"
 						styleClass="ctsms-calendar-datetime">
+						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</p:calendar>
 					<p:tooltip
 						rendered="#{enableTooltips}"
@@ -64,13 +65,14 @@
 						value="#{shiftDurationSummaryModel.stopRe}"
 						required="false"
 						label="#{labels.shift_duration_summary_table_header_stop}"
-						pattern="#{applicationScopeBean.inputDateTimePattern}"
+						pattern="#{sessionScopeBean.inputDateTimePattern}"
 						yearRange="#{applicationScopeBean.calendarYearRange}"
 						showWeek="true"
 						navigator="true"
 						locale="#{sessionScopeBean.locale}"
-						timeZone="#{sessionScopeBean.timeZone}"
 						styleClass="ctsms-calendar-datetime">
+						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</p:calendar>
 					<p:tooltip
 						rendered="#{enableTooltips}"

@@ -101,13 +101,15 @@
 					value="#{bookingBean.in.start}"
 					required="true"
 					label="#{inventorylabels.inventory_booking_core_input_start}"
-					pattern="#{applicationScopeBean.inputDateTimePattern}"
+					pattern="#{sessionScopeBean.inputDateTimePattern}"
 					yearRange="#{applicationScopeBean.calendarYearRange}"
 					showWeek="true"
 					navigator="true"
 					locale="#{sessionScopeBean.locale}"
-					timeZone="#{sessionScopeBean.timeZone}"
-					styleClass="ctsms-calendar-datetime" />
+					styleClass="ctsms-calendar-datetime" >
+					<f:converter converterId="ctsms.DateTime" />
+					<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+				</p:calendar>
 				<p:tooltip
 					rendered="#{enableTooltips}"
 					for="bookingstart">
@@ -147,13 +149,15 @@
 					value="#{bookingBean.in.stop}"
 					required="true"
 					label="#{inventorylabels.inventory_booking_core_input_stop}"
-					pattern="#{applicationScopeBean.inputDateTimePattern}"
+					pattern="#{sessionScopeBean.inputDateTimePattern}"
 					yearRange="#{applicationScopeBean.calendarYearRange}"
 					showWeek="true"
 					navigator="true"
 					locale="#{sessionScopeBean.locale}"
-					timeZone="#{sessionScopeBean.timeZone}"
-					styleClass="ctsms-calendar-datetime" />
+					styleClass="ctsms-calendar-datetime" >
+					<f:converter converterId="ctsms.DateTime" />
+					<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+				</p:calendar>
 				<p:tooltip
 					rendered="#{enableTooltips}"
 					for="bookingstop">

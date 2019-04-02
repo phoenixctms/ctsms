@@ -1,13 +1,9 @@
 package org.phoenixctms.ctsms.web.conversion;
 
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import org.phoenixctms.ctsms.web.util.DateUtil;
-import org.phoenixctms.ctsms.web.util.DefaultSettings;
-import org.phoenixctms.ctsms.web.util.SettingCodes;
-import org.phoenixctms.ctsms.web.util.Settings;
-import org.phoenixctms.ctsms.web.util.Settings.Bundle;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @FacesConverter(value = DateConverter.CONVERTER_ID)
 public class DateConverter extends DateTimeConverterBase {
@@ -16,20 +12,24 @@ public class DateConverter extends DateTimeConverterBase {
 
 	public DateConverter() {
 		super();
-		String converterDatePattern = Settings.getString(SettingCodes.CONVERTER_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_PATTERN);
-		if (converterDatePattern != null && converterDatePattern.length() > 0) {
-			try {
-				this.setPattern(converterDatePattern);
-			} catch (ConverterException e) {
-				setDateStyleType();
-			}
-		} else {
-			setDateStyleType();
-		}
 	}
 
-	private void setDateStyleType() {
-		this.setDateStyle(Settings.getString(SettingCodes.CONVERTER_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_STYLE));
-		this.setType(DateUtil.ConverterType.DATE.toString());
+	protected void setFormat() {
+		this.setPattern(CommonUtil.getInputDatePattern(WebUtil.getDateFormat()));
+		// String converterDatePattern = Settings.getString(SettingCodes.CONVERTER_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_PATTERN);
+		// if (converterDatePattern != null && converterDatePattern.length() > 0) {
+		// try {
+		// this.setPattern(converterDatePattern);
+		// } catch (ConverterException e) {
+		// setDateStyleType();
+		// }
+		// } else {
+		// setDateStyleType();
+		// }
 	}
+
+	// private void setDateStyleType() {
+	// this.setDateStyle(Settings.getString(SettingCodes.CONVERTER_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_STYLE));
+	// this.setType(DateUtil.ConverterType.DATE.toString());
+	// }
 }

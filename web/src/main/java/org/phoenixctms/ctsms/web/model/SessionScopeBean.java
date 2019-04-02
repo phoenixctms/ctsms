@@ -130,21 +130,7 @@ public class SessionScopeBean {
 		viewId.append("faces-redirect=true&includeViewParams=true");
 		return viewId.toString();
 	}
-	private static Collection<TimeZoneVO> getTimeZones() {
-		Collection<TimeZoneVO> timeZones = null;
-		try {
-			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		if (timeZones == null) {
-			timeZones = new ArrayList<TimeZoneVO>();
-		}
-		return timeZones;
-	}
+
 	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
 	private MaxSizeHashMap<Object, StreamedContent> imageStore;
 	// private HashMap<Class, HashMap<Object, Object>> selectionSetServiceCache;
@@ -600,6 +586,16 @@ public class SessionScopeBean {
 		}
 	}
 
+	public synchronized String getInputDatePattern() {
+
+		return CommonUtil.getInputDatePattern(logon != null ? logon.getUser().getDateFormat() : null);
+
+	}
+
+	public synchronized String getInputDateTimePattern() {
+		return CommonUtil.getInputDateTimePattern(logon != null ? logon.getUser().getDateFormat() : null);
+	}
+
 	public synchronized MenuModel getInputFieldEntityMenuModel() {
 		return DynamicEntityMenu.getInputFieldEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -615,6 +611,9 @@ public class SessionScopeBean {
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
+	// public String getInputTimePattern() {
+	// return CommonUtil.INPUT_TIME_PATTERN;
+	// }
 	public synchronized MenuModel getInventoryHomeMenuModel() {
 		return DynamicHomeMenu.getInventoryHomeMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -800,6 +799,7 @@ public class SessionScopeBean {
 		}
 		return null;
 	}
+
 
 	public synchronized MenuModel getUserEntityMenuModel() {
 		return DynamicEntityMenu.getUserEntityMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -1022,7 +1022,7 @@ public class SessionScopeBean {
 				eastTimeZonesMenu.setId("eastTimeZonesMenu");
 				timeZonesMenu.getChildren().add(eastTimeZonesMenu);
 				i = 0;
-				Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(getTimeZones());
+				Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(WebUtil.getTimeZones());
 				Iterator<Integer> it = timeZonesByOffset.keySet().iterator();
 				while (it.hasNext()) {
 					Integer timeZoneOffset = it.next();

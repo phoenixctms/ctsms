@@ -131,16 +131,22 @@ public final class DateUtil {
 	}
 
 	public static DateFormat getDateFormat() {
+		return getDateFormat(Settings.getBoolean(SettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.DATE_USER_TIME_ZONE));
+	}
+
+	public static DateFormat getDateFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
-		DateFormat dateFormat = null;
-		String dateformatDatePattern = Settings.getString(SettingCodes.DATEFORMAT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_PATTERN);
-		if (dateformatDatePattern != null && dateformatDatePattern.length() > 0) {
-			dateFormat = new SimpleDateFormat(dateformatDatePattern, locale);
-		} else {
-			dateFormat = DateFormat.getDateInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE), locale);
+		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDatePattern(WebUtil.getDateFormat()), locale);
+		// String dateformatDatePattern = Settings.getString(SettingCodes.DATEFORMAT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_PATTERN);
+		// if (dateformatDatePattern != null && dateformatDatePattern.length() > 0) {
+		// dateFormat = new SimpleDateFormat(dateformatDatePattern, locale);
+		// } else {
+		// dateFormat = DateFormat.getDateInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE), locale);
+		// }
+		if (isUserTimeZone) {
+			dateFormat.setTimeZone(timeZone);
 		}
-		dateFormat.setTimeZone(timeZone);
 		return dateFormat;
 	}
 
@@ -162,17 +168,22 @@ public final class DateUtil {
 	}
 
 	public static DateFormat getDateTimeFormat() {
+		return getDateTimeFormat(Settings.getBoolean(SettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.DATE_TIME_USER_TIME_ZONE));
+	}
+	public static DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
-		DateFormat dateFormat = null;
-		String dateformatDatetimePattern = Settings.getString(SettingCodes.DATEFORMAT_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATETIME_PATTERN);
-		if (dateformatDatetimePattern != null && dateformatDatetimePattern.length() > 0) {
-			dateFormat = new SimpleDateFormat(dateformatDatetimePattern, locale);
-		} else {
-			dateFormat = DateFormat.getDateTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE),
-					Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
+		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDateTimePattern(WebUtil.getDateFormat()), locale);
+		// String dateformatDatetimePattern = Settings.getString(SettingCodes.DATEFORMAT_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATETIME_PATTERN);
+		// if (dateformatDatetimePattern != null && dateformatDatetimePattern.length() > 0) {
+		// dateFormat = new SimpleDateFormat(dateformatDatetimePattern, locale);
+		// } else {
+		// dateFormat = DateFormat.getDateTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE),
+		// Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
+		// }
+		if (isUserTimeZone) {
+			dateFormat.setTimeZone(timeZone);
 		}
-		dateFormat.setTimeZone(timeZone);
 		return dateFormat;
 	}
 
@@ -534,16 +545,22 @@ public final class DateUtil {
 	}
 
 	public static DateFormat getTimeFormat() {
+		return getTimeFormat(Settings.getBoolean(SettingCodes.TIME_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.TIME_USER_TIME_ZONE));
+	}
+
+	public static DateFormat getTimeFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
-		DateFormat dateFormat = null;
-		String dateformatTimePattern = Settings.getString(SettingCodes.DATEFORMAT_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_PATTERN);
-		if (dateformatTimePattern != null && dateformatTimePattern.length() > 0) {
-			dateFormat = new SimpleDateFormat(dateformatTimePattern, locale);
-		} else {
-			dateFormat = DateFormat.getTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
+		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputTimePattern(WebUtil.getDateFormat()), locale);
+		// String dateformatTimePattern = Settings.getString(SettingCodes.DATEFORMAT_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_PATTERN);
+		// if (dateformatTimePattern != null && dateformatTimePattern.length() > 0) {
+		// dateFormat = new SimpleDateFormat(dateformatTimePattern, locale);
+		// } else {
+		// dateFormat = DateFormat.getTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
+		// }
+		if (isUserTimeZone) {
+			dateFormat.setTimeZone(timeZone);
 		}
-		dateFormat.setTimeZone(timeZone);
 		return dateFormat;
 	}
 

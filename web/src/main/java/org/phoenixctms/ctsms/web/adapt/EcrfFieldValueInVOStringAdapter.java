@@ -53,4 +53,6 @@ public class EcrfFieldValueInVOStringAdapter extends InputFieldValueStringAdapte
 	protected Date getTimeValue(ECRFFieldValueInVO value) {
 		return value.getTimeValue();
 	}
+
+
 }

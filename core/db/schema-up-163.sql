@@ -21,3 +21,7 @@ alter table TRIAL alter SIGNUP_RANDOMIZE set not null;
 
 update ecrf_status_type set audit_trail = 't' where name_l10n_key = 'in_progress';
 
+alter table INPUT_FIELD add column USER_TIME_ZONE BOOLEAN;
+update INPUT_FIELD set USER_TIME_ZONE = 'f';
+alter table INPUT_FIELD alter USER_TIME_ZONE set not null;
+

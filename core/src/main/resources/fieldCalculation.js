@@ -28,6 +28,7 @@ var FieldCalculation = FieldCalculation || {};
 	    'calculated'          : "%s - %s erwartet: %s",
 	    'enteredIndex'        : "%s - %s (Index %d) eingegeben: %s",
 	    'entered'             : "%s - %s eingegeben: %s",
+	    'noSelectionLabel'    : "[kein]",
 
 	    'date is empty'       : "Datum ist leer",
 	    'wrong date format'   : "falsches Datumsformat",
@@ -36,7 +37,6 @@ var FieldCalculation = FieldCalculation || {};
 	    'month required'      : "Monat erforderlich",
 	    'day required'        : "Tag erforderlich",
 	    'invalid date'        : "ungültiges Datum",
-	    'noSelectionLabel'    : "[kein]",
 
 	    'time is empty'       : "Uhrzeit ist leer",
 	    'wrong time format'   : "falsches Uhrzeitformat",
@@ -650,7 +650,7 @@ var FieldCalculation = FieldCalculation || {};
 							formatOrSeparator = "%f";
 						}
 					}
-					return sprintf(formatOrSeparator,value);
+					return _formatDecimal(sprintf(formatOrSeparator,value));
 				}
 			} else if (value instanceof Array) {
 				if (value.length <= 0 || (value.length == 1 && value[0] == "")) {
@@ -824,6 +824,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["parseDate"] = _parseDate;
 		mask["parseDateTime"] = _parseDateTime;
 		mask["parseTime"] = _parseTime;
+		mask["formatDecimal"] = _formatDecimal;
 
 		mask["parseDateCustom"] = _parseDateCustom;
 		mask["parseTimeCustom"] = _parseTimeCustom;
@@ -846,7 +847,8 @@ var FieldCalculation = FieldCalculation || {};
 		mask["INPUT_DATE_PATTERN"] = INPUT_DATE_PATTERN;
 		mask["INPUT_TIME_PATTERN"] = INPUT_TIME_PATTERN;
 		mask["INPUT_DATETIME_PATTERN"] = INPUT_DATETIME_PATTERN;
-		mask["JSON_DATETIME_PATTERN"] = JSON_DATETIME_PATTERN;
+		mask["INPUT_JSON_DATETIME_PATTERN"] = INPUT_JSON_DATETIME_PATTERN;
+		mask["INPUT_DECIMAL_SEPARATOR"] = INPUT_DECIMAL_SEPARATOR;
 		mask["JSON"] = JSON;
 		mask["jQuery"] = jQuery;
 		mask["RestApi"] = RestApi;
@@ -1025,6 +1027,20 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _getLocalizedMessage(message,locale) {
 		return localizedMessages[_getLocale(locale)][message];
+	}
+	
+	function _parseDecimal(input) {
+		if (input != null && INPUT_DECIMAL_SEPARATOR != null && INPUT_DECIMAL_SEPARATOR.length > 0) {
+			input = (input+'').replace(INPUT_DECIMAL_SEPARATOR,'.');
+		}
+		return input;
+	}
+	
+	function _formatDecimal(input) {
+		if (input != null && INPUT_DECIMAL_SEPARATOR != null && INPUT_DECIMAL_SEPARATOR.length > 0) {
+			input = (input+'').replace('.',INPUT_DECIMAL_SEPARATOR);
+		}
+		return input;
 	}
 
 	function _printDateCustom(input,locale) {
@@ -1535,15 +1551,15 @@ var FieldCalculation = FieldCalculation || {};
 		}
 
 		if (typeof inputFieldVariableValue.dateValue === 'string') { //inputFieldVariableValue.dateValue != null && inputFieldVariableValue.dateValue.length > 0) {
-			inputFieldVariableValue.dateValue = Date.parseExact(inputFieldVariableValue.dateValue, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
+			inputFieldVariableValue.dateValue = Date.parseExact(inputFieldVariableValue.dateValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
 		}
 		if (typeof inputFieldVariableValue.timeValue === 'string') { //if (inputFieldVariableValue.timeValue != null && inputFieldVariableValue.timeValue.length > 0) {
 			//console.log(inputFieldVariableValue.timeValue);
-			inputFieldVariableValue.timeValue = Date.parseExact(inputFieldVariableValue.timeValue, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
+			inputFieldVariableValue.timeValue = Date.parseExact(inputFieldVariableValue.timeValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
 			//console.log(inputFieldVariableValue.timeValue);
 		}
 		if (typeof inputFieldVariableValue.timestampValue === 'string') { //if (inputFieldVariableValue.timestampValue != null && inputFieldVariableValue.timestampValue.length > 0) {
-			inputFieldVariableValue.timestampValue = Date.parseExact(inputFieldVariableValue.timestampValue, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
+			inputFieldVariableValue.timestampValue = Date.parseExact(inputFieldVariableValue.timestampValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
 		}
 
 		//if (jQuery.type(inputFieldVariableValue.floatValue) === "string") {
@@ -1744,7 +1760,7 @@ var FieldCalculation = FieldCalculation || {};
 
 	function floatOnChange(variableName, index, widget, outputId) {
 
-		if (!silent) _inputFieldOnChange(variableName, index, widget.getValue());
+		if (!silent) _inputFieldOnChange(variableName, index, _parseDecimal(widget.getValue()));
 
 	}
 
@@ -1929,7 +1945,7 @@ var FieldCalculation = FieldCalculation || {};
 	function floatApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
+		widget.setValue(_formatDecimal(newValue));
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);

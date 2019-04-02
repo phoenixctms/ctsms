@@ -83,13 +83,13 @@ extends NotificationDaoBase
 		}
 
 		@Override
-		protected DateFormat getDateFormat() {
+		protected DateFormat getDateFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN,
 					Locales.NOTIFICATION);
 		}
 
 		@Override
-		protected DateFormat getDateTimeFormat() {
+		protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
 					DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN, Locales.NOTIFICATION);
 		}
@@ -97,6 +97,11 @@ extends NotificationDaoBase
 		@Override
 		protected Date getDateValue(ECRFFieldValueOutVO value) {
 			return value.getDateValue();
+		}
+
+		@Override
+		protected String getDecimalSeparator() {
+			return Settings.getString(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR);
 		}
 
 		@Override
@@ -137,7 +142,7 @@ extends NotificationDaoBase
 		}
 
 		@Override
-		protected DateFormat getTimeFormat() {
+		protected DateFormat getTimeFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN,
 					Locales.NOTIFICATION);
 		}

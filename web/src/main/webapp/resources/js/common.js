@@ -144,8 +144,9 @@ var sessionMaxInactiveInterval = null;
 function createSessionTimer(duration) {
 	if (duration != null && duration > 0) {
 		sessionMaxInactiveInterval = duration;
-		var sessionExpiry = (new Date()).addSeconds(sessionMaxInactiveInterval);
-		jQuery('#session_timer').countdown(sessionExpiry.toString('yyyy/MM/dd HH:mm:ss'), {
+		var sessionExpiry = (new Date()); //.addSeconds(sessionMaxInactiveInterval);
+		sessionExpiry.setSeconds(sessionExpiry.getSeconds() + sessionMaxInactiveInterval);
+		jQuery('#session_timer').countdown(sessionExpiry, { //.toString('yyyy/MM/dd HH:mm:ss'), {
 		    elapse : false, // Allow to continue after finishes
 		    precision : 1000, // The update rate in milliseconds
 		}).on('update.countdown', function(event) {
@@ -165,8 +166,9 @@ function resetSessionTimers(depth) {
 		depth = 0;
 	}
 	if (sessionMaxInactiveInterval != null) {
-		var sessionExpiry = (new Date()).addSeconds(sessionMaxInactiveInterval);
-		jQuery('#session_timer').countdown(sessionExpiry.toString('yyyy/MM/dd HH:mm:ss'));
+		var sessionExpiry = (new Date()); //.addSeconds(sessionMaxInactiveInterval);
+		sessionExpiry.setSeconds(sessionExpiry.getSeconds() + sessionMaxInactiveInterval);
+		jQuery('#session_timer').countdown(sessionExpiry); //.toString('yyyy/MM/dd HH:mm:ss'));
 	}
 
 	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers && depth < 10) {

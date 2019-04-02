@@ -96,6 +96,7 @@ public final class CommonUtil {
 		TRAILING
 	}
 
+
 	public final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
 	static {
 		VO_EQUALS_EXCLUDES.add("CourseOutVO.getPrecedingCourses");
@@ -111,9 +112,12 @@ public final class CommonUtil {
 	private final static String UNKNOWN_LOCAL_HOST_NAME = "localhost";
 	public final static String LOCAL_HOST_NAME = getLocalHostName();
 	public final static String TIME_SEPARATOR = ":";
-	public final static String INPUT_DATETIME_PATTERN = "dd.MM.yyyy HH" + TIME_SEPARATOR + "mm"; // "yyyy-MM-dd HH:mm"; //must not be locale dependent
-	public final static String INPUT_DATE_PATTERN = "dd.MM.yyyy"; // "yyyy-MM-dd"; //must not be locale dependent
-	public final static String INPUT_TIME_PATTERN = "HH" + TIME_SEPARATOR + "mm"; // must not be locale dependent
+	// var INPUT_DATE_PATTERN = 'dd.MM.yyyy';
+	// var INPUT_TIME_PATTERN = 'HH:mm';
+	public final static String DEFAULT_INPUT_TIME_PATTERN = "HH" + TIME_SEPARATOR + "mm"; // must not be locale dependent
+	private final static String DEFAULT_INPUT_DATE_PATTERN = "yyyy-MM-dd"; // "dd.MM.yyyy"; // "yyyy-MM-dd"; //must not be locale dependent
+	private final static String DEFAULT_INPUT_DATETIME_PATTERN = DEFAULT_INPUT_DATE_PATTERN + " " + DEFAULT_INPUT_TIME_PATTERN; // "yyyy-MM-dd HH:mm"; //must not be locale
+	// dependent
 	public final static String DIGITS_ONLY_DATETIME_PATTERN = "yyyyMMddHHmmss";
 	public final static boolean FILE_EXTENSION_REGEXP_MODE = true; // different primefaces versions(?), etc...
 	public final static String DEFAULT_FILE_EXTENSION_PATTERN = (FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)([a-zA-Z0-9]+)$/" : "*.*");
@@ -435,6 +439,7 @@ public final class CommonUtil {
 					out.setInputFieldId(inputField.getId());
 					out.setInputFieldType(inputField.getFieldType().getType());
 					out.setInputFieldName(inputField.getName());
+					out.setUserTimeZone(inputField.getUserTimeZone());
 					copySelectionSetValuesOutToJson(inputField.getSelectionSetValues(), out.getInputFieldSelectionSetValues());
 				}
 			}
@@ -466,6 +471,7 @@ public final class CommonUtil {
 					out.setInputFieldId(inputField.getId());
 					out.setInputFieldType(inputField.getFieldType().getType());
 					out.setInputFieldName(inputField.getName());
+					out.setUserTimeZone(inputField.getUserTimeZone());
 					copySelectionSetValuesOutToJson(inputField.getSelectionSetValues(), out.getInputFieldSelectionSetValues());
 				}
 			}
@@ -496,6 +502,7 @@ public final class CommonUtil {
 					out.setInputFieldId(inputField.getId());
 					out.setInputFieldType(inputField.getFieldType().getType());
 					out.setInputFieldName(inputField.getName());
+					out.setUserTimeZone(inputField.getUserTimeZone());
 					copySelectionSetValuesOutToJson(inputField.getSelectionSetValues(), out.getInputFieldSelectionSetValues());
 				}
 			}
@@ -586,8 +593,6 @@ public final class CommonUtil {
 		}
 	}
 
-
-
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
@@ -636,6 +641,30 @@ public final class CommonUtil {
 	public static String formatDate(Date date, String pattern, Locale locale) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
 		return sdf.format(date);
+	}
+
+	public static String formatDecimal(String decimalValue, String userDecimalSeparator) {
+		if (decimalValue != null && userDecimalSeparator != null && userDecimalSeparator.length() > 0) {
+			return decimalValue.replace('.', userDecimalSeparator.charAt(0));
+		}
+		return decimalValue;
+	}
+
+	public static String formatDouble(Double doubleValue, String userDecimalSeparator) {
+		String result = null;
+		if (doubleValue != null) {
+			result = formatDecimal(doubleValue.toString(),userDecimalSeparator);
+
+		}
+		return result;
+	}
+
+	public static String formatFloat(Float floatValue, String userDecimalSeparator) {
+		String result = null;
+		if (floatValue != null) {
+			result = formatDecimal(floatValue.toString(), userDecimalSeparator);
+		}
+		return result;
 	}
 
 	public static String generateUUID() {
@@ -758,11 +787,12 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static String getCriterionValueAsString(CriterionInstantVO criterion, CriterionValueType valueType) {
-		return getCriterionValueAsString(criterion, valueType, NO_SELECTION_VALUE);
+	public static String getCriterionValueAsString(CriterionInstantVO criterion, CriterionValueType valueType, String userDateFormatPattern, String userDecimalSeparator) {
+		return getCriterionValueAsString(criterion, valueType, NO_SELECTION_VALUE, userDateFormatPattern, userDecimalSeparator);
 	}
 
-	public static String getCriterionValueAsString(CriterionInstantVO criterion, CriterionValueType valueType, String emptyValue) {
+	public static String getCriterionValueAsString(CriterionInstantVO criterion, CriterionValueType valueType, String emptyValue, String userDateFormatPattern,
+			String userDecimalSeparator) {
 		switch (valueType) {
 			case BOOLEAN:
 			case BOOLEAN_HASH:
@@ -770,21 +800,21 @@ public final class CommonUtil {
 			case DATE:
 			case DATE_HASH:
 				if (criterion.getDateValue() != null) {
-					return formatDate(criterion.getDateValue(),INPUT_DATE_PATTERN);
+					return formatDate(criterion.getDateValue(),getInputDatePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
 			case TIME:
 			case TIME_HASH:
 				if (criterion.getTimeValue() != null) {
-					return formatDate(criterion.getTimeValue(),INPUT_TIME_PATTERN);
+					return formatDate(criterion.getTimeValue(),getInputTimePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
 			case FLOAT:
 			case FLOAT_HASH:
 				if (criterion.getFloatValue() != null) {
-					return criterion.getFloatValue().toString();
+					return formatFloat(criterion.getFloatValue(), userDecimalSeparator);
 				} else {
 					return emptyValue;
 				}
@@ -805,7 +835,7 @@ public final class CommonUtil {
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
 				if (criterion.getTimestampValue() != null) {
-					return formatDate(criterion.getTimestampValue(),INPUT_DATETIME_PATTERN);
+					return formatDate(criterion.getTimestampValue(),getInputDateTimePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
@@ -817,7 +847,7 @@ public final class CommonUtil {
 		}
 	}
 
-	public static String getCriterionValueAsString(CriterionInVO criterion, CriterionValueType valueType) {
+	public static String getCriterionValueAsString(CriterionInVO criterion, CriterionValueType valueType, String userDateFormatPattern, String userDecimalSeparator) {
 		switch (valueType) {
 			case BOOLEAN:
 			case BOOLEAN_HASH:
@@ -825,21 +855,21 @@ public final class CommonUtil {
 			case DATE:
 			case DATE_HASH:
 				if (criterion.getDateValue() != null) {
-					return formatDate(criterion.getDateValue(),INPUT_DATE_PATTERN);
+					return formatDate(criterion.getDateValue(),getInputDatePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
 			case TIME:
 			case TIME_HASH:
 				if (criterion.getTimeValue() != null) {
-					return formatDate(criterion.getTimeValue(),INPUT_TIME_PATTERN);
+					return formatDate(criterion.getTimeValue(),getInputTimePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
 			case FLOAT:
 			case FLOAT_HASH:
 				if (criterion.getFloatValue() != null) {
-					return criterion.getFloatValue().toString();
+					return formatFloat(criterion.getFloatValue(), userDecimalSeparator);
 				} else {
 					return NO_SELECTION_VALUE;
 				}
@@ -860,7 +890,7 @@ public final class CommonUtil {
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
 				if (criterion.getTimestampValue() != null) {
-					return formatDate(criterion.getTimestampValue(),INPUT_DATETIME_PATTERN);
+					return formatDate(criterion.getTimestampValue(),getInputDateTimePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
@@ -989,6 +1019,26 @@ public final class CommonUtil {
 					HEX_DIGITS.charAt((b & 0x0F)));
 		}
 		return hex.toString();
+	}
+
+	public static String getInputDatePattern(String userDateFormatPattern) {
+		if (isEmptyString(userDateFormatPattern)) {
+			return DEFAULT_INPUT_DATE_PATTERN;
+		} else {
+			return userDateFormatPattern;
+		}
+	}
+
+	public static String getInputDateTimePattern(String userDateFormatPattern) {
+		if (isEmptyString(userDateFormatPattern)) {
+			return DEFAULT_INPUT_DATETIME_PATTERN;
+		} else {
+			return userDateFormatPattern + " " + DEFAULT_INPUT_TIME_PATTERN;
+		}
+	}
+
+	public static String getInputTimePattern(String userDateFormatPattern) {
+		return DEFAULT_INPUT_TIME_PATTERN;
 	}
 
 	public static final String getInventoryName(InventoryOutVO inventory) {
@@ -1834,7 +1884,7 @@ public final class CommonUtil {
 		}
 	}
 
-	public static String inputValueToString(Object value) {
+	public static String inputValueToString(Object value, String userDateFormatPattern, String userDecimalSeparator) {
 		Class valueClass = value.getClass();
 		if (valueClass.equals(String.class)) {
 			return (String) value;
@@ -1851,19 +1901,19 @@ public final class CommonUtil {
 		} else if (valueClass.equals(java.lang.Boolean.TYPE)) {
 			return ((Boolean) value).toString();
 		} else if (valueClass.equals(Float.class)) {
-			return ((Float) value).toString();
+			return formatFloat((Float) value,userDecimalSeparator);
 		} else if (valueClass.equals(java.lang.Float.TYPE)) {
-			return ((Float) value).toString();
+			return formatFloat((Float) value,userDecimalSeparator);
 		} else if (valueClass.equals(Double.class)) {
-			return ((Double) value).toString();
+			return formatDouble((Double) value,userDecimalSeparator);
 		} else if (valueClass.equals(java.lang.Double.TYPE)) {
-			return ((Double) value).toString();
+			return formatDouble((Double) value,userDecimalSeparator);
 		} else if (valueClass.equals(Date.class)) {
-			return formatDate((Date) value,INPUT_DATE_PATTERN);
+			return formatDate((Date) value, getInputDatePattern(userDateFormatPattern));
 		} else if (valueClass.equals(Timestamp.class)) {
-			return formatDate((Date) value,INPUT_DATETIME_PATTERN);
+			return formatDate((Date) value, getInputDateTimePattern(userDateFormatPattern));
 		} else if (valueClass.equals(Time.class)) {
-			return formatDate((Date) value,INPUT_TIME_PATTERN);
+			return formatDate((Date) value, getInputTimePattern(userDateFormatPattern));
 		} else if (valueClass.equals(VariablePeriod.class)) {
 			return ((VariablePeriod) value).name();
 		} else if (valueClass.equals(AuthenticationType.class)) {
@@ -1934,6 +1984,11 @@ public final class CommonUtil {
 		return locale == null ? null : (displayLocale == null ? locale.getDisplayLanguage() : locale.getDisplayLanguage(displayLocale));
 	}
 
+	public static String localeToString(Locale locale) {
+		return locale == null ? null : locale.getLanguage();
+
+	}
+
 	// public static String normalizeLineEndings(String string) {
 	// return normalizeLineEndings(string, "\n");
 	// }
@@ -1941,11 +1996,6 @@ public final class CommonUtil {
 	// public static String normalizeLineEndings(String string, String lineBreak) {
 	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
 	// }
-
-	public static String localeToString(Locale locale) {
-		return locale == null ? null : locale.getLanguage();
-
-	}
 
 	public static String massMailOutVOToString(MassMailOutVO massMail) {
 		if (massMail != null) {
@@ -1972,6 +2022,40 @@ public final class CommonUtil {
 		}
 	}
 
+	public static String parseDecimal(String decimalValue, String userDecimalSeparator) {
+
+		if (decimalValue != null && userDecimalSeparator != null && userDecimalSeparator.length() > 0) {
+			return decimalValue.replace(userDecimalSeparator.charAt(0), '.');
+		}
+		return decimalValue;
+	}
+
+	public static Double parseDouble(String doubleValue, String userDecimalSeparator) {
+		Double result = null;
+		if (doubleValue != null) {
+			doubleValue = parseDecimal(doubleValue,userDecimalSeparator);
+			try {
+				result = Double.parseDouble(doubleValue);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return result;
+	}
+
+	public static Float parseFloat(String floatValue, String userDecimalSeparator) {
+		Float result = null;
+		if (floatValue != null) {
+			floatValue = parseDecimal(floatValue, userDecimalSeparator);
+			try {
+				result = Float.parseFloat(floatValue);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return result;
+	}
+
 	public static UUID parseUUID(String uuid) {
 		return UUID.fromString(uuid);
 	}
@@ -1992,6 +2076,8 @@ public final class CommonUtil {
 		return null;
 	}
 
+
+
 	public static String repeatString(String s, int n) {
 		if (s == null) {
 			return null;
@@ -2002,8 +2088,6 @@ public final class CommonUtil {
 		}
 		return sb.toString();
 	}
-
-
 
 	public static int safeLongToInt(long lng) {
 		if (lng < Integer.MIN_VALUE || lng > Integer.MAX_VALUE) {
@@ -2024,11 +2108,13 @@ public final class CommonUtil {
 		return filePath.replaceAll(FILE_PATH_SEPARATOR_PATTERN, Matcher.quoteReplacement(pathSeparator));
 	}
 
-	public static void setCriterionValueFromString(CriterionInstantVO criterion, CriterionValueType valueType, String value) {
-		setCriterionValueFromString(criterion, valueType, value, NO_SELECTION_VALUE);
+	public static void setCriterionValueFromString(CriterionInstantVO criterion, CriterionValueType valueType, String value, String userDateFormatPattern,
+			String userDecimalSeparator) {
+		setCriterionValueFromString(criterion, valueType, value, NO_SELECTION_VALUE, userDateFormatPattern, userDecimalSeparator);
 	}
 
-	public static void setCriterionValueFromString(CriterionInstantVO criterion, CriterionValueType valueType, String value, String emptyValue) {
+	public static void setCriterionValueFromString(CriterionInstantVO criterion, CriterionValueType valueType, String value, String emptyValue, String userDateFormatPattern,
+			String userDecimalSeparator) {
 		switch (valueType) {
 			case BOOLEAN:
 			case BOOLEAN_HASH:
@@ -2043,7 +2129,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setDateValue(null);
 				} else {
-					criterion.setDateValue(parseDate(value, INPUT_DATE_PATTERN));
+					criterion.setDateValue(parseDate(value,getInputDatePattern(userDateFormatPattern)));
 				}
 				break;
 			case TIME:
@@ -2051,7 +2137,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setTimeValue(null);
 				} else {
-					criterion.setTimeValue(parseDate(value, INPUT_TIME_PATTERN));
+					criterion.setTimeValue(parseDate(value,getInputTimePattern(userDateFormatPattern)));
 				}
 				break;
 			case FLOAT:
@@ -2059,7 +2145,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setFloatValue(null);
 				} else {
-					criterion.setFloatValue(new Float(value));
+					criterion.setFloatValue(parseFloat(value, userDecimalSeparator));
 				}
 				break;
 			case LONG:
@@ -2085,7 +2171,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setTimestampValue(null);
 				} else {
-					criterion.setTimestampValue(dateToTimestamp(parseDate(value, INPUT_DATETIME_PATTERN)));
+					criterion.setTimestampValue(dateToTimestamp(parseDate(value,getInputDateTimePattern(userDateFormatPattern))));
 				}
 				break;
 			case NONE:
@@ -2096,7 +2182,7 @@ public final class CommonUtil {
 		}
 	}
 
-	public static void setCriterionValueFromString(CriterionInVO criterion, CriterionValueType valueType, String value) {
+	public static void setCriterionValueFromString(CriterionInVO criterion, CriterionValueType valueType, String value, String userDateFormatPattern, String userDecimalSeparator) {
 		switch (valueType) {
 			case BOOLEAN:
 			case BOOLEAN_HASH:
@@ -2111,7 +2197,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setDateValue(null);
 				} else {
-					criterion.setDateValue(parseDate(value, INPUT_DATE_PATTERN));
+					criterion.setDateValue(parseDate(value,getInputDatePattern(userDateFormatPattern)));
 				}
 				break;
 			case TIME:
@@ -2119,7 +2205,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setTimeValue(null);
 				} else {
-					criterion.setTimeValue(parseDate(value, INPUT_TIME_PATTERN));
+					criterion.setTimeValue(parseDate(value,getInputTimePattern(userDateFormatPattern)));
 				}
 				break;
 			case FLOAT:
@@ -2127,7 +2213,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setFloatValue(null);
 				} else {
-					criterion.setFloatValue(new Float(value));
+					criterion.setFloatValue(parseFloat(value, userDecimalSeparator));
 				}
 				break;
 			case LONG:
@@ -2154,7 +2240,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setTimestampValue(null);
 				} else {
-					criterion.setTimestampValue(dateToTimestamp(parseDate(value, INPUT_DATETIME_PATTERN)));
+					criterion.setTimestampValue(dateToTimestamp(parseDate(value,getInputDateTimePattern(userDateFormatPattern))));
 				}
 				break;
 			case NONE:

@@ -649,6 +649,8 @@ public class DemoDataProvider {
 			modifiedUser.setName(user.getName());
 			modifiedUser.setLocale(user.getLocale());
 			modifiedUser.setTimeZone(user.getTimeZone());
+			modifiedUser.setDateFormat(user.getDateFormat());
+			modifiedUser.setDecimalSeparator(user.getDecimalSeparator());
 			modifiedUser.setTheme(user.getTheme());
 			modifiedUser.setLocked(user.isLocked());
 			modifiedUser.setShowTooltips(user.isShowTooltips());
@@ -1977,7 +1979,7 @@ public class DemoDataProvider {
 	}
 
 	private InputFieldOutVO createTimestampField(AuthenticationVO auth, String name, String category, String title, String comment, Date timestampPreset, Date minTimestamp,
-			Date maxTimestamp, String validationErrorMessage) throws Exception {
+			Date maxTimestamp, boolean isUserTimeZone, String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.TIMESTAMP);
@@ -1987,6 +1989,7 @@ public class DemoDataProvider {
 		newInputField.setComment(comment);
 		newInputField.setMinTimestamp(minTimestamp);
 		newInputField.setMaxTimestamp(maxTimestamp);
+		newInputField.setUserTimeZone(isUserTimeZone);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setTimestampPreset(timestampPreset);
 		InputFieldOutVO out = inputFieldService.addInputField(auth, newInputField);
@@ -2409,6 +2412,8 @@ public class DemoDataProvider {
 		UserInVO newUser = new UserInVO();
 		newUser.setLocale(CommonUtil.localeToString(Locale.getDefault()));
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
+		newUser.setDateFormat(null);
+		newUser.setDecimalSeparator(null);
 		newUser.setLocked(false);
 		newUser.setShowTooltips(false);
 		newUser.setDecrypt(true);

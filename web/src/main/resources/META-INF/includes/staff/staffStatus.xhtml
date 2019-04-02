@@ -296,13 +296,15 @@
 									value="#{staffStatusBean.in.start}"
 									required="true"
 									label="#{stafflabels.staff_status_start}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-datetime" />
+									styleClass="ctsms-calendar-datetime" >
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="statusstart">
@@ -321,13 +323,15 @@
 									value="#{staffStatusBean.in.stop}"
 									required="false"
 									label="#{stafflabels.staff_status_stop}"
-									pattern="#{applicationScopeBean.inputDateTimePattern}"
+									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-datetime" />
+									styleClass="ctsms-calendar-datetime" >
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="statusstop">

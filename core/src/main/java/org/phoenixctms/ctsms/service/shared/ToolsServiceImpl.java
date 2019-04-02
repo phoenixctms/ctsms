@@ -143,6 +143,7 @@ public class ToolsServiceImpl
 extends ToolsServiceBase
 {
 
+
 	private static HashSet<Long> createSendDepartmentStaffCategorySet(NotificationType notificationType) {
 		Collection<StaffCategory> sendDepartmentStaffCategories = notificationType.getSendDepartmentStaffCategories();
 		HashSet<Long> result = new HashSet<Long>(sendDepartmentStaffCategories.size());
@@ -222,7 +223,7 @@ extends ToolsServiceBase
 	protected UserOutVO handleAddUser(UserInVO newUser, PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
-		ServiceUtil.checkUserInput(newUser, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
 		if (!PasswordPolicy.USER.isAdminIgnorePolicy()) {
 			PasswordPolicy.USER.checkStrength(newPassword.getPassword());
 		}
@@ -604,7 +605,6 @@ extends ToolsServiceBase
 		return this.getStreetDao().findStreetNames(countryName, zipCode, cityName, streetNameInfix, limit);
 	}
 
-
 	@Override
 	protected Collection<String> handleCompleteSystemMessageCode(AuthenticationVO auth, String systemMessageCodeInfix,
 			Integer limit) throws Exception {
@@ -634,6 +634,7 @@ extends ToolsServiceBase
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getTitleDao().findTitles(titlePrefix, limit);
 	}
+
 
 	@Override
 	protected Collection<String> handleCompleteZipCode(AuthenticationVO auth, String zipCodePrefix, String countryNameInfix,
@@ -713,7 +714,6 @@ extends ToolsServiceBase
 		return count;
 	}
 
-
 	@Override
 	protected String handleGetAllowedFileExtensionsPattern(FileModule module, Boolean image)
 			throws Exception {
@@ -788,6 +788,7 @@ extends ToolsServiceBase
 		return null;
 	}
 
+
 	@Override
 	protected CalendarWeekVO handleGetCalendarWeek(Date date) throws Exception {
 		return DateCalc.getCalendarWeek(date);
@@ -796,6 +797,18 @@ extends ToolsServiceBase
 	@Override
 	protected String handleGetCurrencySymbol() throws Exception {
 		return Settings.getString(SettingCodes.CURRENCY_SYMBOL, Bundle.SETTINGS, DefaultSettings.CURRENCY_SYMBOL);
+	}
+
+	@Override
+	protected Collection<String> handleGetDateFormats(
+			AuthenticationVO auth) throws Exception {
+		return CoreUtil.getDateFormats();
+	}
+
+	@Override
+	protected Collection<String> handleGetDecimalSeparators(
+			AuthenticationVO auth) throws Exception {
+		return CoreUtil.getDecimalSeparatos();
 	}
 
 	@Override

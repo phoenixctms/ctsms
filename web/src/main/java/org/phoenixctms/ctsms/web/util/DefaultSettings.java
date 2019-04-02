@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.util;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -230,6 +229,7 @@ public final class DefaultSettings {
 	public static final boolean TRIAL_MONEY_TRANSFER_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = true;
 	public static final boolean ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = true;
 	public static final boolean INPUT_FIELD_LOCALIZED_PRESET = false;
+	public static final boolean INPUT_FIELD_USER_TIMEZONE_PRESET = false;
 	public static final InputFieldType INPUT_FIELD_FIELD_TYPE_PRESET = null;
 	public static final boolean INPUT_FIELD_BOOLEAN_PRESET_PRESET = false;
 	public static final Integer INPUT_FIELD_MAX_SELECTIONS_PRESET = null;
@@ -267,21 +267,21 @@ public final class DefaultSettings {
 	public static final String USER_THEME_PRESET = "aristo";
 	public static final AuthenticationType USER_AUTH_METHOD_PRESET = AuthenticationType.LOCAL;
 	public final static boolean USER_SHOW_TOOLTIPS_PRESET = true;
-	public final static String CONVERTER_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
-	public final static String CONVERTER_DATE_PATTERN = "yyyy-MM-dd";
-	public final static String CONVERTER_TIME_PATTERN = "HH:mm";
-	public final static String CONVERTER_DATE_STYLE = "full";
-	public final static String CONVERTER_TIME_STYLE = "full";
+	// public final static String CONVERTER_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
+	// public final static String CONVERTER_DATE_PATTERN = "yyyy-MM-dd";
+	// public final static String CONVERTER_TIME_PATTERN = "HH:mm";
+	// public final static String CONVERTER_DATE_STYLE = "full";
+	// public final static String CONVERTER_TIME_STYLE = "full";
 	public final static boolean HYPERLINK_ACTIVE_PRESET = true;
 	public final static String HYPERLINK_URL_PRESET = "http://";
 	public final static boolean FILE_ACTIVE_PRESET = true;
 	public final static boolean FILE_PUBLIC_PRESET = false;
 	public final static String FILE_LOGICAL_PATH_PRESET = "";
-	public final static String DATEFORMAT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
-	public final static String DATEFORMAT_DATE_PATTERN = "yyyy-MM-dd";
-	public final static String DATEFORMAT_TIME_PATTERN = "HH:mm";
-	public final static int DATEFORMAT_DATE_STYLE = DateFormat.FULL;
-	public final static int DATEFORMAT_TIME_STYLE = DateFormat.FULL;
+	// public final static String DATEFORMAT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
+	// public final static String DATEFORMAT_DATE_PATTERN = "yyyy-MM-dd";
+	// public final static String DATEFORMAT_TIME_PATTERN = "HH:mm";
+	// public final static int DATEFORMAT_DATE_STYLE = DateFormat.FULL;
+	// public final static int DATEFORMAT_TIME_STYLE = DateFormat.FULL;
 	public static final String SCHEDULE_TIME_PATTERN = "HH:mm";
 	public static final String SCHEDULE_RIGHT_HEADER_TEMPLATE = "month,agendaWeek,agendaDay";
 	public final static int MAX_RECENT_ENTITIES = 10;
@@ -360,6 +360,9 @@ public final class DefaultSettings {
 	public static final boolean INPUT_FIELD_DUMMY_OPTIONAL_PRESET = false;
 	public static final boolean INPUT_FIELD_DUMMY_DISABLED_PRESET = false;
 	public final static boolean ENABLE_PRIMEFACES_SCHEDULE_DST_WORKAROUND = true; // still required 2012-03+
+	public final static boolean DATE_TIME_USER_TIME_ZONE = true;
+	public final static boolean DATE_USER_TIME_ZONE = true;
+	public final static boolean TIME_USER_TIME_ZONE = true;
 	public final static boolean CV_POSITION_SHOW_COMMENT_CV_PRESET = false;
 	public final static boolean CV_POSITION_SHOW_CV_PRESET = true;
 	public static final boolean BANK_ACCOUNT_ACTIVE_PRESET = true;

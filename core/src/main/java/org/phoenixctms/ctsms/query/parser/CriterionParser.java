@@ -87,10 +87,22 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 
 	private final static String GET_DAO_METHOD_PREFIX = "get";
 
-	private static String getCriterionValueString(CriterionInstantVO token, CriterionProperty property) {
-		return CommonUtil.getCriterionValueAsString(token, property.getValueType(), PRETTY_PRINT_EMPTY_VALUE);
-	}
+	// private PermissionProfileDao permissionProfileDao;
+	// private AuthenticationTypeDao authenticationTypeDao;
+	// private boolean obfuscateCriterions;
+	// private boolean resolveProperties;
+	private final static boolean PRETTY_PRINT_SHOW_POSITION_NUMBERS = true;
 
+	private final static String PRETTY_PRINT_INDENTATION = "  ";
+
+	private final static String PRETTY_PRINT_EMPTY_VALUE = "";
+	private final static String PRETTY_PRINT_LINE_BREAK = "\n";
+	private static String getCriterionValueString(CriterionInstantVO token, CriterionProperty property) {
+		
+		return CommonUtil.getCriterionValueAsString(token, property.getValueType(), PRETTY_PRINT_EMPTY_VALUE,
+				CoreUtil.getUserContext().getDateFormat(),
+				CoreUtil.getUserContext().getDecimalSeparator());
+	}
 	private static Method getDaoTransformMethod(String entityName, Object dao) throws Exception {
 		try {
 			return CoreUtil.getDaoOutVOTransformMethod(entityName, dao);
@@ -98,7 +110,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			return CoreUtil.getDaoVOTransformMethod(entityName, dao);
 		}
 	}
-
 	private static boolean getObfuscateCriterionsArg(Object[] args) {
 		try {
 			return (Boolean) args[0];
@@ -156,14 +167,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	private ProbandListEntryTagDao probandListEntryTagDao;
 	private ProbandTagDao probandTagDao;
 	private ECRFFieldDao ecrfFieldDao;
-	// private PermissionProfileDao permissionProfileDao;
-	// private AuthenticationTypeDao authenticationTypeDao;
-	// private boolean obfuscateCriterions;
-	// private boolean resolveProperties;
-	private final static boolean PRETTY_PRINT_SHOW_POSITION_NUMBERS = true;
-	private final static String PRETTY_PRINT_INDENTATION = "  ";
-	private final static String PRETTY_PRINT_EMPTY_VALUE = "";
-	private final static String PRETTY_PRINT_LINE_BREAK = "\n";
 
 	protected CriterionParser() {
 		// this.tieMap = QueryUtil.createCriterionTieMap(criterionTieDao);

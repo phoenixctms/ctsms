@@ -100,6 +100,7 @@ public final class DefaultSettings {
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
+	public static final String NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR = null;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = true;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_ENTITIES = true;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES = true;
@@ -218,6 +219,7 @@ public final class DefaultSettings {
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR = null;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = false;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES = true;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = true;

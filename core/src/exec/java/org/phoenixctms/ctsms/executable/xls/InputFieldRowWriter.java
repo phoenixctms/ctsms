@@ -48,6 +48,7 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int MAX_DATE_COLUMN_INDEX = 10;
 	private final static int MIN_TIMESTAMP_COLUMN_INDEX = 9;
 	private final static int MAX_TIMESTAMP_COLUMN_INDEX = 10;
+	private final static int USER_TIME_ZONE_COLUMN_INDEX = 11;
 	private final static int MIN_TIME_COLUMN_INDEX = 9;
 	private final static int MAX_TIME_COLUMN_INDEX = 10;
 	private final static int WIDTH_COLUMN_INDEX = 11;
@@ -81,6 +82,7 @@ public class InputFieldRowWriter extends RowWriter {
 	private int maxDateColumnIndex;
 	private int minTimestampColumnIndex;
 	private int maxTimestampColumnIndex;
+	private int userTimeZoneIndex;
 	private int minTimeColumnIndex;
 	private int maxTimeColumnIndex;
 	private int widthColumnIndex;
@@ -167,6 +169,8 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(minTimestampColumnIndex, maxColumnIndex);
 		maxTimestampColumnIndex = MAX_TIMESTAMP_COLUMN_INDEX;
 		maxColumnIndex = Math.max(maxTimestampColumnIndex, maxColumnIndex);
+		userTimeZoneIndex = USER_TIME_ZONE_COLUMN_INDEX;
+		maxColumnIndex = Math.max(userTimeZoneIndex, maxColumnIndex);
 		minTimeColumnIndex = MIN_TIME_COLUMN_INDEX;
 		maxColumnIndex = Math.max(minTimeColumnIndex, maxColumnIndex);
 		maxTimeColumnIndex = MAX_TIME_COLUMN_INDEX;
@@ -241,6 +245,7 @@ public class InputFieldRowWriter extends RowWriter {
 				values[timestampPresetColumnIndex] =( inputField.getTimestampPreset() != null ? CommonUtil.formatDate(inputField.getTimestampPreset(),dateTimePattern) : null);
 				values[minTimestampColumnIndex] =( inputField.getMinTimestamp() != null ? CommonUtil.formatDate(inputField.getMinTimestamp(),dateTimePattern) : null);
 				values[maxTimestampColumnIndex] =( inputField.getMaxTimestamp() != null ? CommonUtil.formatDate(inputField.getMaxTimestamp(),dateTimePattern) : null);
+				values[userTimeZoneIndex] = Boolean.toString(inputField.getUserTimeZone());
 				break;
 			case SKETCH:
 				values[widthColumnIndex] = (inputField.getWidth() != null ? Long.toString(inputField.getWidth()) : null);

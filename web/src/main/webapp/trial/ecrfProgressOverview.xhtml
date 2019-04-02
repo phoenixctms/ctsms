@@ -99,13 +99,14 @@
 									value="#{ecrfProgressOverviewBean.start}"
 									required="false"
 									label="#{triallabels.ecrf_progress_summary_start_filter}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
 									styleClass="ctsms-calendar-date">
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									<!-- <p:ajax
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" />
@@ -137,13 +138,14 @@
 									value="#{ecrfProgressOverviewBean.stop}"
 									required="false"
 									label="#{triallabels.ecrf_progress_summary_stop_filter}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
 									styleClass="ctsms-calendar-date">
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									<!-- <p:ajax
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" /> 

@@ -143,10 +143,13 @@ function _getOutputId(value) {
 }
 
 
-var JSON_DATETIME_PATTERN = 'yyyy-MM-dd HH:mm:ss';
-var INPUT_DATE_PATTERN = 'dd.MM.yyyy';
+var INPUT_JSON_DATETIME_PATTERN = 'yyyy-MM-dd HH:mm';
+var INPUT_DATE_PATTERN = 'yyyy-MM-dd';
 var INPUT_TIME_PATTERN = 'HH:mm';
 var INPUT_DATETIME_PATTERN = INPUT_DATE_PATTERN + ' ' + INPUT_TIME_PATTERN;
+var INPUT_DECIMAL_SEPARATOR = null;
+var INPUT_TIMEZONE_ID = null;
+var SYSTEM_TIMEZONE_ID = null;
 
 var AJAX_OPERATION_SUCCESS = 'operationSuccess';
 var AJAX_FIELD_DELTA_ERROR_MESSAGE_ID = 'fieldDeltaErrorMessageId';

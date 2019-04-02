@@ -1582,6 +1582,17 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
+	protected TimeZoneVO handleGetTimeZone(AuthenticationVO auth, String timeZoneID)
+			throws Exception {
+		TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneID);
+		TimeZoneVO timeZoneVO = new TimeZoneVO();
+		timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+		timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, L10nUtil.getLocale(Locales.USER)));
+		timeZoneVO.setRawOffset(timeZone.getRawOffset());
+		return timeZoneVO;
+	}
+
+	@Override
 	protected Collection<TimeZoneVO> handleGetTimeZones(AuthenticationVO auth)
 			throws Exception {
 		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
