@@ -265,6 +265,8 @@ public interface SettingCodes {
 	public static final String NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = "new_ecrf_field_status_notification_queues";
 	public static final String ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = "ecrf_field_values_schedule_validation_limit";
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
+	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";
+	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
 	public static final String ECRF_CHARGE_DUE_ANNUAL = "ecrf_charge_due_annual";
 	public static final String ECRF_CHARGE_DUE_PERIOD = "ecrf_charge_due_period";

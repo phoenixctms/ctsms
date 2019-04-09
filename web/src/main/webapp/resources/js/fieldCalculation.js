@@ -9,8 +9,6 @@ var FieldCalculation = FieldCalculation || {};
 
 	var expressionDeclarationRegExp = /^function\((([a-zA-Z0-9_]+,?)*)\)/;
 
-	var debug_level = 0; //2;
-
 	var defaultLocale = 'en';
 	var localizedMessages = {};
 	localizedMessages['de'] = {
@@ -188,7 +186,7 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function _processInputFieldVariableValues() {
-		if (debug_level >= 1) {
+		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			console.log("process variables");
 		}
 		for ( var variableName in inputFieldVariableMap) {
@@ -216,13 +214,13 @@ var FieldCalculation = FieldCalculation || {};
 						var inputFieldVariable = series[index];
 						if ((!excludeVariableName || excludeVariableName != variableName) || (excludeIndex == null || inputFieldVariable.index != excludeIndex)) {
 							inputFieldVariable.processed = false;
-							if (debug_level >= 3) {
+							if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 								console.log("variable " + _debugVarName(inputFieldVariable) + " invalidated");
 							}
 						} else {
-							if (debug_level >= 1) {
+							if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 								msg = ", ecluding " + _debugVarName(inputFieldVariable);
-								if (debug_level >= 3) {
+								if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 									console.log("variable " + _debugVarName(inputFieldVariable) + " NOT invalidated");
 								}
 							}
@@ -233,25 +231,25 @@ var FieldCalculation = FieldCalculation || {};
 				var inputFieldVariable = series;
 				if (!excludeVariableName || excludeVariableName != variableName) {
 					inputFieldVariable.processed = false;
-					if (debug_level >= 3) {
+					if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 						console.log("variable " + _debugVarName(inputFieldVariable) + " invalidated");
 					}
 				} else {
-					if (debug_level >= 1) {
+					if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 						msg = ",  ecluding " + _debugVarName(inputFieldVariable);
-						if (debug_level >= 3) {
+						if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 							console.log("variable " + _debugVarName(inputFieldVariable) + " NOT invalidated");
 						}
 					}
 				}
 			}
 		}
-		if (debug_level >= 1) {
+		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			console.log("variables invalidated" + msg);
 		}
 	}
 	function _updateInputFieldVariableOutputs() {
-		if (debug_level >= 1) {
+		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			console.log("update and print outputs");
 		}
 		var errorMsgs;
@@ -284,7 +282,7 @@ var FieldCalculation = FieldCalculation || {};
 		}
 
 		if (errorMsgs != null) {
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("display delta errors: " + errorMsgs.length);
 			}
 			setErrorMessageTexts(errorMessageId,errorMsgs);
@@ -364,7 +362,7 @@ var FieldCalculation = FieldCalculation || {};
 			if (inputFieldVariable.processed) {
 				return inputFieldVariable.value;
 			}
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log("processing variable value " + _debugVarName(inputFieldVariable));
 			}
 			inputFieldVariable.valueErrorMessage = null;
@@ -390,7 +388,7 @@ var FieldCalculation = FieldCalculation || {};
 	function _updateInputFieldVariableOutput(inputFieldVariable, cycleCheckMap) {
 
 		if (inputFieldVariable) {
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log("processing variable output " + _debugVarName(inputFieldVariable));
 			}
 			inputFieldVariable.outputErrorMessage = null;
@@ -410,7 +408,7 @@ var FieldCalculation = FieldCalculation || {};
 		var returnValue;
 		var variableName = inputFieldVariable.value.jsVariableName;
 		if (expression != null && expression.length > 0 && expression.indexOf("{") > 0) {
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log("evaluating " + _debugVarName(inputFieldVariable) + " " + errorMessagePrefix + " ...");
 			}
 			if (cycleCheckMap != null && (variableName in cycleCheckMap)) {
@@ -522,7 +520,7 @@ var FieldCalculation = FieldCalculation || {};
 					returnValue = null;
 				}
 			}
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log("evaluating " + _debugVarName(inputFieldVariable) + " " + errorMessagePrefix + " completed: " + (errorMessage ? errorMessage : 'no error'));
 			}
 			return {
@@ -532,7 +530,7 @@ var FieldCalculation = FieldCalculation || {};
 		} else if (copyEnteredValue) {
 			inputFieldVariable.oldValue = _cloneJSON( inputFieldVariable.value);
 			inputFieldVariable.value = _cloneJSON( inputFieldVariable.enteredValue);
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log("entered value of " + _debugVarName(inputFieldVariable) + " copied");
 			}
 			return null;
@@ -1236,7 +1234,7 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVar) {
 		    inputFieldVar.oldValue = _cloneJSON( inputFieldVar.value);
 			_setInputFieldVariableValue(inputFieldVar.value, value);
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			    _debugVariableValue("user code sets variable value ", inputFieldVar);
 			}
 			if (apply) {
@@ -1260,7 +1258,7 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVar) {
 		    inputFieldVar.oldOutput = inputFieldVar.output;
 			inputFieldVar.output = output;
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			    console.log("user code sets variable output " + _debugVarName(inputFieldVar));
 			}
 			_printInputFieldVariableOutput(inputFieldVar);
@@ -1375,7 +1373,7 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVariable != null) {
 			// var value = inputFieldVariable.value;
 			//var enteredValue = inputFieldVariable.enteredValue;
-			if (debug_level >= 3) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 3) {
 				console.log(prefix + _debugVarName(inputFieldVariable) + " = " + JSON.stringify(_getInputFieldVariableValue(inputFieldVariable.value)));
 			}
 		}
@@ -1499,7 +1497,7 @@ var FieldCalculation = FieldCalculation || {};
 	function handleInitInputFieldVariables(xhr, status, args) {
 
 		if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("############### INITIALIZE SYMBOL TABLE ###############");
 			}
 
@@ -1516,7 +1514,7 @@ var FieldCalculation = FieldCalculation || {};
 			_processInputFieldVariableValues();
 			return _updateInputFieldVariableOutputs();
 		} else {
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("############### SERVER-SIDE ERROR, SKIP ###############");
 			}
 			return null;
@@ -1539,7 +1537,7 @@ var FieldCalculation = FieldCalculation || {};
 		inputFieldVars = {};
 		errorMessageId = null;
 		silent = false;
-		if (debug_level >= 1) {
+		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			console.log("symbol table cleared");
 		}
 	}
@@ -1760,12 +1758,12 @@ var FieldCalculation = FieldCalculation || {};
 					if (inputFieldVariableValue.series) {
 						if (inputFieldVariableValue.jsVariableName in inputFieldVariableMap) {
 							if (inputFieldVariableValue.index in inputFieldVariableMap[inputFieldVariableValue.jsVariableName]) {
-								if (debug_level >= 2) {
+								if (FIELD_CALCULATION_DEBUG_LEVEL >= 2) {
 									console.log("variable " + _debugVarName(inputFieldVariable) + " updated");
 								}
 								updated++;
 							} else {
-								if (debug_level >= 2) {
+								if (FIELD_CALCULATION_DEBUG_LEVEL >= 2) {
 									console.log("variable " + _debugVarName(inputFieldVariable) + " added");
 								}
 								added++;
@@ -1774,7 +1772,7 @@ var FieldCalculation = FieldCalculation || {};
 							inputFieldVariableMap[inputFieldVariableValue.jsVariableName] = [];
 							//inputFieldVariableValue.list = inputFieldVariableMap[inputFieldVariableValue.jsVariableName];
 							//inputFieldVariable.series = inputFieldVariableMap[inputFieldVariableValue.jsVariableName];
-							if (debug_level >= 2) {
+							if (FIELD_CALCULATION_DEBUG_LEVEL >= 2) {
 								console.log("variable " + _debugVarName(inputFieldVariable) + " added");
 							}
 							added++;
@@ -1783,12 +1781,12 @@ var FieldCalculation = FieldCalculation || {};
 						inputFieldVariableMap[inputFieldVariableValue.jsVariableName][inputFieldVariableValue.index] = inputFieldVariable;
 					} else {
 						if (inputFieldVariableValue.jsVariableName in inputFieldVariableMap) {
-							if (debug_level >= 2) {
+							if (FIELD_CALCULATION_DEBUG_LEVEL >= 2) {
 								console.log("variable " + _debugVarName(inputFieldVariable) + " updated");
 							}
 							updated++;
 						} else {
-							if (debug_level >= 2) {
+							if (FIELD_CALCULATION_DEBUG_LEVEL >= 2) {
 								console.log("variable " + _debugVarName(inputFieldVariable) + " added");
 							}
 							added++;
@@ -1798,7 +1796,7 @@ var FieldCalculation = FieldCalculation || {};
 					inputFieldVariable.enteredValue = _cloneJSON( inputFieldVariableValue);
 				}
 			}
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				newMapSize = _getInputFieldVariableMapSize();
 				msg += ": " + added + " added, " + updated + " updated";
 				console.log(msg);
@@ -1809,7 +1807,7 @@ var FieldCalculation = FieldCalculation || {};
 
 	function handleUpdateInputFieldVariables(xhr, status, args) {
 
-		if (debug_level >= 1) {
+		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 			console.log("############### UPDATE SYMBOL TABLE ###################");
 		}
 
@@ -1974,7 +1972,7 @@ var FieldCalculation = FieldCalculation || {};
 		var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
 		if (inputFieldVariable) {
 			_setInputFieldVariableValue(inputFieldVariable.enteredValue, newValue);
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("onchange " + _debugVarName(inputFieldVariable));
 			}
 			_refreshInputFieldVariables();
@@ -1986,7 +1984,7 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVariable) {
 			inputFieldVariable.enteredValue = _cloneJSON( inputFieldVariable.value);
 			inputFieldVariable.delta = false;
-			if (debug_level >= 1) {
+			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("apply calculated value " + _debugVarName(inputFieldVariable));
 			}
 			_refreshInputFieldVariables(variableName, index);
@@ -2249,7 +2247,7 @@ var FieldCalculation = FieldCalculation || {};
 
 	_exportExpressionUtils(FieldCalculation);
 
-	if (debug_level >= 1) {
+	if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 		console.log("field calculation utilities loaded");
 	}
 

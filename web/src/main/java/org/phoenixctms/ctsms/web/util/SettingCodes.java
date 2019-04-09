@@ -405,6 +405,7 @@ public interface SettingCodes {
 	// public static final String API_INSTANCE = "api_instance";
 	public static final String API_VERSION = "api_version";
 	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
+	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";
 	public static final String PROBAND_GROUPS_SHOW_INQUIRY_COLUMN = "proband_groups_show_inquiry_column";
 	public static final String PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN = "proband_groups_show_proband_list_entry_tag_column";
 	public static final String PROBAND_LIST_SHOW_INQUIRY_COLUMN = "proband_list_show_inquiry_column";

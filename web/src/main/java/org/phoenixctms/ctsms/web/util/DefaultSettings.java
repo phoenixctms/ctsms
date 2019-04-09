@@ -511,6 +511,7 @@ public final class DefaultSettings {
 	public static final float DEFAULT_GEOLOCATION_LONGITUDE = 15.468107f;
 	public static final String GOOGLE_API_URL = "https://maps.google.at/maps/api/js?sensor=false";
 	public static final Integer INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
+	public static final int FIELD_CALCULATION_DEBUG_LEVEL = 0;
 	public static final String PRIVATE_CAPTCHA_KEY = "";
 	public static final String PUBLIC_CAPTCHA_KEY = "";
 	public static final boolean PROBAND_GROUPS_SHOW_INQUIRY_COLUMN = false;

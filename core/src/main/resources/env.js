@@ -20,7 +20,7 @@ jQuery.trim = function(str) {
 };
 var console = {
 	log : function(msg) {
-		//java.lang.System.out.println(msg);
+		java.lang.System.out.println(msg);
 	}
 };
 
@@ -148,8 +148,9 @@ var INPUT_DATE_PATTERN = 'yyyy-MM-dd';
 var INPUT_TIME_PATTERN = 'HH:mm';
 var INPUT_DATETIME_PATTERN = INPUT_DATE_PATTERN + ' ' + INPUT_TIME_PATTERN;
 var INPUT_DECIMAL_SEPARATOR = null;
-var INPUT_TIMEZONE_ID = null;
-var SYSTEM_TIMEZONE_ID = null;
+var INPUT_TIMEZONE_ID;
+var SYSTEM_TIMEZONE_ID;
+var FIELD_CALCULATION_DEBUG_LEVEL = 0;
 
 var AJAX_OPERATION_SUCCESS = 'operationSuccess';
 var AJAX_FIELD_DELTA_ERROR_MESSAGE_ID = 'fieldDeltaErrorMessageId';
@@ -180,7 +181,7 @@ var FORCE_DEFAULT_GEOLOCATION = false;
 
 var REST_API_URL = null;
 
-var INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
+var INPUT_FIELD_DELTA_SUMMARY_MAX = null;
 var FIELD_CALCULATION_DECODE_BASE64 = false;
 
 function initInputFieldVariables(args) {

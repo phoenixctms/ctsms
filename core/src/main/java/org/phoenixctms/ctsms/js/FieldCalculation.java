@@ -14,8 +14,12 @@ import javax.script.ScriptException;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -174,6 +178,12 @@ public class FieldCalculation {
 		}
 		sb.append("INPUT_TIMEZONE_ID = '" + CoreUtil.getUserContext().getTimeZone().getID() + "';");
 		sb.append("SYSTEM_TIMEZONE_ID = '" + TimeZone.getDefault().getID() + "';");
+		sb.append("FIELD_CALCULATION_DEBUG_LEVEL = "
+				+ Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL)) + ";");
+		Integer inputFieldDeltaSummaryMax = Settings.getIntNullable(SettingCodes.INPUT_FIELD_DELTA_SUMMARY_MAX, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DELTA_SUMMARY_MAX);
+		if (inputFieldDeltaSummaryMax != null) {
+			sb.append("INPUT_FIELD_DELTA_SUMMARY_MAX = " + Integer.toString(inputFieldDeltaSummaryMax) + ";");
+		}
 		engine.eval(sb.toString());
 	}
 

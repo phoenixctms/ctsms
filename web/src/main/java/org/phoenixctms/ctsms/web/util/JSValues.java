@@ -220,7 +220,7 @@ public enum JSValues {
 	INPUT_TIME_PATTERN(""), // CommonUtil.INPUT_TIME_PATTERN),
 	INPUT_DATE_PATTERN(""), // CommonUtil.INPUT_DATE_PATTERN),
 	INPUT_DECIMAL_SEPARATOR(""),
-	INPUT_TIMEZONE_ID(""), SYSTEM_TIMEZONE_ID(""),
+	INPUT_TIMEZONE_ID(""), SYSTEM_TIMEZONE_ID(""), FIELD_CALCULATION_DEBUG_LEVEL(""),
 	JQPLOT_DATE_PATTERN(DateUtil.JQPLOT_DATE_PATTERN),
 	INPUT_JSON_DATETIME_PATTERN(JsUtil.INPUT_JSON_DATETIME_PATTERN),
 	AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64("criteriaJournalTabTitleBase64"),
@@ -346,6 +346,7 @@ public enum JSValues {
 				return WebUtil.escapeJSStringArray(Settings.getTrustetRefererHosts((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()), true,
 						true);
 			case INPUT_FIELD_DELTA_SUMMARY_MAX:
+			case FIELD_CALCULATION_DEBUG_LEVEL:
 			case ENABLE_GEOLOCATION_SERVICES:
 			case FORCE_DEFAULT_GEOLOCATION:
 			case DEFAULT_GEOLOCATION_LATITUDE:
@@ -488,6 +489,8 @@ public enum JSValues {
 				return WebUtil.getTimeZone().getID();
 			case SYSTEM_TIMEZONE_ID:
 				return WebUtil.getDefaultTimeZone().getID();
+			case FIELD_CALCULATION_DEBUG_LEVEL:
+				return Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL));
 			case PF_LOCALE_STRING:
 				try {
 					return LocaleConverter.getLocaleString(WebUtil.getLocale(), '_');

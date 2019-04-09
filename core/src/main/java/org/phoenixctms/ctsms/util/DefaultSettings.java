@@ -213,6 +213,8 @@ public final class DefaultSettings {
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
+	public final static int FIELD_CALCULATION_DEBUG_LEVEL = 0;
+	public final static Integer INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
 	public static final boolean REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = false;
 
 	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
