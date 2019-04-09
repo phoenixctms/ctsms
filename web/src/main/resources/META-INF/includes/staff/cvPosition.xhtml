@@ -89,6 +89,7 @@
 						</f:facet>
 						<h:outputText value="#{cvPosition.vo.start}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{cvPosition.vo.stop}">
@@ -97,6 +98,7 @@
 						</f:facet>
 						<h:outputText value="#{cvPosition.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column

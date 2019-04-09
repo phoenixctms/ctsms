@@ -705,10 +705,12 @@
 									<h:outputLabel value="#{stafflabels.duty_roster_turn_core_input_start_label}" />
 									<h:outputLabel value="#{scheduleDutyRosterTurnBean.out.start}">
 										<f:converter converterId="ctsms.DateTime" />
+										<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									</h:outputLabel>
 									<h:outputLabel value="#{stafflabels.duty_roster_turn_core_input_stop_label}" />
 									<h:outputLabel value="#{scheduleDutyRosterTurnBean.out.stop}">
 										<f:converter converterId="ctsms.DateTime" />
+										<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									</h:outputLabel>
 									<h:outputLabel value="#{stafflabels.duty_roster_turn_core_input_visit_schedule_item_label}" />
 									<h:outputLabel value="#{scheduleDutyRosterTurnBean.getVisitScheduleItemName(scheduleDutyRosterTurnBean.out.visitScheduleItem)}" />

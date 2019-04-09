@@ -22,6 +22,7 @@
 			</f:facet>
 			<h:outputText value="#{statusEntry.vo.start}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{statusEntry.vo.stop}">
@@ -30,6 +31,7 @@
 			</f:facet>
 			<h:outputText value="#{statusEntry.vo.stop}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{statusEntry.vo.type.inventoryActive}">

@@ -70,6 +70,7 @@
 						</f:facet>
 						<h:outputText value="#{maintenanceItem.vo.date}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{maintenanceItem.vo.active}">

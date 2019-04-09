@@ -93,6 +93,7 @@
 			</f:facet>
 			<h:outputText value="#{probandListEntry.vo.lastStatus.realTimestamp}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column rendered="#{showReimbursementTotalsColumn}">

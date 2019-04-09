@@ -57,6 +57,7 @@
 					<h:outputLabel value="#{labels.photo_timestamp_label}" />
 					<h:outputText value="#{photoBean.timestamp}">
 						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 					<h:outputLabel />
 					<h:outputLabel

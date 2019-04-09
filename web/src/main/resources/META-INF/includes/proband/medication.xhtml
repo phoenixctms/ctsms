@@ -123,6 +123,7 @@
 						</f:facet>
 						<h:outputText value="#{medication.vo.start}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{medication.vo.stop}">
@@ -131,6 +132,7 @@
 						</f:facet>
 						<h:outputText value="#{medication.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column> 
 				</p:dataTable>
@@ -264,6 +266,7 @@
 																styleClass="ctsms-code-itemtip-em"
 																value="#{asp.vo.registrationDate}" >
 																<f:converter converterId="ctsms.Date" />
+																<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 																</h:outputText></li>																												
 													<li><h:outputText value="#{probandlabels.medication_asp_proprietor_label}" /><br /> <h:outputText
 																styleClass="ctsms-code-itemtip-em"

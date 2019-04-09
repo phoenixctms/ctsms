@@ -16,6 +16,7 @@
 		<h:outputText rendered="#{validationStatus == null or validationStatus.validationStatus != 'PENDING'}"
 			value="#{value}">
 			<f:converter converterId="ctsms.DateTime" />	
+			<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 		</h:outputText>
 	</ui:composition>
 </h:body>

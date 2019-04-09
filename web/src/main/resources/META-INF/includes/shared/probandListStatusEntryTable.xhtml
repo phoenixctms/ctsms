@@ -88,6 +88,7 @@
 				</f:facet>
 				<h:outputText value="#{probandListStatusEntry.vo.realTimestamp}">
 					<f:converter converterId="ctsms.DateTime" />
+					<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>

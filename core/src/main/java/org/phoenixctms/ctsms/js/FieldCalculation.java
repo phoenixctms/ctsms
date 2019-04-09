@@ -173,7 +173,7 @@ public class FieldCalculation {
 			sb.append("INPUT_DECIMAL_SEPARATOR = '" + CoreUtil.getUserContext().getDecimalSeparator() + "';");
 		}
 		sb.append("INPUT_TIMEZONE_ID = '" + CoreUtil.getUserContext().getTimeZone().getID() + "';");
-		sb.append("SYSTEM_TIMEZONE_ID = '" + TimeZone.getDefault() + "';");
+		sb.append("SYSTEM_TIMEZONE_ID = '" + TimeZone.getDefault().getID() + "';");
 		engine.eval(sb.toString());
 	}
 

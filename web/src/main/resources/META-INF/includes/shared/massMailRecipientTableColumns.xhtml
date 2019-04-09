@@ -61,6 +61,7 @@
 			</f:facet>
 			<h:outputText value="#{massMailRecipient.vo.processedTimestamp}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.read}">
@@ -81,6 +82,7 @@
 				styleClass="ctsms-list-icon ctsms-icon-information"
 				value="#{massMailRecipient.vo.unsubscribedTimestamp}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.modifiedUser.name}" rendered="#{showModified}">
@@ -95,6 +97,7 @@
 			</f:facet>
 			<h:outputText value="#{massMailRecipient.vo.modifiedTimestamp}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 	</ui:composition>

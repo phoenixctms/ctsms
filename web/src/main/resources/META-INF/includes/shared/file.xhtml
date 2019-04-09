@@ -285,6 +285,7 @@
 							</f:facet>
 							<h:outputText value="#{filefolder.modifiedTimestamp}">
 								<f:converter converterId="ctsms.DateTime" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</p:column>
 						<f:facet name="footer">
@@ -504,6 +505,7 @@
 							<h:outputLabel value="#{labels.file_timestamp_label}" />
 							<h:outputText value="#{fileBean.out.modifiedTimestamp}">
 								<f:converter converterId="ctsms.DateTime" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</h:panelGrid>
 						<h:panelGrid

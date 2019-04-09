@@ -36,6 +36,7 @@
 			</f:facet>
 			<h:outputText value="#{dutyRosterTurn.vo.start}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column
@@ -46,6 +47,7 @@
 			</f:facet>
 			<h:outputText value="#{dutyRosterTurn.vo.stop}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column>

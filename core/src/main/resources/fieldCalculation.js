@@ -130,9 +130,18 @@ var FieldCalculation = FieldCalculation || {};
 	        }
 	        return cloneA;
 	    }
-	    if (obj instanceof Date) {
-	        return new Date(obj);
-		}
+	    if (obj instanceof JSJoda.LocalDate) {
+	    	return JSJoda.LocalDate.from(obj);
+	    }
+	    if (obj instanceof JSJoda.LocalTime) {
+	    	return JSJoda.LocalTime.from(obj);
+	    }
+	    if (obj instanceof JSJoda.LocalDateTime) {
+	    	return JSJoda.LocalDateTime.from(obj);
+	    }
+	    if (obj instanceof JSJoda.ZonedDateTime) {
+	    	return JSJoda.ZonedDateTime.from(obj);
+	    }
 	    // object deep copy
 	    var cloneO = {};
 	    for (var i in obj) {
@@ -150,8 +159,7 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function _getInputFieldVariable(variableName, index) {
-		//if (jQuery.isPlainObject(variableName)) {
-		if (variableName instanceof Array) { //if (jQuery.isArray(variableName)) {
+		if (variableName instanceof Array) {
 			index = variableName[1];
 			variableName = variableName[0];
 		} else if (variableName !== null && typeof variableName === 'object') {
@@ -164,7 +172,6 @@ var FieldCalculation = FieldCalculation || {};
 	function _getSeriesInputFieldVariable(variableName, index, returnArrays) {
 		if (variableName in inputFieldVariableMap) {
 			var series = inputFieldVariableMap[variableName];
-			//if (jQuery.isArray(series)) {
 			if (series instanceof Array) {
 				if (index == null) {
 					if (returnArrays) {
@@ -186,7 +193,6 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		for ( var variableName in inputFieldVariableMap) {
 			var series = inputFieldVariableMap[variableName];
-			//if (jQuery.isArray(series)) {
 			if (series instanceof Array) {
 				for (var index = 0; index < series.length; index++) { //index asc
 					if (index in series) {
@@ -204,7 +210,6 @@ var FieldCalculation = FieldCalculation || {};
 		var msg = "";
 		for ( var variableName in inputFieldVariableMap) {
 			var series = inputFieldVariableMap[variableName];
-			//if (jQuery.isArray(series)) {
 			if (series instanceof Array) {
 				for (var index = 0; index < series.length; index++) {
 					if (index in series) {
@@ -257,7 +262,6 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		for (var variableName in inputFieldVariableMap) {
 			var series = inputFieldVariableMap[variableName];
-			//if (jQuery.isArray(series)) {
 			if (series instanceof Array) {
 				for (var index = 0; index < series.length; index++) { //index asc
 					if (index in series) {
@@ -319,7 +323,6 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function _printInputFieldVariableOutput(inputFieldVariable) {
-		//var inputFieldVariable = inputFieldVariableMap[variableName];
 		if (inputFieldVariable && inputFieldVariable.outputId != null && inputFieldVariable.outputId.length > 0) {
 			var outputElement = _getElement(inputFieldVariable.outputId);
 			if (outputElement != null) {
@@ -357,7 +360,6 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _processInputFieldVariableValue(inputFieldVariable, cycleCheckMap) {
 
-		//var inputFieldVariable = inputFieldVariableMap[variableName];
 		if (inputFieldVariable) {
 			if (inputFieldVariable.processed) {
 				return inputFieldVariable.value;
@@ -387,7 +389,6 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _updateInputFieldVariableOutput(inputFieldVariable, cycleCheckMap) {
 
-		//var inputFieldVariable = inputFieldVariableMap[variableName];
 		if (inputFieldVariable) {
 			if (debug_level >= 3) {
 				console.log("processing variable output " + _debugVarName(inputFieldVariable));
@@ -442,7 +443,6 @@ var FieldCalculation = FieldCalculation || {};
 					var j;
 					for (i = 0; i < argNames.length; i++) {
 						if (argNames[i] != null && argNames[i].length > 0) {
-							//argInputFieldVariable = inputFieldVariableMap[argNames[i]];
 
 							argInputFieldVariable = _getSeriesInputFieldVariable(argNames[i], null, true);
 							if (argInputFieldVariable == null) {
@@ -453,7 +453,7 @@ var FieldCalculation = FieldCalculation || {};
 								returnValue = null;
 								argsOk = false;
 								break;
-							} else if (argInputFieldVariable instanceof Array) { //if (jQuery.isArray(argInputFieldVariable)) {
+							} else if (argInputFieldVariable instanceof Array) {
 								if (argInputFieldVariable[0] != null && inputFieldVariable.value.section == argInputFieldVariable[0].value.section) {
 									argInputFieldVariable = argInputFieldVariable[index];
 									if (argInputFieldVariable == null) {
@@ -480,28 +480,6 @@ var FieldCalculation = FieldCalculation || {};
 								argValue = _processInputFieldVariableValue(argInputFieldVariable, cycleCheckMap ? cycleCheckMap : {});
 							}
 
-//							argInputFieldVariable = _getSeriesInputFieldVariable(argNames[i], index, true);
-//							if (!argInputFieldVariable) {
-//								errorMessage = errorMessagePrefix + ": unknown argument variable " + argNames[i];
-//								if (index != null) {
-//									errorMessage += "[" + index + "]";
-//								}
-//								returnValue = null;
-//								argsOk = false;
-//								break;
-//							} else if (jQuery.isArray(argInputFieldVariable)) {
-//								argValue = [];
-//								length = argInputFieldVariable.length;
-//								for (j = 0; j < length; j++) {
-//									if (j in argInputFieldVariable) {
-//										argValue.push(_processInputFieldVariableValue(argInputFieldVariable[j], cycleCheckMap ? cycleCheckMap : {}));
-//									}
-//								}
-//							} else {
-//								argValue = _processInputFieldVariableValue(argInputFieldVariable, cycleCheckMap ? cycleCheckMap : {});
-//							}
-
-
 							if ((!argInputFieldVariable || (argInputFieldVariable.valueErrorMessage != null && argInputFieldVariable.valueErrorMessage.length > 0))) {
 
 								errorMessage = argInputFieldVariable.valueErrorMessage;
@@ -509,7 +487,6 @@ var FieldCalculation = FieldCalculation || {};
 								argsOk = false;
 								break;
 							} else {
-								//if (jQuery.isArray(argValue)) {
 								if (argValue instanceof Array) {
 									mask[argNames[i]] = [];
 									length = argValue.length;
@@ -526,7 +503,6 @@ var FieldCalculation = FieldCalculation || {};
 					}
 					if (argsOk) {
 						_exportVars(mask, inputFieldVariable);
-						//_exportExpressionUtils(mask);
 
 						returnValue = null;
 						try {
@@ -590,19 +566,12 @@ var FieldCalculation = FieldCalculation || {};
 		}
 
 		mask["$selectionSetValues"] = inputFieldVariable.value.selectionSetValues;
-		//mask["$proband"] = _cloneJSON( inputFieldVars.proband);
 		mask["$proband"] =  inputFieldVars.proband;
-		//mask["$trial"] = _cloneJSON( inputFieldVars.trial);
 		mask["$trial"] = inputFieldVars.trial;
-		//mask["$probandAddresses"] = _cloneJSON( inputFieldVars.probandAddresses);
 		mask["$probandAddresses"] = inputFieldVars.probandAddresses;
-		//mask["$lastEnrollmentStatus"] = _cloneJSON( inputFieldVars.lastProbandListStatusEntry);
-		//mask["$listEntry"] = _cloneJSON( inputFieldVars.probandListEntry);
 		mask["$listEntry"] = inputFieldVars.probandListEntry;
-		//mask["$visitSchedule"] = _cloneJSON( inputFieldVars.visitScheduleItems);
 		mask["$visitSchedule"] = inputFieldVars.visitScheduleItems;
 		mask["$probandGroups"] = inputFieldVars.probandGroups;
-		//mask["$activeUser"] = _cloneJSON( inputFieldVars.activeUser);
 		mask["$activeUser"] = inputFieldVars.activeUser;
 		mask["$locale"] = inputFieldVars.locale;
 		mask["$section"] = inputFieldVariable.value.section;
@@ -610,8 +579,9 @@ var FieldCalculation = FieldCalculation || {};
 		mask["$inputFieldName"] = inputFieldVariable.value.inputFieldName;
 		mask["$probandGroup"] = inputFieldVariable.value.probandGroupToken;
 		mask["$visit"] = inputFieldVariable.value.visitToken;
-		//mask["$tagValues"] = _cloneJSON( inputFieldVars.probandListEntryTagValues);
 
+		mask["getEnteredValue"] = _getEnteredValue;
+		
 		var _printSelectionSetValues = function(value, separator, selectionSetValueField) {
 			if (!(value instanceof Array)) {
 				value = [ value ];
@@ -657,14 +627,42 @@ var FieldCalculation = FieldCalculation || {};
 				    return localizedMessages[inputFieldVars.locale].noSelectionLabel;
 			    }
 				return _printSelectionSetValues(value, formatOrSeparator, selectionSetValueFieldOrLocale);
-		    } else if (value instanceof Date) {
+		    } else if(value instanceof JSJoda.LocalDate) {
+		    	if ('date' == formatOrSeparator) {
+		    		return _printDateCustom(value,selectionSetValueFieldOrLocale);
+		    	} else {
+		    		return value.format(JSJoda.DateTimeFormatter.ofPattern(formatOrSeparator != null ? formatOrSeparator : INPUT_DATE_PATTERN));
+		    	}
+		    } else if(value instanceof JSJoda.LocalTime) {
+		    	if ('time' == formatOrSeparator) {
+		    		return _printTimeCustom(value,selectionSetValueFieldOrLocale);
+		    	} else {
+		    		return value.format(JSJoda.DateTimeFormatter.ofPattern(formatOrSeparator != null ? formatOrSeparator : INPUT_TIME_PATTERN));
+		    	}
+		    } else if(value instanceof JSJoda.LocalDateTime) {
 		    	if ('date' == formatOrSeparator) {
 					return _printDateCustom(value,selectionSetValueFieldOrLocale);
 				} else if ('time' == formatOrSeparator) {
-					return _printTimeCustom(value,selectionSetValueFieldOrLocale);
-				} else {
-					return value.toString(formatOrSeparator);
-				}
+					return _printTimeCustom(value,selectionSetValueFieldOrLocale);			
+		    	} else {
+		    		return value.format(JSJoda.DateTimeFormatter.ofPattern(formatOrSeparator != null ? formatOrSeparator : INPUT_DATETIME_PATTERN));
+		    	}
+		    } else if(value instanceof JSJoda.ZonedDateTime) {
+		    	var timestamp;
+		    	var pattern = INPUT_DATETIME_PATTERN;
+		    	if (inputFieldVariable.value.userTimeZone) {
+		    		timestamp = value.withZoneSameInstant(JSJoda.ZoneId.of(INPUT_TIMEZONE_ID));
+		    		pattern += ' (VV)';
+		    	} else {
+		    		timestamp = value;
+		    	}
+		    	if ('date' == formatOrSeparator) {
+					return _printDateCustom(timestamp,selectionSetValueFieldOrLocale);
+				} else if ('time' == formatOrSeparator) {
+					return _printTimeCustom(timestamp,selectionSetValueFieldOrLocale);			
+		    	} else {
+		    		return timestamp.format(JSJoda.DateTimeFormatter.ofPattern(formatOrSeparator != null ? formatOrSeparator : pattern));
+		    	}
 			} else if(typeof value === "object" && 'ids' in value){
 				if (value.ids.length <= 0) {
 					return localizedMessages[inputFieldVars.locale].noSelectionLabel;
@@ -754,8 +752,14 @@ var FieldCalculation = FieldCalculation || {};
 			    if (entered.length <= 0 || (entered.length == 1 && entered[0] == "")) {
 				    _throwError('required',true,true);
 			    }
-		    } else if (entered instanceof Date) {
-
+		    } else if(entered instanceof JSJoda.LocalDate) {
+		    	
+		    } else if(entered instanceof JSJoda.LocalTime) {
+		    	
+		    } else if(entered instanceof JSJoda.LocalDateTime) {
+		    	
+		    } else if(entered instanceof JSJoda.ZonedDateTime) {
+		    	
 			} else if(typeof entered === "object" && 'ids' in entered){
 				if (entered.ids.length <= 0) {
 				    _throwError('required',true,true);
@@ -793,8 +797,14 @@ var FieldCalculation = FieldCalculation || {};
 			    if (entered.length > 0 && !(entered.length == 1 && entered[0] == "")) {
 				    _throwError('mustBeUnselected',true,true);
 			    }
-			} else if (entered instanceof Date) {
-			    _throwError('mustBeEmpty',true,true);
+			} else if(entered instanceof JSJoda.LocalDate) {
+				_throwError('mustBeEmpty',true,true);
+		    } else if(entered instanceof JSJoda.LocalTime) {
+		    	_throwError('mustBeEmpty',true,true);
+		    } else if(entered instanceof JSJoda.LocalDateTime) {
+		    	_throwError('mustBeEmpty',true,true);
+		    } else if(entered instanceof JSJoda.ZonedDateTime) {
+		    	_throwError('mustBeEmpty',true,true);
 			} else if(typeof entered === "object" && 'ids' in entered){
 				if (entered.ids.length > 0) {
 				    _throwError('mustBeUnmarked',true,true);
@@ -824,7 +834,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["parseDate"] = _parseDate;
 		mask["parseDateTime"] = _parseDateTime;
 		mask["parseTime"] = _parseTime;
-		mask["formatDecimal"] = _formatDecimal;
+		mask["formatDecimal"] = _formatDecimal;		
 
 		mask["parseDateCustom"] = _parseDateCustom;
 		mask["parseTimeCustom"] = _parseTimeCustom;
@@ -843,17 +853,17 @@ var FieldCalculation = FieldCalculation || {};
 		mask["openUser"] = openUser;
 		mask["openMassMail"] = openMassMail;
 
-		mask["Date"] = Date;
+		mask["JSJoda"] = JSJoda;
 		mask["INPUT_DATE_PATTERN"] = INPUT_DATE_PATTERN;
 		mask["INPUT_TIME_PATTERN"] = INPUT_TIME_PATTERN;
 		mask["INPUT_DATETIME_PATTERN"] = INPUT_DATETIME_PATTERN;
 		mask["INPUT_JSON_DATETIME_PATTERN"] = INPUT_JSON_DATETIME_PATTERN;
 		mask["INPUT_DECIMAL_SEPARATOR"] = INPUT_DECIMAL_SEPARATOR;
+		mask["INPUT_TIMEZONE_ID"] = INPUT_TIMEZONE_ID;
+		mask["SYSTEM_TIMEZONE_ID"] = SYSTEM_TIMEZONE_ID;
 		mask["JSON"] = JSON;
 		mask["jQuery"] = jQuery;
 		mask["RestApi"] = RestApi;
-		mask["TimeSpan"] = TimeSpan;
-		mask["TimePeriod"] = TimePeriod;
 		if (ENABLE_GEOLOCATION_SERVICES && window.LocationDistance) {
 			mask["LocationDistance"] = window.LocationDistance;
 		}
@@ -875,8 +885,14 @@ var FieldCalculation = FieldCalculation || {};
 			return false;
 		} else if (input instanceof Array) {
 		    return (input.length <= 0 || (input.length == 1 && input[0] == ""));
-		} else if (input instanceof Date) {
-		    return false;
+		} else if(entered instanceof JSJoda.LocalDate) {
+			return false;
+	    } else if(entered instanceof JSJoda.LocalTime) {
+	    	return false;
+	    } else if(entered instanceof JSJoda.LocalDateTime) {
+	    	return false;
+	    } else if(entered instanceof JSJoda.ZonedDateTime) {
+	    	return false;
 		} else if(typeof input === "object" && 'ids' in input){
 			return input.ids.length <= 0;
 		} else {
@@ -890,15 +906,13 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function _getInputFieldSelectionSetValue(variable, id) {
-	    //if (jQuery.isPlainObject(variable)) {
-	    if (variable instanceof Array) { //if (jQuery.isArray(variable)) {
+	    if (variable instanceof Array) {
 	        variable = variable[0];
 	    } else if (variable !== null && typeof variable === 'object') {
 	        variable = variable.name;
 	    }
 	    var inputFieldVar = _getSeriesInputFieldVariable(variable,null,true);
 	    if (inputFieldVar) {
-	        //if (jQuery.isArray(inputFieldVar)) {
 	        if (inputFieldVar instanceof Array) {
 	            inputFieldVar = inputFieldVar[0];
 	        }
@@ -918,15 +932,13 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _testSelectionSetValueName(variable, value, selectionSetValueName) {
 	    if (value != null && value.length > 0) {
-		    //if (jQuery.isPlainObject(variable)) {
-			if (variable instanceof Array) { // if (jQuery.isArray(variable)) {
+			if (variable instanceof Array) {
 			    variable = variable[0];
 	        } else if (variable !== null && typeof variable === 'object') {
 			    variable = variable.name;
 			}
 	        var inputFieldVar = _getSeriesInputFieldVariable(variable,null,true);
 			if (inputFieldVar) {
-			    //if (jQuery.isArray(inputFieldVar)) {
 				if (inputFieldVar instanceof Array) {
 				    inputFieldVar = inputFieldVar[0];
 			    }
@@ -953,15 +965,13 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _testSelectionSetValueValue(variable, value, selectionSetValueValue) {
 	    if (value != null && value.length > 0) {
-		    //if (jQuery.isPlainObject(variable)) {
-		    if (variable instanceof Array) { //if (jQuery.isArray(variable)) {
+		    if (variable instanceof Array) {
 		        variable = variable[0];
 		    } else if (variable !== null && typeof variable === 'object') {
 		        variable = variable.name;
 		    }
 		    var inputFieldVar = _getSeriesInputFieldVariable(variable,null,true);
 		    if (inputFieldVar) {
-		        //if (jQuery.isArray(inputFieldVar)) {
 			    if (inputFieldVar instanceof Array) {
 			        inputFieldVar = inputFieldVar[0];
 			    }
@@ -987,8 +997,7 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function _getSeriesValues(variable) {
-	    //if (jQuery.isPlainObject(variable)) {
-		if (variable instanceof Array) { //if (jQuery.isArray(variable)) {
+		if (variable instanceof Array) {
 		    variable = variable[0];
 		} else if (variable !== null && typeof variable === 'object') {
 		    variable = variable.name;
@@ -996,7 +1005,6 @@ var FieldCalculation = FieldCalculation || {};
 		var inputFieldVar = _getSeriesInputFieldVariable(variable,null,true);
 		var result = [];
 		if (inputFieldVar) {
-		    //if (jQuery.isArray(inputFieldVar)) {
 			if (inputFieldVar instanceof Array) {
 			    for (var index = 0; index < inputFieldVar.length; index++) {
 				    if (index in inputFieldVar) {
@@ -1008,12 +1016,40 @@ var FieldCalculation = FieldCalculation || {};
 		return result;
 	}
 
-	function _parseDate(input) {
-	    return Date.parseExact(input, INPUT_DATE_PATTERN);
+	function _parseDate(input,pattern) {
+		if (input == null || input.length == 0) {
+			return null;
+		}
+		try {
+			return JSJoda.LocalDate.parse(input,pattern != null ? JSJoda.DateTimeFormatter.ofPattern(pattern) : JSJoda.DateTimeFormatter.ISO_LOCAL_DATE);
+		} catch (e) {
+			return null;
+		}
 	}
 
-	function _parseDateTime(input) {
-	    return Date.parseExact(input, INPUT_DATETIME_PATTERN);
+	function _parseTime(input,pattern) {
+		if (input == null || input.length == 0) {
+			return null;
+		}
+		try {
+			return JSJoda.LocalTime.parse(input,pattern != null ? JSJoda.DateTimeFormatter.ofPattern(pattern) : JSJoda.DateTimeFormatter.ISO_LOCAL_TIME);
+		} catch (e) {
+			return null;
+		}
+	}
+	
+	function _parseDateTime(input,pattern,zone) {
+		if (input == null || input.length == 0) {
+			return null;
+		}
+		try {
+			return JSJoda.ZonedDateTime.of(
+					JSJoda.LocalDateTime.parse(input,pattern != null ? JSJoda.DateTimeFormatter.ofPattern(pattern) : JSJoda.DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+					JSJoda.ZoneId.of(zone != null ? zone : SYSTEM_TIMEZONE_ID)
+				);
+		} catch (e) {
+			return null;
+		}
 	}
 
 	function _getLocale(locale) {
@@ -1028,7 +1064,7 @@ var FieldCalculation = FieldCalculation || {};
 	function _getLocalizedMessage(message,locale) {
 		return localizedMessages[_getLocale(locale)][message];
 	}
-	
+
 	function _parseDecimal(input) {
 		if (input != null && INPUT_DECIMAL_SEPARATOR != null && INPUT_DECIMAL_SEPARATOR.length > 0) {
 			input = (input+'').replace(INPUT_DECIMAL_SEPARATOR,'.');
@@ -1042,13 +1078,13 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		return input;
 	}
-
+	
 	function _printDateCustom(input,locale) {
 		if (input == null || input === undefined) {
 
-		} else if (input instanceof Date) {
+		} else if ((input instanceof JSJoda.LocalDate) || (input instanceof JSJoda.LocalDateTime) || (input instanceof JSJoda.ZonedDateTime)) {
 			var customDateSeparator = _getLocalizedMessage('customDateSeparator',locale);
-			return zeroFill(input.getDate(),2) + customDateSeparator + _getLocalizedMessage('customMonthNumberToName',locale)[input.getMonth()] + customDateSeparator + input.getFullYear();
+			return zeroFill(input.dayOfMonth(),2) + customDateSeparator + _getLocalizedMessage('customMonthNumberToName',locale)[input.monthValue() - 1] + customDateSeparator + input.year();
 		}
 		return '';
 	}
@@ -1056,8 +1092,8 @@ var FieldCalculation = FieldCalculation || {};
 	function _printTimeCustom(input,locale) {
 		if (input == null || input === undefined) {
 
-		} else if (input instanceof Date) {
-			return zeroFill(input.getHour(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.getMinute(),2);
+		} else if ((input instanceof JSJoda.LocalTime) || (input instanceof JSJoda.LocalDateTime) || (input instanceof JSJoda.ZonedDateTime)) {
+			return zeroFill(input.hour(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.minute(),2);
 		}
 		return '';
 	}
@@ -1121,8 +1157,7 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			return null;
 		} else {
-		    //var lastDayOfMonth = (new Date((new Date(+y,m - 1,1)) - 1)).getDate();
-			var lastDayOfMonth = Date.getDaysInMonth(+y,m-1);
+			var lastDayOfMonth = JSJoda.LocalDate.of(+y,+m,1).lengthOfMonth();
 			if (+nkDay > lastDayOfMonth) {
 			    nkDay = lastDayOfMonth + '';
 			}
@@ -1139,8 +1174,8 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			d = ary[0];
 		}
-		var date = new Date(+y,m - 1,+d);
-		if (date && (date.getFullYear() == +y) && (+y >= 1900) && date.getMonth() == (m - 1) && date.getDate() == +d) {
+		var date = JSJoda.LocalDate.of(+y,+m,+d);
+		if (date && (date.year() == +y) && (+y >= 1900) && date.monthValue() == m && date.dayOfMonth() == +d) {
 		    return date;
 		} else {
 		    if (_testFunction(error)) {
@@ -1192,7 +1227,7 @@ var FieldCalculation = FieldCalculation || {};
 	        }
 			return null;
 	    } else {
-		    return new Date(1970, 0, 1, +h, +m, 0);
+	    	return JSJoda.LocalTime.of(+h,+m);
 	    }
 	}
 
@@ -1210,6 +1245,14 @@ var FieldCalculation = FieldCalculation || {};
 			    _refreshInputFieldVariables(inputFieldVar.value.jsVariableName,inputFieldVar.value.index);
 			}
 		}
+	}
+	
+	function _getEnteredValue(variable,index) {
+	    var inputFieldVar = _getInputFieldVariable(variable, index);
+		if (inputFieldVar) {
+			return _getInputFieldVariableValue(inputFieldVar.enteredValue);
+		}
+		return null;
 	}
 
 	function _setOutput(variable, output) {
@@ -1254,7 +1297,6 @@ var FieldCalculation = FieldCalculation || {};
 							newValue[i] = newValue[i];
 						}
 					}
-					//newValue[i] = (typeof newValue[i] === 'string') ? (isNaN(parseInt(newValue[i])) ? null : parseInt(newValue[i])) : newValue[i];
 				}
 				inputFieldVariableValue.selectionValueIds = newValue;
 				break;
@@ -1268,26 +1310,50 @@ var FieldCalculation = FieldCalculation || {};
 				inputFieldVariableValue.floatValue = (typeof newValue === 'string') ? (isNaN(parseFloat(newValue)) ? null : parseFloat(newValue)) : newValue;
 				break;
 			case "DATE":
-				inputFieldVariableValue.dateValue = (typeof newValue === 'string') ? Date.parseExact(newValue, INPUT_DATE_PATTERN) : newValue;
+				if (typeof newValue === 'string') {
+					inputFieldVariableValue.dateValue = _parseDate(newValue,INPUT_DATE_PATTERN);
+				} else if (newValue instanceof JSJoda.LocalDate) {
+					inputFieldVariableValue.dateValue = newValue;
+				} else if (newValue instanceof Date) {
+					inputFieldVariableValue.dateValue = JSJoda.LocalDate.from(JSJoda.nativeJs(newValue));
+				} else {
+					inputFieldVariableValue.dateValue = null;
+				}
 				break;
 			case "TIME":
-				inputFieldVariableValue.timeValue = (typeof newValue === 'string') ? _parseTime(newValue) : newValue;
+				if (typeof newValue === 'string') {
+					inputFieldVariableValue.timeValue = _parseTime(newValue,INPUT_TIME_PATTERN);
+				} else if (newValue instanceof JSJoda.LocalTime) {
+					inputFieldVariableValue.timeValue = newValue;
+				} else if (newValue instanceof Date) {
+					inputFieldVariableValue.timeValue = JSJoda.LocalTime.from(JSJoda.nativeJs(newValue));
+				} else {
+					inputFieldVariableValue.timeValue = null;
+				}
 				break;
 			case "TIMESTAMP":
-				inputFieldVariableValue.timestampValue = (typeof newValue === 'string') ? Date.parseExact(newValue, INPUT_DATETIME_PATTERN) : newValue;
-				break;
+				if (typeof newValue === 'string') {
+					inputFieldVariableValue.timestampValue = _parseDateTime(newValue,INPUT_DATETIME_PATTERN);
+				} else if (newValue instanceof JSJoda.LocalDateTime) {
+					inputFieldVariableValue.timestampValue = JSJoda.ZonedDateTime.of(
+							newValue,
+							JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID)
+					);
+				} else if (newValue instanceof JSJoda.ZonedDateTime) {
+					inputFieldVariableValue.timestampValue = newValue;
+				} else if (newValue instanceof Date) {
+					inputFieldVariableValue.timestampValue = JSJoda.ZonedDateTime.of(
+							JSJoda.LocalDateTime.from(JSJoda.nativeJs(newValue)),
+							JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID)
+					);
+				} else {
+					inputFieldVariableValue.timestampValue = null;
+				}
+				break;				
 			default:
 
 			}
 		}
-	}
-
-	function _parseTime(value) {
-		var d = Date.parseExact(value, INPUT_TIME_PATTERN);
-		if (d != null) {
-			return new Date(1970, 0, 1, d.getHours(), d.getMinutes(), 0);
-		}
-		return null;
 	}
 
 	function _debugVarName(inputFieldVariable) {
@@ -1392,7 +1458,7 @@ var FieldCalculation = FieldCalculation || {};
 
 	function _dateEqual(date1, date2) {
 		if (date1 != null && date2 != null) {
-			return date1.getTime() == date2.getTime();
+			return date1.equals(date2);
 		} else if (date1 == null && date2 != null) {
 			return false;
 		} else if (date1 != null && date2 == null) {
@@ -1401,6 +1467,7 @@ var FieldCalculation = FieldCalculation || {};
 			return true;
 		}
 	}
+	
 	function _selectionSetValueIdsEqual(ids1, ids2) {
 		var idMap1 = {};
 		var idCount1 = 0;
@@ -1460,7 +1527,6 @@ var FieldCalculation = FieldCalculation || {};
 	function resetInputFieldVariables() {
 		for (var variableName in inputFieldVariableMap) { //help GC..
 			var series = inputFieldVariableMap[variableName];
-			//if (jQuery.isArray(series)) {
 			if (series instanceof Array) {
 				for (var index = 0; index < series.length; index++) {
 					if (index in series) {
@@ -1551,26 +1617,70 @@ var FieldCalculation = FieldCalculation || {};
 		}
 
 		if (typeof inputFieldVariableValue.dateValue === 'string') { //inputFieldVariableValue.dateValue != null && inputFieldVariableValue.dateValue.length > 0) {
-			inputFieldVariableValue.dateValue = Date.parseExact(inputFieldVariableValue.dateValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
+			if (inputFieldVariableValue.dateValue == null || inputFieldVariableValue.dateValue.length == 0) {
+				inputFieldVariableValue.dateValue = null;
+			} else {
+				try {
+					inputFieldVariableValue.dateValue = JSJoda.LocalDateTime.parse(
+							inputFieldVariableValue.dateValue,
+							JSJoda.DateTimeFormatter.ofPattern(INPUT_JSON_DATETIME_PATTERN)).toLocalDate();
+				} catch (e) {
+					inputFieldVariableValue.dateValue = null;
+				}
+			}
+		} else if (inputFieldVariableValue.dateValue instanceof Date) {
+			inputFieldVariableValue.dateValue = JSJoda.LocalDate.from(JSJoda.nativeJs(inputFieldVariableValue.dateValue));
 		}
+		
 		if (typeof inputFieldVariableValue.timeValue === 'string') { //if (inputFieldVariableValue.timeValue != null && inputFieldVariableValue.timeValue.length > 0) {
-			//console.log(inputFieldVariableValue.timeValue);
-			inputFieldVariableValue.timeValue = Date.parseExact(inputFieldVariableValue.timeValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
-			//console.log(inputFieldVariableValue.timeValue);
+			if (inputFieldVariableValue.timeValue == null || inputFieldVariableValue.timeValue.length == 0) {
+				inputFieldVariableValue.timeValue = null;
+			} else {
+				try {
+					inputFieldVariableValue.timeValue = JSJoda.LocalDateTime.parse(
+							inputFieldVariableValue.timeValue,
+							JSJoda.DateTimeFormatter.ofPattern(INPUT_JSON_DATETIME_PATTERN)).toLocalTime();
+				} catch (e) {
+					inputFieldVariableValue.timeValue = null;
+				}
+			}
+		} else if (inputFieldVariableValue.timeValue instanceof Date) {
+			inputFieldVariableValue.timeValue = JSJoda.LocalTime.from(JSJoda.nativeJs(inputFieldVariableValue.timeValue));
 		}
+		
 		if (typeof inputFieldVariableValue.timestampValue === 'string') { //if (inputFieldVariableValue.timestampValue != null && inputFieldVariableValue.timestampValue.length > 0) {
-			inputFieldVariableValue.timestampValue = Date.parseExact(inputFieldVariableValue.timestampValue, INPUT_JSON_DATETIME_PATTERN); //, INPUT_DATETIME_PATTERN); //JSON_DATETIME_PATTERN); //INPUT_DATETIME_PATTERN);
+			if (inputFieldVariableValue.timestampValue == null || inputFieldVariableValue.timestampValue.length == 0) {
+				inputFieldVariableValue.timestampValue = null;
+			} else {
+				try {
+					inputFieldVariableValue.timestampValue = JSJoda.ZonedDateTime.of(
+							JSJoda.LocalDateTime.parse(inputFieldVariableValue.timestampValue,
+							JSJoda.DateTimeFormatter.ofPattern(INPUT_JSON_DATETIME_PATTERN)),
+							JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID)
+					);
+				} catch (e) {
+					inputFieldVariableValue.timestampValue = null;
+				}
+			}
+		} else if (inputFieldVariableValue.timestampValue instanceof Date) {
+			inputFieldVariableValue.timestampValue = JSJoda.ZonedDateTime.of(
+					JSJoda.LocalDateTime.from(JSJoda.nativeJs(inputFieldVariableValue.timestampValue)),
+					JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID)
+			);
+		}
+		
+		if (typeof inputFieldVariableValue.userTimeZone === 'string') {
+			inputFieldVariableValue.userTimeZone = !!inputFieldVariableValue.userTimeZone;
 		}
 
-		//if (jQuery.type(inputFieldVariableValue.floatValue) === "string") {
 		if (typeof inputFieldVariableValue.floatValue === 'string') {
 			inputFieldVariableValue.floatValue = parseFloat(inputFieldVariableValue.floatValue);
 		}
-		//if (jQuery.type(inputFieldVariableValue.longValue) === "string") {
+
 		if (typeof inputFieldVariableValue.longValue === 'string') {
 			inputFieldVariableValue.longValue = parseInt(inputFieldVariableValue.longValue);
 		}
-		//if (jQuery.type(inputFieldVariableValue.booleanValue) === "string") {
+
 		if (typeof inputFieldVariableValue.booleanValue === 'string') {
 			inputFieldVariableValue.booleanValue = !!inputFieldVariableValue.booleanValue;
 		}
@@ -1777,8 +1887,26 @@ var FieldCalculation = FieldCalculation || {};
 	}
 
 	function timestampOnChange(variableName, index, widget, outputId) {
-
-		if (!silent) _inputFieldOnChange(variableName, index, widget.getDate());
+		
+		if (!silent) {
+			var timestamp = null;
+			if (widget.getDate() != null) {
+				timestamp = JSJoda.LocalDateTime.from(JSJoda.nativeJs(widget.getDate()));
+				var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
+				if (inputFieldVariable != null && inputFieldVariable.value.userTimeZone) {
+					timestamp = JSJoda.ZonedDateTime.of(
+						timestamp,
+						JSJoda.ZoneId.of(INPUT_TIMEZONE_ID)
+					).withZoneSameInstant(JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID));
+				} else {
+					timestamp = JSJoda.ZonedDateTime.of(
+						timestamp,
+						JSJoda.ZoneId.of(SYSTEM_TIMEZONE_ID)
+					);
+				}
+			}
+			_inputFieldOnChange(variableName, index, timestamp);
+		}
 
 	}
 
@@ -1896,6 +2024,7 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function selectOneRadioApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
@@ -1915,6 +2044,7 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function autoCompleteApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
@@ -1924,6 +2054,7 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function checkBoxApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
@@ -1933,6 +2064,7 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function integerApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
@@ -1942,6 +2074,7 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function floatApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
@@ -1951,33 +2084,47 @@ var FieldCalculation = FieldCalculation || {};
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function dateApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setDate(newValue);
+		widget.setDate(newValue != null ? JSJoda.convert(newValue).toDate() : null);
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function timeApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setTime(newValue);
+		widget.setTime(newValue != null ? JSJoda.convert(JSJoda.LocalDateTime.of(1970,1,1,newValue.hour(),newValue.minute())).toDate() : null);
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 	function timestampApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setDate(newValue);
+		var timestamp = null;
+		if (newValue != null) {
+			var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
+			if (inputFieldVariable != null && inputFieldVariable.value.userTimeZone) {
+				timestamp = newValue.withZoneSameInstant(JSJoda.ZoneId.of(INPUT_TIMEZONE_ID));
+			} else {
+				timestamp = newValue;
+			}
+			timestamp = JSJoda.convert(timestamp.toLocalDateTime()).toDate();
+		}
+		widget.setDate(timestamp);
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
+	
 //	function sketchApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 //		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
 //		if (sourceId != null && sourceId.length > 0 && rowId != null && rowId.length > 0) {
@@ -1990,6 +2137,7 @@ var FieldCalculation = FieldCalculation || {};
 //			}
 //		}
 //	}
+	
 	function sketchApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);

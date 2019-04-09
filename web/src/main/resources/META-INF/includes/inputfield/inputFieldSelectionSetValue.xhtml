@@ -125,6 +125,7 @@
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column rendered="#{selectionSetValueBean.autocomplete}" 
