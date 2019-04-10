@@ -136,6 +136,7 @@
         <dependency>
             <groupId>jboss</groupId>
             <artifactId>jboss-j2ee</artifactId>
+   	    <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.andromda</groupId>
@@ -247,11 +248,13 @@
                 <!-- http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories -->
                 <executions>
 			        <execution>
-			            <phase>generate-sources</phase>
+			        <!-- The phase needs to happen before generate-sources according to: -->
+			        <!-- https://stackoverflow.com/questions/13699466/maven-compiler-plugin-build-helper-plugin-does-not-generate-class-files -->
+			            <phase>initialize</phase>
 			            <goals><goal>add-source</goal></goals>
 			            <configuration>
 			                <sources>
-			                    <source>src/exec</source>
+			                    <source>src/exec/java</source>
 			                </sources>
 			            </configuration>
 			        </execution>

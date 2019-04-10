@@ -33,6 +33,13 @@
             <timezone></timezone>
         </developer>
     </developers>
+      <repositories>
+    <repository>
+      <id>primeface repo</id>
+      <name>PrimeFaces Repository</name>
+      <url>https://repository.primefaces.org/</url>
+    </repository>
+  </repositories>
     <dependencyManagement>
         <dependencies>
         <dependency>
@@ -780,7 +787,7 @@
                     </configuration>
                 </plugin>
                 <!-- Comment to run Eclipse plugin for top level project only, as part of mda install. See mda/eclipse.bat -->
-                <plugin>
+<!--                 <plugin>
                     <artifactId>maven-eclipse-plugin</artifactId>
                     <version>2.8</version>
                     <inherited>true</inherited>
@@ -788,7 +795,7 @@
                         <wtpversion>1.5</wtpversion>
                         <buildOutputDirectory>target/classes</buildOutputDirectory>
                     </configuration>
-                </plugin>
+                </plugin> -->
                 <plugin>
                     <!-- Automatically attach sources to build artifact as artifact-version-sources.jar and deploy to local repository -->
                     <artifactId>maven-source-plugin</artifactId>
@@ -897,10 +904,10 @@
                     <showWarnings>true</showWarnings>
                     <compilerArgument>-Xlint:cast,unchecked,fallthrough,finally,serial</compilerArgument>
 
-<compilerArguments>
+<!-- <compilerArguments>
         <verbose />
         <bootclasspath>${java.home}/jre/lib/rt.jar${path.separator}${java.home}/jre/lib/jce.jar</bootclasspath>
-      </compilerArguments>
+      </compilerArguments> -->
                 </configuration>
             </plugin>
             <plugin>
@@ -968,7 +975,7 @@
         <!-- <java.home>C:/Program Files (x86)/Java/jdk1.6.0_31</java.home> -->
         <!-- <java.home>C:/Program Files (x86)/Java/jdk1.7.0_79/jre</java.home> -->
         <!-- <java.home>C:/Program Files (x86)/Java/jdk1.7.0_79</java.home> -->
-        <java.home>C:/Program Files/Java/jdk1.8.0_171</java.home>
+        <!-- requires JAVA_HOME to point to jdk  -->
         <downloadSources>true</downloadSources>
         <createChecksum>true</createChecksum>
         <uniqueVersion>false</uniqueVersion>
@@ -1157,10 +1164,10 @@
                                 <compilerArgument>-Xlint:cast,unchecked,fallthrough,finally,serial</compilerArgument>
                                 <showDeprecation>true</showDeprecation>
                                 <showWarnings>true</showWarnings>
-<compilerArguments>
+<!-- <compilerArguments>
         <verbose />
         <bootclasspath>${java.home}/jre/lib/rt.jar${path.separator}${java.home}/jre/lib/jce.jar</bootclasspath>
-      </compilerArguments>
+      </compilerArguments> -->
                             </configuration>
                         </plugin>
                         <plugin>
