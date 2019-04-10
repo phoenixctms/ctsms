@@ -699,6 +699,7 @@
 			</resource>
 		</resources>
 		<plugins>
+	
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -723,6 +724,40 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
+<plugin>
+        <groupId>com.samaxes.maven</groupId>
+        <artifactId>minify-maven-plugin</artifactId>
+        <version>1.7.6</version>
+        <executions>
+          <execution>
+            <id>default-minify</id>
+            <!-- http://samaxes.github.io/minify-maven-plugin/minify-mojo.html -->
+            <configuration>
+            <verbose>true</verbose>
+            <skipMerge>true</skipMerge>
+              <webappSourceDir>${project.basedir}/src/main/webapp</webappSourceDir>
+              <webappTargetDir>${project.basedir}/target/src/main/webapp</webappTargetDir>
+              <cssSourceDir>resources/css</cssSourceDir>
+              <cssSourceIncludes>
+                <cssSourceInclude>*.css</cssSourceInclude>
+              </cssSourceIncludes>
+              <cssSourceExcludes>
+                <cssSourceExclude>*.min.css</cssSourceExclude>
+              </cssSourceExcludes>
+              <jsSourceDir>resources/js</jsSourceDir>
+              <jsSourceIncludes>
+                <jsSourceInclude>*.js</jsSourceInclude>
+              </jsSourceIncludes>
+              <jsSourceExcludes>
+                <jsSourceExclude>*.min.js</jsSourceExclude>
+              </jsSourceExcludes>
+            </configuration>
+            <goals>
+              <goal>minify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>					
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>

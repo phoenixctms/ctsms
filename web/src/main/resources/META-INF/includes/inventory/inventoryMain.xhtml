@@ -293,8 +293,9 @@
 									required="true"
 									disabled="#{!inventoryBean.in.bookable}"
 									label="#{inventorylabels.inventory_max_overlapping_bookings}">
-									<p:ajax />
-									<p:ajax event="keyup" />
+									<p:ajax
+												event="blur"
+												process="@this" />
 								</p:spinner>
 								<p:tooltip
 									rendered="#{enableTooltips}"

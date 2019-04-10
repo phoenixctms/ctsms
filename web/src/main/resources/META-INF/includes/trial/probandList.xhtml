@@ -578,8 +578,9 @@
 										styleClass="ctsms-spinner"
 										required="true"
 										label="#{triallabels.bulkadd_limit}">
-										<p:ajax />
-										<p:ajax event="keyup" />
+										<p:ajax
+												event="blur"
+												process="@this" />
 									</p:spinner>
 									<p:tooltip
 										rendered="#{enableTooltips}"

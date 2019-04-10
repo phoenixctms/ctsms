@@ -13,15 +13,15 @@
 	<ui:composition template="moduleTemplate.xhtml">
 		<ui:define name="head">
 			<h:outputStylesheet
-				name="trial.css"
+				name="trial.min.css"
 				library="css"
 				target="head" />
 			<h:outputStylesheet
-				name="inputField.css"
+				name="inputField.min.css"
 				library="css"
 				target="head" />
 			<h:outputStylesheet
-				name="mimetypes.css"
+				name="mimetypes.min.css"
 				library="css"
 				target="head" />
 			<h:outputStylesheet
@@ -37,20 +37,20 @@
 				library="js"
 				target="head" />
 			<h:outputScript
-				name="restApi.js"
+				name="restApi.min.js"
 				library="js"
 				target="head" />				
 			<h:outputScript
 				rendered="#{applicationScopeBean.enableGeolocationServices}"
-				name="locationDistance.js"
+				name="locationDistance.min.js"
 				library="js"
 				target="head" />
 			<h:outputScript
-				name="fieldCalculation.js"
+				name="fieldCalculation.min.js"
 				library="js"
 				target="head" />
 			<h:outputScript
-				name="trial.js"
+				name="trial.min.js"
 				library="js"
 				target="head" />
 			<ui:fragment rendered="#{applicationScopeBean.enableGeolocationServices}">

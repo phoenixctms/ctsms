@@ -64,12 +64,14 @@
 									required="false"
 									label="#{probandlabels.auto_deletion_proband_overview_reminder_period_days}">
 									<p:ajax
+									event="blur"
+												process="@this" 
 										update="autodeletionproband_list"
 										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" />
-									<p:ajax
+									<!-- <p:ajax
 										event="keyup"
 										update="autodeletionproband_list"
-										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" />
+										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" /> -->
 								</p:spinner>
 								<p:tooltip
 									rendered="#{enableTooltips}"

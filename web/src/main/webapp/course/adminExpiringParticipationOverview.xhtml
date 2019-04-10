@@ -64,12 +64,14 @@
 									required="false"
 									label="#{courselabels.admin_expiring_participation_overview_reminder_period_days}">
 									<p:ajax
+												event="blur"
+												process="@this" 
 										update="expiringparticipation_list"
 										listener="#{adminExpiringParticipationOverviewBean.handleReminderChange}" />
-									<p:ajax
+									<!-- <p:ajax
 										event="keyup"
 										update="expiringparticipation_list"
-										listener="#{adminExpiringParticipationOverviewBean.handleReminderChange}" />
+										listener="#{adminExpiringParticipationOverviewBean.handleReminderChange}" /> -->
 								</p:spinner>
 								<p:tooltip
 									rendered="#{enableTooltips}"

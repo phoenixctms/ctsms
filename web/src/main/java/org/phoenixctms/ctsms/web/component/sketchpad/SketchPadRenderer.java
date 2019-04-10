@@ -28,12 +28,12 @@ import org.primefaces.component.tooltip.Tooltip;
 @ResourceDependencies({
 	@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
 	@ResourceDependency(library = "js", name = "json2.min.js", target = "head"),
-	@ResourceDependency(library = "js", name = "raphael-2.2.0.js", target = "head"),
-	@ResourceDependency(library = "js", name = "raphael.sketchpad.js", target = "head"),
-	@ResourceDependency(library = "js", name = "jquery.colorPicker.js", target = "head"),
-	@ResourceDependency(library = "js", name = "sketch.js", target = "head"),
-	@ResourceDependency(library = "css", name = "colorPicker.css"),
-	@ResourceDependency(library = "css", name = "sketch.css") })
+	@ResourceDependency(library = "js", name = "raphael-2.2.0.min.js", target = "head"),
+	@ResourceDependency(library = "js", name = "raphael.sketchpad.min.js", target = "head"),
+	@ResourceDependency(library = "js", name = "jquery.colorPicker.min.js", target = "head"),
+	@ResourceDependency(library = "js", name = "sketch.min.js", target = "head"),
+	@ResourceDependency(library = "css", name = "colorPicker.min.css"),
+	@ResourceDependency(library = "css", name = "sketch.min.css") })
 @FacesRenderer(componentFamily = "javax.faces.Input", rendererType = "ctsms.SketchPad")
 public class SketchPadRenderer extends Renderer {
 

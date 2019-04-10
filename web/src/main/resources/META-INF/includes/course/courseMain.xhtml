@@ -456,8 +456,10 @@
 											styleClass="ctsms-spinner"
 											required="false"
 											label="#{courselabels.max_number_of_participants}">
-											<p:ajax />
-											<p:ajax event="keyup" />
+											
+											<p:ajax
+												event="blur"
+												process="@this" />
 										</p:spinner>
 										<p:tooltip
 											rendered="#{enableTooltips}"
@@ -580,9 +582,9 @@
 											styleClass="ctsms-spinner"
 											required="false"
 											label="#{courselabels.course_validity_period_days}">
-											<p:ajax update="courseexpiredmessage" />
 											<p:ajax
-												event="keyup"
+												event="blur"
+												process="@this"
 												update="courseexpiredmessage" />
 										</p:spinner>
 										<p:tooltip
