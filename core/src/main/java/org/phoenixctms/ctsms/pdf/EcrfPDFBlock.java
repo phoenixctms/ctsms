@@ -51,22 +51,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		// SPACER,
 	}
 
-	private ECRFFieldValueOutVO auditTrailValue;
-	private ECRFFieldStatusEntryOutVO fieldStatusEntry;
-	private ProbandListEntryTagValueOutVO listEntryTagValuesVO;
-
-	private ECRFFieldValueOutVO value;
-	private ProbandListEntryOutVO listEntry;
-	private ECRFOutVO ecrf;
-	private ECRFStatusEntryVO statusEntry;
-	private SignatureVO signature;
-	private String section;
-	private Long index;
-	private BlockType type;
-	private boolean inserted = false;
-	private Date now;
-	private boolean hasNext = false;
-
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		@Override
@@ -80,18 +64,23 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 					value ? EcrfPDFLabelCodes.INPUT_FIELD_VALUE_CHECKBOX_CHECKED : EcrfPDFLabelCodes.INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED, PDFUtil.DEFAULT_LABEL);
 		}
 		@Override
-		protected DateFormat getDateFormat() {
+		protected DateFormat getDateFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF);
 		}
 
 		@Override
-		protected DateFormat getDateTimeFormat() {
+		protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.ECRF_PDF);
 		}
 
 		@Override
 		protected Date getDateValue(ECRFFieldValueOutVO value) {
 			return value.getDateValue();
+		}
+
+		@Override
+		protected String getDecimalSeparator() {
+			return Settings.getString(EcrfPDFSettingCodes.DECIMAL_SEPARATOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DECIMAL_SEPARATOR);
 		}
 
 		@Override
@@ -130,7 +119,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		}
 
 		@Override
-		protected DateFormat getTimeFormat() {
+		protected DateFormat getTimeFormat(boolean isUserTimeZone) {
 			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF);
 		}
 
@@ -144,6 +133,22 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			return value.getTimeValue();
 		}
 	};
+	private ECRFFieldValueOutVO auditTrailValue;
+	private ECRFFieldStatusEntryOutVO fieldStatusEntry;
+
+	private ProbandListEntryTagValueOutVO listEntryTagValuesVO;
+	private ECRFFieldValueOutVO value;
+	private ProbandListEntryOutVO listEntry;
+	private ECRFOutVO ecrf;
+	private ECRFStatusEntryVO statusEntry;
+	private SignatureVO signature;
+	private String section;
+	private Long index;
+	private BlockType type;
+	private boolean inserted = false;
+	private Date now;
+
+	private boolean hasNext = false;
 
 	public EcrfPDFBlock(BlockType type, boolean inserted) {
 		super();
@@ -267,6 +272,11 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	@Override
 	protected String getDateValueFormatPattern() {
 		return Settings.getString(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN);
+	}
+
+	@Override
+	protected String getDecimalSeparator() {
+		return Settings.getString(EcrfPDFSettingCodes.DECIMAL_SEPARATOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DECIMAL_SEPARATOR);
 	}
 
 	@Override
@@ -604,10 +614,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 										listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 												listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""
 								),
-								cursor.getBlockX(),
-								Settings.getFloat(EcrfPDFSettingCodes.PAGE_TITLE_Y, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_TITLE_Y),
-								Alignment.TOP_LEFT,
-								cursor.getBlockWidth());
+						cursor.getBlockX(),
+						Settings.getFloat(EcrfPDFSettingCodes.PAGE_TITLE_Y, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_TITLE_Y),
+						Alignment.TOP_LEFT,
+						cursor.getBlockWidth());
 				break;
 			case NEW_ECRF:
 				width = (cursor.getBlockWidth() - 3.0f * Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF,
@@ -636,10 +646,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.TRIAL_NAME, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(), listEntry.getTrial()
 								.getTitle()),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height1);
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PROBAND_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -654,11 +664,11 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 										L10nUtil.getString(Locales.ECRF_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 										L10nUtil.getString(Locales.ECRF_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
 										),
-										listEntry.getProband().getInitials(), listEntry.getProband().getName()),
-										x + getXFrameIndent(),
-										y,
-										Alignment.TOP_LEFT,
-										width - getXFrameIndent()), height2);
+								listEntry.getProband().getInitials(), listEntry.getProband().getName()),
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height2);
 				x += width;
 				height3 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -681,10 +691,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 												Locales.ECRF_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
 												listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 														listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
-														x + getXFrameIndent(),
-														y,
-														Alignment.TOP_LEFT,
-														width - getXFrameIndent()), height3);
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								width - getXFrameIndent()), height3);
 				//
 				x = cursor.getBlockX();
 				y -= Math.max(Math.max(height1, height2), height3) + getYFrameIndent();
@@ -712,10 +722,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				height2 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.GROUP_TITLE, PDFUtil.DEFAULT_LABEL, ecrf.getGroup() != null ? ecrf.getGroup().getTitle() : "",
 								ecrf.getGroup() != null ? ecrf.getGroup().getToken() : ""),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height2);
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height2);
 				x += width;
 				height3 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.VISIT_TITLE_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -727,10 +737,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				height3 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.VISIT_TITLE, PDFUtil.DEFAULT_LABEL, ecrf.getVisit() != null ? ecrf.getVisit().getTitle() : "",
 								ecrf.getVisit() != null ? ecrf.getVisit().getToken() : ""),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height3);
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height3);
 				//
 				x = cursor.getBlockX();
 				y -= Math.max(Math.max(height1, height2), height3) + getYFrameIndent();
@@ -776,10 +786,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								Bundle.ECRF_PDF,
 								EcrfPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
 								Locales.ECRF_PDF).format(now)),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height3);
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height3);
 				x = cursor.getBlockX();
 				y -= Math.max(Math.max(height1, height2), height3) + getYFrameIndent();
 				if (!inserted) {
@@ -850,10 +860,10 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								EntitySignature.getDescription(signature, Locales.ECRF_PDF,
 										Settings.getIntNullable(EcrfPDFSettingCodes.SIGNATURE_VALUE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_VALUE_LENGTH),
 										false),
-										x + getXFrameIndent(),
-										y,
-										Alignment.TOP_LEFT,
-										cursor.getBlockWidth() - x - 2.0f * getXFrameIndent()), ximage.getHeightPoints());
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								cursor.getBlockWidth() - x - 2.0f * getXFrameIndent()), ximage.getHeightPoints());
 						y -= getYFrameIndent();
 						height += y1 - y;
 						PDFUtil.renderFrame(contentStream,
@@ -973,7 +983,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								PDFUtil.Alignment.TOP_LEFT,
 								cursor.getBlockIndentedX() + cursor.getBlockIndentedWidth() - (x + getXFieldColumnIndent() + getXFrameIndent()) - getXFrameIndent(),
 								TextDecoration.STRIKE_THROUGH))
-								+ getYFrameIndent();
+						+ getYFrameIndent();
 				y -= Math.max(PDFUtil.renderMultilineText(
 						contentStream,
 						cursor.getFontA(),
@@ -994,7 +1004,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								y,
 								PDFUtil.Alignment.TOP_LEFT,
 								cursor.getBlockIndentedX() + cursor.getBlockIndentedWidth() - (x + getXFieldColumnIndent() + getXFrameIndent()) - getXFrameIndent()))
-								+ getYFrameIndent();
+						+ getYFrameIndent();
 				height = cursor.getBlockY() - y;
 				PDFUtil.renderFrame(contentStream, getFrameColor(),
 						cursor.getBlockIndentedX(), cursor.getBlockY(), cursor.getBlockIndentedWidth(), height,
@@ -1028,22 +1038,22 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								// getTextColor(),
 								L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.FIELD_STATUS_LABEL, PDFUtil.DEFAULT_LABEL,
 										L10nUtil.getEcrfFieldStatusTypeName(Locales.ECRF_PDF, fieldStatusEntry.getStatus().getNameL10nKey())),
-										x + getXFrameIndent(),
-										y,
-										PDFUtil.Alignment.TOP_LEFT,
-										getXFieldColumnIndent() - getXFrameIndent()),
-										PDFUtil.renderMultilineText(
-												contentStream,
-												cursor.getFontC(),
-												PDFUtil.FontSize.SMALL,
-												getTextColor(),
-												fieldStatusEntry.getComment(),
-												x + getXFieldColumnIndent() + getXFrameIndent(),
-												y,
-												PDFUtil.Alignment.TOP_LEFT,
-												cursor.getBlockIndentedX() + cursor.getBlockIndentedWidth() - (x + getXFieldColumnIndent() + getXFrameIndent()) - getXFrameIndent()
-												))
-												+ getYFrameIndent();
+								x + getXFrameIndent(),
+								y,
+								PDFUtil.Alignment.TOP_LEFT,
+								getXFieldColumnIndent() - getXFrameIndent()),
+						PDFUtil.renderMultilineText(
+								contentStream,
+								cursor.getFontC(),
+								PDFUtil.FontSize.SMALL,
+								getTextColor(),
+								fieldStatusEntry.getComment(),
+								x + getXFieldColumnIndent() + getXFrameIndent(),
+								y,
+								PDFUtil.Alignment.TOP_LEFT,
+								cursor.getBlockIndentedX() + cursor.getBlockIndentedWidth() - (x + getXFieldColumnIndent() + getXFrameIndent()) - getXFrameIndent()
+								))
+						+ getYFrameIndent();
 				y -= PDFUtil.renderTextLine(
 						contentStream,
 						cursor.getFontA(),

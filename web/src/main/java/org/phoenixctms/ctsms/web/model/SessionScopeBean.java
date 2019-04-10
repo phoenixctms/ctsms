@@ -81,7 +81,7 @@ public class SessionScopeBean {
 	private static Collection<LocaleVO> getLocales() {
 		Collection<LocaleVO> locales = null;
 		try {
-			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
+			locales = WebUtil.getServiceLocator().getToolsService().getLocales(WebUtil.getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -93,6 +93,7 @@ public class SessionScopeBean {
 		}
 		return locales;
 	}
+
 	private static String getLoginOutcome(boolean success) {
 		String refererBase64 = WebUtil.getParamValue(GetParamNames.REFERER);
 		String referer = JsUtil.decodeBase64(refererBase64);
@@ -130,10 +131,10 @@ public class SessionScopeBean {
 		viewId.append("faces-redirect=true&includeViewParams=true");
 		return viewId.toString();
 	}
-	private static Collection<TimeZoneVO> getTimeZones() {
+	public static Collection<TimeZoneVO> getTimeZones() {
 		Collection<TimeZoneVO> timeZones = null;
 		try {
-			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
+			timeZones = WebUtil.getServiceLocator().getToolsService().getTimeZones(WebUtil.getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -145,6 +146,7 @@ public class SessionScopeBean {
 		}
 		return timeZones;
 	}
+
 	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
 	private MaxSizeHashMap<Object, StreamedContent> imageStore;
 	// private HashMap<Class, HashMap<Object, Object>> selectionSetServiceCache;
@@ -600,6 +602,16 @@ public class SessionScopeBean {
 		}
 	}
 
+	public synchronized String getInputDatePattern() {
+
+		return CommonUtil.getInputDatePattern(logon != null ? logon.getUser().getDateFormat() : null);
+
+	}
+
+	public synchronized String getInputDateTimePattern() {
+		return CommonUtil.getInputDateTimePattern(logon != null ? logon.getUser().getDateFormat() : null);
+	}
+
 	public synchronized MenuModel getInputFieldEntityMenuModel() {
 		return DynamicEntityMenu.getInputFieldEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -615,6 +627,9 @@ public class SessionScopeBean {
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
+	// public String getInputTimePattern() {
+	// return CommonUtil.INPUT_TIME_PATTERN;
+	// }
 	public synchronized MenuModel getInventoryHomeMenuModel() {
 		return DynamicHomeMenu.getInventoryHomeMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -800,6 +815,7 @@ public class SessionScopeBean {
 		}
 		return null;
 	}
+
 
 	public synchronized MenuModel getUserEntityMenuModel() {
 		return DynamicEntityMenu.getUserEntityMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));

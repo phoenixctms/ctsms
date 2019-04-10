@@ -234,6 +234,7 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.dateOfBirth}" >
 								<f:converter converterId="ctsms.Date" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</p:column>						
 						
@@ -534,6 +535,7 @@
 						</f:facet>
 						<h:outputText value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 

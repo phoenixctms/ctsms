@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -13,8 +14,12 @@ import javax.script.ScriptException;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -35,8 +40,9 @@ public class FieldCalculation {
 	private final static String ENV_JS_FILE_NAME = "env.js";
 	private final static String FIELD_CALCULATION_JS_FILE_NAME = "fieldCalculation.js";
 	private final static String SPRINTF_JS_FILE_NAME = "sprintf.js";
-	private final static String DATE_JS_FILE_NAME = "date.js";
-	private final static String TIME_JS_FILE_NAME = "time.js";
+	private final static String JS_JODA_JS_FILE_NAME = "js-joda.min.js";
+	// private final static String TIME_JS_FILE_NAME = "time.js";
+	private final static String JS_JODA_TIMEZONE_JS_FILE_NAME = "js-joda-timezone.min.js";
 	private final static String STRIP_COMMENTS_JS_FILE_NAME = "strip-comments.js";
 	private final static String JQUERY_BASE64_JS_FILE_NAME = "jquery.base64.js";
 	private final static String REST_API_JS_FILE_NAME = "restApi.js";
@@ -113,10 +119,12 @@ public class FieldCalculation {
 		// engine.eval(new FileReader(LOCATION_DISTANCE_SHIM_JS_FILE_NAME));
 		// engine.eval(new FileReader(FIELD_CALCULATION_JS_FILE_NAME));
 		engine.eval(getJsFile(ENV_JS_FILE_NAME));
+		updateEnv(engine);
 		engine.eval(getJsFile(SPRINTF_JS_FILE_NAME));
 		engine.eval(getJsFile(JSON2_JS_FILE_NAME));
-		engine.eval(getJsFile(DATE_JS_FILE_NAME));
-		engine.eval(getJsFile(TIME_JS_FILE_NAME));
+		engine.eval(getJsFile(JS_JODA_JS_FILE_NAME)); // DATE_JS_FILE_NAME));
+		// engine.eval(getJsFile(TIME_JS_FILE_NAME));
+		engine.eval(getJsFile(JS_JODA_TIMEZONE_JS_FILE_NAME));
 		engine.eval(getJsFile(STRIP_COMMENTS_JS_FILE_NAME));
 		engine.eval(getJsFile(JQUERY_BASE64_JS_FILE_NAME));
 		engine.eval(getJsFile(REST_API_JS_FILE_NAME));
@@ -129,12 +137,15 @@ public class FieldCalculation {
 	}
 
 	private static String encode(Object src) {
-		String json = JsUtil.inputFieldVariableValueToJson(src);
+		String json = JsUtil.inputFieldVariableValueToJson(src); // ,
+		// CoreUtil.getUserContext().getDateFormat(),
+		// CoreUtil.getUserContext().getDecimalSeparator());
 		if (FIELD_CALCULATION_ENCODE_BASE64) {
 			return JsUtil.encodeBase64(json,false);
 		}
 		return json;
 	}
+
 	private static String encodeVO(Object src) {
 		String json = JsUtil.voToJson(src);
 		if (FIELD_CALCULATION_ENCODE_BASE64) {
@@ -142,7 +153,6 @@ public class FieldCalculation {
 		}
 		return json;
 	}
-
 	private static InputStreamReader getJsFile(String fileName) throws IOException {
 		ClassPathResource resource = new ClassPathResource("/" + fileName);
 		return new InputStreamReader(resource.getInputStream());
@@ -156,6 +166,26 @@ public class FieldCalculation {
 	//		}
 	//		return new MultiStreamReader(resources);
 	//	}
+
+	private final static void updateEnv(ScriptEngine engine) throws ScriptException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INPUT_JSON_DATETIME_PATTERN = '" + JsUtil.INPUT_JSON_DATETIME_PATTERN + "';");
+		sb.append("INPUT_DATE_PATTERN = '" + CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()) + "';");
+		sb.append("INPUT_TIME_PATTERN = '" + CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()) + "';");
+		sb.append("INPUT_DATETIME_PATTERN = '" + CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()) + "';");
+		if (CoreUtil.getUserContext().getDecimalSeparator() != null) {
+			sb.append("INPUT_DECIMAL_SEPARATOR = '" + CoreUtil.getUserContext().getDecimalSeparator() + "';");
+		}
+		sb.append("INPUT_TIMEZONE_ID = '" + CommonUtil.timeZoneToString(CoreUtil.getUserContext().getTimeZone()) + "';");
+		sb.append("SYSTEM_TIMEZONE_ID = '" + CommonUtil.timeZoneToString(TimeZone.getDefault()) + "';");
+		sb.append("FIELD_CALCULATION_DEBUG_LEVEL = "
+				+ Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL)) + ";");
+		Integer inputFieldDeltaSummaryMax = Settings.getIntNullable(SettingCodes.INPUT_FIELD_DELTA_SUMMARY_MAX, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DELTA_SUMMARY_MAX);
+		if (inputFieldDeltaSummaryMax != null) {
+			sb.append("INPUT_FIELD_DELTA_SUMMARY_MAX = " + Integer.toString(inputFieldDeltaSummaryMax) + ";");
+		}
+		engine.eval(sb.toString());
+	}
 
 	//	private static Bindings newBindings() throws ScriptException {
 	//		//Bindings bindings = SCRIPT.getEngine().createBindings();

@@ -373,7 +373,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				if (!CommonUtil.isEmptyString(deltaErrorMessageId)) {
 					requestContext.addCallbackParam(JSValues.AJAX_FIELD_DELTA_ERROR_MESSAGE_ID.toString(), deltaErrorMessageId);
 				}
-				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
+				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
+						JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
 				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_BASE64.toString(),
 				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getProband() : null), false));
 				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_TRIAL_BASE64.toString(),

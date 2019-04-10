@@ -581,13 +581,14 @@
 									value="#{staffBean.in.dateOfBirth}"
 									required="false"
 									label="#{stafflabels.date_of_birth}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
 									styleClass="ctsms-calendar-date">
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									<p:ajax
 										event="blur"
 										process="@this" />

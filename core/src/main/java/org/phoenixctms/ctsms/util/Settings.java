@@ -55,6 +55,7 @@ public final class Settings {
 		PROBAND_LIST_ENTRY_TAGS_PDF,
 		AUDIT_TRAIL_EXCEL,
 		INVENTORY_BOOKINGS_EXCEL,
+		DATE_FORMATS,
 	}
 
 	private static String settingsBundleBasename;
@@ -75,6 +76,7 @@ public final class Settings {
 	private static String reimbursementsExcelSettingsBundleBasename;
 	private static String auditTrailExcelSettingsBundleBasename;
 	private static String inventoryBookingsExcelSettingsBundleBasename;
+	private static String dateFormatsBundleBasename;
 
 	// private final static ArrayList<String> CLASS_PATH_ELEMENTS = new ArrayList<String>();
 	// static {
@@ -308,6 +310,8 @@ public final class Settings {
 				return getBundle(inquiriesPdfSettingsBundleBasename);
 			case PROBAND_LIST_ENTRY_TAGS_PDF:
 				return getBundle(probandListEntryTagsPdfSettingsBundleBasename);
+			case DATE_FORMATS:
+				return getBundle(dateFormatsBundleBasename);
 			default:
 				return null;
 		}
@@ -629,6 +633,13 @@ public final class Settings {
 			String cvPdfSettingsBundleBasename) {
 		Settings.cvPdfSettingsBundleBasename = cvPdfSettingsBundleBasename;
 		getBundle(cvPdfSettingsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setDateFormatsBundleBasename(
+			String dateFormatsBundleBasename) {
+		Settings.dateFormatsBundleBasename = dateFormatsBundleBasename;
+		getBundle(dateFormatsBundleBasename);
 	}
 
 	@Autowired(required = true)

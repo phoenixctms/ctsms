@@ -375,7 +375,39 @@
 								for="timeZone"
 								value="#{userlabels.user_time_zone_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
+
+<p:autoComplete
+									id="timeZone"
+									required="false"
+									value="#{userBean.timeZone}"
+									label="#{userlabels.user_time_zone}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthTimeZone}"
+									maxResults="#{autoCompleteMaxResultsTimeZone}"
+									queryDelay="#{autoCompleteQueryDelayTimeZone}"
+									dropdown="#{autoCompleteDropdownTimeZone}"
+									global="#{autoCompleteGlobalTimeZone}"
+									scrollHeight="#{autoCompleteScrollHeightTimeZone}"
+									completeMethod="#{userBean.completeTimeZone}"
+									forceSelection="true"
+									var="timezone"
+									itemValue="#{timezone}"
+									itemLabel="#{timezone.name}"
+									converter="ctsms.TimeZone">
+
+									<p:ajax
+									    process="@this"
+										event="itemSelect"
+										listener="#{userBean.handleTimeZoneSelect}" />
+									<p:ajax
+									    process="@this"
+										event="itemUnselect"
+										listener="#{userBean.handleTimeZoneUnselect}" />
+								</p:autoComplete>
+								
+								
+							
+								<!-- <p:selectOneMenu
 									id="timeZone"
 									value="#{userBean.in.timeZone}"
 									required="true"
@@ -390,7 +422,7 @@
 										itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax />
-								</p:selectOneMenu>
+								</p:selectOneMenu> -->
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="timeZone">
@@ -403,6 +435,79 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
+							
+							
+							<h:outputLabel
+								for="dateformat"
+								value="#{userlabels.user_dateformat_label}" />
+							<h:panelGroup>
+							
+							<p:selectOneMenu
+									id="dateformat"
+									value="#{userBean.in.dateFormat}"
+									required="false"
+									label="#{userlabels.user_dateformat}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.dateFormats}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu> 							
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dateformat">
+									<h:outputText
+										value="#{userlabels.user_dateformat_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dateformat" />
+							
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							
+							
+							<h:outputLabel
+								for="decimalseparator"
+								value="#{userlabels.user_decimalseparator_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="decimalseparator"
+									value="#{userBean.in.decimalSeparator}"
+									required="false"
+									label="#{userlabels.user_decimalseparator}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{userBean.decimalSeparators}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu> 								
+
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="decimalseparator">
+									<h:outputText
+										value="#{userlabels.user_decimalseparator_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="decimalseparator" />
+							
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							
 							<h:outputLabel
 								for="theme"
 								value="#{userlabels.user_theme_label}" />

@@ -201,7 +201,9 @@
 									value="#{visitBean.in.reimbursement}"
 									required="true"
 									label="#{triallabels.visit_reimbursement}"
-									styleClass="ctsms-control-float" />
+									styleClass="ctsms-control-float" >
+									<f:converter converterId="ctsms.Float" />
+									</p:inputText>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="reimbursement">

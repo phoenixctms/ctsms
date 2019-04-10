@@ -158,17 +158,17 @@ public final class CriteriaUtil {
 		} else if (propertyClass.equals(java.lang.Boolean.TYPE)) {
 			return applyOr(Restrictions.eq(propertyName, Boolean.parseBoolean(value)),or);
 		} else if (propertyClass.equals(Float.class)) {
-			return applyOr(Restrictions.eq(propertyName, new Float(value)),or);
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(java.lang.Float.TYPE)) {
-			return applyOr(Restrictions.eq(propertyName, Float.parseFloat(value)),or);
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(Double.class)) {
-			return applyOr(Restrictions.eq(propertyName, new Double(value)),or);
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(java.lang.Double.TYPE)) {
-			return applyOr(Restrictions.eq(propertyName, Double.parseDouble(value)),or);
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(Date.class)) {
-			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN)),or);
+			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()))), or);
 		} else if (propertyClass.equals(Timestamp.class)) {
-			Date date = CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN);
+			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
 			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))),or);
 		} else if (propertyClass.equals(VariablePeriod.class)) {
 			return applyOr(Restrictions.eq(propertyName, VariablePeriod.fromString(value)),or);

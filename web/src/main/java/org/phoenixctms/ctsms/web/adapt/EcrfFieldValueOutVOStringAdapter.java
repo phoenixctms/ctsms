@@ -23,6 +23,8 @@ public class EcrfFieldValueOutVOStringAdapter extends InputFieldValueStringAdapt
 		return value.getBooleanValue();
 	}
 
+
+
 	@Override
 	protected Date getDateValue(ECRFFieldValueOutVO value) {
 		return value.getDateValue();

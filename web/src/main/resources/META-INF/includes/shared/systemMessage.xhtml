@@ -30,6 +30,7 @@
 					<h:outputLabel value="#{labels.system_message_real_timestamp_label}" />
 					<h:outputText value="#{timestamp}">
 						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 				</h:panelGrid>
 			</h:panelGrid>

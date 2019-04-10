@@ -353,13 +353,14 @@
 											value="#{courseBean.in.start}"
 											required="false"
 											label="#{courselabels.course_start}"
-											pattern="#{applicationScopeBean.inputDatePattern}"
+											pattern="#{sessionScopeBean.inputDatePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
 											styleClass="ctsms-calendar-date">
+											<f:converter converterId="ctsms.Date" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 											<p:ajax
 												event="blur"
 												process="@this" />
@@ -385,13 +386,14 @@
 											value="#{courseBean.in.stop}"
 											required="true"
 											label="#{courselabels.course_stop}"
-											pattern="#{applicationScopeBean.inputDatePattern}"
+											pattern="#{sessionScopeBean.inputDatePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
 											styleClass="ctsms-calendar-date">
+											<f:converter converterId="ctsms.Date" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 											<p:ajax
 												event="blur"
 												process="@this"
@@ -420,13 +422,14 @@
 											value="#{courseBean.in.participationDeadline}"
 											required="false"
 											label="#{courselabels.participation_deadline}"
-											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											pattern="#{sessionScopeBean.inputDateTimePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
 											styleClass="ctsms-calendar-datetime">
+											<f:converter converterId="ctsms.DateTime" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 											<p:ajax
 												event="blur"
 												process="@this" />

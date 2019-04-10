@@ -53,6 +53,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int MAX_DATE_COLUMN_INDEX = 10;
 	private final static int MIN_TIMESTAMP_COLUMN_INDEX = 9;
 	private final static int MAX_TIMESTAMP_COLUMN_INDEX = 10;
+	private final static int USER_TIME_ZONE_COLUMN_INDEX = 11;
 	private final static int MIN_TIME_COLUMN_INDEX = 9;
 	private final static int MAX_TIME_COLUMN_INDEX = 10;
 	private final static int WIDTH_COLUMN_INDEX = 11;
@@ -87,6 +88,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private int maxDateColumnIndex;
 	private int minTimestampColumnIndex;
 	private int maxTimestampColumnIndex;
+	private int userTimeZoneColumnIndex;
 	private int minTimeColumnIndex;
 	private int maxTimeColumnIndex;
 	private int widthColumnIndex;
@@ -246,6 +248,10 @@ public class InputFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, titleColumnIndex);
 	}
 
+	private String getUserTimeZone(String[] values) {
+		return getColumnValue(values, userTimeZoneColumnIndex);
+	}
+
 	private String getValidationErrorMsg(String[] values) {
 		return getColumnValue(values, validationErrorMsgColumnIndex);
 	}
@@ -288,6 +294,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 		maxDateColumnIndex = MAX_DATE_COLUMN_INDEX;
 		minTimestampColumnIndex = MIN_TIMESTAMP_COLUMN_INDEX;
 		maxTimestampColumnIndex = MAX_TIMESTAMP_COLUMN_INDEX;
+		userTimeZoneColumnIndex = USER_TIME_ZONE_COLUMN_INDEX;
 		minTimeColumnIndex = MIN_TIME_COLUMN_INDEX;
 		maxTimeColumnIndex = MAX_TIME_COLUMN_INDEX;
 		widthColumnIndex = WIDTH_COLUMN_INDEX;
@@ -303,41 +310,41 @@ public class InputFieldRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		// .append(getName(values))
-		.append(getName(values))
-		.append(getTitle(values))
-		.append(getLocalized(values))
-		.append(getCategory(values))
-		.append(getExternalId(values))
-		.append(getFieldType(values))
-		.append(getComment(values))
-		.append(getTextPreset(values))
-		.append(getBooleanPreset(values))
-		.append(getLongPreset(values))
-		.append(getFloatPreset(values))
-		.append(getDatePreset(values))
-		.append(getTimestampPreset(values))
-		.append(getTimePreset(values))
-		.append(getValidationErrorMsg(values))
-		.append(getRegExp(values))
-		.append(getLearn(values))
-		.append(getStrict(values))
-		.append(getMinSelections(values))
-		.append(getMaxSelections(values))
-		.append(getLongLowerLimit(values))
-		.append(getLongUpperLimit(values))
-		.append(getFloatLowerLimit(values))
-		.append(getFloatUpperLimit(values))
-		.append(getMinDate(values))
-		.append(getMaxDate(values))
-		.append(getMinTimestamp(values))
-		.append(getMaxTimestamp(values))
-		.append(getMinTime(values))
-		.append(getMaxTime(values))
-		.append(getWidth(values))
-		.append(getHeight(values))
-		.append(getFileName(values))
-		.toHashCode();
+				// .append(getName(values))
+				.append(getName(values))
+				.append(getTitle(values))
+				.append(getLocalized(values))
+				.append(getCategory(values))
+				.append(getExternalId(values))
+				.append(getFieldType(values))
+				.append(getComment(values))
+				.append(getTextPreset(values))
+				.append(getBooleanPreset(values))
+				.append(getLongPreset(values))
+				.append(getFloatPreset(values))
+				.append(getDatePreset(values))
+				.append(getTimestampPreset(values))
+				.append(getTimePreset(values))
+				.append(getValidationErrorMsg(values))
+				.append(getRegExp(values))
+				.append(getLearn(values))
+				.append(getStrict(values))
+				.append(getMinSelections(values))
+				.append(getMaxSelections(values))
+				.append(getLongLowerLimit(values))
+				.append(getLongUpperLimit(values))
+				.append(getFloatLowerLimit(values))
+				.append(getFloatUpperLimit(values))
+				.append(getMinDate(values))
+				.append(getMaxDate(values))
+				.append(getMinTimestamp(values))
+				.append(getMaxTimestamp(values))
+				.append(getMinTime(values))
+				.append(getMaxTime(values))
+				.append(getWidth(values))
+				.append(getHeight(values))
+				.append(getFileName(values))
+				.toHashCode();
 	}
 
 	private void loadFile(InputFieldInVO inputFieldIn,String fileName) throws Throwable {
@@ -421,6 +428,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setTimestampPreset(CommonUtil.isEmptyString(getTimestampPreset(values)) ? null : CommonUtil.parseDate(getTimestampPreset(values), dateTimePattern));
 				inputFieldIn.setMinTimestamp(CommonUtil.isEmptyString(getMinTimestamp(values)) ? null : CommonUtil.parseDate(getMinTimestamp(values), dateTimePattern));
 				inputFieldIn.setMaxTimestamp(CommonUtil.isEmptyString(getMaxTimestamp(values)) ? null : CommonUtil.parseDate(getMaxTimestamp(values), dateTimePattern));
+				inputFieldIn.setUserTimeZone(Boolean.parseBoolean(getUserTimeZone(values)));
 				break;
 			case SKETCH:
 				inputFieldIn.setWidth(CommonUtil.isEmptyString(getWidth(values)) ? null : Long.parseLong(getWidth(values)));

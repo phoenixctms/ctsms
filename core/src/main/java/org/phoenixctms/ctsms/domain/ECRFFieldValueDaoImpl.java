@@ -882,6 +882,7 @@ extends ECRFFieldValueDaoBase
 			if (inputField != null) {
 				target.setInputFieldId(inputField.getId());
 				target.setInputFieldType(inputField.getFieldType());
+				target.setUserTimeZone(inputField.isUserTimeZone());
 				if (inputField.isLocalized()) {
 					target.setInputFieldName(L10nUtil.getInputFieldName(Locales.USER, inputField.getNameL10nKey()));
 				} else {

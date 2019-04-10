@@ -513,7 +513,7 @@
 						timeFormat="#{applicationScopeBean.scheduleTimePattern}"
 						styleClass="ctsms-schedule"
 						locale="#{sessionScopeBean.locale}"
-						timeZone="#{sessionScopeBean.timeZone}"
+						timeZone="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}"
 						view="agendaDay"
 						leftHeaderTemplate="prev,today,next"
 						centerTemplate="title"

@@ -289,6 +289,8 @@ public interface MessageCodes {
 	public final static String VOUCHER_CODE_PRESET = "voucher_code_preset";
 	public final static String MONEY_TRANSFER_COMMENT_PRESET = "money_transfer_comment_preset";
 	public final static String USER_NAME_PRESET = "user_name_preset";
+	public final static String USER_DATE_FORMAT_PRESET = "user_date_format_preset";
+	public final static String USER_DECIMAL_SEPARATOR_PRESET = "user_decimal_separator_preset";
 	public static final String ERROR_LOADING_INVENTORY = "error_loading_inventory";
 	public static final String ERROR_LOADING_STAFF = "error_loading_staff";
 	public static final String ERROR_LOADING_COURSE = "error_loading_course";
@@ -488,6 +490,9 @@ public interface MessageCodes {
 	public static final String OPAQUE_AUTHENTICATION_ERROR_MESSAGE = "opaque_authentication_error_message";
 	public static final String AUTHENTICATION_REQUIRED_ERROR_MESSAGE = "authentication_required_error_message";
 	public static final String INPUT_FIELD_OPTIONAL_VALIDATION_TOOLTIP = "input_field_optional_validation_tooltip";
+	public static final String INPUT_FIELD_TOOLTIP_FIELDTYPE_USER_TIMEZONE = "input_field_tooltip_fieldtype_user_timezone";
+	public static final String INPUT_FIELD_TOOLTIP_FIELDTYPE_SYSTEM_TIMEZONE = "input_field_tooltip_fieldtype_system_timezone";
+	public static final String INPUT_FIELD_TOOLTIP_FIELDTYPE = "input_field_tooltip_fieldtype";
 	public static final String INPUT_FIELD_OPTIONAL_NO_VALIDATION_TOOLTIP = "input_field_optional_no_validation_tooltip";
 	public static final String INPUT_FIELD_REQUIRED_VALIDATION_TOOLTIP = "input_field_required_validation_tooltip";
 	public static final String INPUT_FIELD_REQUIRED_NO_VALIDATION_TOOLTIP = "input_field_required_no_validation_tooltip";

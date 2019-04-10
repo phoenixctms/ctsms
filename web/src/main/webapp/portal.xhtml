@@ -294,6 +294,7 @@
 							</f:facet>
 							<h:outputText value="#{notification.vo.date}">
 								<f:converter converterId="ctsms.Date" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</p:column>
 						<p:column style="width:32px;">

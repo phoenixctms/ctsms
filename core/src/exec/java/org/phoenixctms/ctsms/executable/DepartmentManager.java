@@ -180,6 +180,8 @@ public class DepartmentManager {
 		UserInVO newUser = new UserInVO();
 		newUser.setLocale(locale); // CommonUtil.localeToString(Locale.getDefault()));
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
+		newUser.setDateFormat(null);
+		newUser.setDecimalSeparator(null);
 		newUser.setLocked(false);
 		newUser.setShowTooltips(true);
 		newUser.setDecrypt(true);

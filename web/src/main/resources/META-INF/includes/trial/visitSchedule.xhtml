@@ -324,13 +324,15 @@
 											value="#{visitScheduleBean.in.start}"
 											required="true"
 											label="#{triallabels.visit_schedule_start}"
-											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											pattern="#{sessionScopeBean.inputDateTimePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
-											styleClass="ctsms-calendar-datetime" />
+											styleClass="ctsms-calendar-datetime" >
+											<f:converter converterId="ctsms.DateTime" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+										</p:calendar>
 										<p:tooltip
 											rendered="#{enableTooltips}"
 											for="visitscheduleitemstart">
@@ -368,13 +370,15 @@
 											value="#{visitScheduleBean.in.stop}"
 											required="false"
 											label="#{triallabels.visit_schedule_stop}"
-											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											pattern="#{sessionScopeBean.inputDateTimePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
-											styleClass="ctsms-calendar-datetime" />
+											styleClass="ctsms-calendar-datetime" >
+											<f:converter converterId="ctsms.DateTime" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+										</p:calendar>
 										<p:tooltip
 											rendered="#{enableTooltips}"
 											for="visitscheduleitemstop">

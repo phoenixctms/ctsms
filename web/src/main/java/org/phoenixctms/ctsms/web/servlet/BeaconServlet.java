@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+
 @ManagedBean
 public class BeaconServlet extends FileServletBase {
 

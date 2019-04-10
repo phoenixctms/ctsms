@@ -307,7 +307,8 @@ extends InputFieldServiceBase
 		if (!(InputFieldType.TIMESTAMP.equals(fieldType)) && (
 				inputFieldIn.getMinTimestamp() != null ||
 				inputFieldIn.getMaxTimestamp() != null ||
-				inputFieldIn.getTimestampPreset() != null)) {
+				inputFieldIn.getTimestampPreset() != null ||
+				inputFieldIn.getUserTimeZone() == true)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TIMESTAMP_LIMITS_OR_PRESET_NOT_NULL);
 		}
 		if (!(InputFieldType.SKETCH.equals(fieldType)) && (
@@ -369,6 +370,16 @@ extends InputFieldServiceBase
 					InputFieldType.AUTOCOMPLETE.equals(newFieldType))
 					&& this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, true) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TYPE_CHANGED_RANDOMIZE);
+			}
+		}
+	}
+
+	private void checkInputFieldUserTimeZoneChanged(Long inputFieldId, boolean oldIsUserTimeZone, boolean newIsUserTimeZone) throws ServiceException {
+		if (oldIsUserTimeZone != newIsUserTimeZone) {
+			if (this.getInquiryValueDao().getCountByField(inputFieldId) > 0
+					|| this.getProbandListEntryTagValueDao().getCountByField(inputFieldId) > 0
+					|| this.getECRFFieldValueDao().getCountByField(inputFieldId) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_USER_TIMEZONE_CHANGED);
 			}
 		}
 	}
@@ -520,6 +531,7 @@ extends InputFieldServiceBase
 		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_UPDATE_LOCALIZED_INPUT_FIELD);
 		// }
 		checkInputFieldInputFieldTypeChanged(modifiedInputField.getId(), originalInputField.getFieldType(), modifiedInputField.getFieldType());
+		checkInputFieldUserTimeZoneChanged(modifiedInputField.getId(), originalInputField.isUserTimeZone(), modifiedInputField.getUserTimeZone());
 		if (!originalInputField.getNameL10nKey().equals(modifiedInputField.getName())
 				|| !originalInputField.getTitleL10nKey().equals(modifiedInputField.getTitle())) {
 			boolean checkProbandTrialLocked = Settings.getBoolean(SettingCodes.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED, Bundle.SETTINGS,
@@ -1003,6 +1015,7 @@ extends InputFieldServiceBase
 		newInputField.setMaxDate(originalInputField.getMaxDate());
 		newInputField.setMaxSelections(originalInputField.getMaxSelections());
 		newInputField.setMaxTimestamp(originalInputField.getMaxTimestamp());
+		newInputField.setUserTimeZone(originalInputField.isUserTimeZone());
 		newInputField.setMaxTime(originalInputField.getMaxTime());
 		newInputField.setMinDate(originalInputField.getMinDate());
 		newInputField.setMinSelections(originalInputField.getMinSelections());

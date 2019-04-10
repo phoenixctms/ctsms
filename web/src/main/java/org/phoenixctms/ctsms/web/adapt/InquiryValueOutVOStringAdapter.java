@@ -18,10 +18,12 @@ public class InquiryValueOutVOStringAdapter extends InputFieldValueStringAdapter
 		return value.getBooleanValue();
 	}
 
+
 	@Override
 	protected Date getDateValue(InquiryValueOutVO value) {
 		return value.getDateValue();
 	}
+
 	@Override
 	protected Float getFloatValue(InquiryValueOutVO value) {
 		return value.getFloatValue();

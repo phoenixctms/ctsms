@@ -26,23 +26,24 @@ import com.google.gson.JsonSerializer;
 
 public final class JsUtil {
 
+	public final static String INPUT_JSON_DATETIME_PATTERN = "yyyy-MM-dd " + CommonUtil.DEFAULT_INPUT_TIME_PATTERN;
 	public final static String JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private final static String BASE64_CHARSET = "UTF8";
 	public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
-		new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
-		new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
-		new GsonExclusionStrategy(InventoryOutVO.class, "children"),
-		new GsonExclusionStrategy(StaffOutVO.class, "children"),
-		new GsonExclusionStrategy(CourseOutVO.class, "renewals"),
-		new GsonExclusionStrategy(CourseOutVO.class, "precedingCourses"),
-		// new GsonExclusionStrategy(InputFieldOutVO.class, "selectionSetValues"),
-		new GsonExclusionStrategy(InputFieldSelectionSetValueOutVO.class, "field"),
-		// new GsonExclusionStrategy(CriteriaOutVO.class, "criterions"),
-		new GsonExclusionStrategy(CriterionOutVO.class, "criteria"),
-		// new GsonExclusionStrategy(ProbandListEntryOutVO.class, "lastStatus"),
-		new GsonExclusionStrategy(ProbandListStatusEntryOutVO.class, "listEntry"),
-		new GsonExclusionStrategy(ProbandOutVO.class, "children"),
-		new GsonExclusionStrategy(ProbandOutVO.class, "parents"),
+			new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
+			new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
+			new GsonExclusionStrategy(InventoryOutVO.class, "children"),
+			new GsonExclusionStrategy(StaffOutVO.class, "children"),
+			new GsonExclusionStrategy(CourseOutVO.class, "renewals"),
+			new GsonExclusionStrategy(CourseOutVO.class, "precedingCourses"),
+			// new GsonExclusionStrategy(InputFieldOutVO.class, "selectionSetValues"),
+			new GsonExclusionStrategy(InputFieldSelectionSetValueOutVO.class, "field"),
+			// new GsonExclusionStrategy(CriteriaOutVO.class, "criterions"),
+			new GsonExclusionStrategy(CriterionOutVO.class, "criteria"),
+			// new GsonExclusionStrategy(ProbandListEntryOutVO.class, "lastStatus"),
+			new GsonExclusionStrategy(ProbandListStatusEntryOutVO.class, "listEntry"),
+			new GsonExclusionStrategy(ProbandOutVO.class, "children"),
+			new GsonExclusionStrategy(ProbandOutVO.class, "parents"),
 	};
 
 	public static final HashMap<Class, JsonSerializer> GSON_SHORTCUT_SERIALISATIONS = new HashMap<Class, JsonSerializer>();
@@ -63,10 +64,9 @@ public final class JsUtil {
 				);
 	}
 	private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
-			GSON_SHORTCUT_SERIALISATIONS
-			).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
+			GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
 			.serializeNulls()
-			.setDateFormat(CommonUtil.INPUT_DATETIME_PATTERN)
+			.setDateFormat(INPUT_JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
 			.create();
 	private final static Gson VO_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
 			JsUtil.GSON_SHORTCUT_SERIALISATIONS
@@ -95,8 +95,25 @@ public final class JsUtil {
 		return "";
 	}
 
-	public static String inputFieldVariableValueToJson(Object src) {
+	public static String inputFieldVariableValueToJson(Object src) { // , final TimeZone timeZone) {
 		return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
+		// final DateFormat dateFormat = new SimpleDateFormat(INPUT_JSON_DATETIME_PATTERN);
+		// if (timeZone != null) {
+		// dateFormat.setTimeZone(timeZone);
+		// }
+		// return registerGsonTypeAdapters(new GsonBuilder(),
+		// GSON_SHORTCUT_SERIALISATIONS)
+		// .registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
+		//
+		// @Override
+		// public synchronized JsonElement serialize(Date date, Type type, JsonSerializationContext jsonSerializationContext) {
+		// return new JsonPrimitive(dateFormat.format(date));
+		// }
+		// })
+		// .setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
+		// .serializeNulls()
+		// // .setDateFormat(JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
+		// .create().toJson(src);
 	}
 
 	public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {

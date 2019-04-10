@@ -18,11 +18,26 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract String getCheckboxString(boolean value);
 
-	protected abstract DateFormat getDateFormat();
+	protected abstract DateFormat getDateFormat(boolean isUserTimeZone);
 
-	protected abstract DateFormat getDateTimeFormat();
+	protected abstract DateFormat getDateTimeFormat(boolean isUserTimeZone);
+
+	private final boolean getDateTimeUserTimeZone(InputFieldOutVO inputField) {
+		if (inputField != null) {
+			return inputField.getUserTimeZone();
+		}
+		return false;
+	}
+
+	private final boolean getDateUserTimeZone(InputFieldOutVO inputField) {
+		return false;
+	}
 
 	protected abstract Date getDateValue(VALUEVO value);
+
+
+
+	protected abstract String getDecimalSeparator();
 
 	protected abstract Float getFloatValue(VALUEVO value);
 
@@ -40,9 +55,15 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract String getTextValue(VALUEVO value);
 
-	protected abstract DateFormat getTimeFormat();
+	protected abstract DateFormat getTimeFormat(boolean isUserTimeZone);
 
 	protected abstract Date getTimestampValue(VALUEVO value);
+
+	private final boolean getTimeUserTimeZone(InputFieldOutVO inputField) {
+		return false;
+	}
+
+
 
 	protected abstract Date getTimeValue(VALUEVO value);
 
@@ -115,25 +136,25 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 						case FLOAT:
 							Float floatValue = getFloatValue(value);
 							if (floatValue != null) {
-								return floatValue.toString();
+								return CommonUtil.formatFloat(floatValue, getDecimalSeparator());
 							}
 							break;
 						case DATE:
 							Date dateValue = getDateValue(value);
 							if (dateValue != null) {
-								return getDateFormat().format(dateValue);
+								return getDateFormat(getDateUserTimeZone(inputField)).format(dateValue);
 							}
 							break;
 						case TIME:
 							Date timeValue = getTimeValue(value);
 							if (timeValue != null) {
-								return getTimeFormat().format(timeValue);
+								return getTimeFormat(getTimeUserTimeZone(inputField)).format(timeValue);
 							}
 							break;
 						case TIMESTAMP:
 							Date timestampValue = getTimestampValue(value);
 							if (timestampValue != null) {
-								return getDateTimeFormat().format(timestampValue);
+								return getDateTimeFormat(getDateTimeUserTimeZone(inputField)).format(timestampValue);
 							}
 							break;
 						case SKETCH:

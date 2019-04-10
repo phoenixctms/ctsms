@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
+import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class CriterionSelectedItemList extends CriterionListBase<String> {
 
@@ -18,7 +19,8 @@ public class CriterionSelectedItemList extends CriterionListBase<String> {
 		CriterionInVO criterionIn = this.getCriterionIn(index);
 		CriterionPropertyVO propertyVO = this.getPropertyVO(criterionIn);
 		if (criterionIn != null && propertyVO != null) {
-			return CommonUtil.getCriterionValueAsString(criterionIn, propertyVO.getValueType());
+			return CommonUtil.getCriterionValueAsString(criterionIn, propertyVO.getValueType(),
+					WebUtil.getDateFormat(), WebUtil.getDecimalSeparator());
 		}
 		return CommonUtil.NO_SELECTION_VALUE;
 	}
@@ -28,8 +30,8 @@ public class CriterionSelectedItemList extends CriterionListBase<String> {
 		CriterionInVO criterionIn = this.getCriterionIn(index);
 		CriterionPropertyVO propertyVO = this.getPropertyVO(criterionIn);
 		if (criterionIn != null && propertyVO != null) {
-			String old = CommonUtil.getCriterionValueAsString(criterionIn, propertyVO.getValueType());
-			CommonUtil.setCriterionValueFromString(criterionIn, propertyVO.getValueType(), value);
+			String old = CommonUtil.getCriterionValueAsString(criterionIn, propertyVO.getValueType(), WebUtil.getDateFormat(), WebUtil.getDecimalSeparator());
+			CommonUtil.setCriterionValueFromString(criterionIn, propertyVO.getValueType(), value, WebUtil.getDateFormat(), WebUtil.getDecimalSeparator());
 			return old;
 		}
 		return CommonUtil.NO_SELECTION_VALUE;
