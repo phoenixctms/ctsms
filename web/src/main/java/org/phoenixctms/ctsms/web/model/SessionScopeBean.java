@@ -81,7 +81,7 @@ public class SessionScopeBean {
 	private static Collection<LocaleVO> getLocales() {
 		Collection<LocaleVO> locales = null;
 		try {
-			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
+			locales = WebUtil.getServiceLocator().getToolsService().getLocales(WebUtil.getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -93,6 +93,7 @@ public class SessionScopeBean {
 		}
 		return locales;
 	}
+
 	private static String getLoginOutcome(boolean success) {
 		String refererBase64 = WebUtil.getParamValue(GetParamNames.REFERER);
 		String referer = JsUtil.decodeBase64(refererBase64);
@@ -129,6 +130,21 @@ public class SessionScopeBean {
 		}
 		viewId.append("faces-redirect=true&includeViewParams=true");
 		return viewId.toString();
+	}
+	public static Collection<TimeZoneVO> getTimeZones() {
+		Collection<TimeZoneVO> timeZones = null;
+		try {
+			timeZones = WebUtil.getServiceLocator().getToolsService().getTimeZones(WebUtil.getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (timeZones == null) {
+			timeZones = new ArrayList<TimeZoneVO>();
+		}
+		return timeZones;
 	}
 
 	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
@@ -1022,7 +1038,7 @@ public class SessionScopeBean {
 				eastTimeZonesMenu.setId("eastTimeZonesMenu");
 				timeZonesMenu.getChildren().add(eastTimeZonesMenu);
 				i = 0;
-				Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(WebUtil.getTimeZones());
+				Map<Integer, ArrayList<TimeZoneVO>> timeZonesByOffset = DateUtil.getTimeZoneByOffsets(getTimeZones());
 				Iterator<Integer> it = timeZonesByOffset.keySet().iterator();
 				while (it.hasNext()) {
 					Integer timeZoneOffset = it.next();

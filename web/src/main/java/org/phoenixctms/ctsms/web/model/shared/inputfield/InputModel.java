@@ -338,10 +338,10 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			if (isTimestamp()) {
 				if (inputField.getUserTimeZone()) {
 					fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE_USER_TIMEZONE, inputField.getFieldType().getName(),
-							WebUtil.getTimeZone().getID());
+							CommonUtil.timeZoneToDisplayString(WebUtil.getTimeZone(), WebUtil.getLocale()));
 				} else {
 					fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE_SYSTEM_TIMEZONE, inputField.getFieldType().getName(),
-							WebUtil.getDefaultTimeZone().getID());
+							CommonUtil.timeZoneToDisplayString(WebUtil.getDefaultTimeZone(), WebUtil.getLocale()));
 				}
 			} else {
 				fieldTypeName = Messages.getMessage(MessageCodes.INPUT_FIELD_TOOLTIP_FIELDTYPE, inputField.getFieldType().getName());

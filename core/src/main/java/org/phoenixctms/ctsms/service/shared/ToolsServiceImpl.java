@@ -125,6 +125,7 @@ import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightInputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.LightInquiryOutVO;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
@@ -132,6 +133,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
@@ -629,12 +631,41 @@ extends ToolsServiceBase
 	}
 
 	@Override
+	protected Collection<TimeZoneVO> handleCompleteTimeZone(AuthenticationVO auth, String nameInfix, Integer limit) {
+		CoreUtil.setUser(auth, this.getUserDao());
+		if (nameInfix != null) {
+			nameInfix = nameInfix.toLowerCase();
+		}
+		if (limit == null) {
+			limit = Settings.getIntNullable(SettingCodes.TIMEZONE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+					DefaultSettings.TIMEZONE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT);
+		}
+		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
+		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>(timeZones.size());
+		Iterator<TimeZone> it = timeZones.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext() && (limit == null || result.size() < limit)) {
+			TimeZone timeZone = it.next();
+			TimeZoneVO timeZoneVO = new TimeZoneVO();
+			timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+			timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, userLocale));
+			if (CommonUtil.isEmptyString(nameInfix)
+					|| timeZoneVO.getName().toLowerCase().contains(nameInfix)
+					|| timeZoneVO.getTimeZoneID().toLowerCase().contains(nameInfix)) {
+				timeZoneVO.setRawOffset(timeZone.getRawOffset());
+				result.add(timeZoneVO);
+			}
+		}
+		return result;
+	}
+
+
+	@Override
 	protected Collection<String> handleCompleteTitle(AuthenticationVO auth, String titlePrefix, Integer limit)
 			throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getTitleDao().findTitles(titlePrefix, limit);
 	}
-
 
 	@Override
 	protected Collection<String> handleCompleteZipCode(AuthenticationVO auth, String zipCodePrefix, String countryNameInfix,
@@ -778,6 +809,7 @@ extends ToolsServiceBase
 		return result.toString();
 	}
 
+
 	@Override
 	protected AnnouncementVO handleGetAnnouncement() throws Exception {
 		AnnouncementDao announcementDao = this.getAnnouncementDao();
@@ -787,7 +819,6 @@ extends ToolsServiceBase
 		}
 		return null;
 	}
-
 
 	@Override
 	protected CalendarWeekVO handleGetCalendarWeek(Date date) throws Exception {
@@ -883,6 +914,35 @@ extends ToolsServiceBase
 	}
 
 	@Override
+	protected LocaleVO handleGetLocale(AuthenticationVO auth, String language)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		Locale locale = CommonUtil.localeFromString(language);
+		LocaleVO localeVO = new LocaleVO();
+		localeVO.setLanguage(CommonUtil.localeToString(locale));
+		localeVO.setName(CommonUtil.localeToDisplayString(locale, L10nUtil.getLocale(Locales.USER)));
+		return localeVO;
+	}
+
+	@Override
+	protected Collection<LocaleVO> handleGetLocales(AuthenticationVO auth)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		ArrayList<Locale> supportedLocales = CoreUtil.getSupportedLocales();
+		ArrayList<LocaleVO> result = new ArrayList<LocaleVO>(supportedLocales.size());
+		Iterator<Locale> it = supportedLocales.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext()) {
+			Locale locale = it.next();
+			LocaleVO localeVO = new LocaleVO();
+			localeVO.setLanguage(CommonUtil.localeToString(locale));
+			localeVO.setName(CommonUtil.localeToDisplayString(locale, userLocale));
+			result.add(localeVO);
+		}
+		return result;
+	}
+
+	@Override
 	protected DBModuleVO handleGetLocalizedDBModule(AuthenticationVO auth, DBModule module) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return L10nUtil.createDBModuleVO(Locales.USER, module);
@@ -965,6 +1025,37 @@ extends ToolsServiceBase
 	protected Integer handleGetStaffImageUploadSizeLimit()
 			throws Exception {
 		return Settings.getIntNullable(SettingCodes.STAFF_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.STAFF_IMAGE_SIZE_LIMIT);
+	}
+
+	@Override
+	protected TimeZoneVO handleGetTimeZone(AuthenticationVO auth, String timeZoneID)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneID);
+		TimeZoneVO timeZoneVO = new TimeZoneVO();
+		timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+		timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, L10nUtil.getLocale(Locales.USER)));
+		timeZoneVO.setRawOffset(timeZone.getRawOffset());
+		return timeZoneVO;
+	}
+
+	@Override
+	protected Collection<TimeZoneVO> handleGetTimeZones(AuthenticationVO auth)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
+		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>(timeZones.size());
+		Iterator<TimeZone> it = timeZones.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext()) {
+			TimeZone timeZone = it.next();
+			TimeZoneVO timeZoneVO = new TimeZoneVO();
+			timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+			timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, userLocale));
+			timeZoneVO.setRawOffset(timeZone.getRawOffset());
+			result.add(timeZoneVO);
+		}
+		return result;
 	}
 
 	@Override

@@ -486,9 +486,9 @@ public enum JSValues {
 					return WebUtil.JS_NULL;
 				}
 			case INPUT_TIMEZONE_ID:
-				return WebUtil.getTimeZone().getID();
+				return CommonUtil.timeZoneToString(WebUtil.getTimeZone());
 			case SYSTEM_TIMEZONE_ID:
-				return WebUtil.getDefaultTimeZone().getID();
+				return CommonUtil.timeZoneToString(WebUtil.getDefaultTimeZone());
 			case FIELD_CALCULATION_DEBUG_LEVEL:
 				return Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL));
 			case PF_LOCALE_STRING:

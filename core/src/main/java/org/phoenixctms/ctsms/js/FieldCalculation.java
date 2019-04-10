@@ -176,8 +176,8 @@ public class FieldCalculation {
 		if (CoreUtil.getUserContext().getDecimalSeparator() != null) {
 			sb.append("INPUT_DECIMAL_SEPARATOR = '" + CoreUtil.getUserContext().getDecimalSeparator() + "';");
 		}
-		sb.append("INPUT_TIMEZONE_ID = '" + CoreUtil.getUserContext().getTimeZone().getID() + "';");
-		sb.append("SYSTEM_TIMEZONE_ID = '" + TimeZone.getDefault().getID() + "';");
+		sb.append("INPUT_TIMEZONE_ID = '" + CommonUtil.timeZoneToString(CoreUtil.getUserContext().getTimeZone()) + "';");
+		sb.append("SYSTEM_TIMEZONE_ID = '" + CommonUtil.timeZoneToString(TimeZone.getDefault()) + "';");
 		sb.append("FIELD_CALCULATION_DEBUG_LEVEL = "
 				+ Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL)) + ";");
 		Integer inputFieldDeltaSummaryMax = Settings.getIntNullable(SettingCodes.INPUT_FIELD_DELTA_SUMMARY_MAX, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DELTA_SUMMARY_MAX);

@@ -2945,7 +2945,7 @@ public final class WebUtil {
 		Collection<LocaleVO> localeVOs = null;
 		ArrayList<SelectItem> locales;
 		try {
-			localeVOs = getServiceLocator().getSelectionSetService().getLocales(getAuthentication());
+			localeVOs = getServiceLocator().getToolsService().getLocales(getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -4193,7 +4193,7 @@ public final class WebUtil {
 	public static TimeZoneVO getTimeZone(String timeZoneID) {
 		if (timeZoneID != null) {
 			try {
-				return WebUtil.getServiceLocator().getSelectionSetService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
+				return WebUtil.getServiceLocator().getToolsService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -4204,21 +4204,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Collection<TimeZoneVO> getTimeZones() {
-		Collection<TimeZoneVO> timeZones = null;
-		try {
-			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		if (timeZones == null) {
-			timeZones = new ArrayList<TimeZoneVO>();
-		}
-		return timeZones;
-	}
+
 
 	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;

@@ -101,7 +101,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> locales;
 	private TimeZoneVO timeZone;
-	private Collection<TimeZoneVO> timeZones;
+
 	private ArrayList<SelectItem> themes;
 
 	private ArrayList<SelectItem> dateFormats;
@@ -226,19 +226,15 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	}
 
 	public List<TimeZoneVO> completeTimeZone(String query) {
-		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>();
-		if (timeZones != null) {
-			Iterator<TimeZoneVO> it = timeZones.iterator();
-			String q = query.toLowerCase();
-			while (it.hasNext()) {
-				TimeZoneVO tz = it.next();
-				if (tz.getName().toLowerCase().contains(q)
-						|| tz.getTimeZoneID().toLowerCase().contains(q)) {
-					result.add(tz);
-				}
-			}
+		try {
+			return (List<TimeZoneVO>) WebUtil.getServiceLocator().getToolsService().completeTimeZone(WebUtil.getAuthentication(), query, null);
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
 		}
-		return result;
+		return new ArrayList<TimeZoneVO>();
 	}
 
 	@Override
@@ -512,18 +508,18 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		}
 		//timeZone = null;
 		loadTimeZone();
-		if (this.timeZones == null) {
-			// if (userLocale == null) {
-			// userLocale = WebUtil.getLocale();
-			// }
-			this.timeZones = WebUtil.getTimeZones();
-			// this.timeZones = new ArrayList<SelectItem>(timeZones.size());
-			// Iterator<TimeZone> it = timeZones.iterator();
-			// while (it.hasNext()) {
-			// TimeZone timeZone = it.next();
-			// this.timeZones.add(new SelectItem(CommonUtil.timeZoneToString(timeZone), CommonUtil.timeZoneToDisplayString(timeZone, userLocale)));
-			// }
-		}
+		// if (this.timeZones == null) {
+		// // if (userLocale == null) {
+		// // userLocale = WebUtil.getLocale();
+		// // }
+		// this.timeZones = WebUtil.getTimeZones();
+		// // this.timeZones = new ArrayList<SelectItem>(timeZones.size());
+		// // Iterator<TimeZone> it = timeZones.iterator();
+		// // while (it.hasNext()) {
+		// // TimeZone timeZone = it.next();
+		// // this.timeZones.add(new SelectItem(CommonUtil.timeZoneToString(timeZone), CommonUtil.timeZoneToDisplayString(timeZone, userLocale)));
+		// // }
+		// }
 		if (this.themes == null) {
 			Map<String, String> themeMap = Settings.getThemes();
 			this.themes = new ArrayList<SelectItem>(themeMap.size());

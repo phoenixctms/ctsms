@@ -19,7 +19,7 @@ public class TimeZoneConverter implements Converter {
 		if (submittedValue.trim().equals(CommonUtil.NO_SELECTION_VALUE)) {
 			return null;
 		} else {
-			return getTimeZone(submittedValue);
+			return WebUtil.getTimeZone(submittedValue);
 		}
 	}
 
@@ -40,8 +40,5 @@ public class TimeZoneConverter implements Converter {
 		}
 	}
 
-	protected Object getTimeZone(String timeZoneID) {
-		return WebUtil.getTimeZone(timeZoneID);
-	}
 }
 

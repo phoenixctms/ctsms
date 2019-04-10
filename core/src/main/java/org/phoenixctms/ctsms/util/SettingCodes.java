@@ -209,6 +209,7 @@ public interface SettingCodes {
 	public static final String DUTY_ROSTER_TURN_TITLE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "duty_roster_turn_title_autocomplete_default_result_limit";
 	public static final String INVENTORY_BOOKING_CALENDAR_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "inventory_booking_calendar_autocomplete_default_result_limit";
 	public static final String LDAP_ENTRIES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "ldap_entries_autocomplete_default_result_limit";
+	public static final String TIMEZONE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timezone_autocomplete_default_result_limit";
 	public static final String PROBAND_LIST_ENTRY_TAG_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_list_entry_tag_field_autocomplete_default_result_limit";
 	public static final String INQUIRY_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "inquiry_field_autocomplete_default_result_limit";
 	public static final String INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "input_field_selection_set_autocomplete_default_result_limit";
