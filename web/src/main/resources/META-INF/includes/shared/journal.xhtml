@@ -127,6 +127,7 @@
 					</f:facet>
 					<h:outputText value="#{journalEntry.vo.realTimestamp}">
 						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 				</p:column>
 				<p:column
@@ -204,13 +205,15 @@
 								value="#{journalBean.in.realTimestamp}"
 								required="#{validate}"
 								label="#{labels.journal_real_timestamp}"
-								pattern="#{applicationScopeBean.inputDateTimePattern}"
+								pattern="#{sessionScopeBean.inputDateTimePattern}"
 								yearRange="#{applicationScopeBean.calendarYearRange}"
 								showWeek="true"
 								navigator="true"
 								locale="#{sessionScopeBean.locale}"
-								timeZone="#{sessionScopeBean.timeZone}"
-								styleClass="ctsms-calendar-datetime" />
+								styleClass="ctsms-calendar-datetime" >
+								<f:converter converterId="ctsms.DateTime" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							</p:calendar>
 							<p:tooltip
 								rendered="#{enableTooltips}"
 								for="journalrealTimestamp">

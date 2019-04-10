@@ -733,8 +733,12 @@
             <id>default-minify</id>
             <!-- http://samaxes.github.io/minify-maven-plugin/minify-mojo.html -->
             <configuration>
-            <verbose>true</verbose>
+            <!-- <verbose>true</verbose> -->
             <skipMerge>true</skipMerge>
+            <!-- <yuiDisableOptimizations>true</yuiDisableOptimizations>
+            <yuiLineBreak>0</yuiLineBreak>
+            <yuiNoMunge>true</yuiNoMunge>
+            <yuiPreserveSemicolons>true</yuiPreserveSemicolons> -->
               <webappSourceDir>${project.basedir}/src/main/webapp</webappSourceDir>
               <webappTargetDir>${project.basedir}/target/src/main/webapp</webappTargetDir>
               <cssSourceDir>resources/css</cssSourceDir>

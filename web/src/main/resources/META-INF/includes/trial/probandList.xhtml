@@ -279,6 +279,7 @@
 									    styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
 										value="#{probandListEntry.vo.proband.dateOfBirth}" >
 										<f:converter converterId="ctsms.Date" />
+										<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									</h:outputText>
 									</dd>
 									

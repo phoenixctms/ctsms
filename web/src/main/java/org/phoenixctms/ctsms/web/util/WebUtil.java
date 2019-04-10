@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1273,8 +1274,6 @@ public final class WebUtil {
 		return visitTypes;
 	}
 
-
-
 	public static AlphaIdVO getAlphaId(Long alphaIdId) {
 		if (alphaIdId != null) {
 			try {
@@ -1298,6 +1297,8 @@ public final class WebUtil {
 			return getHttpBaseUrl();
 		}
 	}
+
+
 
 	public static ApplicationScopeBean getApplicationScopeBean(HttpServletRequest request) {
 		if (request != null) {
@@ -1413,7 +1414,6 @@ public final class WebUtil {
 		return categories;
 	}
 
-
 	public static ArrayList<SelectItem> getAvailableJournalCategories(JournalModule module, Long categoryId) {
 		ArrayList<SelectItem> categories;
 		Collection<JournalCategoryVO> categoryVOs = null;
@@ -1487,6 +1487,7 @@ public final class WebUtil {
 		}
 		return types;
 	}
+
 
 	public static ArrayList<SelectItem> getAvailableStaffAddressTypes(Long staffId, Long typeId) {
 		ArrayList<SelectItem> types;
@@ -1589,8 +1590,6 @@ public final class WebUtil {
 		return booleans;
 	}
 
-
-
 	public static CalendarWeekVO getCalendarWeek(Date date) {
 		try {
 			return getServiceLocator().getToolsService().getCalendarWeek(date);
@@ -1631,6 +1630,8 @@ public final class WebUtil {
 		// }
 		// return type;
 	}
+
+
 
 	public static CourseOutVO getCourse(Long courseId, Integer maxInstances, Integer maxPrecedingCoursesDepth, Integer maxRenewalsDepth) {
 		if (courseId != null) {
@@ -1856,6 +1857,42 @@ public final class WebUtil {
 		return cvSections;
 	}
 
+	public static String getDateFormat() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
+			return  sessionScopeBean.getLogon().getUser().getDateFormat();
+		}
+		return null;
+	}
+
+	public static ArrayList<SelectItem> getDateFormats(String existing) {
+
+		ArrayList<SelectItem> result;
+		Collection<String> dateFormats = null;
+		try {
+			dateFormats = new LinkedHashSet<String>(getServiceLocator().getToolsService().getDateFormats(getAuthentication()));
+			if (existing != null && existing.length() > 0) {
+				dateFormats.add(existing);
+			}
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (dateFormats != null) {
+			result = new ArrayList<SelectItem>(dateFormats.size());
+			Iterator<String> it = dateFormats.iterator();
+			while (it.hasNext()) {
+				String dateFromat = it.next();
+				result.add(new SelectItem(dateFromat, dateFromat));
+			}
+		} else {
+			result = new ArrayList<SelectItem>();
+		}
+		return result;
+	}
+
 	public static ArrayList<SelectItem> getDBModules() {
 		ArrayList<SelectItem> dbModules;
 		Collection<DBModuleVO> dbModuleVOs = null;
@@ -1894,6 +1931,39 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String getDecimalSeparator() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
+			return  sessionScopeBean.getLogon().getUser().getDecimalSeparator();
+		}
+		return null;
+	}
+
+	public static ArrayList<SelectItem> getDecimalSeparators() {
+
+		ArrayList<SelectItem> result;
+		Collection<String> deciamlSeparators = null;
+		try {
+			deciamlSeparators = getServiceLocator().getToolsService().getDecimalSeparators(getAuthentication());
+		} catch (ServiceException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		} catch (AuthorisationException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		if (deciamlSeparators != null) {
+			result = new ArrayList<SelectItem>(deciamlSeparators.size());
+			Iterator<String> it = deciamlSeparators.iterator();
+			while (it.hasNext()) {
+				String deciamlSeparator = it.next();
+				result.add(new SelectItem(deciamlSeparator, deciamlSeparator));
+			}
+		} else {
+			result = new ArrayList<SelectItem>();
+		}
+		return result;
+	}
+
 	public static Locale getDefaultLocale() {
 		try {
 			return CommonUtil.localeFromString(getServiceLocator().getToolsService().getDefaultLocale());
@@ -1906,7 +1976,7 @@ public final class WebUtil {
 		return Locale.getDefault();
 	}
 
-	public static TimeZone getDefaultTimezone() {
+	public static TimeZone getDefaultTimeZone() {
 		try {
 			return CommonUtil.timeZoneFromString(getServiceLocator().getToolsService().getDefaultTimeZone());
 		} catch (ServiceException e) {
@@ -2353,13 +2423,13 @@ public final class WebUtil {
 		return null;
 	}
 
+
 	public static Boolean getExpired(Date today, Date date, VariablePeriod validityPeriod, Long validityPeriodDays) {
 		if (today != null && date != null && validityPeriod != null) {
 			return getExpired(today, addIntervals(date, validityPeriod, validityPeriodDays, 1));
 		}
 		return null;
 	}
-
 
 	public static String getHttpBaseUrl() {
 		try {
@@ -2875,7 +2945,7 @@ public final class WebUtil {
 		Collection<LocaleVO> localeVOs = null;
 		ArrayList<SelectItem> locales;
 		try {
-			localeVOs = getServiceLocator().getSelectionSetService().getLocales(getAuthentication());
+			localeVOs = getServiceLocator().getToolsService().getLocales(getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -2929,6 +2999,20 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static MaintenanceTypeVO getMaintenanceType(Long maintenanceTypeId) {
+		if (maintenanceTypeId != null) {
+			try {
+				return getServiceLocator().getSelectionSetService().getMaintenanceType(getAuthentication(), maintenanceTypeId);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
 	// public static ArrayList<SelectItem> getSupportedLocales() {
 	// return getLocales(getLocale());
 	// }
@@ -2955,20 +3039,6 @@ public final class WebUtil {
 	// }
 	// return locales;
 	// }
-
-	public static MaintenanceTypeVO getMaintenanceType(Long maintenanceTypeId) {
-		if (maintenanceTypeId != null) {
-			try {
-				return getServiceLocator().getSelectionSetService().getMaintenanceType(getAuthentication(), maintenanceTypeId);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		return null;
-	}
 
 	public static MassMailOutVO getMassMail(Long massMailId) {
 		if (massMailId != null) {
@@ -3482,7 +3552,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static Long getProbandListEntryCount(Long trialId, Long probandId, boolean total) {
 		if (trialId != null || probandId != null) {
 			try {
@@ -3496,6 +3565,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
+
 
 	public static ProbandListEntryTagOutVO getProbandListEntryTag(Long probandListEntryTagId) {
 		if (probandListEntryTagId != null) {
@@ -3656,7 +3726,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static ArrayList<SelectItem> getProcedures(Long probandId) {
 		ArrayList<SelectItem> procedures;
 		Collection<ProcedureOutVO> procedureVOs = null;
@@ -3684,6 +3753,7 @@ public final class WebUtil {
 		return procedures;
 	}
 
+
 	public static ArrayList<SelectItem> getRandomizationModes() {
 		ArrayList<SelectItem> modes;
 		Collection<RandomizationModeVO> modeVOs = null;
@@ -3709,14 +3779,6 @@ public final class WebUtil {
 		return modes;
 	}
 
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
-
 	public static String getRefererBase64(HttpServletRequest request) {
 		if (request != null) {
 			String headerValue = request.getHeader(REFERER_HEADER_NAME);
@@ -3729,8 +3791,12 @@ public final class WebUtil {
 		return "";
 	}
 
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
+	// public static Object getSelectionSetServiceCache(Class type, Object key) {
+	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
+	// if (sessionScopeBean != null) {
+	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
+	// }
+	// return null;
 	// }
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
@@ -3758,6 +3824,10 @@ public final class WebUtil {
 		}
 		return trials;
 	}
+
+	// public static String getSeriesColors(ArrayList<Color> colors) {
+	// return getSeriesColors(colors, null);
+	// }
 
 	public static String getRemoteHost() {
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -4013,7 +4083,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
 	public static String getTabTitleString(
 			String tabTitleMsgCode,
 			String tabTitleWithCountMsgCode,
@@ -4036,6 +4105,7 @@ public final class WebUtil {
 		}
 		return Messages.getMessage(titleMsgCode, args);
 	}
+
 
 	public static TeamMemberOutVO getTeamMember(Long teamMemberId) {
 		if (teamMemberId != null) {
@@ -4120,6 +4190,22 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static TimeZoneVO getTimeZone(String timeZoneID) {
+		if (timeZoneID != null) {
+			try {
+				return WebUtil.getServiceLocator().getToolsService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+
+
 	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;
 	// if (counts != null) {
@@ -4131,30 +4217,30 @@ public final class WebUtil {
 	// return result;
 	// }
 
-	public static ArrayList<SelectItem> getTimeZones() {
-		Collection<TimeZoneVO> timeZoneVOs = null;
-		ArrayList<SelectItem> timeZones;
-		try {
-			timeZoneVOs = getServiceLocator().getSelectionSetService().getTimeZones(getAuthentication());
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		if (timeZoneVOs != null) {
-			timeZones = new ArrayList<SelectItem>(timeZoneVOs.size());
-			Iterator<TimeZoneVO> it = timeZoneVOs.iterator();
-			while (it.hasNext()) {
-				TimeZoneVO timeZone = it.next();
-				timeZones.add(new SelectItem(timeZone.getTimeZoneID(), timeZone.getName()));
-				//timeZones.add(CommonUtil.timeZoneFromString(it.next().getTimeZone()));
-			}
-		} else {
-			timeZones = new ArrayList<SelectItem>();
-		}
-		return timeZones;
-	}
+	// public static ArrayList<SelectItem> getTimeZones() {
+	// Collection<TimeZoneVO> timeZoneVOs = null;
+	// ArrayList<SelectItem> timeZones;
+	// try {
+	// timeZoneVOs = getServiceLocator().getSelectionSetService().getTimeZones(getAuthentication());
+	// } catch (ServiceException e) {
+	// } catch (AuthenticationException e) {
+	// publishException(e);
+	// } catch (AuthorisationException e) {
+	// } catch (IllegalArgumentException e) {
+	// }
+	// if (timeZoneVOs != null) {
+	// timeZones = new ArrayList<SelectItem>(timeZoneVOs.size());
+	// Iterator<TimeZoneVO> it = timeZoneVOs.iterator();
+	// while (it.hasNext()) {
+	// TimeZoneVO timeZone = it.next();
+	// timeZones.add(new SelectItem(timeZone.getTimeZoneID(), timeZone.getName()));
+	// //timeZones.add(CommonUtil.timeZoneFromString(it.next().getTimeZone()));
+	// }
+	// } else {
+	// timeZones = new ArrayList<SelectItem>();
+	// }
+	// return timeZones;
+	// }
 
 	public static Long getTotalFileCount(FileModule module, Long id) {
 		// PSFVO psf = new PSFVO();

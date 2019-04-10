@@ -70,6 +70,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setMaxDate(out.getMaxDate());
 			in.setMaxSelections(out.getMaxSelections());
 			in.setMaxTimestamp(out.getMaxTimestamp());
+			in.setUserTimeZone(out.getUserTimeZone());
 			in.setMinDate(out.getMinDate());
 			in.setMinSelections(out.getMinSelections());
 			in.setMinTimestamp(out.getMinTimestamp());
@@ -114,6 +115,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setMaxDate(DefaultSettings.INPUT_FIELD_MAX_DATE_PRESET);
 			in.setMaxSelections(Settings.getIntNullable(SettingCodes.INPUT_FIELD_MAX_SELECTIONS_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_MAX_SELECTIONS_PRESET));
 			in.setMaxTimestamp(DefaultSettings.INPUT_FIELD_MAX_TIMESTAMP_PRESET);
+			in.setUserTimeZone(Settings.getBoolean(SettingCodes.INPUT_FIELD_USER_TIMEZONE_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_USER_TIMEZONE_PRESET));
 			in.setMinDate(DefaultSettings.INPUT_FIELD_MIN_DATE_PRESET);
 			in.setMinSelections(Settings.getIntNullable(SettingCodes.INPUT_FIELD_MIN_SELECTIONS_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_MIN_SELECTIONS_PRESET));
 			in.setMinTimestamp(DefaultSettings.INPUT_FIELD_MIN_TIMESTAMP_PRESET);
@@ -313,6 +315,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setMinTimestamp(null);
 			in.setMaxTimestamp(null);
 			in.setTimestampPreset(null);
+			in.setUserTimeZone(false);
 		}
 		if (!(InputFieldType.SKETCH.equals(fieldType))) {
 			in.setWidth(null);

@@ -150,6 +150,7 @@ public interface SettingCodes {
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "notification_template_model_datetime_pattern";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "notification_template_model_date_pattern";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN = "notification_template_model_time_pattern";
+	public static final String NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR = "notification_template_model_decimal_separator";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "notification_template_model_omit_encrypted_fields";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "notification_template_model_enumerate_references";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "notification_template_model_enumerate_collections";
@@ -208,6 +209,7 @@ public interface SettingCodes {
 	public static final String DUTY_ROSTER_TURN_TITLE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "duty_roster_turn_title_autocomplete_default_result_limit";
 	public static final String INVENTORY_BOOKING_CALENDAR_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "inventory_booking_calendar_autocomplete_default_result_limit";
 	public static final String LDAP_ENTRIES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "ldap_entries_autocomplete_default_result_limit";
+	public static final String TIMEZONE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timezone_autocomplete_default_result_limit";
 	public static final String PROBAND_LIST_ENTRY_TAG_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_list_entry_tag_field_autocomplete_default_result_limit";
 	public static final String INQUIRY_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "inquiry_field_autocomplete_default_result_limit";
 	public static final String INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "input_field_selection_set_autocomplete_default_result_limit";
@@ -264,6 +266,8 @@ public interface SettingCodes {
 	public static final String NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = "new_ecrf_field_status_notification_queues";
 	public static final String ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = "ecrf_field_values_schedule_validation_limit";
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
+	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";
+	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
 	public static final String ECRF_CHARGE_DUE_ANNUAL = "ecrf_charge_due_annual";
 	public static final String ECRF_CHARGE_DUE_PERIOD = "ecrf_charge_due_period";
@@ -276,6 +280,7 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "mass_mail_template_model_datetime_pattern";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "mass_mail_template_model_date_pattern";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "mass_mail_template_model_time_pattern";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR = "mass_mail_template_model_decimal_separator";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "mass_mail_template_model_omit_encrypted_fields";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "mass_mail_template_model_enumerate_references";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "mass_mail_template_model_enumerate_collections";

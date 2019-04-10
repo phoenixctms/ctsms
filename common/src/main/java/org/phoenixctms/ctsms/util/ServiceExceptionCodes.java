@@ -153,6 +153,8 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_LOCALE = "invalid_locale";
 	public final static String INVALID_TIME_ZONE = "invalid_time_zone";
 	public final static String DEPARTMENT_PASSWORD_WRONG = "department_password_wrong";
+	public final static String INVALID_DATE_FORMAT_PATTERN = "invalid_date_format_pattern";
+	public final static String INVALID_DECIMAL_SEPARATOR = "invalid_decimal_separator";
 	public final static String INPUT_FIELD_VALUE_REQUIRED = "input_field_value_required";
 	public final static String INPUT_FIELD_INVALID_REGEXP_PATTERN = "input_field_invalid_regexp_pattern";
 	public static final String INPUT_FIELD_TEXT_VALUE_NOT_FOUND = "input_field_text_value_not_found";
@@ -578,6 +580,7 @@ public interface ServiceExceptionCodes {
 	public final static String FILE_EXTENSIONS_REQUIRED = "file_extensions_required";
 	public final static String NO_MIME_TYPES_OR_FILE_EXTENSIONS = "no_mime_type_or_file_extensions";
 	public final static String INPUT_FIELD_TYPE_CHANGED = "input_field_type_changed";
+	public final static String INPUT_FIELD_USER_TIMEZONE_CHANGED = "input_field_user_timezone_changed";
 	public final static String INPUT_FIELD_TYPE_CHANGED_STRATIFICATION = "input_field_type_changed_stratification";
 	public final static String INPUT_FIELD_TYPE_CHANGED_RANDOMIZE = "input_field_type_changed_randomize";
 	public final static String SELECTION_SET_VALUES_NOT_FOR_SELECT = "selection_set_values_not_for_select";

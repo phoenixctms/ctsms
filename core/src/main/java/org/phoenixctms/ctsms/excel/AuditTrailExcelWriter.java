@@ -11,10 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
@@ -33,31 +29,16 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
+
 public class AuditTrailExcelWriter extends WorkbookWriter {
 
-	private static String getEcrfFieldValueColumnName() {
-		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_VALUE_HEAD, ExcelUtil.DEFAULT_LABEL);
-	}
-	// public static String getCityNamesColumnName() {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	private AuditTrailExcelVO excelVO;
-	// private String costType;
-	// private PaymentMethodVO method;
-	// private Boolean paid;
-	private TrialOutVO trial;
-	private ProbandListEntryOutVO listEntry;
-	private ECRFOutVO ecrf;
 	private static final String AUDIT_TRAIL_EXCEL_FILENAME_PREFIX = "audit_trail_";
 	private static final String AUDIT_TRAIL_EXCEL_FILENAME_TRIAL = "trial_";
 	private static final String AUDIT_TRAIL_EXCEL_FILENAME_PROBAND = "proband_";
-
 	private static final String AUDIT_TRAIL_EXCEL_FILENAME_ECRF = "ecrf_";
-
-	private LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
-
-	// private HashMap<Integer,ECRFFieldStatusQueue> sheetIndexQueueMap;
-
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 
@@ -72,18 +53,23 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 
 		@Override
-		protected DateFormat getDateFormat() {
+		protected DateFormat getDateFormat(boolean isUserTimeZone) {
 			return new SimpleDateFormat(ExcelUtil.EXCEL_DATE_PATTERN);
 		}
 
 		@Override
-		protected DateFormat getDateTimeFormat() {
+		protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 			return new SimpleDateFormat(ExcelUtil.EXCEL_DATE_TIME_PATTERN);
 		}
 
 		@Override
 		protected Date getDateValue(ECRFFieldValueOutVO value) {
 			return value.getDateValue();
+		}
+
+		@Override
+		protected String getDecimalSeparator() {
+			return ExcelUtil.EXCEL_DECIMAL_SEPARATOR;
 		}
 
 		@Override
@@ -122,7 +108,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 
 		@Override
-		protected DateFormat getTimeFormat() {
+		protected DateFormat getTimeFormat(boolean isUserTimeZone) {
 			return new SimpleDateFormat(ExcelUtil.EXCEL_TIME_PATTERN);
 		}
 
@@ -137,6 +123,25 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 
 	};
+	private static String getEcrfFieldValueColumnName() {
+		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_VALUE_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+	// public static String getCityNamesColumnName() {
+	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	// }
+	private AuditTrailExcelVO excelVO;
+	// private String costType;
+	// private PaymentMethodVO method;
+	// private Boolean paid;
+	private TrialOutVO trial;
+
+	private ProbandListEntryOutVO listEntry;
+
+	private ECRFOutVO ecrf;
+
+	// private HashMap<Integer,ECRFFieldStatusQueue> sheetIndexQueueMap;
+
+	private LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
 
 	// public static String getStreetsColumnName() {
 	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
@@ -238,42 +243,42 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return new SpreadSheetWriter(this,
 				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.AUDIT_TRAIL_VO_FIELD_COLUMNS,
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_VO_FIELD_COLUMNS)),
-						Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
-								AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-								omitFields,
-								Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
-										AuditTrailExcelDefaultSettings.AUDIT_TRAIL_AUTOSIZE),
-										Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
-												AuditTrailExcelDefaultSettings.AUDIT_TRAIL_WRITEHEAD),
-												Settings.getIntNullable(AuditTrailExcelSettingCodes.AUDIT_TRAIL_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
-														AuditTrailExcelDefaultSettings.AUDIT_TRAIL_PAGE_BREAK_AT_ROW),
-														Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
-																AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_COLORS),
-																Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
-																		AuditTrailExcelDefaultSettings.AUDIT_TRAIL_HEAD_FORMAT),
-																		Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
-																				AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_FORMAT));
+				Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+				omitFields,
+				Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_AUTOSIZE),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_WRITEHEAD),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.AUDIT_TRAIL_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_PAGE_BREAK_AT_ROW),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_COLORS),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_FORMAT));
 	}
 
 	private SpreadSheetWriter createEcrfFieldStatusSpreadSheetWriter(boolean omitFields) {
 		return new SpreadSheetWriter(this,
 				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_STATUS_VO_FIELD_COLUMNS,
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_VO_FIELD_COLUMNS)),
-						Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
-								AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-								omitFields,
-								Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
-										AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_AUTOSIZE),
-										Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
-												AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_WRITEHEAD),
-												Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
-														AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW),
-														Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
-																AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_COLORS),
-																Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
-																		AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_HEAD_FORMAT),
-																		Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
-																				AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_FORMAT));
+				Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+				omitFields,
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_AUTOSIZE),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_WRITEHEAD),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_COLORS),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_FORMAT));
 	}
 
 

@@ -92,6 +92,7 @@
 							</f:facet>
 							<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
 								<f:converter converterId="ctsms.DateTime" />
+								<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</p:column>
 						<p:rowExpansion>
@@ -120,6 +121,7 @@
 										<h:outputLabel value="#{labels.audit_trail_timestamp_label}" />
 										<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
 											<f:converter converterId="ctsms.DateTime" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 										</h:outputText>
 									</h:panelGrid>
 									<h:outputLabel rendered="#{fieldValue.vo.version > 0}" value="#{labels.audit_trail_reason_for_change_label}" />

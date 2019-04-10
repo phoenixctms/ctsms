@@ -78,6 +78,7 @@
 						</f:facet>
 						<h:outputText value="#{diagnosis.vo.start}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{diagnosis.vo.stop}">
@@ -86,6 +87,7 @@
 						</f:facet>
 						<h:outputText value="#{diagnosis.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column>
@@ -207,13 +209,15 @@
 									value="#{diagnosisBean.in.start}"
 									required="false"
 									label="#{probandlabels.diagnosis_start}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="start">
@@ -232,13 +236,15 @@
 									value="#{diagnosisBean.in.stop}"
 									required="false"
 									label="#{probandlabels.diagnosis_stop}"
-									pattern="#{applicationScopeBean.inputDatePattern}"
+									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
 									showWeek="true"
 									navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									timeZone="#{sessionScopeBean.timeZone}"
-									styleClass="ctsms-calendar-date" />
+									styleClass="ctsms-calendar-date" >
+									<f:converter converterId="ctsms.Date" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</p:calendar>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="stop">

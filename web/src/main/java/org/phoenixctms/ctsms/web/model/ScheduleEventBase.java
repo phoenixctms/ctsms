@@ -15,11 +15,11 @@ public abstract class ScheduleEventBase<IN> implements ScheduleEvent {
 		EVENT
 	}
 
+	protected final static ColorOpacity DEFAULT_COLOR_OPACITY = ColorOpacity.ALPHA50;
 	protected IN in;
 	private ScheduleEvent event;
-	private String id;
 
-	protected final static ColorOpacity DEFAULT_COLOR_OPACITY = ColorOpacity.ALPHA50;
+	private String id;
 
 	public ScheduleEventBase() {
 		initIn(InitSource.DEFAULT_VALUES);

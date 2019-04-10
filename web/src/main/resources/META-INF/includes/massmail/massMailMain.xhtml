@@ -327,13 +327,14 @@
 											value="#{massMailBean.in.start}"
 											required="true"
 											label="#{massmaillabels.mass_mail_start}"
-											pattern="#{applicationScopeBean.inputDateTimePattern}"
+											pattern="#{sessionScopeBean.inputDateTimePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
 											showWeek="true"
 											navigator="true"
 											locale="#{sessionScopeBean.locale}"
-											timeZone="#{sessionScopeBean.timeZone}"
 											styleClass="ctsms-calendar-datetime">
+											<f:converter converterId="ctsms.DateTime" />
+											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 										</p:calendar>
 										<p:tooltip
 											rendered="#{enableTooltips}"

@@ -23,12 +23,16 @@ public class UserContext extends VOCacheContext {// implements Principal {
 	private String realm;
 	private Locale locale;
 	private TimeZone timeZone;
+	private String dateFormat;
+	private String decimalSeparator;
 	private String plainDepartmentPassword;
 	private SecretKey departmentKey;
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 	private boolean isLocaleSet;
 	private boolean isTimeZoneSet;
+	private boolean isDateFormatSet;
+	private boolean isDecimalSeparatorSet;
 	private boolean isPlainDepartmentPasswordSet;
 	private boolean isDepartmentKeySet;
 	private boolean isPrivateKeySet;
@@ -48,6 +52,22 @@ public class UserContext extends VOCacheContext {// implements Principal {
 		this.plainPassword = plainPassword;
 		this.host = host;
 		this.realm = realm;
+	}
+
+	public String getDateFormat() {
+		if (!isDateFormatSet && user != null) {
+			dateFormat = user.getDateFormat();
+			isDateFormatSet = true;
+		}
+		return dateFormat;
+	}
+
+	public String getDecimalSeparator() {
+		if (!isDecimalSeparatorSet && user != null) {
+			decimalSeparator = user.getDecimalSeparator();
+			isDecimalSeparatorSet = true;
+		}
+		return decimalSeparator;
 	}
 
 	public SecretKey getDepartmentKey() throws Exception {
@@ -143,6 +163,10 @@ public class UserContext extends VOCacheContext {// implements Principal {
 		isLocaleSet = false;
 		timeZone = null;
 		isTimeZoneSet = false;
+		dateFormat = null;
+		isDateFormatSet = false;
+		decimalSeparator = null;
+		isDecimalSeparatorSet = false;
 		publicKey = null;
 		isPublicKeySet = false;
 		resetDecrypted();

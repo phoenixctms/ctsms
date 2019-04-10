@@ -90,6 +90,7 @@
 							disabled="#{!reimbursementBean.addTravelExpense}"
 							label="#{probandlabels.money_transfer_distance}"
 							styleClass="ctsms-control-float">
+							<f:converter converterId="ctsms.Float" />
 						<p:ajax
 						    event="keyup"
 						    process="@this,moneyTransferTravelOneWay"
@@ -127,6 +128,7 @@
 						disabled="#{!reimbursementBean.addTravelExpense}"
 						label="#{probandlabels.money_transfer_travel_expense_factor}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax
 						    event="keyup"
 						    process="@this,moneyTransferDistance"
@@ -176,6 +178,7 @@
 						disabled="#{!reimbursementBean.addTravelExpense}"
 						label="#{probandlabels.money_transfer_travel_expense_amount}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
 					<p:tooltip
@@ -276,6 +279,7 @@
 						disabled="#{!reimbursementBean.addTicketExpense}"
 						label="#{probandlabels.money_transfer_ticket_expense_amount}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
 					<p:tooltip
@@ -355,6 +359,7 @@
 						disabled="#{!reimbursementBean.addAccommodationExpense}"
 						label="#{probandlabels.money_transfer_accommodation_expense_amount}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
 					<p:tooltip
@@ -418,6 +423,7 @@
 						disabled="#{!reimbursementBean.addReimbursement}"
 						label="#{probandlabels.money_transfer_reimbursement_amount}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
 					<p:tooltip
@@ -455,6 +461,7 @@
 						required="true"
 						label="#{probandlabels.money_transfer_amount}"
 						styleClass="ctsms-control-float">
+						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
 					<p:tooltip

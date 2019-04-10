@@ -60,6 +60,7 @@ public interface EcrfPDFSettingCodes {
 	public static final String TIME_VALUE_PATTERN = "time_value_pattern";
 	public static final String FLOAT_VALUE_PATTERN = "float_value_pattern";
 	public static final String INTEGER_VALUE_PATTERN = "integer_value_pattern";
+	public static final String DECIMAL_SEPARATOR = "decimal_separator";
 
 	public static final String CHECKBOX_CHECKED_IMAGE_FILE_NAME = "checkbox_checked_image_file_name";
 	public static final String CHECKBOX_CHECKED_PRESET_IMAGE_FILE_NAME = "checkbox_checked_preset_image_file_name";

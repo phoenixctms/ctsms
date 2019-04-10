@@ -175,6 +175,7 @@
 				label="#{labels.criterion_float} #{searchBean.criterionsIn[index].position}"
 				rendered="#{searchBean.isFloat[index] and searchBean.isCriterionPropertyRendered[index]}"
 				styleClass="ctsms-control-float">
+				<f:converter converterId="ctsms.Float" />
 				<p:ajax />
 			</p:inputText>
 			<p:calendar
@@ -182,14 +183,15 @@
 				value="#{searchBean.criterionsIn[index].dateValue}"
 				required="false"
 				label="#{labels.criterion_date} #{searchBean.criterionsIn[index].position}"
-				pattern="#{applicationScopeBean.inputDatePattern}"
+				pattern="#{sessionScopeBean.inputDatePattern}"
 				yearRange="#{applicationScopeBean.calendarYearRange}"
 				showWeek="true"
 				navigator="true"
 				locale="#{sessionScopeBean.locale}"
-				timeZone="#{sessionScopeBean.timeZone}"
 				rendered="#{searchBean.isDate[index] and searchBean.isCriterionPropertyRendered[index]}"
 				styleClass="ctsms-calendar-date">
+				<f:converter converterId="ctsms.Date" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 				<p:ajax
 					event="blur"
 					process="@this" />
@@ -202,14 +204,15 @@
 				value="#{searchBean.criterionsIn[index].timestampValue}"
 				required="false"
 				label="#{labels.criterion_timestamp} #{searchBean.criterionsIn[index].position}"
-				pattern="#{applicationScopeBean.inputDateTimePattern}"
+				pattern="#{sessionScopeBean.inputDateTimePattern}"
 				yearRange="#{applicationScopeBean.calendarYearRange}"
 				showWeek="true"
 				navigator="true"
 				locale="#{sessionScopeBean.locale}"
-				timeZone="#{sessionScopeBean.timeZone}"
 				rendered="#{searchBean.isTimestamp[index] and searchBean.isCriterionPropertyRendered[index]}"
 				styleClass="ctsms-calendar-datetime">
+				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 				<p:ajax
 					event="blur"
 					process="@this" />

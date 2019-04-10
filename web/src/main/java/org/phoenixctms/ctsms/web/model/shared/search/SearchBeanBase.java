@@ -874,7 +874,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 									}
 									String value = null;
 									if (valueObject != null) {
-										value = CommonUtil.inputValueToString(valueObject);
+										value = CommonUtil.inputValueToString(valueObject, WebUtil.getDateFormat(), WebUtil.getDecimalSeparator());
 									} else {
 										value = CommonUtil.NO_SELECTION_VALUE;
 									}

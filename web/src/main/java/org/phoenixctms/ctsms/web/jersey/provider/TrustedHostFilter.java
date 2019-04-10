@@ -17,7 +17,6 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-
 @Provider
 public class TrustedHostFilter extends ExceptionMapperBase implements ContainerRequestFilter {
 

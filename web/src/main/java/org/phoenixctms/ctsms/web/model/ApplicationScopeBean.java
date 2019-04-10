@@ -231,6 +231,10 @@ public class ApplicationScopeBean {
 		return WebUtil.getCurrencySymbol();
 	}
 
+	public TimeZone getDefaultTimeZone() {
+		return WebUtil.getDefaultTimeZone();
+	}
+
 	public String getDurationString(long duration) {
 		return DateUtil.getDurationString(duration);
 	}
@@ -297,18 +301,6 @@ public class ApplicationScopeBean {
 		return WebUtil.getIdentityString(user);
 	}
 
-	// public String getInputTimePattern() {
-	// return CommonUtil.INPUT_TIME_PATTERN;
-	// }
-
-	public String getInputDatePattern() {
-		return CommonUtil.INPUT_DATE_PATTERN;
-	}
-
-	public String getInputDateTimePattern() {
-		return CommonUtil.INPUT_DATETIME_PATTERN;
-	}
-
 	public String getInputFieldIcon(InputFieldOutVO inputField) {
 		return WebUtil.getInputFieldIcon(inputField);
 	}
@@ -316,6 +308,8 @@ public class ApplicationScopeBean {
 	public Long getInquiryValueCount(InquiryOutVO inquiry) {
 		return WebUtil.getInquiryValueCount(inquiry);
 	}
+
+
 
 	public int getIntegerMaxValue() {
 		return Integer.MAX_VALUE;
@@ -417,28 +411,9 @@ public class ApplicationScopeBean {
 		return "";
 	}
 
-	// public boolean getProbandGroupsShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	//
-	// public boolean getProbandGroupsShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
-	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
-
 	public Long getProbandListEntryTagValueCount(ProbandListEntryTagOutVO probandListEntryTag) {
 		return WebUtil.getProbandListEntryTagValueCount(probandListEntryTag);
 	}
-
-	// public boolean getProbandListShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	// public boolean getProbandListShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
-
 
 	public String getProbandStatusEntryStartStopString(ProbandStatusEntryOutVO statusEntry) {
 		if (statusEntry != null) {
@@ -451,13 +426,28 @@ public class ApplicationScopeBean {
 		return WebUtil.getRemoteHost();
 	}
 
+	// public boolean getProbandGroupsShowInquiryColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
+	// }
+	//
+	//
+	// public boolean getProbandGroupsShowProbandListEntryTagColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
+	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
+	// }
+
 	public String getScheduleRightHeaderTemplate() {
 		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
 	}
 
-	// public String getSignatureDescription(SignatureVO signature) {
-	// x
+	// public boolean getProbandListShowInquiryColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_INQUIRY_COLUMN);
 	// }
+	//
+	// public boolean getProbandListShowProbandListEntryTagColumn() {
+	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
+	// }
+
 
 	public String getScheduleTimePattern() {
 		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
@@ -471,6 +461,10 @@ public class ApplicationScopeBean {
 		return DateUtil.getStatusEntryDurationString(duration);
 	}
 
+	// public String getSignatureDescription(SignatureVO signature) {
+	// x
+	// }
+
 	public String getStringDigest(String string) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		if (string != null) {
@@ -478,15 +472,6 @@ public class ApplicationScopeBean {
 		}
 		return CommonUtil.getHex(messageDigest.digest());
 	}
-
-	// public boolean getTrialParticipationsShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	// public boolean getTrialParticipationsShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
-	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
 
 	public int getTimePickerIntervalMinutes() {
 		return Settings.getInt(SettingCodes.TIME_PICKER_INTERVAL_MINUTES, Bundle.SETTINGS, DefaultSettings.TIME_PICKER_INTERVAL_MINUTES);
@@ -505,6 +490,15 @@ public class ApplicationScopeBean {
 		}
 		return result;
 	}
+
+	// public boolean getTrialParticipationsShowInquiryColumn() {
+	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN);
+	// }
+	//
+	// public boolean getTrialParticipationsShowProbandListEntryTagColumn() {
+	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
+	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
+	// }
 
 	public String getUserIdentityString(UserOutVO user) {
 		return WebUtil.getUserIdentityString(user);
@@ -526,7 +520,15 @@ public class ApplicationScopeBean {
 
 	private void initSets() {
 		Locale.setDefault(WebUtil.getDefaultLocale());
-		TimeZone.setDefault(WebUtil.getDefaultTimezone());
+		TimeZone.setDefault(WebUtil.getDefaultTimeZone());
+	}
+
+	public boolean isDateTimeUserTimeZone() {
+		return Settings.getBoolean(SettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.DATE_TIME_USER_TIME_ZONE);
+	}
+
+	public boolean isDateUserTimeZone() {
+		return Settings.getBoolean(SettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.DATE_USER_TIME_ZONE);
 	}
 
 	public boolean isEnableGeolocationServices() {
@@ -551,6 +553,10 @@ public class ApplicationScopeBean {
 
 	public boolean isShowProbandRating() {
 		return Settings.getBoolean(SettingCodes.SHOW_PROBAND_RATING, Bundle.SETTINGS, DefaultSettings.SHOW_PROBAND_RATING);
+	}
+
+	public boolean isTimeUserTimeZone() {
+		return Settings.getBoolean(SettingCodes.TIME_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.TIME_USER_TIME_ZONE);
 	}
 
 	public boolean isTrustedHost() {

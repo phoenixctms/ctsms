@@ -83,6 +83,8 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract String getDateValueFormatPattern();
 
+	protected abstract String getDecimalSeparator();
+
 	protected abstract float getFieldFrameLineWidth();
 
 	protected abstract Float getFloatValue();
@@ -477,6 +479,7 @@ public abstract class InputFieldPDFBlock {
 					string = (isShowPresetValues() ? getFloatValueFormatPattern() : null); // numberFormat.toString(); // .toLocalizedPattern();
 					isPresetColor = true;
 				}
+				string = CommonUtil.formatDecimal(string, getDecimalSeparator());
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
 						PDFUtil.getStringWidth(getFloatValueFormatPattern(), cursor.getFontD(), PDFUtil.FontSize.MEDIUM));
 				break;

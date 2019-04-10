@@ -142,6 +142,11 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
+	protected String getDecimalSeparator() {
+		return Settings.getString(InquiriesPDFSettingCodes.DECIMAL_SEPARATOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.DECIMAL_SEPARATOR);
+	}
+
+	@Override
 	protected float getFieldFrameLineWidth() {
 		return Settings.getFloat(InquiriesPDFSettingCodes.FIELD_FRAME_LINE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.FIELD_FRAME_LINE_WIDTH);
 	}
@@ -475,10 +480,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 												: "",
 												proband.getAge() != null ? Integer.toString(proband.getAge()) : ""
 								),
-								cursor.getBlockX(),
-								Settings.getFloat(InquiriesPDFSettingCodes.PAGE_TITLE_Y, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_TITLE_Y),
-								Alignment.TOP_LEFT,
-								cursor.getBlockWidth());
+						cursor.getBlockX(),
+						Settings.getFloat(InquiriesPDFSettingCodes.PAGE_TITLE_Y, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_TITLE_Y),
+						Alignment.TOP_LEFT,
+						cursor.getBlockWidth());
 				break;
 			case NEW_PROBAND_TRIAL:
 				width = (cursor.getBlockWidth() - 2.0f * Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF,
@@ -499,10 +504,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 											proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
 													proband.getAge() != null ? Integer.toString(proband.getAge()) : ""
 									),
-									cursor.getBlockCenterX(),
-									y,
-									Alignment.TOP_CENTER,
-									cursor.getBlockWidth());
+							cursor.getBlockCenterX(),
+							y,
+							Alignment.TOP_CENTER,
+							cursor.getBlockWidth());
 					y -= Settings.getFloat(InquiriesPDFSettingCodes.Y_HEADLINE_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_HEADLINE_INDENT);
 				}
 				y1 = y;
@@ -543,10 +548,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
 												),
 										proband.getInitials(), proband.getName()),
-												x + getXFrameIndent(),
-												y,
-												Alignment.TOP_LEFT,
-												width - getXFrameIndent()), height1);
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -570,10 +575,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 												Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
 												proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
 														proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
-														x + getXFrameIndent(),
-														y,
-														Alignment.TOP_LEFT,
-														width - getXFrameIndent()), height2);
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								width - getXFrameIndent()), height2);
 				//
 
 				x = cursor.getBlockX();
@@ -609,10 +614,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								Bundle.INQUIRIES_PDF,
 								InquiriesPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
 								Locales.INQUIRIES_PDF).format(now)),
-								x + getXFrameIndent(),
-								y,
-								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height2);
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height2);
 				x = cursor.getBlockX();
 				y -= Math.max(height1, height2) + getYFrameIndent();
 				if (!inserted) {

@@ -53,6 +53,7 @@
 					</f:facet>
 					<h:outputText value="#{booking.vo.start}">
 						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 				</p:column>
 				<p:column sortBy="#{booking.vo.stop}">
@@ -61,6 +62,7 @@
 					</f:facet>
 					<h:outputText value="#{booking.vo.stop}">
 						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 				</p:column>
 				<p:column>

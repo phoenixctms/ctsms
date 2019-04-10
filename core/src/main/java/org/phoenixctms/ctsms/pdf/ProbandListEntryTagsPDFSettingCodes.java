@@ -47,6 +47,7 @@ public interface ProbandListEntryTagsPDFSettingCodes {
 	public static final String FRAME_COLOR = "frame_color";
 	public static final String VALIDATION_ERROR_MESSAGE_TEXT_COLOR = "validation_error_message_text_color";
 	public static final String DATE_VALUE_PATTERN = "date_value_pattern";
+	public static final String DECIMAL_SEPARATOR = "decimal_separator";
 	public static final String TIMESTAMP_VALUE_PATTERN = "timestamp_value_pattern";
 	public static final String TIME_VALUE_PATTERN = "time_value_pattern";
 	public static final String FLOAT_VALUE_PATTERN = "float_value_pattern";

@@ -416,6 +416,7 @@
 						</f:facet>
 						<h:outputText value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 

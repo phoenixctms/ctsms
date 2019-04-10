@@ -205,6 +205,7 @@
 					</f:facet>
 					<h:outputText value="#{course.vo.stop}">
 						<f:converter converterId="ctsms.Date" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					</h:outputText>
 				</p:column>
 				<p:column sortBy="#{course.vo.selfRegistration}">

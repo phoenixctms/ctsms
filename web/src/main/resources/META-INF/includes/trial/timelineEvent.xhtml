@@ -86,6 +86,7 @@
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.start}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.stop}">
@@ -94,6 +95,7 @@
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column

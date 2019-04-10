@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,6 +77,12 @@ public final class CoreUtil {
 	public static final String PDF_MIMETYPE_STRING = "application/pdf"; // public for demodataprovider
 	public static final String EXCEL_FILENAME_EXTENSION = "xls";
 	public static final String EXCEL_MIMETYPE_STRING = "application/vnd.ms-excel";
+
+	private final static ArrayList<String> DECIMAL_SEPARATORS = new ArrayList<String>();
+	static {
+		DECIMAL_SEPARATORS.add(".");
+		DECIMAL_SEPARATORS.add(",");
+	}
 
 	// private static final String HEX_DIGITS = "0123456789ABCDEF";
 	private static final String DAO_LOAD_METHOD_NAME = "load";
@@ -600,6 +607,14 @@ public final class CoreUtil {
 		return getDaoTransformMethod(entityName, VO_CLASS_SUFFIX, dao);
 	}
 
+	public static Collection<String> getDateFormats() {
+		return Settings.getBundleMap(Bundle.DATE_FORMATS, true).values();
+	}
+
+	public static ArrayList<String> getDecimalSeparatos() {
+		return new ArrayList<String>(CoreUtil.DECIMAL_SEPARATORS);
+	}
+
 	private static String getEntityClassNameFromEntityName(String entityName) {
 		StringBuilder voClassName = new StringBuilder(ENTITIES_PACKAGE_NAME);
 		voClassName.append(".");
@@ -919,10 +934,6 @@ public final class CoreUtil {
 		return getTimeZones(TimeZone.getAvailableIDs());
 	}
 
-	public static ArrayList<TimeZone> getTimeZones(int timeZoneOffset) {
-		return getTimeZones(TimeZone.getAvailableIDs(timeZoneOffset));
-	}
-
 	private static ArrayList<TimeZone> getTimeZones(String[] availableIDs) {
 		ArrayList<TimeZone> result;
 		if (availableIDs != null && availableIDs.length > 0) {
@@ -935,6 +946,10 @@ public final class CoreUtil {
 		}
 		return result;
 	}
+
+	// public static ArrayList<TimeZone> getTimeZones(int timeZoneOffset) {
+	// return getTimeZones(TimeZone.getAvailableIDs(timeZoneOffset));
+	// }
 
 	public static User getUser() {
 		return getUserContext().getUser();

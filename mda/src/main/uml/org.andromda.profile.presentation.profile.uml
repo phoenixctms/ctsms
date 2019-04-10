@@ -1,58 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Profile xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xmi:id="_11_5_e240333_1154527378140_885914_432" name="presentation" metamodelReference="_11_5_e240333_1154527378140_885914_432_packageImportcreatedOnLoad">
-  <eAnnotations xmi:id="_mbIQ-TrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML">
-    <contents xmi:type="ecore:EPackage" xmi:id="_mbIQ-jrrEemunOReBQlSaA" name="presentation" nsURI="http:///schemas/presentation/_l8i28DrrEemunOReBQlSaA/0" nsPrefix="presentation">
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIQ-zrrEemunOReBQlSaA" name="WebActionFormScope">
-        <eAnnotations xmi:id="_mbIQ_DrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_568959_38"/>
-        <eLiterals xmi:id="_mbIQ_TrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIQ_jrrEemunOReBQlSaA" name="none" value="1"/>
-        <eLiterals xmi:id="_mbIQ_zrrEemunOReBQlSaA" name="request" value="2"/>
-        <eLiterals xmi:id="_mbIRADrrEemunOReBQlSaA" name="session" value="3"/>
+  <eAnnotations xmi:id="_I_A7YVr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <contents xmi:type="ecore:EPackage" xmi:id="_I_A7Ylr-EemrbaBrg61NCg" name="presentation" nsURI="http:///schemas/presentation/_IRKWEFr-EemrbaBrg61NCg/0" nsPrefix="presentation">
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_A7Y1r-EemrbaBrg61NCg" name="WebActionFormScope">
+        <eAnnotations xmi:id="_I_A7ZFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_568959_38"/>
+        <eLiterals xmi:id="_I_A7ZVr-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_A7Zlr-EemrbaBrg61NCg" name="none" value="1"/>
+        <eLiterals xmi:id="_I_A7Z1r-EemrbaBrg61NCg" name="request" value="2"/>
+        <eLiterals xmi:id="_I_A7aFr-EemrbaBrg61NCg" name="session" value="3"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIRATrrEemunOReBQlSaA" name="WebFieldType">
-        <eAnnotations xmi:id="_mbIRAjrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_274451_21"/>
-        <eLiterals xmi:id="_mbIRAzrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIRBDrrEemunOReBQlSaA" name="select" value="1"/>
-        <eLiterals xmi:id="_mbIRBTrrEemunOReBQlSaA" name="hidden" value="2"/>
-        <eLiterals xmi:id="_mbIRBjrrEemunOReBQlSaA" name="password" value="3"/>
-        <eLiterals xmi:id="_mbIRBzrrEemunOReBQlSaA" name="link" value="4"/>
-        <eLiterals xmi:id="_mbIRCDrrEemunOReBQlSaA" name="textarea" value="5"/>
-        <eLiterals xmi:id="_mbIRCTrrEemunOReBQlSaA" name="text" value="6"/>
-        <eLiterals xmi:id="_mbIRCjrrEemunOReBQlSaA" name="checkbox" value="7"/>
-        <eLiterals xmi:id="_mbIRCzrrEemunOReBQlSaA" name="multibox" value="8"/>
-        <eLiterals xmi:id="_mbIRDDrrEemunOReBQlSaA" name="radio" value="9"/>
-        <eLiterals xmi:id="_mbIRDTrrEemunOReBQlSaA" name="plaintext" value="10"/>
-        <eLiterals xmi:id="_mbIRDjrrEemunOReBQlSaA" name="table" value="11"/>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_A7aVr-EemrbaBrg61NCg" name="WebFieldType">
+        <eAnnotations xmi:id="_I_A7alr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_274451_21"/>
+        <eLiterals xmi:id="_I_A7a1r-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_A7bFr-EemrbaBrg61NCg" name="select" value="1"/>
+        <eLiterals xmi:id="_I_A7bVr-EemrbaBrg61NCg" name="hidden" value="2"/>
+        <eLiterals xmi:id="_I_A7blr-EemrbaBrg61NCg" name="password" value="3"/>
+        <eLiterals xmi:id="_I_A7b1r-EemrbaBrg61NCg" name="link" value="4"/>
+        <eLiterals xmi:id="_I_A7cFr-EemrbaBrg61NCg" name="textarea" value="5"/>
+        <eLiterals xmi:id="_I_A7cVr-EemrbaBrg61NCg" name="text" value="6"/>
+        <eLiterals xmi:id="_I_A7clr-EemrbaBrg61NCg" name="checkbox" value="7"/>
+        <eLiterals xmi:id="_I_A7c1r-EemrbaBrg61NCg" name="multibox" value="8"/>
+        <eLiterals xmi:id="_I_A7dFr-EemrbaBrg61NCg" name="radio" value="9"/>
+        <eLiterals xmi:id="_I_A7dVr-EemrbaBrg61NCg" name="plaintext" value="10"/>
+        <eLiterals xmi:id="_I_A7dlr-EemrbaBrg61NCg" name="table" value="11"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIRDzrrEemunOReBQlSaA" name="WebActionType">
-        <eAnnotations xmi:id="_mbIREDrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_121659_52"/>
-        <eLiterals xmi:id="_mbIRETrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIREjrrEemunOReBQlSaA" name="hyperlink" value="1"/>
-        <eLiterals xmi:id="_mbIREzrrEemunOReBQlSaA" name="form" value="2"/>
-        <eLiterals xmi:id="_mbIRFDrrEemunOReBQlSaA" name="image" value="3"/>
-        <eLiterals xmi:id="_mbIRFTrrEemunOReBQlSaA" name="table" value="4"/>
-        <eLiterals xmi:id="_mbIRFjrrEemunOReBQlSaA" name="popup" value="5"/>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_A7d1r-EemrbaBrg61NCg" name="WebActionType">
+        <eAnnotations xmi:id="_I_A7eFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_121659_52"/>
+        <eLiterals xmi:id="_I_A7eVr-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_A7elr-EemrbaBrg61NCg" name="hyperlink" value="1"/>
+        <eLiterals xmi:id="_I_A7e1r-EemrbaBrg61NCg" name="form" value="2"/>
+        <eLiterals xmi:id="_I_A7fFr-EemrbaBrg61NCg" name="image" value="3"/>
+        <eLiterals xmi:id="_I_A7fVr-EemrbaBrg61NCg" name="table" value="4"/>
+        <eLiterals xmi:id="_I_A7flr-EemrbaBrg61NCg" name="popup" value="5"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIRFzrrEemunOReBQlSaA" name="WebExportType">
-        <eAnnotations xmi:id="_mbIRGDrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_819259_44"/>
-        <eLiterals xmi:id="_mbIRGTrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIRGjrrEemunOReBQlSaA" name="xml" value="1"/>
-        <eLiterals xmi:id="_mbIRGzrrEemunOReBQlSaA" name="csv" value="2"/>
-        <eLiterals xmi:id="_mbIRHDrrEemunOReBQlSaA" name="excel" value="3"/>
-        <eLiterals xmi:id="_mbIRHTrrEemunOReBQlSaA" name="pdf" value="4"/>
-        <eLiterals xmi:id="_mbIRHjrrEemunOReBQlSaA" name="none" value="5"/>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_A7f1r-EemrbaBrg61NCg" name="WebExportType">
+        <eAnnotations xmi:id="_I_A7gFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_819259_44"/>
+        <eLiterals xmi:id="_I_A7gVr-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_A7glr-EemrbaBrg61NCg" name="xml" value="1"/>
+        <eLiterals xmi:id="_I_A7g1r-EemrbaBrg61NCg" name="csv" value="2"/>
+        <eLiterals xmi:id="_I_BhoFr-EemrbaBrg61NCg" name="excel" value="3"/>
+        <eLiterals xmi:id="_I_BhoVr-EemrbaBrg61NCg" name="pdf" value="4"/>
+        <eLiterals xmi:id="_I_Bholr-EemrbaBrg61NCg" name="none" value="5"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIRHzrrEemunOReBQlSaA" name="ViewType">
-        <eAnnotations xmi:id="_mbIRIDrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_2_12ab03bf_1125759055984_835993_0"/>
-        <eLiterals xmi:id="_mbIRITrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIRIjrrEemunOReBQlSaA" name="regular" value="1"/>
-        <eLiterals xmi:id="_mbIRIzrrEemunOReBQlSaA" name="popup" value="2"/>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_Bho1r-EemrbaBrg61NCg" name="ViewType">
+        <eAnnotations xmi:id="_I_BhpFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_2_12ab03bf_1125759055984_835993_0"/>
+        <eLiterals xmi:id="_I_BhpVr-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_Bhplr-EemrbaBrg61NCg" name="regular" value="1"/>
+        <eLiterals xmi:id="_I_Bhp1r-EemrbaBrg61NCg" name="popup" value="2"/>
       </eClassifiers>
-      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_mbIRJDrrEemunOReBQlSaA" name="TernaryBoolean">
-        <eAnnotations xmi:id="_mbIRJTrrEemunOReBQlSaA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_6_e240333_1161153044093_386067_123"/>
-        <eLiterals xmi:id="_mbIRJjrrEemunOReBQlSaA" name="default"/>
-        <eLiterals xmi:id="_mbIRJzrrEemunOReBQlSaA" name="true" value="1"/>
-        <eLiterals xmi:id="_mbIRKDrrEemunOReBQlSaA" name="false" value="2"/>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_BhqFr-EemrbaBrg61NCg" name="FrontEndRegistration">
+        <eAnnotations xmi:id="_I_BhqVr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_2_12ab03bf_1126726268765_386289_0"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bhqlr-EemrbaBrg61NCg" name="base_UseCase" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//UseCase"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bhq1r-EemrbaBrg61NCg" name="FrontEndException">
+        <eAnnotations xmi:id="_I_BhrFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_447433_8"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_BhrVr-EemrbaBrg61NCg" name="base_Transition" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Transition"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhrlr-EemrbaBrg61NCg" name="andromda_presentation_exception_type" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bhr1r-EemrbaBrg61NCg" name="FrontEndTable">
+        <eAnnotations xmi:id="_I_BhsFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_5_e240333_1154527287671_632374_75"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhsVr-EemrbaBrg61NCg" name="andromda_presentation_view_table_columns" ordered="false" lowerBound="1" upperBound="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bhslr-EemrbaBrg61NCg" name="base_Parameter" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Parameter"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bhs1r-EemrbaBrg61NCg" name="base_Property" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Property"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhtFr-EemrbaBrg61NCg" name="andromda_presentation_view_table" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhtVr-EemrbaBrg61NCg" name="andromda_presentation_view_table_sortable" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhtlr-EemrbaBrg61NCg" name="andromda_presentation_view_table_maxrows" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bht1r-EemrbaBrg61NCg" name="andromda_presentation_view_table_export" ordered="false" upperBound="-1" eType="_I_A7f1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhuFr-EemrbaBrg61NCg" name="andromda_struts_view_table_decorator" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_BhuVr-EemrbaBrg61NCg" name="base_Class" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Class"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhulr-EemrbaBrg61NCg" name="andromda_presentation_view_table_pageable" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EEnum" xmi:id="_I_Bhu1r-EemrbaBrg61NCg" name="TernaryBoolean">
+        <eAnnotations xmi:id="_I_BhvFr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_6_e240333_1161153044093_386067_123"/>
+        <eLiterals xmi:id="_I_BhvVr-EemrbaBrg61NCg" name="default"/>
+        <eLiterals xmi:id="_I_Bhvlr-EemrbaBrg61NCg" name="true" value="1"/>
+        <eLiterals xmi:id="_I_Bhv1r-EemrbaBrg61NCg" name="false" value="2"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_BhwFr-EemrbaBrg61NCg" name="FrontEndField">
+        <eAnnotations xmi:id="_I_BhwVr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_5_e240333_1154527287656_847272_19"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhwlr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_calendar" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bhw1r-EemrbaBrg61NCg" name="base_Parameter" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Parameter"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_BhxFr-EemrbaBrg61NCg" name="base_Property" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Property"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhxVr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_equal" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhxlr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_reset" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhx1r-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_rows" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhyFr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_size" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhyVr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_type" ordered="false" lowerBound="1" eType="_I_A7aVr-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhylr-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_validators" ordered="false" lowerBound="1" upperBound="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhy1r-EemrbaBrg61NCg" name="andromda_presentation_web_view_field_validwhen" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhzFr-EemrbaBrg61NCg" name="andromda_presentation_view_field_multibox" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_BhzVr-EemrbaBrg61NCg" name="andromda_presentation_view_field_radio" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhzlr-EemrbaBrg61NCg" name="andromda_presentation_view_field_readonly" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bhz1r-EemrbaBrg61NCg" name="andromda_presentation_view_field_required" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh0Fr-EemrbaBrg61NCg" name="andromda_presentation_view_field_table_identifier_columns" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh0Vr-EemrbaBrg61NCg" name="andromda_presentation_view_field_format" ordered="false" lowerBound="1" upperBound="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh0lr-EemrbaBrg61NCg" name="FrontEndAction">
+        <eAnnotations xmi:id="_I_Bh01r-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_5_e240333_1154527287671_31101_88"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh1Fr-EemrbaBrg61NCg" name="andromda_presentation_web_action_form_reset" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh1Vr-EemrbaBrg61NCg" name="base_Transition" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Transition"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh1lr-EemrbaBrg61NCg" name="andromda_presentation_web_action_tablelink" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh11r-EemrbaBrg61NCg" name="andromda_presentation_web_action_type" ordered="false" lowerBound="1" eType="_I_A7d1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh2Fr-EemrbaBrg61NCg" name="andromda_presentation_web_action_resettable" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh2Vr-EemrbaBrg61NCg" name="andromda_presentation_web_action_redirect" ordered="false" lowerBound="1" eType="_I_Bhu1r-EemrbaBrg61NCg"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh2lr-EemrbaBrg61NCg" name="andromda_presentation_web_action_form_scope" ordered="false" lowerBound="1" eType="_I_A7Y1r-EemrbaBrg61NCg"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh21r-EemrbaBrg61NCg" name="FrontEndApplication">
+        <eAnnotations xmi:id="_I_Bh3Fr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_791195_9"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh3Vr-EemrbaBrg61NCg" name="base_UseCase" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//UseCase"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh3lr-EemrbaBrg61NCg" name="FrontEndController">
+        <eAnnotations xmi:id="_I_Bh31r-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_5_e240333_1154527287656_99430_24"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh4Fr-EemrbaBrg61NCg" name="andromda_presentation_controller_usecase" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh4Vr-EemrbaBrg61NCg" name="base_Class" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Class"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh4lr-EemrbaBrg61NCg" name="FrontEndUseCase">
+        <eAnnotations xmi:id="_I_Bh41r-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_839982_7"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh5Fr-EemrbaBrg61NCg" name="base_UseCase" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//UseCase"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh5Vr-EemrbaBrg61NCg" name="andromda_presentation_usecase_activity" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh5lr-EemrbaBrg61NCg" name="andromda_presentation_web_action_form_key" ordered="false" lowerBound="1" defaultValueLiteral="">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh51r-EemrbaBrg61NCg" name="FrontEndView">
+        <eAnnotations xmi:id="_I_Bh6Fr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_676970_30"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh6Vr-EemrbaBrg61NCg" name="base_State" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//State"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh6lr-EemrbaBrg61NCg" name="andromda_presentation_web_view_type" ordered="false" lowerBound="1" eType="_I_Bho1r-EemrbaBrg61NCg"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh61r-EemrbaBrg61NCg" name="FrontEndSessionObject">
+        <eAnnotations xmi:id="_I_Bh7Fr-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337248937_233969_55"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh7Vr-EemrbaBrg61NCg" name="base_Class" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Class"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_I_Bh7lr-EemrbaBrg61NCg" name="FrontEndMessage">
+        <eAnnotations xmi:id="_I_Bh71r-EemrbaBrg61NCg" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_6_e240333_1161154424000_684096_139"/>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_I_Bh8Fr-EemrbaBrg61NCg" name="base_Transition" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/2.0.0/UML#//Transition"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh8Vr-EemrbaBrg61NCg" name="andromda_presentation_action_warning_message" ordered="false" lowerBound="1" upperBound="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_I_Bh8lr-EemrbaBrg61NCg" name="andromda_presentation_action_success_message" ordered="false" lowerBound="1" upperBound="-1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eStructuralFeatures>
       </eClassifiers>
     </contents>
   </eAnnotations>
@@ -152,135 +297,344 @@
       <ownedComment xmi:id="_9_0_2_12ab03bf_1125759158093_568254_6" body="A &quot;popup&quot; view." annotatedElement="_9_0_2_12ab03bf_1125759114125_324601_2"/>
     </ownedLiteral>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527331125_669071_417" name="" navigableOwnedEnd="_11_5_e240333_1154527331125_934188_419">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527331125_934188_419" name="extension_FrontEndView" visibility="private" aggregation="composite" association="_11_5_e240333_1154527331125_669071_417">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119337248937_676970_30"/>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_2_12ab03bf_1126726268765_386289_0" name="FrontEndRegistration">
+    <ownedComment xmi:id="_9_0_2_12ab03bf_1126726336515_471546_88" body="Place this on a use case that represents a front-end registration process." annotatedElement="_9_0_2_12ab03bf_1126726268765_386289_0"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287968_39304_178" name="base_UseCase" visibility="private" association="_11_5_e240333_1154527287968_626765_177">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#UseCase"/>
+    </ownedAttribute>
+    <icon xmi:id="_11_5_e240333_1154527287671_359722_90" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_1fe00f9_1119337248937_447433_8" name="FrontEndException">
+    <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_735717_155" body="Have this transition point to a &lt;&lt;FrontEndView>> action state or a final state, it will have any exception directed to that page or use-case respectively. Using tagged values you can have control on the type of exception for each of such transitions." annotatedElement="_9_0_1fe00f9_1119337248937_447433_8"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287937_730560_155" name="base_Transition" visibility="private" association="_11_5_e240333_1154527287937_114543_154">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Transition"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_990004_22" name="andromda_presentation_exception_type" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_243682_89" body="The type of exception that is to be handled by this transition." annotatedElement="_9_0_1fe00f9_1119337248937_990004_22"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_347072_12" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_143412_11" name="" value="1"/>
+    </ownedAttribute>
+    <icon xmi:id="_11_5_e240333_1154527287656_32066_4" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_11_5_e240333_1154527287671_632374_75" name="FrontEndTable">
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_371403_33" name="andromda_presentation_view_table_columns" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_448388_117" body="Determines which properties of the value objects in a Collection are to be called in order to render the columns of the table. The order directly specifies the order of the columns. Multiple values are separated by commas or whitespace." annotatedElement="_9_0_1fe00f9_1119337248937_371403_33"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_525566_74" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_207236_73" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527288000_288006_253" name="base_Parameter" visibility="private" association="_11_5_e240333_1154527288000_296291_252">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Parameter"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527288000_402729_258" name="base_Property" visibility="private" association="_11_5_e240333_1154527288000_271313_257">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_2_12ab03bf_1126298730968_419691_1" name="andromda_presentation_view_table" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_2_12ab03bf_1126298846187_985551_2" body="A flag indicating whether or not a parameter should be considered a table.  This must be set to true when you wish to display a list of simple types (such as strings) within a table. If you specify the table's columns in andromda_presentation_view_table_columns, then this tagged value is not required to indicate that the parameter is table (as it will be assumed)." annotatedElement="_9_0_2_12ab03bf_1126298730968_419691_1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_402294_25" name="andromda_presentation_view_table_sortable" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_775313_98" body="Denotes whether or not columns are supposed to be sortable, defaults to true in case of absence." annotatedElement="_9_0_1fe00f9_1119337248937_402294_25"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_96935_41" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_34060_40" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_237101_6" name="andromda_presentation_view_table_maxrows" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_925797_72" body="Denotes the maximum number of rows per 'page'. Defaults to 15." annotatedElement="_9_0_1fe00f9_1119337248937_237101_6"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_196184_71" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_708831_70" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_389174_46" name="andromda_presentation_view_table_export" visibility="private" type="_9_0_1fe00f9_1119337248937_819259_44">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_707534_130" body="This tagged value specifies which types of export are supported. " annotatedElement="_9_0_1fe00f9_1119337248937_389174_46"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_968928_6" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_663386_5" name=""/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_9656_34" name="andromda_struts_view_table_decorator" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_658433_120" body="Denotes whether or not to render a displaytag table decorator, will be ignored if this parameter does not represent a table." annotatedElement="_9_0_1fe00f9_1119337248937_9656_34"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_173173_29" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_53940_28" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_6_e240333_1161154558906_663163_157" name="base_Class" visibility="private" association="_11_6_e240333_1161154558906_210642_156">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_12_0_12ab03bf_1174357703062_616670_98" name="andromda_presentation_view_table_pageable" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_12_0_12ab03bf_1174357763312_883861_99" body="Defines whether or not a table is considered &quot;pageable&quot;.  Pageable tables trigger generation of DB paging support." annotatedElement="_12_0_12ab03bf_1174357703062_616670_98"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_0_12ab03bf_1174357784562_167461_101" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_0_12ab03bf_1174357784562_203204_100" name="" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_11_5_e240333_1154527287656_847272_19" name="FrontEndField">
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_27957_31" name="andromda_presentation_web_view_field_calendar" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_722442_111" body="Put this tagged value on a parameter of type Date to denote that you want a calendar popup." annotatedElement="_9_0_1fe00f9_1119337248937_27957_31"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_988336_18" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_619723_17" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287968_867227_166" name="base_Parameter" visibility="private" association="_11_5_e240333_1154527287968_334402_165">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Parameter"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287968_13317_171" name="base_Property" visibility="private" association="_11_5_e240333_1154527287968_599262_170">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Property"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_5_1_12ab03bf_1126910812625_261156_0" name="andromda_presentation_web_view_field_equal" visibility="private">
+      <ownedComment xmi:id="_9_5_1_12ab03bf_1126910893453_422563_1" body="Allows you to specify the name for the field that this field must be equal to." annotatedElement="_9_5_1_12ab03bf_1126910812625_261156_0"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_494345_3" name="andromda_presentation_web_view_field_reset" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_315123_63" body="Denotes whether this field should be reset to an empty value " annotatedElement="_9_0_1fe00f9_1119337248937_494345_3"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_749886_9" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_576117_8" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_2_1fe00f9_1123180006655_412428_1" name="andromda_presentation_web_view_field_rows" visibility="private">
+      <ownedComment xmi:id="_9_0_2_1fe00f9_1123180010988_322402_7" body="Denotes the number of rows of a textarea field." annotatedElement="_9_0_2_1fe00f9_1123180006655_412428_1"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_293484_86" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_71587_85" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_2_1fe00f9_1123180006655_508675_0" name="andromda_presentation_web_view_field_size" visibility="private">
+      <ownedComment xmi:id="_9_0_2_1fe00f9_1123180010988_942305_4" body="Denotes the number of columns of an input field." annotatedElement="_9_0_2_1fe00f9_1123180006655_508675_0"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_618757_83" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_293706_82" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_175825_53" name="andromda_presentation_web_view_field_type" visibility="private" type="_9_0_1fe00f9_1119337248937_274451_21">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_713213_143" body="Use this tagged value if you wish to display input fields using a special widget." annotatedElement="_9_0_1fe00f9_1119337248937_175825_53"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_805594_64" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_694286_63" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_514761_54" name="andromda_presentation_web_view_field_validators" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_951447_146" body="Allows users to specify custom validators for a field, when used the validation-rules.xml will need an update to include these validators." annotatedElement="_9_0_1fe00f9_1119337248937_514761_54"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_83256_58" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_557949_57" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_697950_48" name="andromda_presentation_web_view_field_validwhen" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_483757_136" body="Makes the validity of this parameter dependent on another parameter. This is useful for example for confirming passwords." annotatedElement="_9_0_1fe00f9_1119337248937_697950_48"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_158945_35" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_458371_34" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_986459_10" name="andromda_presentation_view_field_multibox" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_935880_75" body="When using the andromda_struts_view_field_type=multibox tagged value (which is only allowed in tables) you must specify also this tagged value to specify the collection or array holding the actual values to match against." annotatedElement="_9_0_1fe00f9_1119337248937_986459_10"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_542396_47" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_219472_46" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_938137_29" name="andromda_presentation_view_field_radio" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_516994_108" body="This tagged value only makes sense when used in combination with andromda_struts_field_type=radio, it denotes the number of options to render. Specify an integer value, or specify a comma-separated list of property values." annotatedElement="_9_0_1fe00f9_1119337248937_938137_29"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_870815_51" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_545153_50" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_756262_56" name="andromda_presentation_view_field_readonly" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_127441_149" body="Will make the parameter read-only." annotatedElement="_9_0_1fe00f9_1119337248937_756262_56"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_196733_26" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_512285_25" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_655967_27" name="andromda_presentation_view_field_required" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_182286_102" body="The parameter is not allowed to represent a blank (null or whitespace)." annotatedElement="_9_0_1fe00f9_1119337248937_655967_27"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_9043_32" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_79977_31" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_5_1_12ab03bf_1127450606265_565893_0" name="andromda_presentation_view_field_table_identifier_columns" visibility="private">
+      <ownedComment xmi:id="_9_5_1_12ab03bf_1127450714578_743824_1" body="A comma seperated list; used with the table input type. Defines the columns that make up the identifier of the row (these are necessary in order to allow the merging of the value with the backing value when submitting and loading an input table)." annotatedElement="_9_5_1_12ab03bf_1127450606265_565893_0"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_389614_24" name="andromda_presentation_view_field_format" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_911022_95" body="Denotes the format of the parameter value, this value will be check on the client as well as on the server. You may enter more than one value for this tag." annotatedElement="_9_0_1fe00f9_1119337248937_389614_24"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_594740_67" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_966625_66" name="" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_11_5_e240333_1154527287671_31101_88" name="FrontEndAction">
+    <ownedAttribute xmi:id="_9_0_2_12ab03bf_1125937922234_122922_0" name="andromda_presentation_web_action_form_reset" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_2_12ab03bf_1125938044765_936335_1" body="Allows one to reset the values on the corresponding action's (a transition coming out a of a front end view) form." annotatedElement="_9_0_2_12ab03bf_1125937922234_122922_0"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527288062_348945_342" name="base_Transition" visibility="private" association="_11_5_e240333_1154527288062_877396_341">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Transition"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_867276_5" name="andromda_presentation_web_action_tablelink" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_882896_69" body="Use this tagged value when you have an incoming transition with a Collection parameter that is to be represented as a table. The value of this tagged value will then be used to determine which table use when calling this action.&#xA;&#xA;The value should the name of an table page-variable entering the page on which this action has been modeled." annotatedElement="_9_0_1fe00f9_1119337248937_867276_5"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_528002_55" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_639555_54" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_701444_4" name="andromda_presentation_web_action_type" visibility="private" type="_9_0_1fe00f9_1119337248937_121659_52">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_80100_66" body="Denotes how the action is to be rendered." annotatedElement="_9_0_1fe00f9_1119337248937_701444_4"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287640_849884_2" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287640_103483_1" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_980341_23" name="andromda_presentation_web_action_resettable" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_883142_92" body="Denotes that the user should be able to reset the action form." annotatedElement="_9_0_1fe00f9_1119337248937_980341_23"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_307868_61" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_682028_60" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_55917_45" name="andromda_presentation_web_action_redirect" visibility="private" type="_11_6_e240333_1161153044093_386067_123">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_254110_127" body="Defines whether or not the struts action should be redirected when forwarding to the next action." annotatedElement="_9_0_1fe00f9_1119337248937_55917_45"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_133299_15" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_370351_14" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_781907_26" name="andromda_presentation_web_action_form_scope" visibility="private" type="_9_0_1fe00f9_1119337248937_568959_38">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_572049_99" body="Denotes the scope in which the &quot;form&quot; attribute should be placed when executing the action." annotatedElement="_9_0_1fe00f9_1119337248937_781907_26"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_1fe00f9_1119337248937_791195_9" name="FrontEndApplication">
+    <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_658825_154" body="This stereotype means that the use-case will be consider the first one when entering the application." annotatedElement="_9_0_1fe00f9_1119337248937_791195_9"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527288078_528195_369" name="base_UseCase" visibility="private" association="_11_5_e240333_1154527288078_207838_368">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#UseCase"/>
+    </ownedAttribute>
+    <icon xmi:id="_11_5_e240333_1154527287656_995766_20" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_11_5_e240333_1154527287656_99430_24" name="FrontEndController">
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_771725_32" name="andromda_presentation_controller_usecase" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_530124_114" body="For those CASE tools with marginal UML support this tagged value allows the controller to reference the use-case. You should give the name of the use-case, nothing more and nothing less." annotatedElement="_9_0_1fe00f9_1119337248937_771725_32"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_591996_23" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_156430_22" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287890_496902_107" name="base_Class" visibility="private" association="_11_5_e240333_1154527287890_998142_106">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_1fe00f9_1119337248937_839982_7" name="FrontEndUseCase">
+    <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_133439_153" body="A use-case to be processed by AndroMDA." annotatedElement="_9_0_1fe00f9_1119337248937_839982_7"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527287968_667419_193" name="base_UseCase" visibility="private" association="_11_5_e240333_1154527287968_226810_192">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#UseCase"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_823379_28" name="andromda_presentation_usecase_activity" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_182500_105" body="This tagged value is used to reference activity graphs from a use-case. In doing so you will associate the graph with the usecase. Instead of using this tagged value you can simply assign a single graph in the namespace of the use-case." annotatedElement="_9_0_1fe00f9_1119337248937_823379_28"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_40710_44" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_235311_43" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_2_1fe00f9_1123074520234_333609_0" name="andromda_presentation_web_action_form_key" visibility="private">
+      <ownedComment xmi:id="_9_0_2_1fe00f9_1123074523890_730226_3" body="Denotes the key used to store this action's form under. Depending on the setting of the andromda_presentation_web_action_form_scope tagged value this key is used for either request or session scope. Will only be used when the form is not empty, it is ignored otherwise." annotatedElement="_9_0_2_1fe00f9_1123074520234_333609_0"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_992876_80" name="" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_314989_79" name="" value="1"/>
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_11_5_e240333_1154527288078_793927_367" name="" value=""/>
+    </ownedAttribute>
+    <icon xmi:id="_11_5_e240333_1154527287671_339401_49" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_1fe00f9_1119337248937_676970_30" name="FrontEndView">
+    <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_390839_156" body="A presentation component interfacing with the end-user." annotatedElement="_9_0_1fe00f9_1119337248937_676970_30"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527331125_15563_418" name="base_State" visibility="private" association="_11_5_e240333_1154527331125_669071_417">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#State"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_2_12ab03bf_1125759126875_377431_3" name="andromda_presentation_web_view_type" visibility="private" type="_9_0_2_12ab03bf_1125759055984_835993_0"/>
+    <icon xmi:id="_11_5_e240333_1154527287671_312048_69" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_9_0_1fe00f9_1119337248937_233969_55" name="FrontEndSessionObject">
+    <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_642710_157" body="A session object needs to be associated with controllers, that way the controller will have some code to lookup the session object and can therefore expose it in your manual code." annotatedElement="_9_0_1fe00f9_1119337248937_233969_55"/>
+    <ownedAttribute xmi:id="_11_5_e240333_1154527288000_343009_263" name="base_Class" visibility="private" association="_11_5_e240333_1154527288000_831781_262">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Class"/>
+    </ownedAttribute>
+    <icon xmi:id="_11_5_e240333_1154527287671_551592_53" content="" location="" format=""/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527331125_669071_417" name="" memberEnd="_11_5_e240333_1154527331125_934188_419 _11_5_e240333_1154527331125_15563_418" navigableOwnedEnd="_11_5_e240333_1154527331125_934188_419">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527331125_934188_419" name="extension_FrontEndView" visibility="private" type="_9_0_1fe00f9_1119337248937_676970_30" aggregation="composite" association="_11_5_e240333_1154527331125_669071_417">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527331140_887349_421" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527331140_484488_420" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527331125_934188_419"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527331125_15563_418"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288062_877396_341" name="" navigableOwnedEnd="_11_5_e240333_1154527288062_856788_343">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288062_856788_343" name="extension_andromda_presentation_web_action_form_reset" visibility="private" aggregation="composite" association="_11_5_e240333_1154527288062_877396_341">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287671_31101_88"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288062_877396_341" name="" memberEnd="_11_5_e240333_1154527288062_348945_342 _11_5_e240333_1154527288062_856788_343" navigableOwnedEnd="_11_5_e240333_1154527288062_856788_343">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288062_856788_343" name="extension_andromda_presentation_web_action_form_reset" visibility="private" type="_11_5_e240333_1154527287671_31101_88" aggregation="composite" association="_11_5_e240333_1154527288062_877396_341">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527288062_56699_345" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527288062_595912_344" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527288062_856788_343"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527288062_348945_342"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_626765_177" name="" navigableOwnedEnd="_11_5_e240333_1154527287968_98523_179">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_98523_179" name="extension_FrontEndRegistration" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287968_626765_177">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_2_12ab03bf_1126726268765_386289_0"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_626765_177" name="" memberEnd="_11_5_e240333_1154527287968_39304_178 _11_5_e240333_1154527287968_98523_179" navigableOwnedEnd="_11_5_e240333_1154527287968_98523_179">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_98523_179" name="extension_FrontEndRegistration" visibility="private" type="_9_0_2_12ab03bf_1126726268765_386289_0" aggregation="composite" association="_11_5_e240333_1154527287968_626765_177">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287968_224700_181" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287968_918628_180" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287968_98523_179"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287968_39304_178"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288078_207838_368" name="" navigableOwnedEnd="_11_5_e240333_1154527288078_778765_370">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288078_778765_370" name="extension_FrontEndApplication" visibility="private" aggregation="composite" association="_11_5_e240333_1154527288078_207838_368">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119337248937_791195_9"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288078_207838_368" name="" memberEnd="_11_5_e240333_1154527288078_778765_370 _11_5_e240333_1154527288078_528195_369" navigableOwnedEnd="_11_5_e240333_1154527288078_778765_370">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288078_778765_370" name="extension_FrontEndApplication" visibility="private" type="_9_0_1fe00f9_1119337248937_791195_9" aggregation="composite" association="_11_5_e240333_1154527288078_207838_368">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527288078_484104_372" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527288078_194545_371" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527288078_778765_370"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527288078_528195_369"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_334402_165" name="" navigableOwnedEnd="_11_5_e240333_1154527287968_514621_167">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_514621_167" name="extension_andromda_presentation_web_view_field_calendar" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287968_334402_165">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287656_847272_19"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_334402_165" name="" memberEnd="_11_5_e240333_1154527287968_514621_167 _11_5_e240333_1154527287968_867227_166" navigableOwnedEnd="_11_5_e240333_1154527287968_514621_167">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_514621_167" name="extension_andromda_presentation_web_view_field_calendar" visibility="private" type="_11_5_e240333_1154527287656_847272_19" aggregation="composite" association="_11_5_e240333_1154527287968_334402_165">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287968_189272_169" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287968_860457_168" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287968_867227_166"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287968_514621_167"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_296291_252" name="" navigableOwnedEnd="_11_5_e240333_1154527288000_912747_254">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_912747_254" name="extension_andromda_presentation_view_table_columns" visibility="private" aggregation="composite" association="_11_5_e240333_1154527288000_296291_252">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287671_632374_75"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_296291_252" name="" memberEnd="_11_5_e240333_1154527288000_912747_254 _11_5_e240333_1154527288000_288006_253" navigableOwnedEnd="_11_5_e240333_1154527288000_912747_254">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_912747_254" name="extension_andromda_presentation_view_table_columns" visibility="private" type="_11_5_e240333_1154527287671_632374_75" aggregation="composite" association="_11_5_e240333_1154527288000_296291_252">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527288000_159732_256" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527288000_27717_255" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527288000_288006_253"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527288000_912747_254"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_599262_170" name="" navigableOwnedEnd="_11_5_e240333_1154527287968_870612_172">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_870612_172" name="extension_andromda_presentation_web_view_field_calendar" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287968_599262_170">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287656_847272_19"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_599262_170" name="" memberEnd="_11_5_e240333_1154527287968_870612_172 _11_5_e240333_1154527287968_13317_171" navigableOwnedEnd="_11_5_e240333_1154527287968_870612_172">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_870612_172" name="extension_andromda_presentation_web_view_field_calendar" visibility="private" type="_11_5_e240333_1154527287656_847272_19" aggregation="composite" association="_11_5_e240333_1154527287968_599262_170">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287968_335215_174" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287968_561745_173" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287968_870612_172"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287968_13317_171"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_831781_262" name="" navigableOwnedEnd="_11_5_e240333_1154527288000_263835_264">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_263835_264" name="extension_FrontEndSessionObject" visibility="private" aggregation="composite" association="_11_5_e240333_1154527288000_831781_262">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119337248937_233969_55"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_831781_262" name="" memberEnd="_11_5_e240333_1154527288000_263835_264 _11_5_e240333_1154527288000_343009_263" navigableOwnedEnd="_11_5_e240333_1154527288000_263835_264">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_263835_264" name="extension_FrontEndSessionObject" visibility="private" type="_9_0_1fe00f9_1119337248937_233969_55" aggregation="composite" association="_11_5_e240333_1154527288000_831781_262">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527288000_473429_266" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527288000_852272_265" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527288000_343009_263"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527288000_263835_264"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287890_998142_106" name="" navigableOwnedEnd="_11_5_e240333_1154527287890_353960_108">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287890_353960_108" name="extension_andromda_presentation_controller_usecase" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287890_998142_106">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287656_99430_24"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287890_998142_106" name="" memberEnd="_11_5_e240333_1154527287890_496902_107 _11_5_e240333_1154527287890_353960_108" navigableOwnedEnd="_11_5_e240333_1154527287890_353960_108">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287890_353960_108" name="extension_andromda_presentation_controller_usecase" visibility="private" type="_11_5_e240333_1154527287656_99430_24" aggregation="composite" association="_11_5_e240333_1154527287890_998142_106">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287890_264361_110" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287890_455090_109" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287890_353960_108"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287890_496902_107"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287937_114543_154" name="" navigableOwnedEnd="_11_5_e240333_1154527287937_268071_156">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287937_268071_156" name="extension_FrontEndException" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287937_114543_154">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119337248937_447433_8"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287937_114543_154" name="" memberEnd="_11_5_e240333_1154527287937_730560_155 _11_5_e240333_1154527287937_268071_156" navigableOwnedEnd="_11_5_e240333_1154527287937_268071_156">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287937_268071_156" name="extension_FrontEndException" visibility="private" type="_9_0_1fe00f9_1119337248937_447433_8" aggregation="composite" association="_11_5_e240333_1154527287937_114543_154">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287937_916429_158" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287937_973782_157" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287937_268071_156"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287937_730560_155"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_226810_192" name="" navigableOwnedEnd="_11_5_e240333_1154527287968_12122_194">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_12122_194" name="extension_FrontEndUseCase" visibility="private" aggregation="composite" association="_11_5_e240333_1154527287968_226810_192">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_9_0_1fe00f9_1119337248937_839982_7"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527287968_226810_192" name="" memberEnd="_11_5_e240333_1154527287968_667419_193 _11_5_e240333_1154527287968_12122_194" navigableOwnedEnd="_11_5_e240333_1154527287968_12122_194">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527287968_12122_194" name="extension_FrontEndUseCase" visibility="private" type="_9_0_1fe00f9_1119337248937_839982_7" aggregation="composite" association="_11_5_e240333_1154527287968_226810_192">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287968_844687_196" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287968_194351_195" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287968_667419_193"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527287968_12122_194"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_271313_257" name="" navigableOwnedEnd="_11_5_e240333_1154527288000_709450_259">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_709450_259" name="extension_andromda_presentation_view_table_columns" visibility="private" aggregation="composite" association="_11_5_e240333_1154527288000_271313_257">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287671_632374_75"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527288000_271313_257" name="" memberEnd="_11_5_e240333_1154527288000_402729_258 _11_5_e240333_1154527288000_709450_259" navigableOwnedEnd="_11_5_e240333_1154527288000_709450_259">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527288000_709450_259" name="extension_andromda_presentation_view_table_columns" visibility="private" type="_11_5_e240333_1154527287671_632374_75" aggregation="composite" association="_11_5_e240333_1154527288000_271313_257">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527288000_130774_261" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527288000_466581_260" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527288000_709450_259"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_5_e240333_1154527288000_402729_258"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Enumeration" xmi:id="_11_6_e240333_1161153044093_386067_123" name="TernaryBoolean">
     <ownedLiteral xmi:id="_11_6_e240333_1161153044171_420133_126" name="default"/>
     <ownedLiteral xmi:id="_11_6_e240333_1161153044140_843873_124" name="true"/>
     <ownedLiteral xmi:id="_11_6_e240333_1161153044171_46313_125" name="false"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161154437921_99743_145" name="" navigableOwnedEnd="_11_6_e240333_1161154437921_48395_147">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161154437921_48395_147" name="extension_Message" visibility="private" aggregation="composite" association="_11_6_e240333_1161154437921_99743_145">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_6_e240333_1161154424000_684096_139"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161154437921_99743_145" name="" memberEnd="_11_6_e240333_1161154437921_860306_146 _11_6_e240333_1161154437921_48395_147" navigableOwnedEnd="_11_6_e240333_1161154437921_48395_147">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161154437921_48395_147" name="extension_Message" visibility="private" type="_11_6_e240333_1161154424000_684096_139" aggregation="composite" association="_11_6_e240333_1161154437921_99743_145">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_6_e240333_1161154437921_973089_149" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_6_e240333_1161154437921_568484_148" name=""/>
     </ownedEnd>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_6_e240333_1161154437921_860306_146"/>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_6_e240333_1161154437921_48395_147"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161154558906_210642_156" name="" navigableOwnedEnd="_11_6_e240333_1161154558906_939217_158">
-    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161154558906_939217_158" name="extension_Table" visibility="private" aggregation="composite" association="_11_6_e240333_1161154558906_210642_156">
-      <type xmi:type="uml:Stereotype" href="org.andromda.profile.profile.uml#_11_5_e240333_1154527287671_632374_75"/>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161154558906_210642_156" name="" memberEnd="_11_6_e240333_1161154558906_939217_158 _11_6_e240333_1161154558906_663163_157" navigableOwnedEnd="_11_6_e240333_1161154558906_939217_158">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161154558906_939217_158" name="extension_Table" visibility="private" type="_11_5_e240333_1154527287671_632374_75" aggregation="composite" association="_11_6_e240333_1161154558906_210642_156">
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_6_e240333_1161154558906_878400_160" name="" value="1"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_6_e240333_1161154558906_656073_159" name=""/>
     </ownedEnd>
-    <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_6_e240333_1161154558906_939217_158"/>
-    <memberEnd href="org.andromda.profile.profile.uml#_11_6_e240333_1161154558906_663163_157"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_11_6_e240333_1161154424000_684096_139" name="FrontEndMessage">
+    <ownedAttribute xmi:id="_11_6_e240333_1161154437921_860306_146" name="base_Transition" visibility="private" association="_11_6_e240333_1161154437921_99743_145">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Transition"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_768123_57" name="andromda_presentation_action_warning_message" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_568753_152" body="Place this tagged value on a transition if you want to have an automatic warning message rendered into the target jsp page, this message will indicate that the action has finished succesfully but the user's attention should go to a specific topic. The value assigned to this tagged value will be used as the warning message in case it contains more than 5 characters, otherwise the value needs to be 'true' to be taken into account." annotatedElement="_9_0_1fe00f9_1119337248937_768123_57"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287656_441193_38" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287656_525605_37" name="" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_9_0_1fe00f9_1119337248937_826380_47" name="andromda_presentation_action_success_message" visibility="private">
+      <ownedComment xmi:id="_9_0_1fe00f9_1119337319421_883649_133" body="Place this tagged value on a transition if you want to have an automatic confirmation message rendered into the target jsp page, this message will indicate that the action has finished succesfully. The value assigned to this tagged value will be used as the success message in case it contains more than 5 characters, otherwise the value needs to be 'true' to be taken into account." annotatedElement="_9_0_1fe00f9_1119337248937_826380_47"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527287671_809835_77" name="" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527287671_835569_76" name="" value="1"/>
+    </ownedAttribute>
   </packagedElement>
 </uml:Profile>

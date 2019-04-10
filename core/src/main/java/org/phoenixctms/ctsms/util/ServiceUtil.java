@@ -1088,7 +1088,7 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static void checkUserInput(UserInVO userIn, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
+	public static void checkUserInput(UserInVO userIn, User originalUser, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
 		Department department = CheckIDUtil.checkDepartmentId(userIn.getDepartmentId(), departmentDao);
 		if (!CryptoUtil.checkDepartmentPassword(department, plainDepartmentPassword)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
@@ -1098,6 +1098,20 @@ public final class ServiceUtil {
 		}
 		checkLocale(userIn.getLocale());
 		checkTimeZone(userIn.getTimeZone());
+		if (userIn.getDecimalSeparator() != null) { // && userIn.getDecimalSeparator().length() > 0) {
+			if (!CoreUtil.getDecimalSeparatos().contains(userIn.getDecimalSeparator())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DECIMAL_SEPARATOR, userIn.getDecimalSeparator());
+			}
+		}
+		if (userIn.getDateFormat() != null) { // && userIn.getDateFormat().length() > 0) {
+			HashSet<String> dateFormats = new HashSet<String>(CoreUtil.getDateFormats());
+			if (originalUser != null && originalUser.getDateFormat() != null && originalUser.getDateFormat().length() > 0) {
+				dateFormats.add(originalUser.getDateFormat());
+			}
+			if (!dateFormats.contains(userIn.getDateFormat())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DATE_FORMAT_PATTERN, userIn.getDateFormat());
+			}
+		}
 	}
 
 	public static void checkUsernameExists(String username, UserDao userDao) throws ServiceException {
@@ -1347,13 +1361,13 @@ public final class ServiceUtil {
 			}
 
 			@Override
-			protected DateFormat getDateFormat() {
+			protected DateFormat getDateFormat(boolean isUserTimeZone) {
 				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN,
 						locale);
 			}
 
 			@Override
-			protected DateFormat getDateTimeFormat() {
+			protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
 						DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, locale);
 			}
@@ -1361,6 +1375,11 @@ public final class ServiceUtil {
 			@Override
 			protected Date getDateValue(ProbandListEntryTagValueOutVO value) {
 				return value.getDateValue();
+			}
+
+			@Override
+			protected String getDecimalSeparator() {
+				return Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR);
 			}
 
 			@Override
@@ -1401,7 +1420,7 @@ public final class ServiceUtil {
 			}
 
 			@Override
-			protected DateFormat getTimeFormat() {
+			protected DateFormat getTimeFormat(boolean isUserTimeZone) {
 				return Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN,
 						locale);
 			}
@@ -1867,6 +1886,7 @@ public final class ServiceUtil {
 		}
 		ecrfFieldValueVO.setInputFieldId(inputField.getId());
 		ecrfFieldValueVO.setInputFieldType(inputField.getFieldType());
+		ecrfFieldValueVO.setUserTimeZone(inputField.isUserTimeZone());
 		if (inputField.isLocalized()) {
 			ecrfFieldValueVO.setInputFieldName(L10nUtil.getInputFieldName(Locales.USER, inputField.getNameL10nKey()));
 		} else {
@@ -2022,6 +2042,7 @@ public final class ServiceUtil {
 		inquiryValueVO.setCategory(inquiry.getCategory());
 		inquiryValueVO.setInputFieldId(inputField.getId());
 		inquiryValueVO.setInputFieldType(inputField.getFieldType());
+		inquiryValueVO.setUserTimeZone(inputField.isUserTimeZone());
 		if (inputField.isLocalized()) {
 			inquiryValueVO.setInputFieldName(L10nUtil.getInputFieldName(Locales.USER, inputField.getNameL10nKey()));
 		} else {
@@ -2153,6 +2174,7 @@ public final class ServiceUtil {
 		listEntryTagValueVO.setDisabled(listEntryTag.isDisabled());
 		listEntryTagValueVO.setInputFieldId(inputField.getId());
 		listEntryTagValueVO.setInputFieldType(inputField.getFieldType());
+		listEntryTagValueVO.setUserTimeZone(inputField.isUserTimeZone());
 		if (inputField.isLocalized()) {
 			listEntryTagValueVO.setInputFieldName(L10nUtil.getInputFieldName(Locales.USER, inputField.getNameL10nKey()));
 		} else {

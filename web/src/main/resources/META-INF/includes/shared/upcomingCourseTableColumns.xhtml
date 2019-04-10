@@ -88,6 +88,7 @@
 			</f:facet>
 			<h:outputText value="#{course.vo.start}">
 				<f:converter converterId="ctsms.Date" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column
@@ -98,6 +99,7 @@
 			</f:facet>
 			<h:outputText value="#{course.vo.stop}">
 				<f:converter converterId="ctsms.Date" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column
@@ -108,6 +110,7 @@
 			</f:facet>
 			<h:outputText value="#{course.vo.participationDeadline}">
 				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column>

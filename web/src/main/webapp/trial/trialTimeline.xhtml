@@ -345,9 +345,10 @@
 					dragAreaWidth="10"
 					width="100%"
 					responsive="true"
-					timeZone="#{sessionScopeBean.timeZone}"
+					timeZone="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}"
 					locale="#{sessionScopeBean.locale}"
 					var="timelineEvent">
+					
 					<pe:javascript
 						event="rangechanged"
 						execute="if(handleTrialTimelineRangeChanged()){setSupressWait();changeTrial();}" />

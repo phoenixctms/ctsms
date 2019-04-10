@@ -17,6 +17,8 @@ public class InputFieldValueVOStringAdapter extends InputFieldValueStringAdapter
 		return value.getBooleanValue();
 	}
 
+
+
 	@Override
 	protected Date getDateValue(InputFieldValueVO value) {
 		return value.getDateValue();

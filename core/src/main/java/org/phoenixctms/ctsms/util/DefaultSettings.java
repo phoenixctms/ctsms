@@ -100,6 +100,7 @@ public final class DefaultSettings {
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
+	public static final String NOTIFICATION_TEMPLATE_MODEL_DECIMAL_SEPARATOR = null;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = true;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_ENTITIES = true;
 	public static final boolean NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_REFERENCES = true;
@@ -157,6 +158,7 @@ public final class DefaultSettings {
 	public static final Integer DUTY_ROSTER_TURN_TITLE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 10;
 	public static final Integer INVENTORY_BOOKING_CALENDAR_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 10;
 	public static final Integer LDAP_ENTRIES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
+	public static final Integer TIMEZONE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer PROBAND_LIST_ENTRY_TAG_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer INQUIRY_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
@@ -212,12 +214,15 @@ public final class DefaultSettings {
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
 	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
+	public final static int FIELD_CALCULATION_DEBUG_LEVEL = 0;
+	public final static Integer INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
 	public static final boolean REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = false;
 
 	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
+	public static final String MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR = null;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = false;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES = true;
 	public static final boolean MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_REFERENCES = true;

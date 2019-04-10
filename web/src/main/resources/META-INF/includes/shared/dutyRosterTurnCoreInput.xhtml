@@ -115,13 +115,14 @@
 					value="#{dutyRosterTurnBean.in.start}"
 					required="true"
 					label="#{stafflabels.duty_roster_turn_core_input_start}"
-					pattern="#{applicationScopeBean.inputDateTimePattern}"
+					pattern="#{sessionScopeBean.inputDateTimePattern}"
 					yearRange="#{applicationScopeBean.calendarYearRange}"
 					showWeek="true"
 					navigator="true"
 					locale="#{sessionScopeBean.locale}"
-					timeZone="#{sessionScopeBean.timeZone}"
 					styleClass="ctsms-calendar-datetime">
+					<f:converter converterId="ctsms.DateTime" />
+					<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					<p:ajax
 						onstart="setSupressWait()"
 						event="blur"
@@ -173,13 +174,14 @@
 					value="#{dutyRosterTurnBean.in.stop}"
 					required="true"
 					label="#{stafflabels.duty_roster_turn_core_input_stop}"
-					pattern="#{applicationScopeBean.inputDateTimePattern}"
+					pattern="#{sessionScopeBean.inputDateTimePattern}"
 					yearRange="#{applicationScopeBean.calendarYearRange}"
 					showWeek="true"
 					navigator="true"
 					locale="#{sessionScopeBean.locale}"
-					timeZone="#{sessionScopeBean.timeZone}"
 					styleClass="ctsms-calendar-datetime">
+					<f:converter converterId="ctsms.DateTime" />
+					<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 					<p:ajax
 						onstart="setSupressWait()"
 						event="blur"

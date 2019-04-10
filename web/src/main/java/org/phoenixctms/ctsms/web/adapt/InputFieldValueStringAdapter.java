@@ -55,12 +55,17 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 		}
 	}
 
-	protected DateFormat getDateFormat() {
-		return DateUtil.getDateFormat();
+	protected DateFormat getDateFormat(boolean isUserTimeZone) {
+		return DateUtil.getDateFormat(isUserTimeZone);
 	}
 
-	protected  DateFormat getDateTimeFormat() {
-		return DateUtil.getDateTimeFormat();
+	protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
+		return DateUtil.getDateTimeFormat(isUserTimeZone);
+	}
+
+	@Override
+	protected String getDecimalSeparator() {
+		return WebUtil.getDecimalSeparator();
 	}
 
 	protected String getSelectionSetValuesSeparator() {
@@ -71,8 +76,8 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 		return textClipMaxLength;
 	}
 
-	protected DateFormat getTimeFormat() {
-		return DateUtil.getTimeFormat();
+	protected DateFormat getTimeFormat(boolean isUserTimeZone) {
+		return DateUtil.getTimeFormat(isUserTimeZone);
 	}
 
 }

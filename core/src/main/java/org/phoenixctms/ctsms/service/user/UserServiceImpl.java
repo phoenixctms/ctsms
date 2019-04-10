@@ -151,7 +151,7 @@ extends UserServiceBase
 	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, Integer maxInstances) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
-		ServiceUtil.checkUserInput(newUser, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(newUser, null, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
@@ -521,7 +521,7 @@ extends UserServiceBase
 	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, Integer maxInstances) throws Exception {
 		UserDao userDao = this.getUserDao();
 		User originalUser = CheckIDUtil.checkUserId(modifiedUser.getId(), userDao, LockMode.PESSIMISTIC_WRITE);
-		ServiceUtil.checkUserInput(modifiedUser, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(modifiedUser, originalUser, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
 		if (!modifiedUser.getDepartmentId().equals(originalUser.getDepartment().getId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.USER_DEPARTMENT_CHANGED);
 		}

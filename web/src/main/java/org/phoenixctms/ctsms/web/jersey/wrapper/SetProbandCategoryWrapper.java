@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.wrapper;
 
-
 import java.io.Serializable;
 
 public class SetProbandCategoryWrapper implements Serializable {

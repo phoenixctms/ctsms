@@ -336,16 +336,20 @@ public final class QueryUtil {
 			hqlWhereClause.append(" >= ? and ");
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" <= ?)");
-			Date date = CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN);
-			queryValues.add(new QueryParameterValue(Timestamp.class, CommonUtil.inputValueToString(CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)))));
-			queryValues.add(new QueryParameterValue(Timestamp.class, CommonUtil.inputValueToString(CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date)))));
+			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+			queryValues.add(new QueryParameterValue(Timestamp.class, CommonUtil.inputValueToString(CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)),
+					CoreUtil.getUserContext().getDateFormat(),
+					CoreUtil.getUserContext().getDecimalSeparator())));
+			queryValues.add(new QueryParameterValue(Timestamp.class, CommonUtil.inputValueToString(CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date)),
+					CoreUtil.getUserContext().getDateFormat(),
+					CoreUtil.getUserContext().getDecimalSeparator())));
 		} else if (propertyClass.equals(Time.class)) {
 			hqlWhereClause.append("(hour(");
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(") >= ? and hour(");
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(") <= ?)");
-			Date time = CommonUtil.parseDate(value, CommonUtil.INPUT_TIME_PATTERN);
+			Date time = CommonUtil.parseDate(value, CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()));
 			queryValues.add(new QueryParameterValue(Integer.class, Integer.toString(DateCalc.getHour(time))));
 			queryValues.add(new QueryParameterValue(Integer.class, Integer.toString(DateCalc.getHour(time))));
 		} else if (propertyClass.equals(VariablePeriod.class)) {
@@ -1508,17 +1512,17 @@ public final class QueryUtil {
 		} else if (propertyClass.equals(java.lang.Boolean.TYPE)) {
 			query.setBoolean(pos, new Boolean(value));
 		} else if (propertyClass.equals(Float.class)) {
-			query.setFloat(pos, new Float(value));
+			query.setFloat(pos, CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator()));
 		} else if (propertyClass.equals(java.lang.Float.TYPE)) {
-			query.setFloat(pos, new Float(value));
+			query.setFloat(pos, CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator()));
 		} else if (propertyClass.equals(Double.class)) {
-			query.setDouble(pos, new Double(value));
+			query.setDouble(pos, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator()));
 		} else if (propertyClass.equals(java.lang.Double.TYPE)) {
-			query.setDouble(pos, new Double(value));
+			query.setDouble(pos, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator()));
 		} else if (propertyClass.equals(Date.class)) {
-			query.setDate(pos, CommonUtil.parseDate(value, CommonUtil.INPUT_DATE_PATTERN));
+			query.setDate(pos, CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat())));
 		} else if (propertyClass.equals(Timestamp.class)) {
-			query.setTimestamp(pos, CommonUtil.dateToTimestamp(CommonUtil.parseDate(value, CommonUtil.INPUT_DATETIME_PATTERN)));
+			query.setTimestamp(pos, CommonUtil.dateToTimestamp(CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()))));
 		} else if (propertyClass.equals(VariablePeriod.class)) {
 			query.setString(pos, VariablePeriod.fromString(value).name());
 		} else if (propertyClass.equals(AuthenticationType.class)) {

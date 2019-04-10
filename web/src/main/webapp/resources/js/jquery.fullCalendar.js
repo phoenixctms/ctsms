@@ -1649,11 +1649,13 @@ var dateFormatters = {
 	},
 	w   : function(d, o) { // local
 		//return o.weekNumberCalculation(d);
-		return o.weekNumberCalculation(d.clone().addDays(-1 * o.firstDay + 1));
+		return o.weekNumberCalculation(addDays(cloneDate(d),-1 * o.firstDay + 1));
+		//return o.weekNumberCalculation(d.clone().addDays(-1 * o.firstDay + 1));
 	},
 	W   : function(d, o) { // ISO
 		//return iso8601Week(d);
-		return iso8601Week(d.clone().addDays(-1 * o.firstDay + 1));
+		return iso8601Week(addDays(cloneDate(d),-1 * o.firstDay + 1));
+		//return iso8601Week(d.clone().addDays(-1 * o.firstDay + 1));
 	}
 };
 fc.dateFormatters = dateFormatters;
