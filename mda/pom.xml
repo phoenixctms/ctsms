@@ -55,33 +55,6 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>eclipse</id>
-            <build>
-                <plugins>
-                    <!-- This will overwrite top level .project and .classpath each time.
-                         The maven Eclipse plugin in mda/pom.xml does a better job anyway. See mda/eclipse.bat.-->
-                    <plugin>
-                        <groupId>org.andromda.maven.plugins</groupId>
-                        <artifactId>andromdapp-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>eclipse</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <excludes>
-                                <exclude>app/pom.xml</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <build>
         <sourceDirectory>${project.basedir}/src/main/uml</sourceDirectory>
         <plugins>
