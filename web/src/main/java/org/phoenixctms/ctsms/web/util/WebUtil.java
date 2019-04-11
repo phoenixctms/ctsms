@@ -1870,7 +1870,7 @@ public final class WebUtil {
 		ArrayList<SelectItem> result;
 		Collection<String> dateFormats = null;
 		try {
-			dateFormats = new LinkedHashSet<String>(getServiceLocator().getToolsService().getDateFormats(getAuthentication()));
+			dateFormats = new LinkedHashSet<String>(getServiceLocator().getSelectionSetService().getDateFormats(getAuthentication()));
 			if (existing != null && existing.length() > 0) {
 				dateFormats.add(existing);
 			}
@@ -1944,7 +1944,7 @@ public final class WebUtil {
 		ArrayList<SelectItem> result;
 		Collection<String> deciamlSeparators = null;
 		try {
-			deciamlSeparators = getServiceLocator().getToolsService().getDecimalSeparators(getAuthentication());
+			deciamlSeparators = getServiceLocator().getSelectionSetService().getDecimalSeparators(getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -2945,7 +2945,7 @@ public final class WebUtil {
 		Collection<LocaleVO> localeVOs = null;
 		ArrayList<SelectItem> locales;
 		try {
-			localeVOs = getServiceLocator().getToolsService().getLocales(getAuthentication());
+			localeVOs = getServiceLocator().getSelectionSetService().getLocales(getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -4193,7 +4193,7 @@ public final class WebUtil {
 	public static TimeZoneVO getTimeZone(String timeZoneID) {
 		if (timeZoneID != null) {
 			try {
-				return WebUtil.getServiceLocator().getToolsService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
+				return WebUtil.getServiceLocator().getSelectionSetService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

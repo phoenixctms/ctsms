@@ -1,2 +1,49 @@
-# Auto detect text files and perform LF normalization
-# * text=auto
+# All file types need to be handled explicitly, so no: * text=auto
+
+# These files are text and should be normalized (Convert crlf => lf)
+*.css           text
+*.classpath     text
+*.df            text
+*.htm           text
+*.html          text
+*.xhtml         text
+*.md            text
+*.java          text
+*.js            text
+*.json          text
+*.jsp           text
+*.jspf          text
+*.jspx          text
+*.properties    text
+*.sh            text eol=lf
+*.sql           text
+*.tld           text
+*.txt           text
+*.tag           text
+*.tagx          text
+*.xml           text
+*.xhtml         text
+*.yml           text
+*.csv           text
+*.vsl           text
+*.bat           text eol=crlf
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.db            binary
+*.class         binary
+*.dll           binary
+*.ear           binary
+*.gif           binary
+*.ico           binary
+*.jar           binary
+*.jpg           binary
+*.jpeg          binary
+*.png           binary
+*.so            binary
+*.war           binary
+*.xls           binary
+*.pdf           binary
+*.xlsx          binary
+*.uml           binary
+

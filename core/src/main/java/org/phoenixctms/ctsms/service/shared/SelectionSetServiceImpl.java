@@ -10,6 +10,9 @@ package org.phoenixctms.ctsms.service.shared;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.phoenixctms.ctsms.adapt.InventoryTagAdapter;
 import org.phoenixctms.ctsms.adapt.LecturerCompetenceTagAdapter;
@@ -125,6 +128,8 @@ import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -168,6 +173,7 @@ import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightInputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.LightInquiryOutVO;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailTypeVO;
@@ -189,6 +195,7 @@ import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StreetVO;
 import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
+import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
@@ -872,6 +879,12 @@ extends SelectionSetServiceBase
 	}
 
 	@Override
+	protected Collection<String> handleGetDateFormats(
+			AuthenticationVO auth) throws Exception {
+		return CoreUtil.getDateFormats();
+	}
+
+	@Override
 	protected Collection<DBModuleVO> handleGetDBModules(AuthenticationVO auth)
 			throws Exception {
 		Collection<DBModuleVO> result; // = new ArrayList<SexVO>();
@@ -885,6 +898,12 @@ extends SelectionSetServiceBase
 			result = new ArrayList<DBModuleVO>();
 		}
 		return result;
+	}
+
+	@Override
+	protected Collection<String> handleGetDecimalSeparators(
+			AuthenticationVO auth) throws Exception {
+		return CoreUtil.getDecimalSeparatos();
 	}
 
 	@Override
@@ -1199,7 +1218,32 @@ extends SelectionSetServiceBase
 		return lecturerCompetenceDao.toLecturerCompetenceVO(competence);
 	}
 
+	@Override
+	protected LocaleVO handleGetLocale(AuthenticationVO auth, String language)
+			throws Exception {
+		Locale locale = CommonUtil.localeFromString(language);
+		LocaleVO localeVO = new LocaleVO();
+		localeVO.setLanguage(CommonUtil.localeToString(locale));
+		localeVO.setName(CommonUtil.localeToDisplayString(locale, L10nUtil.getLocale(Locales.USER)));
+		return localeVO;
+	}
 
+	@Override
+	protected Collection<LocaleVO> handleGetLocales(AuthenticationVO auth)
+			throws Exception {
+		ArrayList<Locale> supportedLocales = CoreUtil.getSupportedLocales();
+		ArrayList<LocaleVO> result = new ArrayList<LocaleVO>(supportedLocales.size());
+		Iterator<Locale> it = supportedLocales.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext()) {
+			Locale locale = it.next();
+			LocaleVO localeVO = new LocaleVO();
+			localeVO.setLanguage(CommonUtil.localeToString(locale));
+			localeVO.setName(CommonUtil.localeToDisplayString(locale, userLocale));
+			result.add(localeVO);
+		}
+		return result;
+	}
 
 	@Override
 	protected MaintenanceTypeVO handleGetMaintenanceType(AuthenticationVO auth, Long typeId)
@@ -1557,6 +1601,35 @@ extends SelectionSetServiceBase
 		TimelineEventTypeDao timelineEventTypeDao = this.getTimelineEventTypeDao();
 		TimelineEventType type = CheckIDUtil.checkTimelineEventTypeId(typeId, timelineEventTypeDao);
 		return timelineEventTypeDao.toTimelineEventTypeVO(type);
+	}
+
+	@Override
+	protected TimeZoneVO handleGetTimeZone(AuthenticationVO auth, String timeZoneID)
+			throws Exception {
+		TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneID);
+		TimeZoneVO timeZoneVO = new TimeZoneVO();
+		timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+		timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, L10nUtil.getLocale(Locales.USER)));
+		timeZoneVO.setRawOffset(timeZone.getRawOffset());
+		return timeZoneVO;
+	}
+
+	@Override
+	protected Collection<TimeZoneVO> handleGetTimeZones(AuthenticationVO auth)
+			throws Exception {
+		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
+		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>(timeZones.size());
+		Iterator<TimeZone> it = timeZones.iterator();
+		Locale userLocale = L10nUtil.getLocale(Locales.USER);
+		while (it.hasNext()) {
+			TimeZone timeZone = it.next();
+			TimeZoneVO timeZoneVO = new TimeZoneVO();
+			timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
+			timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, userLocale));
+			timeZoneVO.setRawOffset(timeZone.getRawOffset());
+			result.add(timeZoneVO);
+		}
+		return result;
 	}
 
 
