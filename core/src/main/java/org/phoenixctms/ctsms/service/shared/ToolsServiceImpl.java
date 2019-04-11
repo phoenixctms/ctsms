@@ -125,7 +125,6 @@ import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightInputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.LightInquiryOutVO;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
-import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
@@ -830,17 +829,7 @@ extends ToolsServiceBase
 		return Settings.getString(SettingCodes.CURRENCY_SYMBOL, Bundle.SETTINGS, DefaultSettings.CURRENCY_SYMBOL);
 	}
 
-	@Override
-	protected Collection<String> handleGetDateFormats(
-			AuthenticationVO auth) throws Exception {
-		return CoreUtil.getDateFormats();
-	}
 
-	@Override
-	protected Collection<String> handleGetDecimalSeparators(
-			AuthenticationVO auth) throws Exception {
-		return CoreUtil.getDecimalSeparatos();
-	}
 
 	@Override
 	protected String handleGetDefaultLocale() throws Exception {
@@ -913,34 +902,7 @@ extends ToolsServiceBase
 		return getLdapEntry(auth, username, AuthenticationType.LDAP2);
 	}
 
-	@Override
-	protected LocaleVO handleGetLocale(AuthenticationVO auth, String language)
-			throws Exception {
-		CoreUtil.setUser(auth, this.getUserDao());
-		Locale locale = CommonUtil.localeFromString(language);
-		LocaleVO localeVO = new LocaleVO();
-		localeVO.setLanguage(CommonUtil.localeToString(locale));
-		localeVO.setName(CommonUtil.localeToDisplayString(locale, L10nUtil.getLocale(Locales.USER)));
-		return localeVO;
-	}
 
-	@Override
-	protected Collection<LocaleVO> handleGetLocales(AuthenticationVO auth)
-			throws Exception {
-		CoreUtil.setUser(auth, this.getUserDao());
-		ArrayList<Locale> supportedLocales = CoreUtil.getSupportedLocales();
-		ArrayList<LocaleVO> result = new ArrayList<LocaleVO>(supportedLocales.size());
-		Iterator<Locale> it = supportedLocales.iterator();
-		Locale userLocale = L10nUtil.getLocale(Locales.USER);
-		while (it.hasNext()) {
-			Locale locale = it.next();
-			LocaleVO localeVO = new LocaleVO();
-			localeVO.setLanguage(CommonUtil.localeToString(locale));
-			localeVO.setName(CommonUtil.localeToDisplayString(locale, userLocale));
-			result.add(localeVO);
-		}
-		return result;
-	}
 
 	@Override
 	protected DBModuleVO handleGetLocalizedDBModule(AuthenticationVO auth, DBModule module) throws Exception {
@@ -1027,36 +989,7 @@ extends ToolsServiceBase
 		return Settings.getIntNullable(SettingCodes.STAFF_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.STAFF_IMAGE_SIZE_LIMIT);
 	}
 
-	@Override
-	protected TimeZoneVO handleGetTimeZone(AuthenticationVO auth, String timeZoneID)
-			throws Exception {
-		CoreUtil.setUser(auth, this.getUserDao());
-		TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneID);
-		TimeZoneVO timeZoneVO = new TimeZoneVO();
-		timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
-		timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, L10nUtil.getLocale(Locales.USER)));
-		timeZoneVO.setRawOffset(timeZone.getRawOffset());
-		return timeZoneVO;
-	}
 
-	@Override
-	protected Collection<TimeZoneVO> handleGetTimeZones(AuthenticationVO auth)
-			throws Exception {
-		CoreUtil.setUser(auth, this.getUserDao());
-		ArrayList<TimeZone> timeZones = CoreUtil.getTimeZones();
-		ArrayList<TimeZoneVO> result = new ArrayList<TimeZoneVO>(timeZones.size());
-		Iterator<TimeZone> it = timeZones.iterator();
-		Locale userLocale = L10nUtil.getLocale(Locales.USER);
-		while (it.hasNext()) {
-			TimeZone timeZone = it.next();
-			TimeZoneVO timeZoneVO = new TimeZoneVO();
-			timeZoneVO.setTimeZoneID(CommonUtil.timeZoneToString(timeZone));
-			timeZoneVO.setName(CommonUtil.timeZoneToDisplayString(timeZone, userLocale));
-			timeZoneVO.setRawOffset(timeZone.getRawOffset());
-			result.add(timeZoneVO);
-		}
-		return result;
-	}
 
 	@Override
 	protected Integer handleGetUploadSizeLimit() throws Exception {

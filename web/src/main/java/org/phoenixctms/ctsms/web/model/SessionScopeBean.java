@@ -81,7 +81,7 @@ public class SessionScopeBean {
 	private static Collection<LocaleVO> getLocales() {
 		Collection<LocaleVO> locales = null;
 		try {
-			locales = WebUtil.getServiceLocator().getToolsService().getLocales(WebUtil.getAuthentication());
+			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -134,7 +134,7 @@ public class SessionScopeBean {
 	public static Collection<TimeZoneVO> getTimeZones() {
 		Collection<TimeZoneVO> timeZones = null;
 		try {
-			timeZones = WebUtil.getServiceLocator().getToolsService().getTimeZones(WebUtil.getAuthentication());
+			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
