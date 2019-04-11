@@ -134,18 +134,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
-		<!--         <dependency>
-			<groupId>com.sun.facelets</groupId>
-			<artifactId>jsf-facelets</artifactId>
-		</dependency> -->
-
-		<dependency>
-			<groupId>com.sun.facelets</groupId>
-			<artifactId>jsf-facelets</artifactId>
-			<version>1.1.15</version>
-			<scope>runtime</scope>
-		</dependency>
-
 		<!-- <dependency>
 			<groupId>org.apache.myfaces.trinidad</groupId>
 			<artifactId>trinidad-api</artifactId>
@@ -217,7 +205,7 @@
 		  <groupId>com.sun.faces</groupId>
 		  <artifactId>jsf-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
 		  <groupId>com.sun.faces</groupId>
 		  <artifactId>jsf-impl</artifactId>
@@ -263,7 +251,7 @@
 		  <artifactId>el-api</artifactId>
 		  <version>2.2</version>
 		</dependency>
-	
+
 		<dependency>
 		  <groupId>org.glassfish.web</groupId>
 		  <artifactId>el-impl</artifactId>
@@ -352,7 +340,7 @@
 				<groupId>net.java.dev.webdav</groupId>
 				<artifactId>webdav-jaxrs</artifactId>
 				<version>1.2.1</version>
-		
+
 		</dependency> -->
 		<dependency>
 			<groupId>net.java.dev.webdav</groupId>
@@ -429,13 +417,13 @@
 		<!--             <dependency>
 		  <groupId>javax.el</groupId>
 		  <artifactId>el-api</artifactId>
-	
+
 		</dependency>
-	
+
 		<dependency>
 		  <groupId>org.glassfish.web</groupId>
 		  <artifactId>el-impl</artifactId>
-	
+
 		</dependency> -->
 
 
@@ -699,7 +687,7 @@
 			</resource>
 		</resources>
 		<plugins>
-	
+
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
@@ -761,7 +749,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>					
+      </plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
