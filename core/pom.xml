@@ -246,8 +246,10 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <!-- http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories -->
                 <executions>
-			        <execution>
-			            <phase>generate-sources</phase>
+			<execution>
+                                <!-- The phase needs to happen before generate-sources according to: -->
+			        <!-- https://stackoverflow.com/questions/13699466/maven-compiler-plugin-build-helper-plugin-does-not-generate-class-files -->
+			            <phase>initialize</phase>
 			            <goals><goal>add-source</goal></goals>
 			            <configuration>
 			                <sources>
