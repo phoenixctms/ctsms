@@ -143,7 +143,7 @@ function setErrorMessageTexts(error_message_id,msgs) {
 var sessionMaxInactiveInterval = null;
 function createSessionTimer(duration) {
 	if (duration != null && duration > 0) {
-		sessionMaxInactiveInterval = duration;
+		sessionMaxInactiveInterval = +duration;
 		var sessionExpiry = (new Date()); //.addSeconds(sessionMaxInactiveInterval);
 		sessionExpiry.setSeconds(sessionExpiry.getSeconds() + sessionMaxInactiveInterval);
 		jQuery('#session_timer').countdown(sessionExpiry, { //.toString('yyyy/MM/dd HH:mm:ss'), {

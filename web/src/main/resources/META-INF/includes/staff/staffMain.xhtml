@@ -588,7 +588,7 @@
 									locale="#{sessionScopeBean.locale}"
 									styleClass="ctsms-calendar-date">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<f:attribute name="timeZone" value="#{applicationScopeBean.defaultTimeZone}" />
 									<p:ajax
 										event="blur"
 										process="@this" />

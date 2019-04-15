@@ -1887,9 +1887,9 @@ var FieldCalculation = FieldCalculation || {};
 	function timestampOnChange(variableName, index, widget, outputId) {
 		
 		if (!silent) {
-			var timestamp = null;
-			if (widget.getDate() != null) {
-				timestamp = JSJoda.LocalDateTime.from(JSJoda.nativeJs(widget.getDate()));
+			var timestamp = widget.getDate();
+			if (timestamp != null) {
+				timestamp = JSJoda.LocalDateTime.from(JSJoda.nativeJs(timestamp));
 				var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
 				if (inputFieldVariable != null && inputFieldVariable.value.userTimeZone) {
 					timestamp = JSJoda.ZonedDateTime.of(
