@@ -22,7 +22,7 @@ After years of collaborative development with trial sites at the Medical Univers
 * need to formulate complex _ad-hoc_ database queries to list matching subject candidates using _set operations_
 * conduct several trials in parallel and need to organize site staff and resources
 * need a software to implement various processes for ICH GCP (good clinical practice) compliance
-* want a turn-key system that’s operational out-of-the-box, instead of integrating multiple systems
+* want a turn-key system thatï¿½s operational out-of-the-box, instead of integrating multiple systems
 
 This GitHub repository contains all tiers of the main JEE web application. Transient artifacts generated using AndroMDA are excluded.
 
@@ -52,7 +52,7 @@ Build and Install
 
 Eclipse IDE
 -----
-The following was tested on a vanilla Windows 8 VM.
+The following was tested on a vanilla Windows 10 VM.
 
 1. Prerequisites:
 * download and install a recent JDK (eg. Oracle JDK1.8.0 u201 64bit)
@@ -69,16 +69,15 @@ The following was tested on a vanilla Windows 8 VM.
 ```
 git clone https://github.com/phoenixctms/ctsms.git
 ```
-* open C:\workspaces\ctsms\pom.xml and update the java.home property to <java.home>C:\Program Files\Java\jdk1.8.0_201</java.home>
 * change to C:\workspaces\ctsms and run
 ```
-mvn -Peclipse -Dmaven.test.skip=true
+mvn install -DskipTests
 ```
 
 4. Eclipse IDE:
 * download and run Eclipse Installer (2018-12 R), choose flavour "Eclipse IDE for Java EE Developers"
 * launch Eclipse IDE and select workspace C:\workspaces
-* goto File -> Open Projects from File System..., select C:\workspaces\ctsms folder, untick "Search for nested projects" and press "Finish"
-* in the Project Explorer tree, right-click "ctsms" -> Build Path -> Configure Build Path
-* in the dialog, switch to "Source" tab and press "Add Folder...", add core/src/exec/java and core/target/src/test/java, then press "Apply and Close"
+* goto Window -> Preferences -> Installed JRE and add and select __JDK__ -JRE (=JAVA_HOME)
+* goto File -> Import... -> Maven -> Existing Maven Project select C:\workspaces\ctsms folder and press "Finish"
+* agree to install missing m2e maven eclipse connectors
 * done. you can now start debugging, ie. select DBTool.java and goto Run -> Debug
