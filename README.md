@@ -22,7 +22,7 @@ After years of collaborative development with trial sites at the Medical Univers
 * need to formulate complex _ad-hoc_ database queries to list matching subject candidates using _set operations_
 * conduct several trials in parallel and need to organize site staff and resources
 * need a software to implement various processes for ICH GCP (good clinical practice) compliance
-* want a turn-key system that�s operational out-of-the-box, instead of integrating multiple systems
+* want a turn-key system that’s operational out-of-the-box, instead of integrating multiple systems
 
 This GitHub repository contains all tiers of the main JEE web application. Transient artifacts generated using AndroMDA are excluded.
 
