@@ -351,6 +351,7 @@ public enum JSValues {
 			case FORCE_DEFAULT_GEOLOCATION:
 			case DEFAULT_GEOLOCATION_LATITUDE:
 			case DEFAULT_GEOLOCATION_LONGITUDE:
+			case INPUT_DECIMAL_SEPARATOR:
 			case HIGHLIGHT_TEXT_INPUT:
 			case LIST_INITIAL_POSITION:
 			case FIELD_CALCULATION_DECODE_BASE64:
@@ -481,7 +482,7 @@ public enum JSValues {
 				return CommonUtil.getInputDatePattern(WebUtil.getDateFormat());
 			case INPUT_DECIMAL_SEPARATOR:
 				try {
-					return WebUtil.getDecimalSeparator().toString();
+					return WebUtil.quoteJSString(WebUtil.getDecimalSeparator().toString(), true);
 				} catch (NullPointerException e) {
 					return WebUtil.JS_NULL;
 				}
