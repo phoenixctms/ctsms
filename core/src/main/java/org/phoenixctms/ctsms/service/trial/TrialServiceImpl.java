@@ -477,10 +477,18 @@ extends TrialServiceBase
 				ProbandListStatusEntry statusEntry = ProbandListStatusEntry.Factory.newInstance();
 				statusEntry.setListEntry(listEntry);
 				listEntry.addStatusEntries(statusEntry);
-				CipherText cipherText = CryptoUtil.encryptValue(reason);
-				statusEntry.setReasonIv(cipherText.getIv());
-				statusEntry.setEncryptedReason(cipherText.getCipherText());
-				statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
+				if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+					statusEntry.setReason(null);
+					CipherText cipherText = CryptoUtil.encryptValue(reason);
+					statusEntry.setReasonIv(cipherText.getIv());
+					statusEntry.setEncryptedReason(cipherText.getCipherText());
+					statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
+				} else {
+					statusEntry.setReasonIv(null);
+					statusEntry.setEncryptedReason(null);
+					statusEntry.setReasonHash(null);
+					statusEntry.setReason(reason);
+				}
 				statusEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 				statusEntry.setStatus(statusType);
 				CoreUtil.modifyVersion(statusEntry, now, user);

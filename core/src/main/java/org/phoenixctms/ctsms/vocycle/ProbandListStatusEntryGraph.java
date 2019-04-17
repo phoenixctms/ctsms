@@ -11,6 +11,7 @@ import org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
@@ -97,14 +98,19 @@ public class ProbandListStatusEntryGraph extends GraphCycle1Helper<ProbandListSt
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
-		try {
-			if (!CoreUtil.isPassDecryption())
-				throw new Exception();
-			target.setReason((String) CryptoUtil.decryptValue(source.getReasonIv(), source.getEncryptedReason()));
+		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+			try {
+				if (!CoreUtil.isPassDecryption()) {
+					throw new Exception();
+				}
+				target.setReason((String) CryptoUtil.decryptValue(source.getReasonIv(), source.getEncryptedReason()));
+				target.setDecrypted(true);
+			} catch (Exception e) {
+				target.setReason(null);
+				target.setDecrypted(false);
+			}
+		} else {
 			target.setDecrypted(true);
-		} catch (Exception e) {
-			target.setReason(null);
-			target.setDecrypted(false);
 		}
 	}
 }

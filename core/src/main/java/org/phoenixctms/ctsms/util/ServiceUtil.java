@@ -2582,7 +2582,7 @@ public final class ServiceUtil {
 					fieldValue = probandListStatusEntryVO == null ? "" : probandListStatusEntryVO.getStatus().getName();
 					fieldRow.put(fieldKey, fieldValue);
 				}
-				if (passDecryption && showEnrollmentStatusReason) {
+				if ((!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON || passDecryption) && showEnrollmentStatusReason) {
 					fieldKey = VisitScheduleExcelWriter.getEnrollmentStatusReasonColumnName();
 					fieldValue = probandListStatusEntryVO == null ? "" : probandListStatusEntryVO.getReason();
 					fieldRow.put(fieldKey, fieldValue);

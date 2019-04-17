@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
@@ -188,15 +189,23 @@ extends ProbandListStatusEntryDaoBase
 				listEntry.removeStatusEntries(target);
 			}
 		}
-		try {
-			if (copyIfNull || source.getReason() != null) {
-				CipherText cipherText = CryptoUtil.encryptValue(source.getReason());
-				target.setReasonIv(cipherText.getIv());
-				target.setEncryptedReason(cipherText.getCipherText());
-				target.setReasonHash(CryptoUtil.hashForSearch(source.getReason()));
+		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+			try {
+				if (copyIfNull || source.getReason() != null) {
+					CipherText cipherText = CryptoUtil.encryptValue(source.getReason());
+					target.setReasonIv(cipherText.getIv());
+					target.setEncryptedReason(cipherText.getCipherText());
+					target.setReasonHash(CryptoUtil.hashForSearch(source.getReason()));
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+				target.setReason(null);
 			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} else {
+			target.setReasonIv(null);
+			target.setEncryptedReason(null);
+			target.setReasonHash(null);
 		}
 	}
 
@@ -245,15 +254,23 @@ extends ProbandListStatusEntryDaoBase
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
 		}
-		try {
-			if (copyIfNull || source.getReason() != null) {
-				CipherText cipherText = CryptoUtil.encryptValue(source.getReason());
-				target.setReasonIv(cipherText.getIv());
-				target.setEncryptedReason(cipherText.getCipherText());
-				target.setReasonHash(CryptoUtil.hashForSearch(source.getReason()));
+		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+			try {
+				if (copyIfNull || source.getReason() != null) {
+					CipherText cipherText = CryptoUtil.encryptValue(source.getReason());
+					target.setReasonIv(cipherText.getIv());
+					target.setEncryptedReason(cipherText.getCipherText());
+					target.setReasonHash(CryptoUtil.hashForSearch(source.getReason()));
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+				target.setReason(null);
 			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} else {
+			target.setReasonIv(null);
+			target.setEncryptedReason(null);
+			target.setReasonHash(null);
 		}
 	}
 
@@ -283,10 +300,12 @@ extends ProbandListStatusEntryDaoBase
 		if (listEntry != null) {
 			target.setListEntryId(listEntry.getId());
 		}
-		try {
-			target.setReason((String) CryptoUtil.decryptValue(source.getReasonIv(), source.getEncryptedReason()));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+			try {
+				target.setReason((String) CryptoUtil.decryptValue(source.getReasonIv(), source.getEncryptedReason()));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
