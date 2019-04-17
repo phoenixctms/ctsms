@@ -209,15 +209,37 @@
 				<!-- http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories -->
 				<executions>
 					<execution>
-						<!-- The phase needs to happen before generate-sources according to: -->
-						<!-- https://stackoverflow.com/questions/13699466/maven-compiler-plugin-build-helper-plugin-does-not-generate-class-files -->
-						<phase>initialize</phase>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>add-source</goal>
 						</goals>
 						<configuration>
 							<sources>
 								<source>src/exec/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/src/main/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/src/test/java</source>
 							</sources>
 						</configuration>
 					</execution>
