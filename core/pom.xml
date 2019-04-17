@@ -209,17 +209,6 @@
 				<!-- http://stackoverflow.com/questions/270445/maven-compile-with-multiple-src-directories -->
 				<executions>
 					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/exec/java</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
 						<id>add-source</id>
 						<phase>generate-sources</phase>
 						<goals>
@@ -227,6 +216,7 @@
 						</goals>
 						<configuration>
 							<sources>
+								<source>src/exec/java</source>
 								<source>target/src/main/java</source>
 							</sources>
 						</configuration>
