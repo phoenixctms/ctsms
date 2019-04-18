@@ -380,7 +380,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.5</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.andromda.maven.plugins</groupId>
@@ -436,18 +436,6 @@
 					<artifactId>maven-dependency-plugin</artifactId>
 				</plugin>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<showDeprecation>true</showDeprecation>
-					<showWarnings>true</showWarnings>
-					<compilerArgs>
-						<arg>-Xlint:cast,unchecked,fallthrough,finally,serial</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin><plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 			</plugin></plugins>
@@ -506,7 +494,19 @@
 			</plugin>
 			
 			
-		</plugins>
+		<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-Xlint:cast,unchecked,fallthrough,finally,serial</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin></plugins>
 	</build>
 	<modules>
 		<!-- Save the values used to generate this project from andromdapp ejb3Persistence=$ejb3Persistence
