@@ -43,6 +43,9 @@
   <bean id="fileDecryptInitializer" class="org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer">
     <property name="authenticator" ref="authenticator"/>
   </bean>
+  <bean id="probandListStatusEntryReasonDecryptInitializer" class="org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryReasonDecryptInitializer">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
   <bean id="journalSystemMessageCodeInitializer" class="org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitializer">
     <property name="authenticator" ref="authenticator"/>
   </bean>

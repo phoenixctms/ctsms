@@ -547,15 +547,18 @@ extends TrialServiceBase
 		Object[] args;
 		String l10nKey;
 		ProbandGroup group = probandListEntry.getGroup();
+		ProbandOutVO probandVO = this.getProbandDao().toProbandOutVO(probandListEntry.getProband());
 		if (group != null) {
 			args = new Object[] {
-					CommonUtil.probandOutVOToString(this.getProbandDao().toProbandOutVO(probandListEntry.getProband())),
-					group.getTitle()
+					CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+							: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)),
+							group.getTitle()
 			};
 			l10nKey = reasonL10nKey;
 		} else {
 			args = new Object[] {
-					CommonUtil.probandOutVOToString(this.getProbandDao().toProbandOutVO(probandListEntry.getProband()))
+					CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+							: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME))
 			};
 			l10nKey = reasonNoGroupL10nKey;
 		}

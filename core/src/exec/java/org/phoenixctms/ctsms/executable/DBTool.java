@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer;
 import org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandCommentFieldInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer;
+import org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryReasonDecryptInitializer;
 import org.phoenixctms.ctsms.executable.xls.XlsExporter;
 import org.phoenixctms.ctsms.executable.xls.XlsImporter;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -726,7 +727,10 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getFileDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
-					// sendEmail = dbTool.getProbandCommentFieldInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getProbandListStatusEntryReasonDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
@@ -1023,6 +1027,7 @@ public class DBTool {
 	private ProbandImageFieldInitializer probandImageFieldInitializer;
 	private ProbandCommentFieldInitializer probandCommentFieldInitializer;
 	private FileDecryptInitializer fileDecryptInitializer;
+	private ProbandListStatusEntryReasonDecryptInitializer probandListStatusEntryReasonDecryptInitializer;
 	private JournalSystemMessageCodeInitializer journalSystemMessageCodeInitializer;
 	private JournalPurger journalPurger;
 	private JobOutput jobOutput;
@@ -1164,6 +1169,14 @@ public class DBTool {
 			probandImageFieldInitializer.setJobOutput(getJobOutput());
 		}
 		return probandImageFieldInitializer;
+	}
+
+	private ProbandListStatusEntryReasonDecryptInitializer getProbandListStatusEntryReasonDecryptInitializer() {
+		if (probandListStatusEntryReasonDecryptInitializer == null) {
+			probandListStatusEntryReasonDecryptInitializer = context.getBean(ProbandListStatusEntryReasonDecryptInitializer.class);
+			probandListStatusEntryReasonDecryptInitializer.setJobOutput(getJobOutput());
+		}
+		return probandListStatusEntryReasonDecryptInitializer;
 	}
 
 	private ProductionDataProvider getProductionDataProvider() {
