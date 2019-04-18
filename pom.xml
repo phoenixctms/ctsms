@@ -434,11 +434,9 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.1.1</version>
 				</plugin>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-			</plugin></plugins>
+			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
@@ -492,9 +490,9 @@
 					</filesets>
 				</configuration>
 			</plugin>
-			
-			
-		<plugin>
+
+
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
@@ -506,7 +504,8 @@
 						<arg>-Xlint:cast,unchecked,fallthrough,finally,serial</arg>
 					</compilerArgs>
 				</configuration>
-			</plugin></plugins>
+			</plugin>
+		</plugins>
 	</build>
 	<modules>
 		<!-- Save the values used to generate this project from andromdapp ejb3Persistence=$ejb3Persistence
