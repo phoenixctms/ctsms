@@ -477,10 +477,18 @@ extends TrialServiceBase
 				ProbandListStatusEntry statusEntry = ProbandListStatusEntry.Factory.newInstance();
 				statusEntry.setListEntry(listEntry);
 				listEntry.addStatusEntries(statusEntry);
-				CipherText cipherText = CryptoUtil.encryptValue(reason);
-				statusEntry.setReasonIv(cipherText.getIv());
-				statusEntry.setEncryptedReason(cipherText.getCipherText());
-				statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
+				if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
+					statusEntry.setReason(null);
+					CipherText cipherText = CryptoUtil.encryptValue(reason);
+					statusEntry.setReasonIv(cipherText.getIv());
+					statusEntry.setEncryptedReason(cipherText.getCipherText());
+					statusEntry.setReasonHash(CryptoUtil.hashForSearch(reason));
+				} else {
+					statusEntry.setReasonIv(null);
+					statusEntry.setEncryptedReason(null);
+					statusEntry.setReasonHash(null);
+					statusEntry.setReason(reason);
+				}
 				statusEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 				statusEntry.setStatus(statusType);
 				CoreUtil.modifyVersion(statusEntry, now, user);
@@ -539,15 +547,18 @@ extends TrialServiceBase
 		Object[] args;
 		String l10nKey;
 		ProbandGroup group = probandListEntry.getGroup();
+		ProbandOutVO probandVO = this.getProbandDao().toProbandOutVO(probandListEntry.getProband());
 		if (group != null) {
 			args = new Object[] {
-					CommonUtil.probandOutVOToString(this.getProbandDao().toProbandOutVO(probandListEntry.getProband())),
-					group.getTitle()
+					CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+							: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)),
+							group.getTitle()
 			};
 			l10nKey = reasonL10nKey;
 		} else {
 			args = new Object[] {
-					CommonUtil.probandOutVOToString(this.getProbandDao().toProbandOutVO(probandListEntry.getProband()))
+					CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+							: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME))
 			};
 			l10nKey = reasonNoGroupL10nKey;
 		}

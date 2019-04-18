@@ -51,7 +51,7 @@
 			</f:facet>
 			<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
 		</p:column>		
-		<p:column rendered="#{lazyModel and showStatusDetails}">
+		<p:column rendered="#{probandListEntryModel.useReasonEncryption and lazyModel and showStatusDetails}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.probandlistentry_list_reason_column}" />
 			</f:facet>
@@ -68,7 +68,7 @@
 			</ui:include>
 		</p:column>
 		<p:column
-			rendered="#{!lazyModel and showStatusDetails}"
+			rendered="#{probandListEntryModel.useReasonEncryption and !lazyModel and showStatusDetails}"
 			filterBy="#{probandListEntry.vo.lastStatus.reason}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.probandlistentry_list_reason_column}" />
@@ -85,6 +85,20 @@
 					value="#{!empty probandListEntry.vo.lastStatus}" />
 			</ui:include>
 		</p:column>
+		
+		
+		
+		<p:column 
+			rendered="#{!probandListEntryModel.useReasonEncryption and showStatusDetails}"
+			filterBy="#{probandListEntry.vo.lastStatus.reason}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.probandlistentry_list_reason_column}" />
+			</f:facet>
+			<h:outputText value="#{applicationScopeBean.clipStringTrailing(probandListEntry.vo.lastStatus.reason)}" />
+		</p:column>
+	
+		
+		
 		<p:column rendered="#{showStatusDetails}"
 			sortBy="#{probandListEntry.vo.lastStatus.realTimestamp}"
 			filterBy="#{probandListEntry.vo.lastStatus.realTimestamp}">

@@ -195,6 +195,7 @@ public final class CommonUtil {
 	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = "getPosition";
 	public final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^get"); // Pattern.compile("^((get)|(is))");
 	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
+	public final static boolean ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON = false;
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.FileModule> ENCRYPTED_FILE_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.FileModule>();
 	static
 	{

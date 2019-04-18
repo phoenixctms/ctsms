@@ -25,3 +25,6 @@ alter table INPUT_FIELD add column USER_TIME_ZONE BOOLEAN;
 update INPUT_FIELD set USER_TIME_ZONE = 'f';
 alter table INPUT_FIELD alter USER_TIME_ZONE set not null;
 
+alter table PROBAND_LIST_STATUS_ENTRY alter ENCRYPTED_REASON drop not null;
+alter table PROBAND_LIST_STATUS_ENTRY alter REASON_IV drop not null;
+

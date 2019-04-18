@@ -60,7 +60,7 @@
 						value="#{probandListStatusEntry.vo.status.count}" />
 				</ui:include>
 			</p:column>
-			<p:column>
+			<p:column rendered="#{probandListBean.probandListEntryModel.useReasonEncryption}">
 				<f:facet name="header">
 					<h:outputText value="#{triallabels.probandliststatus_list_reason_column}" />
 				</f:facet>
@@ -76,6 +76,12 @@
 						value="true" />
 				</ui:include>
 			</p:column>
+			<p:column sortBy="#{probandListStatusEntry.vo.modifiedUser.name}" rendered="#{!probandListBean.probandListEntryModel.useReasonEncryption}">
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_reason_column}" />
+				</f:facet>
+				<h:outputText value="#{applicationScopeBean.clipStringTrailing(probandListStatusEntry.vo.reason,56)}" />
+			</p:column>			
 			<p:column sortBy="#{probandListStatusEntry.vo.modifiedUser.name}">
 				<f:facet name="header">
 					<h:outputText value="#{triallabels.probandliststatus_list_modified_user_column}" />

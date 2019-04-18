@@ -88,9 +88,9 @@
 			styleClass="ctsms-input-panelgrid"
 			rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 			<h:outputLabel
-				styleClass="ctsms-field-icon ctsms-icon-encryption"
+				styleClass="#{probandListBean.probandListEntryModel.useReasonEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : 'ctsms-field-icon ctsms-icon-noencryption'}"
 				for="probandliststatusreason"
-				value="#{triallabels.proband_list_status_entry_input_reason_label}" />
+				value="#{!probandListBean.probandListEntryModel.useReasonEncryption ? labels.noencryption_warning_label : ''}#{triallabels.proband_list_status_entry_input_reason_label}" />
 			<h:panelGroup>
 				<p:inputTextarea
 					id="probandliststatusreason"

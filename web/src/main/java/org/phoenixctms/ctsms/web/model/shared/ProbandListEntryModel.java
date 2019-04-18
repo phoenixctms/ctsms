@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
@@ -618,6 +619,10 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 
 	public boolean isShowProbandListEntryTagColumn() {
 		return showProbandListEntryTagColumn;
+	}
+
+	public boolean isUseReasonEncryption() {
+		return CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON;
 	}
 
 	public String probandListEntryTagValueToString(ProbandListEntryTagValueOutVO listEntryTagValue) {
