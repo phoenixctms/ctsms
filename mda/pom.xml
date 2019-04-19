@@ -1,143 +1,106 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <!-- These settings apply specifically to the andromda code generation process. To generate code without
-    compiling or testing or packaging, run mvn install from /mda instead of from the root directory. -->
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.phoenixctms.ctsms</groupId>
-        <artifactId>ctsms</artifactId>
-        <version>1.6.2</version>
-    </parent>
-    <artifactId>ctsms-mda</artifactId>
-    <packaging>pom</packaging>
-    <name>Clinical Trial Site Management System MDA</name>
-    <dependencies>
-        <dependency>
-            <groupId>org.andromda.profiles.uml2</groupId>
-            <artifactId>andromda-profile</artifactId>
-            <version>${andromda.version}</version>
-            <type>xml.zip</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.andromda.cartridges</groupId>
-            <artifactId>andromda-spring-cartridge</artifactId>
-            <version>${andromda.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.andromda.cartridges</groupId>
-            <artifactId>andromda-hibernate-cartridge</artifactId>
-            <version>${andromda.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.andromda.cartridges</groupId>
-            <artifactId>andromda-java-cartridge</artifactId>
-            <version>${andromda.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-<!--         <dependency>
-            <groupId>org.andromda.cartridges</groupId>
-            <artifactId>andromda-jsf-cartridge</artifactId>
-            <version>${andromda.version}</version>
-            <scope>runtime</scope>
-        </dependency> -->
-        <dependency>
-            <groupId>org.andromda.translationlibraries</groupId>
-            <artifactId>andromda-ocl-validation-library</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.andromda.translationlibraries</groupId>
-            <artifactId>andromda-ocl-query-library</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
-    <profiles>
-        <profile>
-            <id>eclipse</id>
-            <build>
-                <plugins>
-                    <!-- This will overwrite top level .project and .classpath each time.
-                         The maven Eclipse plugin in mda/pom.xml does a better job anyway. See mda/eclipse.bat.-->
-                    <plugin>
-                        <groupId>org.andromda.maven.plugins</groupId>
-                        <artifactId>andromdapp-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>eclipse</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <excludes>
-                                <exclude>app/pom.xml</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    <build>
-        <sourceDirectory>${project.basedir}/src/main/uml</sourceDirectory>
-        <plugins>
-            <plugin>
-                <groupId>org.andromda.maven.plugins</groupId>
-                <artifactId>andromda-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configurationUri>${project.basedir}/src/main/config/andromda.xml</configurationUri>
-                    <!-- Check model dates vs output file dates from previous gen, skip if files are later -->
-                    <lastModifiedCheck>true</lastModifiedCheck>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <properties>
-        <!-- Avoid JDK6 XJC runtime error on wdsl2java from conflicting Jaxb2.2 -->
-        <!-- Versioned independently from CXF core, only used for wsdl2java -->
-        <cxf.xjc.version>2.3.2</cxf.xjc.version>
-        <model.uri>file:${project.basedir}/src/main/uml/ctsms.uml</model.uri>
-        <filter></filter>
-        <validation>true</validation>
-        <!-- ant script location for temp copy of resources -->
-        <andromda.project>${project.basedir}/..</andromda.project>
-        <conf.dir>${project.basedir}/src/main/config</conf.dir>
-        <!-- cartridge output locations -->
-        <common.generated.dir>${project.basedir}/../common/target/src/main/java</common.generated.dir>
-        <common.manual.dir>${project.basedir}/../common/src/main/java</common.manual.dir>
-        <core.generated.dir>${project.basedir}/../core/target/src/main/java</core.generated.dir>
-        <core.manual.dir>${project.basedir}/../core/src/main/java</core.manual.dir>
-        <core.manual.java.dir>${project.basedir}/../core/src/main/java</core.manual.java.dir>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!-- These settings apply specifically to the andromda code generation process. 
+		To generate code without compiling or testing or packaging, run mvn install 
+		from /mda instead of from the root directory. -->
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.phoenixctms.ctsms</groupId>
+		<artifactId>ctsms</artifactId>
+		<version>1.6.2</version>
+	</parent>
+	<artifactId>ctsms-mda</artifactId>
+	<packaging>pom</packaging>
+	<name>Clinical Trial Site Management System MDA</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.andromda.profiles.uml2</groupId>
+			<artifactId>andromda-profile</artifactId>
+			<version>${andromda.version}</version>
+			<type>xml.zip</type>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.andromda.cartridges</groupId>
+			<artifactId>andromda-spring-cartridge</artifactId>
+			<version>${andromda.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.andromda.cartridges</groupId>
+			<artifactId>andromda-hibernate-cartridge</artifactId>
+			<version>${andromda.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.andromda.cartridges</groupId>
+			<artifactId>andromda-java-cartridge</artifactId>
+			<version>${andromda.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.andromda.translationlibraries</groupId>
+			<artifactId>andromda-ocl-validation-library</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.andromda.translationlibraries</groupId>
+			<artifactId>andromda-ocl-query-library</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>${project.basedir}/src/main/uml</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.andromda.maven.plugins</groupId>
+				<artifactId>andromda-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<configurationUri>${project.basedir}/src/main/config/andromda.xml</configurationUri>
+					<!-- Check model dates vs output file dates from previous gen, skip 
+						if files are later -->
+					<lastModifiedCheck>true</lastModifiedCheck>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<!-- Avoid JDK6 XJC runtime error on wdsl2java from conflicting Jaxb2.2 -->
+		<!-- Versioned independently from CXF core, only used for wsdl2java -->
+		<cxf.xjc.version>2.3.2</cxf.xjc.version>
+		<model.uri>file:${project.basedir}/src/main/uml/ctsms.uml</model.uri>
+		<filter></filter>
+		<validation>true</validation>
 
-        <!-- <web.generated.dir>${project.basedir}/../web/target</web.generated.dir>
-        <web.generated.java.dir>${web.generated.dir}/src/main/java</web.generated.java.dir>
-        <web.generated.web.dir>${web.generated.dir}/src/main/webapp</web.generated.web.dir>
-        <web.manual.dir>${project.basedir}/../web/src/main</web.manual.dir>
-        <web.manual.web.dir>${web.manual.dir}/webapp</web.manual.web.dir>
-        <web.manual.java.dir>${web.manual.dir}/java</web.manual.java.dir> -->
+		<!-- ant script location for temp copy of resources -->
+		<andromda.project>${project.basedir}/..</andromda.project>
+		<conf.dir>${project.basedir}/src/main/config</conf.dir>
 
-        <core.generated.test.dir>${project.basedir}/../core/target/src/test/java</core.generated.test.dir>
-        <core.manual.test.dir>${project.basedir}/../core/src/test/java</core.manual.test.dir>
-        <core.manual.test.resources>${project.basedir}/../core/src/test/resources</core.manual.test.resources>
+		<!-- cartridge output locations -->
+		<common.generated.dir>${project.basedir}/../common/target/src/main/java</common.generated.dir>
+		<common.manual.dir>${project.basedir}/../common/src/main/java</common.manual.dir>
+		<core.generated.dir>${project.basedir}/../core/target/src/main/java</core.generated.dir>
+		<core.manual.dir>${project.basedir}/../core/src/main/java</core.manual.dir>
+		<core.manual.java.dir>${project.basedir}/../core/src/main/java</core.manual.java.dir>
+		<core.generated.test.dir>${project.basedir}/../core/target/src/test/java</core.generated.test.dir>
+		<core.manual.test.dir>${project.basedir}/../core/src/test/java</core.manual.test.dir>
+		<core.manual.test.resources>${project.basedir}/../core/src/test/resources</core.manual.test.resources>
 
-        <!-- hibernate configuration -->
-        <!-- default strategy to use when using inheritance -->
-        <hibernate.inheritance.strategy>subclass</hibernate.inheritance.strategy>
-        <!-- hibernate generator class to use for identifiers -->
-        <hibernate.generatorClass>native</hibernate.generatorClass>
+		<!-- hibernate configuration -->
+		<!-- default strategy to use when using inheritance -->
+		<hibernate.inheritance.strategy>subclass</hibernate.inheritance.strategy>
+		<!-- hibernate generator class to use for identifiers -->
+		<hibernate.generatorClass>native</hibernate.generatorClass>
 
-        <gen.test.ref.files>false</gen.test.ref.files>
-        <core.generated.test.ref.dir>${core.manual.test.dir}</core.generated.test.ref.dir>
-    </properties>
+		<gen.test.ref.files>false</gen.test.ref.files>
+		<core.generated.test.ref.dir>${core.manual.test.dir}</core.generated.test.ref.dir>
+	</properties>
 </project>
