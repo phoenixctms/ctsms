@@ -1297,7 +1297,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{massMailBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -1327,7 +1327,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{massMailBean.deferredDelete ? ',:tabView:massmailmain_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:massmailmain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{massMailBean.delete}"
 					onclick="massMailDeleteConfirmation.hide()"

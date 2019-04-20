@@ -337,7 +337,7 @@
 					styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-input-row">
 					<h:panelGrid
-						rendered="#{inputFieldSearchBean.deferredDelete}"
+						rendered="true"
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
@@ -367,7 +367,7 @@
 				</h:panelGrid>						
 			</f:facet>
 			<p:commandButton
-				process="@this#{inputFieldSearchBean.deferredDelete ? ',:search_form:deferredDeleteReason' : ''}"
+				process="@this,:search_form:deferredDeleteReason"
 				value="#{labels.yes_button_label}"
 				actionListener="#{inputFieldSearchBean.delete}"
 				onclick="criteriaDeleteConfirmation.hide()"

@@ -961,7 +961,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{courseBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -991,7 +991,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{courseBean.deferredDelete ? ',:tabView:coursemain_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:coursemain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{courseBean.delete}"
 					onclick="courseDeleteConfirmation.hide()"

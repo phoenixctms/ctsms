@@ -688,7 +688,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{userBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -718,7 +718,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{userBean.deferredDelete ? ',:tabView:usermain_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:usermain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{userBean.delete}"
 					onclick="userDeleteConfirmation.hide()"

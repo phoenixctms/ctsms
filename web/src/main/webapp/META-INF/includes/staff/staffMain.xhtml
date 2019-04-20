@@ -959,7 +959,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{staffBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -989,7 +989,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{staffBean.deferredDelete ? ',:tabView:staffmain_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:staffmain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{staffBean.delete}"
 					onclick="staffDeleteConfirmation.hide()"

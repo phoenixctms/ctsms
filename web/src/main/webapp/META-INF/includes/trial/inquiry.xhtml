@@ -804,7 +804,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{inquiryBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -834,7 +834,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{inquiryBean.deferredDelete ? ',:tabView:inquiry_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:inquiry_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{inquiryBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"

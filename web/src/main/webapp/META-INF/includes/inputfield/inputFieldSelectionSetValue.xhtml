@@ -382,7 +382,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{selectionSetValueBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -412,7 +412,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{selectionSetValueBean.deferredDelete ? ',:tabView:inputfieldselectionsetvalue_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:inputfieldselectionsetvalue_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{selectionSetValueBean.delete}"
 					oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"

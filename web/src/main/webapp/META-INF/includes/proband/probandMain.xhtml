@@ -1233,7 +1233,7 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row">
 						<h:panelGrid
-							rendered="#{probandBean.deferredDelete}"
+							rendered="true"
 							columns="1"
 							cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
@@ -1264,7 +1264,7 @@
 					</h:panelGrid>						
 				</f:facet>
 				<p:commandButton
-					process="@this#{probandBean.deferredDelete ? ',:tabView:probandmain_form:deferredDeleteReason' : ''}"
+					process="@this,:tabView:probandmain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{probandBean.delete}"
 					onclick="probandDeleteConfirmation.hide()"
