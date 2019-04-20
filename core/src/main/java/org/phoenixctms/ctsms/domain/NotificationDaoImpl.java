@@ -59,13 +59,11 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
  * @see Notification
  */
 public class NotificationDaoImpl
-extends NotificationDaoBase
-{
+		extends NotificationDaoBase {
 
 	private final static VOIDComparator RECIPIENT_VO_ID_COMPARATOR = new VOIDComparator<NotificationRecipientVO>(false);
 	private final static String TEMPLATE_ENCODING = "UTF-8";
 	// private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
-
 	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
@@ -79,7 +77,7 @@ extends NotificationDaoBase
 		protected String getCheckboxString(boolean value) {
 			return L10nUtil.getString(Locales.NOTIFICATION,
 					value ? MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED,
-							value ? DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
+					value ? DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
 		}
 
 		@Override
@@ -295,10 +293,8 @@ extends NotificationDaoBase
 								DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS),
 						Settings.getBoolean(SettingCodes.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS, Bundle.SETTINGS, DefaultSettings.NOTIFICATION_TEMPLATE_MODEL_ENUMERATE_MAPS),
 						NotificationMessageTemplateParameters.TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR,
-						NotificationMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES
-						).iterator();
-
-
+						NotificationMessageTemplateParameters.TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES)
+				.iterator();
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
 			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(preliminaryNotificationVO).iterator();
@@ -329,7 +325,6 @@ extends NotificationDaoBase
 
 	private String getMessage(Notification notification, Map messageParameters) throws Exception {
 		String messageVslFileName = L10nUtil.getNotificationMessageTemplate(Locales.NOTIFICATION, notification.getType().getMessageTemplateL10nKey());
-
 		if (messageVslFileName != null && messageVslFileName.length() > 0) {
 			Iterator<String> it = BundleControl.PROPERTIES_SEARCH_PATHS.iterator();
 			while (it.hasNext()) {
@@ -620,7 +615,7 @@ extends NotificationDaoBase
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
 			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
-					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().equals(dutyRosterTurn.getModifiedUser())) {
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().getUser().equals(dutyRosterTurn.getModifiedUser())) {
 				addSuperVisorsRecipients(notification, staff, true);
 			}
 			return notification;
@@ -674,7 +669,7 @@ extends NotificationDaoBase
 			notification = this.create(notification);
 			createNotificationRecipient(notification, staff);
 			if (Settings.getBoolean(SettingCodes.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES, Bundle.SETTINGS,
-					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().equals(modified)) {
+					DefaultSettings.NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES) && !CoreUtil.getUserContext().getUser().equals(modified)) {
 				addSuperVisorsRecipients(notification, staff, true);
 			}
 			return notification;
@@ -685,7 +680,6 @@ extends NotificationDaoBase
 			return null;
 		}
 	}
-
 
 	@Override
 	protected Notification handleAddNotification(ECRFFieldStatusEntry ecrfFieldStatusEntry, Date today, Map messageParameters) throws Exception {
@@ -1044,7 +1038,7 @@ extends NotificationDaoBase
 	@Override
 	protected Notification handleAddNotification(
 			VisitScheduleItem visitScheduleItem, Proband proband, ProbandStatusEntry probandStatusEntry, Date today, Map messageParameters)
-					throws Exception {
+			throws Exception {
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.PROBAND_INACTIVE_VISIT_SCHEDULE_ITEM;
 		ServiceUtil.cancelNotifications(visitScheduleItem.getNotifications(), this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
@@ -1104,7 +1098,7 @@ extends NotificationDaoBase
 	@Override
 	protected Collection<Notification> handleFindByRecipient(Long recipientId,
 			Long departmentId, Boolean obsolete, Boolean send, Boolean show, Boolean sent, Boolean dropped, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria notificationCriteria = createNotificationCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Notification.class, notificationCriteria);
 		if (recipientId != null) {
@@ -1141,7 +1135,7 @@ extends NotificationDaoBase
 	@Override
 	protected long handleGetCountByDay(Date currentDate, Long recipientId,
 			Long departmentId, Boolean obsolete, Boolean send, Boolean show, Boolean sent, Boolean dropped)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria notificationCriteria = createNotificationCriteria();
 		Date today;
 		if (currentDate == null) {
@@ -1186,8 +1180,7 @@ extends NotificationDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Notification loadNotificationFromNotificationVO(NotificationVO notificationVO)
-	{
+	private Notification loadNotificationFromNotificationVO(NotificationVO notificationVO) {
 		// TODO implement loadNotificationFromNotificationVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationFromNotificationVO(NotificationVO) not yet implemented.");
 		// Notification notification = null;
@@ -1206,8 +1199,7 @@ extends NotificationDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Notification notificationVOToEntity(NotificationVO notificationVO)
-	{
+	public Notification notificationVOToEntity(NotificationVO notificationVO) {
 		Notification entity = this.loadNotificationFromNotificationVO(notificationVO);
 		this.notificationVOToEntity(notificationVO, entity, true);
 		return entity;
@@ -1220,8 +1212,7 @@ extends NotificationDaoBase
 	public void notificationVOToEntity(
 			NotificationVO source,
 			Notification target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.notificationVOToEntity(source, target, copyIfNull);
 	}
 
@@ -1254,8 +1245,7 @@ extends NotificationDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public NotificationVO toNotificationVO(final Notification entity)
-	{
+	public NotificationVO toNotificationVO(final Notification entity) {
 		return super.toNotificationVO(entity);
 	}
 
@@ -1265,8 +1255,7 @@ extends NotificationDaoBase
 	@Override
 	public void toNotificationVO(
 			Notification source,
-			NotificationVO target)
-	{
+			NotificationVO target) {
 		super.toNotificationVO(source, target);
 		MaintenanceScheduleItem maintenanceScheduleItem = source.getMaintenanceScheduleItem();
 		InventoryStatusEntry inventoryStatusEntry = source.getInventoryStatusEntry();
