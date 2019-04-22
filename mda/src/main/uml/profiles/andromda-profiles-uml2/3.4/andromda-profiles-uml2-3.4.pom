@@ -1,0 +1,41 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.profiles</groupId>
+        <artifactId>andromda-profiles</artifactId>
+        <version>3.4</version>
+    </parent>
+    <groupId>org.andromda.profiles.uml2</groupId>
+    <artifactId>andromda-profiles-uml2</artifactId>
+    <name>AndroMDA UML 2.0 Profile</name>
+    <packaging>pom</packaging>
+    <description>
+        Contains the AndroMDA UML 2.0 profiles.
+    </description>
+    <scm>
+        <connection>scm:svn:http://andromda.svn.sourceforge.net/svnroot/andromda/trunk/profiles/uml-2.0</connection>
+        <developerConnection>scm:svn:https://andromda.svn.sourceforge.net/svnroot/andromda/trunk/profiles/uml-2.0</developerConnection>
+        <url>http://andromda.svn.sourceforge.net/</url>
+    </scm>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.andromda.maven.plugins</groupId>
+                <artifactId>andromda-model-archiver-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <modules>
+        <module>common</module>
+        <module>datatype</module>
+        <module>messaging</module>
+        <module>meta</module>
+        <module>persistence</module>
+        <module>presentation</module>
+        <module>process</module>
+        <module>service</module>
+        <module>webservice</module>
+        <module>xml</module>
+    </modules>
+</project>
