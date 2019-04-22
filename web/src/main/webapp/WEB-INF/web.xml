@@ -1,10 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-    id="ctsms"
-    version="2.5">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
           
     <description>Clinical Trial Site Management System</description>
 
@@ -125,7 +124,6 @@
     <filter-mapping>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
-        <load-on-startup>10</load-on-startup>
     </filter-mapping>
 
 
@@ -285,7 +283,6 @@
     
     <session-config>
         <session-timeout>60</session-timeout>
-        <tracking-mode>COOKIE</tracking-mode>
 	    <cookie-config>
 	        <path>/</path>                       
 	        <http-only>true</http-only> 
@@ -374,35 +371,10 @@
   <servlet>
     <servlet-name>Jersey REST Service</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <!--  <servlet-class>com.sun.jersey.impl.container.servlet.ServletAdaptor</servlet-class> -->
-     <!-- <init-param>
-      <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>org.phoenixctms.ctsms.web.jersey</param-value>
-      </init-param> -->
              <init-param>
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>org.phoenixctms.ctsms.web.jersey.Application</param-value>
         </init-param> 
-           <!--  <init-param>
-         <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-         <param-value>com.sun.jersey.api.container.filter.LoggingFilter</param-value>
-     </init-param>
-     <init-param>
-         <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-         <param-value>com.sun.jersey.api.container.filter.LoggingFilter</param-value>
-     </init-param> -->
-    <!-- <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-    <param-value>your.package.BasicAuthFilter</param-value> -->   
-    <!-- <init-param>
-            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-            <param-value>true</param-value>
-        </init-param> -->   
-        
-<!-- <init-param>
-            <param-name>com.sun.jersey.config.feature.Trace</param-name>
-            <param-value>true</param-value>
-        </init-param> -->
-    <load-on-startup>20</load-on-startup>
     <init-param>
         <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
         <param-value>org.phoenixctms.ctsms.web.jersey.provider.CORSFilter</param-value>
@@ -411,6 +383,7 @@
 	  <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
 	  <param-value>org.phoenixctms.ctsms.web.jersey.provider.TrustedHostFilter</param-value>
 	</init-param>    
+    <load-on-startup>20</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
