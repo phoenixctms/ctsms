@@ -98,7 +98,6 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_ECRF_FIELD_VALUE_ID = "invalid_ecrf_field_value_id";
 	public final static String ECRF_FIELD_VALUE_ALREADY_EXISTS = "ecrf_field_value_already_exists";
 	public final static String ECRF_FIELD_VALUE_INDEX_ALREADY_EXISTS = "ecrf_field_value_index_already_exists";
-
 	public final static String INVALID_MASS_MAIL_ID = "invalid_mass_mail_id";
 	public final static String INVALID_MASS_MAIL_RECIPIENT_ID = "invalid_mass_mail_recipient_id";
 	public final static String ECRF_FIELD_VALUE_INDEX_NOT_NULL = "ecrf_field_value_index_not_null";
@@ -106,14 +105,12 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_INDEX_NOT_ZERO = "ecrf_field_value_index_not_zero";
 	public final static String ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO = "ecrf_field_value_index_less_than_zero";
 	public final static String ECRF_FIELD_VALUE_INDEX_GAP = "ecrf_field_value_index_gap";
-
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_NULL = "ecrf_field_status_entry_index_not_null";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NULL = "ecrf_field_status_entry_index_null";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_ZERO = "ecrf_field_status_entry_index_not_zero";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_LESS_THAN_ZERO = "ecrf_field_status_entry_index_less_than_zero";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_GAP = "ecrf_field_status_entry_index_gap";
 	// public final static String ECRF_FIELD_STATUS_ENTRY_NO_VALUE = "ecrf_field_status_entry_no_value";
-
 	public final static String INVALID_INITIAL_ECRF_FIELD_STATUS_TYPE = "invalid_initial_ecrf_field_status_type";
 	public final static String INVALID_NEW_ECRF_FIELD_STATUS_TYPE = "invalid_new_ecrf_field_status_type";
 	public final static String ECRF_FIELD_STATUS_ENTRY_COMMENT_REQUIRED = "ecrf_field_status_entry_comment_required";
@@ -501,6 +498,7 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_LIST_ENTRY_TRIAL_CHANGED = "proband_list_entry_trial_changed";
 	public final static String PROBAND_LIST_ENTRY_WRONG_PROBAND_GROUP = "proband_list_entry_wrong_proband_group";
 	public final static String PROBAND_LIST_ENTRY_PROBAND_NOT_ANIMAL = "proband_list_entry_proband_not_animal";
+	public final static String PROBAND_LIST_ENTRY_PROBAND_ID_NOT_NULL = "proband_list_entry_proband_id_not_null";
 	public final static String PROBAND_LIST_ENTRY_PROBAND_NOT_PERSON = "proband_list_entry_proband_not_person";
 	public final static String PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING = "proband_list_entry_already_participating";
 	public final static String PROBAND_LIST_ENTRY_POSITION_NOT_NULL = "proband_list_entry_position_not_null";
@@ -601,7 +599,6 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_IMAGE_SIZE_LIMIT_EXCEEDED = "input_field_image_size_limit_exceeded";
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_REQUIRED = "input_field_image_mime_type_required";
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_UNKNOWN = "input_field_image_mime_type_unknown";
-
 	public static final String INPUT_FIELD_IMAGE_MIME_TYPE_NO_IMAGE = "input_field_image_mime_type_no_image";
 	public static final String INPUT_FIELD_IMAGE_CANNOT_READ_DIMENSIONS = "input_field_image_cannot_read_dimensions";
 	public static final String INPUT_FIELD_SKETCH_WIDTH_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_width_less_than_or_equal_to_zero";
@@ -634,7 +631,6 @@ public interface ServiceExceptionCodes {
 	public final static String SELECTION_SET_VALUE_MULTIPLE_STROKES_IDS = "selection_set_value_multiple_strokes_ids";
 	public final static String SELECTION_SET_VALUE_STROKES_ID_REQUIRED = "selection_set_value_strokes_id_required";
 	public final static String SELECTION_SET_VALUE_INK_REGION_REQUIRED = "selection_set_value_ink_region_required";
-
 	public final static String CRITERIA_LABEL_EMPTY = "criteria_label_empty";
 	public final static String CRITERION_IS_NULL = "criterion_is_null";
 	public final static String CRITERION_POSITION_IS_NULL = "criterion_position_is_null";
@@ -729,6 +725,7 @@ public interface ServiceExceptionCodes {
 	public static final String TRIAL_BLOCKING_PERIOD_REQUIRED = "trial_blocking_period_required";
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_REQUIRED = "trial_blocking_period_explicit_days_required";
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE = "trial_blocking_period_explicit_days_less_than_one";
+	public static final String TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN = "trial_malformed_proband_alias_pattern";
 	public static final String TRIAL_SIGNUP_DESCRIPTION_EMPTY = "trial_signup_description_empty";
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_DISABLED = "trial_signup_proband_list_disabled";
 	public static final String TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED = "trial_signup_randomization_not_defined";
@@ -740,7 +737,6 @@ public interface ServiceExceptionCodes {
 	public static final String SIGNEE_NO_SIGN_TEAM_MEMBER = "signee_no_sign_team_member";
 	public static final String VERIFIER_NO_ACTIVE_IDENTITY = "verifier_no_active_identity";
 	public static final String VERIFIER_NO_VERIFY_TEAM_MEMBER = "verifier_no_verify_team_member";
-
 	public static final String RESOLVER_NO_ACTIVE_IDENTITY = "resolver_no_active_identity";
 	public static final String RESOLVER_NO_RESOLVE_TEAM_MEMBER = "resolver_no_resolve_team_member";
 	public static final String INVALID_MASS_MAIL_STATUS_TYPE_ID = "invalid_mass_mail_status_type_id";
@@ -771,7 +767,6 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND = "mass_mail_recipient_beacon_not_found";
 	// public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
 	public static final String MASS_MAIL_RECIPIENT_PROBAND_NULL = "mass_mail_recipient_proband_null";
-
 	public static final String MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN = "mass_mail_attachment_mime_type_unknown";
 	public static final String PROBAND_DELETED_OR_MARKED_FOR_DELETION = "proband_deleted_or_marked_for_deletion";
 	public static final String DEFERRED_DELETE_REASON_REQUIRED = "deferred_delete_reason_required";

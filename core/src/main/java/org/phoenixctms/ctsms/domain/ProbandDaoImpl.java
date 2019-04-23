@@ -58,10 +58,20 @@ import org.phoenixctms.ctsms.vocycle.ProbandReflexionGraph;
  * @see Proband
  */
 public class ProbandDaoImpl
-extends ProbandDaoBase
-{
+		extends ProbandDaoBase {
 
-
+	@Override
+	protected long handleGetCountByAlias(boolean person, String aliasPattern) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		org.hibernate.Criteria particularsCriteria;
+		if (person) {
+			particularsCriteria = probandCriteria.createCriteria("personParticulars");
+		} else {
+			particularsCriteria = probandCriteria.createCriteria("animalParticulars");
+		}
+		particularsCriteria.add(Restrictions.like("alias", aliasPattern, MatchMode.EXACT));
+		return (Long) probandCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
 
 	private org.hibernate.Criteria createProbandCriteria(String alias) {
 		org.hibernate.Criteria probandCriteria;
@@ -101,7 +111,7 @@ extends ProbandDaoBase
 	protected Collection<Proband> handleFindByMoneyTransferNoParticipation(Long trialId,
 			PaymentMethod method, String costType, Boolean paid, boolean total,
 			Boolean person, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria("proband0");
 		if (person != null) {
 			probandCriteria.add(Restrictions.eq("person", person.booleanValue()));
@@ -122,7 +132,7 @@ extends ProbandDaoBase
 		subQuery.add(Restrictions.eq("trial.id", trialId.longValue()));
 		if (!total) {
 			subQuery.createCriteria("lastStatus", CriteriaSpecification.INNER_JOIN).createCriteria("status", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("count", true));
+					.add(Restrictions.eq("count", true));
 		}
 		probandCriteria.add(Subqueries.eq(0l, subQuery));
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
@@ -144,7 +154,7 @@ extends ProbandDaoBase
 	protected Collection<Proband> handleFindToBeAutoDeleted(Date today, Long departmentId, Long categoryId, VariablePeriod reminderPeriod, Long reminderPeriodDays, Boolean delete,
 			boolean includeAlreadyPassed,
 			PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
 		// probandCriteria.add(Restrictions.eq("person", true));
 		// probandCriteria.add(Restrictions.eq("blinded", false));
@@ -206,15 +216,13 @@ extends ProbandDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Proband loadProbandFromProbandImageInVO(ProbandImageInVO probandImageInVO)
-	{
+	private Proband loadProbandFromProbandImageInVO(ProbandImageInVO probandImageInVO) {
 		Long id = probandImageInVO.getId();
 		Proband proband = null;
 		if (id != null) {
 			proband = this.load(id);
 		}
-		if (proband == null)
-		{
+		if (proband == null) {
 			proband = Proband.Factory.newInstance();
 		}
 		return proband;
@@ -225,8 +233,7 @@ extends ProbandDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Proband loadProbandFromProbandImageOutVO(ProbandImageOutVO probandImageOutVO)
-	{
+	private Proband loadProbandFromProbandImageOutVO(ProbandImageOutVO probandImageOutVO) {
 		// TODO implement loadProbandFromProbandImageOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandFromProbandImageOutVO(ProbandImageOutVO) not yet implemented.");
 		/* A typical implementation looks like this: Proband proband = this.load(probandImageOutVO.getId()); if (proband == null) { proband = Proband.Factory.newInstance(); }
@@ -238,15 +245,13 @@ extends ProbandDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Proband loadProbandFromProbandInVO(ProbandInVO probandInVO)
-	{
+	private Proband loadProbandFromProbandInVO(ProbandInVO probandInVO) {
 		Proband proband = null;
 		Long id = probandInVO.getId();
 		if (id != null) {
 			proband = this.load(id);
 		}
-		if (proband == null)
-		{
+		if (proband == null) {
 			proband = Proband.Factory.newInstance();
 		}
 		return proband;
@@ -257,13 +262,11 @@ extends ProbandDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Proband loadProbandFromProbandOutVO(ProbandOutVO probandOutVO)
-	{
+	private Proband loadProbandFromProbandOutVO(ProbandOutVO probandOutVO) {
 		// TODO implement loadProbandFromProbandOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandFromProbandOutVO(ProbandOutVO) not yet implemented.");
 		Proband proband = this.load(probandOutVO.getId());
-		if (proband == null)
-		{
+		if (proband == null) {
 			proband = Proband.Factory.newInstance();
 		}
 		return proband;
@@ -273,8 +276,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Proband probandImageInVOToEntity(ProbandImageInVO probandImageInVO)
-	{
+	public Proband probandImageInVOToEntity(ProbandImageInVO probandImageInVO) {
 		Proband entity = this.loadProbandFromProbandImageInVO(probandImageInVO);
 		this.probandImageInVOToEntity(probandImageInVO, entity, true);
 		return entity;
@@ -287,8 +289,7 @@ extends ProbandDaoBase
 	public void probandImageInVOToEntity(
 			ProbandImageInVO source,
 			Proband target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandImageInVOToEntity(source, target, copyIfNull);
 		ProbandContactParticulars personParticulars = null;
 		if (target.isPerson()) {
@@ -371,15 +372,13 @@ extends ProbandDaoBase
 				animalParticulars.setHeight(null);
 			}
 		}
-
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public Proband probandImageOutVOToEntity(ProbandImageOutVO probandImageOutVO)
-	{
+	public Proband probandImageOutVOToEntity(ProbandImageOutVO probandImageOutVO) {
 		// TODO verify behavior of probandImageOutVOToEntity
 		Proband entity = this.loadProbandFromProbandImageOutVO(probandImageOutVO);
 		this.probandImageOutVOToEntity(probandImageOutVO, entity, true);
@@ -393,8 +392,7 @@ extends ProbandDaoBase
 	public void probandImageOutVOToEntity(
 			ProbandImageOutVO source,
 			Proband target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of probandImageOutVOToEntity
 		super.probandImageOutVOToEntity(source, target, copyIfNull);
 	}
@@ -403,8 +401,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Proband probandInVOToEntity(ProbandInVO probandInVO)
-	{
+	public Proband probandInVOToEntity(ProbandInVO probandInVO) {
 		Proband entity = this.loadProbandFromProbandInVO(probandInVO);
 		this.probandInVOToEntity(probandInVO, entity, true);
 		return entity;
@@ -417,8 +414,7 @@ extends ProbandDaoBase
 	public void probandInVOToEntity(
 			ProbandInVO source,
 			Proband target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long physicianId = source.getPhysicianId();
@@ -444,16 +440,13 @@ extends ProbandDaoBase
 				physician.removePatients(target);
 			}
 		}
-
-		if (copyIfNull || source.getChildIds().size() > 0)
-		{
+		if (copyIfNull || source.getChildIds().size() > 0) {
 			Iterator<Proband> it = target.getChildren().iterator();
 			while (it.hasNext()) {
 				it.next().removeParents(target);
 			}
 			target.setChildren(toProbandSet(source.getChildIds()));
 		}
-
 		ProbandContactParticulars personParticulars = target.getPersonParticulars();
 		if (source.isPerson()) {
 			if (personParticulars == null) {
@@ -474,7 +467,6 @@ extends ProbandDaoBase
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-
 			if (copyIfNull || source.getGender() != null) {
 				personParticulars.setGender(source.getGender());
 			}
@@ -492,7 +484,6 @@ extends ProbandDaoBase
 			} else if (copyIfNull) {
 				personParticulars.setLastNameIndex(null);
 			}
-
 			if (copyIfNull || source.getAlias() != null) {
 				personParticulars.setAlias(source.getAlias());
 			}
@@ -560,9 +551,7 @@ extends ProbandDaoBase
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-
 		}
-
 		AnimalContactParticulars animalParticulars = target.getAnimalParticulars();
 		if (!source.isPerson()) {
 			if (animalParticulars == null) {
@@ -589,23 +578,20 @@ extends ProbandDaoBase
 				animalParticulars.setAlias(source.getAlias());
 			}
 		}
-
-		//		if (copyIfNull || source.getChildIds().size() > 0)
-		//		{
-		//			target.setChildren(toProbandSet(source.getChildIds()));
-		//		}
-
+		// if (copyIfNull || source.getChildIds().size() > 0)
+		// {
+		// target.setChildren(toProbandSet(source.getChildIds()));
+		// }
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public Proband probandOutVOToEntity(ProbandOutVO probandOutVO)
-	{
-		//		Proband entity = this.loadProbandFromProbandOutVO(probandOutVO);
-		//		this.probandOutVOToEntity(probandOutVO, entity, true);
-		//		return entity;
+	public Proband probandOutVOToEntity(ProbandOutVO probandOutVO) {
+		// Proband entity = this.loadProbandFromProbandOutVO(probandOutVO);
+		// this.probandOutVOToEntity(probandOutVO, entity, true);
+		// return entity;
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
@@ -616,8 +602,7 @@ extends ProbandDaoBase
 	public void probandOutVOToEntity(
 			ProbandOutVO source,
 			Proband target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandOutVOToEntity(source, target, copyIfNull);
 		DepartmentVO departmentVO = source.getDepartment();
 		ProbandCategoryVO categoryVO = source.getCategory();
@@ -655,7 +640,6 @@ extends ProbandDaoBase
 				physician.removePatients(target);
 			}
 		}
-
 		ProbandContactParticulars personParticulars = null;
 		if (source.isPerson()) {
 			personParticulars = target.getPersonParticulars();
@@ -667,7 +651,6 @@ extends ProbandDaoBase
 			target.setPersonParticulars(null);
 		}
 		if (personParticulars != null) {
-
 			if (copyIfNull || source.getGender() != null) {
 				personParticulars.setGender(source.getGender().getSex());
 			}
@@ -807,8 +790,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandImageInVO toProbandImageInVO(final Proband entity)
-	{
+	public ProbandImageInVO toProbandImageInVO(final Proband entity) {
 		return super.toProbandImageInVO(entity);
 	}
 
@@ -818,8 +800,7 @@ extends ProbandDaoBase
 	@Override
 	public void toProbandImageInVO(
 			Proband source,
-			ProbandImageInVO target)
-	{
+			ProbandImageInVO target) {
 		super.toProbandImageInVO(source, target);
 		if (source.isPerson()) {
 			ProbandContactParticulars personParticulars = source.getPersonParticulars();
@@ -854,8 +835,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandImageOutVO toProbandImageOutVO(final Proband entity)
-	{
+	public ProbandImageOutVO toProbandImageOutVO(final Proband entity) {
 		return super.toProbandImageOutVO(entity);
 	}
 
@@ -865,8 +845,7 @@ extends ProbandDaoBase
 	@Override
 	public void toProbandImageOutVO(
 			Proband source,
-			ProbandImageOutVO target)
-	{
+			ProbandImageOutVO target) {
 		super.toProbandImageOutVO(source, target);
 		User modifiedUser = source.getModifiedUser();
 		if (modifiedUser != null) {
@@ -925,8 +904,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandInVO toProbandInVO(final Proband entity)
-	{
+	public ProbandInVO toProbandInVO(final Proband entity) {
 		return super.toProbandInVO(entity);
 	}
 
@@ -936,8 +914,7 @@ extends ProbandDaoBase
 	@Override
 	public void toProbandInVO(
 			Proband source,
-			ProbandInVO target)
-	{
+			ProbandInVO target) {
 		super.toProbandInVO(source, target);
 		Department department = source.getDepartment();
 		Staff physician = source.getPhysician();
@@ -992,8 +969,7 @@ extends ProbandDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandOutVO toProbandOutVO(final Proband entity)
-	{
+	public ProbandOutVO toProbandOutVO(final Proband entity) {
 		return super.toProbandOutVO(entity);
 	}
 
@@ -1003,77 +979,74 @@ extends ProbandDaoBase
 	@Override
 	public void toProbandOutVO(
 			Proband source,
-			ProbandOutVO target)
-	{
+			ProbandOutVO target) {
 		(new ProbandReflexionGraph(this, this.getProbandCategoryDao(), this.getDepartmentDao(), this.getStaffDao(), this.getPrivacyConsentStatusTypeDao(), this.getUserDao()))
-		.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
-
-		//		super.toProbandOutVO(source, target);
-		//		Department department = source.getDepartment();
-		//		ProbandCategory category = source.getCategory();
-		//		User modifiedUser = source.getModifiedUser();
-		//		PrivacyConsentStatusType privacyConsentStatus = source.getPrivacyConsentStatus();
-		//		if (department != null) {
-		//			target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
-		//		}
-		//		if (category != null) {
-		//			target.setCategory(this.getProbandCategoryDao().toProbandCategoryVO(category));
-		//		}
-		//		if (modifiedUser != null) {
-		//			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
-		//		}
-		//		if (privacyConsentStatus != null) {
-		//			target.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().toPrivacyConsentStatusTypeVO(privacyConsentStatus));
-		//		}
-		//		ProbandContactParticulars particulars = source.getParticulars();
-		//		if (particulars != null) {
-		//			try {
-		//				if (!CoreUtil.isPassDecryption()) {
-		//					throw new Exception();
-		//				}
-		//				target.setPrefixedTitle1((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle1Iv(), particulars.getEncryptedPrefixedTitle1()));
-		//				target.setPrefixedTitle2((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle2Iv(), particulars.getEncryptedPrefixedTitle2()));
-		//				target.setPrefixedTitle3((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle3Iv(), particulars.getEncryptedPrefixedTitle3()));
-		//				target.setFirstName((String) CryptoUtil.decryptValue(particulars.getFirstNameIv(), particulars.getEncryptedFirstName()));
-		//				target.setLastName((String) CryptoUtil.decryptValue(particulars.getLastNameIv(), particulars.getEncryptedLastName()));
-		//				target.setPostpositionedTitle1((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle1Iv(), particulars.getEncryptedPostpositionedTitle1()));
-		//				target.setPostpositionedTitle2((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle2Iv(), particulars.getEncryptedPostpositionedTitle2()));
-		//				target.setPostpositionedTitle3((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle3Iv(), particulars.getEncryptedPostpositionedTitle3()));
-		//				target.setDateOfBirth((Date) CryptoUtil.decryptValue(particulars.getDateOfBirthIv(), particulars.getEncryptedDateOfBirth()));
-		//				target.setCitizenship((String) CryptoUtil.decryptValue(particulars.getCitizenshipIv(), particulars.getEncryptedCitizenship()));
-		//				target.setComment((String) CryptoUtil.decryptValue(particulars.getCommentIv(), particulars.getEncryptedComment()));
-		//				target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
-		//				target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
-		//				target.setDecrypted(true);
-		//			} catch (Exception e) {
-		//				target.setPrefixedTitle1(null);
-		//				target.setPrefixedTitle2(null);
-		//				target.setPrefixedTitle3(null);
-		//				target.setFirstName(null);
-		//				target.setLastName(null);
-		//				target.setPostpositionedTitle1(null);
-		//				target.setPostpositionedTitle2(null);
-		//				target.setPostpositionedTitle3(null);
-		//				target.setDateOfBirth(null);
-		//				target.setCitizenship(null);
-		//				target.setComment(null);
-		//				target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
-		//				target.setAge(CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1)).getTime()));
-		//				target.setDecrypted(false);
-		//			}
-		//			target.setGender(L10nUtil.createSexVO(Locales.USER, particulars.getGender()));
-		//			target.setName(getProbandName(target, false));
-		//			target.setNameWithTitles(getProbandName(target, true));
-		//			target.setInitials(getInitials(target));
-		//			target.setHasImage(particulars.getFileSize() != null && particulars.getFileSize() > 0l);
-		//		}
+				.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
+		// super.toProbandOutVO(source, target);
+		// Department department = source.getDepartment();
+		// ProbandCategory category = source.getCategory();
+		// User modifiedUser = source.getModifiedUser();
+		// PrivacyConsentStatusType privacyConsentStatus = source.getPrivacyConsentStatus();
+		// if (department != null) {
+		// target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
+		// }
+		// if (category != null) {
+		// target.setCategory(this.getProbandCategoryDao().toProbandCategoryVO(category));
+		// }
+		// if (modifiedUser != null) {
+		// target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
+		// }
+		// if (privacyConsentStatus != null) {
+		// target.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().toPrivacyConsentStatusTypeVO(privacyConsentStatus));
+		// }
+		// ProbandContactParticulars particulars = source.getParticulars();
+		// if (particulars != null) {
+		// try {
+		// if (!CoreUtil.isPassDecryption()) {
+		// throw new Exception();
+		// }
+		// target.setPrefixedTitle1((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle1Iv(), particulars.getEncryptedPrefixedTitle1()));
+		// target.setPrefixedTitle2((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle2Iv(), particulars.getEncryptedPrefixedTitle2()));
+		// target.setPrefixedTitle3((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle3Iv(), particulars.getEncryptedPrefixedTitle3()));
+		// target.setFirstName((String) CryptoUtil.decryptValue(particulars.getFirstNameIv(), particulars.getEncryptedFirstName()));
+		// target.setLastName((String) CryptoUtil.decryptValue(particulars.getLastNameIv(), particulars.getEncryptedLastName()));
+		// target.setPostpositionedTitle1((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle1Iv(), particulars.getEncryptedPostpositionedTitle1()));
+		// target.setPostpositionedTitle2((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle2Iv(), particulars.getEncryptedPostpositionedTitle2()));
+		// target.setPostpositionedTitle3((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle3Iv(), particulars.getEncryptedPostpositionedTitle3()));
+		// target.setDateOfBirth((Date) CryptoUtil.decryptValue(particulars.getDateOfBirthIv(), particulars.getEncryptedDateOfBirth()));
+		// target.setCitizenship((String) CryptoUtil.decryptValue(particulars.getCitizenshipIv(), particulars.getEncryptedCitizenship()));
+		// target.setComment((String) CryptoUtil.decryptValue(particulars.getCommentIv(), particulars.getEncryptedComment()));
+		// target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
+		// target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
+		// target.setDecrypted(true);
+		// } catch (Exception e) {
+		// target.setPrefixedTitle1(null);
+		// target.setPrefixedTitle2(null);
+		// target.setPrefixedTitle3(null);
+		// target.setFirstName(null);
+		// target.setLastName(null);
+		// target.setPostpositionedTitle1(null);
+		// target.setPostpositionedTitle2(null);
+		// target.setPostpositionedTitle3(null);
+		// target.setDateOfBirth(null);
+		// target.setCitizenship(null);
+		// target.setComment(null);
+		// target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
+		// target.setAge(CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1)).getTime()));
+		// target.setDecrypted(false);
+		// }
+		// target.setGender(L10nUtil.createSexVO(Locales.USER, particulars.getGender()));
+		// target.setName(getProbandName(target, false));
+		// target.setNameWithTitles(getProbandName(target, true));
+		// target.setInitials(getInitials(target));
+		// target.setHasImage(particulars.getFileSize() != null && particulars.getFileSize() > 0l);
+		// }
 	}
 
 	@Override
 	public void toProbandOutVO(
 			Proband source,
-			ProbandOutVO target, Integer... maxInstances)
-	{
+			ProbandOutVO target, Integer... maxInstances) {
 		(new ProbandReflexionGraph(this, this.getProbandCategoryDao(), this.getDepartmentDao(), this.getStaffDao(), this.getPrivacyConsentStatusTypeDao(), this.getUserDao(),
 				maxInstances)).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}

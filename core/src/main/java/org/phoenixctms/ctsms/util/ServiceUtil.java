@@ -28,6 +28,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.EcrfFieldValueInVOInputFieldValueEqualsAdapter;
+import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
 import org.phoenixctms.ctsms.adapt.InquiryValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
@@ -42,6 +43,7 @@ import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
+import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -142,6 +144,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
@@ -173,7 +176,6 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 public final class ServiceUtil {
 
-
 	private final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE = "{0}: {1}";
 	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = new AlphanumStringComparator(true);
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS = "ecrfField0";
@@ -182,32 +184,19 @@ public final class ServiceUtil {
 	public final static String INQUIRY_VALUE_DAO_INQUIRY_VALUE_ALIAS = "inquiryValue0";
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_ALIAS = "probandListEntryTag0";
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_VALUE_ALIAS = "tagValue0";
-
-
 	public final static boolean LOG_ADD_UPDATE_ECRF_NO_DIFF = false;
 	public final static boolean LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF = false;
 	public final static boolean LOG_ECRF_FIELD_VALUE_PROBAND = false;
-
-
 	public final static boolean LOG_ECRF_FIELD_VALUE_TRIAL = false;
-
 	public final static boolean LOG_INQUIRY_VALUE_PROBAND = false;
-
 	public final static boolean LOG_INQUIRY_VALUE_TRIAL = false;
-
 	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND = false;
-
 	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL = false;
-
 	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL = false;
 	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND = false;
-
 	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
-
 	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
-
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
-
 	private final static String DUUMY_BEACON = "dummy";
 	private final static boolean SAVE_UNCHANGED_ECRF_FIELD_VALUES = false;
 	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
@@ -377,7 +366,8 @@ public final class ServiceUtil {
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListStatusEntryInVO newProbandListStatusEntry, Boolean signup, Timestamp now, User user,
 			boolean logTrial,
 			boolean logProband,
-			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,TrialDao trialDao,MassMailDao massMailDao,MassMailRecipientDao massMailRecipientDao,
+			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
+			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao);
 		// ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
@@ -387,7 +377,8 @@ public final class ServiceUtil {
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();
 		listEntry.setLastStatus(probandListStatusEntry);
 		probandListEntryDao.update(listEntry);
-		Iterator<MassMail> massMailsIt = massMailDao.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(), false, null).iterator();
+		Iterator<MassMail> massMailsIt = massMailDao.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(), false, null)
+				.iterator();
 		while (massMailsIt.hasNext()) {
 			ServiceUtil.addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
 					massMailRecipientDao, journalEntryDao);
@@ -475,7 +466,7 @@ public final class ServiceUtil {
 					fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
 				}
 				fieldValue
-				.append(CommonUtil.getStreetString(addressOutVO.getStreetName(), addressOutVO.getHouseNumber(), addressOutVO.getEntrance(), addressOutVO.getDoorNumber()));
+						.append(CommonUtil.getStreetString(addressOutVO.getStreetName(), addressOutVO.getHouseNumber(), addressOutVO.getEntrance(), addressOutVO.getDoorNumber()));
 				fieldRow.put(fieldKey, fieldValue.toString());
 				fieldKey = zipCodesColumnName;
 				if (fieldRow.containsKey(fieldKey)) {
@@ -550,10 +541,6 @@ public final class ServiceUtil {
 		password.setMaxSuccessfulLogons(1L);
 	}
 
-
-
-
-
 	public static String aspSubstanceIDsToString(Collection<Long> aspSubstanceIds, AspSubstanceDao aspSubstanceDao) {
 		Collection<AspSubstanceVO> result = new ArrayList<AspSubstanceVO>(aspSubstanceIds.size());
 		Iterator<Long> it = aspSubstanceIds.iterator();
@@ -565,7 +552,7 @@ public final class ServiceUtil {
 
 	public static void cancelNotifications(Collection<Notification> notifications, NotificationDao notificationDao,
 			org.phoenixctms.ctsms.enumeration.NotificationType notificationType)
-					throws Exception {
+			throws Exception {
 		Iterator<Notification> notificationsIt = notifications.iterator();
 		while (notificationsIt.hasNext()) {
 			Notification notification = notificationsIt.next();
@@ -578,8 +565,7 @@ public final class ServiceUtil {
 
 	public static void checkAddCourseParticipationStatusEntryInput(CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin, Boolean selfRegistration,
 			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
-			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-	{
+			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(courseParticipationIn.getStaffId(), staffDao);
 		Course course = CheckIDUtil.checkCourseId(courseParticipationIn.getCourseId(), courseDao, LockMode.PESSIMISTIC_WRITE);
@@ -643,9 +629,8 @@ public final class ServiceUtil {
 	}
 
 	private static void checkAddProbandListStatusEntryInput(ProbandListStatusEntryInVO probandListStatusEntryIn, Boolean signup,
-			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao
-			) throws ServiceException
-	{
+			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao)
+			throws ServiceException {
 		// referential checks
 		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListStatusEntryIn.getListEntryId(), probandListEntryDao);
@@ -709,7 +694,6 @@ public final class ServiceUtil {
 			}
 		}
 	}
-
 
 	public static void checkInputFieldDateValue(InputField inputField, boolean optional, Date dateValue, InputFieldDao inputFieldDao) throws ServiceException {
 		if (inputField != null) {
@@ -866,7 +850,7 @@ public final class ServiceUtil {
 
 	public static void checkInputFieldTextValue(InputField inputField, boolean optional, String textValue, InputFieldDao inputFieldDao,
 			InputFieldSelectionSetValueDao selectionSetValueDao)
-					throws ServiceException {
+			throws ServiceException {
 		if (inputField != null) {
 			InputFieldType fieldType = inputField.getFieldType();
 			if (fieldType != null) {
@@ -969,7 +953,6 @@ public final class ServiceUtil {
 		}
 	}
 
-
 	public static void checkLockedEcrfs(ECRF ecrf, ECRFStatusEntryDao ecrfStatusEntryDao, ECRFDao ecrfDao) throws ServiceException {
 		long valuesLockedEcrfCount = ecrfStatusEntryDao.getCount(null, ecrf.getId(), null, true, null, null, null, null); // row lock order
 		if (valuesLockedEcrfCount > 0) {
@@ -1021,7 +1004,6 @@ public final class ServiceUtil {
 		}
 	}
 
-
 	public static void checkReminderPeriod(VariablePeriod reminderPeriod, Long reminderPeriodDays) throws ServiceException {
 		if (VariablePeriod.EXPLICIT.equals(reminderPeriod)) {
 			if (reminderPeriodDays == null) {
@@ -1048,8 +1030,7 @@ public final class ServiceUtil {
 	public static void checkUpdateCourseParticipationStatusEntryInput(CourseParticipationStatusEntry originalCourseParticipation,
 			CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin,
 			CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
-			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-	{
+			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
 		if (courseParticipationIn.getSectionId() != null) {
 			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
@@ -1167,7 +1148,8 @@ public final class ServiceUtil {
 		Collection allCompetences = competenceDao.loadAllSorted(0, 0);
 		competenceDao.toLecturerCompetenceVOCollection(allCompetences);
 		if (courseVOs != null) {
-			HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> participationVOMap = new HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>(courseVOs.size());
+			HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> participationVOMap = new HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>(
+					courseVOs.size());
 			HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>> lecturerVOMap = new HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>>(courseVOs.size());
 			HashMap<Long, Collection<InventoryBookingOutVO>> bookingVOMap = new HashMap<Long, Collection<InventoryBookingOutVO>>(allCompetences.size());
 			Iterator<CourseOutVO> courseIt = courseVOs.iterator();
@@ -1246,12 +1228,12 @@ public final class ServiceUtil {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
 						listEntryVO.getTrial().getId(),
 						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-								ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
 			} else {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
 						listEntryVO.getTrial().getId(),
 						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-								ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf");
+						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf");
 			}
 			if (ecrfVisitScheduleItemDate == null || !(new DateInterval(from, to, true)).contains(ecrfVisitScheduleItemDate)) {
 				return null;
@@ -1279,7 +1261,7 @@ public final class ServiceUtil {
 							ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
 									listEntryVO.getTrial().getId(),
 									listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-											ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+									ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
 						}
 						dueDate = DateCalc.getEndOfYear(ecrfVisitScheduleItemDate); // "ecrf")
 					} else {
@@ -1292,7 +1274,7 @@ public final class ServiceUtil {
 								ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
 										listEntryVO.getTrial().getId(),
 										listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-												ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf")
+										ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null); // "ecrf")
 							}
 							dueDate = DateCalc.addInterval(ecrfVisitScheduleItemDate,
 									ecrfChargeDuePeriod, Settings.getLongNullable(SettingCodes.ECRF_CHARGE_DUE_PERIOD_DAYS, Bundle.SETTINGS,
@@ -1307,8 +1289,6 @@ public final class ServiceUtil {
 		}
 		return result;
 	}
-
-
 
 	public static void createKeyPair(User user, String plainDepartmentPassword, KeyPairDao keyPairDao) throws Exception {
 		KeyPair keyPair = KeyPair.Factory.newInstance();
@@ -1332,13 +1312,10 @@ public final class ServiceUtil {
 			BankAccountDao bankAccountDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		Map model = CoreUtil.createEmptyTemplateModel();
-
 		boolean enumerateEntities = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES, Bundle.SETTINGS,
 				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES);
 		boolean excludeEncryptedFields = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS, Bundle.SETTINGS,
 				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS);
-
-
 		String datetimePattern = Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,
 				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN);
 		String datePattern = Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN);
@@ -1357,7 +1334,7 @@ public final class ServiceUtil {
 			protected String getCheckboxString(boolean value) {
 				return L10nUtil.getString(locale,
 						value ? MessageCodes.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : MessageCodes.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED,
-								value ? DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
+						value ? DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED : DefaultMessages.MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED);
 			}
 
 			@Override
@@ -1435,11 +1412,9 @@ public final class ServiceUtil {
 				return value.getTimeValue();
 			}
 		};
-
 		// if (trial == null) {
 		// trial = massMail.getTrial();
 		// }
-
 		Iterator<KeyValueString> voFieldIt = getMassMailTemplateModelKeyValueIterator(MassMailOutVO.class, enumerateEntities, excludeEncryptedFields);
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
@@ -1451,7 +1426,6 @@ public final class ServiceUtil {
 								excludeEncryptedFields));
 			}
 		}
-
 		voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandOutVO.class, enumerateEntities, excludeEncryptedFields);
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
@@ -1628,14 +1602,8 @@ public final class ServiceUtil {
 			}
 			model.put(MassMailMessageTemplateParameters.BANK_ACCOUNTS, models);
 		}
-
-
-		//		model.put(MassMailMessageTemplateParameters.MASS_MAIL, massMail);
-		//		model.put(MassMailMessageTemplateParameters.PROBAND, proband);
-
-
-
-
+		// model.put(MassMailMessageTemplateParameters.MASS_MAIL, massMail);
+		// model.put(MassMailMessageTemplateParameters.PROBAND, proband);
 		// voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialOutVO.class, enumerateEntities, excludeEncryptedFields);
 		// while (voFieldIt.hasNext()) {
 		// KeyValueString keyValuePair = voFieldIt.next();
@@ -1647,7 +1615,6 @@ public final class ServiceUtil {
 		// excludeEncryptedFields));
 		// }
 		// }
-
 		model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES, new ArrayList());
 		model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, new ArrayList());
 		model.put(MassMailMessageTemplateParameters.TRIAL_INVENTORY_BOOKINGS, new ArrayList());
@@ -1672,10 +1639,9 @@ public final class ServiceUtil {
 										excludeEncryptedFields));
 					}
 				}
-				models.add( trialTagValueModel);
+				models.add(trialTagValueModel);
 			}
-			model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES,models);
-
+			model.put(MassMailMessageTemplateParameters.TRIAL_TAG_VALUES, models);
 			if (proband != null) {
 				probandListEntry = probandListEntryDao.toProbandListEntryOutVO(probandListEntryDao.findByTrialProband(massMail.getTrial().getId(), proband.getId()));
 				if (probandListEntry != null) {
@@ -1699,9 +1665,9 @@ public final class ServiceUtil {
 						}
 						listEntryTagValueModel.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES_VALUE,
 								listEntryTagFieldValueAdapter.toString(listEntryTagValue));
-						models.add( listEntryTagValueModel);
+						models.add(listEntryTagValueModel);
 					}
-					model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES,models);
+					model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, models);
 				}
 				models = new ArrayList();
 				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);
@@ -1726,38 +1692,32 @@ public final class ServiceUtil {
 				model.put(MassMailMessageTemplateParameters.TRIAL_INVENTORY_BOOKINGS, models);
 				model.put(MassMailMessageTemplateParameters.PROBAND_INVENTORY_BOOKINGS, models);
 			}
-
 		}
-
 		voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandListEntryOutVO.class, enumerateEntities, excludeEncryptedFields);
 		while (voFieldIt.hasNext()) {
 			KeyValueString keyValuePair = voFieldIt.next();
 			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandListEntry).iterator();
 			while (indexesKeysIt.hasNext()) {
 				ArrayList<Object> indexesKeys = indexesKeysIt.next();
-				model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_OUT_VO_PREFIX +keyValuePair.getKey(indexesKeys),
+				model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_OUT_VO_PREFIX + keyValuePair.getKey(indexesKeys),
 						keyValuePair.getValue(locale, probandListEntry, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
 								excludeEncryptedFields));
 			}
 		}
-
-
-		model.put(MassMailMessageTemplateParameters.SUBJECT,"");
-		model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,"");
-		model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION,"");
+		model.put(MassMailMessageTemplateParameters.SUBJECT, "");
+		model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION, "");
+		model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION, "");
 		if (massMail != null) {
 			model.put(MassMailMessageTemplateParameters.SUBJECT,
 					getMassMailSubject(massMail.getSubjectFormat(), locale, massMail.getMaleSalutation(), massMail.getFemaleSalutation(), proband, massMail.getTrial(),
 							massMail.getProbandListStatus()));
-
-			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
-
+			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,
+					CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
 			if (proband != null) {
-				model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION,CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
+				model.put(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION,
+						CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
 			}
 		}
-
-
 		model.put(
 				MassMailMessageTemplateParameters.MASS_MAIL_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
 						CommonUtil.UNSUBSCRIBE_PATH, beacon != null ? beacon : DUUMY_BEACON)); // CommonUtil.BEACON_GET_PARAMETER_NAME,
@@ -1778,9 +1738,7 @@ public final class ServiceUtil {
 		if (messageParameters != null && messageParameters.size() > 0) {
 			model.putAll(messageParameters);
 		}
-
 		return model;
-
 	}
 
 	public static Password createPassword(boolean reset, Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword,
@@ -1846,7 +1804,6 @@ public final class ServiceUtil {
 			}
 		}
 		return ecrfFieldValueIn;
-
 	}
 
 	public static ArrayList<ECRFFieldValueInVO> createPresetEcrfFieldInValues(long listEntryId, long ecrfId, String section, Long index, ECRFFieldDao ecrfFieldDao,
@@ -1923,8 +1880,7 @@ public final class ServiceUtil {
 	}
 
 	public static ECRFFieldValueOutVO createPresetEcrfFieldOutValue(ECRFFieldOutVO ecrfFieldVO, ProbandListEntryOutVO listEntryVO, Long index, Locales locale,
-			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao
-			) { //InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao) { // InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ECRFFieldValueOutVO ecrfFieldValueVO = new ECRFFieldValueOutVO();
 		if (ecrfFieldVO.getSeries()) {
 			ecrfFieldValueVO.setIndex(index);
@@ -1953,9 +1909,9 @@ public final class ServiceUtil {
 		ecrfFieldValueVO.setLongValue(inputField.getLongPreset());
 		ecrfFieldValueVO.setTimestampValue(inputField.getTimestampPreset());
 		ecrfFieldValueVO.setInkValues(null);
-		//		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
-		//			ecrfFieldValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
-		//		} else {
+		// if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
+		// ecrfFieldValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
+		// } else {
 		ecrfFieldValueVO.setTextValue(inputField.getTextPreset());
 		Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 		while (it.hasNext()) {
@@ -1971,29 +1927,28 @@ public final class ServiceUtil {
 			}
 		}
 		if (listEntryVO != null && ecrfFieldVO != null) {
-
 			ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
 			for (int i = 0; i < queues.length; i++) {
 				ECRFFieldStatusEntry lastStatus = ecrfFieldStatusEntryDao.findLastStatus(queues[i], listEntryVO.getId(), ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex());
 				if (lastStatus != null) {
 					ecrfFieldValueVO.getLastFieldStatuses().add(ecrfFieldStatusTypeDao.toECRFFieldStatusTypeVO(lastStatus.getStatus()));
 					if (!lastStatus.getStatus().isResolved()
-							&& (ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry() == null || ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry().getId() < lastStatus.getId())) {
+							&& (ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry() == null
+									|| ecrfFieldValueVO.getLastUnresolvedFieldStatusEntry().getId() < lastStatus.getId())) {
 						ecrfFieldValueVO.setLastUnresolvedFieldStatusEntry(ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO(lastStatus));
 					}
 				}
 			}
 			// populateEcrfFieldStatusEntryCount(ecrfFieldValueVO.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex(),
 			// ecrfFieldStatusEntryDao);
-
-			//			// ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-			//			ecrfFieldValueVO.setValidationUnresolved(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), ecrfFieldVO.getId(),
-			//					ecrfFieldValueVO.getIndex(), true, false) > 0l);
-			//			ecrfFieldValueVO.setQueryUnresolved(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex(),
-			//					true, false) > 0l);
+			// // ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+			// ecrfFieldValueVO.setValidationUnresolved(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), ecrfFieldVO.getId(),
+			// ecrfFieldValueVO.getIndex(), true, false) > 0l);
+			// ecrfFieldValueVO.setQueryUnresolved(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), ecrfFieldVO.getId(),
+			// ecrfFieldValueVO.getIndex(),
+			// true, false) > 0l);
 		}
-
-		//		}
+		// }
 		return ecrfFieldValueVO;
 	}
 
@@ -2012,7 +1967,7 @@ public final class ServiceUtil {
 		inquiryValueIn.setTimestampValue(inputField.getTimestampPreset());
 		inquiryValueIn.setInkValues(null);
 		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType())) {
-			inquiryValueIn.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+			inquiryValueIn.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
 		} else {
 			if (inputField.isLocalized()) {
 				inquiryValueIn.setTextValue(L10nUtil.getInputFieldTextPreset(Locales.USER, inputField.getTextPresetL10nKey()));
@@ -2027,7 +1982,6 @@ public final class ServiceUtil {
 			}
 		}
 		return inquiryValueIn;
-
 	}
 
 	public static InquiryValueJsonVO createPresetInquiryJsonValue(Inquiry inquiry, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
@@ -2057,7 +2011,7 @@ public final class ServiceUtil {
 		inquiryValueVO.setTimestampValue(inputField.getTimestampPreset());
 		inquiryValueVO.setInkValues(null);
 		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType())) {
-			inquiryValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+			inquiryValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
 		} else {
 			if (inputField.isLocalized()) {
 				inquiryValueVO.setTextValue(L10nUtil.getInputFieldTextPreset(Locales.USER, inputField.getTextPresetL10nKey()));
@@ -2078,8 +2032,8 @@ public final class ServiceUtil {
 		return inquiryValueVO;
 	}
 
-	public static InquiryValueOutVO createPresetInquiryOutValue(ProbandOutVO probandVO, InquiryOutVO inquiryVO, Locales locale
-			) { //InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
+	public static InquiryValueOutVO createPresetInquiryOutValue(ProbandOutVO probandVO, InquiryOutVO inquiryVO, Locales locale) { // InputFieldSelectionSetValueDao
+																																	// inputFieldSelectionSetValueDao) {
 		InquiryValueOutVO inquiryValueVO = new InquiryValueOutVO();
 		InputFieldOutVO inputField = inquiryVO.getField();
 		if (locale != null && inputField.getLocalized()) {
@@ -2103,13 +2057,10 @@ public final class ServiceUtil {
 		inquiryValueVO.setLongValue(inputField.getLongPreset());
 		inquiryValueVO.setTimestampValue(inputField.getTimestampPreset());
 		inquiryValueVO.setInkValues(null);
-
-
-		//		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
-		//			inquiryValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
-		//		} else {
+		// if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
+		// inquiryValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+		// } else {
 		inquiryValueVO.setTextValue(inputField.getTextPreset());
-
 		Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionValue = it.next();
@@ -2123,10 +2074,8 @@ public final class ServiceUtil {
 				inquiryValueVO.getSelectionValues().add(selectionValue);
 			}
 		}
-		//		}
+		// }
 		return inquiryValueVO;
-
-
 	}
 
 	public static ProbandListEntryTagValueInVO createPresetProbandListEntryTagInValue(ProbandListEntryTag listEntryTag, long listEntryId,
@@ -2144,7 +2093,7 @@ public final class ServiceUtil {
 		probandListEntryTagValueIn.setTimestampValue(inputField.getTimestampPreset());
 		probandListEntryTagValueIn.setInkValues(null);
 		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType())) {
-			probandListEntryTagValueIn.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+			probandListEntryTagValueIn.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
 		} else {
 			if (inputField.isLocalized()) {
 				probandListEntryTagValueIn.setTextValue(L10nUtil.getInputFieldTextPreset(Locales.USER, inputField.getTextPresetL10nKey()));
@@ -2159,7 +2108,6 @@ public final class ServiceUtil {
 			}
 		}
 		return probandListEntryTagValueIn;
-
 	}
 
 	public static ProbandListEntryTagValueJsonVO createPresetProbandListEntryTagJsonValue(ProbandListEntryTag listEntryTag,
@@ -2189,7 +2137,7 @@ public final class ServiceUtil {
 		listEntryTagValueVO.setTimestampValue(inputField.getTimestampPreset());
 		listEntryTagValueVO.setInkValues(null);
 		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType())) {
-			listEntryTagValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+			listEntryTagValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(), inputFieldSelectionSetValueDao));
 		} else {
 			if (inputField.isLocalized()) {
 				listEntryTagValueVO.setTextValue(L10nUtil.getInputFieldTextPreset(Locales.USER, inputField.getTextPresetL10nKey()));
@@ -2207,12 +2155,11 @@ public final class ServiceUtil {
 				}
 			}
 		}
-
 		return listEntryTagValueVO;
 	}
 
 	public static ProbandListEntryTagValueOutVO createPresetProbandListEntryTagOutValue(ProbandListEntryOutVO probandListEntryVO, ProbandListEntryTagOutVO listEntryTagVO,
-			Locales locale) { //, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
+			Locales locale) { // , InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ProbandListEntryTagValueOutVO listEntryTagValueVO = new ProbandListEntryTagValueOutVO();
 		InputFieldOutVO inputField = listEntryTagVO.getField();
 		if (locale != null && inputField.getLocalized()) {
@@ -2236,15 +2183,10 @@ public final class ServiceUtil {
 		listEntryTagValueVO.setLongValue(inputField.getLongPreset());
 		listEntryTagValueVO.setTimestampValue(inputField.getTimestampPreset());
 		listEntryTagValueVO.setInkValues(null);
-
-
-
-
-		//		if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
-		//			listEntryTagValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
-		//		} else {
+		// if (InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
+		// listEntryTagValueVO.setTextValue(getAutocompletePresetValue(inputField.getId(),inputFieldSelectionSetValueDao));
+		// } else {
 		listEntryTagValueVO.setTextValue(inputField.getTextPreset());
-
 		Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionValue = it.next();
@@ -2258,10 +2200,8 @@ public final class ServiceUtil {
 				listEntryTagValueVO.getSelectionValues().add(selectionValue);
 			}
 		}
-		//		}
+		// }
 		return listEntryTagValueVO;
-
-
 	}
 
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(Collection<ProbandOutVO> probandVOs, ProbandAddressDao probandAddressDao) throws Exception {
@@ -2446,7 +2386,6 @@ public final class ServiceUtil {
 		return writer.getExcelVO();
 	}
 
-
 	public static VisitScheduleExcelVO creatVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
 			TrialOutVO trialVO,
 			VisitScheduleItemDao visitScheduleItemDao,
@@ -2527,21 +2466,21 @@ public final class ServiceUtil {
 		if (passDecryption) {
 			distinctColumnNames = new ArrayList<String>(
 					(showEnrollmentStatusReason ? 1 : 0) +
-					(showEnrollmentStatus ? 1 : 0) +
-					(showEnrollmentStatusTimestamp ? 1 : 0) +
-					(showEnrollmentStatusTypeIsCount ? 1 : 0) +
-					(showAliquotVisitReimbursement ? 1 : 0) +
-					(showFirstVisitReimbursement ? 1 : 0));
+							(showEnrollmentStatus ? 1 : 0) +
+							(showEnrollmentStatusTimestamp ? 1 : 0) +
+							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
+							(showAliquotVisitReimbursement ? 1 : 0) +
+							(showFirstVisitReimbursement ? 1 : 0));
 			if (showEnrollmentStatusReason) {
 				distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusReasonColumnName());
 			}
 		} else {
 			distinctColumnNames = new ArrayList<String>(
 					(showEnrollmentStatus ? 1 : 0) +
-					(showEnrollmentStatusTimestamp ? 1 : 0) +
-					(showEnrollmentStatusTypeIsCount ? 1 : 0) +
-					(showAliquotVisitReimbursement ? 1 : 0) +
-					(showFirstVisitReimbursement ? 1 : 0));
+							(showEnrollmentStatusTimestamp ? 1 : 0) +
+							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
+							(showAliquotVisitReimbursement ? 1 : 0) +
+							(showFirstVisitReimbursement ? 1 : 0));
 		}
 		if (showEnrollmentStatus) {
 			distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusColumnName());
@@ -2678,7 +2617,6 @@ public final class ServiceUtil {
 		return !SAVE_UNCHANGED_ECRF_FIELD_VALUES && ECRF_FIELD_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
 	}
 
-
 	private static StaffAddressOutVO findOrganisationCvAddress(StaffOutVO staffVO, boolean first, StaffAddressDao staffAddressDao) {
 		StaffAddressOutVO addressVO;
 		if (staffVO != null) {
@@ -2703,7 +2641,6 @@ public final class ServiceUtil {
 			return preset.getValue();
 		}
 		return null;
-
 	}
 
 	public static String getCvAddressBlock(StaffOutVO staff, String lineBreak, StaffAddressDao staffAddressDao) {
@@ -2784,17 +2721,14 @@ public final class ServiceUtil {
 	public static ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues, PSFVO psf,
 			ECRFFieldDao ecrfFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
-
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
-
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
-			ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao
-			)
-					throws Exception {
+			ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao)
+			throws Exception {
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		if (listEntryVO != null && ecrf != null) {
-			//ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
-			//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+			// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, null, psf);
 			HashMap<String, Long> maxSeriesIndexMap = null;
 			HashMap<String, Long> fieldMaxPositionMap = null;
@@ -2816,8 +2750,7 @@ public final class ServiceUtil {
 						fieldMinPositionMap,
 						seriesEcrfFieldMap,
 						// seriesEcrfFieldJsMap,
-						ecrfFieldValueDao
-						);
+						ecrfFieldValueDao);
 			}
 			result.setPageValues(getEcrfFieldValues(listEntryVO, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 					null,
@@ -2841,8 +2774,7 @@ public final class ServiceUtil {
 							fieldMinPositionMap,
 							seriesEcrfFieldMap,
 							// seriesEcrfFieldJsMap,
-							ecrfFieldValueDao
-							);
+							ecrfFieldValueDao);
 				}
 				if (loadAllJsValues) {
 					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, true, null),
@@ -2864,8 +2796,8 @@ public final class ServiceUtil {
 			HashMap<String, Long> fieldMaxPositionMap, HashMap<String, Long> fieldMinPositionMap,
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap, Locales locale, ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao
-			// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao
-			) throws Exception {
+	// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao
+	) throws Exception {
 		// int seriesComplete = 0;
 		// boolean seriesAdded = false;
 		// Integer pageSize = (psf == null ? null : psf.getPageSize());
@@ -2941,16 +2873,10 @@ public final class ServiceUtil {
 	public static ArrayList getIndexFieldLog(long listEntryId, long ecrfFieldId, Long index, boolean blank, boolean auditTrail, boolean skipMostRecentValue,
 			boolean skipMostRecentStatus, ECRFFieldStatusQueue[] queues,
 			ECRFFieldValueDao ecrfFieldValueDao,
-			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao
-
-
-
-			) throws Exception {
-
-		//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
-		//ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
+		// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+		// ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		EcrfFieldValueStatusEntryOutVOComparator ecrfFieldValueStatusEntryOutVOComparator = new EcrfFieldValueStatusEntryOutVOComparator(true);
-
 		ArrayList indexFieldLog = new ArrayList();
 		Collection log;
 		if (!blank && auditTrail) { // x) {
@@ -2980,7 +2906,6 @@ public final class ServiceUtil {
 			}
 		}
 		Collections.sort(indexFieldLog, ecrfFieldValueStatusEntryOutVOComparator);
-
 		return indexFieldLog;
 	}
 
@@ -3009,7 +2934,7 @@ public final class ServiceUtil {
 
 	public static Collection<InquiryValueOutVO> getInquiryValues(ProbandOutVO probandVO, Collection<Map> inquiryValues, Locales locale,
 			InquiryDao inquiryDao, InquiryValueDao inquiryValueDao) // , InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao)
-					throws Exception {
+			throws Exception {
 		ArrayList<InquiryValueOutVO> result = new ArrayList<InquiryValueOutVO>(inquiryValues.size());
 		Iterator<Map> inquiryValuesIt = inquiryValues.iterator();
 		while (inquiryValuesIt.hasNext()) {
@@ -3029,9 +2954,8 @@ public final class ServiceUtil {
 
 	public static InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues,
 			boolean sort,
-			PSFVO psf,InquiryDao inquiryDao,InquiryValueDao inquiryValueDao,InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
-
-		//InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+			PSFVO psf, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
+		// InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
 		InquiryValuesOutVO result = new InquiryValuesOutVO();
 		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, null, psf);
 		result.setPageValues(getInquiryValues(probandVO, inquiryValues, null,
@@ -3047,7 +2971,6 @@ public final class ServiceUtil {
 			}
 		}
 		return result;
-
 	}
 
 	public static Date getLogonExpirationDate(Password password) {
@@ -3066,8 +2989,7 @@ public final class ServiceUtil {
 			MedicationDao medicationDao,
 			BankAccountDao bankAccountDao,
 			JournalEntryDao journalEntryDao)
-					throws ServiceException {
-
+			throws ServiceException {
 		StringWriter result = new StringWriter();
 		try {
 			Map model = createMassMailTemplateModel(massMail, proband, beacon, now, messageParameters, trialTagValueDao, probandListEntryDao, probandListEntryTagValueDao, // trial
@@ -3196,12 +3118,10 @@ public final class ServiceUtil {
 		return result;
 	}
 
-
-
 	public static ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(ProbandListEntryOutVO listEntryVO, boolean jsValues, boolean loadAllJsValues, boolean sort, PSFVO psf,
-			ProbandListEntryTagDao probandListEntryTagDao,ProbandListEntryTagValueDao probandListEntryTagValueDao,InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
-
-		//ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+			ProbandListEntryTagDao probandListEntryTagDao, ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao)
+			throws Exception {
+		// ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 		ProbandListEntryTagValuesOutVO result = new ProbandListEntryTagValuesOutVO();
 		Collection<Map> tagValues = probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, null, psf);
 		result.setPageValues(getProbandListEntryTagValues(listEntryVO, tagValues, null,
@@ -3209,20 +3129,19 @@ public final class ServiceUtil {
 		if (jsValues) {
 			if (loadAllJsValues) {
 				result.setJsValues(getProbandListEntryTagJsonValues(probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, true, null),
-						false, probandListEntryTagValueDao,inputFieldSelectionSetValueDao));
+						false, probandListEntryTagValueDao, inputFieldSelectionSetValueDao));
 			} else {
 				result.setJsValues(getProbandListEntryTagJsonValues(tagValues,
 						true, probandListEntryTagValueDao, inputFieldSelectionSetValueDao));
 			}
 		}
 		return result;
-
 	}
 
 	public static Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagValues(ProbandListEntryOutVO probandListEntryVO, Collection<Map> probandListEntryTagValues,
 			Locales locale, ProbandListEntryTagDao probandListEntryTagDao, ProbandListEntryTagValueDao probandListEntryTagValueDao
-			// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao
-			) throws Exception {
+	// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao
+	) throws Exception {
 		ArrayList<ProbandListEntryTagValueOutVO> result = new ArrayList<ProbandListEntryTagValueOutVO>(probandListEntryTagValues.size());
 		Iterator<Map> probandListEntryTagValuesIt = probandListEntryTagValues.iterator();
 		while (probandListEntryTagValuesIt.hasNext()) {
@@ -3248,8 +3167,6 @@ public final class ServiceUtil {
 	public static SignatureVO getVerifiedEcrfSignatureVO(Signature signature,
 			SignatureDao signatureDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
-
-
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
 		SignatureVO result = signatureDao.toSignatureVO(signature);
 		StringBuilder comment = new StringBuilder();
@@ -3489,8 +3406,8 @@ public final class ServiceUtil {
 		// we don't print proband name etc...
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(MassMail massMail, MassMailOutVO massMailVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -3499,14 +3416,13 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null)) });
 	}
 
-
 	public static JournalEntry logSystemMessage(MassMail massMail, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		// we don't print proband name etc...
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.MASS_MAIL_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Proband proband, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
@@ -3519,8 +3435,8 @@ public final class ServiceUtil {
 			JournalEntryDao journalEntryDao) throws Exception {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Proband proband, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -3533,8 +3449,8 @@ public final class ServiceUtil {
 			JournalEntryDao journalEntryDao) throws Exception {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(Staff staff, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -3548,15 +3464,15 @@ public final class ServiceUtil {
 		// we don't print proband name etc...
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
-	//	public static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	//			JournalEntryDao journalEntryDao) throws Exception {
-	//		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
-	//				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	//	}
+	// public static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+	// JournalEntryDao journalEntryDao) throws Exception {
+	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
+	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
+	// }
 	public static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) },
@@ -3569,12 +3485,6 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	}
 
-
-
-
-
-
-
 	private static JournalEntry logSystemMessage(User user, ProbandOutVO probandVO, Timestamp now, User modified, String systemMessageCode, ProbandOutVO result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -3583,8 +3493,8 @@ public final class ServiceUtil {
 		// we don't print proband name etc...
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	public static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
@@ -3608,7 +3518,7 @@ public final class ServiceUtil {
 
 	public static void populateBookingDurationSummary(boolean inventoryBreakDown, InventoryBookingDurationSummaryVO summary, InventoryBookingDao inventoryBookingDao,
 			InventoryStatusEntryDao inventoryStatusEntryDao)
-					throws Exception {
+			throws Exception {
 		ArrayList<InventoryBookingDurationSummaryDetailVO> assigned = new ArrayList<InventoryBookingDurationSummaryDetailVO>();
 		InventoryBookingDurationSummaryDetailVO notAssigned = new InventoryBookingDurationSummaryDetailVO();
 		HashMap<Long, InventoryBookingDurationSummaryDetailVO> durationSummaryDetailsMap = new HashMap<Long, InventoryBookingDurationSummaryDetailVO>();
@@ -3866,19 +3776,13 @@ public final class ServiceUtil {
 			HashMap<Long, SignatureVO> signatureVOMap,
 			HashMap<Long, InputFieldImageVO> imageVOMap,
 			HashSet<Long> ecrfIds,
-
 			InputFieldDao inputFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
-
 			ECRFStatusEntryDao ecrfStatusEntryDao,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
-
-
 			ProbandListEntryTagDao probandListEntryTagDao,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao,
-
-			SignatureDao signatureDao
-			) throws Exception {
+			SignatureDao signatureDao) throws Exception {
 		if (ecrfValues.size() > 0) {
 			boolean auditTrail = Settings.getBoolean(EcrfPDFSettingCodes.AUDIT_TRAIL, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.AUDIT_TRAIL);
 			ECRFFieldStatusQueue[] queues = Settings.getEcrfFieldStatusQueueList(EcrfPDFSettingCodes.ECRF_FIELD_STATUS_QUEUES, Bundle.ECRF_PDF,
@@ -3887,11 +3791,11 @@ public final class ServiceUtil {
 					EcrfPDFDefaultSettings.SHOW_PROBAND_LIST_ENTRY_TAGS);
 			boolean showAllProbandListEntryTags = Settings.getBoolean(EcrfPDFSettingCodes.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS, Bundle.ECRF_PDF,
 					EcrfPDFDefaultSettings.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS);
-			//ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
-			//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
-			//ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-			//SignatureDao signatureDao = this.getSignatureDao();
-			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			// ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+			// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			// ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+			// SignatureDao signatureDao = this.getSignatureDao();
+			// InputFieldDao inputFieldDao = this.getInputFieldDao();
 			// EcrfFieldValueStatusEntryOutVOComparator ecrfFieldValueStatusEntryOutVOComparator = new EcrfFieldValueStatusEntryOutVOComparator(true);
 			Collection<ECRFOutVO> ecrfVOs;
 			if (ecrfVOMap.containsKey(listEntry.getId())) {
@@ -3905,13 +3809,14 @@ public final class ServiceUtil {
 			if (!listEntryTagValuesVOMap.containsKey(listEntry.getId())) {
 				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(listEntry.getTrial().getId(),
 						null, showAllProbandListEntryTags
-						? null : true,
-								null, null) : new ArrayList();
+								? null
+								: true,
+						null, null) : new ArrayList();
 				// probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listEntryTags);
 				Collection<ProbandListEntryTagValueOutVO> listEntryTagValueVOs = new ArrayList<ProbandListEntryTagValueOutVO>(listEntryTags.size());
 				listEntryTagValuesVOMap.put(listEntry.getId(), listEntryTagValueVOs);
-				//ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
-				//ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
+				// ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+				// ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 				Iterator listEntryTagsIt = listEntryTags.iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = (ProbandListEntryTag) listEntryTagsIt.next();
@@ -3960,11 +3865,8 @@ public final class ServiceUtil {
 					ecrfLogVOMap.put(value.getEcrfField().getId(), fieldLogVOMap);
 				}
 				fieldLogVOMap.put(value.getIndex(), getIndexFieldLog(listEntry.getId(), value.getEcrfField().getId(), value.getIndex(), blank, auditTrail, true, false, queues,
-
 						ecrfFieldValueDao,
-						ecrfFieldStatusEntryDao
-
-						));
+						ecrfFieldStatusEntryDao));
 				// ArrayList indexFieldLog = new ArrayList();
 				// Collection log;
 				// if (!blank && auditTrail) { // x) {
@@ -4004,8 +3906,6 @@ public final class ServiceUtil {
 					signatureVOMap.put(statusEntry.getId(), getVerifiedEcrfSignatureVO(signature,
 							signatureDao,
 							ecrfFieldValueDao,
-
-
 							ecrfFieldStatusEntryDao)); // result.setDescription(EntitySignature.getDescription(result));
 				} else {
 					signatureVOMap.put(statusEntry.getId(), null);
@@ -4034,13 +3934,14 @@ public final class ServiceUtil {
 	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, boolean sectionDetail, Date from, Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
-					throws Exception {
-		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail,from,to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+			throws Exception {
+		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
 		if (result != null) {
 			// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			if (sectionDetail) {
-				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), ecrfVO, listEntryVO, result, true, ecrfFieldValueDao,
+				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), ecrfVO, listEntryVO, result, true,
+						ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao);
 			} else {
 				populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
@@ -4056,12 +3957,12 @@ public final class ServiceUtil {
 	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, Date from, Date to, String section,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
-					throws Exception {
-		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail,from,to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+			throws Exception {
+		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
 		if (result != null) {
-			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(),section, true, null, null, null),ecrfVO,listEntryVO,result,false,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
-
-			populateEcrfProgress(ecrfVO,listEntryVO,result,ecrfFieldDao,ecrfFieldValueDao,ecrfFieldStatusEntryDao);
+			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(), section, true, null, null, null), ecrfVO, listEntryVO, result, false,
+					ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+			populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 		}
 		return result;
 	}
@@ -4111,8 +4012,8 @@ public final class ServiceUtil {
 				if (!ecrfField.isSeries()) {
 					// sectionProgress.setFieldCount(1l);
 					// sectionProgress.setMandatoryFieldCount(ecrfField.isOptional() ? 0l : 1l);
-					//sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
-					//sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
+					// sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
+					// sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
 					if (increment) {
 						result.setSavedValueCount(result.getSavedValueCount() + sectionProgress.getSavedValueCount());
 						result.setMandatorySavedValueCount(result.getMandatorySavedValueCount() + sectionProgress.getMandatorySavedValueCount());
@@ -4122,8 +4023,8 @@ public final class ServiceUtil {
 				} else {
 					// sectionProgress.setFieldCount(0l);
 					// sectionProgress.setMandatoryFieldCount(0l);
-					//					sectionProgress.setSavedValueCount(0l);
-					//					sectionProgress.setMandatorySavedValueCount(0l);
+					// sectionProgress.setSavedValueCount(0l);
+					// sectionProgress.setMandatorySavedValueCount(0l);
 					sectionProgress.setIndex(ecrfFieldValueDao.getMaxIndex(listEntryVO.getId(), ecrfVO.getId(), section));
 					sectionProgress.setSeries(true);
 				}
@@ -4184,10 +4085,9 @@ public final class ServiceUtil {
 			HashMap<Long, Collection<TrialOutVO>> trialVOMap,
 			HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap,
 			HashMap<Long, InputFieldImageVO> imageVOMap,
-			HashSet<Long> trialIds,InputFieldDao inputFieldDao
-			) throws Exception {
+			HashSet<Long> trialIds, InputFieldDao inputFieldDao) throws Exception {
 		if (inquiryValues.size() > 0) {
-			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			// InputFieldDao inputFieldDao = this.getInputFieldDao();
 			Collection<TrialOutVO> trialVOs;
 			if (trialVOMap.containsKey(proband.getId())) {
 				trialVOs = trialVOMap.get(proband.getId());
@@ -4277,7 +4177,7 @@ public final class ServiceUtil {
 				byCostTypeDetail.setTotal(byCostTypeDetail.getTotal() + mt.getAmount());
 				byCostTypeDetail.setCount(byCostTypeDetail.getCount() + 1l);
 				if (comments) {
-					addCostTypeDetailComment(mt,byCostTypeDetail);
+					addCostTypeDetailComment(mt, byCostTypeDetail);
 				}
 				if (byPaymentMethod) {
 					// update payment methods per cost type:
@@ -4339,7 +4239,7 @@ public final class ServiceUtil {
 					byCostTypeDetail.setTotal(byCostTypeDetail.getTotal() + mt.getAmount());
 					byCostTypeDetail.setCount(byCostTypeDetail.getCount() + 1l);
 					if (comments) {
-						addCostTypeDetailComment(mt,byCostTypeDetail);
+						addCostTypeDetailComment(mt, byCostTypeDetail);
 					}
 				}
 				if (byBankAccount && bankAccountId != null) {
@@ -4411,7 +4311,7 @@ public final class ServiceUtil {
 					byCostTypeDetail.setTotal(byCostTypeDetail.getTotal() + mt.getAmount());
 					byCostTypeDetail.setCount(byCostTypeDetail.getCount() + 1l);
 					if (comments) {
-						addCostTypeDetailComment(mt,byCostTypeDetail);
+						addCostTypeDetailComment(mt, byCostTypeDetail);
 					}
 				}
 			}
@@ -4487,10 +4387,9 @@ public final class ServiceUtil {
 			Collection<ProbandListEntryTagValueOutVO> probandListEntryTagValues,
 			ArrayList<ProbandListEntryOutVO> listEntryVOs,
 			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap,
-			HashMap<Long, InputFieldImageVO> imageVOMap, InputFieldDao inputFieldDao
-			) throws Exception {
+			HashMap<Long, InputFieldImageVO> imageVOMap, InputFieldDao inputFieldDao) throws Exception {
 		if (probandListEntryTagValues.size() > 0) {
-			//InputFieldDao inputFieldDao = this.getInputFieldDao();
+			// InputFieldDao inputFieldDao = this.getInputFieldDao();
 			listEntryVOs.add(listEntryVO);
 			if (!valueVOMap.containsKey(listEntry.getId())) {
 				valueVOMap.put(listEntry.getId(), probandListEntryTagValues);
@@ -4596,7 +4495,7 @@ public final class ServiceUtil {
 							if (!statusEntryDuration.isInfinite()) {
 								durationSummaryDetail.setStaffStatusEntryCount(durationSummaryDetail.getStaffStatusEntryCount() + 1);
 								durationSummaryDetail
-								.setStaffStatusEntryDuration(durationSummaryDetail.getStaffStatusEntryDuration() + statusEntryDuration.getDuration());
+										.setStaffStatusEntryDuration(durationSummaryDetail.getStaffStatusEntryDuration() + statusEntryDuration.getDuration());
 							}
 						}
 						summary.setStaffStatusEntryCount(summary.getStaffStatusEntryCount() + durationSummaryDetail.getStaffStatusEntryCount());
@@ -4701,8 +4600,7 @@ public final class ServiceUtil {
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
 			JournalEntryDao journalEntryDao,
 			NotificationDao notificationDao,
-			NotificationRecipientDao notificationRecipientDao
-			) throws Exception {
+			NotificationRecipientDao notificationRecipientDao) throws Exception {
 		ProbandListEntry listEntry = fieldStatus.getListEntry();
 		ECRFFieldStatusEntryOutVO fieldStatusVO = null;
 		if (logProband || logTrial) {
@@ -5242,7 +5140,6 @@ public final class ServiceUtil {
 		if (animalParticulars != null) {
 			animalContactParticularsDao.remove(animalParticulars);
 		}
-
 		logSystemMessage(user, result, now, user, SystemMessageCodes.PROBAND_DELETED, result, null, journalEntryDao);
 	}
 
@@ -5563,7 +5460,7 @@ public final class ServiceUtil {
 			TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
 			populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
 					getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null, inquiryDao, inquiryValueDao, inputFieldSelectionSetValueDao)
-					.getPageValues(),
+							.getPageValues(),
 					probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, inputFieldDao);
 			// }
 		}
@@ -5594,7 +5491,7 @@ public final class ServiceUtil {
 				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
 						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
-						.getPageValues(),
+								.getPageValues(),
 						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
 			}
 		} else {
@@ -5604,7 +5501,7 @@ public final class ServiceUtil {
 				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
 						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
-						.getPageValues(),
+								.getPageValues(),
 						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
 			}
 		}
@@ -5619,22 +5516,14 @@ public final class ServiceUtil {
 		return painter.getPdfVO();
 	}
 
-	public static ReimbursementsPDFVO renderReimbursements(Proband proband,Trial trial, PaymentMethod method, Boolean paid,
-
+	public static ReimbursementsPDFVO renderReimbursements(Proband proband, Trial trial, PaymentMethod method, Boolean paid,
 			ProbandDao probandDao,
 			TrialDao trialDao,
 			MoneyTransferDao moneyTransferDao,
 			TrialTagValueDao trialTagValueDao,
-
 			BankAccountDao bankAccountDao,
 			ProbandAddressDao probandAddressDao,
-
-			UserDao userDao
-
-
-			) throws Exception {
-
-
+			UserDao userDao) throws Exception {
 		TrialOutVO trialVO = null;
 		Collection trialTagValues = null;
 		Collection<String> costTypes = null;
@@ -5651,7 +5540,6 @@ public final class ServiceUtil {
 			costTypes = moneyTransferDao.getCostTypesNoTrial(proband.getId(), method);
 			moneyTransfersIt = moneyTransferDao.findByProbandNoTrialMethodCostTypePaid(proband.getId(), method, null, paid).iterator();
 		}
-
 		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(new ProbandOutVOComparator());
 		HashMap<Long, MoneyTransferSummaryVO> summaryMap = new HashMap<Long, MoneyTransferSummaryVO>();
 		HashMap<Long, ProbandAddressOutVO> addressVOMap = new HashMap<Long, ProbandAddressOutVO>();
@@ -5691,7 +5579,6 @@ public final class ServiceUtil {
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
 		return painter.getPdfVO();
-
 	}
 
 	public static void resetMassMailRecipient(MassMailRecipient recipient, MassMailRecipientOutVO original) throws ServiceException {
@@ -5708,21 +5595,19 @@ public final class ServiceUtil {
 		// if (trial != null) {
 		// checkTrialLocked(proband);
 		// }
-		//recipient.setBeacon(CommonUtil.generateUUID());
+		// recipient.setBeacon(CommonUtil.generateUUID());
 		recipient.setCancelled(false);
 		recipient.setEncryptedMimeMessageData(null);
 		recipient.setMimeMessageDataIv(null);
 		recipient.setErrorMessage(null);
 		recipient.setMimeMessageSize(0l);
 		recipient.setMimeMessageTimestamp(null);
-		//recipient.setProcessedTimestamp(null);
-		//recipient.setRead(0l);
-		//recipient.setReadTimestamp(null);
+		// recipient.setProcessedTimestamp(null);
+		// recipient.setRead(0l);
+		// recipient.setReadTimestamp(null);
 		recipient.setSent(false);
 		recipient.setTimesProcessed(0l);
 	}
-
-
 
 	public static boolean testNotificationExists(Collection<Notification> notifications, org.phoenixctms.ctsms.enumeration.NotificationType notificationType, Boolean obsolete)
 			throws Exception {
@@ -5866,7 +5751,7 @@ public final class ServiceUtil {
 						if (!statusEntryDuration.isInfinite()) {
 							durationSummaryDetail.setInventoryStatusEntryCount(durationSummaryDetail.getInventoryStatusEntryCount() + 1);
 							durationSummaryDetail
-							.setInventoryStatusEntryDuration(durationSummaryDetail.getInventoryStatusEntryDuration() + statusEntryDuration.getDuration());
+									.setInventoryStatusEntryDuration(durationSummaryDetail.getInventoryStatusEntryDuration() + statusEntryDuration.getDuration());
 						}
 					}
 					summary.setInventoryStatusEntryCount(summary.getInventoryStatusEntryCount() + durationSummaryDetail.getInventoryStatusEntryCount());
@@ -5906,7 +5791,59 @@ public final class ServiceUtil {
 		return false;
 	}
 
+	public static void resetAutoDeleteDeadline(Proband proband, Timestamp now) {
+		VariablePeriod periodFromNow = Settings.getVariablePeriod(SettingCodes.PROBAND_AUTODELETE_GRACE_PERIOD, Settings.Bundle.SETTINGS,
+				DefaultSettings.PROBAND_AUTODELETE_GRACE_PERIOD);
+		Long periodFromNowDays = Settings.getLongNullable(SettingCodes.PROBAND_AUTODELETE_GRACE_PERIOD_DAYS, Settings.Bundle.SETTINGS,
+				DefaultSettings.PROBAND_AUTODELETE_GRACE_PERIOD_DAYS);
+		proband.setAutoDeleteDeadline(DateCalc.addInterval(now, periodFromNow, periodFromNowDays));
+	}
 
+	public static void notifyExpiringProbandAutoDelete(Proband proband, Date now, NotificationDao notificationDao) throws Exception {
+		VariablePeriod expiringProbandAutoDeleteReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD,
+				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD);
+		Long expiringProbandAutoDeleteReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS,
+				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS);
+		if (proband.getCategory().isPrivacyConsentControl()
+				&& proband.getPrivacyConsentStatus().isAutoDelete()
+				&& now.compareTo(ExpirationEntityAdapter.getInstance(proband, now).getReminderStart(null, null, expiringProbandAutoDeleteReminderPeriod,
+						expiringProbandAutoDeleteReminderPeriodDays)) >= 0) {
+			if (!ServiceUtil.testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
+				Map messageParameters = CoreUtil.createEmptyTemplateModel();
+				messageParameters.put(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT, DateCalc.dateDeltaDays(now, proband.getAutoDeleteDeadline()));
+				notificationDao.addNotification(proband, now, messageParameters);
+			}
+		} else {
+			ServiceUtil.cancelNotifications(proband.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE);
+		}
+	}
+
+	public final static Proband createProband(ProbandInVO newProband,
+			Timestamp now, User user,
+			ProbandDao probandDao, PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao,
+			ProbandContactParticularsDao probandContactParticularsDao,
+			AnimalContactParticularsDao animalContactParticularsDao,
+			NotificationDao notificationDao) throws Exception {
+		Proband proband = probandDao.probandInVOToEntity(newProband);
+		proband.setBeacon(CommonUtil.generateUUID());
+		CoreUtil.modifyVersion(proband, now, user);
+		resetAutoDeleteDeadline(proband, now);
+		proband.setPrivacyConsentStatus(privacyConsentStatusTypeDao.findInitialStates().iterator().next());
+		if (proband.isPerson()) {
+			ProbandContactParticulars personParticulars = proband.getPersonParticulars();
+			if (personParticulars != null) {
+				probandContactParticularsDao.create(personParticulars);
+			}
+		} else {
+			AnimalContactParticulars animalParticulars = proband.getAnimalParticulars();
+			if (animalParticulars != null) {
+				animalContactParticularsDao.create(animalParticulars);
+			}
+		}
+		proband = probandDao.create(proband);
+		notifyExpiringProbandAutoDelete(proband, now, notificationDao);
+		return proband;
+	}
 
 	private ServiceUtil() {
 	}

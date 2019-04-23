@@ -42,8 +42,8 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setVersion(out.getVersion());
 			in.setRating(out.getRating());
-			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax() :
-				Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET));
+			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax()
+					: Settings.getLongNullable(SettingCodes.PROBAND_LIST_ENTRY_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_RATING_MAX_PRESET));
 		}
 	}
 
@@ -63,7 +63,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	}
 
 	protected ProbandListEntryInVO in;
-
 	protected ProbandListEntryOutVO out;
 	protected ProbandListEntryModel probandListEntryModel;
 	protected TrialOutVO trial;
@@ -71,6 +70,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	protected ArrayList<SelectItem> probandGroups;
 	private ProbandListStatusEntryBean probandListStatusEntryBean;
 	private ProbandListEntryTagValueBean probandListEntryTagValueBean;
+
 	public ProbandListEntryBeanBase() {
 		super();
 		probandListEntryModel = createProbandListEntryModel();
@@ -78,22 +78,20 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		probandListEntryTagValueBean = new ProbandListEntryTagValueBean();
 	}
 
-
 	@Override
-	public String addAction()
-	{
-		return addAction(false);
+	public String addAction() {
+		return addAction(false, false);
 	}
 
-	private String addAction(boolean randomize) {
+	protected String addAction(boolean randomize, boolean createProband) {
 		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
-		sanitizeInVals();
+		sanitizeInVals(createProband);
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), false, randomize, in);
+			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), createProband, false, randomize, in);
 			initIn();
 			// initSets(true, false, false);
 			initSets(false, false, false);
@@ -121,7 +119,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	}
 
 	public String addRandomizedAction() {
-		return addAction(true);
+		return addAction(true, false);
 	}
 
 	@Override
@@ -250,7 +248,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	}
 
 	public boolean isRandomization() {
-		return (trial != null ? trial.getRandomization() !=null : false);
+		return (trial != null ? trial.getRandomization() != null : false);
 	}
 
 	@Override
@@ -295,7 +293,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	// public void onTabViewChange(TabChangeEvent event) {
 	// }
-
 	@Override
 	public String resetAction() {
 		out = null;
@@ -304,7 +301,10 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return RESET_OUTCOME;
 	}
 
-	private void sanitizeInVals() {
+	private void sanitizeInVals(boolean createProband) {
+		if (createProband) {
+			in.setProbandId(null);
+		}
 		if (in.getRatingMax() != null) {
 			if (in.getRating() == null) {
 				in.setRating(0l);
@@ -312,7 +312,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		} else {
 			in.setRating(null);
 		}
-
 	}
 
 	public void setSelectedProbandListEntry(IDVO probandListEntry) {
@@ -335,7 +334,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	private String updateAction(boolean randomize) {
 		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
-		sanitizeInVals();
+		sanitizeInVals(false);
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(WebUtil.getAuthentication(), in, null, randomize);
 			initIn();

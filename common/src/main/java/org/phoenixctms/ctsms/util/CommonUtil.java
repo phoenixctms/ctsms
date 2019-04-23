@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,11 +90,8 @@ import fr.marcwrobel.jbanking.iban.Iban;
 public final class CommonUtil {
 
 	public enum EllipsisPlacement {
-		LEADING,
-		MID,
-		TRAILING
+		LEADING, MID, TRAILING
 	}
-
 
 	public final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
 	static {
@@ -141,8 +137,7 @@ public final class CommonUtil {
 	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported"; // criterion, filter stuff only
 	public static final String UNSUPPORTED_CRITERION_VALUE_TYPE = "unsupported criterion value type {0}";
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> UNARY_RESTRICTIONS = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
-	static
-	{
+	static {
 		UNARY_RESTRICTIONS.add(org.phoenixctms.ctsms.enumeration.CriterionRestriction.TRUE);
 		UNARY_RESTRICTIONS.add(org.phoenixctms.ctsms.enumeration.CriterionRestriction.IS_EMPTY);
 		UNARY_RESTRICTIONS.add(org.phoenixctms.ctsms.enumeration.CriterionRestriction.IS_NOT_EMPTY);
@@ -180,8 +175,7 @@ public final class CommonUtil {
 		// UNARY_RESTRICTIONS.add(org.phoenixctms.ctsms.enumeration.CriterionRestriction.IS_ID_NE_ENTITY_ID);
 	}
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionTie> BLANK_TIES = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionTie>();
-	static
-	{
+	static {
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.LEFT_PARENTHESIS);
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.RIGHT_PARENTHESIS);
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.UNION);
@@ -197,14 +191,12 @@ public final class CommonUtil {
 	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
 	public final static boolean ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON = false;
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.FileModule> ENCRYPTED_FILE_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.FileModule>();
-	static
-	{
+	static {
 		ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.PROBAND_DOCUMENT);
 		// ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.TRIAL_DOCUMENT); //enable encryption by adding module here
 	}
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.JournalModule> ENCRYPTED_JOURNAL_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.JournalModule>();
-	static
-	{
+	static {
 		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.PROBAND_JOURNAL);
 		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.TRIAL_JOURNAL);
 		ENCRYPTED_JOURNAL_MODULE.add(org.phoenixctms.ctsms.enumeration.JournalModule.MASS_MAIL_JOURNAL);
@@ -238,22 +230,19 @@ public final class CommonUtil {
 	// + ")))";
 	private final static Pattern LINE_BREAK_SPLIT_REGEXP = Pattern.compile(LINE_BREAK_SPLIT_REGEXP_PATTERN);
 	private final static StringSplitter LINE_BREAK_KEEP_SEPARATORS_SPLITTER = new StringSplitter(LINE_BREAK_SPLIT_REGEXP, true);
-
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
 	public static final String BEACON_PATH = "beacon";
 	// public static final String BEACON_GET_PARAMETER_NAME = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
-
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
-	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "%";
+	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 
-
-	private static void appendProbandAlias(StringBuilder sb,ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
+	private static void appendProbandAlias(StringBuilder sb, ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
 		if (alias != null && alias.trim().length() > 0) {
 			sb.append(alias.trim());
@@ -261,7 +250,7 @@ public final class CommonUtil {
 			if (blindedProbandNameLabel != null) {
 				sb.append(MessageFormat.format(blindedProbandNameLabel, Long.toString(proband.getId())));
 			} else {
-				sb.append( Long.toString(proband.getId()));
+				sb.append(Long.toString(proband.getId()));
 			}
 		} else if (newBlindedProbandNameLabel != null) {
 			sb.append(newBlindedProbandNameLabel);
@@ -594,6 +583,32 @@ public final class CommonUtil {
 		}
 	}
 
+	public static String escapeSqlLikeWildcards(String queryString) throws Exception {
+		return escapeSqlLikeWildcards(queryString, "\\");
+	}
+
+	public static String escapeSqlLikeWildcards(String queryString, String escape) throws Exception {
+		if (escape != null && escape.length() > 0) {
+			Matcher matcher = SQL_LIKE_WILDCARD_REGEXP.matcher(queryString);
+			StringBuilder sqlLikePattern = new StringBuilder();
+			int lastMatch = 0;
+			while (matcher.find()) {
+				sqlLikePattern.append(queryString.substring(lastMatch, matcher.start()).length() > 0 ? queryString.substring(lastMatch, matcher.start()) : "");
+				if (SQL_LIKE_PERCENT_WILDCARD.equals(matcher.group())) {
+					sqlLikePattern.append(escape);
+					sqlLikePattern.append(SQL_LIKE_PERCENT_WILDCARD);
+				} else if (SQL_LIKE_UNDERSCORE_WILDCARD.equals(matcher.group())) {
+					sqlLikePattern.append(escape);
+					sqlLikePattern.append(SQL_LIKE_UNDERSCORE_WILDCARD);
+				}
+				lastMatch = matcher.end();
+			}
+			sqlLikePattern.append(queryString.substring(lastMatch).length() > 0 ? queryString.substring(lastMatch) : "");
+			return sqlLikePattern.toString();
+		}
+		return queryString;
+	}
+
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
@@ -634,9 +649,7 @@ public final class CommonUtil {
 
 	public static String formatDate(Date date, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-
 		return sdf.format(date);
-
 	}
 
 	public static String formatDate(Date date, String pattern, Locale locale) {
@@ -654,8 +667,7 @@ public final class CommonUtil {
 	public static String formatDouble(Double doubleValue, String userDecimalSeparator) {
 		String result = null;
 		if (doubleValue != null) {
-			result = formatDecimal(doubleValue.toString(),userDecimalSeparator);
-
+			result = formatDecimal(doubleValue.toString(), userDecimalSeparator);
 		}
 		return result;
 	}
@@ -670,7 +682,6 @@ public final class CommonUtil {
 
 	public static String generateUUID() {
 		return UUID.randomUUID().toString();
-
 	}
 
 	public static Integer getAge(Date dateOfBirth) {
@@ -801,14 +812,14 @@ public final class CommonUtil {
 			case DATE:
 			case DATE_HASH:
 				if (criterion.getDateValue() != null) {
-					return formatDate(criterion.getDateValue(),getInputDatePattern(userDateFormatPattern));
+					return formatDate(criterion.getDateValue(), getInputDatePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
 			case TIME:
 			case TIME_HASH:
 				if (criterion.getTimeValue() != null) {
-					return formatDate(criterion.getTimeValue(),getInputTimePattern(userDateFormatPattern));
+					return formatDate(criterion.getTimeValue(), getInputTimePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
@@ -836,7 +847,7 @@ public final class CommonUtil {
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
 				if (criterion.getTimestampValue() != null) {
-					return formatDate(criterion.getTimestampValue(),getInputDateTimePattern(userDateFormatPattern));
+					return formatDate(criterion.getTimestampValue(), getInputDateTimePattern(userDateFormatPattern));
 				} else {
 					return emptyValue;
 				}
@@ -856,14 +867,14 @@ public final class CommonUtil {
 			case DATE:
 			case DATE_HASH:
 				if (criterion.getDateValue() != null) {
-					return formatDate(criterion.getDateValue(),getInputDatePattern(userDateFormatPattern));
+					return formatDate(criterion.getDateValue(), getInputDatePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
 			case TIME:
 			case TIME_HASH:
 				if (criterion.getTimeValue() != null) {
-					return formatDate(criterion.getTimeValue(),getInputTimePattern(userDateFormatPattern));
+					return formatDate(criterion.getTimeValue(), getInputTimePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
@@ -891,7 +902,7 @@ public final class CommonUtil {
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
 				if (criterion.getTimestampValue() != null) {
-					return formatDate(criterion.getTimestampValue(),getInputDateTimePattern(userDateFormatPattern));
+					return formatDate(criterion.getTimestampValue(), getInputDateTimePattern(userDateFormatPattern));
 				} else {
 					return NO_SELECTION_VALUE;
 				}
@@ -956,7 +967,7 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static String getDateStartStopString(Date start, Date stop,DateFormat dateFormat) {
+	public static String getDateStartStopString(Date start, Date stop, DateFormat dateFormat) {
 		StringBuilder sb = new StringBuilder();
 		if (start != null) {
 			sb.append(dateFormat.format(start));
@@ -1080,7 +1091,7 @@ public final class CommonUtil {
 		return ip;
 	}
 
-	//https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	// https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
 	private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
 		try {
 			InetAddress candidateAddress = null;
@@ -1091,12 +1102,10 @@ public final class CommonUtil {
 				for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
 					InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
 					if (!inetAddr.isLoopbackAddress()) {
-
 						if (inetAddr.isSiteLocalAddress()) {
 							// Found non-loopback site-local address. Return it immediately...
 							return inetAddr;
-						}
-						else if (candidateAddress == null) {
+						} else if (candidateAddress == null) {
 							// Found non-loopback address, but not necessarily site-local.
 							// Store it as a candidate to be returned if site-local address is not subsequently found...
 							candidateAddress = inetAddr;
@@ -1120,8 +1129,7 @@ public final class CommonUtil {
 				throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
 			}
 			return jdkSuppliedAddress;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
 			unknownHostException.initCause(e);
 			throw unknownHostException;
@@ -1201,7 +1209,6 @@ public final class CommonUtil {
 	public static final String getNameSortable(ProbandOutVO proband) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-
 			if (!proband.isBlinded()) {
 				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
@@ -1228,15 +1235,14 @@ public final class CommonUtil {
 					}
 				}
 			} else {
-				appendProbandAlias(sb,proband,null,null);
-				//					String alias = proband.getAlias();
-				//					if (alias != null && alias.trim().length() > 0) {
-				//						sb.append(alias.trim());
-				//					} else if (proband.getId() > 0) {
-				//						sb.append(Long.toString(proband.getId()));
-				//					}
+				appendProbandAlias(sb, proband, null, null);
+				// String alias = proband.getAlias();
+				// if (alias != null && alias.trim().length() > 0) {
+				// sb.append(alias.trim());
+				// } else if (proband.getId() > 0) {
+				// sb.append(Long.toString(proband.getId()));
+				// }
 			}
-
 		}
 		return sb.toString();
 	}
@@ -1281,7 +1287,6 @@ public final class CommonUtil {
 	public static final String getProbandInitials(ProbandOutVO proband, String ecryptedProbandNameLabel, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-
 			if (!proband.isBlinded()) {
 				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
@@ -1306,7 +1311,6 @@ public final class CommonUtil {
 			} else {
 				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 			}
-
 		}
 		return sb.toString();
 	}
@@ -1315,7 +1319,6 @@ public final class CommonUtil {
 			String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-
 			if (!proband.isBlinded()) {
 				if (proband.isDecrypted()) {
 					if (proband.isPerson()) {
@@ -1350,7 +1353,6 @@ public final class CommonUtil {
 			} else {
 				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
 			}
-
 		}
 		return sb.toString();
 	}
@@ -1368,8 +1370,7 @@ public final class CommonUtil {
 
 	public static String getSetOperationExpressionSelectLabel(int selectCount) {
 		return MessageFormat.format(SET_OPERATION_EXPRESSION_SELECT_LABEL,
-				SET_OPERATION_EXPRESSION_SELECT_LABEL_ALPHABETIC ?
-						toAlphabetic(selectCount - SET_OPERATION_EXPRESSION_FIRST_INDEX) : selectCount);
+				SET_OPERATION_EXPRESSION_SELECT_LABEL_ALPHABETIC ? toAlphabetic(selectCount - SET_OPERATION_EXPRESSION_FIRST_INDEX) : selectCount);
 	}
 
 	// public static final String getStaffName(StaffInVO staff, boolean withTitles) {
@@ -1424,8 +1425,6 @@ public final class CommonUtil {
 	public static final String getStaffInitials(StaffOutVO staff) {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null) {
-
-
 			if (staff.isPerson()) {
 				String firstName = staff.getFirstName();
 				if (firstName != null && firstName.trim().length() > 0) {
@@ -1441,8 +1440,6 @@ public final class CommonUtil {
 					sb.append(organisationName.trim().substring(0, 3).toUpperCase());
 				}
 			}
-
-
 		}
 		return sb.toString();
 	}
@@ -1851,7 +1848,6 @@ public final class CommonUtil {
 						}
 					}
 				}
-
 			}
 			return doc;
 		}
@@ -1902,13 +1898,13 @@ public final class CommonUtil {
 		} else if (valueClass.equals(java.lang.Boolean.TYPE)) {
 			return ((Boolean) value).toString();
 		} else if (valueClass.equals(Float.class)) {
-			return formatFloat((Float) value,userDecimalSeparator);
+			return formatFloat((Float) value, userDecimalSeparator);
 		} else if (valueClass.equals(java.lang.Float.TYPE)) {
-			return formatFloat((Float) value,userDecimalSeparator);
+			return formatFloat((Float) value, userDecimalSeparator);
 		} else if (valueClass.equals(Double.class)) {
-			return formatDouble((Double) value,userDecimalSeparator);
+			return formatDouble((Double) value, userDecimalSeparator);
 		} else if (valueClass.equals(java.lang.Double.TYPE)) {
-			return formatDouble((Double) value,userDecimalSeparator);
+			return formatDouble((Double) value, userDecimalSeparator);
 		} else if (valueClass.equals(Date.class)) {
 			return formatDate((Date) value, getInputDatePattern(userDateFormatPattern));
 		} else if (valueClass.equals(Timestamp.class)) {
@@ -1987,7 +1983,6 @@ public final class CommonUtil {
 
 	public static String localeToString(Locale locale) {
 		return locale == null ? null : locale.getLanguage();
-
 	}
 
 	// public static String normalizeLineEndings(String string) {
@@ -1997,7 +1992,6 @@ public final class CommonUtil {
 	// public static String normalizeLineEndings(String string, String lineBreak) {
 	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
 	// }
-
 	public static String massMailOutVOToString(MassMailOutVO massMail) {
 		if (massMail != null) {
 			return massMail.getName();
@@ -2024,7 +2018,6 @@ public final class CommonUtil {
 	}
 
 	public static String parseDecimal(String decimalValue, String userDecimalSeparator) {
-
 		if (decimalValue != null && userDecimalSeparator != null && userDecimalSeparator.length() > 0) {
 			return decimalValue.replace(userDecimalSeparator.charAt(0), '.');
 		}
@@ -2034,7 +2027,7 @@ public final class CommonUtil {
 	public static Double parseDouble(String doubleValue, String userDecimalSeparator) {
 		Double result = null;
 		if (doubleValue != null) {
-			doubleValue = parseDecimal(doubleValue,userDecimalSeparator);
+			doubleValue = parseDecimal(doubleValue, userDecimalSeparator);
 			try {
 				result = Double.parseDouble(doubleValue);
 			} catch (NumberFormatException e) {
@@ -2076,8 +2069,6 @@ public final class CommonUtil {
 		}
 		return null;
 	}
-
-
 
 	public static String repeatString(String s, int n) {
 		if (s == null) {
@@ -2130,7 +2121,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setDateValue(null);
 				} else {
-					criterion.setDateValue(parseDate(value,getInputDatePattern(userDateFormatPattern)));
+					criterion.setDateValue(parseDate(value, getInputDatePattern(userDateFormatPattern)));
 				}
 				break;
 			case TIME:
@@ -2138,7 +2129,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setTimeValue(null);
 				} else {
-					criterion.setTimeValue(parseDate(value,getInputTimePattern(userDateFormatPattern)));
+					criterion.setTimeValue(parseDate(value, getInputTimePattern(userDateFormatPattern)));
 				}
 				break;
 			case FLOAT:
@@ -2172,7 +2163,7 @@ public final class CommonUtil {
 				if (value == null || emptyValue.equals(value)) {
 					criterion.setTimestampValue(null);
 				} else {
-					criterion.setTimestampValue(dateToTimestamp(parseDate(value,getInputDateTimePattern(userDateFormatPattern))));
+					criterion.setTimestampValue(dateToTimestamp(parseDate(value, getInputDateTimePattern(userDateFormatPattern))));
 				}
 				break;
 			case NONE:
@@ -2198,7 +2189,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setDateValue(null);
 				} else {
-					criterion.setDateValue(parseDate(value,getInputDatePattern(userDateFormatPattern)));
+					criterion.setDateValue(parseDate(value, getInputDatePattern(userDateFormatPattern)));
 				}
 				break;
 			case TIME:
@@ -2206,7 +2197,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setTimeValue(null);
 				} else {
-					criterion.setTimeValue(parseDate(value,getInputTimePattern(userDateFormatPattern)));
+					criterion.setTimeValue(parseDate(value, getInputTimePattern(userDateFormatPattern)));
 				}
 				break;
 			case FLOAT:
@@ -2241,7 +2232,7 @@ public final class CommonUtil {
 				if (value == null || NO_SELECTION_VALUE.equals(value)) {
 					criterion.setTimestampValue(null);
 				} else {
-					criterion.setTimestampValue(dateToTimestamp(parseDate(value,getInputDateTimePattern(userDateFormatPattern))));
+					criterion.setTimestampValue(dateToTimestamp(parseDate(value, getInputDateTimePattern(userDateFormatPattern))));
 				}
 				break;
 			case NONE:

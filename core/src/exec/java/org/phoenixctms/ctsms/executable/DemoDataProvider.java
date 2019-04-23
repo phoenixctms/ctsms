@@ -157,89 +157,37 @@ import org.springframework.core.io.ClassPathResource;
 public class DemoDataProvider {
 
 	private enum InputFields {
-		HEIGHT("Körpergröße"), WEIGHT("Körpergewicht"),
-		BMI("Body Mass Index"),
-		DIABETES_YN("Diabetes J/N"),
-		DIABETES_TYPE("Diabetes Typ"),
-		DIABETES_SINCE("Diabetes seit"),
-		DIABETES_HBA1C_MMOLPERMOL("HbA1C in mmol/mol"),
-		DIABETES_HBA1C_PERCENT("HbA1C in prozent"),
-		DIABETES_HBA1C_DATE("HbA1C Datum"),
-		DIABETES_C_PEPTIDE("C-Peptid"), // µg/l
-		DIABETES_ATTENDING_PHYSICIAN("Arzt in Behandlung"),
-		DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
-		DIABETES_MEDICATION("Diabetes Medikamente"),
-		CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"),
-		SMOKER_YN("Raucher J/N"),
-		CIGARETTES_PER_DAY("Zigaretten pro Tag"),
-		CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"),
-		CHRONIC_DISEASE("Chronische Erkrankung"),
-		EPILEPSY_YN("Epilepsie J/N"),
-		EPILEPSY("Epilepsie"),
-		CARDIAC_PROBLEMS_YN("Herzprobleme J/N"),
-		CARDIAC_PROBLEMS("Herzprobleme"),
-		HYPERTENSION_YN("Bluthochdruck J/N"),
-		HYPERTENSION("Bluthochdruck"),
-		RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal insufficiencyYN//nieren
-		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"),
-		LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
-		LIVER_DISEASE("Lebererkrankung"),
-		ANEMIA_YN("Anemie J/N"), // anemiaYN
-		ANEMIA("Anemie"),
-		IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
-		IMMUNE_MEDAITED_DISEASE("Autoimmunerkrankung"),
-		GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
-		GESTATION("schwanger, stillen etc."),
-		GESTATION_TYPE("schwanger, stillen etc. Auswahl"),
-		CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
-		CONTRACEPTION("Empfängnisverhütung"), CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"),
-		ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
-		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"),
-		PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
-		PSYCHIATRIC_CONDITION("Psychiatrische Erkrankung"),
-		ALLERGY_YN("Allergien J/N"), // allergyYN
-		ALLERGY("Allergien"),
-		MEDICATION_YN("Medikamente J/N"), // medicationYN
-		MEDICATION("Medikamente"),
-		EYE_PROBLEMS_YN("Probleme mit den Augen J/N"), // eye_probalemsYN
-		EYE_PROBLEMS("Probleme mit den Augen"),
-		FEET_PROBLEMS_YN("Probleme mit den Füßen J/N"), // feet_probalemsYN
-		FEET_PROBLEMS("Probleme mit den Füßen"),
-		DIAGNOSTIC_FINDINGS_AVAILABLE_YN("Befunde zuhause J/N"),
-		DIAGNOSTIC_FINDINGS_AVAILABLE("Befunde zuhause"),
-		GENERAL_STATE_OF_HEALTH("Allgemeiner Gesundheitszustand"),
-		NOTE("Anmerkung"),
-		SUBJECT_NUMBER("Subject Number"),
-		IC_DATE("Informed Consent Date"),
-		SCREENING_DATE("Screening Date"),
-		LAB_NUMBER("Lab Number"),
-		RANDOM_NUMBER("Random Number"),
-		LETTER_TO_PHYSICIAN_SENT("Letter to physician sent"),
-		PARTICIPATION_LETTER_IN_MEDOCS("Participation letter in MR/Medocs"),
-		LETTER_TO_SUBJECT_AT_END_OF_STUDY("Letter to subject at end of study"),
-		COMPLETION_LETTER_IN_MEDOCS("Completion letter in MR/Medocs"),
-		BODY_HEIGHT("Body Height"),
-		BODY_WEIGHT("Body Weight"),
-		BODY_MASS_INDEX("BMI"),
-		OBESITY("Obesity"),
-		EGFR("eGFR"),
-		SERUM_CREATININ_CONCENTRATION("Serum Creatinin Concentration"),
-		ETHNICITY("Ethnicity"),
-		HBA1C_PERCENT("HbA1C (percent)"),
-		HBA1C_MMOLPERMOL("HbA1C (mmol/mol)"),
-		MANNEQUIN("Mannequin"),
-		ESR("ESR"),
-		VAS("VAS"),
-		DAS28("DAS28"),
-		DISTANCE("Distance"),
-		ALPHA_ID("Alpha-ID"),
-		STRING_SINGLELINE("singleline text"),
-		STRING_MULTILINE("multiline text"),
-		FLOAT("decimal"),
-		INTEGER("integer"),
-		DIAGNOSIS_START("diagnosis from"),
-		DIAGNOSIS_END("diagnosis to"),
-		DIAGNOSIS_COUNT("diagnosis count");
+		HEIGHT("Körpergröße"), WEIGHT("Körpergewicht"), BMI("Body Mass Index"), DIABETES_YN("Diabetes J/N"), DIABETES_TYPE("Diabetes Typ"), DIABETES_SINCE(
+				"Diabetes seit"), DIABETES_HBA1C_MMOLPERMOL(
+						"HbA1C in mmol/mol"), DIABETES_HBA1C_PERCENT("HbA1C in prozent"), DIABETES_HBA1C_DATE("HbA1C Datum"), DIABETES_C_PEPTIDE("C-Peptid"), // µg/l
+		DIABETES_ATTENDING_PHYSICIAN("Arzt in Behandlung"), DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
+		DIABETES_MEDICATION("Diabetes Medikamente"), CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"), SMOKER_YN("Raucher J/N"), CIGARETTES_PER_DAY(
+				"Zigaretten pro Tag"), CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"), CHRONIC_DISEASE("Chronische Erkrankung"), EPILEPSY_YN("Epilepsie J/N"), EPILEPSY(
+						"Epilepsie"), CARDIAC_PROBLEMS_YN("Herzprobleme J/N"), CARDIAC_PROBLEMS(
+								"Herzprobleme"), HYPERTENSION_YN("Bluthochdruck J/N"), HYPERTENSION("Bluthochdruck"), RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
+																																													// insufficiencyYN//nieren
+		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"), LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
+		LIVER_DISEASE("Lebererkrankung"), ANEMIA_YN("Anemie J/N"), // anemiaYN
+		ANEMIA("Anemie"), IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
+		IMMUNE_MEDAITED_DISEASE("Autoimmunerkrankung"), GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
+		GESTATION("schwanger, stillen etc."), GESTATION_TYPE("schwanger, stillen etc. Auswahl"), CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
+		CONTRACEPTION("Empfängnisverhütung"), CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"), ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
+		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"), PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
+		PSYCHIATRIC_CONDITION("Psychiatrische Erkrankung"), ALLERGY_YN("Allergien J/N"), // allergyYN
+		ALLERGY("Allergien"), MEDICATION_YN("Medikamente J/N"), // medicationYN
+		MEDICATION("Medikamente"), EYE_PROBLEMS_YN("Probleme mit den Augen J/N"), // eye_probalemsYN
+		EYE_PROBLEMS("Probleme mit den Augen"), FEET_PROBLEMS_YN("Probleme mit den Füßen J/N"), // feet_probalemsYN
+		FEET_PROBLEMS("Probleme mit den Füßen"), DIAGNOSTIC_FINDINGS_AVAILABLE_YN("Befunde zuhause J/N"), DIAGNOSTIC_FINDINGS_AVAILABLE("Befunde zuhause"), GENERAL_STATE_OF_HEALTH(
+				"Allgemeiner Gesundheitszustand"), NOTE("Anmerkung"), SUBJECT_NUMBER("Subject Number"), IC_DATE("Informed Consent Date"), SCREENING_DATE(
+						"Screening Date"), LAB_NUMBER("Lab Number"), RANDOM_NUMBER("Random Number"), LETTER_TO_PHYSICIAN_SENT(
+								"Letter to physician sent"), PARTICIPATION_LETTER_IN_MEDOCS("Participation letter in MR/Medocs"), LETTER_TO_SUBJECT_AT_END_OF_STUDY(
+										"Letter to subject at end of study"), COMPLETION_LETTER_IN_MEDOCS("Completion letter in MR/Medocs"), BODY_HEIGHT(
+												"Body Height"), BODY_WEIGHT("Body Weight"), BODY_MASS_INDEX("BMI"), OBESITY("Obesity"), EGFR("eGFR"), SERUM_CREATININ_CONCENTRATION(
+														"Serum Creatinin Concentration"), ETHNICITY("Ethnicity"), HBA1C_PERCENT("HbA1C (percent)"), HBA1C_MMOLPERMOL(
+																"HbA1C (mmol/mol)"), MANNEQUIN("Mannequin"), ESR("ESR"), VAS("VAS"), DAS28("DAS28"), DISTANCE("Distance"), ALPHA_ID(
+																		"Alpha-ID"), STRING_SINGLELINE("singleline text"), STRING_MULTILINE("multiline text"), FLOAT(
+																				"decimal"), INTEGER("integer"), DIAGNOSIS_START(
+																						"diagnosis from"), DIAGNOSIS_END("diagnosis to"), DIAGNOSIS_COUNT("diagnosis count");
 
 		private final String value;
 
@@ -254,72 +202,50 @@ public class DemoDataProvider {
 	}
 
 	private enum InputFieldValues {
-		TYP_1_DIABETES("Typ 1 Diabetes"),
-		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
-		TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION("Typ 2 Diabetes ohne Insulineigenproduktion"),
-		DIAET("Diät"), SPORTLICHE_BETAETIGUNG("Sportliche Betätigung"),
-		ORALE_ANTIDIABETIKA("Orale Antidiabetika"),
-		INSULINTHERAPIE("Insulintherapie"),
-		CIGARETTES_UNTER_5("Unter 5"),
-		CIGARETTES_5_20("5-20"),
-		CIGARETTES_20_40("20-40"),
-		CIGARETTES_UEBER_40("über 40"),
-		SCHWANGER("schwanger"),
-		STILLEN("stillen"),
-		HORMONELL("hormonell"),
-		MECHANISCH("mechanisch"),
-		INTRAUTERINPESSARE("Intrauterinpessare"),
-		CHEMISCH("chemisch"),
-		OPERATIV("operativ"),
-		SHORTWEIGHT("shortweight"),
-		NORMAL_WEIGHT("normal weight"),
-		OVERWEIGHT("overweight"),
-		ADIPOSITY_DEGREE_I("adiposity degree I"),
-		ADIPOSITY_DEGREE_II("adiposity degree II"),
-		ADIPOSITY_DEGREE_III("adiposity degree III"),
-		AMERICAN_INDIAN_OR_ALASKA_NATIVE("American Indian or Alaska Native"),
-		ASIAN("Asian"),
-		BLACK("Black"),
-		NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER("Native Hawaiian or Other Pacific Islander"),
-		WHITE("White"),
-		SHOULDER_RIGHT("shoulder right"),
-		SHOULDER_LEFT("shoulder left"),
-		ELLBOW_RIGHT("ellbow right"),
-		ELLBOW_LEFT("ellbow left"),
-		WRIST_RIGHT("wrist right"),
-		WRIST_LEFT("wrist left"),
-		THUMB_BASE_RIGHT("thumb base right"),
-		THUMB_MIDDLE_RIGHT("thumb middle right"),
-		THUMB_BASE_LEFT("thumb base left"),
-		THUMB_MIDDLE_LEFT("thumb middle left"),
-		INDEX_FINGER_BASE_RIGHT("index finger base right"),
-		INDEX_FINGER_MIDDLE_RIGHT("index finger middle right"),
-		MIDDLE_FINGER_BASE_RIGHT("middle finger base right"),
-		MIDDLE_FINGER_MIDDLE_RIGHT("middle finger middle right"),
-		RING_FINGER_BASE_RIGHT("ring finger base right"),
-		RING_FINGER_MIDDLE_RIGHT("ring finger middle right"),
-		LITTLE_FINGER_BASE_RIGHT("little finger base right"),
-		LITTLE_FINGER_MIDDLE_RIGHT("little finger middle right"),
-		INDEX_FINGER_BASE_LEFT("index finger base left"),
-		INDEX_FINGER_MIDDLE_LEFT("index finger middle left"),
-		MIDDLE_FINGER_BASE_LEFT("middle finger base left"),
-		MIDDLE_FINGER_MIDDLE_LEFT("middle finger middle left"),
-		RING_FINGER_BASE_LEFT("ring finger base left"),
-		RING_FINGER_MIDDLE_LEFT("ring finger middle left"),
-		LITTLE_FINGER_BASE_LEFT("little finger base left"),
-		LITTLE_FINGER_MIDDLE_LEFT("little finger middle left"),
-		KNEE_RIGHT("knee right"),
-		KNEE_LEFT("knee left"),
-		VAS_1("vas-1"),
-		VAS_2("vas-2"),
-		VAS_3("vas-3"),
-		VAS_4("vas-4"),
-		VAS_5("vas-5"),
-		VAS_6("vas-6"),
-		VAS_7("vas-7"),
-		VAS_8("vas-8"),
-		VAS_9("vas-9"),
-		VAS_10("vas-10");
+		TYP_1_DIABETES("Typ 1 Diabetes"), TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"), TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION(
+				"Typ 2 Diabetes ohne Insulineigenproduktion"), DIAET("Diät"), SPORTLICHE_BETAETIGUNG(
+						"Sportliche Betätigung"), ORALE_ANTIDIABETIKA("Orale Antidiabetika"), INSULINTHERAPIE(
+								"Insulintherapie"), CIGARETTES_UNTER_5("Unter 5"), CIGARETTES_5_20("5-20"), CIGARETTES_20_40("20-40"), CIGARETTES_UEBER_40("über 40"), SCHWANGER(
+										"schwanger"), STILLEN("stillen"), HORMONELL("hormonell"), MECHANISCH("mechanisch"), INTRAUTERINPESSARE("Intrauterinpessare"), CHEMISCH(
+												"chemisch"), OPERATIV("operativ"), SHORTWEIGHT("shortweight"), NORMAL_WEIGHT("normal weight"), OVERWEIGHT(
+														"overweight"), ADIPOSITY_DEGREE_I("adiposity degree I"), ADIPOSITY_DEGREE_II("adiposity degree II"), ADIPOSITY_DEGREE_III(
+																"adiposity degree III"), AMERICAN_INDIAN_OR_ALASKA_NATIVE("American Indian or Alaska Native"), ASIAN(
+																		"Asian"), BLACK("Black"), NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER(
+																				"Native Hawaiian or Other Pacific Islander"), WHITE(
+																						"White"), SHOULDER_RIGHT("shoulder right"), SHOULDER_LEFT("shoulder left"), ELLBOW_RIGHT(
+																								"ellbow right"), ELLBOW_LEFT("ellbow left"), WRIST_RIGHT("wrist right"), WRIST_LEFT(
+																										"wrist left"), THUMB_BASE_RIGHT("thumb base right"), THUMB_MIDDLE_RIGHT(
+																												"thumb middle right"), THUMB_BASE_LEFT(
+																														"thumb base left"), THUMB_MIDDLE_LEFT(
+																																"thumb middle left"), INDEX_FINGER_BASE_RIGHT(
+																																		"index finger base right"), INDEX_FINGER_MIDDLE_RIGHT(
+																																				"index finger middle right"), MIDDLE_FINGER_BASE_RIGHT(
+																																						"middle finger base right"), MIDDLE_FINGER_MIDDLE_RIGHT(
+																																								"middle finger middle right"), RING_FINGER_BASE_RIGHT(
+																																										"ring finger base right"), RING_FINGER_MIDDLE_RIGHT(
+																																												"ring finger middle right"), LITTLE_FINGER_BASE_RIGHT(
+																																														"little finger base right"), LITTLE_FINGER_MIDDLE_RIGHT(
+																																																"little finger middle right"), INDEX_FINGER_BASE_LEFT(
+																																																		"index finger base left"), INDEX_FINGER_MIDDLE_LEFT(
+																																																				"index finger middle left"), MIDDLE_FINGER_BASE_LEFT(
+																																																						"middle finger base left"), MIDDLE_FINGER_MIDDLE_LEFT(
+																																																								"middle finger middle left"), RING_FINGER_BASE_LEFT(
+																																																										"ring finger base left"), RING_FINGER_MIDDLE_LEFT(
+																																																												"ring finger middle left"), LITTLE_FINGER_BASE_LEFT(
+																																																														"little finger base left"), LITTLE_FINGER_MIDDLE_LEFT(
+																																																																"little finger middle left"), KNEE_RIGHT(
+																																																																		"knee right"), KNEE_LEFT(
+																																																																				"knee left"), VAS_1(
+																																																																						"vas-1"), VAS_2(
+																																																																								"vas-2"), VAS_3(
+																																																																										"vas-3"), VAS_4(
+																																																																												"vas-4"), VAS_5(
+																																																																														"vas-5"), VAS_6(
+																																																																																"vas-6"), VAS_7(
+																																																																																		"vas-7"), VAS_8(
+																																																																																				"vas-8"), VAS_9(
+																																																																																						"vas-9"), VAS_10(
+																																																																																								"vas-10");
 
 		private final String value;
 
@@ -334,15 +260,8 @@ public class DemoDataProvider {
 	}
 
 	public enum SearchCriteria {
-		ALL_INVENTORY("all inventory"),
-		ALL_STAFF("all staff"),
-		ALL_COURSES("all courses"),
-		ALL_TRIALS("all trials"),
-		ALL_PROBANDS("all probands"),
-		ALL_INPUTFIELDS("all inputfields"),
-		ALL_MASSMAILS("all_massmails"),
-		ALL_USERS("all users"),
-		SUBJECTS_1("subjects_1");
+		ALL_INVENTORY("all inventory"), ALL_STAFF("all staff"), ALL_COURSES("all courses"), ALL_TRIALS("all trials"), ALL_PROBANDS("all probands"), ALL_INPUTFIELDS(
+				"all inputfields"), ALL_MASSMAILS("all_massmails"), ALL_USERS("all users"), SUBJECTS_1("subjects_1");
 
 		private final String value;
 
@@ -406,10 +325,11 @@ public class DemoDataProvider {
 		public CriterionInVO buildCriterionInVO(DemoDataProvider d, DBModule module, int position) {
 			CriterionInVO newCriterion = new CriterionInVO();
 			newCriterion.setTieId(junction != null ? d.criterionTieDao.searchUniqueTie(junction).getId() : null);
-			CriterionProperty p = CommonUtil.isEmptyString(property) ? null : (new ArrayList<CriterionProperty>(criterionPropertyDao.search(new Search(new SearchParameter[] {
-					new SearchParameter("module", module, SearchParameter.EQUAL_COMPARATOR),
-					new SearchParameter("property", property, SearchParameter.EQUAL_COMPARATOR),
-			})))).iterator().next();
+			CriterionProperty p = CommonUtil.isEmptyString(property) ? null
+					: (new ArrayList<CriterionProperty>(criterionPropertyDao.search(new Search(new SearchParameter[] {
+							new SearchParameter("module", module, SearchParameter.EQUAL_COMPARATOR),
+							new SearchParameter("property", property, SearchParameter.EQUAL_COMPARATOR),
+					})))).iterator().next();
 			newCriterion.setPropertyId(p != null ? p.getId() : null);
 			newCriterion.setRestrictionId(operator != null ? d.criterionRestrictionDao.searchUniqueRestriction(operator).getId() : null);
 			newCriterion.setPosition((long) position);
@@ -859,15 +779,15 @@ public class DemoDataProvider {
 	}
 
 	private Long createDemoEcrfIncrement() {
-		//		function(){
+		// function(){
 		//
-		//		    if ($prevValue != null) {
-		//		     return $prevValue.clone().add(3).days();
-		//		    }
+		// if ($prevValue != null) {
+		// return $prevValue.clone().add(3).days();
+		// }
 		//
-		//		   return $enteredValue;
+		// return $enteredValue;
 		//
-		//		}
+		// }
 		return null;
 	}
 
@@ -879,9 +799,9 @@ public class DemoDataProvider {
 				"function(alphaid) {\n" +
 						"  return alphaid.length - 1;\n" +
 						"}",
-						"function() {\n" +
-								"  return sprintf('medical history: %d entries',$value);\n" +
-				"}"));
+				"function() {\n" +
+						"  return sprintf('medical history: %d entries',$value);\n" +
+						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_START, ecrf, "medical history", 1, true, true, false, true, true,
 				"date when disease started, if known/applicable", null, null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_END, ecrf, "medical history", 2, true, true, false, true, true, "date when disease ended, if known/applicable",
@@ -911,7 +831,7 @@ public class DemoDataProvider {
 						"  } else {\n" +
 						"    return $output;\n" +
 						"  }\n" +
-				"}"));
+						"}"));
 		return ecrfFields;
 	}
 
@@ -927,9 +847,9 @@ public class DemoDataProvider {
 				"function(value1, value2) {\n" +
 						"  return value1 + value2;\n" +
 						"}",
-						"function(value3) {\n" +
-								"  return sprintf(\"value3 = value1 + value2 = %.3f\",value3);\n" +
-				"}"));
+				"function(value3) {\n" +
+						"  return sprintf(\"value3 = value1 + value2 = %.3f\",value3);\n" +
+						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #2", 1, true, false, false, true, true, "some name", null, null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 2, true, false, false, true, true, "some repeatable value 4", "value4", null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 3, true, false, false, true, true, "some repeatable value 5", "value5", null, null));
@@ -938,9 +858,9 @@ public class DemoDataProvider {
 				"function(value4, value5) {\n" +
 						"  return value4 + value5;\n" +
 						"}",
-						"function(value6) {\n" +
-								"  return sprintf(\"value6 = value4 + value5 = %.3f\",value6);\n" +
-				"}"));
+				"function(value6) {\n" +
+						"  return sprintf(\"value6 = value4 + value5 = %.3f\",value6);\n" +
+						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "totals section", 1, false, false, false, true, true, "some name", null, null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 2, false, false, false, true, true, "some total value 1", "total1",
 				"function(value1, value4) {\n" +
@@ -954,9 +874,9 @@ public class DemoDataProvider {
 						"  }\n" +
 						"  return sum;\n" +
 						"}",
-						"function(total1) {\n" +
-								"  return sprintf(\"total1 = sum(value1) + sum(value4) = %.3f\",total1);\n" +
-				"}"));
+				"function(total1) {\n" +
+						"  return sprintf(\"total1 = sum(value1) + sum(value4) = %.3f\",total1);\n" +
+						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 3, false, false, false, true, true, "some total value 2", "total2",
 				"function(value2, value5) {\n" +
 						"  var sum = 0;\n" +
@@ -969,25 +889,25 @@ public class DemoDataProvider {
 						"  }\n" +
 						"  return sum;\n" +
 						"}",
-						"function(total2) {\n" +
-								"  return sprintf(\"total2 = sum(value2) + sum(value5) = %.3f\",total2);\n" +
-				"}"));
+				"function(total2) {\n" +
+						"  return sprintf(\"total2 = sum(value2) + sum(value5) = %.3f\",total2);\n" +
+						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "totals section", 4, false, false, false, true, true, "some description", null, null, null));
 		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "totals section", 5, false, false, false, true, true, "some total value 3", "total3",
 				"function(total1, total2) {\n" +
 						"  return total1 + total2;\n" +
 						"}",
-						"function(total3,value3,value6) {\n" +
-								"  var sum = 0;\n" +
-								"  var i;\n" +
-								"  for (i = 0; i < value3.length; i++) {\n" +
-								"    sum += value3[i];\n" +
-								"  }\n" +
-								"  for (i = 0; i < value6.length; i++) {\n" +
-								"    sum += value6[i];\n" +
-								"  }\n" +
-								"  return sprintf(\"total3 = total1 + total2 = %.3f = sum(value3) + sum(value6) = %.3f\",total3,sum);\n" +
-				"}"));
+				"function(total3,value3,value6) {\n" +
+						"  var sum = 0;\n" +
+						"  var i;\n" +
+						"  for (i = 0; i < value3.length; i++) {\n" +
+						"    sum += value3[i];\n" +
+						"  }\n" +
+						"  for (i = 0; i < value6.length; i++) {\n" +
+						"    sum += value6[i];\n" +
+						"  }\n" +
+						"  return sprintf(\"total3 = total1 + total2 = %.3f = sum(value3) + sum(value6) = %.3f\",total3,sum);\n" +
+						"}"));
 		return ecrfFields;
 	}
 
@@ -1200,6 +1120,7 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
@@ -1223,12 +1144,12 @@ public class DemoDataProvider {
 				"function(weight,size) {\n" +
 						"  return weight / (size * size / 10000.0);\n" +
 						"}",
-						"function(bmi) {\n" +
-								"  return sprintf(\"BMI entered: %.6f<br>\" +\n" +
-								"    \"BMI calculated: %.6f\",\n" +
-								"    $enteredValue + 0.0,\n" +
-								"    bmi);\n" +
-				"}"));
+				"function(bmi) {\n" +
+						"  return sprintf(\"BMI entered: %.6f<br>\" +\n" +
+						"    \"BMI calculated: %.6f\",\n" +
+						"    $enteredValue + 0.0,\n" +
+						"    bmi);\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.OBESITY, trial, "01 - BMI", 4, true, true, false, false, false, false,
 				null,
 				"obesity",
@@ -1250,19 +1171,19 @@ public class DemoDataProvider {
 						"  return findSelectionSetValueIds(function(option){\n" +
 						"    return option.name == selection;});\n" +
 						"}",
-						"function(obesity) {\n" +
-								"  return \"entered: \" +\n" +
-								"    printSelectionSetValues($enteredValue) + \"<br>\" +\n" +
-								"    \"calculated: <em>\" +\n" +
-								"    printSelectionSetValues(obesity) + \"</em>\";\n" +
-				"}"));
+				"function(obesity) {\n" +
+						"  return \"entered: \" +\n" +
+						"    printSelectionSetValues($enteredValue) + \"<br>\" +\n" +
+						"    \"calculated: <em>\" +\n" +
+						"    printSelectionSetValues(obesity) + \"</em>\";\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.ETHNICITY, trial, "02 - eGFR", 1, true, true, false, false, false, false,
 				null,
 				"ethnicity",
 				"",
 				"function() {\n" +
 						"  return sprintf(\"<a href=\\\"http://www.fda.gov/RegulatoryInformation/Guidances/ucm126340.htm\\\" target=\\\"new\\\">FDA Information</a>\");\n" +
-				"}"));
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.SERUM_CREATININ_CONCENTRATION, trial, "02 - eGFR", 2, true, true, false, false, false, false,
 				null,
 				"s_cr",
@@ -1281,42 +1202,42 @@ public class DemoDataProvider {
 						"  }\n" +
 						"  return result;\n" +
 						"}",
-						"function(egfr) {\n" +
-								"  return sprintf(\"eGFR entered: %.6f<br>\" + \n" +
-								"    \"eGFR calculated: %.6f\",\n" +
-								"    $enteredValue + 0.0,\n" +
-								"    egfr);\n" +
-				"}"));
+				"function(egfr) {\n" +
+						"  return sprintf(\"eGFR entered: %.6f<br>\" + \n" +
+						"    \"eGFR calculated: %.6f\",\n" +
+						"    $enteredValue + 0.0,\n" +
+						"    egfr);\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.HBA1C_PERCENT, trial, "03 - HbA1C", 1, true, true, false, false, false, false,
 				null,
 				"hba1c_percent",
 				"//function(hba1c_mmol_per_mol) {\n" +
 						"//  return hba1c_mmol_per_mol * 0.0915 + 2.15;\n" +
 						"//}",
-						"function() {\n" +
-								"  return sprintf(\"HbA1c (%%): %.1f<br/>\" +\n" +
-								"    \"HbA1c (mmol/mol): %.2f\",\n" +
-								"    $enteredValue + 0.0,\n" +
-								"    ($enteredValue - 2.15) * 10.929);\n" +
-				"}"));
+				"function() {\n" +
+						"  return sprintf(\"HbA1c (%%): %.1f<br/>\" +\n" +
+						"    \"HbA1c (mmol/mol): %.2f\",\n" +
+						"    $enteredValue + 0.0,\n" +
+						"    ($enteredValue - 2.15) * 10.929);\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.HBA1C_MMOLPERMOL, trial, "03 - HbA1C", 2, true, true, false, false, false, false,
 				null,
 				"hba1c_mmol_per_mol",
 				"function(hba1c_percent) {\n" +
 						"  return (hba1c_percent - 2.15) * 10.929;\n" +
 						"}",
-						"//function() {\n" +
-								"//  return sprintf(\"HbA1c (mmol/mol): %.2f<br/>\" +\n" +
-								"//    \"HbA1c (%%): %.1f\",\n" +
-								"//    $enteredValue + 0.0,\n" +
-								"//   $enteredValue * 0.0915 + 2.15);\n" +
-								"//}\n" +
-								"function(hba1c_mmol_per_mol) {\n" +
-								"  return sprintf(\"HbA1c entered (mmol/mol): %.6f<br/>\" +\n" +
-								"    \"HbA1c calculated (mmol/mol): %.6f\",\n" +
-								"    $enteredValue + 0.0,\n" +
-								"    hba1c_mmol_per_mol);\n" +
-				"}"));
+				"//function() {\n" +
+						"//  return sprintf(\"HbA1c (mmol/mol): %.2f<br/>\" +\n" +
+						"//    \"HbA1c (%%): %.1f\",\n" +
+						"//    $enteredValue + 0.0,\n" +
+						"//   $enteredValue * 0.0915 + 2.15);\n" +
+						"//}\n" +
+						"function(hba1c_mmol_per_mol) {\n" +
+						"  return sprintf(\"HbA1c entered (mmol/mol): %.6f<br/>\" +\n" +
+						"    \"HbA1c calculated (mmol/mol): %.6f\",\n" +
+						"    $enteredValue + 0.0,\n" +
+						"    hba1c_mmol_per_mol);\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.MANNEQUIN, trial, "04 - DAS28", 1, true, true, false, false, false, false,
 				"tender joints",
 				"tender",
@@ -1347,10 +1268,10 @@ public class DemoDataProvider {
 						"    0.014 * getInputFieldSelectionSetValue(\"vas\",vas.ids[0]).value; //the proband\'s\n" +
 						"    //subjective assessment of recent disease activity (visual analog scale, 0-100 mm)\n" +
 						"}",
-						"function(das28) {\n" +
-								"  return sprintf(\"entered: %.2f<br/>\" +\n" +
-								"    \"calculated: %.2f\", $enteredValue + 0.0,das28 + 0.0);\n" +
-				"}"));
+				"function(das28) {\n" +
+						"  return sprintf(\"entered: %.2f<br/>\" +\n" +
+						"    \"calculated: %.2f\", $enteredValue + 0.0,das28 + 0.0);\n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.DISTANCE, trial, "05 - Google Maps", 1, true, true, false, false, false, false,
 				null,
 				"distance",
@@ -1370,23 +1291,23 @@ public class DemoDataProvider {
 						"  }\n" +
 						"  return;\n" +
 						"}",
-						"function(distance){\n" +
-								"  if ($enteredValue) {\n" +
-								"    return \"\"; \n" +
-								"  }\n" +
-								"  if ($probandAddresses) {\n" +
-								"    for (var i in $probandAddresses) {\n" +
-								"      if ($probandAddresses[i].wireTransfer) {\n" +
-								"        if (distance != null) {\n" +
-								"          return sprintf(\"Distance from %s to %s: %d km\",LocationDistance.currentSubLocality,$probandAddresses[i].name,distance);\n" +
-								"        } else {\n" +
-								"          return \"querying Google Maps ...\"; \n" +
-								"        }\n" +
-								"      }\n" +
-								"    }\n" +
-								"  }\n" +
-								"  return \"No subject address.\"; \n" +
-				"}"));
+				"function(distance){\n" +
+						"  if ($enteredValue) {\n" +
+						"    return \"\"; \n" +
+						"  }\n" +
+						"  if ($probandAddresses) {\n" +
+						"    for (var i in $probandAddresses) {\n" +
+						"      if ($probandAddresses[i].wireTransfer) {\n" +
+						"        if (distance != null) {\n" +
+						"          return sprintf(\"Distance from %s to %s: %d km\",LocationDistance.currentSubLocality,$probandAddresses[i].name,distance);\n" +
+						"        } else {\n" +
+						"          return \"querying Google Maps ...\"; \n" +
+						"        }\n" +
+						"      }\n" +
+						"    }\n" +
+						"  }\n" +
+						"  return \"No subject address.\"; \n" +
+						"}"));
 		inquiries.add(createInquiry(auth, InputFields.ALPHA_ID, trial, "06 - Rest API", 1, true, true, false, false, false, false,
 				"(Medical Coding example ...)",
 				"alphaid",
@@ -1414,12 +1335,11 @@ public class DemoDataProvider {
 						"  } else {\n" +
 						"    return $output;\n" +
 						"  }\n" +
-				"}"));
+						"}"));
 		createDemoEcrfSum(auth, trial, null, 1, null);
 		createDemoEcrfMedicalHistory(auth, trial, null, 2, null);
 		return trial;
 	}
-
 
 	public TrialOutVO createGroupCoinRandomizationTrial(int probandGroupCount, int probandCount)
 			throws Throwable {
@@ -1437,13 +1357,13 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
 		TrialOutVO trial = trialService.addTrial(auth, newTrial);
 		jobOutput.println("trial created: " + trial.getName());
-
 		ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
 		newProbandGroup.setTitle("Screeninggruppe");
 		newProbandGroup.setToken("SG");
@@ -1451,8 +1371,7 @@ public class DemoDataProvider {
 		newProbandGroup.setRandomize(false);
 		ProbandGroupOutVO screeningGroup = trialService.addProbandGroup(auth, newProbandGroup);
 		jobOutput.println("proband group created: " + screeningGroup.getTitle());
-
-		LinkedHashMap<Long,ProbandGroupOutVO> probandGroupMap = new LinkedHashMap<Long,ProbandGroupOutVO>();
+		LinkedHashMap<Long, ProbandGroupOutVO> probandGroupMap = new LinkedHashMap<Long, ProbandGroupOutVO>();
 		for (int i = 0; i < probandGroupCount; i++) {
 			newProbandGroup = new ProbandGroupInVO();
 			newProbandGroup.setTitle("Gruppe " + (i + 1));
@@ -1463,10 +1382,9 @@ public class DemoDataProvider {
 			jobOutput.println("proband group created: " + probandGroup.getTitle());
 			probandGroupMap.put(probandGroup.getId(), probandGroup);
 		}
-
 		ProbandCategory probandCategory = probandCategoryDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("nameL10nKey", "test", SearchParameter.EQUAL_COMPARATOR) })).iterator().next();
-		HashMap<Long,Long> groupSizes = new HashMap<Long,Long>();
+		HashMap<Long, Long> groupSizes = new HashMap<Long, Long>();
 		for (int i = 0; i < probandCount; i++) {
 			ProbandInVO newProband = new ProbandInVO();
 			newProband.setDepartmentId(getDepartmentId(departmentNum));
@@ -1478,22 +1396,19 @@ public class DemoDataProvider {
 			newProband.setDateOfBirth(getRandomDateOfBirth());
 			ProbandOutVO proband = probandService.addProband(auth, newProband, null, null, null);
 			jobOutput.println("proband created: " + proband.getName());
-
 			ProbandListEntryInVO newProbandListEntry = new ProbandListEntryInVO();
-			//newProbandListEntry.setGroupId(null); //getRandomElement(probandGroups).getId());
+			// newProbandListEntry.setGroupId(null); //getRandomElement(probandGroups).getId());
 			newProbandListEntry.setPosition(i + 1l);
 			newProbandListEntry.setTrialId(trial.getId());
 			newProbandListEntry.setProbandId(proband.getId());
-			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, true, newProbandListEntry);
+			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, false, true, newProbandListEntry);
 			jobOutput.println("proband list entry created - trial: " + probandListEntry.getTrial().getName() + " position: " + probandListEntry.getPosition() + " proband: "
 					+ probandListEntry.getProband().getName());
-
 			if (groupSizes.containsKey(probandListEntry.getGroup().getId())) {
 				groupSizes.put(probandListEntry.getGroup().getId(), groupSizes.get(probandListEntry.getGroup().getId()) + 1l);
 			} else {
-				groupSizes.put(probandListEntry.getGroup().getId(),1l);
+				groupSizes.put(probandListEntry.getGroup().getId(), 1l);
 			}
-
 		}
 		Iterator<Long> probandGroupIdsIt = probandGroupMap.keySet().iterator();
 		while (probandGroupIdsIt.hasNext()) {
@@ -1515,7 +1430,7 @@ public class DemoDataProvider {
 	private InquiryOutVO createInquiry(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, String category, int position, boolean active, boolean activeSignup,
 			boolean optional,
 			boolean disabled, boolean excelValue, boolean excelDate, String comment, String jsVariableName, String jsValueExpression, String jsOutputExpression)
-					throws Throwable {
+			throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InquiryInVO newInquiry = new InquiryInVO();
 		newInquiry.setCategory(category);
@@ -1616,7 +1531,7 @@ public class DemoDataProvider {
 
 	private ProbandOutVO createProband(AuthenticationVO auth, int departmentNum, Sex sex, Collection<Long> childIds, Collection<ProbandCategory> categories,
 			Collection<String> titles)
-					throws Exception {
+			throws Exception {
 		// todo: relatives graph
 		auth = (auth == null ? getRandomAuth() : auth);
 		ProbandInVO newProband = new ProbandInVO();
@@ -1677,10 +1592,11 @@ public class DemoDataProvider {
 		jobOutput.println("proband created: " + out.getName());
 		return out;
 	}
+
 	private ProbandListEntryTagOutVO createProbandListEntryTag(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, int position, boolean optional, boolean disabled,
 			boolean excelValue, boolean excelDate, boolean ecrfValue, boolean stratification, boolean randomize, String comment, String jsVariableName, String jsValueExpression,
 			String jsOutputExpression)
-					throws Throwable {
+			throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ProbandListEntryTagInVO newProbandListEntryTag = new ProbandListEntryTagInVO();
 		newProbandListEntryTag.setOptional(optional);
@@ -1703,7 +1619,6 @@ public class DemoDataProvider {
 	}
 
 	public void createProbands(int probandCountPerDepartment) throws Exception {
-
 		int grandChildrenCount = (int) (0.5 * probandCountPerDepartment);
 		int childrenCount = (int) (0.5 * (probandCountPerDepartment - grandChildrenCount));
 		Collection<String> titles = toolsService.completeTitle(null, null, -1);
@@ -1777,7 +1692,7 @@ public class DemoDataProvider {
 
 	private InputFieldOutVO createSelectOneDropdownField(AuthenticationVO auth, String name, String category, String title, String comment,
 			TreeMap<InputFieldValues, Boolean> selectionSetValues)
-					throws Exception {
+			throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.SELECT_ONE_DROPDOWN);
@@ -1793,7 +1708,7 @@ public class DemoDataProvider {
 
 	private InputFieldOutVO createSelectOneRadioField(AuthenticationVO auth, String name, String category, String title, String comment, boolean vertical,
 			TreeMap<InputFieldValues, Boolean> selectionSetValues)
-					throws Exception {
+			throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(vertical ? InputFieldType.SELECT_ONE_RADIO_V : InputFieldType.SELECT_ONE_RADIO_H);
@@ -2011,6 +1926,7 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(getRandomElement(selectionSetService.getTrialTypes(auth, null)).getId());
 		newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
@@ -2204,7 +2120,7 @@ public class DemoDataProvider {
 					null));
 			inquiries.add(createInquiry(auth, InputFields.SMOKER_YN, trial, "01 - Allgemeine information", 5, true, true, false, false, true, true, null, null, null, null));
 			inquiries
-			.add(createInquiry(auth, InputFields.CIGARETTES_PER_DAY, trial, "01 - Allgemeine information", 6, true, true, true, false, true, true, null, null, null, null));
+					.add(createInquiry(auth, InputFields.CIGARETTES_PER_DAY, trial, "01 - Allgemeine information", 6, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_YN, trial, "02 - Diabetes", 1, true, true, false, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_TYPE, trial, "02 - Diabetes", 2, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_SINCE, trial, "02 - Diabetes", 3, true, true, true, false, true, true, null, null, null, null));
@@ -2218,14 +2134,14 @@ public class DemoDataProvider {
 			inquiries.add(createInquiry(auth, InputFields.EPILEPSY_YN, trial, "03 - Krankheitsgeschichte", 3, true, true, false, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.EPILEPSY, trial, "03 - Krankheitsgeschichte", 4, true, true, true, false, true, true, null, null, null, null));
 			inquiries
-			.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 5, true, true, false, false, true, true, null, null, null, null));
+					.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 5, true, true, false, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS, trial, "03 - Krankheitsgeschichte", 6, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.HYPERTENSION_YN, trial, "03 - Krankheitsgeschichte", 7, true, true, false, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.HYPERTENSION, trial, "03 - Krankheitsgeschichte", 8, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY_YN, trial, "03 - Krankheitsgeschichte", 9, true, true, false, false, true, true, null, null, null,
 					null));
 			inquiries
-			.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY, trial, "03 - Krankheitsgeschichte", 10, true, true, true, false, true, true, null, null, null, null));
+					.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY, trial, "03 - Krankheitsgeschichte", 10, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.LIVER_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 11, true, true, false, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.LIVER_DISEASE, trial, "03 - Krankheitsgeschichte", 12, true, true, true, false, true, true, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.ANEMIA_YN, trial, "03 - Krankheitsgeschichte", 13, true, true, false, false, true, true, null, null, null, null));
@@ -2266,12 +2182,11 @@ public class DemoDataProvider {
 		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-		.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
+				.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-		.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
+				.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
 		probandListEntryTags
-		.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
-
+				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
 		// HashMap<Long, HashMap<Long, ArrayList<ECRFFieldOutVO>>> ecrfFieldsPerVisitPerGroupMap = new HashMap<Long, HashMap<Long,
 		// ArrayList<ECRFFieldOutVO>>>(probandGroups.size());
 		// Iterator<ProbandGroupOutVO> probandGroupIt = probandGroups.iterator();
@@ -2290,7 +2205,6 @@ public class DemoDataProvider {
 		// }
 		// ecrfFieldsPerVisitPerGroupMap.put(probandGroup.getId(), ecrfFieldsPerVisitMap);
 		// }
-
 		if (!"migration_started".equals(trial.getStatus().getNameL10nKey())) {
 			newTrial.setId(trial.getId());
 			newTrial.setVersion(trial.getVersion());
@@ -2338,7 +2252,7 @@ public class DemoDataProvider {
 			newProbandListEntry.setPosition(i + 1l);
 			newProbandListEntry.setTrialId(trial.getId());
 			newProbandListEntry.setProbandId(probands.get(i).getId());
-			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, false, newProbandListEntry);
+			ProbandListEntryOutVO probandListEntry = trialService.addProbandListEntry(auth, false, false, false, newProbandListEntry);
 			jobOutput.println("proband list entry created - trial: " + probandListEntry.getTrial().getName() + " position: " + probandListEntry.getPosition() + " proband: "
 					+ probandListEntry.getProband().getName());
 			updateProbandListStatusEntryRealTimestamp(probandListEntry.getLastStatus(), screeningGroup, visitScheduleItemPerGroupMap, 0);
@@ -2392,7 +2306,8 @@ public class DemoDataProvider {
 		return trial;
 	}
 
-	public void createTrials(int trialCountPerDepartment, SearchCriteria[] eligibilityCriterias, Integer[] visitCounts, Integer[] probandGroupCounts, Integer[] avgProbandGroupSizes)
+	public void createTrials(int trialCountPerDepartment, SearchCriteria[] eligibilityCriterias, Integer[] visitCounts, Integer[] probandGroupCounts,
+			Integer[] avgProbandGroupSizes)
 			throws Throwable {
 		for (int departmentNum = 0; departmentNum < departmentCount; departmentNum++) {
 			for (int i = 0; i < trialCountPerDepartment; i++) {
@@ -2491,13 +2406,13 @@ public class DemoDataProvider {
 					return createCriteria(a, DBModule.PROBAND_DB,
 							new ArrayList<SearchCriterion>() {
 
-						{
-							InputFieldOutVO field1 = getInputField(a, InputFields.DIABETES_TYPE);
-							InputFieldSelectionSetValue value1 = getInputFieldValue(field1.getId(), InputFieldValues.TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION);
-							add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
-							add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value1.getId()));
-						}
-					}, name, "", true);
+								{
+									InputFieldOutVO field1 = getInputField(a, InputFields.DIABETES_TYPE);
+									InputFieldSelectionSetValue value1 = getInputFieldValue(field1.getId(), InputFieldValues.TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION);
+									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
+									add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value1.getId()));
+								}
+							}, name, "", true);
 				default:
 					return null;
 			}
@@ -2743,17 +2658,18 @@ public class DemoDataProvider {
 									"25-29.9: overweight\n" +
 									"30-34.9: adiposity degree I\n" +
 									"35-39.9: adiposity degree II\n" +
-									">= 40: adiposity degree III (morbid)", true, new TreeMap<InputFieldValues, Boolean>() {
+									">= 40: adiposity degree III (morbid)",
+							true, new TreeMap<InputFieldValues, Boolean>() {
 
-						{
-							put(InputFieldValues.SHORTWEIGHT, false);
-							put(InputFieldValues.NORMAL_WEIGHT, false);
-							put(InputFieldValues.OVERWEIGHT, false);
-							put(InputFieldValues.ADIPOSITY_DEGREE_I, false);
-							put(InputFieldValues.ADIPOSITY_DEGREE_II, false);
-							put(InputFieldValues.ADIPOSITY_DEGREE_III, false);
-						}
-					});
+								{
+									put(InputFieldValues.SHORTWEIGHT, false);
+									put(InputFieldValues.NORMAL_WEIGHT, false);
+									put(InputFieldValues.OVERWEIGHT, false);
+									put(InputFieldValues.ADIPOSITY_DEGREE_I, false);
+									put(InputFieldValues.ADIPOSITY_DEGREE_II, false);
+									put(InputFieldValues.ADIPOSITY_DEGREE_III, false);
+								}
+							});
 				case EGFR:
 					return createFloatField(auth, name, inquiryQuestionsCategory, "Estimated Glomerular Filtration Rate (ml/min):", "", null, 1f, 50f,
 							"Estimated glomerular filtration rate requires a decimal value between 1.0 and 50.0 ml/min.");
@@ -2781,64 +2697,65 @@ public class DemoDataProvider {
 					return createSketchField(auth, name, inquiryQuestionsCategory, "Joints:", "",
 							"mannequin.png", new TreeMap<InputFieldValues, Stroke>() {
 
-						{
-							put(InputFieldValues.SHOULDER_RIGHT, new Stroke("M111.91619,64.773336L134.22667,64.773336L134.22667,86.512383L111.91619,86.512383Z"));
-							put(InputFieldValues.SHOULDER_LEFT, new Stroke("M196.2019,66.916193L218.51238,66.916193L218.51238,88.65524L196.2019,88.65524Z"));
-							put(InputFieldValues.ELLBOW_RIGHT, new Stroke("M114.05904,111.20191L136.36952,111.20191L136.36952,132.94095L114.05904,132.94095Z"));
-							put(InputFieldValues.ELLBOW_LEFT, new Stroke("M197.63047,113.34477L219.94095,113.34477L219.94095,135.08381L197.63047,135.08381Z"));
-							put(InputFieldValues.WRIST_RIGHT, new Stroke("M94.773327,156.9162L117.08381,156.9162L117.08381,178.65524L94.773327,178.65524Z"));
-							put(InputFieldValues.WRIST_LEFT, new Stroke("M215.48761,161.20191L237.7981,161.20191L237.7981,182.94095L215.48761,182.94095Z"));
-							put(InputFieldValues.THUMB_BASE_RIGHT, new Stroke("M29.891238,214.89125L49.823043,214.89125L49.823043,254.9659L29.891238,254.9659Z"));
-							put(InputFieldValues.THUMB_MIDDLE_RIGHT, new Stroke("M9.0200169,246.16289L29.265697,246.16289L29.265697,265.83713L9.0200169,265.83713Z"));
-							put(InputFieldValues.THUMB_BASE_LEFT, new Stroke("M282.0341,217.03411L301.9659,217.03411L301.9659,257.10876L282.0341,257.10876Z"));
-							put(InputFieldValues.THUMB_MIDDLE_LEFT, new Stroke("M301.87716,250.4486L322.12284,250.4486L322.12284,270.12284L301.87716,270.12284Z"));
-							put(InputFieldValues.INDEX_FINGER_BASE_RIGHT, new Stroke("M28.305731,271.87717L48.551411,271.87717L48.551411,291.55141L28.305731,291.55141Z"));
-							put(InputFieldValues.INDEX_FINGER_MIDDLE_RIGHT, new Stroke("M22.591445,294.73431L42.837125,294.73431L42.837125,314.40855L22.591445,314.40855Z"));
-							put(InputFieldValues.MIDDLE_FINGER_BASE_RIGHT, new Stroke("M48.305731,276.16288L68.551411,276.16288L68.551411,295.83712L48.305731,295.83712Z"));
-							put(InputFieldValues.MIDDLE_FINGER_MIDDLE_RIGHT,
-									new Stroke("M44.734302,298.30574L64.979982,298.30574L64.979982,317.97998L44.734302,317.97998Z"));
-							put(InputFieldValues.RING_FINGER_BASE_RIGHT, new Stroke("M66.162873,279.02003L86.408553,279.02003L86.408553,298.69427L66.162873,298.69427Z"));
-							put(InputFieldValues.RING_FINGER_MIDDLE_RIGHT, new Stroke("M65.448587,302.59146L85.694267,302.59146L85.694267,322.2657L65.448587,322.2657Z"));
-							put(InputFieldValues.LITTLE_FINGER_BASE_RIGHT, new Stroke("M85.448587,276.16289L105.69427,276.16289L105.69427,295.83713L85.448587,295.83713Z"));
-							put(InputFieldValues.LITTLE_FINGER_MIDDLE_RIGHT,
-									new Stroke("M87.591444,299.02003L107.83713,299.02003L107.83713,318.69427L87.591444,318.69427Z"));
-							put(InputFieldValues.INDEX_FINGER_BASE_LEFT, new Stroke("M281.16287,274.73432L301.40856,274.73432L301.40856,294.40856L281.16287,294.40856Z"));
-							put(InputFieldValues.INDEX_FINGER_MIDDLE_LEFT, new Stroke("M286.16287,296.16289L306.40856,296.16289L306.40856,315.83713L286.16287,315.83713Z"));
-							put(InputFieldValues.MIDDLE_FINGER_BASE_LEFT, new Stroke("M262.59144,279.73432L282.83713,279.73432L282.83713,299.40856L262.59144,299.40856Z"));
-							put(InputFieldValues.MIDDLE_FINGER_MIDDLE_LEFT, new Stroke("M264.02001,301.87718L284.2657,301.87718L284.2657,321.55142L264.02001,321.55142Z"));
-							put(InputFieldValues.RING_FINGER_BASE_LEFT, new Stroke("M244.7343,282.59147L264.97999,282.59147L264.97999,302.26571L244.7343,302.26571Z"));
-							put(InputFieldValues.RING_FINGER_MIDDLE_LEFT, new Stroke("M244.02001,304.02004L264.2657,304.02004L264.2657,323.69428L244.02001,323.69428Z"));
-							put(InputFieldValues.LITTLE_FINGER_BASE_LEFT, new Stroke("M224.7343,279.02004L244.97999,279.02004L244.97999,298.69428L224.7343,298.69428Z"));
-							put(InputFieldValues.LITTLE_FINGER_MIDDLE_LEFT, new Stroke("M224.02001,301.1629L244.2657,301.1629L244.2657,320.83714L224.02001,320.83714Z"));
-							put(InputFieldValues.KNEE_RIGHT, new Stroke("M133.4355,241.29267L161.27879,241.29267L161.27879,267.13594L133.4355,267.13594Z"));
-							put(InputFieldValues.KNEE_LEFT, new Stroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
-						}
-					},
+								{
+									put(InputFieldValues.SHOULDER_RIGHT, new Stroke("M111.91619,64.773336L134.22667,64.773336L134.22667,86.512383L111.91619,86.512383Z"));
+									put(InputFieldValues.SHOULDER_LEFT, new Stroke("M196.2019,66.916193L218.51238,66.916193L218.51238,88.65524L196.2019,88.65524Z"));
+									put(InputFieldValues.ELLBOW_RIGHT, new Stroke("M114.05904,111.20191L136.36952,111.20191L136.36952,132.94095L114.05904,132.94095Z"));
+									put(InputFieldValues.ELLBOW_LEFT, new Stroke("M197.63047,113.34477L219.94095,113.34477L219.94095,135.08381L197.63047,135.08381Z"));
+									put(InputFieldValues.WRIST_RIGHT, new Stroke("M94.773327,156.9162L117.08381,156.9162L117.08381,178.65524L94.773327,178.65524Z"));
+									put(InputFieldValues.WRIST_LEFT, new Stroke("M215.48761,161.20191L237.7981,161.20191L237.7981,182.94095L215.48761,182.94095Z"));
+									put(InputFieldValues.THUMB_BASE_RIGHT, new Stroke("M29.891238,214.89125L49.823043,214.89125L49.823043,254.9659L29.891238,254.9659Z"));
+									put(InputFieldValues.THUMB_MIDDLE_RIGHT, new Stroke("M9.0200169,246.16289L29.265697,246.16289L29.265697,265.83713L9.0200169,265.83713Z"));
+									put(InputFieldValues.THUMB_BASE_LEFT, new Stroke("M282.0341,217.03411L301.9659,217.03411L301.9659,257.10876L282.0341,257.10876Z"));
+									put(InputFieldValues.THUMB_MIDDLE_LEFT, new Stroke("M301.87716,250.4486L322.12284,250.4486L322.12284,270.12284L301.87716,270.12284Z"));
+									put(InputFieldValues.INDEX_FINGER_BASE_RIGHT, new Stroke("M28.305731,271.87717L48.551411,271.87717L48.551411,291.55141L28.305731,291.55141Z"));
+									put(InputFieldValues.INDEX_FINGER_MIDDLE_RIGHT,
+											new Stroke("M22.591445,294.73431L42.837125,294.73431L42.837125,314.40855L22.591445,314.40855Z"));
+									put(InputFieldValues.MIDDLE_FINGER_BASE_RIGHT, new Stroke("M48.305731,276.16288L68.551411,276.16288L68.551411,295.83712L48.305731,295.83712Z"));
+									put(InputFieldValues.MIDDLE_FINGER_MIDDLE_RIGHT,
+											new Stroke("M44.734302,298.30574L64.979982,298.30574L64.979982,317.97998L44.734302,317.97998Z"));
+									put(InputFieldValues.RING_FINGER_BASE_RIGHT, new Stroke("M66.162873,279.02003L86.408553,279.02003L86.408553,298.69427L66.162873,298.69427Z"));
+									put(InputFieldValues.RING_FINGER_MIDDLE_RIGHT, new Stroke("M65.448587,302.59146L85.694267,302.59146L85.694267,322.2657L65.448587,322.2657Z"));
+									put(InputFieldValues.LITTLE_FINGER_BASE_RIGHT, new Stroke("M85.448587,276.16289L105.69427,276.16289L105.69427,295.83713L85.448587,295.83713Z"));
+									put(InputFieldValues.LITTLE_FINGER_MIDDLE_RIGHT,
+											new Stroke("M87.591444,299.02003L107.83713,299.02003L107.83713,318.69427L87.591444,318.69427Z"));
+									put(InputFieldValues.INDEX_FINGER_BASE_LEFT, new Stroke("M281.16287,274.73432L301.40856,274.73432L301.40856,294.40856L281.16287,294.40856Z"));
+									put(InputFieldValues.INDEX_FINGER_MIDDLE_LEFT, new Stroke("M286.16287,296.16289L306.40856,296.16289L306.40856,315.83713L286.16287,315.83713Z"));
+									put(InputFieldValues.MIDDLE_FINGER_BASE_LEFT, new Stroke("M262.59144,279.73432L282.83713,279.73432L282.83713,299.40856L262.59144,299.40856Z"));
+									put(InputFieldValues.MIDDLE_FINGER_MIDDLE_LEFT, new Stroke("M264.02001,301.87718L284.2657,301.87718L284.2657,321.55142L264.02001,321.55142Z"));
+									put(InputFieldValues.RING_FINGER_BASE_LEFT, new Stroke("M244.7343,282.59147L264.97999,282.59147L264.97999,302.26571L244.7343,302.26571Z"));
+									put(InputFieldValues.RING_FINGER_MIDDLE_LEFT, new Stroke("M244.02001,304.02004L264.2657,304.02004L264.2657,323.69428L244.02001,323.69428Z"));
+									put(InputFieldValues.LITTLE_FINGER_BASE_LEFT, new Stroke("M224.7343,279.02004L244.97999,279.02004L244.97999,298.69428L224.7343,298.69428Z"));
+									put(InputFieldValues.LITTLE_FINGER_MIDDLE_LEFT, new Stroke("M224.02001,301.1629L244.2657,301.1629L244.2657,320.83714L224.02001,320.83714Z"));
+									put(InputFieldValues.KNEE_RIGHT, new Stroke("M133.4355,241.29267L161.27879,241.29267L161.27879,267.13594L133.4355,267.13594Z"));
+									put(InputFieldValues.KNEE_LEFT, new Stroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
+								}
+							},
 							0, 28, "Mark up to 28 joints.");
 				case VAS:
 					return createSketchField(auth, name, inquiryQuestionsCategory, "Visual Analogue Scale:", "",
 							"vas.png", new TreeMap<InputFieldValues, Stroke>() {
 
-						{
-							final int VAS_STEPS = 10;
-							final float VAS_MAX_VALUE = 100.0f;
-							final float VAS_X_OFFSET = 10.0f;
-							final float VAS_LENGTH = 382.0f;
-							final String[] VAS_COLORS = new String[] {
-									"#24FF00", "#58FF00", "#8DFF00", "#C2FF00",
-									"#F7FF00", "#FFD300", "#FF9E00", "#FF6900", "#FF3400", "#FF0000" };
-							for (int i = 0; i < VAS_STEPS; i++) {
-								float valueFrom = i * VAS_MAX_VALUE / VAS_STEPS;
-								float valueTo = (i + 1) * VAS_MAX_VALUE / VAS_STEPS;
-								float value = (valueFrom + valueTo) / 2;
-								float x1 = VAS_X_OFFSET + i * VAS_LENGTH / VAS_STEPS;
-								float x2 = VAS_X_OFFSET + (i + 1) * VAS_LENGTH / VAS_STEPS;
-								int colorIndex = i * VAS_COLORS.length / VAS_STEPS;
-								put(InputFieldValues.valueOf(String.format("VAS_%d", i + 1)), new Stroke(VAS_COLORS[colorIndex], "M" + x1 + ",10L" + x2 + ",10L" + x2
-										+ ",50L" + x1 + ",50Z", Float.toString(value)));
-							}
-						}
-					},
+								{
+									final int VAS_STEPS = 10;
+									final float VAS_MAX_VALUE = 100.0f;
+									final float VAS_X_OFFSET = 10.0f;
+									final float VAS_LENGTH = 382.0f;
+									final String[] VAS_COLORS = new String[] {
+											"#24FF00", "#58FF00", "#8DFF00", "#C2FF00",
+											"#F7FF00", "#FFD300", "#FF9E00", "#FF6900", "#FF3400", "#FF0000" };
+									for (int i = 0; i < VAS_STEPS; i++) {
+										float valueFrom = i * VAS_MAX_VALUE / VAS_STEPS;
+										float valueTo = (i + 1) * VAS_MAX_VALUE / VAS_STEPS;
+										float value = (valueFrom + valueTo) / 2;
+										float x1 = VAS_X_OFFSET + i * VAS_LENGTH / VAS_STEPS;
+										float x2 = VAS_X_OFFSET + (i + 1) * VAS_LENGTH / VAS_STEPS;
+										int colorIndex = i * VAS_COLORS.length / VAS_STEPS;
+										put(InputFieldValues.valueOf(String.format("VAS_%d", i + 1)), new Stroke(VAS_COLORS[colorIndex], "M" + x1 + ",10L" + x2 + ",10L" + x2
+												+ ",50L" + x1 + ",50Z", Float.toString(value)));
+									}
+								}
+							},
 							1, 1, "Mark exactly one position.");
 				case ESR:
 					return createFloatField(auth, name, inquiryQuestionsCategory, "Erythrocyte Sedimentation Rate (mm/h):", "", null, 1.0f, 30.0f,
@@ -3204,24 +3121,29 @@ public class DemoDataProvider {
 					}
 					break;
 				case INTEGER:
-					inquiryValue.setLongValue(inquiry.isDisabled() ? inquiry.getField().getLongPreset() : getRandomLong(inquiry.getField().getLongLowerLimit(), inquiry.getField()
-							.getLongUpperLimit()));
+					inquiryValue.setLongValue(inquiry.isDisabled() ? inquiry.getField().getLongPreset()
+							: getRandomLong(inquiry.getField().getLongLowerLimit(), inquiry.getField()
+									.getLongUpperLimit()));
 					break;
 				case FLOAT:
-					inquiryValue.setFloatValue(inquiry.isDisabled() ? inquiry.getField().getFloatPreset() : getRandomFloat(inquiry.getField().getFloatLowerLimit(), inquiry
-							.getField().getFloatUpperLimit()));
+					inquiryValue.setFloatValue(inquiry.isDisabled() ? inquiry.getField().getFloatPreset()
+							: getRandomFloat(inquiry.getField().getFloatLowerLimit(), inquiry
+									.getField().getFloatUpperLimit()));
 					break;
 				case DATE:
-					inquiryValue.setDateValue(inquiry.isDisabled() ? inquiry.getField().getDatePreset() : getRandomDate(inquiry.getField().getMinDate(), inquiry.getField()
-							.getMaxDate()));
+					inquiryValue.setDateValue(inquiry.isDisabled() ? inquiry.getField().getDatePreset()
+							: getRandomDate(inquiry.getField().getMinDate(), inquiry.getField()
+									.getMaxDate()));
 					break;
 				case TIME:
-					inquiryValue.setTimeValue(inquiry.isDisabled() ? inquiry.getField().getTimePreset() : getRandomTime(inquiry.getField().getMinTime(), inquiry.getField()
-							.getMaxTime()));
+					inquiryValue.setTimeValue(inquiry.isDisabled() ? inquiry.getField().getTimePreset()
+							: getRandomTime(inquiry.getField().getMinTime(), inquiry.getField()
+									.getMaxTime()));
 					break;
 				case TIMESTAMP:
-					inquiryValue.setTimestampValue(inquiry.isDisabled() ? inquiry.getField().getTimestampPreset() : getRandomTimestamp(inquiry.getField().getMinTimestamp(),
-							inquiry.getField().getMaxTimestamp()));
+					inquiryValue.setTimestampValue(inquiry.isDisabled() ? inquiry.getField().getTimestampPreset()
+							: getRandomTimestamp(inquiry.getField().getMinTimestamp(),
+									inquiry.getField().getMaxTimestamp()));
 					break;
 				default:
 			}
@@ -3284,24 +3206,29 @@ public class DemoDataProvider {
 					}
 					break;
 				case INTEGER:
-					probandListEntryTagValue.setLongValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getLongPreset() : getRandomLong(probandListEntryTag
-							.getField().getLongLowerLimit(), probandListEntryTag.getField().getLongUpperLimit()));
+					probandListEntryTagValue.setLongValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getLongPreset()
+							: getRandomLong(probandListEntryTag
+									.getField().getLongLowerLimit(), probandListEntryTag.getField().getLongUpperLimit()));
 					break;
 				case FLOAT:
-					probandListEntryTagValue.setFloatValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getFloatPreset() : getRandomFloat(probandListEntryTag
-							.getField().getFloatLowerLimit(), probandListEntryTag.getField().getFloatUpperLimit()));
+					probandListEntryTagValue.setFloatValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getFloatPreset()
+							: getRandomFloat(probandListEntryTag
+									.getField().getFloatLowerLimit(), probandListEntryTag.getField().getFloatUpperLimit()));
 					break;
 				case DATE:
-					probandListEntryTagValue.setDateValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getDatePreset() : getRandomDate(probandListEntryTag
-							.getField().getMinDate(), probandListEntryTag.getField().getMaxDate()));
+					probandListEntryTagValue.setDateValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getDatePreset()
+							: getRandomDate(probandListEntryTag
+									.getField().getMinDate(), probandListEntryTag.getField().getMaxDate()));
 					break;
 				case TIME:
-					probandListEntryTagValue.setTimeValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimePreset() : getRandomTime(probandListEntryTag
-							.getField().getMinTime(), probandListEntryTag.getField().getMaxTime()));
+					probandListEntryTagValue.setTimeValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimePreset()
+							: getRandomTime(probandListEntryTag
+									.getField().getMinTime(), probandListEntryTag.getField().getMaxTime()));
 					break;
 				case TIMESTAMP:
-					probandListEntryTagValue.setTimestampValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimestampPreset() : getRandomTimestamp(
-							probandListEntryTag.getField().getMinTimestamp(), probandListEntryTag.getField().getMaxTimestamp()));
+					probandListEntryTagValue.setTimestampValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimestampPreset()
+							: getRandomTimestamp(
+									probandListEntryTag.getField().getMinTimestamp(), probandListEntryTag.getField().getMaxTimestamp()));
 					break;
 				default:
 			}

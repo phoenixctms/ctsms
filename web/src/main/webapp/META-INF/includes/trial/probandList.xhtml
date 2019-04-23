@@ -709,7 +709,43 @@
 													value="#{labels.add_randomize_button_label}"
 													icon="ctsms-menubar-icon ui-icon-gear">
 												</p:menuitem>
-											</p:splitButton>												
+											</p:splitButton>	
+											
+											<p:commandButton
+												process="@this,probandlistentry_input"
+												rendered="#{probandListEntryBean.createProband and not probandListEntryBean.randomization}"
+												id="addProbandListEntryCreateProband"
+												value="#{labels.add_XXX_button_label}"
+												actionListener="#{probandListEntryBean.addCreateProband}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												icon="ui-icon ui-icon-plusthick"
+												ajax="true"
+												disabled="#{!probandListEntryBean.createable}"
+												update=":tabView:probandlist_form:probandListTabView" />
+											
+											<p:splitButton
+												ajax="true"
+												rendered="#{probandListEntryBean.createProband and probandListEntryBean.randomization}"
+												process="@this,probandlistentry_input"
+												id="addProbandListEntryCreateProbandNotRandomized"
+												actionListener="#{probandListEntryBean.addCreateProband}"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												disabled="#{!probandListEntryBean.createable}"
+												update=":tabView:probandlist_form:probandListTabView"
+												value="#{labels.add_XXX_button_label}"
+												icon="ui-icon ui-icon-plusthick">
+												<p:menuitem
+													ajax="true"
+													process="@this,probandlistentry_input"
+													id="addProbandListEntryCreateProbandRandomized"
+													actionListener="#{probandListEntryBean.addCreateProbandRandomized}"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													disabled="#{!probandListEntryBean.createable}"
+													update=":tabView:probandlist_form:probandListTabView"
+													value="#{labels.add_XXX_randomize_button_label}"
+													icon="ctsms-menubar-icon ui-icon-gear">
+												</p:menuitem>
+											</p:splitButton>	
 												
 											<p:commandButton
 											    rendered="#{not probandListEntryBean.randomization}"
