@@ -79,5 +79,4 @@ mvn install -DskipTests
 * launch Eclipse IDE and select workspace C:\workspaces
 * goto Window -> Preferences -> Installed JRE and add and select __JDK__ -JRE (=JAVA_HOME)
 * goto File -> Import... -> Maven -> Existing Maven Project select C:\workspaces\ctsms folder and press "Finish"
-* agree to install missing m2e maven eclipse connectors
 * done. you can now start debugging, ie. select DBTool.java and goto Run -> Debug
