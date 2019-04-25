@@ -82,6 +82,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setSponsoringId(sponsoringVO == null ? null : sponsoringVO.getId());
 			in.setSurveyStatusId(surveyStatusVO == null ? null : surveyStatusVO.getId());
 			in.setExclusiveProbands(out.getExclusiveProbands());
+			in.setProbandAliasFormat(out.getProbandAliasFormat());
 			in.setBlockingPeriod(blockingPeriodVO == null ? null : blockingPeriodVO.getPeriod());
 			in.setBlockingPeriodDays(out.getBlockingPeriodDays());
 			in.setDutySelfAllocationLocked(out.getDutySelfAllocationLocked());
@@ -108,6 +109,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setTypeId(null);
 			in.setSponsoringId(null);
 			in.setSurveyStatusId(null);
+			in.setProbandAliasFormat(Messages.getString(MessageCodes.TRIAL_PROBAND_ALIAS_FORMAT_PRESET));
 			in.setExclusiveProbands(Settings.getBoolean(SettingCodes.TRIAL_EXCLUSIVE_PROBANDS_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_EXCLUSIVE_PROBANDS_PRESET));
 			in.setBlockingPeriod(Settings.getVariablePeriod(SettingCodes.TRIAL_BLOCKING_PERIOD_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_BLOCKING_PERIOD_PRESET));
 			in.setBlockingPeriodDays(Settings.getLongNullable(SettingCodes.TRIAL_BLOCKING_PERIOD_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_BLOCKING_PERIOD_DAYS_PRESET));
@@ -133,12 +135,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		}
 		return null;
 	}
+
 	private String password;
 	private TrialInVO in;
-
 	private TrialOutVO out;
 	private SignatureVO signature;
-
 	private ArrayList<SelectItem> statusTypes;
 	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> trialTypes;
@@ -209,7 +210,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 					break;
 			}
 		}
-
 	}
 
 	@Override
@@ -286,6 +286,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		initSets();
 		return CHANGE_OUTCOME;
 	}
+
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -516,7 +517,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		}
 	}
 
-
 	private void initSets() {
 		password = null;
 		tabCountMap.clear();
@@ -576,12 +576,13 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		tabCountMap.put(JSValues.AJAX_ECRF_FIELD_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_ECRF_FIELD_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.ECRF_FIELDS_TAB_TITLE, MessageCodes.ECRF_FIELDS_TAB_TITLE_WITH_COUNT, count));
-
-		count = (out == null ? null : WebUtil.getEcrfFieldStatusEntryCount(
-				Settings.getEcrfFieldStatusQueue(SettingCodes.ECRF_FIELD_STATUS_QUEUE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_STATUS_QUEUE), in.getId(), null, null, true));
+		count = (out == null ? null
+				: WebUtil.getEcrfFieldStatusEntryCount(
+						Settings.getEcrfFieldStatusQueue(SettingCodes.ECRF_FIELD_STATUS_QUEUE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_STATUS_QUEUE), in.getId(), null, null,
+						true));
 		tabCountMap.put(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString(), count);
-		tabTitleMap.put(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT, count));
-
+		tabTitleMap.put(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getHyperlinkCount(HyperlinkModule.TRIAL_HYPERLINK, in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(),
@@ -701,12 +702,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		}
 		return ERROR_OUTCOME;
 	}
+
 	private Collection<TrialStatusTypeVO> loadAllTrialStatusTypes() {
-		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
+		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
-
 			return WebUtil.getServiceLocator().getSelectionSetService().getAllTrialStatusTypes(WebUtil.getAuthentication());
-
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -714,16 +714,16 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<TrialStatusTypeVO>();
-		//		if (statusTypeVOs != null) {
-		//			statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
-		//			Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
-		//			while (it.hasNext()) {
-		//				ECRFStatusTypeVO typeVO = it.next();
-		//				statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-		//			}
-		//		} else {
-		//			statusTypes = new ArrayList<SelectItem>();
-		//		}
+		// if (statusTypeVOs != null) {
+		// statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
+		// Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
+		// while (it.hasNext()) {
+		// ECRFStatusTypeVO typeVO = it.next();
+		// statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
+		// }
+		// } else {
+		// statusTypes = new ArrayList<SelectItem>();
+		// }
 	}
 
 	private void loadSignature() {
@@ -813,7 +813,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	@Override
 	protected void setRandomizationList(String randomizationList) {
 		in.setRandomizationList(randomizationList);
-
 	}
 
 	@Override

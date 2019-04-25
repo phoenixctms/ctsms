@@ -570,6 +570,31 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="dutySelfAllocationLockedFrom" />
+
+							<h:outputLabel
+								for="probandaliasformat"
+								value="#{triallabels.trial_proband_alias_format_label}" />
+							<h:panelGroup>
+								<p:inputText
+									id="probandaliasformat"
+									value="#{trialBean.in.probandAliasFormat}"
+									required="false"
+									label="#{triallabels.trial_proband_alias_format}"
+									styleClass="ctsms-control">
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="probandaliasformat">
+									<h:outputText
+										value="#{triallabels.trial_proband_alias_format_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="probandaliasformat" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+														
 							<h:outputLabel
 								for="exclusiveProbands"
 								value="#{triallabels.trial_exclusive_probands_label}" />

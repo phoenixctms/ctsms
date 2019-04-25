@@ -40,18 +40,18 @@ public class ProbandListEntryResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize)
+	public ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize, @QueryParam("createProband") Boolean createProband)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, false, randomize, in);
+		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, createProband != null ? createProband.booleanValue() : false, false, randomize, in);
 	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("signup")
-	public ProbandListEntryOutVO addProbandListEntrySignup(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize)
+	public ProbandListEntryOutVO addProbandListEntrySignup(ProbandListEntryInVO in, @QueryParam("randomize") Boolean randomize, @QueryParam("createProband") Boolean createProband)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, true, randomize, in);
+		return WebUtil.getServiceLocator().getTrialService().addProbandListEntry(auth, createProband != null ? createProband.booleanValue() : false, true, randomize, in);
 	}
 
 	@DELETE
@@ -72,7 +72,8 @@ public class ProbandListEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Page<ProbandListEntryOutVO> getProbandListEntryList(@Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<ProbandListEntryOutVO>(WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(auth, null, null, null, true, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<ProbandListEntryOutVO>(WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(auth, null, null, null, true, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
@@ -90,7 +91,7 @@ public class ProbandListEntryResource {
 	@Path("{id}/tagvalues")
 	public JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO> getProbandListEntryTagValues(@PathParam("id") Long id,
 			@QueryParam("sort") Boolean sort, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf = new PSFUriPart(uriInfo, "sort", "load_all_js_values");
 		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
 				.getProbandListEntryTagValues(auth, id, sort, loadAllJsValues, psf);

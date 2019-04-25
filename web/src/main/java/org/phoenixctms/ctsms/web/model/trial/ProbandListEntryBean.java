@@ -93,8 +93,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+	public String addBulkAction() {
 		try {
 			Set<Long> ids = this.probandMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryOutVO> it = WebUtil.getServiceLocator().getTrialService()
@@ -172,8 +171,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		actionPostProcess(deleteBulkAction());
 	}
 
-	public String deleteBulkAction()
-	{
+	public String deleteBulkAction() {
 		try {
 			Set<Long> ids = this.probandMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryOutVO> it = WebUtil.getServiceLocator().getTrialService()
@@ -222,7 +220,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	protected String getDataTableId() {
 		return "proband_list";
 	}
-
 
 	public boolean getEnableExports() {
 		return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_LIST_EXPORTS, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_LIST_EXPORTS);
@@ -457,7 +454,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		return randomize;
 	}
 
-
 	public boolean isBulkAddShuffle() {
 		return shuffle;
 	}
@@ -538,6 +534,10 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		}
 	}
 
+	public boolean isCreateProband() {
+		return (trial != null ? !CommonUtil.isEmptyString(trial.getProbandAliasFormat()) : false);
+	}
+
 	public void moveUp(Long probandListEntryId) {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntry(WebUtil.getAuthentication(), probandListEntryId, PositionMovement.UP);
@@ -574,6 +574,22 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public final void addCreateProbandRandomized() {
+		actionPostProcess(addCreateProbandRandomizedAction());
+	}
+
+	public String addCreateProbandRandomizedAction() {
+		return addAction(true, true);
+	}
+
+	public final void addCreateProband() {
+		actionPostProcess(addCreateProbandAction());
+	}
+
+	public String addCreateProbandAction() {
+		return addAction(false, true);
 	}
 
 	public void setBulkAddGroupId(Long bulkAddGroupId) {

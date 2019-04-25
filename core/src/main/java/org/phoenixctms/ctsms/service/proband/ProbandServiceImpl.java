@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.DiagnosisCollisionFinder;
-import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.InquiryValueCollisionFinder;
 import org.phoenixctms.ctsms.adapt.MaxCostTypesAdapter;
 import org.phoenixctms.ctsms.adapt.MedicationCollisionFinder;
@@ -87,7 +86,6 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
 import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
-import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -156,8 +154,7 @@ import org.phoenixctms.ctsms.vocycle.ProbandReflexionGraph;
  * @see org.phoenixctms.ctsms.service.proband.ProbandService
  */
 public class ProbandServiceImpl
-extends ProbandServiceBase
-{
+		extends ProbandServiceBase {
 
 	private static JournalEntry logSystemMessage(Proband proband, ProbandAddressOutVO addressVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
@@ -170,16 +167,8 @@ extends ProbandServiceBase
 			JournalEntryDao journalEntryDao) throws Exception {
 		boolean journalEncrypted = CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null);
 		return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, journalEncrypted ? new Object[] { CommonUtil.probandOutVOToString(probandVO) }
-		: new Object[] { Long.toString(probandVO.getId()) },
-		new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
-	}
-
-	private static void resetAutoDeleteDeadline(Proband proband, Timestamp now) {
-		VariablePeriod periodFromNow = Settings.getVariablePeriod(SettingCodes.PROBAND_AUTODELETE_GRACE_PERIOD, Settings.Bundle.SETTINGS,
-				DefaultSettings.PROBAND_AUTODELETE_GRACE_PERIOD);
-		Long periodFromNowDays = Settings.getLongNullable(SettingCodes.PROBAND_AUTODELETE_GRACE_PERIOD_DAYS, Settings.Bundle.SETTINGS,
-				DefaultSettings.PROBAND_AUTODELETE_GRACE_PERIOD_DAYS);
-		proband.setAutoDeleteDeadline(DateCalc.addInterval(now, periodFromNow, periodFromNowDays));
+				: new Object[] { Long.toString(probandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
 	private void addUpdateInquiryValue(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry, Timestamp now, User user, boolean logTrial,
@@ -243,8 +232,8 @@ extends ProbandServiceBase
 				// journalEntryDao);
 				if (logTrial) {
 					ServiceUtil
-					.logSystemMessage(inquiry.getTrial(), result.getProband(), now, user, SystemMessageCodes.INQUIRY_VALUE_UPDATED, result, original,
-							journalEntryDao);
+							.logSystemMessage(inquiry.getTrial(), result.getProband(), now, user, SystemMessageCodes.INQUIRY_VALUE_UPDATED, result, original,
+									journalEntryDao);
 				}
 			} else {
 				if (outInquiryValues != null) {
@@ -263,8 +252,7 @@ extends ProbandServiceBase
 		}
 	}
 
-	private void checkBankAccountInput(BankAccountInVO bankAccountIn) throws ServiceException
-	{
+	private void checkBankAccountInput(BankAccountInVO bankAccountIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
 		Proband proband = CheckIDUtil.checkProbandId(bankAccountIn.getProbandId(), probandDao);
@@ -322,11 +310,9 @@ extends ProbandServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.IBAN_OR_BANK_ACCOUNT_ACCOUNT_NUMBER_REQUIRED);
 			}
 		}
-
 	}
 
-	private void checkDiagnosisInput(DiagnosisInVO diagnosisIn) throws ServiceException
-	{
+	private void checkDiagnosisInput(DiagnosisInVO diagnosisIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
 		Proband proband = CheckIDUtil.checkProbandId(diagnosisIn.getProbandId(), probandDao);
@@ -347,8 +333,7 @@ extends ProbandServiceBase
 		}
 	}
 
-	private void checkInquiryValueInput(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry) throws ServiceException
-	{
+	private void checkInquiryValueInput(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry) throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = inquiry.getField();
 		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
@@ -366,12 +351,11 @@ extends ProbandServiceBase
 				this.getInputFieldSelectionSetValueDao());
 		if ((new InquiryValueCollisionFinder(this.getProbandDao(), this.getInquiryValueDao())).collides(inquiryValueIn)) {
 			throw L10nUtil
-			.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_ALREADY_EXISTS, CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+					.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_ALREADY_EXISTS, CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
 		}
 	}
 
-	private void checkMedicationInput(MedicationInVO medicationIn) throws ServiceException
-	{
+	private void checkMedicationInput(MedicationInVO medicationIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = CheckIDUtil.checkProbandId(medicationIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
@@ -409,7 +393,7 @@ extends ProbandServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_DUPLICATE_SUBSTANCE,
 							aspSubstanceDao.toAspSubstanceVO(substance).getName());
 				}
-				if (asp != null && !aspSubstanceIds.remove(id)) { //aspSubstances.size() > 0
+				if (asp != null && !aspSubstanceIds.remove(id)) { // aspSubstances.size() > 0
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_SUBSTANCE_NOT_CONTAINED,
 							aspDao.toAspVO(asp).getName(),
 							aspSubstanceDao.toAspSubstanceVO(substance).getName());
@@ -425,7 +409,6 @@ extends ProbandServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_SUBSTANCES_REQUIRED);
 			}
 		}
-
 		Diagnosis diagnosis = null;
 		if (medicationIn.getDiagnosisId() != null) {
 			diagnosis = CheckIDUtil.checkDiagnosisId(medicationIn.getDiagnosisId(), this.getDiagnosisDao());
@@ -440,7 +423,6 @@ extends ProbandServiceBase
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_WRONG_PROCEDURE, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
 			}
 		}
-
 		if (medicationIn.getDoseValue() != null) {
 			if (medicationIn.getDoseValue() <= 0.0f) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_DOSE_VALUE_LESS_THAN_OR_EQUAL_ZERO);
@@ -461,9 +443,8 @@ extends ProbandServiceBase
 		if (medicationIn.getStart() != null && medicationIn.getStop() != null && medicationIn.getStop().compareTo(medicationIn.getStart()) <= 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_END_DATE_LESS_THAN_OR_EQUAL_TO_START_DATE);
 		}
-
 		if (// diagnosis == null && procedure == null &&
-				(new MedicationCollisionFinder(probandDao, this.getMedicationDao())).collides(medicationIn)) {
+		(new MedicationCollisionFinder(probandDao, this.getMedicationDao())).collides(medicationIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_OVERLAPPING);
 		}
 		// } else {
@@ -474,12 +455,9 @@ extends ProbandServiceBase
 		// y
 		// }
 		// }
-
-
 	}
 
-	private void checkMoneyTransferInput(MoneyTransferInVO moneyTransferIn, Long maxAllowedCostTypes) throws ServiceException
-	{
+	private void checkMoneyTransferInput(MoneyTransferInVO moneyTransferIn, Long maxAllowedCostTypes) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = CheckIDUtil.checkProbandId(moneyTransferIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
@@ -530,7 +508,7 @@ extends ProbandServiceBase
 		}
 	}
 
-	private  void checkParents(ProbandInVO probandIn, Proband child) throws ServiceException {
+	private void checkParents(ProbandInVO probandIn, Proband child) throws ServiceException {
 		Iterator<Proband> parentsIt = child.getParents().iterator();
 		int parentCount = 0;
 		HashSet<Sex> parentGenders = new HashSet<Sex>(Sex.literals().size());
@@ -567,21 +545,17 @@ extends ProbandServiceBase
 						L10nUtil.getSexName(Locales.USER, probandIn.getGender().name()));
 			}
 		}
-
 	}
 
-	private void checkProbandAddressInput(ProbandAddressInVO addressIn) throws ServiceException
-	{
+	private void checkProbandAddressInput(ProbandAddressInVO addressIn) throws ServiceException {
 		(new ProbandAddressTypeTagAdapter(this.getProbandDao(), this.getAddressTypeDao())).checkTagValueInput(addressIn);
 	}
 
-	private void checkProbandContactDetailValueInput(ProbandContactDetailValueInVO contactValueIn) throws ServiceException
-	{
+	private void checkProbandContactDetailValueInput(ProbandContactDetailValueInVO contactValueIn) throws ServiceException {
 		(new ProbandContactDetailTypeTagAdapter(this.getProbandDao(), this.getContactDetailTypeDao())).checkTagValueInput(contactValueIn);
 	}
 
-	private void checkProbandImageInput(ProbandImageInVO probandImage) throws ServiceException
-	{
+	private void checkProbandImageInput(ProbandImageInVO probandImage) throws ServiceException {
 		if (probandImage.getDatas() != null && probandImage.getDatas().length > 0) {
 			Integer probandImageSizeLimit = Settings.getIntNullable(SettingCodes.PROBAND_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_IMAGE_SIZE_LIMIT);
 			if (probandImageSizeLimit != null && probandImage.getDatas().length > probandImageSizeLimit) {
@@ -613,8 +587,7 @@ extends ProbandServiceBase
 		}
 	}
 
-	private void checkProbandInput(ProbandInVO probandIn) throws ServiceException
-	{
+	private void checkProbandInput(ProbandInVO probandIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkDepartmentId(probandIn.getDepartmentId(), this.getDepartmentDao());
 		ProbandCategory category = CheckIDUtil.checkProbandCategoryId(probandIn.getCategoryId(), this.getProbandCategoryDao());
@@ -644,7 +617,6 @@ extends ProbandServiceBase
 			}
 		}
 		// other input checks
-
 		if (probandIn.isPerson()) {
 			if (!category.isPerson()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CATEGORY_NOT_FOR_PERSON_ENTRIES,
@@ -657,17 +629,14 @@ extends ProbandServiceBase
 				if (CommonUtil.isEmptyString(probandIn.getLastName())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LAST_NAME_REQUIRED);
 				}
-
 				if (probandIn.getDateOfBirth() == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_REQUIRED);
 				} else if (DateCalc.getStartOfDay(probandIn.getDateOfBirth()).compareTo(new Date()) > 0) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE);
 				}
-
 				if (probandIn.getGender() == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GENDER_REQUIRED);
 				}
-
 				if (probandIn.getAlias() != null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_ALIAS_NOT_NULL);
 				}
@@ -697,11 +666,9 @@ extends ProbandServiceBase
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CITIZENSHIP_NOT_NULL);
 				}
 			}
-
 			if (probandIn.getAnimalName() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ANIMAL_NAME_NOT_NULL);
 			}
-
 		} else {
 			if (!category.isAnimal()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CATEGORY_NOT_FOR_ANIMAL_ENTRIES,
@@ -711,17 +678,14 @@ extends ProbandServiceBase
 				if (CommonUtil.isEmptyString(probandIn.getAnimalName())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ANIMAL_NAME_REQUIRED);
 				}
-
 				if (probandIn.getDateOfBirth() == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_REQUIRED);
 				} else if (DateCalc.getStartOfDay(probandIn.getDateOfBirth()).compareTo(new Date()) > 0) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE);
 				}
-
 				if (probandIn.getGender() == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GENDER_REQUIRED);
 				}
-
 				if (probandIn.getAlias() != null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_ALIAS_NOT_NULL);
 				}
@@ -739,7 +703,6 @@ extends ProbandServiceBase
 				// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GENDER_NOT_NULL);
 				// }
 			}
-
 			if (probandIn.getPrefixedTitle1() != null || probandIn.getPrefixedTitle2() != null || probandIn.getPrefixedTitle3() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_PREFIXED_TITLES_NOT_NULL);
 			}
@@ -752,13 +715,10 @@ extends ProbandServiceBase
 			if (probandIn.getPostpositionedTitle1() != null || probandIn.getPostpositionedTitle2() != null || probandIn.getPostpositionedTitle3() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_POSTPOSITIONED_TITLES_NOT_NULL);
 			}
-
 			if (probandIn.getCitizenship() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CITIZENSHIP_NOT_NULL);
 			}
-
 		}
-
 		if (probandIn.getRatingMax() != null) {
 			if (probandIn.getRatingMax() <= 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO);
@@ -774,18 +734,16 @@ extends ProbandServiceBase
 		} else if (probandIn.getRating() != null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_NOT_NULL);
 		}
-		//		if (DateCalc.getStartOfDay(probandIn.getDateOfBirth()).compareTo(new Date()) > 0) {
-		//			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE);
-		//		}
-
+		// if (DateCalc.getStartOfDay(probandIn.getDateOfBirth()).compareTo(new Date()) > 0) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE);
+		// }
 	}
 
 	private void checkProbandLoop(Proband proband) throws ServiceException {
 		(new ProbandReflexionGraph(this.getProbandDao())).checkGraphLoop(proband, false, true);
 	}
 
-	private void checkProbandStatusEntryInput(ProbandStatusEntryInVO statusEntryIn) throws ServiceException
-	{
+	private void checkProbandStatusEntryInput(ProbandStatusEntryInVO statusEntryIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
 		Proband proband = CheckIDUtil.checkProbandId(statusEntryIn.getProbandId(), probandDao);
@@ -811,13 +769,11 @@ extends ProbandServiceBase
 		}
 	}
 
-	private void checkProbandTagValueInput(ProbandTagValueInVO tagValueIn) throws ServiceException
-	{
+	private void checkProbandTagValueInput(ProbandTagValueInVO tagValueIn) throws ServiceException {
 		(new ProbandTagAdapter(this.getProbandDao(), this.getProbandTagDao())).checkTagValueInput(tagValueIn);
 	}
 
-	private void checkProcedureInput(ProcedureInVO procedureIn) throws ServiceException
-	{
+	private void checkProcedureInput(ProcedureInVO procedureIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
 		Proband proband = CheckIDUtil.checkProbandId(procedureIn.getProbandId(), probandDao);
@@ -838,11 +794,8 @@ extends ProbandServiceBase
 		}
 	}
 
-
-
 	private InquiryValuesOutVO getInquiryValues(Trial trial, String category, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues,
 			boolean loadAllJsValues, boolean sort, PSFVO psf) throws Exception {
-
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
 		InquiryValuesOutVO result = new InquiryValuesOutVO();
 		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialCategoryActiveJs(probandVO.getId(), trial.getId(), category, active, activeSignup, sort, null, psf);
@@ -852,16 +805,13 @@ extends ProbandServiceBase
 				result.setJsValues(ServiceUtil.getInquiryJsonValues(
 						// inquiryValueDao.findByProbandTrialCategoryActiveJs(proband.getId(), trialId, category, active, sort, true, null),
 						inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null),
-						false,inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
+						false, inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
 			} else {
 				result.setJsValues(ServiceUtil.getInquiryJsonValues(inquiryValues,
-						true,inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
+						true, inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
 			}
 		}
 		return result;
-
-
-
 	}
 
 	@Override
@@ -901,7 +851,7 @@ extends ProbandServiceBase
 		Medication medication = medicationDao.medicationInVOToEntity(newMedication);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		//moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
+		// moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
 		CoreUtil.modifyVersion(medication, now, user);
 		medication = medicationDao.create(medication);
 		MedicationOutVO result = medicationDao.toMedicationOutVO(medication);
@@ -926,7 +876,7 @@ extends ProbandServiceBase
 			logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.MONEY_TRANSFER_CREATED, result, null, this.getJournalEntryDao());
 		}
 		ServiceUtil
-		.logSystemMessage(moneyTransfer.getProband(), result.getProband(), now, user, SystemMessageCodes.MONEY_TRANSFER_CREATED, result, null, this.getJournalEntryDao());
+				.logSystemMessage(moneyTransfer.getProband(), result.getProband(), now, user, SystemMessageCodes.MONEY_TRANSFER_CREATED, result, null, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -938,27 +888,11 @@ extends ProbandServiceBase
 		if (!user.getDepartment().getId().equals(newProband.getDepartmentId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
 		}
-		ProbandDao probandDao = this.getProbandDao();
-		Proband proband = probandDao.probandInVOToEntity(newProband);
-		proband.setBeacon(CommonUtil.generateUUID());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		CoreUtil.modifyVersion(proband, now, user);
-		resetAutoDeleteDeadline(proband, now);
-		proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findInitialStates().iterator().next());
-		if (proband.isPerson()) {
-			ProbandContactParticulars personParticulars = proband.getPersonParticulars();
-			if (personParticulars != null) {
-				this.getProbandContactParticularsDao().create(personParticulars);
-			}
-		} else {
-			AnimalContactParticulars animalParticulars = proband.getAnimalParticulars();
-			if (animalParticulars != null) {
-				this.getAnimalContactParticularsDao().create(animalParticulars);
-			}
-		}
-		proband = probandDao.create(proband);
-		notifyExpiringProbandAutoDelete(proband, now);
-		ProbandOutVO result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
+		Proband proband = ServiceUtil.createProband(newProband,
+				now, user, this.getProbandDao(), this.getPrivacyConsentStatusTypeDao(), this.getProbandContactParticularsDao(), this.getAnimalContactParticularsDao(),
+				this.getNotificationDao());
+		ProbandOutVO result = this.getProbandDao().toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_CREATED, result, null, journalEntryDao);
 		Staff physician = proband.getPhysician();
@@ -990,7 +924,7 @@ extends ProbandServiceBase
 	@Override
 	protected ProbandContactDetailValueOutVO handleAddProbandContactDetailValue(
 			AuthenticationVO auth, ProbandContactDetailValueInVO newProbandContactDetailValue)
-					throws Exception {
+			throws Exception {
 		checkProbandContactDetailValueInput(newProbandContactDetailValue);
 		ProbandContactDetailValueDao contactValueDao = this.getProbandContactDetailValueDao();
 		ProbandContactDetailValue contactValue = contactValueDao.probandContactDetailValueInVOToEntity(newProbandContactDetailValue);
@@ -1175,7 +1109,7 @@ extends ProbandServiceBase
 			medication.setProcedure(null);
 		}
 		medicationDao.remove(medication);
-		ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.MEDICATION_DELETED, result, null,  this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.MEDICATION_DELETED, result, null, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -1550,7 +1484,7 @@ extends ProbandServiceBase
 	@Override
 	protected Collection<BankAccountOutVO> handleGetBankAccounts(
 			AuthenticationVO auth, Long probandId, Boolean active, Long bankAccountId)
-					throws Exception {
+			throws Exception {
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
@@ -1592,8 +1526,8 @@ extends ProbandServiceBase
 				ProbandGroup probandGroup = probandListEntry.getGroup();
 				if (probandGroup != null) {
 					collidingVisitScheduleItems
-					.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandStatusEntry.getStart(),
-							probandStatusEntry.getStop()));
+							.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandStatusEntry.getStart(),
+									probandStatusEntry.getStop()));
 				} else {
 					if (allProbandGroups) {
 						collidingVisitScheduleItems.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), null, probandStatusEntry.getStart(),
@@ -1753,11 +1687,9 @@ extends ProbandServiceBase
 	protected InquiryValuesOutVO handleGetInquiryValues(
 			AuthenticationVO auth, Long trialId, Boolean active, Boolean activeSignup, Long probandId,
 			boolean sort, boolean loadAllJsValues, PSFVO psf) throws Exception {
-
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		ProbandDao probandDao = this.getProbandDao();
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao));
-
 		return ServiceUtil.getInquiryValues(trial, probandVO, active, activeSignup,
 				Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
@@ -1843,7 +1775,7 @@ extends ProbandServiceBase
 	@Override
 	protected String handleGetNewPaymentReference(AuthenticationVO auth,
 			MoneyTransferInVO newMoneyTransfer)
-					throws Exception {
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1915,7 +1847,6 @@ extends ProbandServiceBase
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		return this.getProbandContactDetailValueDao().getCount(probandId, null, na, null, null);
-
 	}
 
 	@Override
@@ -1957,7 +1888,7 @@ extends ProbandServiceBase
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
-		return this.getInventoryBookingDao().getCount(null, probandId, null, null,null);
+		return this.getInventoryBookingDao().getCount(null, probandId, null, null, null);
 	}
 
 	@Override
@@ -1994,7 +1925,7 @@ extends ProbandServiceBase
 	@Override
 	protected Collection<ProbandStatusEntryOutVO> handleGetProbandStatus(
 			AuthenticationVO auth, Date now, Long probandId, Long departmentId, Long probandCategoryId, Boolean probandActive, Boolean hideAvailability, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
@@ -2142,13 +2073,12 @@ extends ProbandServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
-
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = null;
-		TrialOutVO trialVO=null;
+		TrialOutVO trialVO = null;
 		Collection<Trial> trials = new ArrayList<Trial>();
 		if (trialId != null) {
-			trial=CheckIDUtil.checkTrialId(trialId, trialDao);
+			trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 			trialVO = trialDao.toTrialOutVO(trial);
 			trials.add(trial);
 		} else {
@@ -2168,9 +2098,6 @@ extends ProbandServiceBase
 				trials, active,
 				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
 				this.getUserDao());
-
-
-
 		// ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
 		// HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
 		// HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long,Collection<InquiryValueOutVO>>>();
@@ -2226,19 +2153,15 @@ extends ProbandServiceBase
 		// InquiriesPDFVO result = painter.getPdfVO();
 		// byte[] documentDataBackup = result.getDocumentDatas();
 		// result.setDocumentDatas(null);
-
 		if (trial != null) {
 			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 					result, null, journalEntryDao);
 		}
-
 		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 				trial != null ? SystemMessageCodes.INQUIRY_PDF_RENDERED
 						: SystemMessageCodes.INQUIRIES_PDF_RENDERED,
-						result, null,
-						journalEntryDao);
-
-
+				result, null,
+				journalEntryDao);
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
@@ -2280,14 +2203,11 @@ extends ProbandServiceBase
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
-
-
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
 		Collection<Trial> trials = new ArrayList<Trial>();
 		trials.add(trial);
-
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials, active,
 				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
@@ -2327,13 +2247,11 @@ extends ProbandServiceBase
 		// InquiriesPDFVO result = painter.getPdfVO();
 		// byte[] documentDataBackup = result.getDocumentDatas();
 		// result.setDocumentDatas(null);
-
 		ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 				result, null, journalEntryDao);
 		ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 				result, null,
 				journalEntryDao);
-
 		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
@@ -2394,9 +2312,9 @@ extends ProbandServiceBase
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(proband, version.longValue(), now, user);
-		resetAutoDeleteDeadline(proband, now);
+		ServiceUtil.resetAutoDeleteDeadline(proband, now);
 		probandDao.update(proband);
-		notifyExpiringProbandAutoDelete(proband, now);
+		ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
 		ProbandOutVO result = probandDao.toProbandOutVO(proband);
 		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_AUTO_DELETE_DEADLINE_RESET, result, original, this.getJournalEntryDao());
 		return result;
@@ -2459,7 +2377,7 @@ extends ProbandServiceBase
 	@Override
 	protected InquiryValuesOutVO handleSetInquiryValues(
 			AuthenticationVO auth, Set<InquiryValueInVO> inquiryValuesIn)
-					throws Exception {
+			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		InquiryValuesOutVO result = new InquiryValuesOutVO();
@@ -2563,7 +2481,7 @@ extends ProbandServiceBase
 	@Override
 	protected ProbandAddressOutVO handleSetProbandAddressWireTransfer(
 			AuthenticationVO auth, Long probandAddressId, Long version)
-					throws Exception {
+			throws Exception {
 		ProbandAddressDao addressDao = this.getProbandAddressDao();
 		ProbandAddress address = CheckIDUtil.checkProbandAddressId(probandAddressId, addressDao);
 		Proband proband = address.getProband();
@@ -2645,7 +2563,7 @@ extends ProbandServiceBase
 		bankAccountDao.update(bankAccount);
 		BankAccountOutVO result = bankAccountDao.toBankAccountOutVO(bankAccount);
 		ServiceUtil
-		.logSystemMessage(bankAccount.getProband(), result.getProband(), now, user, SystemMessageCodes.BANK_ACCOUNT_UPDATED, result, original, this.getJournalEntryDao());
+				.logSystemMessage(bankAccount.getProband(), result.getProband(), now, user, SystemMessageCodes.BANK_ACCOUNT_UPDATED, result, original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -2749,7 +2667,7 @@ extends ProbandServiceBase
 		CoreUtil.modifyVersion(proband, version.longValue(), now, user);
 		proband.setPrivacyConsentStatus(state);
 		probandDao.update(proband);
-		notifyExpiringProbandAutoDelete(proband, now);
+		ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
 		ProbandOutVO result = probandDao.toProbandOutVO(proband);
 		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PRIVACY_CONSENT_STATUS_TYPE_UPDATED, result, original, this.getJournalEntryDao());
 		return probandDao.toProbandOutVO(proband);
@@ -2783,14 +2701,13 @@ extends ProbandServiceBase
 		Proband proband = probandDao.probandInVOToEntity(modifiedProband);
 		checkProbandLoop(proband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-
 		CoreUtil.modifyVersion(originalProband, proband, now, user);
 		if (!originalPrivacyConsentControl && proband.getCategory().isPrivacyConsentControl()) {
-			resetAutoDeleteDeadline(proband, now);
+			ServiceUtil.resetAutoDeleteDeadline(proband, now);
 			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findInitialStates().iterator().next());
 		}
 		probandDao.update(proband);
-		notifyExpiringProbandAutoDelete(proband, now);
+		ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
 		ProbandOutVO result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_UPDATED, result, original, journalEntryDao);
@@ -2866,7 +2783,6 @@ extends ProbandServiceBase
 				animalParticulars.setComment(comment);
 			}
 		}
-
 		probandDao.update(proband);
 		ProbandOutVO result = probandDao.toProbandOutVO(proband);
 		ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_CATEGORY_UPDATED, result, original, this.getJournalEntryDao());
@@ -2876,7 +2792,7 @@ extends ProbandServiceBase
 	@Override
 	protected ProbandContactDetailValueOutVO handleUpdateProbandContactDetailValue(
 			AuthenticationVO auth, ProbandContactDetailValueInVO modifiedProbandContactDetailValue)
-					throws Exception {
+			throws Exception {
 		ProbandContactDetailValueDao contactValueDao = this.getProbandContactDetailValueDao();
 		ProbandContactDetailValue originalContactValue = CheckIDUtil.checkProbandContactDetailValueId(modifiedProbandContactDetailValue.getId(), contactValueDao);
 		ProbandContactDetailValueOutVO original = contactValueDao.toProbandContactDetailValueOutVO(originalContactValue);
@@ -2962,25 +2878,6 @@ extends ProbandServiceBase
 		return result;
 	}
 
-	private void notifyExpiringProbandAutoDelete(Proband proband, Date now) throws Exception {
-		VariablePeriod expiringProbandAutoDeleteReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD,
-				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD);
-		Long expiringProbandAutoDeleteReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS,
-				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS);
-		if (proband.getCategory().isPrivacyConsentControl()
-				&& proband.getPrivacyConsentStatus().isAutoDelete()
-				&& now.compareTo(ExpirationEntityAdapter.getInstance(proband, now).getReminderStart(null, null, expiringProbandAutoDeleteReminderPeriod,
-						expiringProbandAutoDeleteReminderPeriodDays)) >= 0) {
-			if (!ServiceUtil.testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
-				Map messageParameters = CoreUtil.createEmptyTemplateModel();
-				messageParameters.put(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT, DateCalc.dateDeltaDays(now, proband.getAutoDeleteDeadline()));
-				this.getNotificationDao().addNotification(proband, now, messageParameters);
-			}
-		} else {
-			ServiceUtil.cancelNotifications(proband.getNotifications(), this.getNotificationDao(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE);
-		}
-	}
-
 	private void notifyProbandInactive(ProbandStatusEntry statusEntry, Date now) throws Exception {
 		NotificationDao notificationDao = this.getNotificationDao();
 		ServiceUtil.cancelNotifications(statusEntry.getNotifications(), notificationDao, null); // clears inventory_active AND inventory inactive booking notifications
@@ -3006,7 +2903,4 @@ extends ProbandServiceBase
 			}
 		}
 	}
-
-
-
 }

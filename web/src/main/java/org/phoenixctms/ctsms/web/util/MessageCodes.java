@@ -191,6 +191,7 @@ public interface MessageCodes {
 	public static final String TRIAL_TITLE_PRESET = "trial_title_preset";
 	public static final String TRIAL_DESCRIPTION_PRESET = "trial_description_preset";
 	public static final String TRIAL_SIGNUP_DESCRIPTION_PRESET = "trial_signup_description_preset";
+	public static final String TRIAL_PROBAND_ALIAS_FORMAT_PRESET = "trial_proband_alias_format_preset";
 	public static final String TRIAL_TAG_VALUE_PRESET = "trial_tag_value_preset";
 	public static final String TIMELINE_EVENT_DESCRIPTION_PRESET = "timeline_event_description_preset";
 	public static final String TIMELINE_EVENT_TITLE_PRESET = "timeline_event_title_preset";
@@ -241,7 +242,6 @@ public interface MessageCodes {
 	public static final String PROBAND_LIST_STATUS_ENTRY_REASON_PRESET = "proband_list_status_entry_reason_preset";
 	public static final String NEW_BLINDED_PROBAND_NAME = "new_blinded_proband_name";
 	public static final String BLINDED_PROBAND_NAME = "blinded_proband_name";
-
 	public final static String PROBAND_CITIZENSHIP_PRESET = "proband_citizenship_preset";
 	public final static String PROBAND_FIRST_NAME_PRESET = "proband_first_name_preset";
 	public final static String PROBAND_LAST_NAME_PRESET = "proband_last_name_preset";
@@ -255,15 +255,12 @@ public interface MessageCodes {
 	public final static String PROBAND_PREFIXED_TITLE3_PRESET = "proband_prefixed_title3_preset";
 	public final static String PROBAND_ALIAS_PRESET = "proband_alias_preset";
 	public final static String PROBAND_STATUS_ENTRY_COMMENT_PRESET = "proband_status_entry_comment_preset";
-
 	public final static String PROBAND_TREE_LABEL = "proband_tree_label";
 	public final static String PROBAND_TREE_MAX_LABEL = "proband_tree_max_label";
 	public final static String PROBAND_TREE_CHILDREN_LABEL = "proband_tree_children_label";
 	public final static String PROBAND_TREE_CHILDREN_LEVELS_LABEL = "proband_tree_children_levels_label";
 	public final static String PROBAND_TREE_PARENTS_LABEL = "proband_tree_parents_label";
 	public final static String PROBAND_TREE_PARENTS_LEVELS_LABEL = "proband_tree_parents_levels_label";
-
-
 	public final static String PROCEDURE_COMMENT_PRESET = "procedure_comment_preset";
 	public final static String DIAGNOSIS_COMMENT_PRESET = "diagnosis_comment_preset";
 	public final static String PROBAND_TAG_VALUE_PRESET = "proband_tag_value_preset";
@@ -529,7 +526,6 @@ public interface MessageCodes {
 	public static final String SEARCH_CRITERIONS_UNCHECKED_LABEL = "search_criterions_unchecked_label";
 	public static final String CALENDAR_WEEK = "calendar_week";
 	public static final String ACTIVE_USERS = "active_users";
-
 	public final static String EMPTY_CHART_LABEL = "empty_chart_label";
 	public final static String INVENTORY_TAGS_TAB_TITLE = "inventory_tags_tab_title";
 	public final static String INVENTORY_TAGS_TAB_TITLE_WITH_COUNT = "inventory_tags_tab_title_with_count";
@@ -764,7 +760,6 @@ public interface MessageCodes {
 	public static final String REIMBURSEMENTS_NO_TRIAL_LABEL = "reimbursements_no_trial_label";
 	public static final String TRAVEL_TICKET_TYPES = "travel_ticket_types";
 	public static final String EMPTY_TRAVEL_TICKET_TYPE = "empty_travel_ticket_type";
-
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_ALPHA_ID = "criterion_item_tip_alpha_id_alpha_id";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_PRIMARY_CODE = "criterion_item_tip_alpha_id_primary_code";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_REVISION = "criterion_item_tip_alpha_id_revision";
@@ -822,27 +817,22 @@ public interface MessageCodes {
 	public static final String MEDICATION_DOSE_PERIOD_PRESET = "medication_dose_period_preset";
 	public static final String NO_ECRF_STATUS_TYPE_LABEL = "no_ecrf_status_type_label";
 	public static final String NO_ECRF_STATUS_TYPE_BUTTON_LABEL = "no_ecrf_status_type_button_label";
-
 	public static final String BLANK_INQUIRY_PDF_BUTTON_LABEL = "blank_inquiry_pdf_button_label";
 	public static final String INQUIRY_PDF_BUTTON_LABEL = "inquiry_pdf_button_label";
-
 	public static final String BLANK_PROBAND_LIST_ENTRY_TAG_PDF_BUTTON_LABEL = "blank_proband_list_entry_tag_pdf_button_label";
 	public static final String PROBAND_LIST_ENTRY_TAG_PDF_BUTTON_LABEL = "proband_list_entry_tag_pdf_button_label";
 	public static final String BLANK_ECRF_PDF_BUTTON_LABEL = "blank_ecrf_pdf_button_label";
 	public static final String ECRF_PDF_BUTTON_LABEL = "ecrf_pdf_button_label";
 	public static final String FIELDS_PER_ROW_LABEL = "fields_per_row_label";
-
 	public static final String NO_NEW_ECRF_FIELD_STATUS = "no_new_ecrf_field_status";
 	public static final String ADD_TRAVEL_EXPENSE_ADDRESS_LABEL = "add_travel_expense_address_label";
 	public static final String ADD_TRAVEL_EXPENSE_LABEL = "add_travel_expense_label";
 	public static final String ADD_REIMBURSEMENT_LABEL = "add_reimbursement_label";
 	public static final String ADD_REIMBURSEMENT_FOR_LABEL = "add_reimbursement_for_label";
-
 	public static final String ADD_REIMBURSEMENT_COMMENT_VISIT_SCHEDULE_ITEM_LABEL = "add_reimbursement_comment_visit_schedule_item_label";
 	// ALIQUOT_REIMBURSEMENT_LABEL = "aliquot_reimbursement_label";
 	public static final String ADD_REIMBURSEMENT_COMMENT_TOKEN_VISIT_LABEL = "add_reimbursement_comment_token_visit_label";
 	public static final String ADD_REIMBURSEMENT_COMMENT_VISIT_LABEL = "add_reimbursement_comment_visit_label";
-
 	public static final String ADD_TRAVEL_EXPENSE_COMMENT = "add_travel_expense_comment";
 	public static final String ADD_REIMBURSEMENT_COMMENT = "add_reimbursement_comment";
 	public static final String ADD_ACCOMMODATION_EXPENSE_COMMENT = "add_accommodation_expense_comment";
@@ -850,10 +840,8 @@ public interface MessageCodes {
 	public static final String ECRF_SECTION_TITLE = "ecrf_section_title";
 	public static final String BLANK_ECRF_SECTION_TITLE = "blank_ecrf_section_title";
 	public static final String STAFF_NA_COUNT_EVENT_TITLE = "staff_na_count_event_title";
-
 	public static final String CAPTCHA_ERROR_MESSAGE = "captcha_error_message";
 	public static final String CAPTCHA_NOT_VERIFIED_ERROR_MESSAGE = "captcha_not_verified_error_message";
-
 	public static final String MASS_MAIL_NAME_PRESET = "mass_mail_name_preset";
 	public static final String MASS_MAIL_DESCRIPTION_PRESET = "mass_mail_description_preset";
 	public static final String MASS_MAIL_SUBJECT_FORMAT_PRESET = "mass_mail_subject_format_preset";
@@ -867,5 +855,4 @@ public interface MessageCodes {
 	public static final String GENERATE_TAG_RANDOMIZATION_LIST_TITLE = "generate_tag_randomization_list_title";
 	public static final String STRATIFICATION_RANDOMISATION_LIST_NOT_USED = "stratification_randomisation_list_not_used";
 	public static final String STRATIFICATION_RANDOMISATION_LIST_USED = "stratification_randomisation_list_used";
-
 }
