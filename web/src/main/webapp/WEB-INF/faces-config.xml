@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
- xmlns:xi="http://www.w3.org/2001/XInclude"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <faces-config xmlns="http://java.sun.com/xml/ns/javaee" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+          http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+          version="2.1">
  <!-- Settings for application -->
  <application>
   <locale-config>
@@ -76,25 +78,27 @@
   <!--        <el-resolver>
           org.springframework.web.jsf.el.SpringBeanFacesELResolver
         </el-resolver>  -->
-        
-        <default-validators>
-         <validator>
-  <validator-id>javax.faces.Bean</validator-id>
-  <validator-class>org.phoenixctms.ctsms.web.SkipBeanValidator</validator-class>
- </validator>
- <validator>
-  <validator-id>javax.faces.Required</validator-id>
-  <validator-class>org.phoenixctms.ctsms.web.SkipRequiredValidator</validator-class>
- </validator>
-        </default-validators>
+
+	<default-validators>
+		<validator-id>javax.faces.Bean</validator-id>
+		<validator-id>javax.faces.Required</validator-id>
+	</default-validators>
         
 
     <resource-handler>org.phoenixctms.ctsms.web.ResourceHandlerWrapper</resource-handler>
-
-        
         
  </application>
- 
+
+	<validator>
+		<validator-id>javax.faces.Bean</validator-id>
+		<validator-class>org.phoenixctms.ctsms.web.SkipBeanValidator</validator-class>
+	</validator>
+	<validator>
+		<validator-id>javax.faces.Required</validator-id>
+		<validator-class>org.phoenixctms.ctsms.web.SkipRequiredValidator</validator-class>
+	</validator>
+	
+	
   <lifecycle>
      <phase-listener>org.phoenixctms.ctsms.web.ResetInputAjaxActionListener</phase-listener>
  </lifecycle>
