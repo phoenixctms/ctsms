@@ -1329,10 +1329,10 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS,
 					L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
 		}
-		if (statusEntry.getStatus().isAuditTrail()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS,
-					L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
-		}
+		// if (statusEntry.getStatus().isAuditTrail()) {
+		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS,
+		// L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
+		// }
 		if (listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isEcrfValueInputEnabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
 					L10nUtil.getProbandListStatusTypeName(Locales.USER, listEntry.getLastStatus().getStatus().getNameL10nKey()));
