@@ -124,7 +124,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_value_input_locked_for_ecrf_status";
 	public final static String ECRF_FIELD_STATUS_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_status_input_locked_for_ecrf_status";
 	// public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_FIELD_STATUS = "ecrf_field_value_input_locked_for_ecrf_field_status";
-	public final static String ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS = "ecrf_field_value_input_audit_trail_enabled_for_ecrf_status";
+	// public final static String ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS = "ecrf_field_value_input_audit_trail_enabled_for_ecrf_status";
 	public final static String ECRF_FIELD_VALUES_FOR_WRONG_TRIAL = "ecrf_field_values_for_wrong_trial";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_NOT_NULL = "ecrf_field_value_reason_for_change_not_null";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_EMPTY = "ecrf_field_value_reason_for_change_empty";
