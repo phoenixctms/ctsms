@@ -24,10 +24,10 @@ public class SubCriteriaMap {
 			return DEFAULT_JOIN_TYPE;
 		}
 	}
+
 	private Class entity;
 	private Criteria criteria;
 	private HashMap<String, Criteria> propertyPathMap;
-
 	private HashMap<String, Class> propertyClassMap;
 
 	private SubCriteriaMap() {
@@ -43,6 +43,10 @@ public class SubCriteriaMap {
 	}
 
 	private Criteria createCriteria(AssociationPath fullyQualifiedPropertyName, boolean isPropertyAssociation, int... joinTypes) {
+		return createCriteria(fullyQualifiedPropertyName, isPropertyAssociation, null, joinTypes);
+	}
+
+	private Criteria createCriteria(AssociationPath fullyQualifiedPropertyName, boolean isPropertyAssociation, String alias, int... joinTypes) {
 		if (fullyQualifiedPropertyName.isValid()) {
 			String path;
 			org.hibernate.Criteria subCriteria = criteria;
@@ -53,7 +57,11 @@ public class SubCriteriaMap {
 					subCriteria = propertyPathMap.get(path);
 					propertyClass = propertyClassMap.get(path);
 				} else {
-					subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPathElement(i), getJoinType(joinTypes, i));
+					if (!isPropertyAssociation && alias != null && alias.length() > 0 && i == fullyQualifiedPropertyName.getPathDepth() - 1) {
+						subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPathElement(i), alias, getJoinType(joinTypes, i));
+					} else {
+						subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPathElement(i), getJoinType(joinTypes, i));
+					}
 					propertyPathMap.put(path, subCriteria);
 					propertyClass = CoreUtil.getPropertyClass(propertyClass, fullyQualifiedPropertyName.getPathElement(i));
 					propertyClassMap.put(path, propertyClass);
@@ -62,7 +70,11 @@ public class SubCriteriaMap {
 			path = fullyQualifiedPropertyName.getFullQualifiedPropertyName();
 			if (isPropertyAssociation) {
 				if (!propertyPathMap.containsKey(path)) {
-					subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPropertyName(), getJoinType(joinTypes, -1));
+					if (alias != null && alias.length() > 0) {
+						subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPropertyName(), alias, getJoinType(joinTypes, -1));
+					} else {
+						subCriteria = subCriteria.createCriteria(fullyQualifiedPropertyName.getPropertyName(), getJoinType(joinTypes, -1));
+					}
 					propertyPathMap.put(path, subCriteria);
 					propertyClass = CoreUtil.getPropertyClass(propertyClass, fullyQualifiedPropertyName.getPropertyName());
 					propertyClassMap.put(path, propertyClass);
@@ -90,6 +102,14 @@ public class SubCriteriaMap {
 
 	public Criteria createCriteriaForAttribute(AssociationPath fullyQualifiedPropertyName, int... joinTypes) {
 		return createCriteria(fullyQualifiedPropertyName, false, joinTypes);
+	}
+
+	public Criteria createCriteria(String fullyQualifiedPropertyName, String alias, int... joinTypes) {
+		return createCriteria(new AssociationPath(fullyQualifiedPropertyName), true, alias, joinTypes);
+	}
+
+	public Criteria createCriteriaForAttribute(AssociationPath fullyQualifiedPropertyName, String alias, int... joinTypes) {
+		return createCriteria(fullyQualifiedPropertyName, false, alias, joinTypes);
 	}
 
 	public Criteria getCriteria() {

@@ -48,9 +48,7 @@ public final class CriteriaUtil {
 	static {
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("logicalPath");
 	}
-
 	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
-
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
@@ -70,12 +68,12 @@ public final class CriteriaUtil {
 	}
 
 	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value) throws Exception {
-
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
 			String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
 			if (!CommonUtil.isEmptyString(altFilter)) {
-				AssociationPath altFilterFieldAssociationPath = new AssociationPath(filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+				AssociationPath altFilterFieldAssociationPath = new AssociationPath(
+						filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
 				criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
 				return applyFilter(altFilterFieldAssociationPath.getPropertyName(),
 						criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, null);
@@ -94,18 +92,15 @@ public final class CriteriaUtil {
 						Restrictions.or(
 								Restrictions.or( // partial interval overlappings:
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
-										),
-								Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
-								)
-						, or));
+										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
+								Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))),
+						or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(
 						Restrictions.or( // partial interval overlappings:
 								Restrictions.ge("start", from),
-								Restrictions.gt("stop", from)
-								)
-						, or));
+								Restrictions.gt("stop", from)),
+						or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
 			}
@@ -125,38 +120,34 @@ public final class CriteriaUtil {
 							Restrictions.and(Restrictions.isNotNull("start"),
 									Restrictions.and(
 											Restrictions.le("start", now),
-											Restrictions.or(Restrictions.gt("stop", now), Restrictions.isNull("stop"))
-											))
-							,
+											Restrictions.or(Restrictions.gt("stop", now), Restrictions.isNull("stop")))),
 							Restrictions.and(Restrictions.isNotNull("stop"),
 									Restrictions.and(
 											Restrictions.or(Restrictions.le("start", now), Restrictions.isNull("start")),
-											Restrictions.gt("stop", now)
-											))
-							)
-					, or));
+											Restrictions.gt("stop", now)))),
+					or));
 		}
 	}
 
 	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or) throws Exception {
 		if (propertyClass.equals(String.class)) {
 			if (EXACT_STRING_FILTER_ENTITY_FIELDS.contains(propertyName)) {
-				return applyOr(Restrictions.eq(propertyName, new String(value)),or);
+				return applyOr(Restrictions.eq(propertyName, new String(value)), or);
 			} else {
-				return applyOr(Restrictions.ilike(propertyName, new String(value), MatchMode.ANYWHERE),or);
+				return applyOr(Restrictions.ilike(propertyName, new String(value), MatchMode.ANYWHERE), or);
 			}
 		} else if (propertyClass.equals(Long.class)) {
-			return applyOr(Restrictions.eq(propertyName, new Long(value)),or);
+			return applyOr(Restrictions.eq(propertyName, new Long(value)), or);
 		} else if (propertyClass.equals(java.lang.Long.TYPE)) {
-			return applyOr(Restrictions.eq(propertyName, Long.parseLong(value)),or);
+			return applyOr(Restrictions.eq(propertyName, Long.parseLong(value)), or);
 		} else if (propertyClass.equals(Integer.class)) {
-			return applyOr(Restrictions.eq(propertyName, new Integer(value)),or);
+			return applyOr(Restrictions.eq(propertyName, new Integer(value)), or);
 		} else if (propertyClass.equals(java.lang.Integer.TYPE)) {
-			return applyOr(Restrictions.eq(propertyName, Integer.parseInt(value)),or);
+			return applyOr(Restrictions.eq(propertyName, Integer.parseInt(value)), or);
 		} else if (propertyClass.equals(Boolean.class)) {
-			return applyOr(Restrictions.eq(propertyName, new Boolean(value)),or);
+			return applyOr(Restrictions.eq(propertyName, new Boolean(value)), or);
 		} else if (propertyClass.equals(java.lang.Boolean.TYPE)) {
-			return applyOr(Restrictions.eq(propertyName, Boolean.parseBoolean(value)),or);
+			return applyOr(Restrictions.eq(propertyName, Boolean.parseBoolean(value)), or);
 		} else if (propertyClass.equals(Float.class)) {
 			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(java.lang.Float.TYPE)) {
@@ -169,33 +160,34 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()))), or);
 		} else if (propertyClass.equals(Timestamp.class)) {
 			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
-			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))),or);
+			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))),
+					or);
 		} else if (propertyClass.equals(VariablePeriod.class)) {
-			return applyOr(Restrictions.eq(propertyName, VariablePeriod.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, VariablePeriod.fromString(value)), or);
 		} else if (propertyClass.equals(AuthenticationType.class)) {
-			return applyOr(Restrictions.eq(propertyName, AuthenticationType.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, AuthenticationType.fromString(value)), or);
 		} else if (propertyClass.equals(Sex.class)) {
-			return applyOr(Restrictions.eq(propertyName, Sex.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, Sex.fromString(value)), or);
 		} else if (propertyClass.equals(RandomizationMode.class)) {
 			return applyOr(Restrictions.eq(propertyName, RandomizationMode.fromString(value)), or);
 		} else if (propertyClass.equals(DBModule.class)) {
-			return applyOr(Restrictions.eq(propertyName, DBModule.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, DBModule.fromString(value)), or);
 		} else if (propertyClass.equals(HyperlinkModule.class)) {
-			return applyOr(Restrictions.eq(propertyName, HyperlinkModule.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, HyperlinkModule.fromString(value)), or);
 		} else if (propertyClass.equals(JournalModule.class)) {
-			return applyOr(Restrictions.eq(propertyName, JournalModule.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, JournalModule.fromString(value)), or);
 		} else if (propertyClass.equals(FileModule.class)) {
-			return applyOr(Restrictions.eq(propertyName, FileModule.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, FileModule.fromString(value)), or);
 		} else if (propertyClass.equals(Color.class)) {
-			return applyOr(Restrictions.eq(propertyName, Color.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, Color.fromString(value)), or);
 		} else if (propertyClass.equals(InputFieldType.class)) {
-			return applyOr(Restrictions.eq(propertyName, InputFieldType.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, InputFieldType.fromString(value)), or);
 		} else if (propertyClass.equals(EventImportance.class)) {
 			return applyOr(Restrictions.eq(propertyName, EventImportance.fromString(value)), or);
 		} else if (propertyClass.equals(ExportStatus.class)) {
-			return applyOr(Restrictions.eq(propertyName, ExportStatus.fromString(value)),or);
+			return applyOr(Restrictions.eq(propertyName, ExportStatus.fromString(value)), or);
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
-			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)),or);
+			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)), or);
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED, DefaultMessages.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED,
@@ -255,8 +247,7 @@ public final class CriteriaUtil {
 						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())
-								));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())));
 					}
 				}
 				if (psf.getUpdateRowCount()) {
@@ -334,14 +325,11 @@ public final class CriteriaUtil {
 						Restrictions.or(
 								Restrictions.or( // partial interval overlappings:
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
-										),
+										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
 								Restrictions.or( // total inclusions:
 										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-										Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
-										)
-								)
-						, or));
+										Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to)))),
+						or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.gt("stop", from), or));
 			} else if (from == null && to != null) {
@@ -349,11 +337,9 @@ public final class CriteriaUtil {
 						Restrictions.or(
 								Restrictions.or( // partial interval overlappings:
 										Restrictions.lt("start", to),
-										Restrictions.le("stop", to)
-										),
-								Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))
-								)
-						, or));
+										Restrictions.le("stop", to)),
+								Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))),
+						or));
 			}
 		}
 	}
@@ -369,50 +355,39 @@ public final class CriteriaUtil {
 								Restrictions.isNull("start"),
 								Restrictions.and(
 										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from),
-												Restrictions.le("stop", to)
-										)
-								),
+										Restrictions.le("stop", to))),
 						Restrictions.and(
 								Restrictions.isNotNull("start"),
 								Restrictions.or(
 										// partial interval overlappings:
 										Restrictions.or(
 												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
-												),
+												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))),
 										// total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
-										)
-								)
-						), or));
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))))),
+						or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
 						Restrictions.and(
 								Restrictions.isNull("start"),
-								includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
-								),
+								includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)),
 						Restrictions.and(
 								Restrictions.isNotNull("start"),
 								Restrictions.or(
 										Restrictions.ge("start", from),
-										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
-										)
-								)
-						), or));
+										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)))),
+						or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
 						Restrictions.and(
 								Restrictions.isNull("start"),
-								Restrictions.le("stop", to)
-								),
+								Restrictions.le("stop", to)),
 						Restrictions.and(
 								Restrictions.isNotNull("start"),
 								Restrictions.or(
 										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-												Restrictions.le("stop", to)
-										)
-								)
-						), or));
+										Restrictions.le("stop", to)))),
+						or));
 			}
 		}
 	}
@@ -427,24 +402,19 @@ public final class CriteriaUtil {
 						Restrictions.or(
 								Restrictions.or( // partial interval overlappings:
 										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))
-										),
+										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
 								Restrictions.or( // total inclusions:
 										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-										Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
-										)
-								)
-						, or));
+										Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop")))),
+						or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(
 						Restrictions.or(
 								Restrictions.or( // partial interval overlappings:
 										Restrictions.ge("start", from),
-										Restrictions.gt("stop", from)
-										),
-								Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))
-								)
-						, or));
+										Restrictions.gt("stop", from)),
+								Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))),
+						or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
 			}
@@ -462,50 +432,39 @@ public final class CriteriaUtil {
 								Restrictions.isNull("stop"),
 								Restrictions.and(
 										Restrictions.ge("start", from),
-										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)
-										)
-								),
+										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to))),
 						Restrictions.and(
 								Restrictions.isNotNull("stop"),
 								Restrictions.or(
 										// partial interval overlappings:
 										Restrictions.or(
 												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))
-												),
+												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))),
 										// total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))
-										)
-								)
-						), or));
+										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))))),
+						or));
 			} else if (from != null && to == null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
 						Restrictions.and(
 								Restrictions.isNull("stop"),
-								Restrictions.ge("start", from)
-								),
+								Restrictions.ge("start", from)),
 						Restrictions.and(
 								Restrictions.isNotNull("stop"),
 								Restrictions.or(
 										Restrictions.ge("start", from),
-										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)
-										)
-								)
-						), or));
+										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)))),
+						or));
 			} else if (from == null && to != null) {
 				intervalCriteria.add(applyOr(Restrictions.or(
 						Restrictions.and(
 								Restrictions.isNull("stop"),
-								includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)
-								),
+								includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
 						Restrictions.and(
 								Restrictions.isNotNull("stop"),
 								Restrictions.or(
 										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-												Restrictions.le("stop", to)
-										)
-								)
-						), or));
+										Restrictions.le("stop", to)))),
+						or));
 			}
 		}
 	}
@@ -550,7 +509,7 @@ public final class CriteriaUtil {
 		}
 	}
 
-	public static List listDistinctRoot(Criteria criteria,Object dao,String... fields) throws Exception {
+	public static List listDistinctRoot(Criteria criteria, Object dao, String... fields) throws Exception {
 		if (dao != null && criteria != null) {
 			criteria.setProjection(null);
 			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
@@ -558,7 +517,7 @@ public final class CriteriaUtil {
 			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
 			boolean cast = false;
 			if (fields != null && fields.length > 0) {
-				for (int i = 0; i< fields.length; i++) {
+				for (int i = 0; i < fields.length; i++) {
 					projectionList.add(Projections.property(fields[i]));
 				}
 				cast = true;
@@ -574,6 +533,8 @@ public final class CriteriaUtil {
 		return null;
 	}
 
+	private final static String ALIAS_PREFIX = "_";
+
 	public static List listDistinctRootPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, Object dao) throws Exception {
 		Criteria criteria;
 		if (dao != null && criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
@@ -581,17 +542,25 @@ public final class CriteriaUtil {
 				criteria.setProjection(null);
 				criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 				Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
+				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
 						Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
-						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+						Criteria subCriteria;
+						if (sortFieldAssociationPath.isValid()
+								&& sortFieldAssociationPath.getPathDepth() >= 1
+								&& sortFieldAssociationPath.getPath().equals(filterFieldAssociationPath.getPath())) {
+							String alias = getSortAlias(sortFieldAssociationPath);
+							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, alias);
+						} else {
+							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+						}
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())
-								));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())));
 					}
 				}
 				Long count = null;
@@ -612,13 +581,20 @@ public final class CriteriaUtil {
 					criteria.setMaxResults(CommonUtil.safeLongToInt(count));
 				}
 				ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
 				boolean cast = false;
 				if (sortFieldAssociationPath.isValid()) {
-					Criteria subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
+					Criteria subCriteria;
 					String sortProperty = sortFieldAssociationPath.getPropertyName();
+					if (sortFieldAssociationPath.getPathDepth() >= 1) {
+						String alias = getSortAlias(sortFieldAssociationPath);
+						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, alias, CriteriaSpecification.LEFT_JOIN);
+						sortFieldAssociationPath = new AssociationPath(alias + AssociationPath.ASSOCIATION_PATH_SEPARATOR + sortProperty);
+					} else {
+						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
+						sortFieldAssociationPath = new AssociationPath(sortProperty);
+					}
 					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
-					projectionList.add(Projections.property(sortProperty));
+					projectionList.add(Projections.property(sortFieldAssociationPath.getFullQualifiedPropertyName()));
 					cast = true;
 				}
 				Iterator it = criteria.setProjection(Projections.distinct(projectionList)).list().iterator();
@@ -638,6 +614,10 @@ public final class CriteriaUtil {
 			}
 		}
 		return null;
+	}
+
+	private static final String getSortAlias(AssociationPath sortFieldAssociationPath) {
+		return ALIAS_PREFIX + sortFieldAssociationPath.getPathElement(sortFieldAssociationPath.getPathDepth() - 1);
 	}
 
 	public static <T> ArrayList<T> listEvents(Criteria reminderItemCriteria, Date from, Date to, Boolean notify) {
