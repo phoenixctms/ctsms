@@ -795,7 +795,7 @@ public class DemoDataProvider {
 		ECRFOutVO ecrf = createEcrf(auth, trial, "medical history", "eCRF to capture ICD-10 coded medical history", probandGroupId, position, visitId, true, false, true, 0.0f,
 				null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
-		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_COUNT, ecrf, "summary", 1, false, false, false, true, true, null, "count",
+		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_COUNT, ecrf, "summary", 1, false, false, false, true, true, null, null, "count",
 				"function(alphaid) {\n" +
 						"  return alphaid.length - 1;\n" +
 						"}",
@@ -803,10 +803,11 @@ public class DemoDataProvider {
 						"  return sprintf('medical history: %d entries',$value);\n" +
 						"}"));
 		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_START, ecrf, "medical history", 1, true, true, false, true, true,
-				"date when disease started, if known/applicable", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_END, ecrf, "medical history", 2, true, true, false, true, true, "date when disease ended, if known/applicable",
-				null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.ALPHA_ID, ecrf, "medical history", 3, true, false, false, true, true, "disease name", "alphaid",
+				null, "date when disease started, if known/applicable", null, null, null));
+		ecrfFields.add(
+				createEcrfField(auth, InputFields.DIAGNOSIS_END, ecrf, "medical history", 2, true, true, false, true, true, null, "date when disease ended, if known/applicable",
+						null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.ALPHA_ID, ecrf, "medical history", 3, true, false, false, true, true, null, "disease name", "alphaid",
 				null,
 				"function() {\n" +
 						"  if ($enteredValue != $oldValue) {\n" +
@@ -839,30 +840,30 @@ public class DemoDataProvider {
 		ECRFOutVO ecrf = createEcrf(auth, trial, "some eCRF", "demo eCRF to show field calculations with series sections", probandGroupId, position, visitId, true, false, true,
 				0.0f, null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #1", 1, true, false, false, true, true, "some name", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #1", 2, true, false, false, true, true, "some repeatable value 1", "value1", null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #1", 3, true, false, false, true, true, "some repeatable value 2", "value2", null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "series #1", 4, true, false, false, true, true, "some description", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "series #1", 5, true, false, false, true, true, "some repeatable value 3", "value3",
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #1", 1, true, false, false, true, true, null, "some name", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #1", 2, true, false, false, true, true, null, "some repeatable value 1", "value1", null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #1", 3, true, false, false, true, true, null, "some repeatable value 2", "value2", null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "series #1", 4, true, false, false, true, true, null, "some description", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "series #1", 5, true, false, false, true, true, null, "some repeatable value 3", "value3",
 				"function(value1, value2) {\n" +
 						"  return value1 + value2;\n" +
 						"}",
 				"function(value3) {\n" +
 						"  return sprintf(\"value3 = value1 + value2 = %.3f\",value3);\n" +
 						"}"));
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #2", 1, true, false, false, true, true, "some name", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 2, true, false, false, true, true, "some repeatable value 4", "value4", null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 3, true, false, false, true, true, "some repeatable value 5", "value5", null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "series #2", 4, true, false, false, true, true, "some description", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "series #2", 5, true, false, false, true, true, "some repeatable value 6", "value6",
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #2", 1, true, false, false, true, true, null, "some name", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 2, true, false, false, true, true, null, "some repeatable value 4", "value4", null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "series #2", 3, true, false, false, true, true, null, "some repeatable value 5", "value5", null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "series #2", 4, true, false, false, true, true, null, "some description", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "series #2", 5, true, false, false, true, true, null, "some repeatable value 6", "value6",
 				"function(value4, value5) {\n" +
 						"  return value4 + value5;\n" +
 						"}",
 				"function(value6) {\n" +
 						"  return sprintf(\"value6 = value4 + value5 = %.3f\",value6);\n" +
 						"}"));
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "totals section", 1, false, false, false, true, true, "some name", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 2, false, false, false, true, true, "some total value 1", "total1",
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "totals section", 1, false, false, false, true, true, null, "some name", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 2, false, false, false, true, true, null, "some total value 1", "total1",
 				"function(value1, value4) {\n" +
 						"  var sum = 0;\n" +
 						"  var i;\n" +
@@ -877,7 +878,7 @@ public class DemoDataProvider {
 				"function(total1) {\n" +
 						"  return sprintf(\"total1 = sum(value1) + sum(value4) = %.3f\",total1);\n" +
 						"}"));
-		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 3, false, false, false, true, true, "some total value 2", "total2",
+		ecrfFields.add(createEcrfField(auth, InputFields.INTEGER, ecrf, "totals section", 3, false, false, false, true, true, null, "some total value 2", "total2",
 				"function(value2, value5) {\n" +
 						"  var sum = 0;\n" +
 						"  var i;\n" +
@@ -892,8 +893,8 @@ public class DemoDataProvider {
 				"function(total2) {\n" +
 						"  return sprintf(\"total2 = sum(value2) + sum(value5) = %.3f\",total2);\n" +
 						"}"));
-		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "totals section", 4, false, false, false, true, true, "some description", null, null, null));
-		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "totals section", 5, false, false, false, true, true, "some total value 3", "total3",
+		ecrfFields.add(createEcrfField(auth, InputFields.STRING_MULTILINE, ecrf, "totals section", 4, false, false, false, true, true, null, "some description", null, null, null));
+		ecrfFields.add(createEcrfField(auth, InputFields.FLOAT, ecrf, "totals section", 5, false, false, false, true, true, null, "some total value 3", "total3",
 				"function(total1, total2) {\n" +
 						"  return total1 + total2;\n" +
 						"}",
@@ -998,12 +999,13 @@ public class DemoDataProvider {
 
 	private ECRFFieldOutVO createEcrfField(AuthenticationVO auth,
 			InputFields inputField, ECRFOutVO ecrf,
-			String section, int position, boolean series, boolean optional, boolean disabled, boolean auditTrail, boolean reasonForChangeRequired, String comment,
+			String section, int position, boolean series, boolean optional, boolean disabled, boolean auditTrail, boolean reasonForChangeRequired, String title, String comment,
 			String jsVariableName, String jsValueExpression, String jsOutputExpression) throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ECRFFieldInVO newEcrfField = new ECRFFieldInVO();
 		newEcrfField.setAuditTrail(auditTrail);
 		newEcrfField.setComment(comment);
+		newEcrfField.setTitle(title);
 		newEcrfField.setDisabled(disabled);
 		newEcrfField.setEcrfId(ecrf.getId());
 		newEcrfField.setFieldId(getInputField(auth, inputField).getId());
@@ -1128,17 +1130,17 @@ public class DemoDataProvider {
 		TrialOutVO trial = trialService.addTrial(auth, newTrial);
 		jobOutput.println("trial created: " + trial.getName());
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
-		inquiries.add(createInquiry(auth, InputFields.BODY_HEIGHT, trial, "01 - BMI", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.BODY_HEIGHT, trial, "01 - BMI", 1, true, true, false, false, false, false, null,
 				null,
 				"size",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.BODY_WEIGHT, trial, "01 - BMI", 2, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.BODY_WEIGHT, trial, "01 - BMI", 2, true, true, false, false, false, false, null,
 				null,
 				"weight",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.BODY_WEIGHT, trial, "01 - BMI", 3, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.BODY_WEIGHT, trial, "01 - BMI", 3, true, true, false, false, false, false, null,
 				null,
 				"bmi",
 				"function(weight,size) {\n" +
@@ -1150,7 +1152,7 @@ public class DemoDataProvider {
 						"    $enteredValue + 0.0,\n" +
 						"    bmi);\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.OBESITY, trial, "01 - BMI", 4, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.OBESITY, trial, "01 - BMI", 4, true, true, false, false, false, false, null,
 				null,
 				"obesity",
 				"function(bmi) {\n" +
@@ -1177,19 +1179,19 @@ public class DemoDataProvider {
 						"    \"calculated: <em>\" +\n" +
 						"    printSelectionSetValues(obesity) + \"</em>\";\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.ETHNICITY, trial, "02 - eGFR", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.ETHNICITY, trial, "02 - eGFR", 1, true, true, false, false, false, false, null,
 				null,
 				"ethnicity",
 				"",
 				"function() {\n" +
 						"  return sprintf(\"<a href=\\\"http://www.fda.gov/RegulatoryInformation/Guidances/ucm126340.htm\\\" target=\\\"new\\\">FDA Information</a>\");\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.SERUM_CREATININ_CONCENTRATION, trial, "02 - eGFR", 2, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.SERUM_CREATININ_CONCENTRATION, trial, "02 - eGFR", 2, true, true, false, false, false, false, null,
 				null,
 				"s_cr",
 				"",
 				""));
-		inquiries.add(createInquiry(auth, InputFields.EGFR, trial, "02 - eGFR", 3, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.EGFR, trial, "02 - eGFR", 3, true, true, false, false, false, false, null,
 				null,
 				"egfr",
 				"function(s_cr, ethnicity) { // s_cr: serum creatinin concentration (decimal), skin_color (single selection)\n" +
@@ -1208,7 +1210,7 @@ public class DemoDataProvider {
 						"    $enteredValue + 0.0,\n" +
 						"    egfr);\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.HBA1C_PERCENT, trial, "03 - HbA1C", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.HBA1C_PERCENT, trial, "03 - HbA1C", 1, true, true, false, false, false, false, null,
 				null,
 				"hba1c_percent",
 				"//function(hba1c_mmol_per_mol) {\n" +
@@ -1220,7 +1222,7 @@ public class DemoDataProvider {
 						"    $enteredValue + 0.0,\n" +
 						"    ($enteredValue - 2.15) * 10.929);\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.HBA1C_MMOLPERMOL, trial, "03 - HbA1C", 2, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.HBA1C_MMOLPERMOL, trial, "03 - HbA1C", 2, true, true, false, false, false, false, null,
 				null,
 				"hba1c_mmol_per_mol",
 				"function(hba1c_percent) {\n" +
@@ -1238,27 +1240,27 @@ public class DemoDataProvider {
 						"    $enteredValue + 0.0,\n" +
 						"    hba1c_mmol_per_mol);\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.MANNEQUIN, trial, "04 - DAS28", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.MANNEQUIN, trial, "04 - DAS28", 1, true, true, false, false, false, false, null,
 				"tender joints",
 				"tender",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.MANNEQUIN, trial, "04 - DAS28", 2, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.MANNEQUIN, trial, "04 - DAS28", 2, true, true, false, false, false, false, null,
 				"swollen joints",
 				"swollen",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.ESR, trial, "04 - DAS28", 3, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.ESR, trial, "04 - DAS28", 3, true, true, false, false, false, false, null,
 				null,
 				"esr",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.VAS, trial, "04 - DAS28", 4, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.VAS, trial, "04 - DAS28", 4, true, true, false, false, false, false, null,
 				"The patient's general health condition (subjective)",
 				"vas",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.DAS28, trial, "04 - DAS28", 5, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.DAS28, trial, "04 - DAS28", 5, true, true, false, false, false, false, null,
 				null,
 				"das28",
 				"function (tender, swollen, esr, vas) { //das (28 joints) computation:\n" +
@@ -1272,7 +1274,7 @@ public class DemoDataProvider {
 						"  return sprintf(\"entered: %.2f<br/>\" +\n" +
 						"    \"calculated: %.2f\", $enteredValue + 0.0,das28 + 0.0);\n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.DISTANCE, trial, "05 - Google Maps", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.DISTANCE, trial, "05 - Google Maps", 1, true, true, false, false, false, false, null,
 				null,
 				"distance",
 				"function() {\n" +
@@ -1308,7 +1310,7 @@ public class DemoDataProvider {
 						"  }\n" +
 						"  return \"No subject address.\"; \n" +
 						"}"));
-		inquiries.add(createInquiry(auth, InputFields.ALPHA_ID, trial, "06 - Rest API", 1, true, true, false, false, false, false,
+		inquiries.add(createInquiry(auth, InputFields.ALPHA_ID, trial, "06 - Rest API", 1, true, true, false, false, false, false, null,
 				"(Medical Coding example ...)",
 				"alphaid",
 				null,
@@ -1429,7 +1431,7 @@ public class DemoDataProvider {
 
 	private InquiryOutVO createInquiry(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, String category, int position, boolean active, boolean activeSignup,
 			boolean optional,
-			boolean disabled, boolean excelValue, boolean excelDate, String comment, String jsVariableName, String jsValueExpression, String jsOutputExpression)
+			boolean disabled, boolean excelValue, boolean excelDate, String title, String comment, String jsVariableName, String jsValueExpression, String jsOutputExpression)
 			throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InquiryInVO newInquiry = new InquiryInVO();
@@ -1444,6 +1446,7 @@ public class DemoDataProvider {
 		newInquiry.setTrialId(trial.getId());
 		newInquiry.setPosition(new Long(position));
 		newInquiry.setComment(comment);
+		newInquiry.setTitle(title);
 		newInquiry.setJsVariableName(jsVariableName);
 		newInquiry.setJsValueExpression(jsValueExpression);
 		newInquiry.setJsOutputExpression(jsOutputExpression);
@@ -1594,7 +1597,8 @@ public class DemoDataProvider {
 	}
 
 	private ProbandListEntryTagOutVO createProbandListEntryTag(AuthenticationVO auth, InputFields inputField, TrialOutVO trial, int position, boolean optional, boolean disabled,
-			boolean excelValue, boolean excelDate, boolean ecrfValue, boolean stratification, boolean randomize, String comment, String jsVariableName, String jsValueExpression,
+			boolean excelValue, boolean excelDate, boolean ecrfValue, boolean stratification, boolean randomize, String title, String comment, String jsVariableName,
+			String jsValueExpression,
 			String jsOutputExpression)
 			throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
@@ -1610,6 +1614,7 @@ public class DemoDataProvider {
 		newProbandListEntryTag.setTrialId(trial.getId());
 		newProbandListEntryTag.setPosition(new Long(position));
 		newProbandListEntryTag.setComment(comment);
+		newProbandListEntryTag.setTitle(title);
 		newProbandListEntryTag.setJsVariableName(jsVariableName);
 		newProbandListEntryTag.setJsValueExpression(jsValueExpression);
 		newProbandListEntryTag.setJsOutputExpression(jsOutputExpression);
@@ -2112,81 +2117,111 @@ public class DemoDataProvider {
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
 		ArrayList<ProbandListEntryTagOutVO> probandListEntryTags = new ArrayList<ProbandListEntryTagOutVO>();
 		if (criteria != null) {
-			inquiries.add(createInquiry(auth, InputFields.HEIGHT, trial, "01 - Allgemeine information", 1, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.WEIGHT, trial, "01 - Allgemeine information", 2, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.BMI, trial, "01 - Allgemeine information", 3, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CLINICAL_TRIAL_EXPERIENCE_YN, trial, "01 - Allgemeine information", 4, true, true, false, false, true, true, null, null,
-					null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.SMOKER_YN, trial, "01 - Allgemeine information", 5, true, true, false, false, true, true, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.HEIGHT, trial, "01 - Allgemeine information", 1, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.WEIGHT, trial, "01 - Allgemeine information", 2, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.BMI, trial, "01 - Allgemeine information", 3, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CLINICAL_TRIAL_EXPERIENCE_YN, trial, "01 - Allgemeine information", 4, true, true, false, false, true, true, null, null, null,
+							null,
+							null));
+			inquiries.add(createInquiry(auth, InputFields.SMOKER_YN, trial, "01 - Allgemeine information", 5, true, true, false, false, true, true, null, null, null, null, null));
 			inquiries
-					.add(createInquiry(auth, InputFields.CIGARETTES_PER_DAY, trial, "01 - Allgemeine information", 6, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_YN, trial, "02 - Diabetes", 1, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_TYPE, trial, "02 - Diabetes", 2, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_SINCE, trial, "02 - Diabetes", 3, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_HBA1C_MMOLPERMOL, trial, "02 - Diabetes", 4, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_HBA1C_DATE, trial, "02 - Diabetes", 5, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_ATTENDING_PHYSICIAN, trial, "02 - Diabetes", 6, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_METHOD_OF_TREATMENT, trial, "02 - Diabetes", 7, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIABETES_MEDICATION, trial, "02 - Diabetes", 8, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CHRONIC_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 1, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CHRONIC_DISEASE, trial, "03 - Krankheitsgeschichte", 2, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.EPILEPSY_YN, trial, "03 - Krankheitsgeschichte", 3, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.EPILEPSY, trial, "03 - Krankheitsgeschichte", 4, true, true, true, false, true, true, null, null, null, null));
+					.add(createInquiry(auth, InputFields.CIGARETTES_PER_DAY, trial, "01 - Allgemeine information", 6, true, true, true, false, true, true, null, null, null, null,
+							null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_YN, trial, "02 - Diabetes", 1, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_TYPE, trial, "02 - Diabetes", 2, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_SINCE, trial, "02 - Diabetes", 3, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_HBA1C_MMOLPERMOL, trial, "02 - Diabetes", 4, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_HBA1C_DATE, trial, "02 - Diabetes", 5, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.DIABETES_ATTENDING_PHYSICIAN, trial, "02 - Diabetes", 6, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.DIABETES_METHOD_OF_TREATMENT, trial, "02 - Diabetes", 7, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.DIABETES_MEDICATION, trial, "02 - Diabetes", 8, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CHRONIC_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 1, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CHRONIC_DISEASE, trial, "03 - Krankheitsgeschichte", 2, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.EPILEPSY_YN, trial, "03 - Krankheitsgeschichte", 3, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.EPILEPSY, trial, "03 - Krankheitsgeschichte", 4, true, true, true, false, true, true, null, null, null, null, null));
 			inquiries
-					.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 5, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS, trial, "03 - Krankheitsgeschichte", 6, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.HYPERTENSION_YN, trial, "03 - Krankheitsgeschichte", 7, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.HYPERTENSION, trial, "03 - Krankheitsgeschichte", 8, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY_YN, trial, "03 - Krankheitsgeschichte", 9, true, true, false, false, true, true, null, null, null,
-					null));
+					.add(createInquiry(auth, InputFields.CARDIAC_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 5, true, true, false, false, true, true, null, null, null, null,
+							null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CARDIAC_PROBLEMS, trial, "03 - Krankheitsgeschichte", 6, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.HYPERTENSION_YN, trial, "03 - Krankheitsgeschichte", 7, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.HYPERTENSION, trial, "03 - Krankheitsgeschichte", 8, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.RENAL_INSUFFICIENCY_YN, trial, "03 - Krankheitsgeschichte", 9, true, true, false, false, true, true, null, null, null, null,
+							null));
 			inquiries
-					.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY, trial, "03 - Krankheitsgeschichte", 10, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.LIVER_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 11, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.LIVER_DISEASE, trial, "03 - Krankheitsgeschichte", 12, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.ANEMIA_YN, trial, "03 - Krankheitsgeschichte", 13, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.ANEMIA, trial, "03 - Krankheitsgeschichte", 14, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 15, true, true, false, false, true, true, null, null,
-					null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE, trial, "03 - Krankheitsgeschichte", 16, true, true, true, false, true, true, null, null, null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.GESTATION_YN, trial, "03 - Krankheitsgeschichte", 17, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.GESTATION_TYPE, trial, "03 - Krankheitsgeschichte", 18, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CONTRACEPTION_YN, trial, "03 - Krankheitsgeschichte", 19, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.CONTRACEPTION_TYPE, trial, "03 - Krankheitsgeschichte", 20, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.ALCOHOL_DRUG_ABUSE_YN, trial, "03 - Krankheitsgeschichte", 21, true, true, false, false, true, true, null, null, null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.ALCOHOL_DRUG_ABUSE, trial, "03 - Krankheitsgeschichte", 22, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.ALLERGY_YN, trial, "03 - Krankheitsgeschichte", 23, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.ALLERGY, trial, "03 - Krankheitsgeschichte", 24, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.MEDICATION_YN, trial, "03 - Krankheitsgeschichte", 25, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.MEDICATION, trial, "03 - Krankheitsgeschichte", 26, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.EYE_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 27, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.EYE_PROBLEMS, trial, "03 - Krankheitsgeschichte", 28, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.FEET_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 29, true, true, false, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.FEET_PROBLEMS, trial, "03 - Krankheitsgeschichte", 30, true, true, true, false, true, true, null, null, null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIAGNOSTIC_FINDINGS_AVAILABLE_YN, trial, "03 - Krankheitsgeschichte", 31, true, true, false, false, true, true, null,
-					null,
-					null, null));
-			inquiries.add(createInquiry(auth, InputFields.DIAGNOSTIC_FINDINGS_AVAILABLE, trial, "03 - Krankheitsgeschichte", 32, true, true, true, false, true, true, null, null,
-					null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.GENERAL_STATE_OF_HEALTH, trial, "03 - Krankheitsgeschichte", 33, true, true, true, false, true, true, null, null, null,
-					null));
-			inquiries.add(createInquiry(auth, InputFields.NOTE, trial, "03 - Krankheitsgeschichte", 34, true, true, true, false, true, true, null, null, null, null));
+					.add(createInquiry(auth, InputFields.RENAL_INSUFFICIENCY, trial, "03 - Krankheitsgeschichte", 10, true, true, true, false, true, true, null, null, null, null,
+							null));
+			inquiries.add(
+					createInquiry(auth, InputFields.LIVER_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 11, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries
+					.add(createInquiry(auth, InputFields.LIVER_DISEASE, trial, "03 - Krankheitsgeschichte", 12, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.ANEMIA_YN, trial, "03 - Krankheitsgeschichte", 13, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.ANEMIA, trial, "03 - Krankheitsgeschichte", 14, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries
+					.add(createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 15, true, true, false, false, true, true, null, null, null,
+							null,
+							null));
+			inquiries.add(
+					createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE, trial, "03 - Krankheitsgeschichte", 16, true, true, true, false, true, true, null, null, null, null,
+							null));
+			inquiries
+					.add(createInquiry(auth, InputFields.GESTATION_YN, trial, "03 - Krankheitsgeschichte", 17, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.GESTATION_TYPE, trial, "03 - Krankheitsgeschichte", 18, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CONTRACEPTION_YN, trial, "03 - Krankheitsgeschichte", 19, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.CONTRACEPTION_TYPE, trial, "03 - Krankheitsgeschichte", 20, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.ALCOHOL_DRUG_ABUSE_YN, trial, "03 - Krankheitsgeschichte", 21, true, true, false, false, true, true, null, null, null, null,
+							null));
+			inquiries.add(
+					createInquiry(auth, InputFields.ALCOHOL_DRUG_ABUSE, trial, "03 - Krankheitsgeschichte", 22, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.ALLERGY_YN, trial, "03 - Krankheitsgeschichte", 23, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.ALLERGY, trial, "03 - Krankheitsgeschichte", 24, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.MEDICATION_YN, trial, "03 - Krankheitsgeschichte", 25, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.MEDICATION, trial, "03 - Krankheitsgeschichte", 26, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.EYE_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 27, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries.add(createInquiry(auth, InputFields.EYE_PROBLEMS, trial, "03 - Krankheitsgeschichte", 28, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.FEET_PROBLEMS_YN, trial, "03 - Krankheitsgeschichte", 29, true, true, false, false, true, true, null, null, null, null, null));
+			inquiries
+					.add(createInquiry(auth, InputFields.FEET_PROBLEMS, trial, "03 - Krankheitsgeschichte", 30, true, true, true, false, true, true, null, null, null, null, null));
+			inquiries
+					.add(createInquiry(auth, InputFields.DIAGNOSTIC_FINDINGS_AVAILABLE_YN, trial, "03 - Krankheitsgeschichte", 31, true, true, false, false, true, true, null, null,
+							null,
+							null, null));
+			inquiries.add(
+					createInquiry(auth, InputFields.DIAGNOSTIC_FINDINGS_AVAILABLE, trial, "03 - Krankheitsgeschichte", 32, true, true, true, false, true, true, null, null, null,
+							null,
+							null));
+			inquiries.add(
+					createInquiry(auth, InputFields.GENERAL_STATE_OF_HEALTH, trial, "03 - Krankheitsgeschichte", 33, true, true, true, false, true, true, null, null, null, null,
+							null));
+			inquiries.add(createInquiry(auth, InputFields.NOTE, trial, "03 - Krankheitsgeschichte", 34, true, true, true, false, true, true, null, null, null, null, null));
 		}
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SUBJECT_NUMBER, trial, 1, false, false, true, true, true, false, false, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.IC_DATE, trial, 2, false, false, true, true, true, false, false, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SCREENING_DATE, trial, 3, false, false, true, true, true, false, false, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, false, false, null, null, null, null));
-		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, false, false, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SUBJECT_NUMBER, trial, 1, false, false, true, true, true, false, false, null, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.IC_DATE, trial, 2, false, false, true, true, true, false, false, null, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.SCREENING_DATE, trial, 3, false, false, true, true, true, false, false, null, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.LAB_NUMBER, trial, 4, false, false, true, true, true, false, false, null, null, null, null, null));
+		probandListEntryTags.add(createProbandListEntryTag(auth, InputFields.RANDOM_NUMBER, trial, 5, false, false, true, true, true, false, false, null, null, null, null, null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null));
+				.add(createProbandListEntryTag(auth, InputFields.LETTER_TO_PHYSICIAN_SENT, trial, 6, false, false, true, true, true, false, false, null, null, null, null, null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null));
+				.add(createProbandListEntryTag(auth, InputFields.PARTICIPATION_LETTER_IN_MEDOCS, trial, 7, false, false, true, true, true, false, false, null, null, null, null,
+						null));
 		probandListEntryTags
-				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null));
+				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null,
+						null));
 		// HashMap<Long, HashMap<Long, ArrayList<ECRFFieldOutVO>>> ecrfFieldsPerVisitPerGroupMap = new HashMap<Long, HashMap<Long,
 		// ArrayList<ECRFFieldOutVO>>>(probandGroups.size());
 		// Iterator<ProbandGroupOutVO> probandGroupIt = probandGroups.iterator();

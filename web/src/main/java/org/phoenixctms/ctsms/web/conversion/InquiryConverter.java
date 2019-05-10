@@ -1,10 +1,10 @@
 package org.phoenixctms.ctsms.web.conversion;
 
-
 import java.util.LinkedHashMap;
 
 import javax.faces.convert.FacesConverter;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JSFVOConverterIDs;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.LightInquiryOutVO;
@@ -25,6 +25,9 @@ public class InquiryConverter extends IDVOConverter {
 			details.put(MessageCodes.CRITERION_ITEM_TIP_TRIAL_NAME, inquiry.getTrial().getName());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INQUIRY_CATEGORY, inquiry.getCategory());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_NAME, inquiry.getField().getName());
+			if (!CommonUtil.isEmptyString(inquiry.getTitle())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_TITLE, inquiry.getTitle());
+			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_TYPE, inquiry.getField().getFieldType().getName());
 		}
 		return details;

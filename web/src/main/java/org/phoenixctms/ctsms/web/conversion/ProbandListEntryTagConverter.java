@@ -1,10 +1,10 @@
 package org.phoenixctms.ctsms.web.conversion;
 
-
 import java.util.LinkedHashMap;
 
 import javax.faces.convert.FacesConverter;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JSFVOConverterIDs;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -24,6 +24,9 @@ public class ProbandListEntryTagConverter extends IDVOConverter {
 		if (tag != null) {
 			details.put(MessageCodes.CRITERION_ITEM_TIP_TRIAL_NAME, tag.getTrial().getName());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_NAME, tag.getField().getName());
+			if (!CommonUtil.isEmptyString(tag.getTitle())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_TITLE, tag.getTitle());
+			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_TYPE, tag.getField().getFieldType().getName());
 		}
 		return details;

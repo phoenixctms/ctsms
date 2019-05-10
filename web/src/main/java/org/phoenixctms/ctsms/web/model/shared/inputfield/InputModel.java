@@ -142,7 +142,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	public abstract Date getDateValue();
 
-
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -172,7 +171,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract Float getFloatValue();
 
 	public int getHeight() {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Long height = inputField.getHeight();
 			if (height != null) {
@@ -183,7 +182,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public List<String> getInkRegions() throws UnsupportedEncodingException {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			ArrayList<String> inkRegions = new ArrayList<String>(selectionSetValueVOs.size());
@@ -235,8 +234,15 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	public abstract String getJsVariableName();
 
+	protected abstract String getInputTitle();
+
 	public final String getLabel() {
-		return super.getTitle();
+		String title = getInputTitle();
+		if (CommonUtil.isEmptyString(title)) {
+			return super.getFieldTitle();
+		} else {
+			return title;
+		}
 	}
 
 	public abstract Long getLongValue();
@@ -248,7 +254,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract String getReasonForChange();
 
 	public final String getRequiredMessage() {
-		//InputFieldOutVO inputField = this.getInputField();
+		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			if (!this.isOptional()) {
 				return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_MESSAGE, inputField.getName());
@@ -262,7 +268,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	private final HashMap<String, String> getSelectionSetValueIdToStrokesIdMap() {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			HashMap<String, String> selectionSetValueIdToStrokesIdMap = new HashMap<String, String>(selectionSetValueVOs.size());
@@ -277,7 +283,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public final ArrayList<SelectItem> getSelectionSetValues() {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			ArrayList<SelectItem> selectionSetValues = new ArrayList<SelectItem>(selectionSetValueVOs.size());
@@ -292,7 +298,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	private final HashMap<String, String> getSelectionSetValueStrokesIdToIdMap() {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			HashMap<String, String> selectionSetValueStrokesIdToIdMap = new HashMap<String, String>(selectionSetValueVOs.size());
@@ -322,7 +328,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	@Override
 	public final String getTitle() {
-		String title = super.getTitle();
+		String title = getLabel();
 		if (isOptional()) {
 			return Messages.getMessage(MessageCodes.OPTIONAL_INPUT_FIELD_TITLE, title);
 		} else {
@@ -331,7 +337,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public final String getTooltip() {
-		//InputFieldOutVO inputField = this.getInputField();
+		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			String validationErrorMsg = inputField.getValidationErrorMsg();
 			String fieldTypeName;
@@ -372,7 +378,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract String getWidgetVar();
 
 	public int getWidth() {
-		//InputFieldOutVO inputField = getInputField();
+		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Long width = inputField.getWidth();
 			if (width != null) {
@@ -395,7 +401,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract boolean isCreated();
 
 	public boolean isDeferredDelete() {
-		//InputFieldOutVO inputField = this.getInputField();
+		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			return inputField.getDeferredDelete();
 		}
@@ -424,6 +430,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public final boolean isHasOutput() {
 		return !CommonUtil.isEmptyString(getJsVariableName());
 	}
+
 	// public final boolean isJsOutputExpressionEmpty() {
 	// return CommonUtil.isEmptyString(JavaScriptCompressor.compress(getJsOutputExpression()));
 	// }
@@ -445,7 +452,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	// public boolean isShowReasonForChange() {
 	// return isAuditTrail();
 	// }
-
 	public final boolean isShowTooltip() {
 		return !isCheckBox(); // !(isCheckBox() || isSelect()); // !isCheckBox()
 	}

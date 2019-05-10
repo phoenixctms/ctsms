@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.executable.xls;
 
 import java.util.HashMap;
@@ -42,6 +41,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 13;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 14;
 	private final static int NOTIFY_COLUMN_INDEX = 15;
+	private final static int TITLE_COLUMN_INDEX = 16;
 	// @Autowired
 	// protected InputFieldService inputFieldService;
 	private int ecrfProbandGroupColumnIndex;
@@ -50,6 +50,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int positionColumnIndex;
 	private int externalIdColumnIndex;
 	private int inputFieldNameColumnIndex;
+	private int titleColumnIndex;
 	private int commentColumnIndex;
 	private int seriesColumnIndex;
 	private int optionalColumnIndex;
@@ -60,7 +61,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
 	private int notifyColumnIndex;
-
 	// private AuthenticationVO auth;
 	// private Long inputFieldId;
 	private HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>> ecrfFieldMap;
@@ -75,7 +75,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	protected ProbandGroupDao probandGroupDao;
 	@Autowired
 	protected InputFieldDao inputFieldDao;
-
 	@Autowired
 	protected TrialService trialService;
 
@@ -117,9 +116,12 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	// public HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>> getEcrfFieldMap() {
 	// return ecrfFieldMap;
 	// }
-
 	private String getComment(String[] values) {
 		return getColumnValue(values, commentColumnIndex);
+	}
+
+	private String getTitle(String[] values) {
+		return getColumnValue(values, titleColumnIndex);
 	}
 
 	private String getDisabled(String[] values) {
@@ -198,9 +200,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private String getNotify(String[] values) {
 		return getColumnValue(values, notifyColumnIndex);
 	}
-
-
-
 	// public HashMap<String, Long> getProbandGroupIdMap() {
 	// return probandGroupIdMap;
 	// }
@@ -209,12 +208,9 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	// return probandGroupIdMap.get(probandGroupToken);
 	//
 	// }
-
 	private String getOptional(String[] values) {
 		return getColumnValue(values, optionalColumnIndex);
 	}
-
-
 
 	private String getPosition(String[] values) {
 		return getColumnValue(values, positionColumnIndex);
@@ -265,6 +261,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		positionColumnIndex = POSITION_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
 		inputFieldNameColumnIndex = INPUT_FIELD_NAME_COLUMN_INDEX;
+		titleColumnIndex = TITLE_COLUMN_INDEX;
 		commentColumnIndex = COMMENT_COLUMN_INDEX;
 		seriesColumnIndex = SERIES_COLUMN_INDEX;
 		optionalColumnIndex = OPTIONAL_COLUMN_INDEX;
@@ -275,7 +272,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		jsValueExpressionColumnIndex = JS_VALUE_EXPRESSION_COLUMN_INDEX;
 		jsOutputExpressionColumnIndex = JS_OUTPUT_EXPRESSION_COLUMN_INDEX;
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
-
 		ecrfFieldMap.clear();
 		probandGroupIdMap.clear();
 		// inputFieldIdMap.clear();
@@ -296,6 +292,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 				.append(getPosition(values))
 				.append(getExternalId(values))
 				.append(getInputFieldName(values))
+				.append(getTitle(values))
 				.append(getComment(values))
 				.append(getSeries(values))
 				.append(getOptional(values))
@@ -306,7 +303,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 				.append(getJsValueExpression(values))
 				.append(getJsOutputExpression(values))
 				.append(getNotify(values))
-
 				.toHashCode();
 	}
 
@@ -338,6 +334,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ecrfFieldIn.setPosition(position);
 		ecrfFieldIn.setExternalId(getExternalId(values));
 		ecrfFieldIn.setFieldId(getInputFieldId(inputFieldName));
+		ecrfFieldIn.setTitle(getTitle(values));
 		ecrfFieldIn.setComment(getComment(values));
 		ecrfFieldIn.setSeries(Boolean.parseBoolean(getSeries(values)));
 		ecrfFieldIn.setOptional(Boolean.parseBoolean(getOptional(values)));
@@ -350,8 +347,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ecrfFieldIn.setJsVariableName(clearJs ? null : getJsVariableName(values));
 		ecrfFieldIn.setJsValueExpression(clearJs ? null : getJsValueExpression(values));
 		ecrfFieldIn.setJsOutputExpression(clearJs ? null : getJsOutputExpression(values));
-		ecrfFieldIn.setNotify(clearJs ? false : Boolean.parseBoolean(getNotify(values)));
-
+		ecrfFieldIn.setNotify(Boolean.parseBoolean(getNotify(values))); //clearJs ? false :
 		Set<ECRFFieldInVO> ecrfFields;
 		HashMap<Long, Set<ECRFFieldInVO>> positionMap;
 		if (ecrfFieldMap.containsKey(probandGroupToken)) {

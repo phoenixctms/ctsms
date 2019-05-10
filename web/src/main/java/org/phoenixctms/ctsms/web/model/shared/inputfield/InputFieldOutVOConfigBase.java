@@ -20,8 +20,8 @@ public abstract class InputFieldOutVOConfigBase extends InputFieldConfig {
 		return inputField == null ? null : inputField.getName();
 	}
 
-	@Override
-	public String getTitle() {
+	// @Override
+	public String getFieldTitle() {
 		InputFieldOutVO inputField = getInputField();
 		return inputField == null ? null : inputField.getTitle();
 	}

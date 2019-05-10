@@ -64,7 +64,6 @@ public class InquiryInputModel extends InputModel {
 				}
 			}
 			// }
-
 		}
 	}
 
@@ -136,7 +135,6 @@ public class InquiryInputModel extends InputModel {
 	public InquiryValueInVO getInquiryValue() {
 		return inquiryValue;
 	}
-
 
 	@Override
 	public String getJsOutputExpression() {
@@ -322,7 +320,6 @@ public class InquiryInputModel extends InputModel {
 	// return true;
 	// // return inquiry != null && !WebUtil.isTrialLocked(inquiry.getTrial());
 	// }
-
 	@Override
 	public boolean isDummy() {
 		return false;
@@ -457,7 +454,6 @@ public class InquiryInputModel extends InputModel {
 
 	@Override
 	public void setReasonForChange(String reasonForChange) {
-
 	}
 
 	@Override
@@ -541,6 +537,14 @@ public class InquiryInputModel extends InputModel {
 			} catch (IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			}
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputTitle() {
+		if (inquiry != null) {
+			return inquiry.getTitle();
 		}
 		return null;
 	}

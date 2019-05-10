@@ -146,6 +146,15 @@
 							</ui:include>
 						</p:column>
 						<p:column
+							sortBy="#{ecrfField.vo.title}"
+							filterBy="#{ecrfField.vo.title}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_title_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{ecrfField.vo.title}" />
+						</p:column>
+						<p:column
 							sortBy="#{ecrfField.vo.jsVariableName}"
 							filterBy="#{ecrfField.vo.jsVariableName}">
 							<f:facet name="header">
@@ -696,6 +705,10 @@
 										onclick="openNewInputField()" />
 								</h:panelGrid>
 								<p:message for="ecrfFieldInputField" />
+								
+								
+																
+								
 								<h:outputLabel
 									for="ecrfFieldSeries"
 									value="#{triallabels.ecrffield_series_label}" />
@@ -731,6 +744,32 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldPosition" />
+								
+								
+								
+															<h:outputLabel
+									for="ecrfFieldTitle"
+									value="#{triallabels.ecrffield_title_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="ecrfFieldTitle"
+										value="#{ecrfFieldBean.in.title}"
+										required="false"
+										label="#{triallabels.ecrffield_title}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfFieldTitle">
+										<h:outputText
+											value="#{triallabels.ecrffield_title_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfFieldTitle" />	
+								
+								
+								
 								<h:outputLabel
 									for="ecrfFieldOptional"
 									value="#{triallabels.ecrffield_optional_label}" />
@@ -802,26 +841,7 @@
 								</h:panelGroup>
 								<p:message for="ecrfFieldReasonForChangeRequired" />
 								
-							<h:outputLabel
-									for="ecrfFieldExternalId"
-									value="#{triallabels.ecrffield_externalid_label}" />
-								<h:panelGroup>
-									<p:inputText
-										id="ecrfFieldExternalId"
-										value="#{ecrfFieldBean.in.externalId}"
-										required="false"
-										label="#{triallabels.ecrffield_externalid}"
-										styleClass="ctsms-control">
-									</p:inputText>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldExternalId">
-										<h:outputText
-											value="#{triallabels.ecrffield_externalid_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="ecrfFieldExternalId" />								
+							
 
 								<h:outputLabel
 									for="jsVariableName"
@@ -842,6 +862,29 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="jsVariableName" />
+								
+								
+															<h:outputLabel
+									for="ecrfFieldExternalId"
+									value="#{triallabels.ecrffield_externalid_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="ecrfFieldExternalId"
+										value="#{ecrfFieldBean.in.externalId}"
+										required="false"
+										label="#{triallabels.ecrffield_externalid}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ecrfFieldExternalId">
+										<h:outputText
+											value="#{triallabels.ecrffield_externalid_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfFieldExternalId" />	
+								
 								
 								<h:outputLabel
 									for="ecrfFieldNotify"

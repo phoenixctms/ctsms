@@ -51,6 +51,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setCategory(out.getCategory());
 			in.setDisabled(out.getDisabled());
 			in.setFieldId(fieldVO == null ? null : fieldVO.getId());
+			in.setTitle(out.getTitle());
 			in.setId(out.getId());
 			in.setOptional(out.getOptional());
 			in.setExcelValue(out.getExcelValue());
@@ -84,6 +85,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setCategory(category);
 			in.setDisabled(Settings.getBoolean(SettingCodes.INQUIRY_DISABLED_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_DISABLED_PRESET));
 			in.setFieldId(null);
+			in.setTitle(Messages.getString(MessageCodes.INQUIRY_TITLE_PRESET));
 			in.setId(null);
 			in.setOptional(Settings.getBoolean(SettingCodes.INQUIRY_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_OPTIONAL_PRESET));
 			in.setExcelValue(Settings.getBoolean(SettingCodes.INQUIRY_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXCEL_PRESET));
@@ -108,7 +110,6 @@ public class InquiryBean extends ManagedBeanBase {
 	private String bulkAddCategory;
 	private boolean bulkAddOptional;
 	private boolean bulkAddExcel;
-
 	private String deferredDeleteReason;
 
 	public InquiryBean() {
@@ -118,8 +119,7 @@ public class InquiryBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InquiryInVO backup = new InquiryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -152,8 +152,7 @@ public class InquiryBean extends ManagedBeanBase {
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+	public String addBulkAction() {
 		try {
 			if (bulkAddCategory != null && bulkAddCategory.length() > 0) {
 				Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
@@ -255,6 +254,7 @@ public class InquiryBean extends ManagedBeanBase {
 	public String getBulkAddCategory() {
 		return bulkAddCategory;
 	}
+
 	private List<String> getCompleteCategoryList(String query) {
 		Collection<String> categories = null;
 		if (in.getTrialId() != null) {
@@ -333,7 +333,6 @@ public class InquiryBean extends ManagedBeanBase {
 	public void handleBulkAddCategorySelect(SelectEvent event) {
 		bulkAddCategory = (String) event.getObject();
 	}
-
 
 	public void handleCategorySelect(SelectEvent event) {
 		in.setCategory((String) event.getObject());

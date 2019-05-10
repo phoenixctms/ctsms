@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable.xls;
 
-
 import java.io.FileInputStream;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class InputFieldRowProcessor extends RowProcessor {
 
 	private final static String SHEET_NAME = "inputfields";
-
 	private final static int NAME_COLUMN_INDEX = 0;
 	private final static int TITLE_COLUMN_INDEX = 1;
 	private final static int LOCALIZED_COLUMN_INDEX = 2;
@@ -38,7 +36,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int DATE_PRESET_COLUMN_INDEX = 7;
 	private final static int TIME_PRESET_COLUMN_INDEX = 7;
 	private final static int TIMESTAMP_PRESET_COLUMN_INDEX = 7;
-
 	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 8;
 	private final static int REGEXP_COLUMN_INDEX = 9;
 	private final static int LEARN_COLUMN_INDEX = 9;
@@ -59,7 +56,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int WIDTH_COLUMN_INDEX = 11;
 	private final static int HEIGHT_COLUMN_INDEX = 12;
 	private final static int FILE_NAME_COLUMN_INDEX = 13;
-
 	private int nameColumnIndex;
 	private int titleColumnIndex;
 	private int localizedColumnIndex;
@@ -94,12 +90,10 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private int widthColumnIndex;
 	private int heightColumnIndex;
 	private int fileNameColumnIndex;
-
 	private String dateTimePattern;
 	private String datePattern;
 	private String timePattern;
 	private FilePathSplitter filePath;
-
 	@Autowired
 	protected InputFieldDao inputFieldDao;
 	@Autowired
@@ -113,11 +107,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 	}
-
 	// public AuthenticationVO getAuth() {
 	// return auth;
 	// }
-
 
 	private String getBooleanPreset(String[] values) {
 		return getColumnValue(values, booleanPresetColumnIndex);
@@ -256,12 +248,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, validationErrorMsgColumnIndex);
 	}
 
-
 	private String getWidth(String[] values) {
 		return getColumnValue(values, widthColumnIndex);
 	}
-
-
 
 	@Override
 	public void init() throws Throwable {
@@ -347,8 +336,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 				.toHashCode();
 	}
 
-	private void loadFile(InputFieldInVO inputFieldIn,String fileName) throws Throwable {
-
+	private void loadFile(InputFieldInVO inputFieldIn, String fileName) throws Throwable {
 		try {
 			long fileId = Long.parseLong(fileName);
 			FileContentOutVO file = fileService.getFileContent(context.getAuth(), fileId);
@@ -363,18 +351,15 @@ public class InputFieldRowProcessor extends RowProcessor {
 			inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
 			inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
 		}
-
-		//		try {
+		// try {
 		//
-		//		} finally {
+		// } finally {
 		//
-		//		}
-
+		// }
 	}
 
 	@Override
 	protected void postProcess() {
-
 	}
 
 	@Override
@@ -440,9 +425,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setMinSelections(CommonUtil.isEmptyString(getMinSelections(values)) ? null : Integer.parseInt(getMinSelections(values)));
 				inputFieldIn.setMaxSelections(CommonUtil.isEmptyString(getMaxSelections(values)) ? null : Integer.parseInt(getMaxSelections(values)));
 				break;
-				// case SELECT_ONE_DROPDOWN:
-				// case SELECT_ONE_RADIO_H:
-				// case SELECT_ONE_RADIO_V:
+			// case SELECT_ONE_DROPDOWN:
+			// case SELECT_ONE_RADIO_H:
+			// case SELECT_ONE_RADIO_V:
 			default:
 				break;
 		}

@@ -15,11 +15,9 @@ import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.terracotta.agent.repkg.de.schlichtherle.io.FileOutputStream;
 
-
 public class InputFieldRowWriter extends RowWriter {
 
 	private final static String SHEET_NAME = "inputfields";
-
 	private final static int NAME_COLUMN_INDEX = 0;
 	private final static int TITLE_COLUMN_INDEX = 1;
 	private final static int LOCALIZED_COLUMN_INDEX = 2;
@@ -111,7 +109,6 @@ public class InputFieldRowWriter extends RowWriter {
 	@Override
 	public void init() {
 		super.init();
-
 		maxColumnIndex = 0;
 		nameColumnIndex = NAME_COLUMN_INDEX;
 		maxColumnIndex = Math.max(nameColumnIndex, maxColumnIndex);
@@ -185,7 +182,6 @@ public class InputFieldRowWriter extends RowWriter {
 		datePattern = ExecSettings.getString(ExecSettingCodes.DATE_PATTERN, ExecDefaultSettings.DATE_PATTERN);
 		timePattern = ExecSettings.getString(ExecSettingCodes.TIME_PATTERN, ExecDefaultSettings.TIME_PATTERN);
 		filePath = new FilePathSplitter(context.getFileName());
-
 		context.getExporter().getSelectionSetValueRowWriter().init();
 		context.getSpreadSheet(this);
 	}
@@ -197,7 +193,6 @@ public class InputFieldRowWriter extends RowWriter {
 
 	public void printRows(InputFieldOutVO inputField) throws Throwable {
 		String[] values = new String[maxColumnIndex + 1];
-
 		values[nameColumnIndex] = inputField.getNameL10nKey();
 		values[titleColumnIndex] = inputField.getTitleL10nKey();
 		values[localizedColumnIndex] = Boolean.toString(inputField.getLocalized());
@@ -205,7 +200,6 @@ public class InputFieldRowWriter extends RowWriter {
 		values[externalIdColumnIndex] = inputField.getExternalId();
 		InputFieldType fieldType = inputField.getFieldType().getType();
 		values[fieldTypeColumnIndex] = fieldType.name();
-
 		switch (fieldType) {
 			case SINGLE_LINE_TEXT:
 			case MULTI_LINE_TEXT:
@@ -223,8 +217,8 @@ public class InputFieldRowWriter extends RowWriter {
 				break;
 			case INTEGER:
 				values[longPresetColumnIndex] = (inputField.getLongPreset() != null ? Long.toString(inputField.getLongPreset()) : null);
-				values[longLowerLimitColumnIndex] =(inputField.getLongLowerLimit() != null ?  Long.toString(inputField.getLongLowerLimit()) : null);
-				values[longUpperLimitColumnIndex] =(inputField.getLongUpperLimit() != null ?  Long.toString(inputField.getLongUpperLimit()) : null);
+				values[longLowerLimitColumnIndex] = (inputField.getLongLowerLimit() != null ? Long.toString(inputField.getLongLowerLimit()) : null);
+				values[longUpperLimitColumnIndex] = (inputField.getLongUpperLimit() != null ? Long.toString(inputField.getLongUpperLimit()) : null);
 				break;
 			case FLOAT:
 				values[floatPresetColumnIndex] = (inputField.getFloatPreset() != null ? Float.toString(inputField.getFloatPreset()) : null);
@@ -232,24 +226,24 @@ public class InputFieldRowWriter extends RowWriter {
 				values[floatUpperLimitColumnIndex] = (inputField.getFloatUpperLimit() != null ? Float.toString(inputField.getFloatUpperLimit()) : null);
 				break;
 			case DATE:
-				values[datePresetColumnIndex] = (inputField.getDatePreset() != null ? CommonUtil.formatDate(inputField.getDatePreset(),datePattern) : null);
-				values[minDateColumnIndex] = (inputField.getMinDate() != null ? CommonUtil.formatDate(inputField.getMinDate(),datePattern) : null);
-				values[maxDateColumnIndex] = (inputField.getMaxDate() != null ? CommonUtil.formatDate(inputField.getMaxDate(),datePattern) : null);
+				values[datePresetColumnIndex] = (inputField.getDatePreset() != null ? CommonUtil.formatDate(inputField.getDatePreset(), datePattern) : null);
+				values[minDateColumnIndex] = (inputField.getMinDate() != null ? CommonUtil.formatDate(inputField.getMinDate(), datePattern) : null);
+				values[maxDateColumnIndex] = (inputField.getMaxDate() != null ? CommonUtil.formatDate(inputField.getMaxDate(), datePattern) : null);
 				break;
 			case TIME:
-				values[timePresetColumnIndex] = (inputField.getTimePreset() != null ? CommonUtil.formatDate(inputField.getTimePreset(),timePattern) : null);
-				values[minTimeColumnIndex] = (inputField.getMinTime() != null ? CommonUtil.formatDate(inputField.getMinTime(),timePattern) : null);
-				values[maxTimeColumnIndex] = (inputField.getMaxTime() != null ? CommonUtil.formatDate(inputField.getMaxTime(),timePattern) : null);
+				values[timePresetColumnIndex] = (inputField.getTimePreset() != null ? CommonUtil.formatDate(inputField.getTimePreset(), timePattern) : null);
+				values[minTimeColumnIndex] = (inputField.getMinTime() != null ? CommonUtil.formatDate(inputField.getMinTime(), timePattern) : null);
+				values[maxTimeColumnIndex] = (inputField.getMaxTime() != null ? CommonUtil.formatDate(inputField.getMaxTime(), timePattern) : null);
 				break;
 			case TIMESTAMP:
-				values[timestampPresetColumnIndex] =( inputField.getTimestampPreset() != null ? CommonUtil.formatDate(inputField.getTimestampPreset(),dateTimePattern) : null);
-				values[minTimestampColumnIndex] =( inputField.getMinTimestamp() != null ? CommonUtil.formatDate(inputField.getMinTimestamp(),dateTimePattern) : null);
-				values[maxTimestampColumnIndex] =( inputField.getMaxTimestamp() != null ? CommonUtil.formatDate(inputField.getMaxTimestamp(),dateTimePattern) : null);
+				values[timestampPresetColumnIndex] = (inputField.getTimestampPreset() != null ? CommonUtil.formatDate(inputField.getTimestampPreset(), dateTimePattern) : null);
+				values[minTimestampColumnIndex] = (inputField.getMinTimestamp() != null ? CommonUtil.formatDate(inputField.getMinTimestamp(), dateTimePattern) : null);
+				values[maxTimestampColumnIndex] = (inputField.getMaxTimestamp() != null ? CommonUtil.formatDate(inputField.getMaxTimestamp(), dateTimePattern) : null);
 				values[userTimeZoneIndex] = Boolean.toString(inputField.getUserTimeZone());
 				break;
 			case SKETCH:
 				values[widthColumnIndex] = (inputField.getWidth() != null ? Long.toString(inputField.getWidth()) : null);
-				values[heightColumnIndex] = (inputField.getHeight() != null ? Long.toString(inputField.getHeight()):null);
+				values[heightColumnIndex] = (inputField.getHeight() != null ? Long.toString(inputField.getHeight()) : null);
 				if (inputField.getHasImage()) {
 					values[fileNameColumnIndex] = writeFile(inputField);
 				}
@@ -257,7 +251,7 @@ public class InputFieldRowWriter extends RowWriter {
 			case SELECT_MANY_H:
 			case SELECT_MANY_V:
 				values[minSelectionsColumnIndex] = (inputField.getMinSelections() != null ? Integer.toString(inputField.getMinSelections()) : null);
-				values[maxSelectionsColumnIndex] = (inputField.getMaxSelections() != null ? Integer.toString(inputField.getMaxSelections()):null);
+				values[maxSelectionsColumnIndex] = (inputField.getMaxSelections() != null ? Integer.toString(inputField.getMaxSelections()) : null);
 				// no break
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:
@@ -267,11 +261,9 @@ public class InputFieldRowWriter extends RowWriter {
 			default:
 				break;
 		}
-
 		values[commentColumnIndex] = inputField.getCommentL10nKey();
 		values[validationErrorMsgColumnIndex] = inputField.getValidationErrorMsgL10nKey();
 		printRow(values);
-
 	}
 
 	private String writeFile(InputFieldOutVO inputField) throws Throwable {

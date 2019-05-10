@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.pdf;
 
 import java.text.DecimalFormat;
@@ -27,10 +26,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	public enum BlockType {
 		// NEW_PAGE,
 		// NEW_LIST_ENTRY,
-		PAGE_TITLE,
-		NEW_LIST_ENTRY,
-		INPUT_FIELD,
-
+		PAGE_TITLE, NEW_LIST_ENTRY, INPUT_FIELD,
 		// ECRF_SIGNATURE,
 		// SPACER,
 	}
@@ -55,17 +51,22 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		this.inserted = inserted;
 	}
 
+	@Override
+	protected String getTitleL10nKey() {
+		return value.getTag().getTitleL10nKey();
+	}
+
 	// public EcrfPDFBlock(ProbandListEntryOutVO listEntry) {
 	// super();
 	// this.listEntry = listEntry;
 	// this.type = BlockType.NEW_LIST_ENTRY;
 	// }
-	public ProbandListEntryTagsPDFBlock(ProbandListEntryOutVO listEntry,  Date now, boolean blank) {
+	public ProbandListEntryTagsPDFBlock(ProbandListEntryOutVO listEntry, Date now, boolean blank) {
 		super();
 		this.listEntry = listEntry;
-		//		this.ecrf = ecrf;
-		//		this.statusEntry = statusEntry;
-		//		this.signature = signature;
+		// this.ecrf = ecrf;
+		// this.statusEntry = statusEntry;
+		// this.signature = signature;
 		this.now = now;
 		this.blank = blank;
 		this.type = BlockType.NEW_LIST_ENTRY;
@@ -102,7 +103,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	protected boolean getBooleanValue() {
 		return value.getBooleanValue();
 	}
-
 	// public EcrfPDFBlock(SignatureVO signature) {
 	// super();
 	// this.signature = signature;
@@ -120,7 +120,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	// this.index = index;
 	// this.type = BlockType.NEW_INDEX;
 	// }
-
 	@Override
 	protected String getComment() {
 		return value.getTag().getComment();
@@ -194,7 +193,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	// public Long getIndex() {
 	// return index;
 	// }
-
 	@Override
 	protected String getInputFieldNameLabel(String name, String position) {
 		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_NAME, PDFUtil.DEFAULT_LABEL, name,
@@ -246,8 +244,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected String  getModifiedLabel(String modifiedUser, String modifiedTimestamp) {
-		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.MODIFIED_LABEL, PDFUtil.DEFAULT_LABEL, modifiedUser, modifiedTimestamp);
+	protected String getModifiedLabel(String modifiedUser, String modifiedTimestamp) {
+		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.MODIFIED_LABEL, PDFUtil.DEFAULT_LABEL, modifiedUser,
+				modifiedTimestamp);
 	}
 
 	@Override
@@ -257,7 +256,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 
 	@Override
 	protected SimpleDateFormat getModifiedTimestampFormat() {
-		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
+		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+				ProbandListEntryTagsPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
 	}
 
 	@Override
@@ -268,7 +268,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	// public String getSection() {
 	// return section;
 	// }
-
 	@Override
 	protected float getMultiLineTextMinHeight() {
 		return Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.MULTI_LINE_TEXT_MIN_HEIGHT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -296,7 +295,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	// }
 	// return "";
 	// }
-
 	@Override
 	protected boolean getRenderSketchImages() {
 		return Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -493,16 +491,16 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL,
 								listEntry.getTrial().getName(),
 								Long.toString(listEntry.getProband().getId()), listEntry
-								.getProband()
-								.getInitials(), listEntry.getProband().getName(),
+										.getProband()
+										.getInitials(),
+								listEntry.getProband().getName(),
 								listEntry.getProband().getDateOfBirth() != null ? Settings.getSimpleDateFormat(
 										ProbandListEntryTagsPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 										ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
-										listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
-												listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""
-								),
+								listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
+								listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 						cursor.getBlockX(),
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_TITLE_Y, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.PAGE_TITLE_Y),
@@ -526,9 +524,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 											Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 											ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 											Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
-											listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
-													listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""
-									),
+									listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
+									listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 							cursor.getBlockCenterX(),
 							y,
 							Alignment.TOP_CENTER,
@@ -564,7 +561,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						Alignment.TOP_LEFT,
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height1 = Math.max(
@@ -579,13 +576,13 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 										CommonUtil.getProbandAlias(listEntry.getProband(),
 												L10nUtil.getString(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME,
 														DefaultMessages.NEW_BLINDED_PROBAND_NAME),
-												L10nUtil.getString(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
-												),
+												L10nUtil.getString(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)),
 										listEntry.getProband().getInitials(), listEntry.getProband().getName()),
 								x + getXFrameIndent(),
 								y,
 								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height1);
+								width - getXFrameIndent()),
+						height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL,
@@ -595,7 +592,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						Alignment.TOP_LEFT,
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(
@@ -611,14 +608,14 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 												Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 												ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 												Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
-												listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
-														listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
+										listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
+										listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 								x + getXFrameIndent(),
 								y,
 								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height2);
+								width - getXFrameIndent()),
+						height2);
 				//
-
 				x = cursor.getBlockX();
 				y -= Math.max(height1, height2) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -629,21 +626,21 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						Alignment.TOP_LEFT,
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						blank ? L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFLabelCodes.PROBAND_LIST_ENTRY_LAST_STATUS_TYPE_BLANK,
-								PDFUtil.DEFAULT_LABEL, getStatusTypeName()) :
-									L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF,
-											ProbandListEntryTagsPDFLabelCodes.PROBAND_LIST_ENTRY_LAST_STATUS_TYPE,
-											PDFUtil.DEFAULT_LABEL,
-											getStatusTypeName()),
-									x + getXFrameIndent(),
-									y,
-									Alignment.TOP_LEFT,
-									width - getXFrameIndent()), height1);
+								PDFUtil.DEFAULT_LABEL, getStatusTypeName())
+								: L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF,
+										ProbandListEntryTagsPDFLabelCodes.PROBAND_LIST_ENTRY_LAST_STATUS_TYPE,
+										PDFUtil.DEFAULT_LABEL,
+										getStatusTypeName()),
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.CONTENT_TIMESTAMP_LABEL,
@@ -653,17 +650,18 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						Alignment.TOP_LEFT,
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.CONTENT_TIMESTAMP, PDFUtil.DEFAULT_LABEL,
 								Settings
-								.getSimpleDateFormat(
-										ProbandListEntryTagsPDFSettingCodes.CONTENT_TIMESTAMP_DATETIME_PATTERN,
-										Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-										ProbandListEntryTagsPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
-										Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(now)),
+										.getSimpleDateFormat(
+												ProbandListEntryTagsPDFSettingCodes.CONTENT_TIMESTAMP_DATETIME_PATTERN,
+												Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+												ProbandListEntryTagsPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
+												Locales.PROBAND_LIST_ENTRY_TAGS_PDF)
+										.format(now)),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,
@@ -679,7 +677,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 							Alignment.TOP_LEFT,
 							Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 									ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN1_INDENT)
-							- getXFrameIndent());
+									- getXFrameIndent());
 					x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 							ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
 					height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
@@ -699,7 +697,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 								Alignment.TOP_LEFT,
 								Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 										ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN1_INDENT)
-								- getXFrameIndent());
+										- getXFrameIndent());
 						x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
 						height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
@@ -729,53 +727,52 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 				y -= Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				height = cursor.getBlockY() - y;
-
 				break;
-				// case NEW_CATEGORY:
-				// height = 0.0f;
-				// if (cursor.hasCategory()) {
-				// if (!inserted) {
-				// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-				// height += PDFUtil.renderTextLine(
-				// contentStream,
-				// cursor.getFontB(),
-				// FontSize.BIG,
-				// getTextColor(),
-				// cursor.getCategoryLabel(),
-				// cursor.getBlockX(),
-				// cursor.getBlockY()
-				// - Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-				// Alignment.TOP_LEFT);
-				// }
-				// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-				// }
-				// break;
-				//
-				// case END_OF_CATEGORY:
-				// height = 0.0f;
-				// if (cursor.hasCategory()) {
-				// // PDFUtil.renderFrame(contentStream,
-				// // getFrameColor(),
-				// // cursor.getBlockX(),
-				// // cursor.getSectionY(),
-				// // cursor.getSectionWidth(),
-				// // cursor.getSectionY() - cursor.getBlockY(),
-				// // // + Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-				// // Alignment.TOP_LEFT,
-				// // Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.SECTION_FRAME_LINE_WIDTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.SECTION_FRAME_LINE_WIDTH));
-				// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-				// }
-				// break;
+			// case NEW_CATEGORY:
+			// height = 0.0f;
+			// if (cursor.hasCategory()) {
+			// if (!inserted) {
+			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
+			// height += PDFUtil.renderTextLine(
+			// contentStream,
+			// cursor.getFontB(),
+			// FontSize.BIG,
+			// getTextColor(),
+			// cursor.getCategoryLabel(),
+			// cursor.getBlockX(),
+			// cursor.getBlockY()
+			// - Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
+			// Alignment.TOP_LEFT);
+			// }
+			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
+			// }
+			// break;
+			//
+			// case END_OF_CATEGORY:
+			// height = 0.0f;
+			// if (cursor.hasCategory()) {
+			// // PDFUtil.renderFrame(contentStream,
+			// // getFrameColor(),
+			// // cursor.getBlockX(),
+			// // cursor.getSectionY(),
+			// // cursor.getSectionWidth(),
+			// // cursor.getSectionY() - cursor.getBlockY(),
+			// // // + Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
+			// // Alignment.TOP_LEFT,
+			// // Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.SECTION_FRAME_LINE_WIDTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.SECTION_FRAME_LINE_WIDTH));
+			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
+			// }
+			// break;
 			case INPUT_FIELD:
 				height = renderInputFieldBlock(contentStream, cursor) +
-				Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-						ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
+						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+								ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				break;
 			default:
 				height = 0.0f;

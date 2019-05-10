@@ -10,7 +10,6 @@ public abstract class InputFieldConfig {
 
 	public abstract String getFieldComment();
 
-
 	public abstract String getName();
 
 	public abstract String getTitle();

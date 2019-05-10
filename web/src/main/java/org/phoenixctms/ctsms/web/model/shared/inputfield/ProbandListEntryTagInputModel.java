@@ -64,7 +64,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				}
 			}
 			// }
-
 		}
 	}
 
@@ -116,8 +115,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 		}
 		return "";
 	}
-
-
 
 	@Override
 	public String getJsVariableName() {
@@ -290,7 +287,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	// return true;
 	// // return tag != null && !WebUtil.isTrialLocked(tag.getTrial());
 	// }
-
 	@Override
 	public boolean isDummy() {
 		return false;
@@ -413,7 +409,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 
 	@Override
 	public void setReasonForChange(String reasonForChange) {
-
 	}
 
 	@Override
@@ -509,6 +504,14 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 			} catch (IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			}
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputTitle() {
+		if (tag != null) {
+			return tag.getTitle();
 		}
 		return null;
 	}

@@ -53,6 +53,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setDisabled(out.getDisabled());
 			in.setSeries(out.getSeries());
 			in.setFieldId(fieldVO == null ? null : fieldVO.getId());
+			in.setTitle(out.getTitle());
 			in.setId(out.getId());
 			in.setOptional(out.getOptional());
 			in.setAuditTrail(out.getAuditTrail());
@@ -89,6 +90,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setSeries(Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET));
 			in.setDisabled(Settings.getBoolean(SettingCodes.ECRF_FIELD_DISABLED_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_DISABLED_PRESET));
 			in.setFieldId(null);
+			in.setTitle(Messages.getString(MessageCodes.ECRF_FIELD_TITLE_PRESET));
 			in.setId(null);
 			in.setOptional(Settings.getBoolean(SettingCodes.ECRF_FIELD_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_OPTIONAL_PRESET));
 			in.setAuditTrail(Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET));
@@ -128,7 +130,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	// private boolean bulkAddNotify;
 	private String oldSection;
 	private String newSection;
-
 	private String deferredDeleteReason;
 
 	public EcrfFieldBean() {
@@ -139,8 +140,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ECRFFieldInVO backup = new ECRFFieldInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -173,7 +173,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public final void addBulk() {
 		actionPostProcess(addBulkAction());
 	}
-
 
 	public String addBulkAction() {
 		try {
@@ -316,6 +315,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
 	}
+
 	public String getEcrfFieldListHeader() {
 		if (trial != null) {
 			if (ecrf == null) {
@@ -511,8 +511,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return bulkAddAuditTrail;
 	}
 
-
-
 	public boolean isBulkAddOptional() {
 		return bulkAddOptional;
 	}
@@ -696,16 +694,14 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		if (!in.getAuditTrail()) {
 			in.setReasonForChangeRequired(false);
 		}
-		//		if (CommonUtil.isEmptyString(in.getJsVariableName()) {
-		//			in.setNotify(false);
-		//		}
+		// if (CommonUtil.isEmptyString(in.getJsVariableName()) {
+		// in.setNotify(false);
+		// }
 	}
 
 	public void setBulkAddAuditTrail(boolean bulkAddAuditTrail) {
 		this.bulkAddAuditTrail = bulkAddAuditTrail;
 	}
-
-
 
 	public void setBulkAddOptional(boolean bulkAddOptional) {
 		this.bulkAddOptional = bulkAddOptional;
@@ -780,8 +776,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		actionPostProcess(updateSectionsAction());
 	}
 
-	public String updateSectionsAction()
-	{
+	public String updateSectionsAction() {
 		try {
 			if (oldSection == null || oldSection.length() == 0) {
 				Messages.addLocalizedMessageClientId("updateSectionsMessages", FacesMessage.SEVERITY_ERROR, MessageCodes.UPDATE_ECRF_FIELD_SECTIONS_OLD_SECTION_REQUIRED);

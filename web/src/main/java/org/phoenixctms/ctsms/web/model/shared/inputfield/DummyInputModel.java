@@ -59,7 +59,6 @@ public final class DummyInputModel extends InputModel {
 				}
 			}
 			// }
-
 		}
 	}
 
@@ -85,7 +84,7 @@ public final class DummyInputModel extends InputModel {
 
 	@Override
 	public Color getFieldColor() {
-		//return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR));
+		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR));
 		return Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR);
 	}
 
@@ -107,7 +106,6 @@ public final class DummyInputModel extends InputModel {
 	public String getJsOutputExpression() {
 		return null;
 	}
-
 
 	@Override
 	public String getJsValueExpression() {
@@ -328,7 +326,6 @@ public final class DummyInputModel extends InputModel {
 
 	@Override
 	public void setReasonForChange(String reasonForChange) {
-
 	}
 
 	@Override
@@ -388,6 +385,11 @@ public final class DummyInputModel extends InputModel {
 
 	@Override
 	public Object update() {
+		return null;
+	}
+
+	@Override
+	protected String getInputTitle() {
 		return null;
 	}
 }

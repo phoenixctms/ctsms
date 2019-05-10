@@ -1890,7 +1890,7 @@ public final class ServiceUtil {
 		InputFieldOutVO inputField = ecrfFieldVO.getField();
 		if (locale != null && inputField.getLocalized()) {
 			InputFieldOutVO localizedInputField = new InputFieldOutVO();
-			localizedInputField.copy(localizedInputField);
+			localizedInputField.copy(inputField);
 			if (!InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
 				localizedInputField.setTextPreset(L10nUtil.getInputFieldTextPreset(locale, localizedInputField.getTextPresetL10nKey()));
 			}
@@ -1899,6 +1899,11 @@ public final class ServiceUtil {
 			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
+			ECRFFieldOutVO localizedEcrfFieldVO = new ECRFFieldOutVO();
+			localizedEcrfFieldVO.copy(ecrfFieldVO);
+			localizedEcrfFieldVO.setField(localizedInputField);
+			localizedEcrfFieldVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedEcrfFieldVO.getTitleL10nKey()));
+			ecrfFieldVO = localizedEcrfFieldVO;
 		}
 		ecrfFieldValueVO.setEcrfField(ecrfFieldVO);
 		ecrfFieldValueVO.setListEntry(listEntryVO);
@@ -2038,7 +2043,7 @@ public final class ServiceUtil {
 		InputFieldOutVO inputField = inquiryVO.getField();
 		if (locale != null && inputField.getLocalized()) {
 			InputFieldOutVO localizedInputField = new InputFieldOutVO();
-			localizedInputField.copy(localizedInputField);
+			localizedInputField.copy(inputField);
 			if (!InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
 				localizedInputField.setTextPreset(L10nUtil.getInputFieldTextPreset(locale, localizedInputField.getTextPresetL10nKey()));
 			}
@@ -2047,6 +2052,11 @@ public final class ServiceUtil {
 			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
+			InquiryOutVO localizedInquiryVO = new InquiryOutVO();
+			localizedInquiryVO.copy(inquiryVO);
+			localizedInquiryVO.setField(localizedInputField);
+			localizedInquiryVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedInquiryVO.getTitleL10nKey()));
+			inquiryVO = localizedInquiryVO;
 		}
 		inquiryValueVO.setInquiry(inquiryVO);
 		inquiryValueVO.setProband(probandVO);
@@ -2164,7 +2174,7 @@ public final class ServiceUtil {
 		InputFieldOutVO inputField = listEntryTagVO.getField();
 		if (locale != null && inputField.getLocalized()) {
 			InputFieldOutVO localizedInputField = new InputFieldOutVO();
-			localizedInputField.copy(localizedInputField);
+			localizedInputField.copy(inputField);
 			if (!InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType().getType())) {
 				localizedInputField.setTextPreset(L10nUtil.getInputFieldTextPreset(locale, localizedInputField.getTextPresetL10nKey()));
 			}
@@ -2173,6 +2183,11 @@ public final class ServiceUtil {
 			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
+			ProbandListEntryTagOutVO localizedListEntryTagVO = new ProbandListEntryTagOutVO();
+			localizedListEntryTagVO.copy(listEntryTagVO);
+			localizedListEntryTagVO.setField(localizedInputField);
+			localizedListEntryTagVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedListEntryTagVO.getTitleL10nKey()));
+			listEntryTagVO = localizedListEntryTagVO;
 		}
 		listEntryTagValueVO.setTag(listEntryTagVO);
 		listEntryTagValueVO.setListEntry(probandListEntryVO);

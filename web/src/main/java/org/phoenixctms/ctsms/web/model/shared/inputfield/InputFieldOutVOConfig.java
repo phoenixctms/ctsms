@@ -21,4 +21,9 @@ public final class InputFieldOutVOConfig extends InputFieldOutVOConfigBase {
 	public void setInputField(InputFieldOutVO inputField) {
 		this.inputField = inputField;
 	}
+
+	@Override
+	public String getTitle() {
+		return super.getFieldTitle();
+	}
 }

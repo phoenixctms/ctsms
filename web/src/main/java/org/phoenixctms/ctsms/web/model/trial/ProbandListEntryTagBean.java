@@ -44,6 +44,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			TrialOutVO trialVO = out.getTrial();
 			in.setDisabled(out.getDisabled());
 			in.setFieldId(fieldVO == null ? null : fieldVO.getId());
+			in.setTitle(out.getTitle());
 			in.setId(out.getId());
 			in.setOptional(out.getOptional());
 			in.setExcelValue(out.getExcelValue());
@@ -77,6 +78,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			}
 			in.setDisabled(Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_DISABLED_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_DISABLED_PRESET));
 			in.setFieldId(null);
+			in.setTitle(Messages.getString(MessageCodes.PROBAND_LIST_ENTRY_TAG_TITLE_PRESET));
 			in.setId(null);
 			in.setOptional(Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET));
 			in.setExcelValue(Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET));
@@ -116,8 +118,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandListEntryTagInVO backup = new ProbandListEntryTagInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -150,8 +151,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+	public String addBulkAction() {
 		try {
 			Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryTagOutVO> it = WebUtil.getServiceLocator().getTrialService()
@@ -512,8 +512,6 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	public void setBulkAddOptional(boolean bulkAddOptional) {
 		this.bulkAddOptional = bulkAddOptional;
 	}
-
-
 
 	public void setBulkAddRandomize(boolean bulkAddRandomize) {
 		this.bulkAddRandomize = bulkAddRandomize;

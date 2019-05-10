@@ -205,6 +205,7 @@ public interface MessageCodes {
 	public static final String DUTY_ROSTER_TURN_TITLE_PRESET = "duty_roster_turn_title_preset";
 	public static final String DUTY_ROSTER_TURN_CALENDAR_PRESET = "duty_roster_turn_calendar_preset";
 	public static final String PROBAND_LIST_ENTRY_TAG_COMMENT_PRESET = "proband_list_entry_tag_comment_preset";
+	public static final String PROBAND_LIST_ENTRY_TAG_TITLE_PRESET = "proband_list_entry_tag_title_preset";
 	public static final String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_PRESET = "proband_list_entry_tag_js_variable_name_preset";
 	public static final String PROBAND_LIST_ENTRY_TAG_JS_VALUE_EXPRESSION_PRESET = "proband_list_entry_tag_js_value_expression_preset";
 	public static final String PROBAND_LIST_ENTRY_TAG_JS_OUTPUT_EXPRESSION_PRESET = "proband_list_entry_tag_js_output_expression_preset";
@@ -212,6 +213,7 @@ public interface MessageCodes {
 	public static final String INQUIRY_CATEGORY_PRESET = "inquiry_category_preset";
 	public static final String ECRF_FIELD_SECTION_PRESET = "ecrf_field_section_preset";
 	public static final String INQUIRY_COMMENT_PRESET = "inquiry_comment_preset";
+	public static final String INQUIRY_TITLE_PRESET = "inquiry_title_preset";
 	public static final String INQUIRY_JS_VARIABLE_NAME_PRESET = "inquiry_js_variable_name_preset";
 	public static final String INQUIRY_JS_VALUE_EXPRESSION_PRESET = "inquiry_js_value_expression_preset";
 	public static final String INQUIRY_JS_OUTPUT_EXPRESSION_PRESET = "inquiry_js_output_expression_preset";
@@ -220,6 +222,7 @@ public interface MessageCodes {
 	public final static String ECRF_TITLE_PRESET = "ecrf_title_preset";
 	public final static String ECRF_EXTERNAL_ID_PRESET = "ecrf_external_id_preset";
 	public final static String ECRF_FIELD_COMMENT_PRESET = "ecrf_field_comment_preset";
+	public final static String ECRF_FIELD_TITLE_PRESET = "ecrf_field_title_preset";
 	public final static String ECRF_FIELD_STATUS_ENTRY_TITLE = "ecrf_field_status_entry_title";
 	public final static String ECRF_FIELD_STATUS_ENTRY_TAB_TITLE = "ecrf_field_status_entry_tab_title";
 	public final static String ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT = "ecrf_field_status_entry_tab_title_with_count";
@@ -779,6 +782,7 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_CATEGORY = "criterion_item_tip_input_field_category";
 	public static final String CRITERION_ITEM_TIP_INQUIRY_CATEGORY = "criterion_item_tip_inquiry_category";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_NAME = "criterion_item_tip_input_field_name";
+	public static final String CRITERION_ITEM_TIP_TITLE = "criterion_item_tip_title";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID = "criterion_item_tip_input_field_external_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_DIMDI_ID = "criterion_item_tip_ops_code_dimdi_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_FIRST_CODE = "criterion_item_tip_ops_code_first_code";

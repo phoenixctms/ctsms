@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.web.conversion;
-
 
 import java.util.LinkedHashMap;
 
@@ -34,6 +32,9 @@ public class EcrfFieldConverter extends IDVOConverter {
 				details.put(MessageCodes.CRITERION_ITEM_TIP_ECRF_FIELD_EXTERNAL_ID, ecrfField.getExternalId());
 			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_NAME, ecrfField.getField().getName());
+			if (!CommonUtil.isEmptyString(ecrfField.getTitle())) {
+				details.put(MessageCodes.CRITERION_ITEM_TIP_TITLE, ecrfField.getTitle());
+			}
 			details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_TYPE, ecrfField.getField().getFieldType().getName());
 			if (!CommonUtil.isEmptyString(ecrfField.getField().getExternalId())) {
 				details.put(MessageCodes.CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID, ecrfField.getField().getExternalId());

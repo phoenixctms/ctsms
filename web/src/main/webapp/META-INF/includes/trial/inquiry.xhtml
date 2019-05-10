@@ -83,6 +83,15 @@
 							</ui:include>
 						</p:column>
 						<p:column
+							sortBy="#{inquiry.vo.title}"
+							filterBy="#{inquiry.vo.title}">
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.inquiry_inquiry_list_title_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{inquiry.vo.title}" />
+						</p:column>						
+						<p:column
 							sortBy="#{inquiry.vo.jsVariableName}"
 							filterBy="#{inquiry.vo.jsVariableName}">
 							<f:facet name="header">
@@ -491,23 +500,23 @@
 								</h:panelGrid>
 								<p:message for="inquiryField" />
 								
-								<h:outputLabel
-									for="inquiryActive"
-									value="#{triallabels.inquiry_active_label}" />
+								
+																<h:outputLabel
+									for="inquiryDisabled"
+									value="#{triallabels.inquiry_disabled_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox
-										id="inquiryActive"
-										value="#{inquiryBean.in.active}" />
+										id="inquiryDisabled"
+										value="#{inquiryBean.in.disabled}" />
 									<p:tooltip
 										rendered="#{enableTooltips}"
-										for="inquiryActive">
+										for="inquiryDisabled">
 										<h:outputText
-											value="#{triallabels.inquiry_active_tooltip}"
+											value="#{triallabels.inquiry_disabled_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="inquiryActive" />
-								
+								<p:message for="inquiryDisabled" />
 							
 
 								<h:outputLabel
@@ -531,7 +540,26 @@
 								<p:message for="inquiryPosition" />
 
 
-
+								<h:outputLabel
+									for="inquiryTitle"
+									value="#{triallabels.inquiry_title_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="inquiryTitle"
+										value="#{inquiryBean.in.title}"
+										required="false"
+										label="#{triallabels.inquiry_title}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inquiryTitle">
+										<h:outputText
+											value="#{triallabels.inquiry_title_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="inquiryTitle" />
 
 								
 								<h:outputLabel
@@ -552,40 +580,9 @@
 								<p:message for="inquiryOptional" />								
 
 
-								<h:outputLabel
-									for="inquiryActiveSignup"
-									value="#{triallabels.inquiry_active_signup_label}" />
-								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryActiveSignup"
-										value="#{inquiryBean.in.activeSignup}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryActiveSignup">
-										<h:outputText
-											value="#{triallabels.inquiry_active_signup_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="inquiryActiveSignup" />	
 
-								
-								<h:outputLabel
-									for="inquiryDisabled"
-									value="#{triallabels.inquiry_disabled_label}" />
-								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryDisabled"
-										value="#{inquiryBean.in.disabled}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryDisabled">
-										<h:outputText
-											value="#{triallabels.inquiry_disabled_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="inquiryDisabled" />
+							
+
 								
 
 								<h:outputLabel
@@ -621,6 +618,25 @@
 								</h:panelGroup>
 								<p:message for="inquiryExcelDate" />
 								
+
+								<h:outputLabel
+									for="inquiryActive"
+									value="#{triallabels.inquiry_active_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="inquiryActive"
+										value="#{inquiryBean.in.active}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inquiryActive">
+										<h:outputText
+											value="#{triallabels.inquiry_active_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="inquiryActive" />
+
+								
 								
 
 								<h:outputLabel
@@ -642,6 +658,26 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="jsVariableName" />
+								
+								
+								
+								<h:outputLabel
+									for="inquiryActiveSignup"
+									value="#{triallabels.inquiry_active_signup_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="inquiryActiveSignup"
+										value="#{inquiryBean.in.activeSignup}" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inquiryActiveSignup">
+										<h:outputText
+											value="#{triallabels.inquiry_active_signup_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="inquiryActiveSignup" />
+								
 
 							</h:panelGrid>
 													<p:fieldset

@@ -39,7 +39,6 @@ public class EcrfFieldInputModel extends InputModel {
 	protected ECRFFieldValueInVO ecrfFieldValue;
 	protected ECRFFieldOutVO ecrfField;
 	private String modifiedAnnotation;
-
 	// private long unresolvedEcrfFieldStatusCountSum;
 	private boolean unlockValue;
 	private Color fieldColor;
@@ -66,8 +65,9 @@ public class EcrfFieldInputModel extends InputModel {
 			ecrfFieldValue.setLongValue(inputField.getLongPreset());
 			ecrfFieldValue.setTimestampValue(inputField.getTimestampPreset());
 			ecrfFieldValue.setInkValues(null);
-			ecrfFieldValue.setReasonForChange(ecrfFieldValue.getId() == null || !ecrfField.getAuditTrail() ? null : Messages
-					.getString(MessageCodes.ECRF_FIELD_VALUE_REASON_FOR_CHANGE_PRESET));
+			ecrfFieldValue.setReasonForChange(ecrfFieldValue.getId() == null || !ecrfField.getAuditTrail() ? null
+					: Messages
+							.getString(MessageCodes.ECRF_FIELD_VALUE_REASON_FOR_CHANGE_PRESET));
 			ecrfFieldValue.getSelectionValueIds().clear();
 			// if (isAutocomplete()) {
 			// ecrfFieldValue.setTextValue(autoCompletePresetValue);
@@ -83,7 +83,6 @@ public class EcrfFieldInputModel extends InputModel {
 			// }
 		}
 	}
-
 
 	@Override
 	protected Object check() {
@@ -148,8 +147,6 @@ public class EcrfFieldInputModel extends InputModel {
 		}
 		return "";
 	}
-
-
 
 	@Override
 	public String getJsVariableName() {
@@ -239,8 +236,10 @@ public class EcrfFieldInputModel extends InputModel {
 	@Override
 	public String getStatusComment() {
 		return lastUnresolvedFieldStatusEntry != null && !CommonUtil.isEmptyString(lastUnresolvedFieldStatusEntry.getComment())
-				&& Settings.getBoolean(SettingCodes.SHOW_LAST_UNRESOLVED_FIELD_STATUS, Bundle.SETTINGS, DefaultSettings.SHOW_LAST_UNRESOLVED_FIELD_STATUS) ?
-						Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_STATUS_COMMENT, lastUnresolvedFieldStatusEntry.getStatus().getName(), lastUnresolvedFieldStatusEntry.getComment()) : null;
+				&& Settings.getBoolean(SettingCodes.SHOW_LAST_UNRESOLVED_FIELD_STATUS, Bundle.SETTINGS, DefaultSettings.SHOW_LAST_UNRESOLVED_FIELD_STATUS)
+						? Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_STATUS_COMMENT, lastUnresolvedFieldStatusEntry.getStatus().getName(),
+								lastUnresolvedFieldStatusEntry.getComment())
+						: null;
 	}
 
 	@Override
@@ -323,7 +322,6 @@ public class EcrfFieldInputModel extends InputModel {
 		}
 		return false;
 	}
-
 	// @Override
 	// public boolean isEditable() {
 	// if (ecrfField != null) {
@@ -333,7 +331,6 @@ public class EcrfFieldInputModel extends InputModel {
 	// // return true;
 	// // return ecrfField != null && !WebUtil.isTrialLocked(ecrfField.getTrial()); // todo: add ecrf lock check..
 	// }
-
 
 	@Override
 	public boolean isDummy() {
@@ -378,7 +375,6 @@ public class EcrfFieldInputModel extends InputModel {
 	// // return isAuditTrail();
 	// // }
 	// }
-
 	@Override
 	public boolean isShowToolbar() {
 		return true;
@@ -498,8 +494,6 @@ public class EcrfFieldInputModel extends InputModel {
 	}
 
 	public void setLastFieldStatus(ECRFFieldValueOutVO out) {
-
-
 		unlockValue = false;
 		fieldColor = null;
 		lastUnresolvedFieldStatusEntry = null;
@@ -544,7 +538,6 @@ public class EcrfFieldInputModel extends InputModel {
 				fieldColor = resolvedColor;
 			}
 		}
-
 	}
 
 	@Override
@@ -696,6 +689,14 @@ public class EcrfFieldInputModel extends InputModel {
 			} catch (IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			}
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputTitle() {
+		if (ecrfField != null) {
+			return ecrfField.getTitle();
 		}
 		return null;
 	}

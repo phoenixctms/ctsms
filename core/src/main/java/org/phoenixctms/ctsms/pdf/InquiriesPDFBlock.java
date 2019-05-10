@@ -27,9 +27,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	public enum BlockType {
 		// NEW_PAGE,
 		// NEW_LIST_ENTRY,
-		PAGE_TITLE,
-		NEW_PROBAND_TRIAL,
-		NEW_CATEGORY,
+		PAGE_TITLE, NEW_PROBAND_TRIAL, NEW_CATEGORY,
 		// NEW_INDEX,
 		INPUT_FIELD,
 		// END_OF_INDEX,
@@ -54,6 +52,11 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		super();
 		this.type = type;
 		this.inserted = inserted;
+	}
+
+	@Override
+	protected String getTitleL10nKey() {
+		return value.getInquiry().getTitleL10nKey();
 	}
 
 	public InquiriesPDFBlock(InquiriesPDFBlock block, BlockType type, boolean inserted) {
@@ -232,7 +235,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected String  getModifiedLabel(String modifiedUser, String modifiedTimestamp) {
+	protected String getModifiedLabel(String modifiedUser, String modifiedTimestamp) {
 		return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.MODIFIED_LABEL, PDFUtil.DEFAULT_LABEL, modifiedUser, modifiedTimestamp);
 	}
 
@@ -243,7 +246,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 
 	@Override
 	protected SimpleDateFormat getModifiedTimestampFormat() {
-		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.INQUIRIES_PDF);
+		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN,
+				Locales.INQUIRIES_PDF);
 	}
 
 	@Override
@@ -476,10 +480,10 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 										InquiriesPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Bundle.INQUIRIES_PDF,
 										InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-										Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "", proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth())
-												: "",
-												proband.getAge() != null ? Integer.toString(proband.getAge()) : ""
-								),
+										Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
+								proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth())
+										: "",
+								proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
 						cursor.getBlockX(),
 						Settings.getFloat(InquiriesPDFSettingCodes.PAGE_TITLE_Y, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_TITLE_Y),
 						Alignment.TOP_LEFT,
@@ -501,9 +505,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 											Bundle.INQUIRIES_PDF,
 											InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 											Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
-											proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
-													proband.getAge() != null ? Integer.toString(proband.getAge()) : ""
-									),
+									proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
+									proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
 							cursor.getBlockCenterX(),
 							y,
 							Alignment.TOP_CENTER,
@@ -512,28 +515,28 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 				}
 				y1 = y;
 				y -= getYFrameIndent();
-				//				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-				//						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
-				//						x + getXFrameIndent(),
-				//						y,
-				//						Alignment.TOP_LEFT,
-				//						Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-				//						- getXFrameIndent());
-				//				x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
-				//				height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
-				//						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME, PDFUtil.DEFAULT_LABEL, trial.getName(), trial.getTitle()),
-				//								x + getXFrameIndent(),
-				//								y,
-				//								Alignment.TOP_LEFT,
-				//								width - getXFrameIndent()), height1);
-				//				x += width;
+				// height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
+				// L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
+				// x + getXFrameIndent(),
+				// y,
+				// Alignment.TOP_LEFT,
+				// Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
+				// - getXFrameIndent());
+				// x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
+				// height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
+				// L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME, PDFUtil.DEFAULT_LABEL, trial.getName(), trial.getTitle()),
+				// x + getXFrameIndent(),
+				// y,
+				// Alignment.TOP_LEFT,
+				// width - getXFrameIndent()), height1);
+				// x += width;
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height1 = Math.max(
 						PDFUtil.renderMultilineText(
@@ -545,13 +548,13 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 										Long.toString(proband.getId()),
 										CommonUtil.getProbandAlias(proband,
 												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
-												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)
-												),
+												L10nUtil.getString(Locales.INQUIRIES_PDF, MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)),
 										proband.getInitials(), proband.getName()),
 								x + getXFrameIndent(),
 								y,
 								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height1);
+								width - getXFrameIndent()),
+						height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_DATE_OF_BIRTH_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -559,7 +562,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 						y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(
 						PDFUtil.renderMultilineText(
@@ -573,14 +576,14 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 												Bundle.INQUIRIES_PDF,
 												InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 												Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
-												proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
-														proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
+										proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
+										proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
 								x + getXFrameIndent(),
 								y,
 								Alignment.TOP_LEFT,
-								width - getXFrameIndent()), height2);
+								width - getXFrameIndent()),
+						height2);
 				//
-
 				x = cursor.getBlockX();
 				y -= Math.max(height1, height2) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -589,16 +592,15 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 						y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-						blank ? L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_STATUS_TYPE_BLANK, PDFUtil.DEFAULT_LABEL, getStatusTypeName()) :
-							L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_STATUS_TYPE, PDFUtil.DEFAULT_LABEL, getStatusTypeName()),
-							x + getXFrameIndent(),
-							y,
-							Alignment.TOP_LEFT,
-							width - getXFrameIndent()), height1);
-
+						blank ? L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_STATUS_TYPE_BLANK, PDFUtil.DEFAULT_LABEL, getStatusTypeName())
+								: L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_STATUS_TYPE, PDFUtil.DEFAULT_LABEL, getStatusTypeName()),
+						x + getXFrameIndent(),
+						y,
+						Alignment.TOP_LEFT,
+						width - getXFrameIndent()), height1);
 				x += width;
 				height2 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.CONTENT_TIMESTAMP_LABEL, PDFUtil.DEFAULT_LABEL),
@@ -606,7 +608,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 						y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-						- getXFrameIndent());
+								- getXFrameIndent());
 				x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.CONTENT_TIMESTAMP, PDFUtil.DEFAULT_LABEL, Settings.getSimpleDateFormat(
@@ -627,7 +629,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 							y,
 							Alignment.TOP_LEFT,
 							Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN1_INDENT)
-							- getXFrameIndent());
+									- getXFrameIndent());
 					x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
 					height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
 							trial.getTitle(),
@@ -644,7 +646,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								y,
 								Alignment.TOP_LEFT,
 								Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN1_INDENT)
-								- getXFrameIndent());
+										- getXFrameIndent());
 						x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
 						height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
 								trial.getDescription(),
@@ -670,7 +672,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 						Settings.getFloat(InquiriesPDFSettingCodes.HEAD_FRAME_LINE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.HEAD_FRAME_LINE_WIDTH));
 				y -= Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				height = cursor.getBlockY() - y;
-
 				break;
 			case NEW_CATEGORY:
 				height = 0.0f;
@@ -685,13 +686,12 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								cursor.getCategoryLabel(),
 								cursor.getBlockX(),
 								cursor.getBlockY()
-								- Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT),
+										- Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT),
 								Alignment.TOP_LEFT);
 					}
 					height += Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				}
 				break;
-
 			case END_OF_CATEGORY:
 				height = 0.0f;
 				if (cursor.hasCategory()) {
@@ -709,7 +709,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 				break;
 			case INPUT_FIELD:
 				height = renderInputFieldBlock(contentStream, cursor) +
-				Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
+						Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				break;
 			default:
 				height = 0.0f;

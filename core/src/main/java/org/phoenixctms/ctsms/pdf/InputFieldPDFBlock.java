@@ -30,7 +30,6 @@ public abstract class InputFieldPDFBlock {
 	protected boolean blank;
 	protected PDFJpeg ximage;
 
-
 	protected InputFieldPDFBlock() {
 		this.inputField = null;
 		this.ximage = null;
@@ -137,12 +136,21 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract String getInputFieldNameLabel(String name, String position);
 
+	protected abstract String getTitleL10nKey();
+
 	protected String getInputFieldTitle() {
 		String title;
 		if (inputField.getLocalized()) {
-			title = L10nUtil.getInputFieldTitle(getLabelLocale(), inputField.getTitleL10nKey());
+			title = L10nUtil.getInputFieldTitle(getLabelLocale(), getTitleL10nKey());
 		} else {
-			title = inputField.getTitleL10nKey();
+			title = getTitleL10nKey();
+		}
+		if (CommonUtil.isEmptyString(title)) {
+			if (inputField.getLocalized()) {
+				title = L10nUtil.getInputFieldTitle(getLabelLocale(), inputField.getTitleL10nKey());
+			} else {
+				title = inputField.getTitleL10nKey();
+			}
 		}
 		if (isOptional()) {
 			return getInputFieldTitleOptionalLabel(title, Long.toString(getPosition()));
@@ -154,7 +162,7 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract String getInputFieldTitleLabel(String position, String title);
 
-	protected abstract String getInputFieldTitleOptionalLabel(String position,String title);
+	protected abstract String getInputFieldTitleOptionalLabel(String position, String title);
 
 	private String getInputFieldValidationErrorMessage() {
 		String validationErrorMessage;
@@ -203,10 +211,10 @@ public abstract class InputFieldPDFBlock {
 			} else {
 				user = modifiedUser.getName();
 			}
-			return getModifiedLabel(user,getModifiedTimestampFormat().format(modifiedTimestamp));
-			//		} else if (modifiedTimestamp != null) {
+			return getModifiedLabel(user, getModifiedTimestampFormat().format(modifiedTimestamp));
+			// } else if (modifiedTimestamp != null) {
 			//
-			//		} else {
+			// } else {
 		}
 		return "";
 	}
@@ -217,8 +225,8 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract UserOutVO getModifiedUser();
 
-
 	protected abstract float getMultiLineTextMinHeight();
+
 	protected abstract long getPosition();
 
 	protected abstract Color getPresetTextColor();
@@ -239,7 +247,7 @@ public abstract class InputFieldPDFBlock {
 			} else {
 				name = selectionValue.getName();
 			}
-			result.put(selectionValue.getId(), getSelectionSetValueLabel(name,selectionValue.getValue()));
+			result.put(selectionValue.getId(), getSelectionSetValueLabel(name, selectionValue.getValue()));
 		}
 		return result;
 	}
@@ -336,7 +344,6 @@ public abstract class InputFieldPDFBlock {
 	protected abstract SimpleDateFormat getTimeValueFormat();
 
 	// protected abstract boolean isShowValidationErrorMessages();
-
 	protected abstract String getTimeValueFormatPattern();
 
 	protected abstract Color getValidationErrorMessageTextColor();
@@ -527,10 +534,10 @@ public abstract class InputFieldPDFBlock {
 				cursor.getFontD(),
 				PDFUtil.FontSize.MEDIUM,
 				isPresetColor ? getPresetTextColor() : getTextColor(),
-						string,
-						x,
-						y,
-						PDFUtil.Alignment.TOP_LEFT);
+				string,
+				x,
+				y,
+				PDFUtil.Alignment.TOP_LEFT);
 		PDFUtil.renderFrame(contentStream, getFrameColor(),
 				x - getXValueFrameIndent(),
 				y + getYValueFrameIndent(),
@@ -789,11 +796,11 @@ public abstract class InputFieldPDFBlock {
 				cursor.getFontB(),
 				PDFUtil.FontSize.MEDIUM,
 				isPreset() || blank ? getPresetTextColor() : getTextColor(),
-						getTextValue(blank),
-						x,
-						y,
-						PDFUtil.Alignment.TOP_LEFT,
-						width), InputFieldType.MULTI_LINE_TEXT.equals(fieldType) ? getMultiLineTextMinHeight() : 0.0f);
+				getTextValue(blank),
+				x,
+				y,
+				PDFUtil.Alignment.TOP_LEFT,
+				width), InputFieldType.MULTI_LINE_TEXT.equals(fieldType) ? getMultiLineTextMinHeight() : 0.0f);
 		PDFUtil.renderFrame(contentStream, getFrameColor(),
 				x - getXValueFrameIndent(),
 				y + getYValueFrameIndent(),

@@ -36,8 +36,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Inquiry
  */
 public class InquiryDaoImpl
-extends InquiryDaoBase
-{
+		extends InquiryDaoBase {
 
 	private static final String UNIQUE_CATEGORY_INQUIRY_NAME = "{0} - {1} - {2}. {3}";
 	private static final String UNIQUE_INQUIRY_NAME = "{0} - {1}. {2}";
@@ -101,13 +100,12 @@ extends InquiryDaoBase
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = inquiryCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = inquiryCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			//fieldCriteria.add(Restrictions.eq("localized", false));
+			// fieldCriteria.add(Restrictions.eq("localized", false));
 			inquiryCriteria.add(Restrictions.or(
 					(new CategoryCriterion(nameInfix, "category", MatchMode.ANYWHERE)).getRestriction(),
 					Restrictions.or(
 							(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
-							(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction()
-							)));
+							(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction())));
 		}
 		applySortOrders(inquiryCriteria);
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.INQUIRY_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -155,7 +153,7 @@ extends InquiryDaoBase
 		}
 		if (trialId != null) {
 			inquiryCriteria.createCriteria("inquiryValues", CriteriaSpecification.INNER_JOIN).createCriteria("proband", CriteriaSpecification.INNER_JOIN)
-			.createCriteria("trialParticipations", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("trial.id", trialId.longValue()));
+					.createCriteria("trialParticipations", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		applySortOrders(inquiryCriteria);
 		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
@@ -378,8 +376,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Inquiry inquiryInVOToEntity(InquiryInVO inquiryInVO)
-	{
+	public Inquiry inquiryInVOToEntity(InquiryInVO inquiryInVO) {
 		Inquiry entity = this.loadInquiryFromInquiryInVO(inquiryInVO);
 		this.inquiryInVOToEntity(inquiryInVO, entity, true);
 		return entity;
@@ -392,9 +389,9 @@ extends InquiryDaoBase
 	public void inquiryInVOToEntity(
 			InquiryInVO source,
 			Inquiry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inquiryInVOToEntity(source, target, copyIfNull);
+		target.setTitleL10nKey(source.getTitle());
 		Long fieldId = source.getFieldId();
 		Long trialId = source.getTrialId();
 		if (fieldId != null) {
@@ -425,8 +422,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Inquiry inquiryOutVOToEntity(InquiryOutVO inquiryOutVO)
-	{
+	public Inquiry inquiryOutVOToEntity(InquiryOutVO inquiryOutVO) {
 		Inquiry entity = this.loadInquiryFromInquiryOutVO(inquiryOutVO);
 		this.inquiryOutVOToEntity(inquiryOutVO, entity, true);
 		return entity;
@@ -439,8 +435,7 @@ extends InquiryDaoBase
 	public void inquiryOutVOToEntity(
 			InquiryOutVO source,
 			Inquiry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inquiryOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		InputFieldOutVO fieldVO = source.getField();
@@ -478,8 +473,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Inquiry lightInquiryOutVOToEntity(LightInquiryOutVO lightInquiryOutVO)
-	{
+	public Inquiry lightInquiryOutVOToEntity(LightInquiryOutVO lightInquiryOutVO) {
 		Inquiry entity = this.loadInquiryFromLightInquiryOutVO(lightInquiryOutVO);
 		this.lightInquiryOutVOToEntity(lightInquiryOutVO, entity, true);
 		return entity;
@@ -492,8 +486,7 @@ extends InquiryDaoBase
 	public void lightInquiryOutVOToEntity(
 			LightInquiryOutVO source,
 			Inquiry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.lightInquiryOutVOToEntity(source, target, copyIfNull);
 	}
 
@@ -502,8 +495,7 @@ extends InquiryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Inquiry loadInquiryFromInquiryInVO(InquiryInVO inquiryInVO)
-	{
+	private Inquiry loadInquiryFromInquiryInVO(InquiryInVO inquiryInVO) {
 		// TODO implement loadInquiryFromInquiryInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromInquiryInVO(InquiryInVO) not yet implemented.");
 		Inquiry inquiry = null;
@@ -511,8 +503,7 @@ extends InquiryDaoBase
 		if (id != null) {
 			inquiry = this.load(id);
 		}
-		if (inquiry == null)
-		{
+		if (inquiry == null) {
 			inquiry = Inquiry.Factory.newInstance();
 		}
 		return inquiry;
@@ -523,13 +514,11 @@ extends InquiryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Inquiry loadInquiryFromInquiryOutVO(InquiryOutVO inquiryOutVO)
-	{
+	private Inquiry loadInquiryFromInquiryOutVO(InquiryOutVO inquiryOutVO) {
 		// TODO implement loadInquiryFromInquiryOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromInquiryOutVO(InquiryOutVO) not yet implemented.");
 		Inquiry inquiry = this.load(inquiryOutVO.getId());
-		if (inquiry == null)
-		{
+		if (inquiry == null) {
 			inquiry = Inquiry.Factory.newInstance();
 		}
 		return inquiry;
@@ -540,13 +529,11 @@ extends InquiryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Inquiry loadInquiryFromLightInquiryOutVO(LightInquiryOutVO lightInquiryOutVO)
-	{
+	private Inquiry loadInquiryFromLightInquiryOutVO(LightInquiryOutVO lightInquiryOutVO) {
 		// TODO implement loadInquiryFromLightInquiryOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromLightInquiryOutVO(LightInquiryOutVO) not yet implemented.");
 		Inquiry inquiry = this.load(lightInquiryOutVO.getId());
-		if (inquiry == null)
-		{
+		if (inquiry == null) {
 			inquiry = Inquiry.Factory.newInstance();
 		}
 		return inquiry;
@@ -556,8 +543,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryInVO toInquiryInVO(final Inquiry entity)
-	{
+	public InquiryInVO toInquiryInVO(final Inquiry entity) {
 		return super.toInquiryInVO(entity);
 	}
 
@@ -567,9 +553,9 @@ extends InquiryDaoBase
 	@Override
 	public void toInquiryInVO(
 			Inquiry source,
-			InquiryInVO target)
-	{
+			InquiryInVO target) {
 		super.toInquiryInVO(source, target);
+		target.setTitle(source.getTitleL10nKey());
 		Trial trial = source.getTrial();
 		InputField field = source.getField();
 		if (trial != null) {
@@ -584,8 +570,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryOutVO toInquiryOutVO(final Inquiry entity)
-	{
+	public InquiryOutVO toInquiryOutVO(final Inquiry entity) {
 		return super.toInquiryOutVO(entity);
 	}
 
@@ -595,8 +580,7 @@ extends InquiryDaoBase
 	@Override
 	public void toInquiryOutVO(
 			Inquiry source,
-			InquiryOutVO target)
-	{
+			InquiryOutVO target) {
 		super.toInquiryOutVO(source, target);
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		// WARNING! No conversion for target.field (can't convert source.getField():org.phoenixctms.ctsms.domain.InputField to org.phoenixctms.ctsms.vo.InputFieldOutVO
@@ -607,8 +591,12 @@ extends InquiryDaoBase
 		if (trial != null) {
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
+		target.setTitle(source.getTitleL10nKey());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
+			if (field.isLocalized()) {
+				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+			}
 		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
@@ -620,8 +608,7 @@ extends InquiryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public LightInquiryOutVO toLightInquiryOutVO(final Inquiry entity)
-	{
+	public LightInquiryOutVO toLightInquiryOutVO(final Inquiry entity) {
 		return super.toLightInquiryOutVO(entity);
 	}
 
@@ -631,8 +618,7 @@ extends InquiryDaoBase
 	@Override
 	public void toLightInquiryOutVO(
 			Inquiry source,
-			LightInquiryOutVO target)
-	{
+			LightInquiryOutVO target) {
 		super.toLightInquiryOutVO(source, target);
 		target.setUniqueName(getUniqueInquiryName(source));
 	}
