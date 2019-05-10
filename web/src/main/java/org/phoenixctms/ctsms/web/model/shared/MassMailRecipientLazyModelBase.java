@@ -1,8 +1,5 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
-
-
-
 import java.util.HashMap;
 
 import org.phoenixctms.ctsms.vo.EmailMessageVO;
@@ -37,4 +34,3 @@ public abstract class MassMailRecipientLazyModelBase extends LazyDataModelBase {
 		return WebUtil.getMassMailRecipient(id);
 	}
 }
-

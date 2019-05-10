@@ -78,7 +78,6 @@ public class AssociationPath {
 	// });
 	// return methods;
 	// }
-
 	public static Collection<Method> listMethods(Class propertyInterface) throws Exception {
 		return listMethods(propertyInterface, MethodTransfilter.DEFAULT_TRANSFILTER);
 	}

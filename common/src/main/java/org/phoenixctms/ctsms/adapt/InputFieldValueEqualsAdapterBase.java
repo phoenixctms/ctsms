@@ -23,7 +23,6 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 
 	protected abstract String getAText(A a);
 
-
 	protected abstract Date getATime(A a);
 
 	protected abstract Date getATimestamp(A a);
@@ -42,7 +41,6 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 
 	protected abstract String getBText(B b);
 
-
 	protected abstract Date getBTime(B b);
 
 	protected abstract Date getBTimestamp(B b);
@@ -54,6 +52,7 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 	public final boolean valueEquals(A a, B b) {
 		return valueEquals(a, b, null, false, false);
 	}
+
 	public final boolean valueEquals(A a, B b, InputFieldType fieldType, boolean normalizeLineEndings, boolean normalizeNullStrings) {
 		EqualsBuilder eb = new EqualsBuilder();
 		if (fieldType == null ||

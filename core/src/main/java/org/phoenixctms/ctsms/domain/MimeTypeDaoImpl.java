@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.MimeTypeVO;
  * @see MimeType
  */
 public class MimeTypeDaoImpl
-extends MimeTypeDaoBase
-{
+		extends MimeTypeDaoBase {
 
 	private org.hibernate.Criteria createMimeTypeCriteria() {
 		org.hibernate.Criteria mimeTypeCriteria = this.getSession().createCriteria(MimeType.class);
@@ -71,15 +70,13 @@ extends MimeTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MimeType loadMimeTypeFromMimeTypeVO(MimeTypeVO mimeTypeVO)
-	{
+	private MimeType loadMimeTypeFromMimeTypeVO(MimeTypeVO mimeTypeVO) {
 		MimeType mimeType = null;
 		Long id = mimeTypeVO.getId();
 		if (id != null) {
 			mimeType = this.load(id);
 		}
-		if (mimeType == null)
-		{
+		if (mimeType == null) {
 			mimeType = MimeType.Factory.newInstance();
 		}
 		return mimeType;
@@ -89,8 +86,7 @@ extends MimeTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MimeType mimeTypeVOToEntity(MimeTypeVO mimeTypeVO)
-	{
+	public MimeType mimeTypeVOToEntity(MimeTypeVO mimeTypeVO) {
 		MimeType entity = this.loadMimeTypeFromMimeTypeVO(mimeTypeVO);
 		this.mimeTypeVOToEntity(mimeTypeVO, entity, true);
 		return entity;
@@ -103,8 +99,7 @@ extends MimeTypeDaoBase
 	public void mimeTypeVOToEntity(
 			MimeTypeVO source,
 			MimeType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.mimeTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -112,8 +107,7 @@ extends MimeTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MimeTypeVO toMimeTypeVO(final MimeType entity)
-	{
+	public MimeTypeVO toMimeTypeVO(final MimeType entity) {
 		return super.toMimeTypeVO(entity);
 	}
 
@@ -123,8 +117,7 @@ extends MimeTypeDaoBase
 	@Override
 	public void toMimeTypeVO(
 			MimeType source,
-			MimeTypeVO target)
-	{
+			MimeTypeVO target) {
 		super.toMimeTypeVO(source, target);
 	}
 }

@@ -71,7 +71,6 @@ public abstract class FileServletBase extends HttpServlet {
 					close(input);
 				}
 			}
-
 		}
 	}
 }

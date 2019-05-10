@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.VisitTypeVO;
  * @see VisitType
  */
 public class VisitTypeDaoImpl
-		extends VisitTypeDaoBase
-{
+		extends VisitTypeDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<VisitType> handleFindByVisibleId(Boolean visible, Long typeId)
-	{
+	protected Collection<VisitType> handleFindByVisibleId(Boolean visible, Long typeId) {
 		org.hibernate.Criteria typeCriteria = this.getSession().createCriteria(VisitType.class);
 		typeCriteria.setCacheable(true);
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
@@ -37,8 +35,7 @@ public class VisitTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private VisitType loadVisitTypeFromVisitTypeVO(VisitTypeVO visitTypeVO)
-	{
+	private VisitType loadVisitTypeFromVisitTypeVO(VisitTypeVO visitTypeVO) {
 		// TODO implement loadVisitTypeFromVisitTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitTypeFromVisitTypeVO(VisitTypeVO) not yet implemented.");
 		VisitType visitType = null;
@@ -46,8 +43,7 @@ public class VisitTypeDaoImpl
 		if (id != null) {
 			visitType = this.load(id);
 		}
-		if (visitType == null)
-		{
+		if (visitType == null) {
 			visitType = VisitType.Factory.newInstance();
 		}
 		return visitType;
@@ -57,8 +53,7 @@ public class VisitTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitTypeVO toVisitTypeVO(final VisitType entity)
-	{
+	public VisitTypeVO toVisitTypeVO(final VisitType entity) {
 		return super.toVisitTypeVO(entity);
 	}
 
@@ -68,8 +63,7 @@ public class VisitTypeDaoImpl
 	@Override
 	public void toVisitTypeVO(
 			VisitType source,
-			VisitTypeVO target)
-	{
+			VisitTypeVO target) {
 		super.toVisitTypeVO(source, target);
 		target.setName(L10nUtil.getVisitTypeName(Locales.USER, source.getNameL10nKey()));
 	}
@@ -78,8 +72,7 @@ public class VisitTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitType visitTypeVOToEntity(VisitTypeVO visitTypeVO)
-	{
+	public VisitType visitTypeVOToEntity(VisitTypeVO visitTypeVO) {
 		VisitType entity = this.loadVisitTypeFromVisitTypeVO(visitTypeVO);
 		this.visitTypeVOToEntity(visitTypeVO, entity, true);
 		return entity;
@@ -92,8 +85,7 @@ public class VisitTypeDaoImpl
 	public void visitTypeVOToEntity(
 			VisitTypeVO source,
 			VisitType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.visitTypeVOToEntity(source, target, copyIfNull);
 	}
 }

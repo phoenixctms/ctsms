@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.executable.xls;
-
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -53,13 +51,10 @@ public class EcrfRowProcessor extends RowProcessor {
 	private VisitType defaultVisitType;
 	@Autowired
 	protected TrialService trialService;
-
 	@Autowired
 	protected VisitDao visitDao;
-
 	@Autowired
 	protected VisitTypeDao visitTypeDao;
-
 	@Autowired
 	protected ProbandListStatusTypeDao probandListStatusTypeDao;
 
@@ -140,6 +135,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		return probandListStatusTypeId;
 	}
 
+	@Override
 	public String getSheetName() {
 		// return context.getSheetName(this);
 		return SHEET_NAME;
@@ -223,9 +219,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		ECRFInVO ecrfIn = new ECRFInVO();
 		ecrfIn.setId(ecrf != null ? ecrf.getId() : null);
 		ecrfIn.setVersion(ecrf != null ? ecrf.getVersion() : 0l);
-
 		ecrfIn.setTrialId(context.getEntityId());
-
 		ecrfIn.setGroupId(context.getImporter().getEcrfFieldRowProcessor().getProbandGroupId(probandGroupToken));
 		ecrfIn.setPosition(position);
 		ecrfIn.setVisitId(getVisitId(getVisit(values)));
@@ -237,7 +231,6 @@ public class EcrfRowProcessor extends RowProcessor {
 		ecrfIn.setDescription(getDescription(values));
 		ecrfIn.setProbandListStatusId(getProbandListStatusTypeId(getEnrollmentStatus(values)));
 		ecrfIn.setCharge(CommonUtil.isEmptyString(getCharge(values)) ? 0.0f : Float.parseFloat(getCharge(values)));
-
 		ECRFOutVO ecrfVO = trialService.addUpdateEcrf(context.getAuth(), ecrfIn,
 				context.getImporter().getEcrfFieldRowProcessor().getEcrfFields(probandGroupToken, position));
 		jobOutput.println("ecrf '" + ecrfVO.getUniqueName() + "' " + (ecrfVO.getVersion() > 0l ? "updated" : "created"));

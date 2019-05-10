@@ -22,8 +22,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
  * @see CourseParticipationStatusType
  */
 public class CourseParticipationStatusTypeDaoImpl
-extends CourseParticipationStatusTypeDaoBase
-{
+		extends CourseParticipationStatusTypeDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<CourseParticipationStatusType>(false);
 
@@ -31,8 +30,7 @@ extends CourseParticipationStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusType courseParticipationStatusTypeVOToEntity(CourseParticipationStatusTypeVO courseParticipationStatusTypeVO)
-	{
+	public CourseParticipationStatusType courseParticipationStatusTypeVOToEntity(CourseParticipationStatusTypeVO courseParticipationStatusTypeVO) {
 		CourseParticipationStatusType entity = this.loadCourseParticipationStatusTypeFromCourseParticipationStatusTypeVO(courseParticipationStatusTypeVO);
 		this.courseParticipationStatusTypeVOToEntity(courseParticipationStatusTypeVO, entity, true);
 		return entity;
@@ -45,8 +43,7 @@ extends CourseParticipationStatusTypeDaoBase
 	public void courseParticipationStatusTypeVOToEntity(
 			CourseParticipationStatusTypeVO source,
 			CourseParticipationStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseParticipationStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -80,7 +77,7 @@ extends CourseParticipationStatusTypeDaoBase
 	@Override
 	protected Collection<CourseParticipationStatusType> handleFindTransitions(
 			Long statusTypeId, boolean admin, boolean selfRegistration)
-					throws Exception {
+			throws Exception {
 		CourseParticipationStatusType statusType = this.load(statusTypeId);
 		Iterator<CourseParticipationStatusType> it = null;
 		if (statusType != null) {
@@ -113,16 +110,14 @@ extends CourseParticipationStatusTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CourseParticipationStatusType loadCourseParticipationStatusTypeFromCourseParticipationStatusTypeVO(CourseParticipationStatusTypeVO courseParticipationStatusTypeVO)
-	{
+	private CourseParticipationStatusType loadCourseParticipationStatusTypeFromCourseParticipationStatusTypeVO(CourseParticipationStatusTypeVO courseParticipationStatusTypeVO) {
 		// throw new UnsupportedOperationException("out value object to recursive entity not supported");
 		CourseParticipationStatusType courseParticipationStatusType = null;
 		Long id = courseParticipationStatusTypeVO.getId();
 		if (id != null) {
 			courseParticipationStatusType = this.load(id);
 		}
-		if (courseParticipationStatusType == null)
-		{
+		if (courseParticipationStatusType == null) {
 			courseParticipationStatusType = CourseParticipationStatusType.Factory.newInstance();
 		}
 		return courseParticipationStatusType;
@@ -132,16 +127,14 @@ extends CourseParticipationStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusTypeVO toCourseParticipationStatusTypeVO(final CourseParticipationStatusType entity)
-	{
+	public CourseParticipationStatusTypeVO toCourseParticipationStatusTypeVO(final CourseParticipationStatusType entity) {
 		return super.toCourseParticipationStatusTypeVO(entity);
 	}
 
 	@Override
 	public void toCourseParticipationStatusTypeVO(
 			CourseParticipationStatusType source,
-			CourseParticipationStatusTypeVO target)
-	{
+			CourseParticipationStatusTypeVO target) {
 		super.toCourseParticipationStatusTypeVO(source, target);
 		target.setName(L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

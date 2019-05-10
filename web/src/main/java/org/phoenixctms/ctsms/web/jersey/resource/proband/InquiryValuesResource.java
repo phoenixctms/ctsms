@@ -32,7 +32,6 @@ public class InquiryValuesResource {
 	@Context
 	AuthenticationVO auth;
 
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
@@ -50,7 +49,7 @@ public class InquiryValuesResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO> setInquiryValues(Collection<InquiryValueInVO> in) throws AuthenticationException, AuthorisationException,
-	ServiceException {
+			ServiceException {
 		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, new LinkedHashSet<InquiryValueInVO>(in));
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 		// return new InquiryValuesOutVOPage(WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, in), null);

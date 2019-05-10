@@ -15,7 +15,6 @@ package org.phoenixctms.ctsms.util.xeger;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import java.util.Random;
 
 /**
@@ -23,18 +22,17 @@ import java.util.Random;
  */
 public class XegerUtils {
 
-    /**
-     * Generates a random number within the given bounds.
-     *
-     * @param min The minimum number (inclusive).
-     * @param max The maximum number (inclusive).
-     * @param random The object used as the randomizer.
-     * @return A random number in the given range.
-     */
-    public final static int getRandomInt(int min, int max, Random random) {
-        int dif = max - min;
-        float number = random.nextFloat();              // 0 <= number < 1
-        return min + Math.round(number * dif);
-    }
-
+	/**
+	 * Generates a random number within the given bounds.
+	 *
+	 * @param min The minimum number (inclusive).
+	 * @param max The maximum number (inclusive).
+	 * @param random The object used as the randomizer.
+	 * @return A random number in the given range.
+	 */
+	public final static int getRandomInt(int min, int max, Random random) {
+		int dif = max - min;
+		float number = random.nextFloat(); // 0 <= number < 1
+		return min + Math.round(number * dif);
+	}
 }

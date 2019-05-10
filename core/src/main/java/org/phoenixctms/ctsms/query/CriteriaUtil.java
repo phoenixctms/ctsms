@@ -236,13 +236,13 @@ public final class CriteriaUtil {
 		Criteria criteria;
 		if (criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
 			criteria.setProjection(null);
-			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 			if (psf != null) {
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
-						Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
+						Map.Entry<String, String> filter = filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
@@ -253,7 +253,7 @@ public final class CriteriaUtil {
 				if (psf.getUpdateRowCount()) {
 					psf.setRowCount((Long) criteria.setProjection(Projections.rowCount()).uniqueResult());
 					criteria.setProjection(null);
-					criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+					criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 				}
 				if (psf.getFirst() != null) {
 					criteria.setFirstResult(psf.getFirst());
@@ -512,7 +512,7 @@ public final class CriteriaUtil {
 	public static List listDistinctRoot(Criteria criteria, Object dao, String... fields) throws Exception {
 		if (dao != null && criteria != null) {
 			criteria.setProjection(null);
-			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 			Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
 			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
 			boolean cast = false;
@@ -540,14 +540,14 @@ public final class CriteriaUtil {
 		if (dao != null && criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
 			if (psf != null) {
 				criteria.setProjection(null);
-				criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+				criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 				Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
 				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
-						Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
+						Map.Entry<String, String> filter = filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 						Criteria subCriteria;
 						if (sortFieldAssociationPath.isValid()
@@ -571,7 +571,7 @@ public final class CriteriaUtil {
 					}
 					psf.setRowCount(count);
 					criteria.setProjection(null);
-					criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+					criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 				}
 				if (psf.getFirst() != null) {
 					criteria.setFirstResult(psf.getFirst());

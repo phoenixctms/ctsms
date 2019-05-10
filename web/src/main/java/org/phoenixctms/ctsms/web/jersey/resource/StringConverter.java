@@ -26,7 +26,6 @@ public abstract class StringConverter<T> {
 		BOOL_INT_FLOAT.add(getBooleanConverter());
 		BOOL_INT_FLOAT.add(getIntegerConverter());
 		BOOL_INT_FLOAT.add(getFloatConverter());
-
 		BOOL_LONG.add(getBooleanConverter());
 		BOOL_LONG.add(getLongConverter());
 	}
@@ -56,7 +55,6 @@ public abstract class StringConverter<T> {
 	}
 
 	public static StringConverter getConverter(Type type) throws Exception {
-
 		if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
 			return getIntegerConverter();
 		} else if (Long.class.equals(type) || Long.TYPE.equals(type)) {
@@ -71,14 +69,12 @@ public abstract class StringConverter<T> {
 			return getDateConverter();
 		} else if (String.class.equals(type)) {
 			return getStringConverter();
-
 		} else if (ECRFFieldStatusQueue.class.equals(type)) {
 			return getEcrfFieldStatusQueueConverter();
 		} else if (DBModule.class.equals(type)) {
 			return getDBModuleConverter();
 		}
 		throw new IllegalArgumentException(MessageFormat.format(UNSUPPORTED_RESULT_TYPE, type));
-
 	}
 
 	private static StringConverter<Date> getDateConverter() {

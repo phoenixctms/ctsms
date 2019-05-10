@@ -86,10 +86,13 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 						CourseParticipantListPDFDefaultSettings.PAGE_LEFT_MARGIN)
 						+ (pageWidth
 								- Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_RIGHT_MARGIN,
-												Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f, Settings.getFloat(
-														CourseParticipantListPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_LOWER_MARGIN),
-														PDFUtil.Alignment.BOTTOM_CENTER);
+										CourseParticipantListPDFDefaultSettings.PAGE_LEFT_MARGIN)
+								- Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_RIGHT_MARGIN,
+										Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_RIGHT_MARGIN))
+								/ 2.0f,
+				Settings.getFloat(
+						CourseParticipantListPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_LOWER_MARGIN),
+				PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 
@@ -266,8 +269,8 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 		cursor.setBlockWidth(pageWidth
 				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
+				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+						CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 		cursor.setCourse(null);
 		fontA = null;
 		fontB = null;
@@ -314,8 +317,8 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 		cursor.setBlockWidth(pageWidth
 				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
+				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+						CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 	}
 
 	public void setParticipationVOMap(HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> participationVOMap) {
@@ -333,8 +336,8 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 		cursor.setBlockWidth(pageWidth
 				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
+				- Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+						CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 	}
 
 	private void updateCourseParticipantListPDFVO() {

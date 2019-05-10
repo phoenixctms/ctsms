@@ -113,7 +113,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 	public static String getProbandListEntryTagDateColumnName(ProbandListEntryTagOutVO probandListEntryTag) {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PROBAND_LIST_ENTRY_TAG_DATE_HEAD, ExcelUtil.DEFAULT_LABEL,
 				probandListEntryTag == null ? null : probandListEntryTag.getUniqueName(),
-						probandListEntryTag == null ? null : CommonUtil.inputFieldOutVOToString(probandListEntryTag.getField()));
+				probandListEntryTag == null ? null : CommonUtil.inputFieldOutVOToString(probandListEntryTag.getField()));
 	}
 
 	public ProbandListExcelWriter(ProbandListStatusLogLevel logLevel, boolean omitFields) {
@@ -139,8 +139,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		temp = getTemplateFileName();
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getRight()
-			.append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.TEMPLATE_FILENAME_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
-					(new File(temp)).getName()));
+					.append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.TEMPLATE_FILENAME_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
+							(new File(temp)).getName()));
 		}
 		footer.getLeft().clear();
 		footer.getLeft().append(L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));
@@ -223,102 +223,102 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.ENROLLMENT_LOG_VO_FIELD_COLUMNS,
 									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_VO_FIELD_COLUMNS)),
-									Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
-											ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-											omitFields,
-											Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
-													ProbandListExcelDefaultSettings.ENROLLMENT_LOG_AUTOSIZE),
-													Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
-															ProbandListExcelDefaultSettings.ENROLLMENT_LOG_WRITEHEAD),
-															Settings.getIntNullable(ProbandListExcelSettingCodes.ENROLLMENT_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
-																	ProbandListExcelDefaultSettings.ENROLLMENT_LOG_PAGE_BREAK_AT_ROW),
-																	Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
-																			ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_COLORS),
-																			Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																					ProbandListExcelDefaultSettings.ENROLLMENT_LOG_HEAD_FORMAT),
-																					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_FORMAT));
+							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_AUTOSIZE),
+							Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_WRITEHEAD),
+							Settings.getIntNullable(ProbandListExcelSettingCodes.ENROLLMENT_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_COLORS),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_FORMAT));
 				case PRE_SCREENING:
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.PRE_SCREENING_LOG_VO_FIELD_COLUMNS,
 									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_VO_FIELD_COLUMNS)),
-									Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
-											ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-											omitFields,
-											Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
-													ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_AUTOSIZE),
-													Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
-															ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_WRITEHEAD),
-															Settings.getIntNullable(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
-																	ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_PAGE_BREAK_AT_ROW),
-																	Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
-																			ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_COLORS),
-																			Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																					ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_HEAD_FORMAT),
-																					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_FORMAT));
+							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_AUTOSIZE),
+							Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_WRITEHEAD),
+							Settings.getIntNullable(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_COLORS),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_FORMAT));
 				case SCREENING:
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.SCREENING_LOG_VO_FIELD_COLUMNS,
 									ProbandListExcelDefaultSettings.SCREENING_LOG_VO_FIELD_COLUMNS)),
-									Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
-											ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-											omitFields,
-											Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
-													ProbandListExcelDefaultSettings.SCREENING_LOG_AUTOSIZE),
-													Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
-															ProbandListExcelDefaultSettings.SCREENING_LOG_WRITEHEAD),
-															Settings.getIntNullable(ProbandListExcelSettingCodes.SCREENING_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
-																	ProbandListExcelDefaultSettings.SCREENING_LOG_PAGE_BREAK_AT_ROW),
-																	Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
-																			ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_COLORS),
-																			Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																					ProbandListExcelDefaultSettings.SCREENING_LOG_HEAD_FORMAT),
-																					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-																							ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_FORMAT));
+							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_AUTOSIZE),
+							Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_WRITEHEAD),
+							Settings.getIntNullable(ProbandListExcelSettingCodes.SCREENING_LOG_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_COLORS),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_FORMAT));
 				case SICL:
 					return new SpreadSheetWriter(
 							this,
 							getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.SICL_VO_FIELD_COLUMNS,
 									ProbandListExcelDefaultSettings.SICL_VO_FIELD_COLUMNS)),
-									Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
-											ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-											omitFields,
-											Settings.getBoolean(ProbandListExcelSettingCodes.SICL_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_AUTOSIZE),
-											Settings.getBoolean(ProbandListExcelSettingCodes.SICL_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_WRITEHEAD),
-											Settings.getIntNullable(ProbandListExcelSettingCodes.SICL_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
-													ProbandListExcelDefaultSettings.SICL_PAGE_BREAK_AT_ROW),
-													Settings.getBoolean(ProbandListExcelSettingCodes.SICL_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_COLORS),
-													Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_HEAD_FORMAT),
-													Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_FORMAT));
+							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(ProbandListExcelSettingCodes.SICL_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_AUTOSIZE),
+							Settings.getBoolean(ProbandListExcelSettingCodes.SICL_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_WRITEHEAD),
+							Settings.getIntNullable(ProbandListExcelSettingCodes.SICL_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SICL_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(ProbandListExcelSettingCodes.SICL_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_COLORS),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_FORMAT));
 				default:
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(new ArrayList<String>()),
 							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-									omitFields,
-									false,
-									true,
-									null,
-									true,
-									ExcelCellFormat.getDefaultHeadFormat(),
-									ExcelCellFormat.getDefaultRowFormat());
+							omitFields,
+							false,
+							true,
+							null,
+							true,
+							ExcelCellFormat.getDefaultHeadFormat(),
+							ExcelCellFormat.getDefaultRowFormat());
 			}
 		} else {
 			return new SpreadSheetWriter(this,
 					getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.PROBAND_LIST_VO_FIELD_COLUMNS,
 							ProbandListExcelDefaultSettings.PROBAND_LIST_VO_FIELD_COLUMNS)),
-							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-							omitFields,
-							Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_AUTOSIZE),
-							Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_WRITEHEAD),
-							Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_LIST_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
-									ProbandListExcelDefaultSettings.PROBAND_LIST_PAGE_BREAK_AT_ROW),
-									Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_COLORS),
-									Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-											ProbandListExcelDefaultSettings.PROBAND_LIST_HEAD_FORMAT),
-											Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
-													ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_FORMAT));
+					Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+					omitFields,
+					Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_AUTOSIZE),
+					Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_WRITEHEAD),
+					Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_LIST_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_LIST_PAGE_BREAK_AT_ROW),
+					Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_COLORS),
+					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_LIST_HEAD_FORMAT),
+					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_FORMAT));
 		}
 	}
 

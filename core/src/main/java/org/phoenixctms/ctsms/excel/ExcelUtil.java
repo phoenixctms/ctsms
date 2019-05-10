@@ -72,7 +72,6 @@ public final class ExcelUtil {
 		COLOR_MAPPING.put(Color.SALMON, Colour.CORAL);
 		COLOR_MAPPING.put(Color.LIGHTSKYBLUE, Colour.SKY_BLUE);
 	}
-
 	// formatter to convert from current timezone
 	private static final SimpleDateFormat DATE_FORMATTER_FROM_CURRENT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	// formatter to convert to GMT timezone

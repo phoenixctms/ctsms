@@ -26,8 +26,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see StaffStatusEntry
  */
 public class StaffStatusEntryDaoImpl
-extends StaffStatusEntryDaoBase
-{
+		extends StaffStatusEntryDaoBase {
 
 	private org.hibernate.Criteria createStatusEntryCriteria() {
 		org.hibernate.Criteria staffStatusEntryCriteria = this.getSession().createCriteria(StaffStatusEntry.class);
@@ -38,7 +37,7 @@ extends StaffStatusEntryDaoBase
 	protected Collection<StaffStatusEntry> handleFindByDepartmentCategoryInterval(
 			Long departmentId, Long staffCategoryId, Timestamp from,
 			Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
-					throws Exception {
+			throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (staffActive != null || hideAvailability != null) {
@@ -80,7 +79,7 @@ extends StaffStatusEntryDaoBase
 	@Override
 	protected Collection<StaffStatusEntry> handleFindByStaffInterval(
 			Long staffId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
-					throws Exception {
+			throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (staffActive != null || hideAvailability != null) {
@@ -141,15 +140,13 @@ extends StaffStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffStatusEntry loadStaffStatusEntryFromStaffStatusEntryInVO(StaffStatusEntryInVO staffStatusEntryInVO)
-	{
+	private StaffStatusEntry loadStaffStatusEntryFromStaffStatusEntryInVO(StaffStatusEntryInVO staffStatusEntryInVO) {
 		StaffStatusEntry staffStatusEntry = null;
 		Long id = staffStatusEntryInVO.getId();
 		if (id != null) {
 			staffStatusEntry = this.load(id);
 		}
-		if (staffStatusEntry == null)
-		{
+		if (staffStatusEntry == null) {
 			staffStatusEntry = StaffStatusEntry.Factory.newInstance();
 		}
 		return staffStatusEntry;
@@ -160,11 +157,9 @@ extends StaffStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffStatusEntry loadStaffStatusEntryFromStaffStatusEntryOutVO(StaffStatusEntryOutVO staffStatusEntryOutVO)
-	{
+	private StaffStatusEntry loadStaffStatusEntryFromStaffStatusEntryOutVO(StaffStatusEntryOutVO staffStatusEntryOutVO) {
 		StaffStatusEntry staffStatusEntry = this.load(staffStatusEntryOutVO.getId());
-		if (staffStatusEntry == null)
-		{
+		if (staffStatusEntry == null) {
 			staffStatusEntry = StaffStatusEntry.Factory.newInstance();
 		}
 		return staffStatusEntry;
@@ -174,8 +169,7 @@ extends StaffStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusEntry staffStatusEntryInVOToEntity(StaffStatusEntryInVO staffStatusEntryInVO)
-	{
+	public StaffStatusEntry staffStatusEntryInVOToEntity(StaffStatusEntryInVO staffStatusEntryInVO) {
 		StaffStatusEntry entity = this.loadStaffStatusEntryFromStaffStatusEntryInVO(staffStatusEntryInVO);
 		this.staffStatusEntryInVOToEntity(staffStatusEntryInVO, entity, true);
 		return entity;
@@ -188,8 +182,7 @@ extends StaffStatusEntryDaoBase
 	public void staffStatusEntryInVOToEntity(
 			StaffStatusEntryInVO source,
 			StaffStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffStatusEntryInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long staffId = source.getStaffId();
@@ -215,8 +208,7 @@ extends StaffStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusEntry staffStatusEntryOutVOToEntity(StaffStatusEntryOutVO staffStatusEntryOutVO)
-	{
+	public StaffStatusEntry staffStatusEntryOutVOToEntity(StaffStatusEntryOutVO staffStatusEntryOutVO) {
 		StaffStatusEntry entity = this.loadStaffStatusEntryFromStaffStatusEntryOutVO(staffStatusEntryOutVO);
 		this.staffStatusEntryOutVOToEntity(staffStatusEntryOutVO, entity, true);
 		return entity;
@@ -229,8 +221,7 @@ extends StaffStatusEntryDaoBase
 	public void staffStatusEntryOutVOToEntity(
 			StaffStatusEntryOutVO source,
 			StaffStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffStatusEntryOutVOToEntity(source, target, copyIfNull);
 		StaffStatusTypeVO typeVO = source.getType();
 		StaffOutVO staffVO = source.getStaff();
@@ -262,8 +253,7 @@ extends StaffStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusEntryInVO toStaffStatusEntryInVO(final StaffStatusEntry entity)
-	{
+	public StaffStatusEntryInVO toStaffStatusEntryInVO(final StaffStatusEntry entity) {
 		return super.toStaffStatusEntryInVO(entity);
 	}
 
@@ -273,8 +263,7 @@ extends StaffStatusEntryDaoBase
 	@Override
 	public void toStaffStatusEntryInVO(
 			StaffStatusEntry source,
-			StaffStatusEntryInVO target)
-	{
+			StaffStatusEntryInVO target) {
 		super.toStaffStatusEntryInVO(source, target);
 		StaffStatusType type = source.getType();
 		Staff staff = source.getStaff();
@@ -290,8 +279,7 @@ extends StaffStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusEntryOutVO toStaffStatusEntryOutVO(final StaffStatusEntry entity)
-	{
+	public StaffStatusEntryOutVO toStaffStatusEntryOutVO(final StaffStatusEntry entity) {
 		return super.toStaffStatusEntryOutVO(entity);
 	}
 
@@ -301,8 +289,7 @@ extends StaffStatusEntryDaoBase
 	@Override
 	public void toStaffStatusEntryOutVO(
 			StaffStatusEntry source,
-			StaffStatusEntryOutVO target)
-	{
+			StaffStatusEntryOutVO target) {
 		super.toStaffStatusEntryOutVO(source, target);
 		StaffStatusType type = source.getType();
 		Staff staff = source.getStaff();

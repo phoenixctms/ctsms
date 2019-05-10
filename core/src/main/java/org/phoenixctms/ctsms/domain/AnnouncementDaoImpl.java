@@ -15,15 +15,13 @@ import org.phoenixctms.ctsms.vo.AnnouncementVO;
  * @see Announcement
  */
 public class AnnouncementDaoImpl
-		extends AnnouncementDaoBase
-{
+		extends AnnouncementDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public Announcement announcementVOToEntity(AnnouncementVO announcementVO)
-	{
+	public Announcement announcementVOToEntity(AnnouncementVO announcementVO) {
 		// TODO verify behavior of announcementVOToEntity
 		Announcement entity = this.loadAnnouncementFromAnnouncementVO(announcementVO);
 		this.announcementVOToEntity(announcementVO, entity, true);
@@ -37,8 +35,7 @@ public class AnnouncementDaoImpl
 	public void announcementVOToEntity(
 			AnnouncementVO source,
 			Announcement target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of announcementVOToEntity
 		super.announcementVOToEntity(source, target, copyIfNull);
 	}
@@ -47,8 +44,7 @@ public class AnnouncementDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Announcement handleGetAnnouncement()
-	{
+	protected Announcement handleGetAnnouncement() {
 		org.hibernate.Criteria announcementCriteria = this.getSession().createCriteria(Announcement.class);
 		announcementCriteria.setCacheable(true);
 		announcementCriteria.add(Restrictions.eq("visible", true));
@@ -63,8 +59,7 @@ public class AnnouncementDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Announcement loadAnnouncementFromAnnouncementVO(AnnouncementVO announcementVO)
-	{
+	private Announcement loadAnnouncementFromAnnouncementVO(AnnouncementVO announcementVO) {
 		// TODO implement loadAnnouncementFromAnnouncementVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadAnnouncementFromAnnouncementVO(AnnouncementVO) not yet implemented.");
 		// A typical implementation looks like this:
@@ -73,8 +68,7 @@ public class AnnouncementDaoImpl
 		if (id != null) {
 			announcement = this.load(id);
 		}
-		if (announcement == null)
-		{
+		if (announcement == null) {
 			announcement = Announcement.Factory.newInstance();
 		}
 		return announcement;
@@ -84,8 +78,7 @@ public class AnnouncementDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public AnnouncementVO toAnnouncementVO(final Announcement entity)
-	{
+	public AnnouncementVO toAnnouncementVO(final Announcement entity) {
 		// TODO verify behavior of toAnnouncementVO
 		return super.toAnnouncementVO(entity);
 	}
@@ -96,8 +89,7 @@ public class AnnouncementDaoImpl
 	@Override
 	public void toAnnouncementVO(
 			Announcement source,
-			AnnouncementVO target)
-	{
+			AnnouncementVO target) {
 		// TODO verify behavior of toAnnouncementVO
 		super.toAnnouncementVO(source, target);
 	}

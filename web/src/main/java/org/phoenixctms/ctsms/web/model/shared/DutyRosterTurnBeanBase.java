@@ -94,8 +94,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		DutyRosterTurnInVO backup = new DutyRosterTurnInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -309,8 +308,9 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	public String getVisitScheduleItemName(VisitScheduleItemOutVO visitScheduleItemVO) {
 		if (visitScheduleItemVO != null) {
 			TrialOutVO trialVO = in.getTrialId() == null ? visitScheduleItemVO.getTrial() : null;
-			return trialVO == null ? MessageFormat.format(VISIT_SCHEDULE_ITEM_NAME, visitScheduleItemVO.getName()) : MessageFormat.format(TRIAL_VISIT_SCHEDULE_ITEM_NAME,
-					CommonUtil.trialOutVOToString(visitScheduleItemVO.getTrial()), visitScheduleItemVO.getName());
+			return trialVO == null ? MessageFormat.format(VISIT_SCHEDULE_ITEM_NAME, visitScheduleItemVO.getName())
+					: MessageFormat.format(TRIAL_VISIT_SCHEDULE_ITEM_NAME,
+							CommonUtil.trialOutVOToString(visitScheduleItemVO.getTrial()), visitScheduleItemVO.getName());
 		}
 		return "";
 	}

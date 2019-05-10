@@ -29,8 +29,7 @@ import org.phoenixctms.ctsms.vo.OpsSystModifierVO;
  * @see OpsSystCategory
  */
 public class OpsSystCategoryDaoImpl
-extends OpsSystCategoryDaoBase
-{
+		extends OpsSystCategoryDaoBase {
 
 	@Override
 	protected Collection<String> handleFindCategoryPreferredRubricLabels(
@@ -53,8 +52,7 @@ extends OpsSystCategoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private OpsSystCategory loadOpsSystCategoryFromOpsSystCategoryVO(OpsSystCategoryVO opsSystCategoryVO)
-	{
+	private OpsSystCategory loadOpsSystCategoryFromOpsSystCategoryVO(OpsSystCategoryVO opsSystCategoryVO) {
 		// TODO implement loadOpsSystCategoryFromOpsSystCategoryVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystCategoryFromOpsSystCategoryVO(OpsSystCategoryVO) not yet implemented.");
 		Long id = opsSystCategoryVO.getId();
@@ -62,8 +60,7 @@ extends OpsSystCategoryDaoBase
 		if (id != null) {
 			opsSystCategory = this.load(id);
 		}
-		if (opsSystCategory == null)
-		{
+		if (opsSystCategory == null) {
 			opsSystCategory = OpsSystCategory.Factory.newInstance();
 		}
 		return opsSystCategory;
@@ -73,8 +70,7 @@ extends OpsSystCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystCategory opsSystCategoryVOToEntity(OpsSystCategoryVO opsSystCategoryVO)
-	{
+	public OpsSystCategory opsSystCategoryVOToEntity(OpsSystCategoryVO opsSystCategoryVO) {
 		OpsSystCategory entity = this.loadOpsSystCategoryFromOpsSystCategoryVO(opsSystCategoryVO);
 		this.opsSystCategoryVOToEntity(opsSystCategoryVO, entity, true);
 		return entity;
@@ -87,8 +83,7 @@ extends OpsSystCategoryDaoBase
 	public void opsSystCategoryVOToEntity(
 			OpsSystCategoryVO source,
 			OpsSystCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.opsSystCategoryVOToEntity(source, target, copyIfNull);
 		Collection modifiers = source.getModifiers();
 		if (modifiers.size() > 0) {
@@ -103,8 +98,7 @@ extends OpsSystCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystCategoryVO toOpsSystCategoryVO(final OpsSystCategory entity)
-	{
+	public OpsSystCategoryVO toOpsSystCategoryVO(final OpsSystCategory entity) {
 		return super.toOpsSystCategoryVO(entity);
 	}
 
@@ -114,8 +108,7 @@ extends OpsSystCategoryDaoBase
 	@Override
 	public void toOpsSystCategoryVO(
 			OpsSystCategory source,
-			OpsSystCategoryVO target)
-	{
+			OpsSystCategoryVO target) {
 		super.toOpsSystCategoryVO(source, target);
 		target.setModifiers(toOpsSystModifierVOCollection(source.getModifiers()));
 	}

@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.excel;
 
-
-
 public interface AuditTrailExcelSettingCodes {
 
 	public static final String VO_GRAPH_RECURSION_DEPTH = "vo_graph_recursion_depth";

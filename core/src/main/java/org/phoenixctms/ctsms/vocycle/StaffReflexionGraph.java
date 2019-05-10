@@ -76,7 +76,6 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 	// }
 	// return sb.toString();
 	// }
-
 	private static final boolean LIMIT_INSTANCES = true;
 	private static final boolean LIMIT_PARENTS_DEPTH = true;
 	private static final boolean LIMIT_CHILDREN_DEPTH = true;

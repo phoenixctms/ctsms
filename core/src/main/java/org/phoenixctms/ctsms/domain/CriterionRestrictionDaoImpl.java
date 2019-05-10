@@ -16,15 +16,13 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
  * @see CriterionRestriction
  */
 public class CriterionRestrictionDaoImpl
-		extends CriterionRestrictionDaoBase
-{
+		extends CriterionRestrictionDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionRestriction criterionRestrictionVOToEntity(CriterionRestrictionVO criterionRestrictionVO)
-	{
+	public CriterionRestriction criterionRestrictionVOToEntity(CriterionRestrictionVO criterionRestrictionVO) {
 		CriterionRestriction entity = this.loadCriterionRestrictionFromCriterionRestrictionVO(criterionRestrictionVO);
 		this.criterionRestrictionVOToEntity(criterionRestrictionVO, entity, true);
 		return entity;
@@ -37,8 +35,7 @@ public class CriterionRestrictionDaoImpl
 	public void criterionRestrictionVOToEntity(
 			CriterionRestrictionVO source,
 			CriterionRestriction target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criterionRestrictionVOToEntity(source, target, copyIfNull);
 	}
 
@@ -62,15 +59,13 @@ public class CriterionRestrictionDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CriterionRestriction loadCriterionRestrictionFromCriterionRestrictionVO(CriterionRestrictionVO criterionRestrictionVO)
-	{
+	private CriterionRestriction loadCriterionRestrictionFromCriterionRestrictionVO(CriterionRestrictionVO criterionRestrictionVO) {
 		CriterionRestriction criterionRestriction = null;
 		Long id = criterionRestrictionVO.getId();
 		if (id != null) {
 			criterionRestriction = this.load(id);
 		}
-		if (criterionRestriction == null)
-		{
+		if (criterionRestriction == null) {
 			criterionRestriction = CriterionRestriction.Factory.newInstance();
 		}
 		return criterionRestriction;
@@ -80,8 +75,7 @@ public class CriterionRestrictionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionRestrictionVO toCriterionRestrictionVO(final CriterionRestriction entity)
-	{
+	public CriterionRestrictionVO toCriterionRestrictionVO(final CriterionRestriction entity) {
 		return super.toCriterionRestrictionVO(entity);
 	}
 
@@ -91,8 +85,7 @@ public class CriterionRestrictionDaoImpl
 	@Override
 	public void toCriterionRestrictionVO(
 			CriterionRestriction source,
-			CriterionRestrictionVO target)
-	{
+			CriterionRestrictionVO target) {
 		super.toCriterionRestrictionVO(source, target);
 		target.setName(L10nUtil.getCriterionRestrictionName(Locales.USER, source.getNameL10nKey()));
 	}

@@ -84,12 +84,14 @@ public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOu
 				Settings.getColor(CourseCertificatePDFSettingCodes.TEXT_COLOR, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.TEXT_COLOR),
 				L10nUtil.getCourseCertificatePDFLabel(Locales.COURSE_CERTIFICATE_PDF, CourseCertificatePDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
 				Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAGE_LEFT_MARGIN)
-				+ (pageWidth
-						- Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.COURSE_CERTIFICATE_PDF,
-								CourseCertificatePDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_RIGHT_MARGIN,
-										Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
-										Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAGE_LOWER_MARGIN),
-										PDFUtil.Alignment.BOTTOM_CENTER);
+						+ (pageWidth
+								- Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.COURSE_CERTIFICATE_PDF,
+										CourseCertificatePDFDefaultSettings.PAGE_LEFT_MARGIN)
+								- Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_RIGHT_MARGIN,
+										Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAGE_RIGHT_MARGIN))
+								/ 2.0f,
+				Settings.getFloat(CourseCertificatePDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAGE_LOWER_MARGIN),
+				PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 
@@ -167,7 +169,7 @@ public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOu
 			Iterator<CourseParticipationStatusEntryOutVO> participantIt = participantVOs.iterator();
 			while (participantIt.hasNext()) {
 				CourseParticipationStatusEntryOutVO participationVO = participantIt.next();
-				blocks.add(new CourseCertificatePDFBlock(participationVO,BlockType.HEAD));
+				blocks.add(new CourseCertificatePDFBlock(participationVO, BlockType.HEAD));
 				blocks.add(new CourseCertificatePDFBlock());
 				blocks.add(new CourseCertificatePDFBlock(BlockType.CONFIRMATION_1));
 				blocks.add(new CourseCertificatePDFBlock(BlockType.SPACER_SMALL));
@@ -243,7 +245,6 @@ public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOu
 		pdfVO.setDocumentDatas(documentData);
 		return true;
 	}
-
 
 	public void setAllCompetenceVOs(Collection<LecturerCompetenceVO> allCompetenceVOs) {
 		this.allCompetenceVOs = allCompetenceVOs;

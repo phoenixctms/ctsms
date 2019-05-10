@@ -85,8 +85,7 @@ public class CvPositionBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		CvPositionInVO backup = new CvPositionInVO(in);
 		in.setId(null);
 		in.setVersion(null);

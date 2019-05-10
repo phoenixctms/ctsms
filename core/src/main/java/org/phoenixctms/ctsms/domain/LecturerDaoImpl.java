@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Lecturer
  */
 public class LecturerDaoImpl
-extends LecturerDaoBase
-{
+		extends LecturerDaoBase {
 
 	private org.hibernate.Criteria createLecturerCriteria() {
 		org.hibernate.Criteria lecturerCriteria = this.getSession().createCriteria(Lecturer.class);
@@ -35,7 +34,7 @@ extends LecturerDaoBase
 	@Override
 	protected Collection<Lecturer> handleFindByCourseStaffCompetence(
 			Long courseId, Long staffId, Long competenceId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria lecturerCriteria = createLecturerCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Lecturer.class, lecturerCriteria);
 		if (courseId != null) {
@@ -70,8 +69,7 @@ extends LecturerDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Lecturer lecturerInVOToEntity(LecturerInVO lecturerInVO)
-	{
+	public Lecturer lecturerInVOToEntity(LecturerInVO lecturerInVO) {
 		Lecturer entity = this.loadLecturerFromLecturerInVO(lecturerInVO);
 		this.lecturerInVOToEntity(lecturerInVO, entity, true);
 		return entity;
@@ -84,8 +82,7 @@ extends LecturerDaoBase
 	public void lecturerInVOToEntity(
 			LecturerInVO source,
 			Lecturer target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.lecturerInVOToEntity(source, target, copyIfNull);
 		Long courseId = source.getCourseId();
 		Long staffId = source.getStaffId();
@@ -123,8 +120,7 @@ extends LecturerDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Lecturer lecturerOutVOToEntity(LecturerOutVO lecturerOutVO)
-	{
+	public Lecturer lecturerOutVOToEntity(LecturerOutVO lecturerOutVO) {
 		Lecturer entity = this.loadLecturerFromLecturerOutVO(lecturerOutVO);
 		this.lecturerOutVOToEntity(lecturerOutVO, entity, true);
 		return entity;
@@ -137,8 +133,7 @@ extends LecturerDaoBase
 	public void lecturerOutVOToEntity(
 			LecturerOutVO source,
 			Lecturer target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.lecturerOutVOToEntity(source, target, copyIfNull);
 		CourseOutVO courseVO = source.getCourse();
 		StaffOutVO staffVO = source.getStaff();
@@ -183,8 +178,7 @@ extends LecturerDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Lecturer loadLecturerFromLecturerInVO(LecturerInVO lecturerInVO)
-	{
+	private Lecturer loadLecturerFromLecturerInVO(LecturerInVO lecturerInVO) {
 		Lecturer lecturer = null;
 		Long id = lecturerInVO.getId();
 		if (id != null) {
@@ -201,11 +195,9 @@ extends LecturerDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Lecturer loadLecturerFromLecturerOutVO(LecturerOutVO lecturerOutVO)
-	{
+	private Lecturer loadLecturerFromLecturerOutVO(LecturerOutVO lecturerOutVO) {
 		Lecturer lecturer = this.load(lecturerOutVO.getId());
-		if (lecturer == null)
-		{
+		if (lecturer == null) {
 			lecturer = Lecturer.Factory.newInstance();
 		}
 		return lecturer;
@@ -215,8 +207,7 @@ extends LecturerDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public LecturerInVO toLecturerInVO(final Lecturer entity)
-	{
+	public LecturerInVO toLecturerInVO(final Lecturer entity) {
 		return super.toLecturerInVO(entity);
 	}
 
@@ -226,8 +217,7 @@ extends LecturerDaoBase
 	@Override
 	public void toLecturerInVO(
 			Lecturer source,
-			LecturerInVO target)
-	{
+			LecturerInVO target) {
 		super.toLecturerInVO(source, target);
 		Course course = source.getCourse();
 		Staff staff = source.getStaff();
@@ -247,8 +237,7 @@ extends LecturerDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public LecturerOutVO toLecturerOutVO(final Lecturer entity)
-	{
+	public LecturerOutVO toLecturerOutVO(final Lecturer entity) {
 		return super.toLecturerOutVO(entity);
 	}
 
@@ -258,8 +247,7 @@ extends LecturerDaoBase
 	@Override
 	public void toLecturerOutVO(
 			Lecturer source,
-			LecturerOutVO target)
-	{
+			LecturerOutVO target) {
 		super.toLecturerOutVO(source, target);
 		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
 		// WARNING! No conversion for target.lecturer (can't convert source.getLecturer():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO

@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see TeamMember
  */
 public class TeamMemberDaoImpl
-extends TeamMemberDaoBase
-{
+		extends TeamMemberDaoBase {
 
 	private org.hibernate.Criteria createTeamMemberCriteria() {
 		org.hibernate.Criteria teamMemberCriteria = this.getSession().createCriteria(TeamMember.class);
@@ -82,8 +81,7 @@ extends TeamMemberDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TeamMember loadTeamMemberFromTeamMemberInVO(TeamMemberInVO teamMemberInVO)
-	{
+	private TeamMember loadTeamMemberFromTeamMemberInVO(TeamMemberInVO teamMemberInVO) {
 		// TODO implement loadTeamMemberFromTeamMemberInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberFromTeamMemberInVO(TeamMemberInVO) not yet implemented.");
 		TeamMember teamMember = null;
@@ -91,8 +89,7 @@ extends TeamMemberDaoBase
 		if (id != null) {
 			teamMember = this.load(id);
 		}
-		if (teamMember == null)
-		{
+		if (teamMember == null) {
 			teamMember = TeamMember.Factory.newInstance();
 		}
 		return teamMember;
@@ -103,13 +100,11 @@ extends TeamMemberDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TeamMember loadTeamMemberFromTeamMemberOutVO(TeamMemberOutVO teamMemberOutVO)
-	{
+	private TeamMember loadTeamMemberFromTeamMemberOutVO(TeamMemberOutVO teamMemberOutVO) {
 		// TODO implement loadTeamMemberFromTeamMemberOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberFromTeamMemberOutVO(TeamMemberOutVO) not yet implemented.");
 		TeamMember teamMember = this.load(teamMemberOutVO.getId());
-		if (teamMember == null)
-		{
+		if (teamMember == null) {
 			teamMember = TeamMember.Factory.newInstance();
 		}
 		return teamMember;
@@ -119,8 +114,7 @@ extends TeamMemberDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMember teamMemberInVOToEntity(TeamMemberInVO teamMemberInVO)
-	{
+	public TeamMember teamMemberInVOToEntity(TeamMemberInVO teamMemberInVO) {
 		TeamMember entity = this.loadTeamMemberFromTeamMemberInVO(teamMemberInVO);
 		this.teamMemberInVOToEntity(teamMemberInVO, entity, true);
 		return entity;
@@ -133,8 +127,7 @@ extends TeamMemberDaoBase
 	public void teamMemberInVOToEntity(
 			TeamMemberInVO source,
 			TeamMember target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.teamMemberInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
 		Long staffId = source.getStaffId();
@@ -172,8 +165,7 @@ extends TeamMemberDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMember teamMemberOutVOToEntity(TeamMemberOutVO teamMemberOutVO)
-	{
+	public TeamMember teamMemberOutVOToEntity(TeamMemberOutVO teamMemberOutVO) {
 		TeamMember entity = this.loadTeamMemberFromTeamMemberOutVO(teamMemberOutVO);
 		this.teamMemberOutVOToEntity(teamMemberOutVO, entity, true);
 		return entity;
@@ -186,8 +178,7 @@ extends TeamMemberDaoBase
 	public void teamMemberOutVOToEntity(
 			TeamMemberOutVO source,
 			TeamMember target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.teamMemberOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		StaffOutVO staffVO = source.getStaff();
@@ -231,8 +222,7 @@ extends TeamMemberDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMemberInVO toTeamMemberInVO(final TeamMember entity)
-	{
+	public TeamMemberInVO toTeamMemberInVO(final TeamMember entity) {
 		return super.toTeamMemberInVO(entity);
 	}
 
@@ -242,8 +232,7 @@ extends TeamMemberDaoBase
 	@Override
 	public void toTeamMemberInVO(
 			TeamMember source,
-			TeamMemberInVO target)
-	{
+			TeamMemberInVO target) {
 		super.toTeamMemberInVO(source, target);
 		Trial trial = source.getTrial();
 		Staff staff = source.getStaff();
@@ -263,8 +252,7 @@ extends TeamMemberDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMemberOutVO toTeamMemberOutVO(final TeamMember entity)
-	{
+	public TeamMemberOutVO toTeamMemberOutVO(final TeamMember entity) {
 		return super.toTeamMemberOutVO(entity);
 	}
 
@@ -274,8 +262,7 @@ extends TeamMemberDaoBase
 	@Override
 	public void toTeamMemberOutVO(
 			TeamMember source,
-			TeamMemberOutVO target)
-	{
+			TeamMemberOutVO target) {
 		super.toTeamMemberOutVO(source, target);
 		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

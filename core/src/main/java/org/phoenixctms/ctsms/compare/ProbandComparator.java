@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.compare;
 
 import java.util.Comparator;
@@ -65,7 +64,6 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				} else {
 					return 0;
 				}
-
 			} else if (a.isPerson() && !b.isPerson()) {
 				return -1;
 			} else if (!a.isPerson() && b.isPerson()) {

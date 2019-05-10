@@ -1,8 +1,5 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
-
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,7 +70,6 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase {
 	private Long listEntryId;
 	private Long ecrfId;
 
-
 	public EcrfFieldValueAuditTrailLogEagerModel() {
 		super();
 		resetRows();
@@ -103,7 +99,6 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase {
 		return listEntryId;
 	}
 
-
 	@Override
 	protected ECRFFieldValueOutVO getRowElement(Long id) {
 		return WebUtil.getEcrfFieldValue(id);
@@ -116,5 +111,4 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase {
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-
 }

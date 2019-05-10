@@ -19,5 +19,4 @@ public interface ProbandListStatusReasonCodes {
 	public static final String BOOKING_DELETED = "booking_deleted";
 	public static final String BOOKING_DELETED_NO_CALENDAR = "booking_deleted_no_calendar";
 	public static final String BOOKING_COMMENT = "booking_comment";
-
 }

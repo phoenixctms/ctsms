@@ -98,10 +98,8 @@ public class BundleControl extends Control {
 	}
 
 	@Override
-	public ResourceBundle newBundle
-	(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-			throws IllegalAccessException, InstantiationException, IOException
-			{
+	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+			throws IllegalAccessException, InstantiationException, IOException {
 		String bundleName = toBundleName(baseName, locale);
 		String resourceName = toResourceName(bundleName, BUNDLE_EXTENSION);
 		InputStream stream = null;
@@ -145,5 +143,5 @@ public class BundleControl extends Control {
 			}
 		}
 		return bundle;
-			}
+	}
 }

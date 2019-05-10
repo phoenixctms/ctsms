@@ -38,10 +38,10 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see InventoryBooking
  */
 public class InventoryBookingDaoImpl
-extends InventoryBookingDaoBase
-{
+		extends InventoryBookingDaoBase {
 
-	private static void applyIncludeAppointmentsCriterion(Criteria bookingCriteria,Boolean isAppointment,String idProperty,Boolean isRelevantForAppointments,String relevantForAppointmentsProperty) {
+	private static void applyIncludeAppointmentsCriterion(Criteria bookingCriteria, Boolean isAppointment, String idProperty, Boolean isRelevantForAppointments,
+			String relevantForAppointmentsProperty) {
 		if (isAppointment != null) {
 			if (isAppointment) {
 				bookingCriteria.add(Restrictions.isNotNull(idProperty));
@@ -51,7 +51,7 @@ extends InventoryBookingDaoBase
 		}
 		if (isRelevantForAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq(relevantForAppointmentsProperty, isRelevantForAppointments.booleanValue()));
+					.add(Restrictions.eq(relevantForAppointmentsProperty, isRelevantForAppointments.booleanValue()));
 		}
 	}
 
@@ -62,7 +62,7 @@ extends InventoryBookingDaoBase
 		}
 		if (isRelevantForCourseAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
+					.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
 		}
 	}
 
@@ -76,11 +76,9 @@ extends InventoryBookingDaoBase
 			String calendar, Timestamp from, Timestamp to,
 			Boolean isProbandAppointment, Boolean isRelevantForProbandAppointments,
 			Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments,
-			Boolean isTrialAppointment, Boolean isRelevantForTrialAppointments) throws Exception
-	{
+			Boolean isTrialAppointment, Boolean isRelevantForTrialAppointments) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
-
 		if (probandDepartmentId != null) {
 			bookingCriteria.createCriteria("proband", CriteriaSpecification.LEFT_JOIN).add(
 					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", probandDepartmentId.longValue())));
@@ -93,10 +91,9 @@ extends InventoryBookingDaoBase
 			bookingCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN).add(
 					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 		}
-		applyIncludeAppointmentsCriterion(bookingCriteria,isProbandAppointment,"proband.id",isRelevantForProbandAppointments,"relevantForProbandAppointments");
-		applyIncludeAppointmentsCriterion(bookingCriteria,isCourseAppointment,"course.id",isRelevantForCourseAppointments,"relevantForCourseAppointments");
-		applyIncludeAppointmentsCriterion(bookingCriteria,isTrialAppointment,"trial.id",isRelevantForTrialAppointments,"relevantForTrialAppointments");
-
+		applyIncludeAppointmentsCriterion(bookingCriteria, isProbandAppointment, "proband.id", isRelevantForProbandAppointments, "relevantForProbandAppointments");
+		applyIncludeAppointmentsCriterion(bookingCriteria, isCourseAppointment, "course.id", isRelevantForCourseAppointments, "relevantForCourseAppointments");
+		applyIncludeAppointmentsCriterion(bookingCriteria, isTrialAppointment, "trial.id", isRelevantForTrialAppointments, "relevantForTrialAppointments");
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		bookingCriteria.addOrder(Order.asc("start"));
 		return bookingCriteria.list();
@@ -106,8 +103,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<InventoryBooking> handleFindByCourse(Long courseId, PSFVO psf) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByCourse(Long courseId, PSFVO psf) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(InventoryBooking.class, bookingCriteria);
 		if (courseId != null) {
@@ -122,8 +118,7 @@ extends InventoryBookingDaoBase
 	 */
 	@Override
 	protected Collection<InventoryBooking> handleFindByCourseCalendarInterval(Long courseId, String calendar, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments)
-			throws Exception
-	{
+			throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		applyCourseIntervalCriterion(bookingCriteria, courseId, from, to, isRelevantForCourseAppointments);
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
@@ -133,7 +128,7 @@ extends InventoryBookingDaoBase
 	@Override
 	protected Collection<InventoryBooking> handleFindByCourseParticipantDepartmentCategoryInterval(
 			Long staffId, Long courseDepartmentId, Long courseCategoryId, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments)
-					throws Exception {
+			throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		boolean distinctRoot = false;
@@ -157,7 +152,7 @@ extends InventoryBookingDaoBase
 		}
 		if (isRelevantForCourseAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
+					.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
 		}
 		if (distinctRoot) {
 			return CriteriaUtil.listDistinctRoot(bookingCriteria, this);
@@ -167,15 +162,14 @@ extends InventoryBookingDaoBase
 	}
 
 	@Override
-	protected Collection<InventoryBooking> handleFindByCourseSorted(Long courseId, Boolean isRelevantForCourseAppointments, boolean sort) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByCourseSorted(Long courseId, Boolean isRelevantForCourseAppointments, boolean sort) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		if (courseId != null) {
 			bookingCriteria.add(Restrictions.eq("course.id", courseId.longValue()));
 		}
 		if (isRelevantForCourseAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
+					.add(Restrictions.eq("relevantForCourseAppointments", isRelevantForCourseAppointments.booleanValue()));
 		}
 		if (sort) {
 			bookingCriteria.addOrder(Order.asc("start"));
@@ -187,7 +181,7 @@ extends InventoryBookingDaoBase
 	protected Collection<InventoryBooking> handleFindByDepartmentCategoryInventoryOnBehalfOfProbandCourseTrialCalendarInterval(
 			Long departmentId, Long inventoryCategoryId, Long inventoryId, Long onBehalfOfId, Long probandId, Long courseId, Long trialId, String calendar, Timestamp from,
 			Timestamp to)
-					throws Exception {
+			throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		if (departmentId != null || inventoryCategoryId != null) {
@@ -222,8 +216,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<InventoryBooking> handleFindByInventory(Long inventoryId, PSFVO psf) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByInventory(Long inventoryId, PSFVO psf) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(InventoryBooking.class, bookingCriteria);
 		if (inventoryId != null) {
@@ -237,8 +230,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<InventoryBooking> handleFindByInventoryCalendarInterval(Long inventoryId, String calendar, Timestamp from, Timestamp to) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByInventoryCalendarInterval(Long inventoryId, String calendar, Timestamp from, Timestamp to) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		if (inventoryId != null) {
@@ -264,8 +256,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<InventoryBooking> handleFindByProband(Long probandId, PSFVO psf) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByProband(Long probandId, PSFVO psf) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(InventoryBooking.class, bookingCriteria);
 		if (probandId != null) {
@@ -280,8 +271,7 @@ extends InventoryBookingDaoBase
 	 */
 	@Override
 	protected Collection<InventoryBooking> handleFindByProbandCalendarInterval(Long probandId, String calendar, Timestamp from, Timestamp to,
-			Boolean isRelevantForProbandAppointments) throws Exception
-	{
+			Boolean isRelevantForProbandAppointments) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		if (probandId != null) {
@@ -289,7 +279,7 @@ extends InventoryBookingDaoBase
 		}
 		if (isRelevantForProbandAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("relevantForProbandAppointments", isRelevantForProbandAppointments.booleanValue()));
+					.add(Restrictions.eq("relevantForProbandAppointments", isRelevantForProbandAppointments.booleanValue()));
 		}
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		return bookingCriteria.list();
@@ -324,8 +314,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<InventoryBooking> handleFindByTrial(Long trialId, PSFVO psf) throws Exception
-	{
+	protected Collection<InventoryBooking> handleFindByTrial(Long trialId, PSFVO psf) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(InventoryBooking.class, bookingCriteria);
 		if (trialId != null) {
@@ -346,7 +335,7 @@ extends InventoryBookingDaoBase
 		}
 		if (isRelevantForTrialAppointments != null) {
 			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("relevantForTrialAppointments", isRelevantForTrialAppointments.booleanValue()));
+					.add(Restrictions.eq("relevantForTrialAppointments", isRelevantForTrialAppointments.booleanValue()));
 		}
 		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		return bookingCriteria.list();
@@ -356,7 +345,7 @@ extends InventoryBookingDaoBase
 	protected Collection<String> handleFindCalendars(
 			Long inventoryDepartmentId, Long inventoryId, Long probandId, Long courseId,
 			Long trialId, String calendarPrefix, Integer limit)
-					throws Exception {
+			throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		if (inventoryId != null) {
 			bookingCriteria.add(Restrictions.eq("inventory.id", inventoryId.longValue()));
@@ -405,8 +394,7 @@ extends InventoryBookingDaoBase
 	}
 
 	@Override
-	protected long handleGetCourseIntervalCount(Long courseId, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments) throws Exception
-	{
+	protected long handleGetCourseIntervalCount(Long courseId, Timestamp from, Timestamp to, Boolean isRelevantForCourseAppointments) throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
 		applyCourseIntervalCriterion(bookingCriteria, courseId, from, to, isRelevantForCourseAppointments);
 		return (Long) bookingCriteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -416,8 +404,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryBooking inventoryBookingInVOToEntity(InventoryBookingInVO inventoryBookingInVO)
-	{
+	public InventoryBooking inventoryBookingInVOToEntity(InventoryBookingInVO inventoryBookingInVO) {
 		InventoryBooking entity = this.loadInventoryBookingFromInventoryBookingInVO(inventoryBookingInVO);
 		this.inventoryBookingInVOToEntity(inventoryBookingInVO, entity, true);
 		return entity;
@@ -430,8 +417,7 @@ extends InventoryBookingDaoBase
 	public void inventoryBookingInVOToEntity(
 			InventoryBookingInVO source,
 			InventoryBooking target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryBookingInVOToEntity(source, target, copyIfNull);
 		Long inventoryId = source.getInventoryId();
 		Long onBehalfOfId = source.getOnBehalfOfId();
@@ -499,8 +485,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryBooking inventoryBookingOutVOToEntity(InventoryBookingOutVO inventoryBookingOutVO)
-	{
+	public InventoryBooking inventoryBookingOutVOToEntity(InventoryBookingOutVO inventoryBookingOutVO) {
 		InventoryBooking entity = this.loadInventoryBookingFromInventoryBookingOutVO(inventoryBookingOutVO);
 		this.inventoryBookingOutVOToEntity(inventoryBookingOutVO, entity, true);
 		return entity;
@@ -513,8 +498,7 @@ extends InventoryBookingDaoBase
 	public void inventoryBookingOutVOToEntity(
 			InventoryBookingOutVO source,
 			InventoryBooking target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryBookingOutVOToEntity(source, target, copyIfNull);
 		InventoryOutVO inventoryVO = source.getInventory();
 		StaffOutVO onBehalfOfVO = source.getOnBehalfOf();
@@ -589,15 +573,13 @@ extends InventoryBookingDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryBooking loadInventoryBookingFromInventoryBookingInVO(InventoryBookingInVO inventoryBookingInVO)
-	{
+	private InventoryBooking loadInventoryBookingFromInventoryBookingInVO(InventoryBookingInVO inventoryBookingInVO) {
 		InventoryBooking inventoryBooking = null;
 		Long id = inventoryBookingInVO.getId();
 		if (id != null) {
 			inventoryBooking = this.load(id);
 		}
-		if (inventoryBooking == null)
-		{
+		if (inventoryBooking == null) {
 			inventoryBooking = InventoryBooking.Factory.newInstance();
 		}
 		return inventoryBooking;
@@ -608,11 +590,9 @@ extends InventoryBookingDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryBooking loadInventoryBookingFromInventoryBookingOutVO(InventoryBookingOutVO inventoryBookingOutVO)
-	{
+	private InventoryBooking loadInventoryBookingFromInventoryBookingOutVO(InventoryBookingOutVO inventoryBookingOutVO) {
 		InventoryBooking inventoryBooking = this.load(inventoryBookingOutVO.getId());
-		if (inventoryBooking == null)
-		{
+		if (inventoryBooking == null) {
 			inventoryBooking = InventoryBooking.Factory.newInstance();
 		}
 		return inventoryBooking;
@@ -622,8 +602,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryBookingInVO toInventoryBookingInVO(final InventoryBooking entity)
-	{
+	public InventoryBookingInVO toInventoryBookingInVO(final InventoryBooking entity) {
 		return super.toInventoryBookingInVO(entity);
 	}
 
@@ -633,8 +612,7 @@ extends InventoryBookingDaoBase
 	@Override
 	public void toInventoryBookingInVO(
 			InventoryBooking source,
-			InventoryBookingInVO target)
-	{
+			InventoryBookingInVO target) {
 		super.toInventoryBookingInVO(source, target);
 		Inventory inventory = source.getInventory();
 		Staff onBehalfOf = source.getOnBehalfOf();
@@ -662,8 +640,7 @@ extends InventoryBookingDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryBookingOutVO toInventoryBookingOutVO(final InventoryBooking entity)
-	{
+	public InventoryBookingOutVO toInventoryBookingOutVO(final InventoryBooking entity) {
 		return super.toInventoryBookingOutVO(entity);
 	}
 
@@ -673,8 +650,7 @@ extends InventoryBookingDaoBase
 	@Override
 	public void toInventoryBookingOutVO(
 			InventoryBooking source,
-			InventoryBookingOutVO target)
-	{
+			InventoryBookingOutVO target) {
 		super.toInventoryBookingOutVO(source, target);
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.inventory (can't convert source.getInventory():org.phoenixctms.ctsms.domain.Inventory to org.phoenixctms.ctsms.vo.InventoryOutVO

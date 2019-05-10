@@ -119,9 +119,9 @@ import org.springframework.aop.MethodBeforeAdvice;
 public class AuthorisationInterceptor implements MethodBeforeAdvice {
 
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
-
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
+
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
 		if (index != null) {
@@ -129,6 +129,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return null;
 	}
+
 	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
 		String[] parameterGetters = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterGetter, -1);
 		for (int i = 0; i < parameterGetters.length; i++) {
@@ -149,6 +150,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return true;
 	}
+
 	private static boolean isChild(Staff staff, Staff identity) {
 		if (staff == null) {
 			return false;
@@ -164,6 +166,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return false;
 	}
+
 	private static boolean isLecturer(Course course, Staff identity) {
 		if (course == null) {
 			return false;
@@ -176,6 +179,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return false;
 	}
+
 	private static boolean isMember(Trial trial, Staff identity, Boolean access) {
 		if (trial == null) {
 			return false;
@@ -189,12 +193,14 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		return false;
 	}
+
 	private static void setArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args, Object value) {
 		Integer index = argumentIndexMap.get(parameterName);
 		if (index != null) {
 			args[index] = value;
 		}
 	}
+
 	private static String[] splitParameterSetter(String parameterSetter) {
 		String[] result = new String[2];
 		String[] headTail = PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP.split(parameterSetter, -1);
@@ -209,6 +215,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		result[1] = headTail[headTail.length - 1];
 		return result;
 	}
+
 	private PermissionDao permissionDao;
 	private InventoryTagValueDao inventoryTagValueDao;
 	private InventoryStatusEntryDao inventoryStatusEntryDao;
@@ -259,19 +266,11 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private BankAccountDao bankAccountDao;
 	private MoneyTransferDao moneyTransferDao;
 	private UserPermissionProfileDao userPermissionProfileDao;
-
-
-
 	private DiagnosisDao diagnosisDao;
-
 	private MedicationDao medicationDao;
-
 	private ProcedureDao procedureDao;
-
 	private InquiryValueDao inquiryValueDao;
-
 	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
-
 	private ECRFFieldValueDao ecrfFieldValueDao;
 
 	public AuthorisationInterceptor() {
@@ -398,7 +397,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues[1] = Long.toString(identity.getDepartment().getId());
 									break;
 								case INVENTORY_HYPERLINK_ACTIVE:
-									if (HyperlinkModule.INVENTORY_HYPERLINK.equals(((HyperlinkModule) setterRestrictionValues.get(0)))) {
+									if (HyperlinkModule.INVENTORY_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -407,7 +406,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case STAFF_HYPERLINK_ACTIVE:
-									if (HyperlinkModule.STAFF_HYPERLINK.equals(((HyperlinkModule) setterRestrictionValues.get(0)))) {
+									if (HyperlinkModule.STAFF_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -416,7 +415,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case COURSE_HYPERLINK_ACTIVE:
-									if (HyperlinkModule.COURSE_HYPERLINK.equals(((HyperlinkModule) setterRestrictionValues.get(0)))) {
+									if (HyperlinkModule.COURSE_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -425,7 +424,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case TRIAL_HYPERLINK_ACTIVE:
-									if (HyperlinkModule.TRIAL_HYPERLINK.equals(((HyperlinkModule) setterRestrictionValues.get(0)))) {
+									if (HyperlinkModule.TRIAL_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -434,7 +433,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case INVENTORY_DOCUMENT_ACTIVE:
-									if (FileModule.INVENTORY_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.INVENTORY_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -443,7 +442,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case STAFF_DOCUMENT_ACTIVE:
-									if (FileModule.STAFF_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.STAFF_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -452,7 +451,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case COURSE_DOCUMENT_ACTIVE:
-									if (FileModule.COURSE_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.COURSE_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -461,7 +460,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case TRIAL_DOCUMENT_ACTIVE:
-									if (FileModule.TRIAL_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.TRIAL_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -470,7 +469,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case PROBAND_DOCUMENT_ACTIVE:
-									if (FileModule.PROBAND_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.PROBAND_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -478,17 +477,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = false;
 									}
 									break;
-									// case INPUT_FIELD_DOCUMENT_ACTIVE:
-									// if (((FileModule) setterRestrictionValues.get(0)) == FileModule.INPUT_FIELD_DOCUMENT) {
-									// write = true;
-									// parameterValues = new Object[1];
-									// parameterValues[0] = true;
-									// } else {
-									// write = false;
-									// }
-									// break;
+								// case INPUT_FIELD_DOCUMENT_ACTIVE:
+								// if (((FileModule) setterRestrictionValues.get(0)) == FileModule.INPUT_FIELD_DOCUMENT) {
+								// write = true;
+								// parameterValues = new Object[1];
+								// parameterValues[0] = true;
+								// } else {
+								// write = false;
+								// }
+								// break;
 								case MASS_MAIL_DOCUMENT_ACTIVE:
-									if (FileModule.MASS_MAIL_DOCUMENT.equals(((FileModule) setterRestrictionValues.get(0)))) {
+									if (FileModule.MASS_MAIL_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
@@ -1096,6 +1095,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	public void setStratificationRandomizationListDao(StratificationRandomizationListDao stratificationRandomizationListDao) {
 		this.stratificationRandomizationListDao = stratificationRandomizationListDao;
 	}
+
 	public void setTeamMemberDao(TeamMemberDao teamMemberDao) {
 		this.teamMemberDao = teamMemberDao;
 	}
@@ -1187,11 +1187,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				case CV_POSITION_ID_TO_STAFF_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkCvPositionId((Long) parameterValue, cvPositionDao).getStaff().getId();
 				case COURSE_PARTICIPATION_STATUS_ENTRY_ID_TO_STAFF_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkCourseParticipationStatusEntryId((Long) parameterValue, courseParticipationStatusEntryDao).getStaff()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkCourseParticipationStatusEntryId((Long) parameterValue, courseParticipationStatusEntryDao).getStaff()
+									.getId();
 				case COURSE_PARTICIPATION_STATUS_ENTRY_ID_TO_COURSE_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkCourseParticipationStatusEntryId((Long) parameterValue, courseParticipationStatusEntryDao).getCourse()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkCourseParticipationStatusEntryId((Long) parameterValue, courseParticipationStatusEntryDao).getCourse()
+									.getId();
 				case DUTY_ROSTER_TURN_ID_TO_STAFF_ID:
 					if (parameterValue != null) {
 						Staff staff = CheckIDUtil.checkDutyRosterTurnId((Long) parameterValue, dutyRosterTurnDao).getStaff();
@@ -1262,17 +1264,21 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				case PROBAND_LIST_ENTRY_ID_TO_PROBAND_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryId((Long) parameterValue, probandListEntryDao).getProband().getId();
 				case PROBAND_LIST_STATUS_ENTRY_ID_TO_TRIAL_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getTrial()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getTrial()
+									.getId();
 				case PROBAND_LIST_STATUS_ENTRY_ID_TO_PROBAND_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getProband()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkProbandListStatusEntryId((Long) parameterValue, probandListStatusEntryDao).getListEntry().getProband()
+									.getId();
 				case ECRF_FIELD_STATUS_ENTRY_ID_TO_TRIAL_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkEcrfFieldStatusEntryId((Long) parameterValue, ecrfFieldStatusEntryDao).getListEntry().getTrial()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkEcrfFieldStatusEntryId((Long) parameterValue, ecrfFieldStatusEntryDao).getListEntry().getTrial()
+									.getId();
 				case ECRF_FIELD_STATUS_ENTRY_ID_TO_PROBAND_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkEcrfFieldStatusEntryId((Long) parameterValue, ecrfFieldStatusEntryDao).getListEntry().getProband()
-							.getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkEcrfFieldStatusEntryId((Long) parameterValue, ecrfFieldStatusEntryDao).getListEntry().getProband()
+									.getId();
 				case PROBAND_LIST_ENTRY_TAG_VALUE_IN_TO_TRIAL_ID:
 					if (parameterValue != null) {
 						Long listEntryId = ((ProbandListEntryTagValueInVO) parameterValue).getListEntryId();
@@ -1290,11 +1296,13 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					}
 					return null;
 				case PROBAND_LIST_ENTRY_TAG_VALUE_ID_TO_TRIAL_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryTagValueId((Long) parameterValue, probandListEntryTagValueDao).getListEntry()
-							.getTrial().getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkProbandListEntryTagValueId((Long) parameterValue, probandListEntryTagValueDao).getListEntry()
+									.getTrial().getId();
 				case PROBAND_LIST_ENTRY_TAG_VALUE_ID_TO_PROBAND_ID:
-					return parameterValue == null ? null : CheckIDUtil.checkProbandListEntryTagValueId((Long) parameterValue, probandListEntryTagValueDao).getListEntry()
-							.getProband().getId();
+					return parameterValue == null ? null
+							: CheckIDUtil.checkProbandListEntryTagValueId((Long) parameterValue, probandListEntryTagValueDao).getListEntry()
+									.getProband().getId();
 				case PROBAND_TAG_VALUE_ID_TO_PROBAND_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkProbandTagValueId((Long) parameterValue, probandTagValueDao).getProband().getId();
 				case PROBAND_STATUS_ENTRY_ID_TO_PROBAND_ID:
@@ -1425,49 +1433,49 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_STAFF_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.STAFF_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_COURSE_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.COURSE_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_TRIAL_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.TRIAL_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_PROBAND_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.PROBAND_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_USER_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.USER_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_INPUT_FIELD_ID:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.INPUT_FIELD_JOURNAL.equals(journalModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_AND_ID_TO_CRITERIA_DB_MODULE:
 					journalModule = (JournalModule) ((Object[]) parameterValue)[0];
 					if (!JournalModule.CRITERIA_JOURNAL.equals(journalModule)) {
@@ -1485,7 +1493,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case JOURNAL_MODULE_TO_DB_MODULE:
 					journalModule = (JournalModule) (parameterValue);
 					switch (journalModule) {
@@ -1547,28 +1555,28 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), hyperlinkModule == null ? null : L10nUtil.getHyperlinkModuleName(Locales.USER, hyperlinkModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case HYPERLINK_MODULE_AND_ID_TO_STAFF_ID:
 					hyperlinkModule = (HyperlinkModule) ((Object[]) parameterValue)[0];
 					if (!HyperlinkModule.STAFF_HYPERLINK.equals(hyperlinkModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), hyperlinkModule == null ? null : L10nUtil.getHyperlinkModuleName(Locales.USER, hyperlinkModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case HYPERLINK_MODULE_AND_ID_TO_COURSE_ID:
 					hyperlinkModule = (HyperlinkModule) ((Object[]) parameterValue)[0];
 					if (!HyperlinkModule.COURSE_HYPERLINK.equals(hyperlinkModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), hyperlinkModule == null ? null : L10nUtil.getHyperlinkModuleName(Locales.USER, hyperlinkModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case HYPERLINK_MODULE_AND_ID_TO_TRIAL_ID:
 					hyperlinkModule = (HyperlinkModule) ((Object[]) parameterValue)[0];
 					if (!HyperlinkModule.TRIAL_HYPERLINK.equals(hyperlinkModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), hyperlinkModule == null ? null : L10nUtil.getHyperlinkModuleName(Locales.USER, hyperlinkModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_ID_TO_INVENTORY_ID:
 					if (parameterValue != null) {
 						Inventory inventory = CheckIDUtil.checkFileId((Long) parameterValue, fileDao).getInventory();
@@ -1623,42 +1631,42 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_MODULE_AND_ID_TO_STAFF_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.STAFF_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_MODULE_AND_ID_TO_COURSE_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.COURSE_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_MODULE_AND_ID_TO_TRIAL_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.TRIAL_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_MODULE_AND_ID_TO_PROBAND_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.PROBAND_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case FILE_MODULE_AND_ID_TO_MASS_MAIL_ID:
 					fileModule = (FileModule) ((Object[]) parameterValue)[0];
 					if (!FileModule.MASS_MAIL_DOCUMENT.equals(fileModule)) {
 						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
-					return (Long) ((Object[]) parameterValue)[1];
+					return ((Object[]) parameterValue)[1];
 				case CRITERIA_ID_TO_DB_MODULE:
 					return parameterValue == null ? null : CheckIDUtil.checkCriteriaId((Long) parameterValue, criteriaDao).getModule();
 				default:

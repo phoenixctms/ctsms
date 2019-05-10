@@ -7,8 +7,7 @@ import java.util.List;
 public class OperandConfiguration {
 
 	public enum Associativity {
-		LEFT,
-		RIGHT
+		LEFT, RIGHT
 	}
 
 	private int precedence;

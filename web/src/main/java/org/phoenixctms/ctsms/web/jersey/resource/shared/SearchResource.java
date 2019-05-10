@@ -106,7 +106,7 @@ public class SearchResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/intermediatesets")
 	public IntermediateSetSummaryVO getIntermediateSetsByCriteria(@PathParam("id") Long id, @Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException,
-	ServiceException {
+			ServiceException {
 		return WebUtil.getServiceLocator().getSearchService().getIntermediateSetsByCriteria(auth, id, new PSFUriPart(uriInfo));
 	}
 
@@ -225,7 +225,8 @@ public class SearchResource {
 		PSFUriPart psf;
 		return new Page<InventoryOutVO>(WebUtil.getServiceLocator().getSearchService()
 				.searchInventory(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()),
-						ResourceUtils.LIST_GRAPH_MAX_INVENTORY_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
+						ResourceUtils.LIST_GRAPH_MAX_INVENTORY_INSTANCES, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
@@ -247,7 +248,8 @@ public class SearchResource {
 		PSFUriPart psf;
 		return new Page<ProbandOutVO>(WebUtil.getServiceLocator().getSearchService()
 				.searchProband(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()),
-						ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
+						ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET

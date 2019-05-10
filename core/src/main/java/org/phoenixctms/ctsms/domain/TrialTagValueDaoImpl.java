@@ -26,8 +26,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see TrialTagValue
  */
 public class TrialTagValueDaoImpl
-extends TrialTagValueDaoBase
-{
+		extends TrialTagValueDaoBase {
 
 	private org.hibernate.Criteria createTagValueCriteria() {
 		org.hibernate.Criteria tagValueCriteria = this.getSession().createCriteria(TrialTagValue.class);
@@ -51,7 +50,6 @@ extends TrialTagValueDaoBase
 			Boolean payoffs, Boolean excel) throws Exception {
 		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		tagValueCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-
 		Criteria tagCriteria = tagValueCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN);
 		if (excel != null) {
 			tagCriteria.add(Restrictions.eq("excel", excel.booleanValue()));
@@ -59,7 +57,6 @@ extends TrialTagValueDaoBase
 		if (payoffs != null) {
 			tagCriteria.add(Restrictions.eq("payoffs", payoffs.booleanValue()));
 		}
-
 		tagCriteria.addOrder(Order.asc("nameL10nKey"));
 		return tagValueCriteria.list();
 	}
@@ -88,8 +85,7 @@ extends TrialTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialTagValue loadTrialTagValueFromTrialTagValueInVO(TrialTagValueInVO trialTagValueInVO)
-	{
+	private TrialTagValue loadTrialTagValueFromTrialTagValueInVO(TrialTagValueInVO trialTagValueInVO) {
 		// TODO implement loadTrialTagValueFromTrialTagValueInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTagValueFromTrialTagValueInVO(TrialTagValueInVO) not yet implemented.");
 		TrialTagValue trialTagValue = null;
@@ -97,8 +93,7 @@ extends TrialTagValueDaoBase
 		if (id != null) {
 			trialTagValue = this.load(id);
 		}
-		if (trialTagValue == null)
-		{
+		if (trialTagValue == null) {
 			trialTagValue = TrialTagValue.Factory.newInstance();
 		}
 		return trialTagValue;
@@ -109,13 +104,11 @@ extends TrialTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialTagValue loadTrialTagValueFromTrialTagValueOutVO(TrialTagValueOutVO trialTagValueOutVO)
-	{
+	private TrialTagValue loadTrialTagValueFromTrialTagValueOutVO(TrialTagValueOutVO trialTagValueOutVO) {
 		// TODO implement loadTrialTagValueFromTrialTagValueOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTagValueFromTrialTagValueOutVO(TrialTagValueOutVO) not yet implemented.");
 		TrialTagValue trialTagValue = this.load(trialTagValueOutVO.getId());
-		if (trialTagValue == null)
-		{
+		if (trialTagValue == null) {
 			trialTagValue = TrialTagValue.Factory.newInstance();
 		}
 		return trialTagValue;
@@ -125,8 +118,7 @@ extends TrialTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTagValueInVO toTrialTagValueInVO(final TrialTagValue entity)
-	{
+	public TrialTagValueInVO toTrialTagValueInVO(final TrialTagValue entity) {
 		return super.toTrialTagValueInVO(entity);
 	}
 
@@ -136,8 +128,7 @@ extends TrialTagValueDaoBase
 	@Override
 	public void toTrialTagValueInVO(
 			TrialTagValue source,
-			TrialTagValueInVO target)
-	{
+			TrialTagValueInVO target) {
 		super.toTrialTagValueInVO(source, target);
 		TrialTag tag = source.getTag();
 		Trial trial = source.getTrial();
@@ -153,8 +144,7 @@ extends TrialTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTagValueOutVO toTrialTagValueOutVO(final TrialTagValue entity)
-	{
+	public TrialTagValueOutVO toTrialTagValueOutVO(final TrialTagValue entity) {
 		return super.toTrialTagValueOutVO(entity);
 	}
 
@@ -164,8 +154,7 @@ extends TrialTagValueDaoBase
 	@Override
 	public void toTrialTagValueOutVO(
 			TrialTagValue source,
-			TrialTagValueOutVO target)
-	{
+			TrialTagValueOutVO target) {
 		super.toTrialTagValueOutVO(source, target);
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		// WARNING! No conversion for target.tag (can't convert source.getTag():org.phoenixctms.ctsms.domain.TrialTag to org.phoenixctms.ctsms.vo.TrialTagVO
@@ -188,8 +177,7 @@ extends TrialTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTagValue trialTagValueInVOToEntity(TrialTagValueInVO trialTagValueInVO)
-	{
+	public TrialTagValue trialTagValueInVOToEntity(TrialTagValueInVO trialTagValueInVO) {
 		TrialTagValue entity = this.loadTrialTagValueFromTrialTagValueInVO(trialTagValueInVO);
 		this.trialTagValueInVOToEntity(trialTagValueInVO, entity, true);
 		return entity;
@@ -202,8 +190,7 @@ extends TrialTagValueDaoBase
 	public void trialTagValueInVOToEntity(
 			TrialTagValueInVO source,
 			TrialTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialTagValueInVOToEntity(source, target, copyIfNull);
 		Long tagId = source.getTagId();
 		Long trialId = source.getTrialId();
@@ -229,8 +216,7 @@ extends TrialTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTagValue trialTagValueOutVOToEntity(TrialTagValueOutVO trialTagValueOutVO)
-	{
+	public TrialTagValue trialTagValueOutVOToEntity(TrialTagValueOutVO trialTagValueOutVO) {
 		TrialTagValue entity = this.loadTrialTagValueFromTrialTagValueOutVO(trialTagValueOutVO);
 		this.trialTagValueOutVOToEntity(trialTagValueOutVO, entity, true);
 		return entity;
@@ -243,8 +229,7 @@ extends TrialTagValueDaoBase
 	public void trialTagValueOutVOToEntity(
 			TrialTagValueOutVO source,
 			TrialTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialTagValueOutVOToEntity(source, target, copyIfNull);
 		TrialTagVO tagVO = source.getTag();
 		TrialOutVO trialVO = source.getTrial();

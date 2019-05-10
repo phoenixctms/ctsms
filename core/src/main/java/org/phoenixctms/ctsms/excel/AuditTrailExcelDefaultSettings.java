@@ -15,7 +15,6 @@ public final class AuditTrailExcelDefaultSettings {
 	public final static ArrayList<String> AUDIT_TRAIL_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final boolean AUDIT_TRAIL_WRITEHEAD = true;
 	public static final boolean AUDIT_TRAIL_APPEND_HEADER_FOOTER = false;
-
 	public static final boolean ECRF_FIELD_STATUS_AUTOSIZE = true;
 	public static final Integer ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW = null;
 	public static final Integer ECRF_FIELD_STATUS_SCALE_FACTOR = null;
@@ -26,8 +25,7 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final boolean ECRF_FIELD_STATUS_WRITEHEAD = true;
 	public static final boolean ECRF_FIELD_STATUS_APPEND_HEADER_FOOTER = false;
 	public static final ArrayList<String> ECRF_FIELD_STATUS_QUEUES = new ArrayList<String>();
-	static
-	{
+	static {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "section");
@@ -40,13 +38,13 @@ public final class AuditTrailExcelDefaultSettings {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("modifiedTimestamp");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS
-		.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
+				.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "section");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("index");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "position");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS
-		.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "field" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+				.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "field" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "resolved");
 		ECRF_FIELD_STATUS_VO_FIELD_COLUMNS.add("comment");

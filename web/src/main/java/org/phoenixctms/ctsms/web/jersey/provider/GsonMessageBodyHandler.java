@@ -41,9 +41,7 @@ import com.google.gson.stream.JsonWriter;
 public class GsonMessageBodyHandler implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
 	private enum GsonTypes {
-		SERIALIZER,
-		SHORTCUT_SERIALIZER,
-		DESERIALIZER,
+		SERIALIZER, SHORTCUT_SERIALIZER, DESERIALIZER,
 	}
 
 	private final static String API_JSON_SERIALIZE_VALUE_CHARSET = "UTF8";
@@ -154,7 +152,7 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 	public Object readFrom(Class<Object> type, Type genericType,
 			Annotation[] annotations, MediaType mediaType,
 			MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-					throws IOException, WebApplicationException {
+			throws IOException, WebApplicationException {
 		InputStreamReader r = new InputStreamReader(entityStream, API_JSON_DESERIALIZE_VALUE_CHARSET);
 		// if (genericType != null) {
 		return getDeserializer().fromJson(r, genericType); // type);

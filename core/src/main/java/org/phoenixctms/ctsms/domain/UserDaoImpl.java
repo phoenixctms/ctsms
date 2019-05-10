@@ -32,8 +32,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
  * @see User
  */
 public class UserDaoImpl
-extends UserDaoBase
-{
+		extends UserDaoBase {
 
 	private org.hibernate.Criteria createUserCriteria() {
 		org.hibernate.Criteria userCriteria = this.getSession().createCriteria(User.class);
@@ -47,8 +46,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<User> handleFindByCriteria(CriteriaInstantVO criteria, PSFVO psf) throws Exception
-	{
+	protected Collection<User> handleFindByCriteria(CriteriaInstantVO criteria, PSFVO psf) throws Exception {
 		Query query = QueryUtil.createSearchQuery(
 				criteria,
 				DBModule.USER_DB,
@@ -75,8 +73,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<User> handleFindByIdentity(Long identityId, PSFVO psf) throws Exception
-	{
+	protected Collection<User> handleFindByIdentity(Long identityId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria userCriteria = createUserCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(User.class, userCriteria);
 		if (identityId != null) {
@@ -119,8 +116,7 @@ extends UserDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private User loadUserFromUserInVO(UserInVO userInVO)
-	{
+	private User loadUserFromUserInVO(UserInVO userInVO) {
 		// TODO implement loadUserFromUserInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserInVO(UserInVO) not yet implemented.");
 		User user = null;
@@ -128,8 +124,7 @@ extends UserDaoBase
 		if (id != null) {
 			user = this.load(id);
 		}
-		if (user == null)
-		{
+		if (user == null) {
 			user = User.Factory.newInstance();
 		}
 		return user;
@@ -140,8 +135,7 @@ extends UserDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private User loadUserFromUserOutVO(UserOutVO userOutVO)
-	{
+	private User loadUserFromUserOutVO(UserOutVO userOutVO) {
 		// TODO implement loadUserFromUserOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserOutVO(UserOutVO) not yet implemented.");
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
@@ -152,8 +146,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserInVO toUserInVO(final User entity)
-	{
+	public UserInVO toUserInVO(final User entity) {
 		return super.toUserInVO(entity);
 	}
 
@@ -163,8 +156,7 @@ extends UserDaoBase
 	@Override
 	public void toUserInVO(
 			User source,
-			UserInVO target)
-	{
+			UserInVO target) {
 		super.toUserInVO(source, target);
 		Department department = source.getDepartment();
 		Staff identity = source.getIdentity();
@@ -180,8 +172,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserOutVO toUserOutVO(final User entity)
-	{
+	public UserOutVO toUserOutVO(final User entity) {
 		return super.toUserOutVO(entity);
 	}
 
@@ -191,8 +182,7 @@ extends UserDaoBase
 	@Override
 	public void toUserOutVO(
 			User source,
-			UserOutVO target)
-	{
+			UserOutVO target) {
 		HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>();
 		(new UserReflexionGraph(this, this.getDepartmentDao())).toVOHelper(source, target, voMap);
 		loadDeferredStaffOutVOs(voMap);
@@ -201,8 +191,7 @@ extends UserDaoBase
 	@Override
 	public void toUserOutVO(
 			User source,
-			UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new UserReflexionGraph(this, this.getDepartmentDao())).toVOHelper(source, target, voMap);
 		loadDeferredStaffOutVOs(voMap);
 	}
@@ -210,8 +199,7 @@ extends UserDaoBase
 	@Override
 	public void toUserOutVO(
 			User source,
-			UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap, Integer... maxInstances)
-	{
+			UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap, Integer... maxInstances) {
 		(new UserReflexionGraph(this, this.getDepartmentDao(), maxInstances)).toVOHelper(source, target, voMap);
 		loadDeferredStaffOutVOs(voMap);
 	}
@@ -219,8 +207,7 @@ extends UserDaoBase
 	@Override
 	public void toUserOutVO(
 			User source,
-			UserOutVO target, Integer... maxInstances)
-	{
+			UserOutVO target, Integer... maxInstances) {
 		HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>();
 		(new UserReflexionGraph(this, this.getDepartmentDao(), maxInstances)).toVOHelper(source, target, voMap);
 		loadDeferredStaffOutVOs(voMap);
@@ -230,8 +217,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public User userInVOToEntity(UserInVO userInVO)
-	{
+	public User userInVOToEntity(UserInVO userInVO) {
 		User entity = this.loadUserFromUserInVO(userInVO);
 		this.userInVOToEntity(userInVO, entity, true);
 		return entity;
@@ -244,8 +230,7 @@ extends UserDaoBase
 	public void userInVOToEntity(
 			UserInVO source,
 			User target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.userInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long identityId = source.getIdentityId();
@@ -277,8 +262,7 @@ extends UserDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public User userOutVOToEntity(UserOutVO userOutVO)
-	{
+	public User userOutVOToEntity(UserOutVO userOutVO) {
 		// TODO verify behavior of userOutVOToEntity
 		User entity = this.loadUserFromUserOutVO(userOutVO);
 		this.userOutVOToEntity(userOutVO, entity, true);
@@ -292,8 +276,7 @@ extends UserDaoBase
 	public void userOutVOToEntity(
 			UserOutVO source,
 			User target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of userOutVOToEntity
 		super.userOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO identityVO = source.getIdentity();

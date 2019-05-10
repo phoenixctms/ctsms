@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,9 +21,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 public final class DateUtil {
 
 	public enum ConverterType {
-		DATE("date"),
-		TIME("time"),
-		DATETIME("both");
+		DATE("date"), TIME("time"), DATETIME("both");
 
 		private final String value;
 
@@ -40,12 +39,7 @@ public final class DateUtil {
 	}
 
 	public enum DurationUnitOfTime {
-		SECONDS,
-		MINUTES,
-		HOURS,
-		DAYS,
-		MONTHS,
-		YEARS
+		SECONDS, MINUTES, HOURS, DAYS, MONTHS, YEARS
 	}
 
 	// public final static String JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -56,8 +50,8 @@ public final class DateUtil {
 	public static Date addDayMinuteDelta(Date date, int days, int minutes) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		cal.add(GregorianCalendar.DATE, days);
-		cal.add(GregorianCalendar.MINUTE, minutes);
+		cal.add(Calendar.DATE, days);
+		cal.add(Calendar.MINUTE, minutes);
 		return cal.getTime();
 	}
 
@@ -170,6 +164,7 @@ public final class DateUtil {
 	public static DateFormat getDateTimeFormat() {
 		return getDateTimeFormat(Settings.getBoolean(SettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.DATE_TIME_USER_TIME_ZONE));
 	}
+
 	public static DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
@@ -503,9 +498,9 @@ public final class DateUtil {
 
 	public static Date getScheduleMaxDateValue() {
 		GregorianCalendar cal = new GregorianCalendar();
-		cal.add(GregorianCalendar.YEAR, 100);
-		cal.set(GregorianCalendar.MONTH, 0);
-		cal.set(GregorianCalendar.DATE, 1);
+		cal.add(Calendar.YEAR, 100);
+		cal.set(Calendar.MONTH, 0);
+		cal.set(Calendar.DATE, 1);
 		return cal.getTime();
 	}
 
@@ -601,7 +596,7 @@ public final class DateUtil {
 					if (timeZone.inDaylightTime(new Date())) {
 						GregorianCalendar cal = new GregorianCalendar();
 						cal.setTime(date);
-						cal.add(GregorianCalendar.MILLISECOND, (add ? 1 : -1) * timeZone.getDSTSavings());
+						cal.add(Calendar.MILLISECOND, (add ? 1 : -1) * timeZone.getDSTSavings());
 						return cal.getTime();
 					}
 				} else {
@@ -621,7 +616,7 @@ public final class DateUtil {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			cal.add(GregorianCalendar.MILLISECOND, (sub ? -1 : 1) * TimeZone.getDefault().getOffset(date.getTime()));
+			cal.add(Calendar.MILLISECOND, (sub ? -1 : 1) * TimeZone.getDefault().getOffset(date.getTime()));
 			return cal.getTime();
 		}
 		return null;

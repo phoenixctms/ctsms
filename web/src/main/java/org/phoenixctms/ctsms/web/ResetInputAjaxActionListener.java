@@ -12,7 +12,6 @@ package org.phoenixctms.ctsms.web;
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 import static javax.faces.component.visit.VisitContext.createVisitContext;
 
 import java.util.Collection;
@@ -37,7 +36,6 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.SystemEventListener;
 
 //import org.omnifaces.util.Hacks;
-
 /**
  * <p>
  * The {@link ResetInputAjaxActionListener} will reset input fields which are not executed during ajax submit, but which
@@ -113,9 +111,7 @@ import javax.faces.event.SystemEventListener;
 public class ResetInputAjaxActionListener extends DefaultPhaseListener implements ActionListener {
 
 	// Constants ------------------------------------------------------------------------------------------------------
-
 	private static final long serialVersionUID = -5317382021715077662L;
-
 	private static HashSet<Class> SKIP_COMPONENTS = new HashSet<Class>();
 	static {
 		SKIP_COMPONENTS.add(org.primefaces.component.tabview.TabView.class);
@@ -123,19 +119,17 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	}
 	private static final Set<VisitHint> VISIT_HINTS = EnumSet.of(VisitHint.SKIP_TRANSIENT, VisitHint.SKIP_UNRENDERED); // , VisitHint.SKIP_ITERATION);
 	private static final VisitCallback VISIT_CALLBACK = new VisitCallback() {
+
 		@Override
 		public VisitResult visit(VisitContext context, UIComponent target) {
 			FacesContext facesContext = context.getFacesContext();
 			Collection<String> executeIds = facesContext.getPartialViewContext().getExecuteIds();
-
 			if (executeIds.contains(target.getClientId(facesContext))) {
 				return VisitResult.REJECT;
 			}
-
 			if (target instanceof EditableValueHolder) {
 				((EditableValueHolder) target).resetValue();
-			}
-			else if (context.getIdsToVisit() != VisitContext.ALL_IDS) {
+			} else if (context.getIdsToVisit() != VisitContext.ALL_IDS) {
 				// Render ID didn't specifically point an EditableValueHolder. Visit all children as well.
 				if (!SKIP_COMPONENTS.contains(target.getClass())) {
 					try {
@@ -145,13 +139,11 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 					}
 				}
 			}
-
 			return VisitResult.ACCEPT;
 		}
 	};
 
 	// Variables ------------------------------------------------------------------------------------------------------
-
 	/**
 	 * Helper method with RichFaces4 hack to return the proper render IDs from the given partial view context.
 	 * @param partialViewContext The partial view context to return the render IDs for.
@@ -159,7 +151,6 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	 */
 	private static Collection<String> getRenderIds(PartialViewContext partialViewContext) {
 		Collection<String> renderIds = partialViewContext.getRenderIds();
-
 		// WARNING: START OF HACK! ------------------------------------------------------------------------------------
 		// HACK for RichFaces4 because its ExtendedPartialViewContextImpl class doesn't return its componentRenderIds
 		// property on getRenderIds() call when the action is executed using a RichFaces-specific command button/link.
@@ -168,12 +159,10 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 		//	renderIds = Hacks.getRichFacesRenderIds();
 		//}
 		// END OF HACK ------------------------------------------------------------------------------------------------
-
 		return renderIds;
 	}
 
 	// Constructors ---------------------------------------------------------------------------------------------------
-
 	private ActionListener wrapped;
 
 	/**
@@ -186,7 +175,6 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	}
 
 	// Actions --------------------------------------------------------------------------------------------------------
-
 	/**
 	 * Construct a new reset input ajax action listener around the given wrapped action listener. This constructor
 	 * will be used when registering as <code>&lt;action-listener&gt;</code> in <code>faces-config.xml</code>.
@@ -208,7 +196,6 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	}
 
 	// Helpers --------------------------------------------------------------------------------------------------------
-
 	/**
 	 * Handle the reset input action as follows, only and only if the current request is an ajax request and the
 	 * {@link PartialViewContext#getRenderIds()} does not return an empty collection nor is the same as
@@ -223,18 +210,14 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	public void processAction(ActionEvent event) throws AbortProcessingException {
 		FacesContext context = FacesContext.getCurrentInstance();
 		PartialViewContext partialViewContext = context.getPartialViewContext();
-
 		if (partialViewContext.isAjaxRequest()) {
 			Collection<String> renderIds = getRenderIds(partialViewContext);
-
 			if (!renderIds.isEmpty() && !partialViewContext.getExecuteIds().containsAll(renderIds)) {
 				context.getViewRoot().visitTree(createVisitContext(context, renderIds, VISIT_HINTS), VISIT_CALLBACK);
 			}
 		}
-
 		if (wrapped != null && event != null) {
 			wrapped.processAction(event);
 		}
 	}
-
 }

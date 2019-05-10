@@ -40,5 +40,4 @@ public class FloatConverter extends javax.faces.convert.FloatConverter {
 		configure();
 		return CommonUtil.formatDecimal(super.getAsString(context, component, value), decimalSeparator);
 	}
-
 }

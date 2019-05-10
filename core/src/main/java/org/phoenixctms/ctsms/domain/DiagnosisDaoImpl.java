@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Diagnosis
  */
 public class DiagnosisDaoImpl
-extends DiagnosisDaoBase
-{
+		extends DiagnosisDaoBase {
 
 	private static final String DIAGNOSIS_NAME = "{0} ({1})";
 
@@ -52,8 +51,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Diagnosis diagnosisInVOToEntity(DiagnosisInVO diagnosisInVO)
-	{
+	public Diagnosis diagnosisInVOToEntity(DiagnosisInVO diagnosisInVO) {
 		Diagnosis entity = this.loadDiagnosisFromDiagnosisInVO(diagnosisInVO);
 		this.diagnosisInVOToEntity(diagnosisInVO, entity, true);
 		return entity;
@@ -66,8 +64,7 @@ extends DiagnosisDaoBase
 	public void diagnosisInVOToEntity(
 			DiagnosisInVO source,
 			Diagnosis target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.diagnosisInVOToEntity(source, target, copyIfNull);
 		Long codeId = source.getCodeId();
 		Long probandId = source.getProbandId();
@@ -87,7 +84,6 @@ extends DiagnosisDaoBase
 				alphaId.removeDiagnoses(target);
 			}
 		}
-
 		if (probandId != null) {
 			Proband proband = this.getProbandDao().load(probandId);
 			target.setProband(proband);
@@ -115,8 +111,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Diagnosis diagnosisOutVOToEntity(DiagnosisOutVO diagnosisOutVO)
-	{
+	public Diagnosis diagnosisOutVOToEntity(DiagnosisOutVO diagnosisOutVO) {
 		Diagnosis entity = this.loadDiagnosisFromDiagnosisOutVO(diagnosisOutVO);
 		this.diagnosisOutVOToEntity(diagnosisOutVO, entity, true);
 		return entity;
@@ -129,8 +124,7 @@ extends DiagnosisDaoBase
 	public void diagnosisOutVOToEntity(
 			DiagnosisOutVO source,
 			Diagnosis target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.diagnosisOutVOToEntity(source, target, copyIfNull);
 		AlphaIdVO codeVO = source.getCode();
 		ProbandOutVO probandVO = source.getProband();
@@ -184,8 +178,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Diagnosis> handleFindByProband(Long probandId, PSFVO psf) throws Exception
-	{
+	protected Collection<Diagnosis> handleFindByProband(Long probandId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria diagnosisCriteria = createDiagnosisCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Diagnosis.class, diagnosisCriteria);
 		if (probandId != null) {
@@ -199,8 +192,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Diagnosis> handleFindCollidingProbandCodeInterval(Long probandId, Long codeId, Timestamp from, Timestamp to)
-	{
+	protected Collection<Diagnosis> handleFindCollidingProbandCodeInterval(Long probandId, Long codeId, Timestamp from, Timestamp to) {
 		org.hibernate.Criteria diagnosisCriteria = createDiagnosisCriteria();
 		if (from != null) {
 			diagnosisCriteria.add(Restrictions.isNotNull("start"));
@@ -218,8 +210,7 @@ extends DiagnosisDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long probandId) throws Exception
-	{
+	protected long handleGetCount(Long probandId) throws Exception {
 		org.hibernate.Criteria diagnosisCriteria = createDiagnosisCriteria();
 		if (probandId != null) {
 			diagnosisCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
@@ -232,8 +223,7 @@ extends DiagnosisDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Diagnosis loadDiagnosisFromDiagnosisInVO(DiagnosisInVO diagnosisInVO)
-	{
+	private Diagnosis loadDiagnosisFromDiagnosisInVO(DiagnosisInVO diagnosisInVO) {
 		// TODO implement loadDiagnosisFromDiagnosisInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadDiagnosisFromDiagnosisInVO(DiagnosisInVO) not yet implemented.");
 		Long id = diagnosisInVO.getId();
@@ -241,8 +231,7 @@ extends DiagnosisDaoBase
 		if (id != null) {
 			diagnosis = this.load(id);
 		}
-		if (diagnosis == null)
-		{
+		if (diagnosis == null) {
 			diagnosis = Diagnosis.Factory.newInstance();
 		}
 		return diagnosis;
@@ -253,13 +242,11 @@ extends DiagnosisDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Diagnosis loadDiagnosisFromDiagnosisOutVO(DiagnosisOutVO diagnosisOutVO)
-	{
+	private Diagnosis loadDiagnosisFromDiagnosisOutVO(DiagnosisOutVO diagnosisOutVO) {
 		// TODO implement loadDiagnosisFromDiagnosisOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadDiagnosisFromDiagnosisOutVO(DiagnosisOutVO) not yet implemented.");
 		Diagnosis diagnosis = this.load(diagnosisOutVO.getId());
-		if (diagnosis == null)
-		{
+		if (diagnosis == null) {
 			diagnosis = Diagnosis.Factory.newInstance();
 		}
 		return diagnosis;
@@ -269,8 +256,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DiagnosisInVO toDiagnosisInVO(final Diagnosis entity)
-	{
+	public DiagnosisInVO toDiagnosisInVO(final Diagnosis entity) {
 		return super.toDiagnosisInVO(entity);
 	}
 
@@ -280,8 +266,7 @@ extends DiagnosisDaoBase
 	@Override
 	public void toDiagnosisInVO(
 			Diagnosis source,
-			DiagnosisInVO target)
-	{
+			DiagnosisInVO target) {
 		super.toDiagnosisInVO(source, target);
 		AlphaId code = source.getCode();
 		Proband proband = source.getProband();
@@ -302,8 +287,7 @@ extends DiagnosisDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DiagnosisOutVO toDiagnosisOutVO(final Diagnosis entity)
-	{
+	public DiagnosisOutVO toDiagnosisOutVO(final Diagnosis entity) {
 		return super.toDiagnosisOutVO(entity);
 	}
 
@@ -313,8 +297,7 @@ extends DiagnosisDaoBase
 	@Override
 	public void toDiagnosisOutVO(
 			Diagnosis source,
-			DiagnosisOutVO target)
-	{
+			DiagnosisOutVO target) {
 		super.toDiagnosisOutVO(source, target);
 		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

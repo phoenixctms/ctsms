@@ -54,18 +54,16 @@ public abstract class MoneyTransferBeanBase extends ManagedBeanBase implements P
 			in.setVersion(out.getVersion());
 		}
 	}
+
 	protected MoneyTransferInVO in;
 	protected MoneyTransferOutVO out;
 	protected ArrayList<SelectItem> bankAccounts;
 	private PaymentMethodSelector method;
 
-
 	public MoneyTransferBeanBase() {
 		super();
 		setMethod(new PaymentMethodSelector(this, METHOD_PROPERTY_ID));
 	}
-
-
 
 	public List<String> completeCostType(String query) {
 		in.setCostType(query);
@@ -207,7 +205,6 @@ public abstract class MoneyTransferBeanBase extends ManagedBeanBase implements P
 			}
 		}
 		initSpecificSets(reset);
-
 	}
 
 	protected abstract void initSpecificSets(boolean reset);

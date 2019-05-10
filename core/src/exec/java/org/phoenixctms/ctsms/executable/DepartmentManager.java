@@ -50,9 +50,11 @@ public class DepartmentManager {
 	private static final boolean DEFAULT_DEPARTMENT_VISIBLE = true;
 	private static final boolean USER_ONE_TIME_LOGON = false;
 	private static final Pattern PROFILE_SEPARATOR_REGEXP = Pattern.compile(" *, *");
+
 	private static String getDefaultLocale() {
 		return CommonUtil.localeToString(Locale.getDefault());
 	}
+
 	@Autowired
 	private DepartmentDao departmentDao;
 	@Autowired
@@ -66,7 +68,6 @@ public class DepartmentManager {
 	@Autowired
 	private ProfilePermissionDao profilePermissionDao;
 	private Authenticator authenticator;
-
 	private JobOutput jobOutput;
 
 	public DepartmentManager() {
@@ -119,14 +120,14 @@ public class DepartmentManager {
 					result.add(profile);
 				} else {
 					throw new IllegalArgumentException("exactly one profile of group " + L10nUtil.getPermissionProfileGroupName(Locales.USER, group.name())
-					+ " required - remove profile " + profile.toString() + " from list");
+							+ " required - remove profile " + profile.toString() + " from list");
 				}
 			}
 			PermissionProfileGroup[] profileGroups = PermissionProfileGroup.values();
 			for (int i = 0; i < profileGroups.length; i++) {
 				if (!groups.contains(profileGroups[i])) {
 					throw new IllegalArgumentException("exactly one profile of group " + L10nUtil.getPermissionProfileGroupName(Locales.USER, profileGroups[i].name())
-					+ " required");
+							+ " required");
 				}
 			}
 		}
@@ -147,8 +148,6 @@ public class DepartmentManager {
 		createDepartment(nameL10nKey, true, plainDepartmentPassword);
 		jobOutput.println("department created");
 	}
-
-
 
 	public void createUser(String departmentL10nKey, String plainDepartmentPassword, String username, String password, String locale, String profileList) throws Exception {
 		jobOutput.println("department l10n key: " + departmentL10nKey);
@@ -286,7 +285,7 @@ public class DepartmentManager {
 		while (profileIt.hasNext()) {
 			PermissionProfileVO profileVO = profileIt.next();
 			System.out
-			.println(MessageFormat.format(PROFILE_NAME, profileVO.getProfile().toString(), profileVO.getProfileGroup().getProfileGroupName(), profileVO.getProfileName()));
+					.println(MessageFormat.format(PROFILE_NAME, profileVO.getProfile().toString(), profileVO.getProfileGroup().getProfileGroupName(), profileVO.getProfileName()));
 		}
 	}
 

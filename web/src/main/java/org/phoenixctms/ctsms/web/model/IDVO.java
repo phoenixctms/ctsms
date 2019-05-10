@@ -41,8 +41,7 @@ public class IDVO implements Comparable<IDVO> {
 
 	@Override
 	public int compareTo(IDVO object) {
-		if (object == null)
-		{
+		if (object == null) {
 			return -1;
 		}
 		Long id = getId();
@@ -118,8 +117,7 @@ public class IDVO implements Comparable<IDVO> {
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		return new HashCodeBuilder(1249046965, -82296885).append(this.getId()).toHashCode();
 	}
 
@@ -136,8 +134,7 @@ public class IDVO implements Comparable<IDVO> {
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return new ToStringBuilder(this).append("id", this.getId()).toString();
 	}
 }

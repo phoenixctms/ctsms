@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.web.model.shared;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,7 +85,6 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase {
 	private Long listEntryId;
 	private Long ecrfId;
 	private ECRFFieldStatusQueue queue;
-
 
 	public EcrfFieldStatusEntryLogEagerModel(ECRFFieldStatusQueue queue) {
 		super();

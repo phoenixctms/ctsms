@@ -84,7 +84,8 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 							url.append("=");
 							url.append(JsUtil.encodeBase64(Settings.getBoolean(SettingCodes.HIDE_DETAILED_AUTHENTICATION_ERROR, Bundle.SETTINGS,
 									DefaultSettings.HIDE_DETAILED_AUTHENTICATION_ERROR) ? Messages.getMessage(MessageCodes.OPAQUE_AUTHENTICATION_ERROR_MESSAGE)
-											: authenticationException.getMessage(), true));
+											: authenticationException.getMessage(),
+									true));
 							WebUtil.appendRefererParameter(url, request, "&");
 							if (!context.getExternalContext().isResponseCommitted()) {
 								SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();

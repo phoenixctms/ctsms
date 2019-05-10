@@ -24,6 +24,7 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String EVENT_TITLE_SEPARATOR = " | ";
 	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA25;
+
 	public TimelineEvent() {
 		super();
 	}
@@ -43,7 +44,7 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 	@Override
 	protected boolean copyOutToIn() {
 		if (out != null) {
-			TimelineEventBean.copyTimelineEventOutToIn(in, out, new Date());
+			TimelineEventBeanBase.copyTimelineEventOutToIn(in, out, new Date());
 			return true;
 		}
 		return false;
@@ -124,7 +125,7 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 
 	@Override
 	protected void initDefaultValues() {
-		TimelineEventBean.initTimelineEventDefaultValues(in, null);
+		TimelineEventBeanBase.initTimelineEventDefaultValues(in, null);
 	}
 
 	@Override

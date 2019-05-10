@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable.xls;
 
-
 import java.io.File;
 
 import org.phoenixctms.ctsms.util.JobOutput;
@@ -21,21 +20,19 @@ public class XlsExporter {
 	protected EcrfFieldRowWriter ecrfFieldRowWriter;
 	@Autowired
 	protected EcrfRowWriter ecrfRowWriter;
-
 	private JobOutput jobOutput;
 
 	public XlsExporter() {
 	}
 
 	public long exportEcrfs(String fileName, AuthenticationVO auth, Long trialId) throws Throwable {
-		XlsExporterContext context =new XlsExporterContext(this, fileName);
+		XlsExporterContext context = new XlsExporterContext(this, fileName);
 		setContext(ecrfRowWriter, context);
 		setContext(ecrfFieldRowWriter, context);
 		setContext(inputFieldRowWriter, context);
 		setContext(selectionSetValueRowWriter, context);
-		context.setEntityId(ecrfRowWriter,trialId);
+		context.setEntityId(ecrfRowWriter, trialId);
 		context.setAuth(auth);
-
 		return printRows(context, ecrfRowWriter);
 	}
 
@@ -53,10 +50,8 @@ public class XlsExporter {
 	}
 
 	public InputFieldRowWriter getInputFieldRowWriter() {
-
 		return inputFieldRowWriter;
 	}
-
 
 	public SelectionSetValueRowWriter getSelectionSetValueRowWriter() {
 		return selectionSetValueRowWriter;
@@ -64,7 +59,6 @@ public class XlsExporter {
 
 	private long printRows(XlsExporterContext context, RowWriter writer) throws Throwable {
 		jobOutput.println("writing to file " + context.getFileName());
-
 		try {
 			WritableWorkbook workbook;
 			WorkbookSettings workbookSettings = writer.getWorkbookSettings();

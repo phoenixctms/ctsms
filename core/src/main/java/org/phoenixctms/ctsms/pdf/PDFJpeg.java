@@ -36,7 +36,6 @@ public class PDFJpeg extends PDJpeg {
 	// return ImageIO.read(new ByteArrayInputStream(CommonUtil.scaleConvertImage(data, pointsToPixel(width, dpi), pointsToPixel(height, dpi), IMAGE_FORMAT,
 	// bgColor == null ? IMAGE_BG_COLOR : CommonUtil.convertColor(bgColor))));
 	// }
-
 	public static Image createImage(byte[] data, org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		if (data != null && data.length > 0) {
 			try {
@@ -68,7 +67,7 @@ public class PDFJpeg extends PDJpeg {
 	}
 
 	private static float pixelToPoints(int pixel, int dpi) {
-		return ((float) pixel) * ((float) DEFAULT_USER_SPACE_UNIT_DPI / (float) dpi);
+		return (pixel) * ((float) DEFAULT_USER_SPACE_UNIT_DPI / (float) dpi);
 		// return (float) (((double) pixel) * ((double) DEFAULT_USER_SPACE_UNIT_DPI / (double) dpi));
 	}
 
@@ -76,12 +75,10 @@ public class PDFJpeg extends PDJpeg {
 		return (int) (points * ((float) dpi / (float) DEFAULT_USER_SPACE_UNIT_DPI));
 		// return (int) (((double) points) * ((double) dpi / (double) DEFAULT_USER_SPACE_UNIT_DPI));
 	}
-
 	// private static float pointsToPixelF(float points, int dpi) {
 	// return (points * ((float) dpi / (float) DEFAULT_USER_SPACE_UNIT_DPI));
 	// // return (int) (((double) points) * ((double) dpi / (double) DEFAULT_USER_SPACE_UNIT_DPI));
 	// }
-
 
 	public static PDFJpeg prepareImage(PDDocument doc, Image image, int compressionQualityPercent, int dpi) {
 		if (doc != null && image != null) {
@@ -154,22 +151,21 @@ public class PDFJpeg extends PDJpeg {
 			}
 			try {
 				image.crop(width, height);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				// e.printStackTrace();
 			}
 			if (maxWidth != null && pixelToPoints(image.getImage().getWidth(), dpi) > maxWidth) {
-				scaleImage(image,maxWidth,0.0f,dpi);
+				scaleImage(image, maxWidth, 0.0f, dpi);
 			}
 		}
-		return prepareImage(doc,image,compressionQualityPercent,dpi);
+		return prepareImage(doc, image, compressionQualityPercent, dpi);
 	}
 
-	public static Image scaleImage(Image image, float width, float height,int dpi)  {
+	public static Image scaleImage(Image image, float width, float height, int dpi) {
 		if (image != null) {
 			try {
 				image.scale(pointsToPixel(width, dpi), pointsToPixel(height, dpi));
 			} catch (Exception e) {
-
 			}
 		}
 		return image;
@@ -202,6 +198,7 @@ public class PDFJpeg extends PDJpeg {
 		super(jpeg);
 		// TODO Auto-generated constructor stub
 	}
+
 	public float getHeightPoints() {
 		return pixelToPoints(getHeight(), dpi);
 	}

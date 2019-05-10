@@ -36,5 +36,4 @@ public class MethodComparator implements Comparator<Method> {
 			return 0;
 		}
 	}
-
 }

@@ -102,8 +102,7 @@ import org.phoenixctms.ctsms.vocycle.InventoryReflexionGraph;
  * @see org.phoenixctms.ctsms.service.inventory.InventoryService
  */
 public class InventoryServiceImpl
-extends InventoryServiceBase
-{
+		extends InventoryServiceBase {
 
 	private static JournalEntry logSystemMessage(Course course, InventoryOutVO inventoryVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -146,7 +145,6 @@ extends InventoryServiceBase
 
 	private ProbandListStatusEntryOutVO addInventoryBookingProbandListStatusEntry(String reasonL10nKey, String reasonNoCalendarL10nKey, InventoryBooking inventoryBooking,
 			Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
-
 		Trial trial;
 		Proband proband;
 		ProbandListEntry probandListEntry;
@@ -154,17 +152,16 @@ extends InventoryServiceBase
 				&& (trial = inventoryBooking.getTrial()) != null
 				&& (proband = inventoryBooking.getProband()) != null
 				&& (probandListEntry = this.getProbandListEntryDao().findByTrialProband(trial.getId(), proband.getId())) != null) {
-
 			// ProbandListEntry probandListEntry = it.next();
 			Object[] args;
 			String l10nKey;
-			String comment = CommonUtil.isEmptyString(inventoryBooking.getComment()) ? "" : L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
-					ProbandListStatusReasonCodes.BOOKING_COMMENT, DefaultProbandListStatusReasons.BOOKING_COMMENT,
-					new Object[] { inventoryBooking.getComment() });
+			String comment = CommonUtil.isEmptyString(inventoryBooking.getComment()) ? ""
+					: L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
+							ProbandListStatusReasonCodes.BOOKING_COMMENT, DefaultProbandListStatusReasons.BOOKING_COMMENT,
+							new Object[] { inventoryBooking.getComment() });
 			String datetimePattern = Settings.getString(SettingCodes.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN, Bundle.SETTINGS,
 					DefaultSettings.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN);
 			//String datePattern = Settings.getString(SettingCodes.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN);
-
 			if (!CommonUtil.isEmptyString(inventoryBooking.getCalendar())) {
 				args = new Object[] {
 						CommonUtil.inventoryOutVOToString(this.getInventoryDao().toInventoryOutVO(inventoryBooking.getInventory())),
@@ -189,7 +186,6 @@ extends InventoryServiceBase
 				};
 				l10nKey = reasonNoCalendarL10nKey;
 			}
-
 			return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, now, user,
 					this.getProbandDao(),
 					this.getProbandListEntryDao(),
@@ -201,11 +197,9 @@ extends InventoryServiceBase
 					this.getJournalEntryDao());
 		}
 		return null;
-
 	}
 
-	private void checkInventoryBookingInput(InventoryBookingInVO inventoryBookingIn) throws ServiceException
-	{
+	private void checkInventoryBookingInput(InventoryBookingInVO inventoryBookingIn) throws ServiceException {
 		// referential checks
 		Inventory inventory = CheckIDUtil.checkInventoryId(inventoryBookingIn.getInventoryId(), this.getInventoryDao());
 		Long behalfOfId = inventoryBookingIn.getOnBehalfOfId();
@@ -241,8 +235,7 @@ extends InventoryServiceBase
 		}
 	}
 
-	private void checkInventoryInput(InventoryInVO inventoryIn) throws ServiceException
-	{
+	private void checkInventoryInput(InventoryInVO inventoryIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkDepartmentId(inventoryIn.getDepartmentId(), this.getDepartmentDao());
 		CheckIDUtil.checkInventoryCategoryId(inventoryIn.getCategoryId(), this.getInventoryCategoryDao());
@@ -275,8 +268,7 @@ extends InventoryServiceBase
 		(new InventoryReflexionGraph(this.getInventoryDao())).checkGraphLoop(inventory, true, false);
 	}
 
-	private void checkInventoryStatusEntryInput(InventoryStatusEntryInVO statusEntryIn) throws ServiceException
-	{
+	private void checkInventoryStatusEntryInput(InventoryStatusEntryInVO statusEntryIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkInventoryId(statusEntryIn.getInventoryId(), this.getInventoryDao());
 		if (statusEntryIn.getOriginatorId() != null) {
@@ -304,13 +296,11 @@ extends InventoryServiceBase
 		}
 	}
 
-	private void checkInventoryTagValueInput(InventoryTagValueInVO tagValueIn) throws ServiceException
-	{
+	private void checkInventoryTagValueInput(InventoryTagValueInVO tagValueIn) throws ServiceException {
 		(new InventoryTagAdapter(this.getInventoryDao(), this.getInventoryTagDao())).checkTagValueInput(tagValueIn);
 	}
 
-	private void checkMaintenanceScheduleItemInput(MaintenanceScheduleItemInVO maintenanceScheduleItemIn) throws ServiceException
-	{
+	private void checkMaintenanceScheduleItemInput(MaintenanceScheduleItemInVO maintenanceScheduleItemIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkInventoryId(maintenanceScheduleItemIn.getInventoryId(), this.getInventoryDao());
 		CheckIDUtil.checkMaintenanceTypeId(maintenanceScheduleItemIn.getTypeId(), this.getMaintenanceTypeDao());
@@ -505,8 +495,7 @@ extends InventoryServiceBase
 	 */
 	@Override
 	protected InventoryOutVO handleAddInventory(AuthenticationVO auth, InventoryInVO newInventory, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
-			throws Exception
-	{
+			throws Exception {
 		checkInventoryInput(newInventory);
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory inventory = inventoryDao.inventoryInVOToEntity(newInventory);
@@ -618,7 +607,7 @@ extends InventoryServiceBase
 	@Override
 	protected InventoryOutVO handleDeleteInventory(AuthenticationVO auth, Long inventoryId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
 			Integer maxParentDepth, Integer maxChildrenDepth)
-					throws Exception {
+			throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -806,7 +795,6 @@ extends InventoryServiceBase
 		writer.setFrom(from);
 		writer.setTo(to);
 		//writer.s
-
 		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 		Collection VOs = inventoryBookingDao.findByAppointmentDepartmentsCalendarInterval(
 				probandDepartmentId,
@@ -815,7 +803,6 @@ extends InventoryServiceBase
 				calendar, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), isProbandAppointment, isRelevantForProbandAppointments, isCourseAppointment,
 				isRelevantForCourseAppointments, isTrialAppointment, isRelevantForTrialAppointments);
 		inventoryBookingDao.toInventoryBookingOutVOCollection(VOs);
-
 		writer.setVOs(VOs);
 		//writer.setDistinctColumnNames(distinctColumnNames);
 		//writer.setDistinctFieldRows(distinctFieldRows);
@@ -835,7 +822,7 @@ extends InventoryServiceBase
 	@Override
 	protected InventoryBookingDurationSummaryVO handleGetBookingDurationSummary(
 			AuthenticationVO auth, Long inventoryId, String calendar, Date from, Date to)
-					throws Exception {
+			throws Exception {
 		InventoryBookingDurationSummaryVO result = new InventoryBookingDurationSummaryVO();
 		if (inventoryId != null) {
 			result.setInventory(this.getInventoryDao().toInventoryOutVO(CheckIDUtil.checkInventoryId(inventoryId, this.getInventoryDao())));
@@ -874,7 +861,7 @@ extends InventoryServiceBase
 		Course course = courseInventoryBooking.getCourse();
 		if (course != null
 				&& (isRelevantForCourseAppointments == null || isRelevantForCourseAppointments.booleanValue() == courseInventoryBooking.getInventory().getCategory()
-				.isRelevantForCourseAppointments())) {
+						.isRelevantForCourseAppointments())) {
 			Long courseId = course.getId();
 			collidingCourseParticipationStatusEntries = new ArrayList();
 			InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
@@ -910,7 +897,7 @@ extends InventoryServiceBase
 		Course course = courseInventoryBooking.getCourse();
 		if (course != null
 				&& (isRelevantForCourseAppointments == null || isRelevantForCourseAppointments.booleanValue() == courseInventoryBooking.getInventory().getCategory()
-				.isRelevantForCourseAppointments())) {
+						.isRelevantForCourseAppointments())) {
 			Collection collidingDutyRosterTurns = new HashSet(); // new ArrayList();
 			DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 			Iterator<CourseParticipationStatusEntry> it = course.getParticipations().iterator();
@@ -962,7 +949,7 @@ extends InventoryServiceBase
 		Proband proband = probandInventoryBooking.getProband();
 		if (proband != null
 				&& (isRelevantForProbandAppointments == null || isRelevantForProbandAppointments.booleanValue() == probandInventoryBooking.getInventory().getCategory()
-				.isRelevantForProbandAppointments())) {
+						.isRelevantForProbandAppointments())) {
 			ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
 			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(proband.getId(), probandInventoryBooking.getStart(), probandInventoryBooking.getStop(),
 					false, null);
@@ -980,7 +967,7 @@ extends InventoryServiceBase
 		Course course = courseInventoryBooking.getCourse();
 		if (course != null
 				&& (isRelevantForCourseAppointments == null || isRelevantForCourseAppointments.booleanValue() == courseInventoryBooking.getInventory().getCategory()
-				.isRelevantForCourseAppointments())) {
+						.isRelevantForCourseAppointments())) {
 			Collection collidingStaffStatusEntries = new HashSet(); // new ArrayList();
 			StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
 			Iterator<CourseParticipationStatusEntry> it = course.getParticipations().iterator();
@@ -1091,7 +1078,7 @@ extends InventoryServiceBase
 	protected Collection<InventoryStatusEntryOutVO> handleGetInventoryStatus(
 			AuthenticationVO auth, Date now, Long inventoryId, Long departmentId,
 			Long inventoryCategoryId, Boolean inventoryActive, Boolean hideAvailability, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (inventoryId != null) {
 			CheckIDUtil.checkInventoryId(inventoryId, this.getInventoryDao());
 		}
@@ -1306,8 +1293,7 @@ extends InventoryServiceBase
 	 */
 	@Override
 	protected InventoryOutVO handleUpdateInventory(AuthenticationVO auth, InventoryInVO modifiedInventory, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
-			throws Exception
-	{
+			throws Exception {
 		InventoryDao inventoryDao = this.getInventoryDao();
 		Inventory originalInventory = CheckIDUtil.checkInventoryId(modifiedInventory.getId(), inventoryDao, LockMode.PESSIMISTIC_WRITE);
 		checkInventoryInput(modifiedInventory);

@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.util.date;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -306,6 +307,7 @@ public class DateInterval {
 		}
 		return result;
 	}
+
 	private Date start;
 	private Date stop;
 
@@ -318,12 +320,12 @@ public class DateInterval {
 		if (ascending) {
 			start = new GregorianCalendar();
 			start.setTime(dateTime);
-			stop = new GregorianCalendar(start.get(GregorianCalendar.YEAR), start.get(GregorianCalendar.MONTH), start.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-			stop.add(GregorianCalendar.DAY_OF_MONTH, 1);
+			stop = new GregorianCalendar(start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			stop.add(Calendar.DAY_OF_MONTH, 1);
 		} else {
 			stop = new GregorianCalendar();
 			stop.setTime(dateTime);
-			start = new GregorianCalendar(stop.get(GregorianCalendar.YEAR), stop.get(GregorianCalendar.MONTH), stop.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+			start = new GregorianCalendar(stop.get(Calendar.YEAR), stop.get(Calendar.MONTH), stop.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 		}
 		this.start = start.getTime();
 		this.stop = stop.getTime();
@@ -338,7 +340,7 @@ public class DateInterval {
 			if (from != null) {
 				GregorianCalendar start = new GregorianCalendar();
 				start.setTime(from);
-				start = new GregorianCalendar(start.get(GregorianCalendar.YEAR), start.get(GregorianCalendar.MONTH), start.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+				start = new GregorianCalendar(start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 				this.start = start.getTime();
 			} else {
 				this.start = null;
@@ -346,8 +348,8 @@ public class DateInterval {
 			if (to != null) {
 				GregorianCalendar stop = new GregorianCalendar();
 				stop.setTime(to);
-				stop = new GregorianCalendar(stop.get(GregorianCalendar.YEAR), stop.get(GregorianCalendar.MONTH), stop.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-				stop.add(GregorianCalendar.DAY_OF_MONTH, 1);
+				stop = new GregorianCalendar(stop.get(Calendar.YEAR), stop.get(Calendar.MONTH), stop.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				stop.add(Calendar.DAY_OF_MONTH, 1);
 				this.stop = stop.getTime();
 			} else {
 				this.stop = null;
@@ -359,9 +361,9 @@ public class DateInterval {
 	}
 
 	public DateInterval(GregorianCalendar date) {
-		GregorianCalendar start = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-		GregorianCalendar stop = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-		stop.add(GregorianCalendar.DAY_OF_MONTH, 1);
+		GregorianCalendar start = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+		GregorianCalendar stop = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+		stop.add(Calendar.DAY_OF_MONTH, 1);
 		this.start = start.getTime();
 		this.stop = stop.getTime();
 	}
@@ -370,21 +372,21 @@ public class DateInterval {
 		GregorianCalendar start;
 		GregorianCalendar stop;
 		if (ascending) {
-			start = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), hour, minute, 0);
-			stop = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-			stop.add(GregorianCalendar.DAY_OF_MONTH, 1);
+			start = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), hour, minute, 0);
+			stop = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			stop.add(Calendar.DAY_OF_MONTH, 1);
 		} else {
-			start = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-			stop = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), hour, minute, 0);
+			start = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			stop = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), hour, minute, 0);
 		}
 		this.start = start.getTime();
 		this.stop = stop.getTime();
 	}
 
 	public DateInterval(GregorianCalendar date, int hourStart, int minuteStart, int hourEnd, int minuteEnd) {
-		GregorianCalendar start = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), hourStart,
+		GregorianCalendar start = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), hourStart,
 				minuteStart, 0);
-		GregorianCalendar stop = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH), hourEnd,
+		GregorianCalendar stop = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), hourEnd,
 				minuteEnd, 0);
 		this.start = start.getTime();
 		this.stop = stop.getTime();
@@ -415,10 +417,10 @@ public class DateInterval {
 		if (start != null && stop != null && start.compareTo(stop) <= 0) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(start);
-			cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 			while (cal.getTime().compareTo(stop) <= 0) {
 				result.add(cal.getTime());
-				cal.add(GregorianCalendar.DAY_OF_MONTH, 1);
+				cal.add(Calendar.DAY_OF_MONTH, 1);
 			}
 		}
 		return result;

@@ -54,10 +54,10 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 		super();
 		excelVO = new TeamMembersExcelVO();
 		getSpreadSheetWriters()
-		.add(new SpreadSheetWriter(
-				this,
-				getColumnIndexMap(L10nUtil.getTeamMembersExcelColumns(Locales.USER, TeamMembersExcelLabelCodes.VO_FIELD_COLUMNS,
-						TeamMembersExcelDefaultSettings.VO_FIELD_COLUMNS)),
+				.add(new SpreadSheetWriter(
+						this,
+						getColumnIndexMap(L10nUtil.getTeamMembersExcelColumns(Locales.USER, TeamMembersExcelLabelCodes.VO_FIELD_COLUMNS,
+								TeamMembersExcelDefaultSettings.VO_FIELD_COLUMNS)),
 						Settings.getInt(TeamMembersExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
 						omitFields,
 						Settings.getBoolean(TeamMembersExcelSettingCodes.AUTOSIZE, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.AUTOSIZE),
@@ -84,8 +84,8 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 		temp = getTemplateFileName();
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getRight()
-			.append(L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.TEMPLATE_FILENAME_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
-					(new File(temp)).getName()));
+					.append(L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.TEMPLATE_FILENAME_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
+							(new File(temp)).getName()));
 		}
 		footer.getLeft().clear();
 		footer.getLeft().append(L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));

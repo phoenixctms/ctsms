@@ -13,7 +13,6 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public abstract class IDVOConverter implements Converter {
 
-
 	@Override
 	public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
 		if (submittedValue.trim().equals(CommonUtil.NO_SELECTION_VALUE)) {

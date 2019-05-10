@@ -104,7 +104,6 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 						copyInquiryValueOutToIn(in, out);
 					}
 					inquiryValuesIn.add(in);
-
 				}
 			}
 		}
@@ -268,8 +267,6 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 	public TrialOutVO getTrial() {
 		return trial;
 	}
-
-
 
 	public void handleFieldsPerRowChange() {
 		updateInputModelsMap();

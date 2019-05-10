@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.inventory.InventoryService#getMaintenanceSchedule(org.phoenixctms.ctsms.vo.AuthenticationVO, java.util.Date, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups={"service","InventoryService"})
+@Test(groups = { "service", "InventoryService" })
 public class InventoryService_getMaintenanceScheduleTest extends InventoryServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getMaintenanceSchedule</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'InventoryService_getMaintenanceScheduleTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getMaintenanceSchedule]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getMaintenanceSchedule</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'InventoryService_getMaintenanceScheduleTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getMaintenanceSchedule]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

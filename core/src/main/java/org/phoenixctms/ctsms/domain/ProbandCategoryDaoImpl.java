@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.ProbandCategoryVO;
  * @see ProbandCategory
  */
 public class ProbandCategoryDaoImpl
-extends ProbandCategoryDaoBase
-{
+		extends ProbandCategoryDaoBase {
 
 	private org.hibernate.Criteria createCategoryCriteria() {
 		org.hibernate.Criteria categoryCriteria = this.getSession().createCriteria(ProbandCategory.class);
@@ -30,8 +29,7 @@ extends ProbandCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandCategory> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long categoryId)
-	{
+	protected Collection<ProbandCategory> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long categoryId) {
 		org.hibernate.Criteria categoryCriteria = createCategoryCriteria();
 		// CriteriaUtil.applyVisibleIdCriterion("visible", categoryCriteria, visible, categoryId);
 		if (person != null) {
@@ -77,15 +75,13 @@ extends ProbandCategoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandCategory loadProbandCategoryFromProbandCategoryVO(ProbandCategoryVO probandCategoryVO)
-	{
+	private ProbandCategory loadProbandCategoryFromProbandCategoryVO(ProbandCategoryVO probandCategoryVO) {
 		ProbandCategory probandCategory = null;
 		Long id = probandCategoryVO.getId();
 		if (id != null) {
 			probandCategory = this.load(id);
 		}
-		if (probandCategory == null)
-		{
+		if (probandCategory == null) {
 			probandCategory = ProbandCategory.Factory.newInstance();
 		}
 		return probandCategory;
@@ -95,8 +91,7 @@ extends ProbandCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandCategory probandCategoryVOToEntity(ProbandCategoryVO probandCategoryVO)
-	{
+	public ProbandCategory probandCategoryVOToEntity(ProbandCategoryVO probandCategoryVO) {
 		ProbandCategory entity = this.loadProbandCategoryFromProbandCategoryVO(probandCategoryVO);
 		this.probandCategoryVOToEntity(probandCategoryVO, entity, true);
 		return entity;
@@ -109,8 +104,7 @@ extends ProbandCategoryDaoBase
 	public void probandCategoryVOToEntity(
 			ProbandCategoryVO source,
 			ProbandCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -118,8 +112,7 @@ extends ProbandCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandCategoryVO toProbandCategoryVO(final ProbandCategory entity)
-	{
+	public ProbandCategoryVO toProbandCategoryVO(final ProbandCategory entity) {
 		return super.toProbandCategoryVO(entity);
 	}
 
@@ -129,8 +122,7 @@ extends ProbandCategoryDaoBase
 	@Override
 	public void toProbandCategoryVO(
 			ProbandCategory source,
-			ProbandCategoryVO target)
-	{
+			ProbandCategoryVO target) {
 		super.toProbandCategoryVO(source, target);
 		target.setName(L10nUtil.getProbandCategoryName(Locales.USER, source.getNameL10nKey()));
 	}

@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.adapt;
 
 import java.util.Collection;
@@ -22,8 +21,6 @@ public class EcrfFieldValueOutVOStringAdapter extends InputFieldValueStringAdapt
 	protected boolean getBooleanValue(ECRFFieldValueOutVO value) {
 		return value.getBooleanValue();
 	}
-
-
 
 	@Override
 	protected Date getDateValue(ECRFFieldValueOutVO value) {

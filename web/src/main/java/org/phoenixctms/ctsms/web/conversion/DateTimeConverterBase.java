@@ -10,7 +10,6 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public abstract class DateTimeConverterBase extends javax.faces.convert.DateTimeConverter {
 
 	// private boolean isConfigured;
-
 	public DateTimeConverterBase() {
 		super();
 		// isConfigured = false;
@@ -47,6 +46,4 @@ public abstract class DateTimeConverterBase extends javax.faces.convert.DateTime
 	}
 
 	protected abstract void setFormat();
-
-
 }

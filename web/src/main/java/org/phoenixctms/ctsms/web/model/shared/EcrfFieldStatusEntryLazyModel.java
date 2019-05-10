@@ -1,9 +1,5 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
-
-
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -40,7 +36,8 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase {
 	protected Collection<ECRFFieldStatusEntryOutVO> getLazyResult(PSFVO psf) {
 		if (listEntryId != null && ecrfFieldId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), queue, listEntryId, ecrfFieldId, index, false, false, psf);
+				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), queue, listEntryId, ecrfFieldId, index, false, false,
+						psf);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -72,16 +69,10 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase {
 		this.index = index;
 	}
 
-
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-
-
 	// public void setQueue(ECRFFieldStatusQueue queue) {
 	// this.queue = queue;
 	// }
-
-
-
 }

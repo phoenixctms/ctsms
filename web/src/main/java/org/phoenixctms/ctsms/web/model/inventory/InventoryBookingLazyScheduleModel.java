@@ -216,8 +216,9 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			if (bookings != null) {
 				bookings = new ArrayList(bookings);
 				Collections.sort((ArrayList) bookings, new InventoryBookingIntervalScheduleComparator(false));
-				boolean showCollisions = (showCollisionsThresholdDays == null ? true : to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
-						showCollisionsThresholdDays, 1)) <= 0);
+				boolean showCollisions = (showCollisionsThresholdDays == null ? true
+						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
+								showCollisionsThresholdDays, 1)) <= 0);
 				HashMap<Long, Color> trialColorMap = new HashMap<Long, Color>(bookings.size());
 				Iterator<Color> trialColorsIt = CommonUtil.getCircularIterator(trialColors);
 				Iterator<InventoryBookingOutVO> it = bookings.iterator();

@@ -7,8 +7,7 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 public interface PDFContentPainter {
 
 	public enum PageOrientation {
-		PORTRAIT,
-		LANDSCAPE
+		PORTRAIT, LANDSCAPE
 	};
 
 	public void drawNextBlock(PDPageContentStream contentStream) throws Exception;

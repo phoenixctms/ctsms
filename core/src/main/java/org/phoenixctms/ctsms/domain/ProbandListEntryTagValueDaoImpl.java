@@ -45,8 +45,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandListEntryTagValue
  */
 public class ProbandListEntryTagValueDaoImpl
-extends ProbandListEntryTagValueDaoBase
-{
+		extends ProbandListEntryTagValueDaoBase {
 
 	private final static VOIDComparator SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueOutVO>(false);
 	private final static VOIDComparator SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueJsonVO>(false);
@@ -90,7 +89,6 @@ extends ProbandListEntryTagValueDaoBase
 		// Subqueries.propertyIn("id", subQuery)
 		// )
 		// ));
-
 		// System.out.println(CriteriaUtil.criteriaToSql(listEntryTagCriteria));
 		return listEntryTagCriteria;
 	}
@@ -98,7 +96,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	protected Collection<ProbandListEntryTagValue> handleFindByListEntryField(
 			Long probandListEntryId, Long inputFieldId)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria listEntryTagValueCriteria = createListEntryTagValueCriteria();
 		if (probandListEntryId != null) {
 			listEntryTagValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
@@ -137,7 +135,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	protected Collection<ProbandListEntryTagValue> handleFindByListEntryListEntryTag(
 			Long probandListEntryId, Long probandListEntryTagId)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria listEntryTagValueCriteria = createListEntryTagValueCriteria();
 		if (probandListEntryId != null) {
 			listEntryTagValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
@@ -151,7 +149,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	protected long handleGetCount(
 			Long probandListEntryId, Long probandListEntryTagId)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria listEntryTagValueCriteria = createListEntryTagValueCriteria();
 		if (probandListEntryId != null) {
 			listEntryTagValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
@@ -177,8 +175,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(ProbandListEntryTagValueInVO probandListEntryTagValueInVO)
-	{
+	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(ProbandListEntryTagValueInVO probandListEntryTagValueInVO) {
 		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueInVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(ProbandListEntryTagValueInVO) not yet implemented.");
@@ -187,8 +184,7 @@ extends ProbandListEntryTagValueDaoBase
 		if (id != null) {
 			probandListEntryTagValue = this.load(id);
 		}
-		if (probandListEntryTagValue == null)
-		{
+		if (probandListEntryTagValue == null) {
 			probandListEntryTagValue = ProbandListEntryTagValue.Factory.newInstance();
 		}
 		return probandListEntryTagValue;
@@ -199,8 +195,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO)
-	{
+	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO) {
 		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(ProbandListEntryTagValueJsonVO) not yet implemented.");
@@ -213,14 +208,12 @@ extends ProbandListEntryTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(ProbandListEntryTagValueOutVO probandListEntryTagValueOutVO)
-	{
+	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(ProbandListEntryTagValueOutVO probandListEntryTagValueOutVO) {
 		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(ProbandListEntryTagValueOutVO) not yet implemented.");
 		ProbandListEntryTagValue probandListEntryTagValue = this.load(probandListEntryTagValueOutVO.getId());
-		if (probandListEntryTagValue == null)
-		{
+		if (probandListEntryTagValue == null) {
 			probandListEntryTagValue = ProbandListEntryTagValue.Factory.newInstance();
 		}
 		return probandListEntryTagValue;
@@ -230,8 +223,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValue probandListEntryTagValueInVOToEntity(ProbandListEntryTagValueInVO probandListEntryTagValueInVO)
-	{
+	public ProbandListEntryTagValue probandListEntryTagValueInVOToEntity(ProbandListEntryTagValueInVO probandListEntryTagValueInVO) {
 		ProbandListEntryTagValue entity = this.loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(probandListEntryTagValueInVO);
 		this.probandListEntryTagValueInVOToEntity(probandListEntryTagValueInVO, entity, true);
 		return entity;
@@ -244,8 +236,7 @@ extends ProbandListEntryTagValueDaoBase
 	public void probandListEntryTagValueInVOToEntity(
 			ProbandListEntryTagValueInVO source,
 			ProbandListEntryTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListEntryTagValueInVOToEntity(source, target, copyIfNull);
 		Long listEntryId = source.getListEntryId();
 		Long tagId = source.getTagId();
@@ -260,7 +251,6 @@ extends ProbandListEntryTagValueDaoBase
 				listEntry.removeTagValues(target);
 			}
 		}
-
 		if (tagId != null) {
 			ProbandListEntryTag tag = this.getProbandListEntryTagDao().load(tagId);
 			target.setTag(tag);
@@ -292,24 +282,20 @@ extends ProbandListEntryTagValueDaoBase
 		if (copyIfNull || source.getFloatValue() != null) {
 			value.setFloatValue(source.getFloatValue());
 		}
-		if (copyIfNull || source.getDateValue() != null)
-		{
+		if (copyIfNull || source.getDateValue() != null) {
 			value.setDateValue(CoreUtil.forceDate(source.getDateValue()));
 		}
-		if (copyIfNull || source.getTimestampValue() != null)
-		{
+		if (copyIfNull || source.getTimestampValue() != null) {
 			value.setTimestampValue((source.getTimestampValue() == null ? null : new Timestamp(source.getTimestampValue().getTime())));
 		}
-		if (copyIfNull || source.getTimeValue() != null)
-		{
+		if (copyIfNull || source.getTimeValue() != null) {
 			value.setTimeValue(CoreUtil.forceDate(source.getTimeValue()));
 		}
 		if (copyIfNull || source.getInkValues() != null) {
 			value.setInkValue(source.getInkValues());
 		}
 		Collection selectionValueIds;
-		if ((selectionValueIds = source.getSelectionValueIds()).size() > 0 || copyIfNull)
-		{
+		if ((selectionValueIds = source.getSelectionValueIds()).size() > 0 || copyIfNull) {
 			value.setSelectionValues(toInputFieldSelectionSetValueSet(selectionValueIds));
 		}
 	}
@@ -318,8 +304,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValue probandListEntryTagValueJsonVOToEntity(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO)
-	{
+	public ProbandListEntryTagValue probandListEntryTagValueJsonVOToEntity(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO) {
 		// TODO verify behavior of probandListEntryTagValueJsonVOToEntity
 		ProbandListEntryTagValue entity = this.loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(probandListEntryTagValueJsonVO);
 		this.probandListEntryTagValueJsonVOToEntity(probandListEntryTagValueJsonVO, entity, true);
@@ -333,8 +318,7 @@ extends ProbandListEntryTagValueDaoBase
 	public void probandListEntryTagValueJsonVOToEntity(
 			ProbandListEntryTagValueJsonVO source,
 			ProbandListEntryTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of probandListEntryTagValueJsonVOToEntity
 		super.probandListEntryTagValueJsonVOToEntity(source, target, copyIfNull);
 	}
@@ -343,8 +327,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValue probandListEntryTagValueOutVOToEntity(ProbandListEntryTagValueOutVO probandListEntryTagValueOutVO)
-	{
+	public ProbandListEntryTagValue probandListEntryTagValueOutVOToEntity(ProbandListEntryTagValueOutVO probandListEntryTagValueOutVO) {
 		ProbandListEntryTagValue entity = this.loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(probandListEntryTagValueOutVO);
 		this.probandListEntryTagValueOutVOToEntity(probandListEntryTagValueOutVO, entity, true);
 		return entity;
@@ -357,8 +340,7 @@ extends ProbandListEntryTagValueDaoBase
 	public void probandListEntryTagValueOutVOToEntity(
 			ProbandListEntryTagValueOutVO source,
 			ProbandListEntryTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListEntryTagValueOutVOToEntity(source, target, copyIfNull);
 		ProbandListEntryOutVO listEntryVO = source.getListEntry();
 		ProbandListEntryTagOutVO tagVO = source.getTag();
@@ -425,7 +407,7 @@ extends ProbandListEntryTagValueDaoBase
 		Collection selectionValues;
 		if ((selectionValues = source.getSelectionValues()).size() > 0 || copyIfNull) {
 			this.getInputFieldSelectionSetValueDao().inputFieldSelectionSetValueOutVOToEntityCollection(selectionValues);
-			value.setSelectionValues((Collection<InputFieldSelectionSetValue>) selectionValues); // hashset-exception!!!
+			value.setSelectionValues(selectionValues); // hashset-exception!!!
 		}
 	}
 
@@ -442,7 +424,6 @@ extends ProbandListEntryTagValueDaoBase
 	// }
 	// return result;
 	// }
-
 	private ArrayList<InputFieldSelectionSetValueJsonVO> toInputFieldSelectionSetValueJsonVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
 		// persistentset
 		// prevention
@@ -509,8 +490,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValueInVO toProbandListEntryTagValueInVO(final ProbandListEntryTagValue entity)
-	{
+	public ProbandListEntryTagValueInVO toProbandListEntryTagValueInVO(final ProbandListEntryTagValue entity) {
 		return super.toProbandListEntryTagValueInVO(entity);
 	}
 
@@ -520,8 +500,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	public void toProbandListEntryTagValueInVO(
 			ProbandListEntryTagValue source,
-			ProbandListEntryTagValueInVO target)
-	{
+			ProbandListEntryTagValueInVO target) {
 		super.toProbandListEntryTagValueInVO(source, target);
 		ProbandListEntry listEntry = source.getListEntry();
 		ProbandListEntryTag tag = source.getTag();
@@ -549,8 +528,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValueJsonVO toProbandListEntryTagValueJsonVO(final ProbandListEntryTagValue entity)
-	{
+	public ProbandListEntryTagValueJsonVO toProbandListEntryTagValueJsonVO(final ProbandListEntryTagValue entity) {
 		// TODO verify behavior of toProbandListEntryTagValueJsonVO
 		return super.toProbandListEntryTagValueJsonVO(entity);
 	}
@@ -561,8 +539,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	public void toProbandListEntryTagValueJsonVO(
 			ProbandListEntryTagValue source,
-			ProbandListEntryTagValueJsonVO target)
-	{
+			ProbandListEntryTagValueJsonVO target) {
 		super.toProbandListEntryTagValueJsonVO(source, target);
 		ProbandListEntryTag tag = source.getTag();
 		if (tag != null) {
@@ -609,8 +586,7 @@ extends ProbandListEntryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryTagValueOutVO toProbandListEntryTagValueOutVO(final ProbandListEntryTagValue entity)
-	{
+	public ProbandListEntryTagValueOutVO toProbandListEntryTagValueOutVO(final ProbandListEntryTagValue entity) {
 		return super.toProbandListEntryTagValueOutVO(entity);
 	}
 
@@ -620,8 +596,7 @@ extends ProbandListEntryTagValueDaoBase
 	@Override
 	public void toProbandListEntryTagValueOutVO(
 			ProbandListEntryTagValue source,
-			ProbandListEntryTagValueOutVO target)
-	{
+			ProbandListEntryTagValueOutVO target) {
 		super.toProbandListEntryTagValueOutVO(source, target);
 		// WARNING! No conversion for target.listEntry (can't convert source.getListEntry():org.phoenixctms.ctsms.domain.ProbandListEntry to
 		// org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO

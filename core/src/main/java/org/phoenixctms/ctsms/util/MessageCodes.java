@@ -109,7 +109,6 @@ public interface MessageCodes {
 	public static final String ECRF_SIGNATURE_AVAILABLE = "ecrf_signature_available";
 	public static final String UNSUPPORTED_RANDOMIZATION_MODE = "unsupported_randomization_mode";
 	public static final String UNSUPPORTED_RANDOMIZATION_TYPE = "unsupported_randomization_type";
-
 	public static final String ECRF_VALIDATION_FAILED_RESPONSE = "ecrf_validation_failed_response";
 	public static final String ECRF_VALIDATION_OK_ERRORS_RESPONSE = "ecrf_validation_ok_errors_response";
 	public static final String ECRF_VALIDATION_OK_NO_ERROR_RESPONSE = "ecrf_validation_ok_no_error_response";

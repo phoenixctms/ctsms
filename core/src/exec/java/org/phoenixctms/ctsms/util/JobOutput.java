@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Address;
+import javax.mail.Message.RecipientType;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -53,13 +54,13 @@ public class JobOutput {
 	// return mimeType;
 	// }
 	// }
-
 	private final static String EMAIL_ENCODING = "UTF-8";
 	private final static String LINE_FORMAT = "{0}";
 	private final static String LINE_FORMAT_WITH_TIMESTAMP = "{0}: {1}";
 	private final static boolean ALWAYS_PRINT_TIMESTAMP = false;
 	private final static String DEFAULT_EMAIL_ADDRESS_SEPARATOR = ";";
 	private final static Pattern emailAddressSeparatorRegexp = Pattern.compile(DEFAULT_EMAIL_ADDRESS_SEPARATOR + "|,| ");
+
 	private static StringBuilder getEmailRecipients(CommandLine line, boolean send) {
 		StringBuilder recipients = new StringBuilder();
 		if (line.hasOption(DBToolOptions.EMAIL_RECIPIENTS_OPT)) {
@@ -78,10 +79,8 @@ public class JobOutput {
 	}
 
 	private Date start;
-
 	private StringBuilder output;
 	private ArrayList<EmailAttachmentVO> attachments;
-
 	private JavaMailSender mailSender;
 
 	public JobOutput() {
@@ -89,7 +88,6 @@ public class JobOutput {
 	}
 
 	public void addEmailAttachment(byte[] data, MimeTypeVO contentType, String fileName) {
-
 		// this.getMimeTypeDao().findByMimeTypeModule(fileContent.getMimeType(), file.getModule()).iterator().next()
 		attachments.add(new EmailAttachmentVO(data, fileName, (long) data.length, contentType));
 	}
@@ -174,7 +172,6 @@ public class JobOutput {
 		System.out.println(lineFormatted);
 	}
 
-
 	public void printPrelude(Option task) {
 		String applicationName = Settings.getString(SettingCodes.APPLICATION_NAME, Bundle.SETTINGS, null);
 		String applicationVersion = Settings.getString(SettingCodes.APPLICATION_VERSION, Bundle.SETTINGS, null);
@@ -204,14 +201,13 @@ public class JobOutput {
 		output = new StringBuilder();
 	}
 
-
 	public int send(String subjectFormat, Option task, CommandLine line, boolean send) throws Exception {
 		if (line != null) {
 			StringBuilder recipients = getEmailRecipients(line, send);
 			if (recipients.length() > 0) {
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				prepareEmail(mimeMessage, MessageFormat.format(subjectFormat, task.getDescription()), recipients.toString());
-				Address[] to = mimeMessage.getRecipients(MimeMessage.RecipientType.TO);
+				Address[] to = mimeMessage.getRecipients(RecipientType.TO);
 				int toCount = to != null ? to.length : 0;
 				if (toCount > 0) {
 					if (attachments.size() > 0) {

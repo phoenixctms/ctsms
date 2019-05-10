@@ -8,7 +8,6 @@ public final class EcrfPDFDefaultSettings {
 
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public final static boolean LANDSCAPE = false;
-
 	public static final String PROBAND_DATE_OF_BIRTH_DATE_PATTERN = "d. MMMM yyyy";
 	public static final String CONTENT_TIMESTAMP_DATETIME_PATTERN = "d. MMMM yyyy HH:MM";
 	public static final String MODIFIED_TIMESTAMP_PATTERN = "d. MMMM yyyy HH:MM";
@@ -43,7 +42,6 @@ public final class EcrfPDFDefaultSettings {
 	public final static float X_BOX_FRAME_INDENT = 6.0f;
 	public final static float Y_BOX_FRAME_INDENT = 6.0f;
 	public final static float Y_BOX_LOG_FRAME_INDENT = 3.0f;
-
 	// public final static float SPACER_HEIGHT = 20.0f;
 	// public static final float BLOCK_FRAME_LINE_WIDTH = 1.0f;
 	// public static final float COLUMN_LINE_WIDTH = 0.6f;
@@ -51,19 +49,16 @@ public final class EcrfPDFDefaultSettings {
 	public static final Color PRESET_TEXT_COLOR = Color.GAINSBORO; // Color.WHITESMOKE;
 	public static final Color FRAME_COLOR = Color.BLACK;
 	public static final Color VALIDATION_ERROR_MESSAGE_TEXT_COLOR = Color.INDIANRED; // Color.RED;
-
 	public final static String DATE_VALUE_PATTERN = "yyyy/MM/dd";
 	public final static String TIMESTAMP_VALUE_PATTERN = "yyyy/MM/dd HH:mm";
 	public final static String TIME_VALUE_PATTERN = "HH:mm";
 	public final static String FLOAT_VALUE_PATTERN = "#.######";
 	public final static String INTEGER_VALUE_PATTERN = "######";
-
 	public static final int SELECTION_ITEM_IMAGE_QUALITY = 100;
 	public static final int SELECTION_ITEM_IMAGE_DPI = 600;
 	public static final int SELECTION_ITEM_IMAGE_WIDTH = 12;
 	public static final int SELECTION_ITEM_IMAGE_HEIGHT = 12;
 	public static final Color SELECTION_ITEM_IMAGE_BG_COLOR = null;
-
 	public final static Integer SIGNATURE_VALUE_LENGTH = null;
 	public static final int SIGNATURE_IMAGE_QUALITY = 100;
 	public static final int SIGNATURE_IMAGE_DPI = 300;
@@ -76,7 +71,6 @@ public final class EcrfPDFDefaultSettings {
 	public static final float Y_SELECTION_ITEM_INDENT = 4.0f;
 	public static final float Y_SELECTION_ITEM_IMAGE_LABEL_OFFSET = 1.0f;
 	public static final boolean SHOW_PRESET_VALUES = true;
-
 	public static final int SKETCH_IMAGE_QUALITY = 100;
 	public static final int SKETCH_IMAGE_DPI = 144;
 	public static final Color SKETCH_IMAGE_BG_COLOR = null;
@@ -84,7 +78,6 @@ public final class EcrfPDFDefaultSettings {
 	public static final boolean SHOW_SKETCH_REGIONS = true;
 	public static final int LONG_TITLE_LENGTH = 36;
 	public static final boolean SHOW_MODIFIED_LABEL = true;
-
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_TAGS = true;
 	public static final boolean SHOW_ALL_PROBAND_LIST_ENTRY_TAGS = false;
 	public static final ArrayList<String> ECRF_FIELD_STATUS_QUEUES = new ArrayList<String>();

@@ -19,16 +19,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 public class CVPDFBlock {
 
 	public enum BlockType {
-		SPACER,
-		IMAGE_CENTERED,
-		IMAGE_RIGHT,
-		HEAD,
-		FULL_NAME,
-		DATE_OF_BIRTH,
-		ACADEMIC_TITLE,
-		ADDRESS,
-		CV_SECTION_POSITIONS,
-		SIGNATURE_DATE
+		SPACER, IMAGE_CENTERED, IMAGE_RIGHT, HEAD, FULL_NAME, DATE_OF_BIRTH, ACADEMIC_TITLE, ADDRESS, CV_SECTION_POSITIONS, SIGNATURE_DATE
 	}
 
 	private StaffOutVO staff;
@@ -128,7 +119,7 @@ public class CVPDFBlock {
 		if (staff != null && staff.isPerson()) {
 			return L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL, CommonUtil.getCvStaffName(staff), now == null ? null
 					: Settings.getSimpleDateFormat(CVPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.CV_PDF)
-					.format(now));
+							.format(now));
 		}
 		return "";
 	}
@@ -250,7 +241,7 @@ public class CVPDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth() - Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-						* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+								* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CVPDFSettingCodes.Y_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				PDFUtil.renderFrame(contentStream, Settings.getColor(CVPDFSettingCodes.FRAME_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.FRAME_COLOR), cursor.getBlockX(),
@@ -324,10 +315,11 @@ public class CVPDFBlock {
 						Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR),
 						CommonUtil.getCvAddressBlock(staff, address, PDFUtil.PDF_LINE_BREAK), x, y2, PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth() -
-						(ximage == null ? 0.0f : ximage.getWidthPoints()
-								+ Settings.getFloat(CVPDFSettingCodes.X_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_IMAGE_INDENT))
+								(ximage == null ? 0.0f
+										: ximage.getWidthPoints()
+												+ Settings.getFloat(CVPDFSettingCodes.X_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_IMAGE_INDENT))
 								- Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT_PHOTO, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT_PHOTO) - 2.0f
-								* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CVPDFSettingCodes.Y_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_FRAME_INDENT);
 				height += cursor.getBlockY() - height - Math.min(y1, y2);
 				y1 = cursor.getBlockY(); // - Settings.getFloat(CVPDFSettingCodes.Y_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_IMAGE_INDENT);
@@ -342,9 +334,11 @@ public class CVPDFBlock {
 						cursor.getBlockX(),
 						cursor.getBlockY(),
 						cursor.getBlockWidth()
-						- (ximage == null ? 0.0f : ximage.getWidthPoints()
-								+ Settings.getFloat(CVPDFSettingCodes.X_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_IMAGE_INDENT)), height,
-								PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(CVPDFSettingCodes.BLOCK_FRAME_LINE_WIDTH, Bundle.CV_PDF, CVPDFDefaultSettings.BLOCK_FRAME_LINE_WIDTH));
+								- (ximage == null ? 0.0f
+										: ximage.getWidthPoints()
+												+ Settings.getFloat(CVPDFSettingCodes.X_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_IMAGE_INDENT)),
+						height,
+						PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(CVPDFSettingCodes.BLOCK_FRAME_LINE_WIDTH, Bundle.CV_PDF, CVPDFDefaultSettings.BLOCK_FRAME_LINE_WIDTH));
 				height += Settings.getFloat(CVPDFSettingCodes.Y_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_IMAGE_INDENT);
 				break;
 			case CV_SECTION_POSITIONS:
@@ -360,7 +354,7 @@ public class CVPDFBlock {
 						y1,
 						PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-						* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+								* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 				String description = getSectionDescription();
 				if (!CommonUtil.isEmptyString(description)) {
 					y1 -= PDFUtil.renderMultilineText(
@@ -373,7 +367,7 @@ public class CVPDFBlock {
 							y1,
 							PDFUtil.Alignment.TOP_LEFT,
 							Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-							* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+									* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 				}
 				y1 -= Settings.getFloat(CVPDFSettingCodes.Y_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY() - Settings.getFloat(CVPDFSettingCodes.Y_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_FRAME_INDENT);
@@ -390,19 +384,19 @@ public class CVPDFBlock {
 							y2 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 									Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR), label1, x, y2, PDFUtil.Alignment.TOP_LEFT,
 									cursor.getBlockWidth() - Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-									* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+											* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 						}
 						if (!CommonUtil.isEmptyString(label2)) {
 							y2 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), PDFUtil.FontSize.SMALL,
 									Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR), label2, x, y2, PDFUtil.Alignment.TOP_LEFT,
 									cursor.getBlockWidth() - Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-									* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+											* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 						}
 						if (!CommonUtil.isEmptyString(label3)) {
 							y2 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.SMALL,
 									Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR), label3, x, y2, PDFUtil.Alignment.TOP_LEFT,
 									cursor.getBlockWidth() - Settings.getFloat(CVPDFSettingCodes.X_COLUMN_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_COLUMN_INDENT) - 2.0f
-									* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
+											* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 						}
 					}
 				}

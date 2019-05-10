@@ -537,6 +537,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		return value.getEcrfField().getDisabled();
 	}
 
+	@Override
 	protected boolean isInputFieldLongTitle() {
 		String title = getInputFieldTitle();
 		if (title != null && title.length() > Settings.getInt(EcrfPDFSettingCodes.LONG_TITLE_LENGTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.LONG_TITLE_LENGTH)) {
@@ -582,7 +583,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			case PAGE_TITLE:
 				height = PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.BIG, getTextColor(),
 						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(), ecrf.getName(), // +
-																																										// "xxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXX"
+								// "xxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXX"
 								Long.toString(listEntry.getProband().getId()), listEntry
 										.getProband()
 										.getInitials(),

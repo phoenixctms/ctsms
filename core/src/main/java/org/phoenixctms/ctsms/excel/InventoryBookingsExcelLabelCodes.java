@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.excel;
 
-
 public interface InventoryBookingsExcelLabelCodes {
 
 	public static final String VO_FIELD_COLUMNS = "vo_field_columns";
@@ -12,7 +11,6 @@ public interface InventoryBookingsExcelLabelCodes {
 	// public static final String PHONE_CONTACT_DETAILS_HEAD = "phone_contact_details_head";
 	public static final String SPREADSHEET_NAME_ALL_CALENDARS = "spreadsheet_name_all_calendars";
 	public static final String SPREADSHEET_NAME = "spreadsheet_name";
-
 	public static final String CALENDAR_HEADER_FOOTER = "calendar_header_footer";
 	public static final String FILE_NAME_HEADER_FOOTER = "file_name_header_footer";
 	// public static final String VERSION_HEADER_FOOTER = "version_header_footer";

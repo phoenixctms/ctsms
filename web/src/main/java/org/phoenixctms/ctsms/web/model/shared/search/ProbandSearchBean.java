@@ -158,7 +158,8 @@ public class ProbandSearchBean extends SearchBeanBase {
 		try {
 			ProbandLetterPDFVO probandLetter = WebUtil.getServiceLocator().getSearchService()
 					.renderProbandLetterPDFs(WebUtil.getAuthentication(), criteriaIn, new HashSet<CriterionInVO>(criterionsIn), null);
-			return new DefaultStreamedContent(new ByteArrayInputStream(probandLetter.getDocumentDatas()), probandLetter.getContentType().getMimeType(), probandLetter.getFileName());
+			return new DefaultStreamedContent(new ByteArrayInputStream(probandLetter.getDocumentDatas()), probandLetter.getContentType().getMimeType(),
+					probandLetter.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
@@ -264,9 +265,6 @@ public class ProbandSearchBean extends SearchBeanBase {
 	public boolean isMarkUnEncrypted() {
 		return true;
 	}
-
-
-
 
 	public String probandToColor(ProbandOutVO proband) {
 		return (proband != null ? WebUtil.colorToStyleClass(proband.getCategory().getColor()) : "");

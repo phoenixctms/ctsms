@@ -55,7 +55,6 @@ public class MassMailSearchResultLazyModel extends SearchResultLazyModel {
 			}
 		}
 		return null;
-
 	}
 
 	@Override

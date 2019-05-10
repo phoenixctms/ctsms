@@ -120,22 +120,20 @@ public class RandomizationListBean extends GenerateRandomListBean {
 
 	@Override
 	protected void addGenerateRandomizationListWarnMessage() {
-
-
 	}
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null,
 				JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64, JSValues.AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT,
-				MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE, MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT, new Long(randomizationListModel.getRowCount()));
+				MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE, MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT,
+				new Long(randomizationListModel.getRowCount()));
 		if (operationSuccess && in.getTrialId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
 					MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
 					WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
 		}
 	}
-
 
 	@Override
 	protected String changeAction(Long id) {
@@ -201,7 +199,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		return in;
 	}
 
-
 	@Override
 	public String getModifiedAnnotation() {
 		if (out != null) {
@@ -226,7 +223,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 
 	@Override
 	protected RandomizationMode getRandomizationMode() {
-		return (   (trial != null && trial.getRandomization() != null) ? trial.getRandomization().getMode() : null);
+		return ((trial != null && trial.getRandomization() != null) ? trial.getRandomization().getMode() : null);
 	}
 
 	public IDVO getSelectedStratificationRandomizationList() {
@@ -238,7 +235,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	}
 
 	public List<IDVO> getSelectionSetValues() {
-		return  new IDVOList(selectionSetValues) ;
+		return new IDVOList(selectionSetValues);
 	}
 
 	@Override
@@ -256,12 +253,12 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		return trialId;
 	}
 
-	public void handleSelectionSetValueSelect( SelectEvent event) {
+	public void handleSelectionSetValueSelect(SelectEvent event) {
 		// System.out.println("select");
 		updateRequiredFields();
 	}
 
-	public void handleSelectionSetValueUnselect( UnselectEvent event) {
+	public void handleSelectionSetValueUnselect(UnselectEvent event) {
 		// System.out.println("unselect");
 		updateRequiredFields();
 	}
@@ -292,7 +289,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	private void initSets() {
 		randomizationListModel.setTrialId(in.getTrialId());
 		randomizationListModel.updateRowCount();
-
 		stratificationProbandListEntryTagVOs = null;
 		if (trialId != null) {
 			try {
@@ -306,7 +302,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		}
 		loadSelectionSetValues();
 		updateRequiredFields();
-
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
@@ -401,7 +396,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	private void sanitizeInVals() {
 		in.getSelectionSetValueIds().clear();
 		Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
-
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
 			if (selectionSetValue != null) {
@@ -445,7 +439,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 			return (new ProbandListEntryTagValueOutVOStringAdapter(
 					Settings.getInt(SettingCodes.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
 							DefaultSettings.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH)))
-					.selectionSetValuesToString(randomizationList.getSelectionSetValues(), true);
+									.selectionSetValuesToString(randomizationList.getSelectionSetValues(), true);
 		}
 		return null;
 	}
@@ -498,4 +492,3 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		}
 	}
 }
-

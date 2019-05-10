@@ -39,6 +39,7 @@ public class ProbandAddressTypeTagAdapter extends TagAdapter<Proband, AddressTyp
 		this.probandDao = probandDao;
 		this.addressTypeDao = addressTypeDao;
 	}
+
 	@Override
 	protected Proband checkRootId(Long rootId) throws ServiceException {
 		return CheckIDUtil.checkProbandId(rootId, probandDao, LockMode.PESSIMISTIC_WRITE);

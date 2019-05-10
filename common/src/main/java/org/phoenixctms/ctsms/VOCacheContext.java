@@ -72,5 +72,4 @@ public abstract class VOCacheContext implements Principal {
 		}
 		return map.put(voClass, vo);
 	}
-
 }

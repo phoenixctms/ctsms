@@ -2,7 +2,6 @@ package org.phoenixctms.ctsms.compare;
 
 import java.util.Comparator;
 
-
 public abstract class IDComparatorBase<T> implements Comparator<T> {
 
 	private int idDesc;

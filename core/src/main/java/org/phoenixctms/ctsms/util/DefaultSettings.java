@@ -201,7 +201,6 @@ public final class DefaultSettings {
 	public static final boolean REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED = false;
 	public static final boolean REMOVE_TRIAL_CHECK_PROBAND_LOCKED = false;
 	public static final boolean UNIQUE_ECRF_NAMES = false;
-
 	public static final String SIGNATURE_DESCRIPTION_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final boolean INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
 	public static final boolean PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
@@ -209,7 +208,6 @@ public final class DefaultSettings {
 	public static final boolean ECRF_CHARGE_DUE_ANNUAL = false;
 	public static final VariablePeriod ECRF_CHARGE_DUE_PERIOD = VariablePeriod.MONTH;
 	public static final Long ECRF_CHARGE_DUE_PERIOD_DAYS = null;
-
 	public static final ArrayList<String> NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = new ArrayList<String>();
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
@@ -217,7 +215,6 @@ public final class DefaultSettings {
 	public final static int FIELD_CALCULATION_DEBUG_LEVEL = 0;
 	public final static Integer INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
 	public static final boolean REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = false;
-
 	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
@@ -234,7 +231,6 @@ public final class DefaultSettings {
 	public static final Long EMAIL_PROCESS_MASS_MAILS_MAX = 3l;
 	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
-
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");
@@ -251,7 +247,6 @@ public final class DefaultSettings {
 	// public final static String JQUERY_BASE64_JS_FILE_NAME = "jquery.base64.js";
 	// public final static String REST_API_SHIM_JS_FILE_NAME = "restApiShim.js";
 	// public final static String LOCATION_DISTANCE_SHIM_JS_FILE_NAME = "locationDistanceShim.js";
-
 	private DefaultSettings() {
 	}
 }

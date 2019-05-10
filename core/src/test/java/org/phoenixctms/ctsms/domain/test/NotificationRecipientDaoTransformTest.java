@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.NotificationRecipient
 */
-@Test(groups={"transform","NotificationRecipientDao"})
+@Test(groups = { "transform", "NotificationRecipientDao" })
 public class NotificationRecipientDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method NotificationRecipientDao.toNotificationRecipientVO
-   *
-   * @see org.phoenixctms.ctsms.domain.NotificationRecipientDao#toNotificationRecipientVO(org.phoenixctms.ctsms.domain.NotificationRecipient source, org.phoenixctms.ctsms.vo.NotificationRecipientVO target)
-   */
-  @Test
-  public void testToNotificationRecipientVO() {
-    Assert.fail("Test 'NotificationRecipientDaoTransformTest.testToNotificationRecipientVO' not implemented!");
-  }
+	/**
+	 * Test for method NotificationRecipientDao.toNotificationRecipientVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.NotificationRecipientDao#toNotificationRecipientVO(org.phoenixctms.ctsms.domain.NotificationRecipient source, org.phoenixctms.ctsms.vo.NotificationRecipientVO target)
+	 */
+	@Test
+	public void testToNotificationRecipientVO() {
+		Assert.fail("Test 'NotificationRecipientDaoTransformTest.testToNotificationRecipientVO' not implemented!");
+	}
 
-    /**
-   * Test for method notificationRecipientVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.NotificationRecipientDao#notificationRecipientVOToEntity(org.phoenixctms.ctsms.vo.NotificationRecipientVO source, org.phoenixctms.ctsms.domain.NotificationRecipient target, boolean copyIfNull)
-   */
-  @Test
-  public void testNotificationRecipientVOToEntity() {
-    Assert.fail("Test 'NotificationRecipientDaoTransformTest.testNotificationRecipientVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method notificationRecipientVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.NotificationRecipientDao#notificationRecipientVOToEntity(org.phoenixctms.ctsms.vo.NotificationRecipientVO source, org.phoenixctms.ctsms.domain.NotificationRecipient target, boolean copyIfNull)
+	*/
+	@Test
+	public void testNotificationRecipientVOToEntity() {
+		Assert.fail("Test 'NotificationRecipientDaoTransformTest.testNotificationRecipientVOToEntity' not implemented!");
+	}
 }

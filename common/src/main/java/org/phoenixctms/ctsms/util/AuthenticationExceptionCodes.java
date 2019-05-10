@@ -15,5 +15,4 @@ public interface AuthenticationExceptionCodes {
 	public static final String WRONG_PASSWORD = "wrong_password";
 	public final static String WRONG_PASSWORD_ATTEMPT_LIMIT_EXCEEDED = "wrong_password_attempt_limit_exceeded";
 	public final static String WRONG_REMOTE_PASSWORD = "wrong_remote_password";
-
 }

@@ -70,7 +70,6 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 		// Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(CVPDFSettingCodes.PAGE_RIGHT_MARGIN,
 		// Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN - Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF,
 		// CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
-
 		if (cursor.getStaff() != null) {
 			// CVPDFBlock block = blocks.get(blockIndex - 1);
 			PDFUtil.renderTextLine(
@@ -97,7 +96,6 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 		// + (pageWidth - Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(
 		// CVPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
 		// Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_CENTER);
-
 		PDFUtil.renderTextLine(
 				contentStream,
 				fontA,
@@ -107,10 +105,9 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 				Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN)
 						+ (pageWidth - Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(
 								CVPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_RIGHT_MARGIN)),
-						Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_RIGHT);
+				Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_RIGHT);
 		writer.closeContentStream();
 	}
-
 
 	@Override
 	public PDRectangle getDefaultPageSize() {

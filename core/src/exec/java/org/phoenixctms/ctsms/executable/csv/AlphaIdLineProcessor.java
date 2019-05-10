@@ -84,12 +84,12 @@ public class AlphaIdLineProcessor extends LineProcessor {
 
 	private HashCodeBuilder getHashCodeBuilder(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getValid(values))
-		.append(getAlphaId(values))
-		.append(getPrimaryCode(values))
-		.append(getAsteriskCode(values))
-		.append(getOptionalCode(values))
-		.append(getText(values));
+				.append(getValid(values))
+				.append(getAlphaId(values))
+				.append(getPrimaryCode(values))
+				.append(getAsteriskCode(values))
+				.append(getOptionalCode(values))
+				.append(getText(values));
 	}
 
 	public String getIcdSystRevision() {

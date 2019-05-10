@@ -117,8 +117,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		TeamMemberInVO backup = new TeamMemberInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -152,8 +151,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+	public String addBulkAction() {
 		try {
 			if (bulkAddRoleId != null) {
 				Set<Long> ids = this.staffMultiPicker.getSelectionIds();
@@ -161,7 +159,8 @@ public class TeamMemberBean extends ManagedBeanBase {
 						.addTeamMembers(WebUtil.getAuthentication(), trialId, bulkAddRoleId, bulkAddAccess, // bulkAddNotifyTimelineEvent,
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET),
-								Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET), ids).iterator();
+								Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET), ids)
+						.iterator();
 				while (it.hasNext()) {
 					this.staffMultiPicker.removeId(it.next().getStaff().getId());
 				}
@@ -384,7 +383,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 	// public boolean isBulkAddNotifyTimelineEvent() {
 	// return bulkAddNotifyTimelineEvent;
 	// }
-
 	@Override
 	public boolean isCreateable() {
 		return (in.getTrialId() == null ? false : !WebUtil.isTrialLocked(trial));
@@ -463,7 +461,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 	// public void setBulkAddNotifyTimelineEvent(boolean bulkAddNotifyTimelineEvent) {
 	// this.bulkAddNotifyTimelineEvent = bulkAddNotifyTimelineEvent;
 	// }
-
 	public void setBulkAddRoleId(Long bulkAddRoleId) {
 		this.bulkAddRoleId = bulkAddRoleId;
 	}

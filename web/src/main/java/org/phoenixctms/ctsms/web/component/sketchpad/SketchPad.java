@@ -9,16 +9,7 @@ import javax.faces.component.UIInput;
 public class SketchPad extends UIInput {
 
 	enum PropertyKeys {
-		width,
-		height,
-		disabled,
-		sketchPadStyle,
-		backgroundImage,
-		styleClass,
-		strokesId,
-		onChange,
-		widgetVar,
-		regions
+		width, height, disabled, sketchPadStyle, backgroundImage, styleClass, strokesId, onChange, widgetVar, regions
 	}
 
 	public static final String COMPONENT_TYPE = "ctsms.SketchPad";

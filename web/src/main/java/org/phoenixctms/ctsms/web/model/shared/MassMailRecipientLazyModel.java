@@ -15,12 +15,9 @@ public class MassMailRecipientLazyModel extends MassMailRecipientLazyModelBase {
 	private Long massMailId;
 	private Long probandId;
 
-
 	public MassMailRecipientLazyModel() {
 		super();
-
 	}
-
 
 	@Override
 	protected Collection<MassMailRecipientOutVO> getLazyResult(PSFVO psf) {
@@ -45,8 +42,6 @@ public class MassMailRecipientLazyModel extends MassMailRecipientLazyModelBase {
 	public Long getProbandId() {
 		return probandId;
 	}
-
-
 
 	public void setMassMailId(Long massMailId) {
 		this.massMailId = massMailId;

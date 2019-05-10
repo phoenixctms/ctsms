@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.InventoryStatusTypeVO;
  * @see InventoryStatusType
  */
 public class InventoryStatusTypeDaoImpl
-		extends InventoryStatusTypeDaoBase
-{
+		extends InventoryStatusTypeDaoBase {
 
 	@Override
 	protected Collection<InventoryStatusType> handleFindByVisibleId(
@@ -33,8 +32,7 @@ public class InventoryStatusTypeDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusType inventoryStatusTypeVOToEntity(InventoryStatusTypeVO inventoryStatusTypeVO)
-	{
+	public InventoryStatusType inventoryStatusTypeVOToEntity(InventoryStatusTypeVO inventoryStatusTypeVO) {
 		InventoryStatusType entity = this.loadInventoryStatusTypeFromInventoryStatusTypeVO(inventoryStatusTypeVO);
 		this.inventoryStatusTypeVOToEntity(inventoryStatusTypeVO, entity, true);
 		return entity;
@@ -47,8 +45,7 @@ public class InventoryStatusTypeDaoImpl
 	public void inventoryStatusTypeVOToEntity(
 			InventoryStatusTypeVO source,
 			InventoryStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -57,15 +54,13 @@ public class InventoryStatusTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryStatusType loadInventoryStatusTypeFromInventoryStatusTypeVO(InventoryStatusTypeVO inventoryStatusTypeVO)
-	{
+	private InventoryStatusType loadInventoryStatusTypeFromInventoryStatusTypeVO(InventoryStatusTypeVO inventoryStatusTypeVO) {
 		InventoryStatusType inventoryStatusType = null;
 		Long id = inventoryStatusTypeVO.getId();
 		if (id != null) {
 			inventoryStatusType = this.load(id);
 		}
-		if (inventoryStatusType == null)
-		{
+		if (inventoryStatusType == null) {
 			inventoryStatusType = InventoryStatusType.Factory.newInstance();
 		}
 		return inventoryStatusType;
@@ -75,8 +70,7 @@ public class InventoryStatusTypeDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusTypeVO toInventoryStatusTypeVO(final InventoryStatusType entity)
-	{
+	public InventoryStatusTypeVO toInventoryStatusTypeVO(final InventoryStatusType entity) {
 		return super.toInventoryStatusTypeVO(entity);
 	}
 
@@ -86,8 +80,7 @@ public class InventoryStatusTypeDaoImpl
 	@Override
 	public void toInventoryStatusTypeVO(
 			InventoryStatusType source,
-			InventoryStatusTypeVO target)
-	{
+			InventoryStatusTypeVO target) {
 		super.toInventoryStatusTypeVO(source, target);
 		target.setName(L10nUtil.getInventoryStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

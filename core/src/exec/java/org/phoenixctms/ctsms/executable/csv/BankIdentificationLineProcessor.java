@@ -67,9 +67,9 @@ public class BankIdentificationLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getBankName(values))
-		.append(getBankCodeNumber(values))
-		.toHashCode();
+				.append(getBankName(values))
+				.append(getBankCodeNumber(values))
+				.toHashCode();
 	}
 
 	@Override

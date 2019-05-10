@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.StaffCategoryVO;
  * @see StaffCategory
  */
 public class StaffCategoryDaoImpl
-extends StaffCategoryDaoBase
-{
+		extends StaffCategoryDaoBase {
 
 	@Override
 	protected Collection<StaffCategory> handleFindByPersonOrganisationId(
@@ -47,15 +46,13 @@ extends StaffCategoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffCategory loadStaffCategoryFromStaffCategoryVO(StaffCategoryVO staffCategoryVO)
-	{
+	private StaffCategory loadStaffCategoryFromStaffCategoryVO(StaffCategoryVO staffCategoryVO) {
 		StaffCategory staffCategory = null;
 		Long id = staffCategoryVO.getId();
 		if (id != null) {
 			staffCategory = this.load(id);
 		}
-		if (staffCategory == null)
-		{
+		if (staffCategory == null) {
 			staffCategory = StaffCategory.Factory.newInstance();
 		}
 		return staffCategory;
@@ -65,8 +62,7 @@ extends StaffCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffCategory staffCategoryVOToEntity(StaffCategoryVO staffCategoryVO)
-	{
+	public StaffCategory staffCategoryVOToEntity(StaffCategoryVO staffCategoryVO) {
 		StaffCategory entity = this.loadStaffCategoryFromStaffCategoryVO(staffCategoryVO);
 		this.staffCategoryVOToEntity(staffCategoryVO, entity, true);
 		return entity;
@@ -79,8 +75,7 @@ extends StaffCategoryDaoBase
 	public void staffCategoryVOToEntity(
 			StaffCategoryVO source,
 			StaffCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -88,8 +83,7 @@ extends StaffCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffCategoryVO toStaffCategoryVO(final StaffCategory entity)
-	{
+	public StaffCategoryVO toStaffCategoryVO(final StaffCategory entity) {
 		return super.toStaffCategoryVO(entity);
 	}
 
@@ -99,8 +93,7 @@ extends StaffCategoryDaoBase
 	@Override
 	public void toStaffCategoryVO(
 			StaffCategory source,
-			StaffCategoryVO target)
-	{
+			StaffCategoryVO target) {
 		super.toStaffCategoryVO(source, target);
 		target.setName(L10nUtil.getStaffCategoryName(Locales.USER, source.getNameL10nKey()));
 	}

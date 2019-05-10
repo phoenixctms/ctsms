@@ -76,8 +76,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		DiagnosisInVO backup = new DiagnosisInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -236,12 +235,10 @@ public class DiagnosisBean extends ManagedBeanBase {
 		}
 	}
 
-	public void handleCodeSelect( SelectEvent event) {
-
+	public void handleCodeSelect(SelectEvent event) {
 	}
 
-	public void handleCodeUnselect( UnselectEvent event) {
-
+	public void handleCodeUnselect(UnselectEvent event) {
 	}
 
 	@PostConstruct

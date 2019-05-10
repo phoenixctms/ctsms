@@ -12,15 +12,13 @@ import org.phoenixctms.ctsms.vo.IcdSystModifierVO;
  * @see IcdSystModifier
  */
 public class IcdSystModifierDaoImpl
-		extends IcdSystModifierDaoBase
-{
+		extends IcdSystModifierDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystModifier icdSystModifierVOToEntity(IcdSystModifierVO icdSystModifierVO)
-	{
+	public IcdSystModifier icdSystModifierVOToEntity(IcdSystModifierVO icdSystModifierVO) {
 		IcdSystModifier entity = this.loadIcdSystModifierFromIcdSystModifierVO(icdSystModifierVO);
 		this.icdSystModifierVOToEntity(icdSystModifierVO, entity, true);
 		return entity;
@@ -33,8 +31,7 @@ public class IcdSystModifierDaoImpl
 	public void icdSystModifierVOToEntity(
 			IcdSystModifierVO source,
 			IcdSystModifier target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.icdSystModifierVOToEntity(source, target, copyIfNull);
 	}
 
@@ -43,8 +40,7 @@ public class IcdSystModifierDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private IcdSystModifier loadIcdSystModifierFromIcdSystModifierVO(IcdSystModifierVO icdSystModifierVO)
-	{
+	private IcdSystModifier loadIcdSystModifierFromIcdSystModifierVO(IcdSystModifierVO icdSystModifierVO) {
 		// TODO implement loadIcdSystModifierFromIcdSystModifierVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystModifierFromIcdSystModifierVO(IcdSystModifierVO) not yet implemented.");
 		Long id = icdSystModifierVO.getId();
@@ -52,8 +48,7 @@ public class IcdSystModifierDaoImpl
 		if (id != null) {
 			icdSystModifier = this.load(id);
 		}
-		if (icdSystModifier == null)
-		{
+		if (icdSystModifier == null) {
 			icdSystModifier = IcdSystModifier.Factory.newInstance();
 		}
 		return icdSystModifier;
@@ -63,8 +58,7 @@ public class IcdSystModifierDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystModifierVO toIcdSystModifierVO(final IcdSystModifier entity)
-	{
+	public IcdSystModifierVO toIcdSystModifierVO(final IcdSystModifier entity) {
 		return super.toIcdSystModifierVO(entity);
 	}
 
@@ -74,8 +68,7 @@ public class IcdSystModifierDaoImpl
 	@Override
 	public void toIcdSystModifierVO(
 			IcdSystModifier source,
-			IcdSystModifierVO target)
-	{
+			IcdSystModifierVO target) {
 		super.toIcdSystModifierVO(source, target);
 	}
 }

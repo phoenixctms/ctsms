@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.ProbandTagVO;
  * @see ProbandTag
  */
 public class ProbandTagDaoImpl
-extends ProbandTagDaoBase
-{
+		extends ProbandTagDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandTag> handleFindByPersonAnimalIdExcel(Boolean person, Boolean animal, Long tagId, Boolean excel)
-	{
+	protected Collection<ProbandTag> handleFindByPersonAnimalIdExcel(Boolean person, Boolean animal, Long tagId, Boolean excel) {
 		org.hibernate.Criteria probandTagCriteria = this.getSession().createCriteria(ProbandTag.class);
 		probandTagCriteria.setCacheable(true);
 		if (excel != null) {
@@ -54,8 +52,7 @@ extends ProbandTagDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandTag loadProbandTagFromProbandTagVO(ProbandTagVO probandTagVO)
-	{
+	private ProbandTag loadProbandTagFromProbandTagVO(ProbandTagVO probandTagVO) {
 		// TODO implement loadProbandTagFromProbandTagVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagFromProbandTagVO(ProbandTagVO) not yet implemented.");
 		ProbandTag probandTag = null;
@@ -63,8 +60,7 @@ extends ProbandTagDaoBase
 		if (id != null) {
 			probandTag = this.load(id);
 		}
-		if (probandTag == null)
-		{
+		if (probandTag == null) {
 			probandTag = ProbandTag.Factory.newInstance();
 		}
 		return probandTag;
@@ -74,8 +70,7 @@ extends ProbandTagDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTag probandTagVOToEntity(ProbandTagVO probandTagVO)
-	{
+	public ProbandTag probandTagVOToEntity(ProbandTagVO probandTagVO) {
 		ProbandTag entity = this.loadProbandTagFromProbandTagVO(probandTagVO);
 		this.probandTagVOToEntity(probandTagVO, entity, true);
 		return entity;
@@ -88,8 +83,7 @@ extends ProbandTagDaoBase
 	public void probandTagVOToEntity(
 			ProbandTagVO source,
 			ProbandTag target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandTagVOToEntity(source, target, copyIfNull);
 	}
 
@@ -97,8 +91,7 @@ extends ProbandTagDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTagVO toProbandTagVO(final ProbandTag entity)
-	{
+	public ProbandTagVO toProbandTagVO(final ProbandTag entity) {
 		return super.toProbandTagVO(entity);
 	}
 
@@ -108,8 +101,7 @@ extends ProbandTagDaoBase
 	@Override
 	public void toProbandTagVO(
 			ProbandTag source,
-			ProbandTagVO target)
-	{
+			ProbandTagVO target) {
 		super.toProbandTagVO(source, target);
 		target.setName(L10nUtil.getProbandTagName(Locales.USER, source.getNameL10nKey()));
 	}

@@ -131,6 +131,7 @@ public class SessionScopeBean {
 		viewId.append("faces-redirect=true&includeViewParams=true");
 		return viewId.toString();
 	}
+
 	public static Collection<TimeZoneVO> getTimeZones() {
 		Collection<TimeZoneVO> timeZones = null;
 		try {
@@ -196,9 +197,7 @@ public class SessionScopeBean {
 	private int failedAttempts;
 	private boolean authenticationFailed;
 	private boolean localPasswordRequired;
-
 	private String authenticationFailedMessage;
-
 	private MenuModel userMenuModel;
 
 	public SessionScopeBean() {
@@ -591,8 +590,7 @@ public class SessionScopeBean {
 		if (PhaseId.RENDER_RESPONSE.equals(context.getCurrentPhaseId())) {
 			// So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
 			return new DefaultStreamedContent();
-		}
-		else {
+		} else {
 			// So, browser is requesting the image. Return a real StreamedContent with the image bytes.
 			String uuid = WebUtil.getParamValue(GetParamNames.UUID);
 			if (imageStore.containsKey(uuid)) {
@@ -603,9 +601,7 @@ public class SessionScopeBean {
 	}
 
 	public synchronized String getInputDatePattern() {
-
 		return CommonUtil.getInputDatePattern(logon != null ? logon.getUser().getDateFormat() : null);
-
 	}
 
 	public synchronized String getInputDateTimePattern() {
@@ -815,7 +811,6 @@ public class SessionScopeBean {
 		}
 		return null;
 	}
-
 
 	public synchronized MenuModel getUserEntityMenuModel() {
 		return DynamicEntityMenu.getUserEntityMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -1055,7 +1050,7 @@ public class SessionScopeBean {
 						timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
 								CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
 						timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
-						+ "')}"));
+								+ "')}"));
 						timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
 						timeZoneMenuItem.setId("timeZoneMenuItem_" + Integer.toString(i) + "_" + Integer.toString(j));
 						if (CommonUtil.timeZoneFromString(timeZone.getTimeZoneID()).equals(userTimeZone)) {
@@ -1185,8 +1180,6 @@ public class SessionScopeBean {
 		FacesContext context = FacesContext.getCurrentInstance();
 		logout(WebUtil.getRefererBase64((HttpServletRequest) context.getExternalContext().getRequest()));
 	}
-
-
 
 	private synchronized void logout(String redirectUrlBase64) {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();

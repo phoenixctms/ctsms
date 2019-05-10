@@ -15,7 +15,6 @@ public final class ResourceUtils {
 	public static final Integer LIST_GRAPH_MAX_COURSE_INSTANCES = 1;
 	public static final Integer LIST_GRAPH_MAX_USER_INSTANCES = 1;
 	public static final Integer LIST_GRAPH_MAX_PROBAND_INSTANCES = 1;
-
 	private static final MethodTransfilter RESOURCE_METHOD_TRANSFILTER = MethodTransfilter.DEFAULT_TRANSFILTER;
 
 	// public static String getMethodPath(Class resourceClass, String methodName) {
@@ -44,7 +43,6 @@ public final class ResourceUtils {
 		}
 		return sb.toString();
 	}
-
 
 	public static String popQueryParamValue(String parameter, MultivaluedMap<String, String> queryParameters) {
 		List<String> values = queryParameters.remove(parameter);

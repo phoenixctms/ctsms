@@ -27,7 +27,6 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 	private final static String EVENT_TITLE_HEAD_SEPARATOR = ": ";
 	private final static String TOKEN_SEPARATOR_STRING = ":";
 	private final static String EVENT_TITLE_SEPARATOR = "\n";
-
 	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA25;
 
 	public VisitScheduleItemEvent() {

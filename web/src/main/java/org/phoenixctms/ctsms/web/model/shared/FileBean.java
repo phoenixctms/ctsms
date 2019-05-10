@@ -233,8 +233,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		return addAction(true);
 	}
 
@@ -507,8 +506,7 @@ public class FileBean extends ManagedBeanBase {
 		actionPostProcess(deleteBulkAction());
 	}
 
-	public String deleteBulkAction()
-	{
+	public String deleteBulkAction() {
 		try {
 			PSFVO sf = createSFVO();
 			if (sf.getFilters().size() == 0) {
@@ -563,7 +561,6 @@ public class FileBean extends ManagedBeanBase {
 		}
 		return null;
 	}
-
 
 	public String getAllowTypes() {
 		return allowTypes;
@@ -1180,6 +1177,7 @@ public class FileBean extends ManagedBeanBase {
 		((FileFolderVO) fileRoot.getData()).resetCounts();
 		loadFileFolderTree(fileRoot, selectedOut, select, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, null, null, createSFVO(), isDynamic() ? 1 : -1, true);
 	}
+
 	private void updateLogicalFileSystemStats() {
 		if (!isDynamic()) {
 			long totalSize = 0l;

@@ -11,10 +11,7 @@ import org.phoenixctms.ctsms.Search;
 public abstract class ChunkedDaoOperationAdapter<DAO, ENTITY> {
 
 	public enum PageSizes {
-		TINY(100),
-		DEFAULT(1000),
-		BIG(10000),
-		HUGE(100000);
+		TINY(100), DEFAULT(1000), BIG(10000), HUGE(100000);
 
 		public final int value;
 

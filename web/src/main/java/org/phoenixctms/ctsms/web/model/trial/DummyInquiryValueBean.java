@@ -78,11 +78,13 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 		return ERROR_OUTCOME;
 	}
 
+	@Override
 	protected int getDefaultFieldsPerRow() {
 		return Settings.getInt(SettingCodes.DUMMY_INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW, Bundle.SETTINGS, DefaultSettings.DUMMY_INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW);
 	}
 
-	protected  int getDefaultPageSize() {
+	@Override
+	protected int getDefaultPageSize() {
 		return Settings.getInt(SettingCodes.DUMMY_INQUIRY_VALUES_DEFAULT_PAGE_SIZE, Bundle.SETTINGS, DefaultSettings.DUMMY_INQUIRY_VALUES_DEFAULT_PAGE_SIZE);
 	}
 
@@ -92,7 +94,8 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 		return new InquiryDummyInputModelList(values);
 	}
 
-	protected  ArrayList<String> getPageSizeStrings() {
+	@Override
+	protected ArrayList<String> getPageSizeStrings() {
 		return Settings.getStringList(SettingCodes.DUMMY_INQUIRY_VALUES_PAGE_SIZES, Bundle.SETTINGS, DefaultSettings.DUMMY_INQUIRY_VALUES_PAGE_SIZES);
 	}
 
@@ -127,8 +130,8 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 			if (inquiryValuesOut == null || jsInquiryValuesOut == null) {
 				try {
 					portionInquiryValues(isSignup() ? WebUtil.getServiceLocator().getTrialService()
-							.getInquiryPresetValues(WebUtil.getAuthentication(), trialId, null, true, true, loadAllJsValues, paginator.getPsf()) :
-								WebUtil.getServiceLocator().getTrialService()
+							.getInquiryPresetValues(WebUtil.getAuthentication(), trialId, null, true, true, loadAllJsValues, paginator.getPsf())
+							: WebUtil.getServiceLocator().getTrialService()
 									.getInquiryPresetValues(WebUtil.getAuthentication(), trialId, true, null, true, loadAllJsValues, paginator.getPsf()));
 				} catch (ServiceException e) {
 				} catch (AuthenticationException e) {

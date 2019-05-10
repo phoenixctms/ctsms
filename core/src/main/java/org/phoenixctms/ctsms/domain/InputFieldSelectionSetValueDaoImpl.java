@@ -37,10 +37,9 @@ import org.phoenixctms.ctsms.vocycle.InputFieldSelectionSetValueGraph;
  * @see InputFieldSelectionSetValue
  */
 public class InputFieldSelectionSetValueDaoImpl
-extends InputFieldSelectionSetValueDaoBase
-{
+		extends InputFieldSelectionSetValueDaoBase {
 
-	private  static void applySortOrders(org.hibernate.Criteria selectionSetValueCriteria) {
+	private static void applySortOrders(org.hibernate.Criteria selectionSetValueCriteria) {
 		if (selectionSetValueCriteria != null) {
 			selectionSetValueCriteria.addOrder(Order.asc("field"));
 			selectionSetValueCriteria.addOrder(Order.asc("localized"));
@@ -48,9 +47,9 @@ extends InputFieldSelectionSetValueDaoBase
 		}
 	}
 
-	private  static void applyUsedByCriterions(org.hibernate.Criteria selectionSetValueCriteria, String nameInfix, String inputFieldProperty) {
+	private static void applyUsedByCriterions(org.hibernate.Criteria selectionSetValueCriteria, String nameInfix, String inputFieldProperty) {
 		if (selectionSetValueCriteria != null) {
-			org.hibernate.Criteria fieldCriteria = selectionSetValueCriteria.createCriteria("field","inputField", CriteriaSpecification.INNER_JOIN);
+			org.hibernate.Criteria fieldCriteria = selectionSetValueCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
 			if (!CommonUtil.isEmptyString(inputFieldProperty)) {
 				fieldCriteria.add(Restrictions.not(Restrictions.isEmpty(inputFieldProperty)));
 			}
@@ -58,10 +57,8 @@ extends InputFieldSelectionSetValueDaoBase
 			if (!CommonUtil.isEmptyString(nameInfix)) {
 				selectionSetValueCriteria.add(Restrictions.or(
 						(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
-						(new CategoryCriterion(nameInfix, "nameL10nKey", MatchMode.ANYWHERE)).getRestriction()
-						));
+						(new CategoryCriterion(nameInfix, "nameL10nKey", MatchMode.ANYWHERE)).getRestriction()));
 			}
-
 		}
 	}
 
@@ -73,7 +70,7 @@ extends InputFieldSelectionSetValueDaoBase
 	@Override
 	protected Collection<InputFieldSelectionSetValue> handleFindByFieldNameL10nKeyLocalized(
 			Long fieldId, String nameL10nKey, boolean localized)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria selectionSetValueCriteria = createSelectionSetValueCriteria();
 		if (fieldId != null) {
 			selectionSetValueCriteria.add(Restrictions.eq("field.id", fieldId.longValue()));
@@ -99,7 +96,6 @@ extends InputFieldSelectionSetValueDaoBase
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return selectionSetValueCriteria.list();
 	}
-
 
 	@Override
 	protected Collection<InputFieldSelectionSetValue> handleFindByFieldValue(
@@ -252,15 +248,13 @@ extends InputFieldSelectionSetValueDaoBase
 		selectionSetValueCriteria.addOrder(Order.asc("id"));
 		selectionSetValueCriteria.setMaxResults(1);
 		return (InputFieldSelectionSetValue) selectionSetValueCriteria.uniqueResult();
-
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValue inputFieldSelectionSetValueInVOToEntity(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueInVO)
-	{
+	public InputFieldSelectionSetValue inputFieldSelectionSetValueInVOToEntity(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueInVO) {
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(inputFieldSelectionSetValueInVO);
 		this.inputFieldSelectionSetValueInVOToEntity(inputFieldSelectionSetValueInVO, entity, true);
 		return entity;
@@ -273,8 +267,7 @@ extends InputFieldSelectionSetValueDaoBase
 	public void inputFieldSelectionSetValueInVOToEntity(
 			InputFieldSelectionSetValueInVO source,
 			InputFieldSelectionSetValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inputFieldSelectionSetValueInVOToEntity(source, target, copyIfNull);
 		Long fieldId = source.getFieldId();
 		InputField field = null;
@@ -291,8 +284,7 @@ extends InputFieldSelectionSetValueDaoBase
 		}
 		target.setLocalized(false);
 		target.setNameL10nKey(source.getName());
-		if (copyIfNull || source.getInkRegions() != null)
-		{
+		if (copyIfNull || source.getInkRegions() != null) {
 			target.setInkRegion(source.getInkRegions());
 		}
 	}
@@ -301,8 +293,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValue inputFieldSelectionSetValueJsonVOToEntity(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO)
-	{
+	public InputFieldSelectionSetValue inputFieldSelectionSetValueJsonVOToEntity(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO) {
 		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(inputFieldSelectionSetValueJsonVO);
 		this.inputFieldSelectionSetValueJsonVOToEntity(inputFieldSelectionSetValueJsonVO, entity, true);
@@ -316,8 +307,7 @@ extends InputFieldSelectionSetValueDaoBase
 	public void inputFieldSelectionSetValueJsonVOToEntity(
 			InputFieldSelectionSetValueJsonVO source,
 			InputFieldSelectionSetValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		super.inputFieldSelectionSetValueJsonVOToEntity(source, target, copyIfNull);
 	}
@@ -326,8 +316,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValue inputFieldSelectionSetValueOutVOToEntity(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO)
-	{
+	public InputFieldSelectionSetValue inputFieldSelectionSetValueOutVOToEntity(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO) {
 		// TODO verify behavior of inputFieldSelectionSetValueOutVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(inputFieldSelectionSetValueOutVO);
 		this.inputFieldSelectionSetValueOutVOToEntity(inputFieldSelectionSetValueOutVO, entity, true);
@@ -341,8 +330,7 @@ extends InputFieldSelectionSetValueDaoBase
 	public void inputFieldSelectionSetValueOutVOToEntity(
 			InputFieldSelectionSetValueOutVO source,
 			InputFieldSelectionSetValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of inputFieldSelectionSetValueOutVOToEntity
 		super.inputFieldSelectionSetValueOutVOToEntity(source, target, copyIfNull);
 	}
@@ -351,8 +339,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValue lightInputFieldSelectionSetValueOutVOToEntity(LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO)
-	{
+	public InputFieldSelectionSetValue lightInputFieldSelectionSetValueOutVOToEntity(LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO) {
 		// TODO verify behavior of lightInputFieldSelectionSetValueOutVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(lightInputFieldSelectionSetValueOutVO);
 		this.lightInputFieldSelectionSetValueOutVOToEntity(lightInputFieldSelectionSetValueOutVO, entity, true);
@@ -366,8 +353,7 @@ extends InputFieldSelectionSetValueDaoBase
 	public void lightInputFieldSelectionSetValueOutVOToEntity(
 			LightInputFieldSelectionSetValueOutVO source,
 			InputFieldSelectionSetValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		super.lightInputFieldSelectionSetValueOutVOToEntity(source, target, copyIfNull);
 	}
@@ -377,8 +363,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueInVO)
-	{
+	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueInVO) {
 		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(InputFieldSelectionSetValueInVO) not yet implemented.");
@@ -387,8 +372,7 @@ extends InputFieldSelectionSetValueDaoBase
 		if (id != null) {
 			inputFieldSelectionSetValue = this.load(id);
 		}
-		if (inputFieldSelectionSetValue == null)
-		{
+		if (inputFieldSelectionSetValue == null) {
 			inputFieldSelectionSetValue = InputFieldSelectionSetValue.Factory.newInstance();
 		}
 		return inputFieldSelectionSetValue;
@@ -399,8 +383,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO)
-	{
+	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO) {
 		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(InputFieldSelectionSetValueJsonVO) not yet implemented.");
@@ -413,8 +396,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO)
-	{
+	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO) {
 		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 		// throw new
@@ -424,8 +406,7 @@ extends InputFieldSelectionSetValueDaoBase
 	}
 
 	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(
-			LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO)
-	{
+			LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO) {
 		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(LightInputFieldSelectionSetValueOutVO) not yet implemented.");
@@ -437,8 +418,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValueInVO toInputFieldSelectionSetValueInVO(final InputFieldSelectionSetValue entity)
-	{
+	public InputFieldSelectionSetValueInVO toInputFieldSelectionSetValueInVO(final InputFieldSelectionSetValue entity) {
 		return super.toInputFieldSelectionSetValueInVO(entity);
 	}
 
@@ -448,8 +428,7 @@ extends InputFieldSelectionSetValueDaoBase
 	@Override
 	public void toInputFieldSelectionSetValueInVO(
 			InputFieldSelectionSetValue source,
-			InputFieldSelectionSetValueInVO target)
-	{
+			InputFieldSelectionSetValueInVO target) {
 		super.toInputFieldSelectionSetValueInVO(source, target);
 		InputField field = source.getField();
 		if (field != null) {
@@ -467,8 +446,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValueJsonVO toInputFieldSelectionSetValueJsonVO(final InputFieldSelectionSetValue entity)
-	{
+	public InputFieldSelectionSetValueJsonVO toInputFieldSelectionSetValueJsonVO(final InputFieldSelectionSetValue entity) {
 		return super.toInputFieldSelectionSetValueJsonVO(entity);
 	}
 
@@ -478,8 +456,7 @@ extends InputFieldSelectionSetValueDaoBase
 	@Override
 	public void toInputFieldSelectionSetValueJsonVO(
 			InputFieldSelectionSetValue source,
-			InputFieldSelectionSetValueJsonVO target)
-	{
+			InputFieldSelectionSetValueJsonVO target) {
 		super.toInputFieldSelectionSetValueJsonVO(source, target);
 		if (source.isLocalized()) {
 			target.setName(L10nUtil.getInputFieldSelectionSetValueName(Locales.USER, source.getNameL10nKey()));
@@ -497,8 +474,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldSelectionSetValueOutVO toInputFieldSelectionSetValueOutVO(final InputFieldSelectionSetValue entity)
-	{
+	public InputFieldSelectionSetValueOutVO toInputFieldSelectionSetValueOutVO(final InputFieldSelectionSetValue entity) {
 		return super.toInputFieldSelectionSetValueOutVO(entity);
 	}
 
@@ -508,16 +484,14 @@ extends InputFieldSelectionSetValueDaoBase
 	@Override
 	public void toInputFieldSelectionSetValueOutVO(
 			InputFieldSelectionSetValue source,
-			InputFieldSelectionSetValueOutVO target)
-	{
+			InputFieldSelectionSetValueOutVO target) {
 		(new InputFieldSelectionSetValueGraph(this, this.getInputFieldDao(), this.getUserDao())).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toInputFieldSelectionSetValueOutVO(
 			InputFieldSelectionSetValue source,
-			InputFieldSelectionSetValueOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			InputFieldSelectionSetValueOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new InputFieldSelectionSetValueGraph(this, this.getInputFieldDao(), this.getUserDao())).toVOHelper(source, target, voMap);
 	}
 
@@ -525,8 +499,7 @@ extends InputFieldSelectionSetValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public LightInputFieldSelectionSetValueOutVO toLightInputFieldSelectionSetValueOutVO(final InputFieldSelectionSetValue entity)
-	{
+	public LightInputFieldSelectionSetValueOutVO toLightInputFieldSelectionSetValueOutVO(final InputFieldSelectionSetValue entity) {
 		return super.toLightInputFieldSelectionSetValueOutVO(entity);
 	}
 
@@ -536,8 +509,7 @@ extends InputFieldSelectionSetValueDaoBase
 	@Override
 	public void toLightInputFieldSelectionSetValueOutVO(
 			InputFieldSelectionSetValue source,
-			LightInputFieldSelectionSetValueOutVO target)
-	{
+			LightInputFieldSelectionSetValueOutVO target) {
 		super.toLightInputFieldSelectionSetValueOutVO(source, target);
 		if (source.isLocalized()) {
 			target.setName(L10nUtil.getInputFieldSelectionSetValueName(Locales.USER, source.getNameL10nKey()));

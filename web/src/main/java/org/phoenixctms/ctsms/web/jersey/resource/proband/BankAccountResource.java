@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.proband;
 
-
 import io.swagger.annotations.Api;
 
 import javax.ws.rs.Consumes;

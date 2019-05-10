@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.model.shared;
 
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
@@ -17,10 +16,9 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 		super();
 		ecrfFieldStatusEntryModel = new EcrfFieldStatusEntryLazyModel(queue);
 		this.change();
-
-
 	}
 
+	@Override
 	protected void addMessages() {
 		if (ecrfField != null) { // suppresse messages if dialog not open...
 			super.addMessages();
@@ -63,26 +61,25 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 	// protected String getDataTableId() {
 	// return "ecrffieldstatus_" + ecrfFieldStatusEntryModel.getQueue().getValue() + "_list";
 	// }
-
 	public EcrfFieldStatusEntryLazyModel getEcrfFieldStatusEntryModel() {
 		return ecrfFieldStatusEntryModel;
 	}
 
-	protected  String getMessagesId() {
+	@Override
+	protected String getMessagesId() {
 		return "ecrffieldstatus_" + getQueue().getValue() + "_messages";
 	}
 
+	@Override
 	public ECRFFieldStatusQueue getQueue() {
 		return ecrfFieldStatusEntryModel.getQueue();
 	}
 
-
 	public String getTabTitle() {
-		return WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT, new
-				Long(ecrfFieldStatusEntryModel.getRowCount()), getQueueName());
+		return WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT,
+				new Long(ecrfFieldStatusEntryModel.getRowCount()), getQueueName());
 		//return Messages.getMessage(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, getQueueName(), ecrfFieldStatusEntryModel.getRowCount());
 	}
-
 
 	@Override
 	public String getTitle() {
@@ -91,10 +88,10 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 		} else {
 			return Messages.getMessage(MessageCodes.CREATE_NEW_ECRF_FIELD_STATUS_ENTRY, getQueueName());
 		}
-
 	}
 
-	protected  void initSpecificSets() {
+	@Override
+	protected void initSpecificSets() {
 		ecrfFieldStatusEntryModel.setListEntryId(in.getListEntryId());
 		ecrfFieldStatusEntryModel.setEcrfFieldId(in.getEcrfFieldId());
 		ecrfFieldStatusEntryModel.setIndex(in.getIndex());
@@ -108,5 +105,4 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-
 }

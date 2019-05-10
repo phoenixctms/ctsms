@@ -23,7 +23,6 @@ package org.phoenixctms.ctsms.compare;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-
 /**
  * This is an updated version with enhancements made by Daniel Migowski,
  * Andre Bogus, and David Koelle
@@ -37,13 +36,10 @@ package org.phoenixctms.ctsms.compare;
  *   Use the static "sort" method from the java.util.Collections class:
  *   Collections.sort(your list, new AlphanumComparator());
  */
-public abstract class AlphanumComparatorBase
-{
+public abstract class AlphanumComparatorBase {
 
-	public final static int cmp(Object o1, Object o2)
-	{
-		if (!(o1 instanceof String) || !(o2 instanceof String))
-		{
+	public final static int cmp(Object o1, Object o2) {
+		if (!(o1 instanceof String) || !(o2 instanceof String)) {
 			return 0;
 		}
 		String s1 = (String) o1;
@@ -52,33 +48,27 @@ public abstract class AlphanumComparatorBase
 		int thatMarker = 0;
 		int s1Length = s1.length();
 		int s2Length = s2.length();
-		while (thisMarker < s1Length && thatMarker < s2Length)
-		{
+		while (thisMarker < s1Length && thatMarker < s2Length) {
 			String thisChunk = getChunk(s1, s1Length, thisMarker);
 			thisMarker += thisChunk.length();
 			String thatChunk = getChunk(s2, s2Length, thatMarker);
 			thatMarker += thatChunk.length();
 			// If both chunks contain numeric characters, sort them numerically
 			int result = 0;
-			if (isDigit(thisChunk.charAt(0)) && isDigit(thatChunk.charAt(0)))
-			{
+			if (isDigit(thisChunk.charAt(0)) && isDigit(thatChunk.charAt(0))) {
 				// Simple chunk comparison by length.
 				int thisChunkLength = thisChunk.length();
 				result = thisChunkLength - thatChunk.length();
 				// If equal, the first different number counts
-				if (result == 0)
-				{
-					for (int i = 0; i < thisChunkLength; i++)
-					{
+				if (result == 0) {
+					for (int i = 0; i < thisChunkLength; i++) {
 						result = thisChunk.charAt(i) - thatChunk.charAt(i);
-						if (result != 0)
-						{
+						if (result != 0) {
 							return result;
 						}
 					}
 				}
-			} else
-			{
+			} else {
 				result = thisChunk.compareTo(thatChunk);
 			}
 			if (result != 0) {
@@ -89,16 +79,13 @@ public abstract class AlphanumComparatorBase
 	}
 
 	/** Length of string is passed in for improved efficiency (only need to calculate it once) **/
-	private final static String getChunk(String s, int slength, int marker)
-	{
+	private final static String getChunk(String s, int slength, int marker) {
 		StringBuilder chunk = new StringBuilder();
 		char c = s.charAt(marker);
 		chunk.append(c);
 		marker++;
-		if (isDigit(c))
-		{
-			while (marker < slength)
-			{
+		if (isDigit(c)) {
+			while (marker < slength) {
 				c = s.charAt(marker);
 				if (!isDigit(c)) {
 					break;
@@ -106,10 +93,8 @@ public abstract class AlphanumComparatorBase
 				chunk.append(c);
 				marker++;
 			}
-		} else
-		{
-			while (marker < slength)
-			{
+		} else {
+			while (marker < slength) {
 				c = s.charAt(marker);
 				if (isDigit(c)) {
 					break;
@@ -121,8 +106,7 @@ public abstract class AlphanumComparatorBase
 		return chunk.toString();
 	}
 
-	private final static boolean isDigit(char ch)
-	{
+	private final static boolean isDigit(char ch) {
 		return ch >= 48 && ch <= 57;
 	}
 
@@ -130,4 +114,3 @@ public abstract class AlphanumComparatorBase
 		return cmp(o1, o2);
 	}
 }
-

@@ -23,8 +23,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see StaffContactDetailValue
  */
 public class StaffContactDetailValueDaoImpl
-extends StaffContactDetailValueDaoBase
-{
+		extends StaffContactDetailValueDaoBase {
 
 	private org.hibernate.Criteria createContactDetailValueCriteria() {
 		org.hibernate.Criteria contactDetailValueCriteria = this.getSession().createCriteria(StaffContactDetailValue.class);
@@ -94,15 +93,13 @@ extends StaffContactDetailValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffContactDetailValue loadStaffContactDetailValueFromStaffContactDetailValueInVO(StaffContactDetailValueInVO staffContactDetailValueInVO)
-	{
+	private StaffContactDetailValue loadStaffContactDetailValueFromStaffContactDetailValueInVO(StaffContactDetailValueInVO staffContactDetailValueInVO) {
 		StaffContactDetailValue staffContactDetailValue = null;
 		Long id = staffContactDetailValueInVO.getId();
 		if (id != null) {
 			staffContactDetailValue = this.load(id);
 		}
-		if (staffContactDetailValue == null)
-		{
+		if (staffContactDetailValue == null) {
 			staffContactDetailValue = StaffContactDetailValue.Factory.newInstance();
 		}
 		return staffContactDetailValue;
@@ -113,11 +110,9 @@ extends StaffContactDetailValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffContactDetailValue loadStaffContactDetailValueFromStaffContactDetailValueOutVO(StaffContactDetailValueOutVO staffContactDetailValueOutVO)
-	{
+	private StaffContactDetailValue loadStaffContactDetailValueFromStaffContactDetailValueOutVO(StaffContactDetailValueOutVO staffContactDetailValueOutVO) {
 		StaffContactDetailValue staffContactDetailValue = this.load(staffContactDetailValueOutVO.getId());
-		if (staffContactDetailValue == null)
-		{
+		if (staffContactDetailValue == null) {
 			staffContactDetailValue = StaffContactDetailValue.Factory.newInstance();
 		}
 		return staffContactDetailValue;
@@ -127,8 +122,7 @@ extends StaffContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffContactDetailValue staffContactDetailValueInVOToEntity(StaffContactDetailValueInVO staffContactDetailValueInVO)
-	{
+	public StaffContactDetailValue staffContactDetailValueInVOToEntity(StaffContactDetailValueInVO staffContactDetailValueInVO) {
 		StaffContactDetailValue entity = this.loadStaffContactDetailValueFromStaffContactDetailValueInVO(staffContactDetailValueInVO);
 		this.staffContactDetailValueInVOToEntity(staffContactDetailValueInVO, entity, true);
 		return entity;
@@ -141,8 +135,7 @@ extends StaffContactDetailValueDaoBase
 	public void staffContactDetailValueInVOToEntity(
 			StaffContactDetailValueInVO source,
 			StaffContactDetailValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffContactDetailValueInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long staffId = source.getStaffId();
@@ -168,8 +161,7 @@ extends StaffContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffContactDetailValue staffContactDetailValueOutVOToEntity(StaffContactDetailValueOutVO staffContactDetailValueOutVO)
-	{
+	public StaffContactDetailValue staffContactDetailValueOutVOToEntity(StaffContactDetailValueOutVO staffContactDetailValueOutVO) {
 		StaffContactDetailValue entity = this.loadStaffContactDetailValueFromStaffContactDetailValueOutVO(staffContactDetailValueOutVO);
 		this.staffContactDetailValueOutVOToEntity(staffContactDetailValueOutVO, entity, true);
 		return entity;
@@ -182,8 +174,7 @@ extends StaffContactDetailValueDaoBase
 	public void staffContactDetailValueOutVOToEntity(
 			StaffContactDetailValueOutVO source,
 			StaffContactDetailValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffContactDetailValueOutVOToEntity(source, target, copyIfNull);
 		ContactDetailTypeVO typeVO = source.getType();
 		StaffOutVO staffVO = source.getStaff();
@@ -215,8 +206,7 @@ extends StaffContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffContactDetailValueInVO toStaffContactDetailValueInVO(final StaffContactDetailValue entity)
-	{
+	public StaffContactDetailValueInVO toStaffContactDetailValueInVO(final StaffContactDetailValue entity) {
 		return super.toStaffContactDetailValueInVO(entity);
 	}
 
@@ -226,8 +216,7 @@ extends StaffContactDetailValueDaoBase
 	@Override
 	public void toStaffContactDetailValueInVO(
 			StaffContactDetailValue source,
-			StaffContactDetailValueInVO target)
-	{
+			StaffContactDetailValueInVO target) {
 		super.toStaffContactDetailValueInVO(source, target);
 		ContactDetailType type = source.getType();
 		Staff staff = source.getStaff();
@@ -243,8 +232,7 @@ extends StaffContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffContactDetailValueOutVO toStaffContactDetailValueOutVO(final StaffContactDetailValue entity)
-	{
+	public StaffContactDetailValueOutVO toStaffContactDetailValueOutVO(final StaffContactDetailValue entity) {
 		return super.toStaffContactDetailValueOutVO(entity);
 	}
 
@@ -254,8 +242,7 @@ extends StaffContactDetailValueDaoBase
 	@Override
 	public void toStaffContactDetailValueOutVO(
 			StaffContactDetailValue source,
-			StaffContactDetailValueOutVO target)
-	{
+			StaffContactDetailValueOutVO target) {
 		super.toStaffContactDetailValueOutVO(source, target);
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.ContactDetailType to org.phoenixctms.ctsms.vo.ContactDetailVO

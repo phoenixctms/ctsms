@@ -6,7 +6,6 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 public class CVPDFBlockCursor extends PDFBlockCursor {
 
 	private CVPDFPainter painter;
-
 	private StaffOutVO staff;
 
 	public CVPDFBlockCursor(CVPDFPainter painter) {

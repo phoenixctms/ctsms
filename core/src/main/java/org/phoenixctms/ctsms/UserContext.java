@@ -151,6 +151,7 @@ public class UserContext extends VOCacheContext {// implements Principal {
 		return isTrustedHost;
 	}
 
+	@Override
 	public void reset() {
 		super.reset();
 		this.user = null;
@@ -221,8 +222,7 @@ public class UserContext extends VOCacheContext {// implements Principal {
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return getName();
 	}
 }

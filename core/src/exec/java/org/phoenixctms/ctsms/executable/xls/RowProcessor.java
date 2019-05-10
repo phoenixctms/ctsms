@@ -22,7 +22,6 @@ public abstract class RowProcessor {
 	protected boolean multipleInsert;
 	protected HashSet<Integer> dupeCheck;
 	protected JobOutput jobOutput;
-
 	protected XlsImporterContext context;
 
 	protected RowProcessor() {
@@ -108,9 +107,9 @@ public abstract class RowProcessor {
 				}
 				values[i] = value;
 			}
-			if (testNotNullRowFields( values, rowNumber)) {
+			if (testNotNullRowFields(values, rowNumber)) {
 				if (multipleInsert || (!filterDupes || dupeCheck.add(lineHashCode(values)))) {
-					return processRow( values, rowNumber);
+					return processRow(values, rowNumber);
 				} else {
 					jobOutput.println("row " + rowNumber + ": dupe ignored");
 					return 0;

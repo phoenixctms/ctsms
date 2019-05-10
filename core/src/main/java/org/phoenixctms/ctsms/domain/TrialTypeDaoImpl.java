@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.TrialTypeVO;
  * @see TrialType
  */
 public class TrialTypeDaoImpl
-		extends TrialTypeDaoBase
-{
+		extends TrialTypeDaoBase {
 
 	private org.hibernate.Criteria createTrialTypeCriteria() {
 		org.hibernate.Criteria trialTypeCriteria = this.getSession().createCriteria(TrialType.class);
@@ -30,8 +29,7 @@ public class TrialTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<TrialType> handleFindByVisibleId(Boolean visible, Long typeId)
-	{
+	protected Collection<TrialType> handleFindByVisibleId(Boolean visible, Long typeId) {
 		org.hibernate.Criteria typeCriteria = createTrialTypeCriteria();
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
 		return typeCriteria.list();
@@ -42,8 +40,7 @@ public class TrialTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialType loadTrialTypeFromTrialTypeVO(TrialTypeVO trialTypeVO)
-	{
+	private TrialType loadTrialTypeFromTrialTypeVO(TrialTypeVO trialTypeVO) {
 		// TODO implement loadTrialTypeFromTrialTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTypeFromTrialTypeVO(TrialTypeVO) not yet implemented.");
 		TrialType trialType = null;
@@ -51,8 +48,7 @@ public class TrialTypeDaoImpl
 		if (id != null) {
 			trialType = this.load(id);
 		}
-		if (trialType == null)
-		{
+		if (trialType == null) {
 			trialType = TrialType.Factory.newInstance();
 		}
 		return trialType;
@@ -62,8 +58,7 @@ public class TrialTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTypeVO toTrialTypeVO(final TrialType entity)
-	{
+	public TrialTypeVO toTrialTypeVO(final TrialType entity) {
 		return super.toTrialTypeVO(entity);
 	}
 
@@ -73,8 +68,7 @@ public class TrialTypeDaoImpl
 	@Override
 	public void toTrialTypeVO(
 			TrialType source,
-			TrialTypeVO target)
-	{
+			TrialTypeVO target) {
 		super.toTrialTypeVO(source, target);
 		target.setName(L10nUtil.getTrialTypeName(Locales.USER, source.getNameL10nKey()));
 	}
@@ -83,8 +77,7 @@ public class TrialTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialType trialTypeVOToEntity(TrialTypeVO trialTypeVO)
-	{
+	public TrialType trialTypeVOToEntity(TrialTypeVO trialTypeVO) {
 		TrialType entity = this.loadTrialTypeFromTrialTypeVO(trialTypeVO);
 		this.trialTypeVOToEntity(trialTypeVO, entity, true);
 		return entity;
@@ -97,8 +90,7 @@ public class TrialTypeDaoImpl
 	public void trialTypeVOToEntity(
 			TrialTypeVO source,
 			TrialType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialTypeVOToEntity(source, target, copyIfNull);
 	}
 }

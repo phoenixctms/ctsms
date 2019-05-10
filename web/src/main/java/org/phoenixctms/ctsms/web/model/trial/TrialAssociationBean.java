@@ -25,7 +25,6 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	private TrialCourseLazyModel trialCourseModel;
 	private TrialMassMailLazyModel trialMassMailModel;
 	private BookingDurationSummaryModel bookingDurationModel;
-
 	private EnrollmentChartBean enrollmentChartBean;
 
 	public TrialAssociationBean() {
@@ -58,15 +57,11 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	public String getMassMailProgressLabel(MassMailOutVO massMail) {
 		return WebUtil.getMassMailProgressLabel(massMail, trialMassMailModel.getMassMailProgress(massMail));
-
 	}
 
 	public int getMassMailProgressValue(MassMailOutVO massMail) {
 		return WebUtil.getMassMailProgressValue(massMail, trialMassMailModel.getMassMailProgress(massMail));
-
 	}
-
-
 
 	public ShiftDurationSummaryModel getShiftDurationModel() {
 		return shiftDurationModel;
@@ -75,9 +70,6 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	public TrialCourseLazyModel getTrialCourseModel() {
 		return trialCourseModel;
 	}
-
-
-
 
 	public TrialMassMailLazyModel getTrialMassMailModel() {
 		return trialMassMailModel;

@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.util.date;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -14,21 +15,21 @@ public abstract class DurationBase {
 			GregorianCalendar end;
 			if (stop.before(start)) {
 				date.setTime(start);
-				end = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH));
+				end = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
 				date.setTime(stop);
-				begin = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH));
+				begin = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
 			} else {
 				date.setTime(stop);
-				end = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH));
+				end = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
 				date.setTime(start);
-				begin = new GregorianCalendar(date.get(GregorianCalendar.YEAR), date.get(GregorianCalendar.MONTH), date.get(GregorianCalendar.DAY_OF_MONTH));
+				begin = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
 			}
 			if (begin.equals(end)) {
 				this.add(begin, new DateInterval(start, stop), holidayDao);
 			} else {
 				date.clear();
-				for (date.set(begin.get(GregorianCalendar.YEAR), begin.get(GregorianCalendar.MONTH), begin.get(GregorianCalendar.DAY_OF_MONTH)); date.compareTo(end) <= 0; date
-						.add(GregorianCalendar.DAY_OF_MONTH, 1)) {
+				for (date.set(begin.get(Calendar.YEAR), begin.get(Calendar.MONTH), begin.get(Calendar.DAY_OF_MONTH)); date.compareTo(end) <= 0; date
+						.add(Calendar.DAY_OF_MONTH, 1)) {
 					if (date.equals(begin)) {
 						this.add(date, new DateInterval(start, true), holidayDao);
 					} else if (date.equals(end)) {

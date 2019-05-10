@@ -43,8 +43,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see MoneyTransfer
  */
 public class MoneyTransferDaoImpl
-extends MoneyTransferDaoBase
-{
+		extends MoneyTransferDaoBase {
 
 	private static void applyCostTypeCriterions(org.hibernate.Criteria moneyTransferCriteria,
 			Long probandId, Long trialId) {
@@ -100,8 +99,7 @@ extends MoneyTransferDaoBase
 	}
 
 	@Override
-	protected Collection<MoneyTransfer> handleFindByProbandNoTrialMethodCostTypePaid(Long probandId, PaymentMethod method, String costType, Boolean paid) throws Exception
-	{
+	protected Collection<MoneyTransfer> handleFindByProbandNoTrialMethodCostTypePaid(Long probandId, PaymentMethod method, String costType, Boolean paid) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria("moneyTransfer");
 		if (method != null) {
 			moneyTransferCriteria.add(Restrictions.eq("method", method));
@@ -117,8 +115,7 @@ extends MoneyTransferDaoBase
 
 	@Override
 	protected Collection<MoneyTransfer> handleFindByProbandTrialMethodCostTypePaidPerson(Long trialDepartmentId, Long trialId, Long probandDepartmentId, Long probandId,
-			PaymentMethod method, String costType, Boolean paid, Boolean person, PSFVO psf) throws Exception
-			{
+			PaymentMethod method, String costType, Boolean paid, Boolean person, PSFVO psf) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria("moneyTransfer");
 		if (method != null) {
 			moneyTransferCriteria.add(Restrictions.eq("method", method));
@@ -164,7 +161,7 @@ extends MoneyTransferDaoBase
 		CategoryCriterion.apply(moneyTransferCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return moneyTransferCriteria.list();
-			}
+	}
 
 	@Override
 	protected Collection<String> handleFindCostTypes(Long trialDepartmentId, Long trialId, Long probandDepartmentId,
@@ -180,8 +177,7 @@ extends MoneyTransferDaoBase
 	}
 
 	@Override
-	protected long handleGetCostTypeCount(Long probandId, Long trialId) throws Exception
-	{
+	protected long handleGetCostTypeCount(Long probandId, Long trialId) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria(null);
 		applyCostTypeCriterions(moneyTransferCriteria, probandId, trialId);
 		// return (Long) moneyTransferCriteria.setProjection(Projections.countDistinct("costType")).uniqueResult();
@@ -191,8 +187,7 @@ extends MoneyTransferDaoBase
 	}
 
 	@Override
-	protected long handleGetCostTypeCount(Long probandId, Long trialId, String costType) throws Exception
-	{
+	protected long handleGetCostTypeCount(Long probandId, Long trialId, String costType) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria(null);
 		applyCostTypeCriterions(moneyTransferCriteria, probandId, trialId);
 		CategoryCriterion.apply(moneyTransferCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.EMPTY_ROWS)); // , true));
@@ -205,7 +200,7 @@ extends MoneyTransferDaoBase
 	@Override
 	protected Collection<String> handleGetCostTypes(Long trialDepartmentId, Long trialId, Long probandDepartmentId,
 			Long probandId, PaymentMethod method)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria("moneyTransfer");
 		if (method != null) {
 			moneyTransferCriteria.add(Restrictions.eq("method", method));
@@ -233,8 +228,7 @@ extends MoneyTransferDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long trialId, Long probandId, Long bankAccountId, PaymentMethod method, String costType, Boolean paid) throws Exception
-	{
+	protected long handleGetCount(Long trialId, Long probandId, Long bankAccountId, PaymentMethod method, String costType, Boolean paid) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria("moneyTransfer");
 		//moneyTransferCriteria.add(Restrictions.isNull("trial.id"));
 		if (trialId != null) {
@@ -261,8 +255,7 @@ extends MoneyTransferDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MoneyTransfer loadMoneyTransferFromMoneyTransferInVO(MoneyTransferInVO moneyTransferInVO)
-	{
+	private MoneyTransfer loadMoneyTransferFromMoneyTransferInVO(MoneyTransferInVO moneyTransferInVO) {
 		// TODO implement loadMoneyTransferFromMoneyTransferInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMoneyTransferFromMoneyTransferInVO(MoneyTransferInVO) not yet implemented.");
 		MoneyTransfer moneyTransfer = null;
@@ -270,8 +263,7 @@ extends MoneyTransferDaoBase
 		if (id != null) {
 			moneyTransfer = this.load(id);
 		}
-		if (moneyTransfer == null)
-		{
+		if (moneyTransfer == null) {
 			moneyTransfer = MoneyTransfer.Factory.newInstance();
 		}
 		return moneyTransfer;
@@ -282,13 +274,11 @@ extends MoneyTransferDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MoneyTransfer loadMoneyTransferFromMoneyTransferOutVO(MoneyTransferOutVO moneyTransferOutVO)
-	{
+	private MoneyTransfer loadMoneyTransferFromMoneyTransferOutVO(MoneyTransferOutVO moneyTransferOutVO) {
 		// TODO implement loadMoneyTransferFromMoneyTransferOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMoneyTransferFromMoneyTransferOutVO(MoneyTransferOutVO) not yet implemented.");
 		MoneyTransfer moneyTransfer = this.load(moneyTransferOutVO.getId());
-		if (moneyTransfer == null)
-		{
+		if (moneyTransfer == null) {
 			moneyTransfer = MoneyTransfer.Factory.newInstance();
 		}
 		return moneyTransfer;
@@ -298,8 +288,7 @@ extends MoneyTransferDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MoneyTransfer moneyTransferInVOToEntity(MoneyTransferInVO moneyTransferInVO)
-	{
+	public MoneyTransfer moneyTransferInVOToEntity(MoneyTransferInVO moneyTransferInVO) {
 		MoneyTransfer entity = this.loadMoneyTransferFromMoneyTransferInVO(moneyTransferInVO);
 		this.moneyTransferInVOToEntity(moneyTransferInVO, entity, true);
 		return entity;
@@ -312,8 +301,7 @@ extends MoneyTransferDaoBase
 	public void moneyTransferInVOToEntity(
 			MoneyTransferInVO source,
 			MoneyTransfer target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.moneyTransferInVOToEntity(source, target, copyIfNull);
 		Long bankAccountId = source.getBankAccountId();
 		Long probandId = source.getProbandId();
@@ -367,8 +355,7 @@ extends MoneyTransferDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MoneyTransfer moneyTransferOutVOToEntity(MoneyTransferOutVO moneyTransferOutVO)
-	{
+	public MoneyTransfer moneyTransferOutVOToEntity(MoneyTransferOutVO moneyTransferOutVO) {
 		MoneyTransfer entity = this.loadMoneyTransferFromMoneyTransferOutVO(moneyTransferOutVO);
 		this.moneyTransferOutVOToEntity(moneyTransferOutVO, entity, true);
 		return entity;
@@ -381,8 +368,7 @@ extends MoneyTransferDaoBase
 	public void moneyTransferOutVOToEntity(
 			MoneyTransferOutVO source,
 			MoneyTransfer target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.moneyTransferOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.method (can't convert source.getMethod():org.phoenixctms.ctsms.vo.PaymentMethodVO to org.phoenixctms.ctsms.enumeration.PaymentMethod
 		// No conversion for target.exportStatus (can't convert source.getExportStatus():org.phoenixctms.ctsms.vo.ExportStatusVO to org.phoenixctms.ctsms.enumeration.ExportStatus
@@ -444,8 +430,7 @@ extends MoneyTransferDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MoneyTransferInVO toMoneyTransferInVO(final MoneyTransfer entity)
-	{
+	public MoneyTransferInVO toMoneyTransferInVO(final MoneyTransfer entity) {
 		return super.toMoneyTransferInVO(entity);
 	}
 
@@ -455,8 +440,7 @@ extends MoneyTransferDaoBase
 	@Override
 	public void toMoneyTransferInVO(
 			MoneyTransfer source,
-			MoneyTransferInVO target)
-	{
+			MoneyTransferInVO target) {
 		super.toMoneyTransferInVO(source, target);
 		BankAccount bankAccount = source.getBankAccount();
 		Proband proband = source.getProband();
@@ -481,8 +465,7 @@ extends MoneyTransferDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MoneyTransferOutVO toMoneyTransferOutVO(final MoneyTransfer entity)
-	{
+	public MoneyTransferOutVO toMoneyTransferOutVO(final MoneyTransfer entity) {
 		return super.toMoneyTransferOutVO(entity);
 	}
 
@@ -492,8 +475,7 @@ extends MoneyTransferDaoBase
 	@Override
 	public void toMoneyTransferOutVO(
 			MoneyTransfer source,
-			MoneyTransferOutVO target)
-	{
+			MoneyTransferOutVO target) {
 		super.toMoneyTransferOutVO(source, target);
 		// WARNING! No conversion for target.method (can't convert source.getMethod():org.phoenixctms.ctsms.enumeration.PaymentMethod to org.phoenixctms.ctsms.vo.PaymentMethodVO
 		// WARNING! No conversion for target.exportStatus (can't convert source.getExportStatus():org.phoenixctms.ctsms.enumeration.ExportStatus to org.phoenixctms.ctsms.vo.ExportStatusVO

@@ -12,7 +12,6 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFBlockCursor {
 
 	private EcrfPDFPainter painter;
-
 	// private float previousSectionY;
 	private float sectionY;
 	// private float previousIndexY;
@@ -20,10 +19,8 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	private EcrfPDFBlock sectionBlock;
 	private EcrfPDFBlock indexBlock;
 	private EcrfPDFBlock ecrfBlock;
-
 	// private EcrfPDFBlock previousBlock;
 	// private EcrfPDFBlock block;
-
 	private ProbandListEntryOutVO listEntry;
 
 	public EcrfPDFBlockCursor(EcrfPDFPainter painter) {
@@ -39,10 +36,12 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		// this.block = null;
 	}
 
+	@Override
 	public float getBlockIndentedCenterX() throws Exception {
 		return getBlockIndentedX() + getBlockIndentedWidth() / 2.0f;
 	}
 
+	@Override
 	public float getBlockIndentedWidth() throws Exception {
 		return getBlockIndentedWidth(true);
 	}
@@ -60,6 +59,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return width;
 	}
 
+	@Override
 	public float getBlockIndentedX() throws Exception {
 		float x = blockX;
 		if (hasSection()) {
@@ -73,6 +73,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return x;
 	}
 
+	@Override
 	public PDFJpeg getCheckboxCheckedImage() {
 		return painter.getCheckboxCheckedImage();
 	}
@@ -82,6 +83,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return painter.getCheckboxCheckedPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getCheckboxUncheckedImage() {
 		return painter.getCheckboxUncheckedImage();
 	}
@@ -90,10 +92,12 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return ecrfBlock;
 	}
 
+	@Override
 	public PDFont getFontA() {
 		return painter.getFontA();
 	}
 
+	@Override
 	public PDFont getFontB() {
 		return painter.getFontB();
 	}
@@ -105,14 +109,15 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	// public PDFont getFontF() {
 	// return painter.getFontF();
 	// }
+	@Override
 	public PDFont getFontC() {
 		return painter.getFontC();
 	}
 
+	@Override
 	public PDFont getFontD() {
 		return painter.getFontD();
 	}
-
 	// public float getIndexWidth() throws Exception {
 	// return 0.0f; //PDFUtil.renderTextLine(null, painter.getFontA(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
 	// }
@@ -120,7 +125,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	// public EcrfPDFBlock getPreviousBlock() {
 	// return previousBlock;
 	// }
-
 	public EcrfPDFBlock getIndexBlock() {
 		return indexBlock;
 	}
@@ -128,11 +132,10 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	// public float getIndexY() {
 	// return indexY;
 	// }
-
 	public String getIndexLabel() {
 		if (indexBlock != null) {
 			Long index = indexBlock.getIndex();
-			if (index != null ) {
+			if (index != null) {
 				return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_FIELD_INDEX, PDFUtil.DEFAULT_LABEL, index.toString(), indexBlock.getSection());
 			}
 		}
@@ -147,10 +150,12 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return listEntry;
 	}
 
+	@Override
 	public PDFJpeg getRadioOffImage() {
 		return painter.getRadioOffImage();
 	}
 
+	@Override
 	public PDFJpeg getRadioOnImage() {
 		return painter.getRadioOnImage();
 	}
@@ -158,7 +163,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	// public float getSectionWidth() throws Exception {
 	// return PDFUtil.renderTextLine(null, painter.getFontB(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
 	// }
-
 	@Override
 	public PDFJpeg getRadioOnPresetImage() {
 		return painter.getRadioOnPresetImage();
@@ -167,7 +171,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	// public float getSectionY() {
 	// return sectionY;
 	// }
-
 	public EcrfPDFBlock getSectionBlock() {
 		return sectionBlock;
 	}
@@ -186,6 +189,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return sectionY;
 	}
 
+	@Override
 	public PDFJpeg getSelectboxCheckedImage() {
 		return painter.getSelectboxCheckedImage();
 	}
@@ -195,6 +199,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return painter.getSelectboxCheckedPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getSelectboxUncheckedImage() {
 		return painter.getSelectboxUncheckedImage();
 	}
@@ -207,12 +212,9 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return painter.getSignatureInvalidImage();
 	}
 
-
-
 	public PDFJpeg getSignatureValidImage() {
 		return painter.getSignatureValidImage();
 	}
-
 
 	public boolean hasIndex() {
 		return !CommonUtil.isEmptyString(getIndexLabel());

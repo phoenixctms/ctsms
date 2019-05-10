@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -211,7 +210,6 @@ public class IDVOList implements List<IDVO> {
 	// public List getBackingList() {
 	// return backingList;
 	// }
-
 	@Override
 	public int indexOf(Object o) {
 		if (o instanceof IDVO) {

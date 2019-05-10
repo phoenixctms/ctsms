@@ -91,7 +91,6 @@ public class MedicationBean extends ManagedBeanBase {
 			in.setAspId(null);
 			in.getSubstanceIds().clear();
 			in.setVersion(null);
-
 		}
 	}
 
@@ -104,7 +103,6 @@ public class MedicationBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> procedures;
 	private ArrayList<SelectItem> filterProcedures;
 	private MedicationLazyModel medicationModel;
-
 	private AspVO asp;
 	private List<AspSubstanceVO> substances;
 
@@ -115,8 +113,7 @@ public class MedicationBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		MedicationInVO backup = new MedicationInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -154,8 +151,6 @@ public class MedicationBean extends ManagedBeanBase {
 					WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
 		}
 	}
-
-
 
 	@Override
 	protected String changeAction(Long id) {
@@ -217,14 +212,10 @@ public class MedicationBean extends ManagedBeanBase {
 		return new ArrayList<IDVO>();
 	}
 
-
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
 	}
-
-
 
 	@Override
 	public String deleteAction(Long id) {
@@ -301,11 +292,11 @@ public class MedicationBean extends ManagedBeanBase {
 	}
 
 	public List<IDVO> getSubstances() {
-		return  new IDVOList(substances) ;
+		return new IDVOList(substances);
 	}
 
 	public String getSubstancesLabel(MedicationOutVO medication) {
-		if (medication != null ) {
+		if (medication != null) {
 			return CommonUtil.aspSubstanceVOCollectionToString(medication.getSubstances());
 		}
 		return "";
@@ -321,25 +312,24 @@ public class MedicationBean extends ManagedBeanBase {
 		}
 	}
 
-	public void handleAspSelect( SelectEvent event) {
+	public void handleAspSelect(SelectEvent event) {
 		substances.clear();
 		substances.addAll(this.asp.getSubstances());
 	}
 
-	public void handleAspUnselect( UnselectEvent event) {
-
+	public void handleAspUnselect(UnselectEvent event) {
 	}
 
 	public void handleDoseUnitSelect(SelectEvent event) {
 		in.setDoseUnit((String) event.getObject());
 	}
 
-	public void handleSubstanceSelect( SelectEvent event) {
-		this.asp=null;
+	public void handleSubstanceSelect(SelectEvent event) {
+		this.asp = null;
 	}
 
-	public void handleSubstanceUnselect( UnselectEvent event) {
-		this.asp=null;
+	public void handleSubstanceUnselect(UnselectEvent event) {
+		this.asp = null;
 	}
 
 	@PostConstruct

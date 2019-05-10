@@ -67,6 +67,5 @@ public class InputFieldImageServlet extends FileServletBase {
 				return !found;
 			}
 		};
-
 	}
 }

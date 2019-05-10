@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.IcdSystVO;
  * @see AlphaId
  */
 public class AlphaIdDaoImpl
-extends AlphaIdDaoBase
-{
+		extends AlphaIdDaoBase {
 
 	private final static boolean MATCH_PRIMARY_CODE = true;
 
@@ -58,8 +57,7 @@ extends AlphaIdDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public AlphaId alphaIdVOToEntity(AlphaIdVO alphaIdVO)
-	{
+	public AlphaId alphaIdVOToEntity(AlphaIdVO alphaIdVO) {
 		AlphaId entity = this.loadAlphaIdFromAlphaIdVO(alphaIdVO);
 		this.alphaIdVOToEntity(alphaIdVO, entity, true);
 		return entity;
@@ -72,8 +70,7 @@ extends AlphaIdDaoBase
 	public void alphaIdVOToEntity(
 			AlphaIdVO source,
 			AlphaId target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.alphaIdVOToEntity(source, target, copyIfNull);
 		IcdSystVO systematicsVO = source.getSystematics();
 		// if (systematicsVO != null) {
@@ -116,8 +113,7 @@ extends AlphaIdDaoBase
 	}
 
 	@Override
-	protected Collection<AlphaId> handleFindAlphaIds(String textInfix, Integer limit)
-	{
+	protected Collection<AlphaId> handleFindAlphaIds(String textInfix, Integer limit) {
 		org.hibernate.Criteria alphaIdCriteria = createAlphaIdCriteria(true);
 		applyAlphaIdTextCriterions(alphaIdCriteria, textInfix);
 		alphaIdCriteria.addOrder(Order.asc("text"));
@@ -140,11 +136,10 @@ extends AlphaIdDaoBase
 	}
 
 	@Override
-	protected long handleGetDiagnosisCount(String revision) throws Exception
-	{
-		org.hibernate.Criteria alphaIdCriteria =createAlphaIdCriteria(false);
+	protected long handleGetDiagnosisCount(String revision) throws Exception {
+		org.hibernate.Criteria alphaIdCriteria = createAlphaIdCriteria(false);
 		alphaIdCriteria.add(Restrictions.eq("revision", revision));
-		alphaIdCriteria.createCriteria("diagnoses",CriteriaSpecification.INNER_JOIN);
+		alphaIdCriteria.createCriteria("diagnoses", CriteriaSpecification.INNER_JOIN);
 		return (Long) alphaIdCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -153,8 +148,7 @@ extends AlphaIdDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private AlphaId loadAlphaIdFromAlphaIdVO(AlphaIdVO alphaIdVO)
-	{
+	private AlphaId loadAlphaIdFromAlphaIdVO(AlphaIdVO alphaIdVO) {
 		// TODO implement loadAlphaIdFromAlphaIdVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadAlphaIdFromAlphaIdVO(AlphaIdVO) not yet implemented.");
 		Long id = alphaIdVO.getId();
@@ -162,8 +156,7 @@ extends AlphaIdDaoBase
 		if (id != null) {
 			alphaId = this.load(id);
 		}
-		if (alphaId == null)
-		{
+		if (alphaId == null) {
 			alphaId = AlphaId.Factory.newInstance();
 		}
 		return alphaId;
@@ -173,8 +166,7 @@ extends AlphaIdDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public AlphaIdVO toAlphaIdVO(final AlphaId entity)
-	{
+	public AlphaIdVO toAlphaIdVO(final AlphaId entity) {
 		return super.toAlphaIdVO(entity);
 	}
 
@@ -184,8 +176,7 @@ extends AlphaIdDaoBase
 	@Override
 	public void toAlphaIdVO(
 			AlphaId source,
-			AlphaIdVO target)
-	{
+			AlphaIdVO target) {
 		super.toAlphaIdVO(source, target);
 		IcdSyst systematics = source.getSystematics();
 		if (systematics != null) {

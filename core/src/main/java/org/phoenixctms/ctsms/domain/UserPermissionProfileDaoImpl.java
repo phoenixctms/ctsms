@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
  * @see UserPermissionProfile
  */
 public class UserPermissionProfileDaoImpl
-extends UserPermissionProfileDaoBase
-{
+		extends UserPermissionProfileDaoBase {
 
 	private org.hibernate.Criteria createUserPermissionProfileCriteria() {
 		org.hibernate.Criteria userPermissionProfileCritria = this.getSession().createCriteria(UserPermissionProfile.class);
@@ -35,7 +34,7 @@ extends UserPermissionProfileDaoBase
 	@Override
 	protected Collection<UserPermissionProfile> handleFindByUserProfileGroup(
 			Long userId, PermissionProfile profile, PermissionProfileGroup profileGroup, Boolean active)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria userPermissionProfileCritria = createUserPermissionProfileCriteria();
 		if (userId != null) {
 			userPermissionProfileCritria.add(Restrictions.eq("user.id", userId.longValue()));
@@ -55,7 +54,7 @@ extends UserPermissionProfileDaoBase
 	@Override
 	protected long handleGetCount(
 			Long userId, PermissionProfile profile, PermissionProfileGroup profileGroup, Boolean active)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria userPermissionProfileCritria = createUserPermissionProfileCriteria();
 		if (userId != null) {
 			userPermissionProfileCritria.add(Restrictions.eq("user.id", userId.longValue()));
@@ -77,15 +76,13 @@ extends UserPermissionProfileDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private UserPermissionProfile loadUserPermissionProfileFromUserPermissionProfileInVO(UserPermissionProfileInVO userPermissionProfileInVO)
-	{
+	private UserPermissionProfile loadUserPermissionProfileFromUserPermissionProfileInVO(UserPermissionProfileInVO userPermissionProfileInVO) {
 		UserPermissionProfile userPermissionProfile = null;
 		Long id = userPermissionProfileInVO.getId();
 		if (id != null) {
 			userPermissionProfile = this.load(id);
 		}
-		if (userPermissionProfile == null)
-		{
+		if (userPermissionProfile == null) {
 			userPermissionProfile = UserPermissionProfile.Factory.newInstance();
 		}
 		return userPermissionProfile;
@@ -96,11 +93,9 @@ extends UserPermissionProfileDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private UserPermissionProfile loadUserPermissionProfileFromUserPermissionProfileOutVO(UserPermissionProfileOutVO userPermissionProfileOutVO)
-	{
+	private UserPermissionProfile loadUserPermissionProfileFromUserPermissionProfileOutVO(UserPermissionProfileOutVO userPermissionProfileOutVO) {
 		UserPermissionProfile userPermissionProfile = this.load(userPermissionProfileOutVO.getId());
-		if (userPermissionProfile == null)
-		{
+		if (userPermissionProfile == null) {
 			userPermissionProfile = UserPermissionProfile.Factory.newInstance();
 		}
 		return userPermissionProfile;
@@ -110,8 +105,7 @@ extends UserPermissionProfileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserPermissionProfileInVO toUserPermissionProfileInVO(final UserPermissionProfile entity)
-	{
+	public UserPermissionProfileInVO toUserPermissionProfileInVO(final UserPermissionProfile entity) {
 		return super.toUserPermissionProfileInVO(entity);
 	}
 
@@ -121,8 +115,7 @@ extends UserPermissionProfileDaoBase
 	@Override
 	public void toUserPermissionProfileInVO(
 			UserPermissionProfile source,
-			UserPermissionProfileInVO target)
-	{
+			UserPermissionProfileInVO target) {
 		super.toUserPermissionProfileInVO(source, target);
 		User user = source.getUser();
 		if (user != null) {
@@ -134,8 +127,7 @@ extends UserPermissionProfileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserPermissionProfileOutVO toUserPermissionProfileOutVO(final UserPermissionProfile entity)
-	{
+	public UserPermissionProfileOutVO toUserPermissionProfileOutVO(final UserPermissionProfile entity) {
 		return super.toUserPermissionProfileOutVO(entity);
 	}
 
@@ -145,8 +137,7 @@ extends UserPermissionProfileDaoBase
 	@Override
 	public void toUserPermissionProfileOutVO(
 			UserPermissionProfile source,
-			UserPermissionProfileOutVO target)
-	{
+			UserPermissionProfileOutVO target) {
 		super.toUserPermissionProfileOutVO(source, target);
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
@@ -166,8 +157,7 @@ extends UserPermissionProfileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserPermissionProfile userPermissionProfileInVOToEntity(UserPermissionProfileInVO userPermissionProfileInVO)
-	{
+	public UserPermissionProfile userPermissionProfileInVOToEntity(UserPermissionProfileInVO userPermissionProfileInVO) {
 		UserPermissionProfile entity = this.loadUserPermissionProfileFromUserPermissionProfileInVO(userPermissionProfileInVO);
 		this.userPermissionProfileInVOToEntity(userPermissionProfileInVO, entity, true);
 		return entity;
@@ -180,8 +170,7 @@ extends UserPermissionProfileDaoBase
 	public void userPermissionProfileInVOToEntity(
 			UserPermissionProfileInVO source,
 			UserPermissionProfile target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.userPermissionProfileInVOToEntity(source, target, copyIfNull);
 		Long userId = source.getUserId();
 		if (userId != null) {
@@ -201,8 +190,7 @@ extends UserPermissionProfileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public UserPermissionProfile userPermissionProfileOutVOToEntity(UserPermissionProfileOutVO userPermissionProfileOutVO)
-	{
+	public UserPermissionProfile userPermissionProfileOutVOToEntity(UserPermissionProfileOutVO userPermissionProfileOutVO) {
 		UserPermissionProfile entity = this.loadUserPermissionProfileFromUserPermissionProfileOutVO(userPermissionProfileOutVO);
 		this.userPermissionProfileOutVOToEntity(userPermissionProfileOutVO, entity, true);
 		return entity;
@@ -215,8 +203,7 @@ extends UserPermissionProfileDaoBase
 	public void userPermissionProfileOutVOToEntity(
 			UserPermissionProfileOutVO source,
 			UserPermissionProfile target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.userPermissionProfileOutVOToEntity(source, target, copyIfNull);
 		UserOutVO userVO = source.getUser();
 		PermissionProfileVO profileVO = source.getProfile();

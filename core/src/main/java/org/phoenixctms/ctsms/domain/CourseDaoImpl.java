@@ -46,10 +46,10 @@ import org.phoenixctms.ctsms.vocycle.CourseReflexionGraph;
  * @see Course
  */
 public class CourseDaoImpl
-extends CourseDaoBase
-{
+		extends CourseDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<Course>(false);
+
 	private static void findUpcomingRenewals(Timestamp now, Course course, Set<Course> result, boolean skip, Set<Long> participatingCourseIds, Set<Long> courseIdchecked) {
 		if (!courseIdchecked.add(course.getId())) {
 			return;
@@ -67,13 +67,11 @@ extends CourseDaoBase
 				valid = true;
 			}
 			if (valid) {
-				if ((course.isSelfRegistration() && (
-						(course.getParticipationDeadline() == null && today.compareTo(course.getStop()) <= 0) ||
-						(course.getParticipationDeadline() != null && now.compareTo(course.getParticipationDeadline()) <= 0)
-						)) || ((!course.isSelfRegistration() &&
+				if ((course.isSelfRegistration() && ((course.getParticipationDeadline() == null && today.compareTo(course.getStop()) <= 0) ||
+						(course.getParticipationDeadline() != null && now.compareTo(course.getParticipationDeadline()) <= 0)))
+						|| ((!course.isSelfRegistration() &&
 								today.compareTo(course.getStop()) <= 0) &&
-								(participatingCourseIds == null || participatingCourseIds.contains(course.getId()))
-								)) {
+								(participatingCourseIds == null || participatingCourseIds.contains(course.getId())))) {
 					result.add(course);
 				}
 			}
@@ -91,8 +89,7 @@ extends CourseDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Course courseInVOToEntity(CourseInVO courseInVO)
-	{
+	public Course courseInVOToEntity(CourseInVO courseInVO) {
 		Course entity = this.loadCourseFromCourseInVO(courseInVO);
 		this.courseInVOToEntity(courseInVO, entity, true);
 		return entity;
@@ -105,8 +102,7 @@ extends CourseDaoBase
 	public void courseInVOToEntity(
 			CourseInVO source,
 			Course target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long categoryId = source.getCategoryId();
@@ -150,8 +146,7 @@ extends CourseDaoBase
 				trial.removeCourses(target);
 			}
 		}
-		if (copyIfNull || source.getPrecedingCourseIds().size() > 0)
-		{
+		if (copyIfNull || source.getPrecedingCourseIds().size() > 0) {
 			Iterator<Course> it = target.getPrecedingCourses().iterator();
 			while (it.hasNext()) {
 				it.next().removeRenewals(target);
@@ -164,8 +159,7 @@ extends CourseDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Course courseOutVOToEntity(CourseOutVO courseOutVO)
-	{
+	public Course courseOutVOToEntity(CourseOutVO courseOutVO) {
 		Course entity = this.loadCourseFromCourseOutVO(courseOutVO);
 		this.courseOutVOToEntity(courseOutVO, entity, true);
 		return entity;
@@ -178,8 +172,7 @@ extends CourseDaoBase
 	public void courseOutVOToEntity(
 			CourseOutVO source,
 			Course target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseOutVOToEntity(source, target, copyIfNull);
 		CourseCategoryVO categoryVO = source.getCategory();
 		DepartmentVO departmentVO = source.getDepartment();
@@ -258,7 +251,7 @@ extends CourseDaoBase
 	@Override
 	protected Collection<Course> handleFindByDepartmentCategoryInterval(
 			Long departmentId, Long courseCategoryId, Timestamp from, Timestamp to)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseCriteria = createCourseCriteria(null);
 		CriteriaUtil.applyStartOptionalIntervalCriterion(courseCriteria, from, to, null, true);
 		if (departmentId != null) {
@@ -308,7 +301,7 @@ extends CourseDaoBase
 	protected Collection<Course> handleFindExpiring(Date today,
 			Long departmentId, Long courseCategoryId,
 			VariablePeriod reminderPeriod, Long reminderPeriodDays, boolean includeAlreadyPassed, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseCriteria = createCourseCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Course.class, courseCriteria);
 		if (departmentId != null) {
@@ -326,13 +319,13 @@ extends CourseDaoBase
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
 		ArrayList<Course> resultSet = CriteriaUtil.listExpirations(courseCriteria, today, null, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
-		return (Collection<Course>) CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
+		return CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
 	}
 
 	@Override
 	protected Collection<Course> handleFindUpcoming(Timestamp currentTimestamp,
 			Long departmentId, Long courseCategoryId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseCriteria = createCourseCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Course.class, courseCriteria);
 		Timestamp now;
@@ -360,7 +353,7 @@ extends CourseDaoBase
 	@Override
 	protected Collection<Course> handleFindUpcoming(
 			Timestamp currentTimestamp, Long staffId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseCriteria = createCourseCriteria("course0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Course.class, courseCriteria);
 		Timestamp now;
@@ -395,16 +388,11 @@ extends CourseDaoBase
 						Restrictions.or(
 								Restrictions.and(
 										Restrictions.isNull("participationDeadline"),
-										Restrictions.ge("stop", new Date(now.getTime()))
-										),
-								Restrictions.ge("participationDeadline", now)
-								)
-						),
+										Restrictions.ge("stop", new Date(now.getTime()))),
+								Restrictions.ge("participationDeadline", now))),
 				Restrictions.and(
 						Restrictions.and(Restrictions.eq("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime()))),
-						Subqueries.lt(0l, subQuery)
-						)
-				));
+						Subqueries.lt(0l, subQuery))));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf); // unique participant staff per course
 		return courseCriteria.list();
 	}
@@ -466,15 +454,13 @@ extends CourseDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Course loadCourseFromCourseInVO(CourseInVO courseInVO)
-	{
+	private Course loadCourseFromCourseInVO(CourseInVO courseInVO) {
 		Course course = null;
 		Long id = courseInVO.getId();
 		if (id != null) {
 			course = this.load(id);
 		}
-		if (course == null)
-		{
+		if (course == null) {
 			course = Course.Factory.newInstance();
 		}
 		return course;
@@ -485,8 +471,7 @@ extends CourseDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Course loadCourseFromCourseOutVO(CourseOutVO courseOutVO)
-	{
+	private Course loadCourseFromCourseOutVO(CourseOutVO courseOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
@@ -515,8 +500,7 @@ extends CourseDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseInVO toCourseInVO(final Course entity)
-	{
+	public CourseInVO toCourseInVO(final Course entity) {
 		return super.toCourseInVO(entity);
 	}
 
@@ -526,8 +510,7 @@ extends CourseDaoBase
 	@Override
 	public void toCourseInVO(
 			Course source,
-			CourseInVO target)
-	{
+			CourseInVO target) {
 		super.toCourseInVO(source, target);
 		Department department = source.getDepartment();
 		CourseCategory category = source.getCategory();
@@ -556,8 +539,7 @@ extends CourseDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseOutVO toCourseOutVO(final Course entity)
-	{
+	public CourseOutVO toCourseOutVO(final Course entity) {
 		return super.toCourseOutVO(entity);
 	}
 
@@ -567,17 +549,15 @@ extends CourseDaoBase
 	@Override
 	public void toCourseOutVO(
 			Course source,
-			CourseOutVO target)
-	{
+			CourseOutVO target) {
 		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getStaffDao(), this.getTrialDao(), this.getUserDao()))
-		.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
+				.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toCourseOutVO(
 			Course source,
-			CourseOutVO target, Integer... maxInstances)
-	{
+			CourseOutVO target, Integer... maxInstances) {
 		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getStaffDao(), this.getTrialDao(), this.getUserDao(),
 				maxInstances)).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}

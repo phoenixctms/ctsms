@@ -441,6 +441,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return value.getTag().getDisabled();
 	}
 
+	@Override
 	protected boolean isInputFieldLongTitle() {
 		String title = getInputFieldTitle();
 		if (title != null && title.length() > Settings.getInt(ProbandListEntryTagsPDFSettingCodes.LONG_TITLE_LENGTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,

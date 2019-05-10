@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.CourseCategory
 */
-@Test(groups={"transform","CourseCategoryDao"})
+@Test(groups = { "transform", "CourseCategoryDao" })
 public class CourseCategoryDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method CourseCategoryDao.toCourseCategoryVO
-   *
-   * @see org.phoenixctms.ctsms.domain.CourseCategoryDao#toCourseCategoryVO(org.phoenixctms.ctsms.domain.CourseCategory source, org.phoenixctms.ctsms.vo.CourseCategoryVO target)
-   */
-  @Test
-  public void testToCourseCategoryVO() {
-    Assert.fail("Test 'CourseCategoryDaoTransformTest.testToCourseCategoryVO' not implemented!");
-  }
+	/**
+	 * Test for method CourseCategoryDao.toCourseCategoryVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.CourseCategoryDao#toCourseCategoryVO(org.phoenixctms.ctsms.domain.CourseCategory source, org.phoenixctms.ctsms.vo.CourseCategoryVO target)
+	 */
+	@Test
+	public void testToCourseCategoryVO() {
+		Assert.fail("Test 'CourseCategoryDaoTransformTest.testToCourseCategoryVO' not implemented!");
+	}
 
-    /**
-   * Test for method courseCategoryVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.CourseCategoryDao#courseCategoryVOToEntity(org.phoenixctms.ctsms.vo.CourseCategoryVO source, org.phoenixctms.ctsms.domain.CourseCategory target, boolean copyIfNull)
-   */
-  @Test
-  public void testCourseCategoryVOToEntity() {
-    Assert.fail("Test 'CourseCategoryDaoTransformTest.testCourseCategoryVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method courseCategoryVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.CourseCategoryDao#courseCategoryVOToEntity(org.phoenixctms.ctsms.vo.CourseCategoryVO source, org.phoenixctms.ctsms.domain.CourseCategory target, boolean copyIfNull)
+	*/
+	@Test
+	public void testCourseCategoryVOToEntity() {
+		Assert.fail("Test 'CourseCategoryDaoTransformTest.testCourseCategoryVOToEntity' not implemented!");
+	}
 }

@@ -62,7 +62,7 @@ public abstract class RowWriter {
 		lineNumber++;
 	}
 
-	protected final void printComment( String line) throws Exception {
+	protected final void printComment(String line) throws Exception {
 		printRow(new String[] { line }, true);
 	}
 

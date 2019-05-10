@@ -17,14 +17,6 @@ import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 
 public class TagCoinRandomization extends Randomization {
 
-
-
-
-
-
-
-
-
 	protected TagCoinRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -62,7 +54,5 @@ public class TagCoinRandomization extends Randomization {
 		InputFieldSelectionSetValue value = getRandomValue(trial, values);
 		saveRandom(trial);
 		return value;
-
 	}
-
 }

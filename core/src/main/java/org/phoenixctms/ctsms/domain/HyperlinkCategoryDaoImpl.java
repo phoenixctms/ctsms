@@ -20,8 +20,7 @@ import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
  * @see HyperlinkCategory
  */
 public class HyperlinkCategoryDaoImpl
-		extends HyperlinkCategoryDaoBase
-{
+		extends HyperlinkCategoryDaoBase {
 
 	@Override
 	protected Collection<HyperlinkCategory> handleFindByModuleVisibleId(
@@ -39,8 +38,7 @@ public class HyperlinkCategoryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public HyperlinkCategory hyperlinkCategoryVOToEntity(HyperlinkCategoryVO hyperlinkCategoryVO)
-	{
+	public HyperlinkCategory hyperlinkCategoryVOToEntity(HyperlinkCategoryVO hyperlinkCategoryVO) {
 		HyperlinkCategory entity = this.loadHyperlinkCategoryFromHyperlinkCategoryVO(hyperlinkCategoryVO);
 		this.hyperlinkCategoryVOToEntity(hyperlinkCategoryVO, entity, true);
 		return entity;
@@ -53,8 +51,7 @@ public class HyperlinkCategoryDaoImpl
 	public void hyperlinkCategoryVOToEntity(
 			HyperlinkCategoryVO source,
 			HyperlinkCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.hyperlinkCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -63,15 +60,13 @@ public class HyperlinkCategoryDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private HyperlinkCategory loadHyperlinkCategoryFromHyperlinkCategoryVO(HyperlinkCategoryVO hyperlinkCategoryVO)
-	{
+	private HyperlinkCategory loadHyperlinkCategoryFromHyperlinkCategoryVO(HyperlinkCategoryVO hyperlinkCategoryVO) {
 		HyperlinkCategory hyperlinkCategory = null;
 		Long id = hyperlinkCategoryVO.getId();
 		if (id != null) {
 			hyperlinkCategory = this.load(id);
 		}
-		if (hyperlinkCategory == null)
-		{
+		if (hyperlinkCategory == null) {
 			hyperlinkCategory = HyperlinkCategory.Factory.newInstance();
 		}
 		return hyperlinkCategory;
@@ -81,8 +76,7 @@ public class HyperlinkCategoryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public HyperlinkCategoryVO toHyperlinkCategoryVO(final HyperlinkCategory entity)
-	{
+	public HyperlinkCategoryVO toHyperlinkCategoryVO(final HyperlinkCategory entity) {
 		return super.toHyperlinkCategoryVO(entity);
 	}
 
@@ -92,8 +86,7 @@ public class HyperlinkCategoryDaoImpl
 	@Override
 	public void toHyperlinkCategoryVO(
 			HyperlinkCategory source,
-			HyperlinkCategoryVO target)
-	{
+			HyperlinkCategoryVO target) {
 		super.toHyperlinkCategoryVO(source, target);
 		target.setName(L10nUtil.getHyperlinkCategoryName(Locales.USER, source.getNameL10nKey()));
 		target.setTitlePreset(L10nUtil.getHyperlinkTitlePreset(Locales.USER, source.getTitlePresetL10nKey()));

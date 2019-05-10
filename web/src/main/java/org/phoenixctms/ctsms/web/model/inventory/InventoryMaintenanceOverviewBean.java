@@ -38,7 +38,7 @@ public class InventoryMaintenanceOverviewBean extends ManagedBeanBase {
 		if (maintenanceItem != null) {
 			try {
 				WebUtil.getServiceLocator().getInventoryService()
-				.setMaintenaceScheduleItemDismissed(WebUtil.getAuthentication(), maintenanceItem.getId(), maintenanceItem.getVersion(), true);
+						.setMaintenaceScheduleItemDismissed(WebUtil.getAuthentication(), maintenanceItem.getId(), maintenanceItem.getVersion(), true);
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

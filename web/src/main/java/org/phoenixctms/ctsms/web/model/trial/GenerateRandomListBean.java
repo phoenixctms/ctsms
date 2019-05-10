@@ -73,12 +73,9 @@ public abstract class GenerateRandomListBean extends ManagedBeanBase {
 		return n;
 	}
 
-
 	protected abstract String getRandomizationList();
 
-
 	protected abstract RandomizationMode getRandomizationMode();
-
 
 	protected abstract Long getTrialId();
 
@@ -127,8 +124,6 @@ public abstract class GenerateRandomListBean extends ManagedBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-
 		}
 	}
-
 }

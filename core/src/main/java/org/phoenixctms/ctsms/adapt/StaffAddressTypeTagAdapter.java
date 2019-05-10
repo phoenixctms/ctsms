@@ -60,7 +60,7 @@ public class StaffAddressTypeTagAdapter extends TagAdapter<Staff, AddressType, S
 			}
 		} else {
 			if (tagValueIn.isCv() && !CheckIDUtil.checkStaffAddressId(tagValueIn.getId(), staffAddressDao).isCv() &&
-					// staffAddressDao.findByStaff(tagValueIn.getStaffId(), true, null, null, null).size() > 0) {
+			// staffAddressDao.findByStaff(tagValueIn.getStaffId(), true, null, null, null).size() > 0) {
 					staffAddressDao.getCount(tagValueIn.getStaffId(), true, null, null) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_ADDRESS_ALREADY_ANOTHER_ADDRESS_MARKED_FOR_CV);
 			}

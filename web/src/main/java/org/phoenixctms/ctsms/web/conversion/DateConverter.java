@@ -14,6 +14,7 @@ public class DateConverter extends DateTimeConverterBase {
 		super();
 	}
 
+	@Override
 	protected void setFormat() {
 		this.setPattern(CommonUtil.getInputDatePattern(WebUtil.getDateFormat()));
 		// String converterDatePattern = Settings.getString(SettingCodes.CONVERTER_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_PATTERN);
@@ -27,7 +28,6 @@ public class DateConverter extends DateTimeConverterBase {
 		// setDateStyleType();
 		// }
 	}
-
 	// private void setDateStyleType() {
 	// this.setDateStyle(Settings.getString(SettingCodes.CONVERTER_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.CONVERTER_DATE_STYLE));
 	// this.setType(DateUtil.ConverterType.DATE.toString());

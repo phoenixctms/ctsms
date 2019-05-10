@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.adapt;
 
-
-
 import java.util.Collection;
 
 import org.hibernate.LockMode;

@@ -18,8 +18,7 @@ import org.hibernate.criterion.Subqueries;
  * @see Permission
  */
 public class PermissionDaoImpl
-		extends PermissionDaoBase
-{
+		extends PermissionDaoBase {
 
 	private org.hibernate.Criteria createPermissionCriteria() {
 		org.hibernate.Criteria permissionCritria = this.getSession().createCriteria(Permission.class);

@@ -26,8 +26,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandTagValue
  */
 public class ProbandTagValueDaoImpl
-extends ProbandTagValueDaoBase
-{
+		extends ProbandTagValueDaoBase {
 
 	private org.hibernate.Criteria createTagValueCriteria() {
 		org.hibernate.Criteria tagValueCriteria = this.getSession().createCriteria(ProbandTagValue.class);
@@ -39,8 +38,7 @@ extends ProbandTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandTagValue> handleFindByProband(Long probandId, PSFVO psf) throws Exception
-	{
+	protected Collection<ProbandTagValue> handleFindByProband(Long probandId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandTagValue.class, tagValueCriteria);
 		if (probandId != null) {
@@ -53,7 +51,7 @@ extends ProbandTagValueDaoBase
 	@Override
 	protected long handleGetCount(
 			Long probandId) throws Exception {
-		org.hibernate.Criteria tagValueCriteria =createTagValueCriteria();
+		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		if (probandId != null) {
 			tagValueCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
@@ -65,8 +63,7 @@ extends ProbandTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandTagValue loadProbandTagValueFromProbandTagValueInVO(ProbandTagValueInVO probandTagValueInVO)
-	{
+	private ProbandTagValue loadProbandTagValueFromProbandTagValueInVO(ProbandTagValueInVO probandTagValueInVO) {
 		// TODO implement loadProbandTagValueFromProbandTagValueInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagValueFromProbandTagValueInVO(ProbandTagValueInVO) not yet implemented.");
 		ProbandTagValue probandTagValue = null;
@@ -74,8 +71,7 @@ extends ProbandTagValueDaoBase
 		if (id != null) {
 			probandTagValue = this.load(id);
 		}
-		if (probandTagValue == null)
-		{
+		if (probandTagValue == null) {
 			probandTagValue = ProbandTagValue.Factory.newInstance();
 		}
 		return probandTagValue;
@@ -86,13 +82,11 @@ extends ProbandTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandTagValue loadProbandTagValueFromProbandTagValueOutVO(ProbandTagValueOutVO probandTagValueOutVO)
-	{
+	private ProbandTagValue loadProbandTagValueFromProbandTagValueOutVO(ProbandTagValueOutVO probandTagValueOutVO) {
 		// TODO implement loadProbandTagValueFromProbandTagValueOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagValueFromProbandTagValueOutVO(ProbandTagValueOutVO) not yet implemented.");
 		ProbandTagValue probandTagValue = this.load(probandTagValueOutVO.getId());
-		if (probandTagValue == null)
-		{
+		if (probandTagValue == null) {
 			probandTagValue = ProbandTagValue.Factory.newInstance();
 		}
 		return probandTagValue;
@@ -102,8 +96,7 @@ extends ProbandTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTagValue probandTagValueInVOToEntity(ProbandTagValueInVO probandTagValueInVO)
-	{
+	public ProbandTagValue probandTagValueInVOToEntity(ProbandTagValueInVO probandTagValueInVO) {
 		ProbandTagValue entity = this.loadProbandTagValueFromProbandTagValueInVO(probandTagValueInVO);
 		this.probandTagValueInVOToEntity(probandTagValueInVO, entity, true);
 		return entity;
@@ -116,8 +109,7 @@ extends ProbandTagValueDaoBase
 	public void probandTagValueInVOToEntity(
 			ProbandTagValueInVO source,
 			ProbandTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandTagValueInVOToEntity(source, target, copyIfNull);
 		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		Long tagId = source.getTagId();
@@ -154,8 +146,7 @@ extends ProbandTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTagValue probandTagValueOutVOToEntity(ProbandTagValueOutVO probandTagValueOutVO)
-	{
+	public ProbandTagValue probandTagValueOutVOToEntity(ProbandTagValueOutVO probandTagValueOutVO) {
 		ProbandTagValue entity = this.loadProbandTagValueFromProbandTagValueOutVO(probandTagValueOutVO);
 		this.probandTagValueOutVOToEntity(probandTagValueOutVO, entity, true);
 		return entity;
@@ -168,8 +159,7 @@ extends ProbandTagValueDaoBase
 	public void probandTagValueOutVOToEntity(
 			ProbandTagValueOutVO source,
 			ProbandTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandTagValueOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		ProbandTagVO tagVO = source.getTag();
@@ -212,8 +202,7 @@ extends ProbandTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTagValueInVO toProbandTagValueInVO(final ProbandTagValue entity)
-	{
+	public ProbandTagValueInVO toProbandTagValueInVO(final ProbandTagValue entity) {
 		return super.toProbandTagValueInVO(entity);
 	}
 
@@ -223,8 +212,7 @@ extends ProbandTagValueDaoBase
 	@Override
 	public void toProbandTagValueInVO(
 			ProbandTagValue source,
-			ProbandTagValueInVO target)
-	{
+			ProbandTagValueInVO target) {
 		super.toProbandTagValueInVO(source, target);
 		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
 		ProbandTag tag = source.getTag();
@@ -246,8 +234,7 @@ extends ProbandTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandTagValueOutVO toProbandTagValueOutVO(final ProbandTagValue entity)
-	{
+	public ProbandTagValueOutVO toProbandTagValueOutVO(final ProbandTagValue entity) {
 		return super.toProbandTagValueOutVO(entity);
 	}
 
@@ -257,8 +244,7 @@ extends ProbandTagValueDaoBase
 	@Override
 	public void toProbandTagValueOutVO(
 			ProbandTagValue source,
-			ProbandTagValueOutVO target)
-	{
+			ProbandTagValueOutVO target) {
 		// TODO verify behavior of toProbandTagValueOutVO
 		super.toProbandTagValueOutVO(source, target);
 		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String

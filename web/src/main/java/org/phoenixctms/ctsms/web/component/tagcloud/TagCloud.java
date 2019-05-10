@@ -27,10 +27,7 @@ import javax.faces.context.FacesContext;
 public class TagCloud extends UIOutput implements org.primefaces.component.api.Widget {
 
 	protected enum PropertyKeys {
-		widgetVar
-		, model
-		, style
-		, styleClass;
+		widgetVar, model, style, styleClass;
 
 		String toString;
 

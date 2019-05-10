@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
  * @see CriterionProperty
  */
 public class CriterionPropertyDaoImpl
-extends CriterionPropertyDaoBase
-{
+		extends CriterionPropertyDaoBase {
 
 	private final static VOIDComparator CRITERION_RESTRICTION_ID_COMPARATOR = new VOIDComparator<CriterionRestrictionVO>(false);
 
@@ -39,8 +38,7 @@ extends CriterionPropertyDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionProperty criterionPropertyVOToEntity(CriterionPropertyVO criterionPropertyVO)
-	{
+	public CriterionProperty criterionPropertyVOToEntity(CriterionPropertyVO criterionPropertyVO) {
 		CriterionProperty entity = this.loadCriterionPropertyFromCriterionPropertyVO(criterionPropertyVO);
 		this.criterionPropertyVOToEntity(criterionPropertyVO, entity, true);
 		return entity;
@@ -53,14 +51,13 @@ extends CriterionPropertyDaoBase
 	public void criterionPropertyVOToEntity(
 			CriterionPropertyVO source,
 			CriterionProperty target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of criterionPropertyVOToEntity
 		super.criterionPropertyVOToEntity(source, target, copyIfNull);
 		Collection validRestrictions = source.getValidRestrictions();
 		if (copyIfNull || validRestrictions.size() > 0) {
 			this.getCriterionRestrictionDao().criterionRestrictionVOToEntityCollection(validRestrictions); // copy if null cannot be passed; copy if null is always true
-			target.setValidRestrictions((Collection<CriterionRestriction>) validRestrictions);
+			target.setValidRestrictions(validRestrictions);
 		}
 	}
 
@@ -92,15 +89,13 @@ extends CriterionPropertyDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CriterionProperty loadCriterionPropertyFromCriterionPropertyVO(CriterionPropertyVO criterionPropertyVO)
-	{
+	private CriterionProperty loadCriterionPropertyFromCriterionPropertyVO(CriterionPropertyVO criterionPropertyVO) {
 		CriterionProperty criterionProperty = null;
 		Long id = criterionPropertyVO.getId();
 		if (id != null) {
 			criterionProperty = this.load(id);
 		}
-		if (criterionProperty == null)
-		{
+		if (criterionProperty == null) {
 			criterionProperty = CriterionProperty.Factory.newInstance();
 		}
 		return criterionProperty;
@@ -110,8 +105,7 @@ extends CriterionPropertyDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionPropertyVO toCriterionPropertyVO(final CriterionProperty entity)
-	{
+	public CriterionPropertyVO toCriterionPropertyVO(final CriterionProperty entity) {
 		return super.toCriterionPropertyVO(entity);
 	}
 
@@ -121,8 +115,7 @@ extends CriterionPropertyDaoBase
 	@Override
 	public void toCriterionPropertyVO(
 			CriterionProperty source,
-			CriterionPropertyVO target)
-	{
+			CriterionPropertyVO target) {
 		super.toCriterionPropertyVO(source, target);
 		target.setValidRestrictions(toCriterionRestrictionVOCollection(source.getValidRestrictions()));
 		target.setName(L10nUtil.getCriterionPropertyName(Locales.USER, source.getNameL10nKey()));

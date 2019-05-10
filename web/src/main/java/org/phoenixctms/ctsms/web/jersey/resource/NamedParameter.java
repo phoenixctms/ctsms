@@ -25,7 +25,6 @@ public class NamedParameter {
 		return true;
 	}
 
-
 	public String getName() {
 		return name;
 	}

@@ -65,5 +65,4 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase {
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-
 }

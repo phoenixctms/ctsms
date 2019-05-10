@@ -51,11 +51,7 @@ import com.google.gson.JsonObject;
 public class Captcha extends UIInput {
 
 	protected enum PropertyKeys {
-		theme
-		, language
-		, tabindex
-		, label
-		, secure;
+		theme, language, tabindex, label, secure;
 
 		String toString;
 
@@ -73,8 +69,7 @@ public class Captcha extends UIInput {
 	}
 
 	enum ReCaptchaVersions {
-		V1,
-		V2;
+		V1, V2;
 	}
 
 	public static final String COMPONENT_TYPE = "ctsms.Captcha";

@@ -22,8 +22,7 @@ public abstract class GraphEnumerator {
 			boolean enumerateReferences,
 			boolean enumerateCollections,
 			boolean enumerateMaps,
-			String associationPathSeparator
-			) throws Exception {
+			String associationPathSeparator) throws Exception {
 		if (graph != null && properties != null) {
 			Method[] methods = graph.getMethods();
 			if (methods != null) {
@@ -107,8 +106,7 @@ public abstract class GraphEnumerator {
 
 	private static GraphEnumerator getInstance(Class clazz, Accessor lastGetter, ArrayList<Accessor> getterChain,
 			MethodTransfilter transfilter,
-			String associationPathSeparator
-			) throws Exception {
+			String associationPathSeparator) throws Exception {
 		GraphEnumerator instance = (GraphEnumerator) clazz.newInstance();
 		instance.associationPathSeparator = associationPathSeparator;
 		instance.transfilter = transfilter;
@@ -237,7 +235,7 @@ public abstract class GraphEnumerator {
 				newHelpers = new ArrayList<FieldKeyHelper>();
 				if (indexesKeys != null) {
 					newHelpers
-					.add(helpersIt.next().append(getter, ((Integer) indexesKeys.pop()).intValue(), transfilter, associationPathSeparator));
+							.add(helpersIt.next().append(getter, ((Integer) indexesKeys.pop()).intValue(), transfilter, associationPathSeparator));
 				} else {
 					while (helpersIt.hasNext()) {
 						FieldKeyHelper helper = helpersIt.next();

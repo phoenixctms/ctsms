@@ -85,8 +85,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setPrefixedTitle2(out.getPrefixedTitle2());
 			in.setPrefixedTitle3(out.getPrefixedTitle3());
 			in.setRating(out.getRating());
-			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax() :
-				Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
+			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax()
+					: Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
 			// in.setRecruitmentForOtherTrialsAllowed(out.getRecruitmentForOtherTrialsAllowed());
 			ArrayList<Long> childIds = new ArrayList<Long>(childrenVOs.size());
 			Iterator<ProbandOutVO> it = childrenVOs.iterator();
@@ -96,6 +96,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setChildIds(childIds);
 		}
 	}
+
 	private static ProbandOutVO createProbandOutFromIn(ProbandInVO in) {
 		ProbandOutVO result = new ProbandOutVO();
 		if (in != null) {
@@ -140,8 +141,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			result.setPrefixedTitle2(in.getPrefixedTitle2());
 			result.setPrefixedTitle3(in.getPrefixedTitle3());
 			result.setRating(in.getRating());
-			result.setRatingMax(in.getRatingMax() != null ? in.getRatingMax() :
-				Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
+			result.setRatingMax(in.getRatingMax() != null ? in.getRatingMax()
+					: Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
 			// result.setPrivacyConsentStatus(value)
 			// result.setRecruitmentForOtherTrialsAllowed(in.isRecruitmentForOtherTrialsAllowed());
 			// result.setVersion(value);
@@ -157,6 +158,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		}
 		return result;
 	}
+
 	public static void initProbandDefaultValues(ProbandInVO in, UserOutVO user) {
 		if (in != null) {
 			ProbandCategoryVO categoryPreset = null;
@@ -201,6 +203,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setChildIds(new ArrayList<Long>());
 		}
 	}
+
 	private ProbandInVO in;
 	private ProbandOutVO out;
 	private ArrayList<SelectItem> categories;
@@ -208,15 +211,11 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	private SexSelector gender;
 	private ProbandCategoryVO category;
 	private TreeNode childrenRoot;
-
 	private TreeNode parentsRoot;
-
 	private ProbandMultiPickerModel childrenMultiPicker;
-
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private Object[] inquiryValuesTotalCounts;
-
 	private String deferredDeleteReason;
 
 	public ProbandBean() {
@@ -238,8 +237,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandInVO backup = new ProbandInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -567,8 +565,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
-			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : (out.isPerson() ? MessageCodes.PROBAND_PERSON_TITLE
-					: MessageCodes.PROBAND_ANIMAL_TITLE),
+			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE
+					: (out.isPerson() ? MessageCodes.PROBAND_PERSON_TITLE
+							: MessageCodes.PROBAND_ANIMAL_TITLE),
 					Long.toString(out.getId()), out.getNameWithTitles());
 		} else {
 			return Messages.getString(operationSuccess ? MessageCodes.CREATE_NEW_PROBAND : MessageCodes.ERROR_LOADING_PROBAND);
@@ -578,7 +577,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	// public void handleBlindedChange() {
 	// loadProbandCategories();
 	// }
-
 	@Override
 	public String getWindowName() {
 		return getWindowName(WebUtil.getLongParamValue(GetParamNames.PROBAND_ID) == null);
@@ -705,7 +703,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		count = (out == null ? null : WebUtil.getProcedureCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROCEDURE_COUNT.toString(), count);
 		tabTitleMap
-		.put(JSValues.AJAX_PROCEDURE_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.PROCEDURES_TAB_TITLE, MessageCodes.PROCEDURES_TAB_TITLE_WITH_COUNT, count));
+				.put(JSValues.AJAX_PROCEDURE_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.PROCEDURES_TAB_TITLE, MessageCodes.PROCEDURES_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getMedicationCount(in.getId(), null, null));
 		tabCountMap.put(JSValues.AJAX_MEDICATION_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_MEDICATION_COUNT.toString(),
@@ -742,11 +740,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT, count));
-
-
 		childrenRoot.getChildren().clear();
 		parentsRoot.getChildren().clear();
-
 		if (out != null) {
 			// probandOutVOtoChildTreeNode1
 			probandOutVOtoParentTreeNode(out, parentsRoot, new ArrayList<IDVOTreeNode>(),
@@ -768,9 +763,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
 		}
 		childrenMultiPicker.setIds(in.getChildIds());
-
-
-
 		// categories = WebUtil.getVisibleProbandCategories(in.getCategoryId());
 		loadProbandCategories();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
@@ -802,6 +794,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		return Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.PROBAND_DB) && super.isEditable();
 	}
@@ -813,6 +806,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		return false;
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.PROBAND_DB) && super.isRemovable();
 	}

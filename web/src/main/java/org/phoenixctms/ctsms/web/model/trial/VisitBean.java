@@ -78,8 +78,7 @@ public class VisitBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		VisitInVO backup = new VisitInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

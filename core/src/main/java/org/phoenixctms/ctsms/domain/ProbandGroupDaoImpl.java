@@ -25,8 +25,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandGroup
  */
 public class ProbandGroupDaoImpl
-extends ProbandGroupDaoBase
-{
+		extends ProbandGroupDaoBase {
 
 	private static final String UNIQUE_PROBAND_GROUP_NAME = "{0} - {1}";
 
@@ -112,8 +111,7 @@ extends ProbandGroupDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandGroup loadProbandGroupFromProbandGroupInVO(ProbandGroupInVO probandGroupInVO)
-	{
+	private ProbandGroup loadProbandGroupFromProbandGroupInVO(ProbandGroupInVO probandGroupInVO) {
 		// TODO implement loadProbandGroupFromProbandGroupInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandGroupFromProbandGroupInVO(ProbandGroupInVO) not yet implemented.");
 		ProbandGroup probandGroup = null;
@@ -121,8 +119,7 @@ extends ProbandGroupDaoBase
 		if (id != null) {
 			probandGroup = this.load(id);
 		}
-		if (probandGroup == null)
-		{
+		if (probandGroup == null) {
 			probandGroup = ProbandGroup.Factory.newInstance();
 		}
 		return probandGroup;
@@ -133,13 +130,11 @@ extends ProbandGroupDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandGroup loadProbandGroupFromProbandGroupOutVO(ProbandGroupOutVO probandGroupOutVO)
-	{
+	private ProbandGroup loadProbandGroupFromProbandGroupOutVO(ProbandGroupOutVO probandGroupOutVO) {
 		// TODO implement loadProbandGroupFromProbandGroupOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandGroupFromProbandGroupOutVO(ProbandGroupOutVO) not yet implemented.");
 		ProbandGroup probandGroup = this.load(probandGroupOutVO.getId());
-		if (probandGroup == null)
-		{
+		if (probandGroup == null) {
 			probandGroup = ProbandGroup.Factory.newInstance();
 		}
 		return probandGroup;
@@ -149,8 +144,7 @@ extends ProbandGroupDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandGroup probandGroupInVOToEntity(ProbandGroupInVO probandGroupInVO)
-	{
+	public ProbandGroup probandGroupInVOToEntity(ProbandGroupInVO probandGroupInVO) {
 		ProbandGroup entity = this.loadProbandGroupFromProbandGroupInVO(probandGroupInVO);
 		this.probandGroupInVOToEntity(probandGroupInVO, entity, true);
 		return entity;
@@ -163,8 +157,7 @@ extends ProbandGroupDaoBase
 	public void probandGroupInVOToEntity(
 			ProbandGroupInVO source,
 			ProbandGroup target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandGroupInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
 		if (trialId != null) {
@@ -184,8 +177,7 @@ extends ProbandGroupDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandGroup probandGroupOutVOToEntity(ProbandGroupOutVO probandGroupOutVO)
-	{
+	public ProbandGroup probandGroupOutVOToEntity(ProbandGroupOutVO probandGroupOutVO) {
 		ProbandGroup entity = this.loadProbandGroupFromProbandGroupOutVO(probandGroupOutVO);
 		this.probandGroupOutVOToEntity(probandGroupOutVO, entity, true);
 		return entity;
@@ -198,8 +190,7 @@ extends ProbandGroupDaoBase
 	public void probandGroupOutVOToEntity(
 			ProbandGroupOutVO source,
 			ProbandGroup target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandGroupOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -225,8 +216,7 @@ extends ProbandGroupDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandGroupInVO toProbandGroupInVO(final ProbandGroup entity)
-	{
+	public ProbandGroupInVO toProbandGroupInVO(final ProbandGroup entity) {
 		return super.toProbandGroupInVO(entity);
 	}
 
@@ -236,8 +226,7 @@ extends ProbandGroupDaoBase
 	@Override
 	public void toProbandGroupInVO(
 			ProbandGroup source,
-			ProbandGroupInVO target)
-	{
+			ProbandGroupInVO target) {
 		super.toProbandGroupInVO(source, target);
 		Trial trial = source.getTrial();
 		if (trial != null) {
@@ -249,8 +238,7 @@ extends ProbandGroupDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandGroupOutVO toProbandGroupOutVO(final ProbandGroup entity)
-	{
+	public ProbandGroupOutVO toProbandGroupOutVO(final ProbandGroup entity) {
 		return super.toProbandGroupOutVO(entity);
 	}
 
@@ -260,8 +248,7 @@ extends ProbandGroupDaoBase
 	@Override
 	public void toProbandGroupOutVO(
 			ProbandGroup source,
-			ProbandGroupOutVO target)
-	{
+			ProbandGroupOutVO target) {
 		super.toProbandGroupOutVO(source, target);
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

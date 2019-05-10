@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.pdf;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +57,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	private PDFJpeg checkboxCheckedPresetImage;
 	private PDFJpeg radioOnPresetImage;
 	private PDFJpeg selectboxCheckedPresetImage;
-
 	// private PDFont fontE;
 	// private PDFont fontF;
 	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
@@ -75,7 +73,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	private void drawBlock(PDPageContentStream contentStream, InquiriesPDFBlock block) throws Exception {
 		if (// BlockType.NEW_LIST_ENTRY.equals(block.getType())
-				BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
+		BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
 			// || BlockType.ECRF_SIGNATURE.equals(block.getType())) {
 			cursor.setCategoryY(cursor.getBlockY());
 			// cursor.setIndexY(cursor.getBlockY());
@@ -110,6 +108,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		// InquiriesPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
+	@Override
 	public void drawPageBreakNewPage(PDPageContentStream contentStream) throws Exception {
 		InquiriesPDFBlock block = blocks.get(blockIndex);
 		if (BlockType.INPUT_FIELD.equals(block.getType())
@@ -123,6 +122,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
+	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 		InquiriesPDFBlock block = blocks.get(blockIndex - 1);
 		// if (BlockType.NEW_INDEX.equals(block.getType())) {
@@ -144,10 +144,12 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 				Settings.getColor(InquiriesPDFSettingCodes.TEXT_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.TEXT_COLOR),
 				L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, EcrfPDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
 				Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LEFT_MARGIN)
-				+ (pageWidth - Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings
-						.getFloat(
-								InquiriesPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
-								Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_CENTER);
+						+ (pageWidth - Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings
+								.getFloat(
+										InquiriesPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_RIGHT_MARGIN))
+								/ 2.0f,
+				Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LOWER_MARGIN),
+				PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 
@@ -167,7 +169,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	public PDRectangle getDefaultPageSize() {
 		return DEFAULT_PAGE_SIZE;
 	}
-
 	// public PDFont getFontE() {
 	// return fontE;
 	// }
@@ -175,7 +176,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	// public PDFont getFontF() {
 	// return fontF;
 	// }
-
 
 	public PDFont getFontA() {
 		return fontA;
@@ -229,8 +229,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	public PDFJpeg getSelectboxUncheckedImage() {
 		return selectboxUncheckedImage;
 	}
-
-
 
 	private PDFJpeg getSketchImage(InquiryValueOutVO value) {
 		InputFieldOutVO field = value.getInquiry().getField();
@@ -300,7 +298,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		selectboxUncheckedImage = PDFJpeg.prepareScaledImage(doc,
 				PDFUtil.loadImage(Settings.getImageFilename(InquiriesPDFSettingCodes.SELECTBOX_UNCHECKED_IMAGE_FILE_NAME, Bundle.INQUIRIES_PDF, null)),
 				selectionItemImageWidth, selectionItemImageHeight, quality, dpi, bgColor);
-
 		if (valueVOMap != null && imageVOMap != null
 				&& Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			// Integer width = Settings.getIntNullable(InquiriesPDFSettingCodes.IMAGE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.IMAGE_WIDTH);
@@ -501,8 +498,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.blank = blank;
 	}
 
-
-
 	public void setImageVOMap(HashMap<Long, InputFieldImageVO> imageVOMap) {
 		this.imageVOMap = imageVOMap;
 	}
@@ -529,8 +524,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	public void setTrialVOMap(HashMap<Long, Collection<TrialOutVO>> trialVOMap) {
 		this.trialVOMap = trialVOMap;
 	}
-
-
 
 	public void setValueVOMap(HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap) {
 		this.valueVOMap = valueVOMap;
@@ -600,4 +593,3 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		pdfVO.setFileName(fileName.toString());
 	}
 }
-

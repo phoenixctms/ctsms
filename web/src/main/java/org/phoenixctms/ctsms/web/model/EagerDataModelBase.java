@@ -43,7 +43,6 @@ public abstract class EagerDataModelBase implements EagerDataModel, SelectableDa
 	// public PSFVO getInitialPsf() {
 	// return null;
 	// }
-
 	protected Long getPageId(IDVO idvo) {
 		return idvo.getId();
 	}

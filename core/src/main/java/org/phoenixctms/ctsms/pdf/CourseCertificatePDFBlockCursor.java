@@ -6,12 +6,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 public class CourseCertificatePDFBlockCursor extends PDFBlockCursor {
 
 	private CourseCertificatePDFPainter painter;
-
-
-
 	private CourseParticipationStatusEntryOutVO participation;
-
-
 
 	public CourseCertificatePDFBlockCursor(CourseCertificatePDFPainter painter) {
 		this.painter = painter;
@@ -36,5 +31,4 @@ public class CourseCertificatePDFBlockCursor extends PDFBlockCursor {
 	public void setParticipation(CourseParticipationStatusEntryOutVO participation) {
 		this.participation = participation;
 	}
-
 }

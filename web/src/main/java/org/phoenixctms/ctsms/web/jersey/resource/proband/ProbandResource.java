@@ -74,6 +74,7 @@ public class ProbandResource extends ServiceResourceBase {
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
+
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -171,10 +172,11 @@ public class ProbandResource extends ServiceResourceBase {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/{trialId}")
 	public JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO> getInquiryValues(@PathParam("id") Long id, @PathParam("trialId") Long trialId,
-			@QueryParam("active") Boolean active, @QueryParam("active_signup") Boolean activeSignup, @QueryParam("sort") Boolean sort, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
-					throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf = new PSFUriPart(uriInfo, "active","active_signup", "sort", "load_all_js_values");
-		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active,activeSignup, id, sort, loadAllJsValues, psf);
+			@QueryParam("active") Boolean active, @QueryParam("active_signup") Boolean activeSignup, @QueryParam("sort") Boolean sort,
+			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf = new PSFUriPart(uriInfo, "active", "active_signup", "sort", "load_all_js_values");
+		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active, activeSignup, id, sort, loadAllJsValues, psf);
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 		// PSFUriPart psf;
 		// return new InquiryValuesOutVOPage(WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, null, id, false, false, psf = new PSFUriPart(uriInfo)),
@@ -269,7 +271,7 @@ public class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/inquiryvalues/pdf")
 	public Response renderInquiries(@PathParam("id") Long id, @QueryParam("active") Boolean active, @QueryParam("active_signup") Boolean activeSignup,
 			@QueryParam("blank") boolean blank) throws AuthenticationException,
-	AuthorisationException, ServiceException {
+			AuthorisationException, ServiceException {
 		InquiriesPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderInquiries(auth, null, id, active, activeSignup, blank);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
@@ -282,7 +284,7 @@ public class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/inquiryvalues/{trialId}/pdf")
 	public Response renderInquiries(@PathParam("id") Long id, @PathParam("trialId") Long trialId, @QueryParam("active") Boolean active,
 			@QueryParam("active_signup") Boolean activeSignup, @QueryParam("blank") boolean blank) throws AuthenticationException,
-	AuthorisationException, ServiceException {
+			AuthorisationException, ServiceException {
 		InquiriesPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderInquiries(auth, trialId, id, active, activeSignup, blank);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
@@ -297,7 +299,7 @@ public class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/inquiryvalues/pdf/head")
 	public InquiriesPDFVO renderInquiriesHead(@PathParam("id") Long id, @QueryParam("active") Boolean active, @QueryParam("active_signup") Boolean activeSignup,
 			@QueryParam("blank") Boolean blank)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		InquiriesPDFVO result = WebUtil.getServiceLocator().getProbandService().renderInquiries(auth, null, id, active, activeSignup, blank);
 		result.setDocumentDatas(null);
 		return result;
@@ -309,7 +311,7 @@ public class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/inquiryvalues/{trialId}/pdf/head")
 	public InquiriesPDFVO renderInquiriesHead(@PathParam("id") Long id, @PathParam("trialId") Long trialId, @QueryParam("active") Boolean active,
 			@QueryParam("active_signup") Boolean activeSignup, @QueryParam("blank") Boolean blank)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		InquiriesPDFVO result = WebUtil.getServiceLocator().getProbandService().renderInquiries(auth, trialId, id, active, activeSignup, blank);
 		result.setDocumentDatas(null);
 		return result;
@@ -317,8 +319,9 @@ public class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Path("{id}/inquiryvalues/signuppdf")
-	public Response renderInquiriesSignup(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup) throws AuthenticationException,
-	AuthorisationException, ServiceException {
+	public Response renderInquiriesSignup(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup)
+			throws AuthenticationException,
+			AuthorisationException, ServiceException {
 		InquiriesPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, id, activeSignup);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
@@ -331,8 +334,9 @@ public class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/signuppdf/head")
-	public InquiriesPDFVO renderInquiriesSignupHead(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup) throws AuthenticationException,
-	AuthorisationException, ServiceException {
+	public InquiriesPDFVO renderInquiriesSignupHead(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup)
+			throws AuthenticationException,
+			AuthorisationException, ServiceException {
 		InquiriesPDFVO result = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, id, activeSignup);
 		result.setDocumentDatas(null);
 		return result;

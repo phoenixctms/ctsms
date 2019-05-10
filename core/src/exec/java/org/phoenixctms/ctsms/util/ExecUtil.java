@@ -20,6 +20,7 @@ import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaMetadataKeys;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -49,12 +50,10 @@ import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 
 public final class ExecUtil {
-
 	// public static String DATE_PATTERN = "yyy-MM-dd";
 
 	// public static String DATETIME_PATTERN = "yyy-MM-dd HH:mm:ss";
 	// private final static String DEFAULT_ENCODING = "UTF-8";
-
 	public final static ArrayList<Class> AUTHORIZED_SERVICE_CLASSES = new ArrayList<Class>();
 	static {
 		AUTHORIZED_SERVICE_CLASSES.add(InventoryService.class);
@@ -147,7 +146,6 @@ public final class ExecUtil {
 	public static String formatFileName(String fileName, String fileNameFormat) {
 		FilePathSplitter filePath = new FilePathSplitter(fileName);
 		return filePath.joinFilePath(fileNameFormat);
-
 	}
 
 	public static URI getExportedFileUri(String fileName) throws URISyntaxException {
@@ -161,7 +159,7 @@ public final class ExecUtil {
 	}
 
 	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
-	AuthorisationException, ServiceException, FileNotFoundException {
+			AuthorisationException, ServiceException, FileNotFoundException {
 		try {
 			long fileId = Long.parseLong(fileName);
 			FileStreamOutVO file = fileService.getFileStream(auth, fileId);
@@ -175,7 +173,7 @@ public final class ExecUtil {
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
-		metadata.add(Metadata.RESOURCE_NAME_KEY, fileName);
+		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, fileName);
 		try {
 			tikaStream = TikaInputStream.get(data, metadata);
 			return detector.detect(tikaStream, metadata).toString();
@@ -194,7 +192,7 @@ public final class ExecUtil {
 	public static String getMimeType(File file) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
-		metadata.add(Metadata.RESOURCE_NAME_KEY, file.getName());
+		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, file.getName());
 		try {
 			tikaStream = TikaInputStream.get(file, metadata);
 			return detector.detect(tikaStream, metadata).toString();
@@ -213,7 +211,6 @@ public final class ExecUtil {
 	public static Scanner getScanner() {
 		return new Scanner(System.in);
 	}
-
 
 	public static void lockProcess(String lockFileName) {
 		if (!CommonUtil.isEmptyString(lockFileName)) {

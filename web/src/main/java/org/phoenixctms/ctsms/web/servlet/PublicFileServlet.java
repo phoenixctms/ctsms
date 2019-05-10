@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.servlet;
 
-
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,6 +66,5 @@ public class PublicFileServlet extends FileServletBase {
 				return !found;
 			}
 		};
-
 	}
 }

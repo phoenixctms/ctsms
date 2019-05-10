@@ -208,11 +208,9 @@ import org.phoenixctms.ctsms.vo.ZipVO;
  * @see org.phoenixctms.ctsms.service.shared.SelectionSetService
  */
 public class SelectionSetServiceImpl
-extends SelectionSetServiceBase
-{
+		extends SelectionSetServiceBase {
 
-	private static NotificationType checkNotificationTypeId(Long notificationTypeId, NotificationTypeDao notificationTypeDao) throws ServiceException
-	{
+	private static NotificationType checkNotificationTypeId(Long notificationTypeId, NotificationTypeDao notificationTypeDao) throws ServiceException {
 		NotificationType notificationType = notificationTypeDao.load(notificationTypeId);
 		if (notificationType == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_NOTIFICATION_TYPE_ID, notificationTypeId == null ? null : notificationTypeId.toString());
@@ -314,8 +312,7 @@ extends SelectionSetServiceBase
 	 */
 	@Override
 	protected Collection<DepartmentVO> handleGetAllDepartments(AuthenticationVO auth)
-			throws Exception
-	{
+			throws Exception {
 		DepartmentDao departmentDao = this.getDepartmentDao();
 		Collection departments = departmentDao.loadAllSorted(0, 0);
 		departmentDao.toDepartmentVOCollection(departments);
@@ -329,7 +326,6 @@ extends SelectionSetServiceBase
 		inputFieldDao.toInputFieldOutVOCollection(inputFields);
 		return inputFields;
 	}
-
 
 	@Override
 	protected Collection<LightInputFieldSelectionSetValueOutVO> handleGetAllEcrfFieldInputFieldSelectionSetValues(AuthenticationVO auth) throws Exception {
@@ -356,8 +352,6 @@ extends SelectionSetServiceBase
 		ecrfFieldStatusTypeDao.toECRFFieldStatusTypeVOCollection(ecrfFieldStates);
 		return ecrfFieldStates;
 	}
-
-
 
 	@Override
 	protected Collection<ECRFStatusTypeVO> handleGetAllEcrfStatusTypes(AuthenticationVO auth)
@@ -398,8 +392,7 @@ extends SelectionSetServiceBase
 	 */
 	@Override
 	protected Collection<InventoryCategoryVO> handleGetAllInventoryCategories(AuthenticationVO auth)
-			throws Exception
-	{
+			throws Exception {
 		InventoryCategoryDao inventoryCategoryDao = this.getInventoryCategoryDao();
 		Collection categories = inventoryCategoryDao.loadAllSorted(0, 0);
 		inventoryCategoryDao.toInventoryCategoryVOCollection(categories);
@@ -753,7 +746,7 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<BankIdentificationVO> handleGetBankIdentifications(AuthenticationVO auth, String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix,
 			Integer limit)
-					throws Exception {
+			throws Exception {
 		BankIdentificationDao bankIdentificationDao = this.getBankIdentificationDao();
 		Collection bankIdentifications = bankIdentificationDao.findBankIdentifications(bankCodeNumberPrefix, bicPrefix, bankNameInfix, limit);
 		bankIdentificationDao.toBankIdentificationVOCollection(bankIdentifications);
@@ -835,7 +828,7 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<CourseParticipationStatusTypeVO> handleGetCourseParticipationStatusTypeTransitions(
 			AuthenticationVO auth, Long typeId, boolean admin, boolean selfRegistration)
-					throws Exception {
+			throws Exception {
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		if (typeId != null) {
 			CheckIDUtil.checkCourseParticipationStatusTypeId(typeId, courseParticipationStatusTypeDao);
@@ -908,8 +901,7 @@ extends SelectionSetServiceBase
 
 	@Override
 	protected Collection<DepartmentVO> handleGetDepartments(AuthenticationVO auth, Long departmentId)
-			throws Exception
-	{
+			throws Exception {
 		DepartmentDao departmentDao = this.getDepartmentDao();
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, departmentDao);
@@ -1109,8 +1101,7 @@ extends SelectionSetServiceBase
 
 	@Override
 	protected Collection<InventoryCategoryVO> handleGetInventoryCategories(AuthenticationVO auth, Long categoryId)
-			throws Exception
-	{
+			throws Exception {
 		InventoryCategoryDao inventoryCategoryDao = this.getInventoryCategoryDao();
 		if (categoryId != null) {
 			CheckIDUtil.checkInventoryCategoryId(categoryId, inventoryCategoryDao);
@@ -1560,7 +1551,7 @@ extends SelectionSetServiceBase
 	@Override
 	protected Collection<StreetVO> handleGetStreets(AuthenticationVO auth, String countryName,
 			String zipCode, String cityName, String streetNameInfix, Integer limit)
-					throws Exception {
+			throws Exception {
 		StreetDao streetDao = this.getStreetDao();
 		Collection streets = streetDao.findStreets(countryName, zipCode, cityName, streetNameInfix, limit);
 		streetDao.toStreetVOCollection(streets);
@@ -1631,8 +1622,6 @@ extends SelectionSetServiceBase
 		}
 		return result;
 	}
-
-
 
 	@Override
 	protected Collection<HyperlinkCategoryVO> handleGetTrialHyperlinkCategories(AuthenticationVO auth)
@@ -1749,6 +1738,4 @@ extends SelectionSetServiceBase
 		zipDao.toZipVOCollection(zips);
 		return zips;
 	}
-
-
 }

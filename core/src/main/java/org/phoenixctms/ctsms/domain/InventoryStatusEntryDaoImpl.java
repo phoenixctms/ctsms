@@ -27,8 +27,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see InventoryStatusEntry
  */
 public class InventoryStatusEntryDaoImpl
-extends InventoryStatusEntryDaoBase
-{
+		extends InventoryStatusEntryDaoBase {
 
 	private org.hibernate.Criteria createStatusEntryCriteria() {
 		org.hibernate.Criteria statusEntryCriteria = this.getSession().createCriteria(InventoryStatusEntry.class);
@@ -128,7 +127,7 @@ extends InventoryStatusEntryDaoBase
 	protected Collection<InventoryStatusEntry> handleFindInventoryStatus(
 			Timestamp now, Long inventoryId, Long departmentId,
 			Long inventoryCategoryId, Boolean inventoryActive, Boolean hideAvailability, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(InventoryStatusEntry.class, statusEntryCriteria);
 		if (inventoryId != null) {
@@ -164,8 +163,7 @@ extends InventoryStatusEntryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusEntry inventoryStatusEntryInVOToEntity(InventoryStatusEntryInVO inventoryStatusEntryInVO)
-	{
+	public InventoryStatusEntry inventoryStatusEntryInVOToEntity(InventoryStatusEntryInVO inventoryStatusEntryInVO) {
 		InventoryStatusEntry entity = this.loadInventoryStatusEntryFromInventoryStatusEntryInVO(inventoryStatusEntryInVO);
 		this.inventoryStatusEntryInVOToEntity(inventoryStatusEntryInVO, entity, true);
 		return entity;
@@ -178,8 +176,7 @@ extends InventoryStatusEntryDaoBase
 	public void inventoryStatusEntryInVOToEntity(
 			InventoryStatusEntryInVO source,
 			InventoryStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryStatusEntryInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long inventoryId = source.getInventoryId();
@@ -229,8 +226,7 @@ extends InventoryStatusEntryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusEntry inventoryStatusEntryOutVOToEntity(InventoryStatusEntryOutVO inventoryStatusEntryOutVO)
-	{
+	public InventoryStatusEntry inventoryStatusEntryOutVOToEntity(InventoryStatusEntryOutVO inventoryStatusEntryOutVO) {
 		InventoryStatusEntry entity = this.loadInventoryStatusEntryFromInventoryStatusEntryOutVO(inventoryStatusEntryOutVO);
 		this.inventoryStatusEntryOutVOToEntity(inventoryStatusEntryOutVO, entity, true);
 		return entity;
@@ -243,8 +239,7 @@ extends InventoryStatusEntryDaoBase
 	public void inventoryStatusEntryOutVOToEntity(
 			InventoryStatusEntryOutVO source,
 			InventoryStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryStatusEntryOutVOToEntity(source, target, copyIfNull);
 		InventoryStatusTypeVO typeVO = source.getType();
 		InventoryOutVO inventoryVO = source.getInventory();
@@ -301,15 +296,13 @@ extends InventoryStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryStatusEntry loadInventoryStatusEntryFromInventoryStatusEntryInVO(InventoryStatusEntryInVO inventoryStatusEntryInVO)
-	{
+	private InventoryStatusEntry loadInventoryStatusEntryFromInventoryStatusEntryInVO(InventoryStatusEntryInVO inventoryStatusEntryInVO) {
 		InventoryStatusEntry inventoryStatusEntry = null;
 		Long id = inventoryStatusEntryInVO.getId();
 		if (id != null) {
 			inventoryStatusEntry = this.load(id);
 		}
-		if (inventoryStatusEntry == null)
-		{
+		if (inventoryStatusEntry == null) {
 			inventoryStatusEntry = InventoryStatusEntry.Factory.newInstance();
 		}
 		return inventoryStatusEntry;
@@ -320,11 +313,9 @@ extends InventoryStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryStatusEntry loadInventoryStatusEntryFromInventoryStatusEntryOutVO(InventoryStatusEntryOutVO inventoryStatusEntryOutVO)
-	{
+	private InventoryStatusEntry loadInventoryStatusEntryFromInventoryStatusEntryOutVO(InventoryStatusEntryOutVO inventoryStatusEntryOutVO) {
 		InventoryStatusEntry inventoryStatusEntry = this.load(inventoryStatusEntryOutVO.getId());
-		if (inventoryStatusEntry == null)
-		{
+		if (inventoryStatusEntry == null) {
 			inventoryStatusEntry = InventoryStatusEntry.Factory.newInstance();
 		}
 		return inventoryStatusEntry;
@@ -334,8 +325,7 @@ extends InventoryStatusEntryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusEntryInVO toInventoryStatusEntryInVO(final InventoryStatusEntry entity)
-	{
+	public InventoryStatusEntryInVO toInventoryStatusEntryInVO(final InventoryStatusEntry entity) {
 		return super.toInventoryStatusEntryInVO(entity);
 	}
 
@@ -345,8 +335,7 @@ extends InventoryStatusEntryDaoBase
 	@Override
 	public void toInventoryStatusEntryInVO(
 			InventoryStatusEntry source,
-			InventoryStatusEntryInVO target)
-	{
+			InventoryStatusEntryInVO target) {
 		super.toInventoryStatusEntryInVO(source, target);
 		InventoryStatusType type = source.getType();
 		Inventory inventory = source.getInventory();
@@ -370,8 +359,7 @@ extends InventoryStatusEntryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryStatusEntryOutVO toInventoryStatusEntryOutVO(final InventoryStatusEntry entity)
-	{
+	public InventoryStatusEntryOutVO toInventoryStatusEntryOutVO(final InventoryStatusEntry entity) {
 		return super.toInventoryStatusEntryOutVO(entity);
 	}
 
@@ -381,8 +369,7 @@ extends InventoryStatusEntryDaoBase
 	@Override
 	public void toInventoryStatusEntryOutVO(
 			InventoryStatusEntry source,
-			InventoryStatusEntryOutVO target)
-	{
+			InventoryStatusEntryOutVO target) {
 		super.toInventoryStatusEntryOutVO(source, target);
 		InventoryStatusType type = source.getType();
 		Inventory inventory = source.getInventory();

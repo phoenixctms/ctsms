@@ -26,8 +26,7 @@ import org.phoenixctms.ctsms.vo.StreetVO;
  * @see Street
  */
 public class StreetDaoImpl
-		extends StreetDaoBase
-{
+		extends StreetDaoBase {
 
 	private static void applyStreetCriterions(org.hibernate.Criteria streetCriteria, String countryName,
 			String zipCode, String cityName, String streetNameInfix) {
@@ -68,8 +67,7 @@ public class StreetDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Street> handleFindStreets(String countryName, String zipCode, String cityName, String streetNameInfix, Integer limit)
-	{
+	protected Collection<Street> handleFindStreets(String countryName, String zipCode, String cityName, String streetNameInfix, Integer limit) {
 		org.hibernate.Criteria streetCriteria = createStreetCriteria();
 		applyStreetCriterions(streetCriteria, countryName, zipCode, cityName, streetNameInfix);
 		streetCriteria.addOrder(Order.asc("countryName"));
@@ -86,8 +84,7 @@ public class StreetDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<String> handleFindZipCodes(String countryName, String zipCodePrefix, String cityName, String streetName, Integer limit)
-	{
+	protected Collection<String> handleFindZipCodes(String countryName, String zipCodePrefix, String cityName, String streetName, Integer limit) {
 		org.hibernate.Criteria streetCriteria = createStreetCriteria();
 		if (!CommonUtil.isEmptyString(countryName)) {
 			streetCriteria.add(Restrictions.eq("countryName", countryName));
@@ -113,8 +110,7 @@ public class StreetDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Street loadStreetFromStreetVO(StreetVO streetVO)
-	{
+	private Street loadStreetFromStreetVO(StreetVO streetVO) {
 		// TODO implement loadStreetFromStreetVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStreetFromStreetVO(StreetVO) not yet implemented.");
 		Street street = null;
@@ -122,8 +118,7 @@ public class StreetDaoImpl
 		if (id != null) {
 			street = this.load(id);
 		}
-		if (street == null)
-		{
+		if (street == null) {
 			street = Street.Factory.newInstance();
 		}
 		return street;
@@ -133,8 +128,7 @@ public class StreetDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public Street streetVOToEntity(StreetVO streetVO)
-	{
+	public Street streetVOToEntity(StreetVO streetVO) {
 		Street entity = this.loadStreetFromStreetVO(streetVO);
 		this.streetVOToEntity(streetVO, entity, true);
 		return entity;
@@ -147,8 +141,7 @@ public class StreetDaoImpl
 	public void streetVOToEntity(
 			StreetVO source,
 			Street target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.streetVOToEntity(source, target, copyIfNull);
 	}
 
@@ -156,8 +149,7 @@ public class StreetDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public StreetVO toStreetVO(final Street entity)
-	{
+	public StreetVO toStreetVO(final Street entity) {
 		return super.toStreetVO(entity);
 	}
 
@@ -167,8 +159,7 @@ public class StreetDaoImpl
 	@Override
 	public void toStreetVO(
 			Street source,
-			StreetVO target)
-	{
+			StreetVO target) {
 		super.toStreetVO(source, target);
 	}
 }

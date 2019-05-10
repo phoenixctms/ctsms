@@ -57,7 +57,6 @@ public class ReimbursementsBean extends ManagedBeanBase {
 	private MoneyTransferSummaryVO paidSummary;
 	private MoneyTransferSummaryVO payOffSummary;
 	private PaymentMethod payOffPaymentMethod;
-
 	private boolean allProbandListEntries;
 
 	public ReimbursementsBean() {

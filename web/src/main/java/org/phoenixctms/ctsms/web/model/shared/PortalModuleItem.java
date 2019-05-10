@@ -196,10 +196,10 @@ public class PortalModuleItem {
 			if (maxCount != null && maxCount > 0) {
 				Iterator<TagCloudItem> tagsIt = tagModel.getTags().iterator();
 				Float scale = Settings.getFloat(SettingCodes.MAX_TAG_CLOUD_ITEM_STRENGTH, Bundle.SETTINGS, DefaultSettings.MAX_TAG_CLOUD_ITEM_STRENGTH)
-						/ ((float) CommonUtil.safeLongToInt(maxCount));
+						/ (CommonUtil.safeLongToInt(maxCount));
 				while (tagsIt.hasNext()) {
 					TagCloudItem tagCloudItem = tagsIt.next();
-					tagCloudItem.setStrength((int) Math.round(((float) tagCloudItem.getStrength()) * scale));
+					tagCloudItem.setStrength(Math.round((tagCloudItem.getStrength()) * scale));
 				}
 			}
 		}

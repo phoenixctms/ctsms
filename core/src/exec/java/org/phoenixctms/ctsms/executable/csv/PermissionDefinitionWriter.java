@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.executable.csv;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import org.phoenixctms.ctsms.util.ExecUtil;
 public class PermissionDefinitionWriter extends LineWriter {
 
 	private Collection<Permission> allPermissions;
-
 	private HashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<ServiceMethodParameterTransformation, LinkedHashMap<String, ArrayList<Permission>>>>>> getterMap;
 	private HashMap<String, LinkedHashMap<String, LinkedHashMap<String, ArrayList<Permission>>>> setterMap;
 	private HashMap<String, Permission> noGetterSetterMap;
@@ -26,7 +24,6 @@ public class PermissionDefinitionWriter extends LineWriter {
 
 	public PermissionDefinitionWriter() {
 		super();
-
 		getterMap = new HashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<ServiceMethodParameterTransformation, LinkedHashMap<String, ArrayList<Permission>>>>>>();
 		setterMap = new HashMap<String, LinkedHashMap<String, LinkedHashMap<String, ArrayList<Permission>>>>();
 		noGetterSetterMap = new HashMap<String, Permission>();
@@ -132,7 +129,6 @@ public class PermissionDefinitionWriter extends LineWriter {
 		}
 		Iterator<Class> authorizedServiceClassesIt = ExecUtil.AUTHORIZED_SERVICE_CLASSES.iterator();
 		while (authorizedServiceClassesIt.hasNext()) {
-
 			printLines(authorizedServiceClassesIt.next());
 			if (authorizedServiceClassesIt.hasNext()) {
 				printBlankLine();
@@ -239,7 +235,6 @@ public class PermissionDefinitionWriter extends LineWriter {
 						StringBuilder profiles = new StringBuilder();
 						Iterator<Permission> permissionsIt = ipRange.getValue().iterator();
 						while (permissionsIt.hasNext()) {
-
 							StringBuilder overrideProfiles = new StringBuilder();
 							Iterator<ProfilePermission> profilesIt = permissionsIt.next().getProfilePermissions().iterator();
 							while (profilesIt.hasNext()) {

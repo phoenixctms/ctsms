@@ -67,8 +67,7 @@ public class ProbandTagBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandTagValueInVO backup = new ProbandTagValueInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

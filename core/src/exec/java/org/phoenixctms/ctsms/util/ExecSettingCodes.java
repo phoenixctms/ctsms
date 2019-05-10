@@ -1,8 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-
-
-
 public interface ExecSettingCodes {
 
 	public final static String DEFAULT_ENCODING = "default_encoding";

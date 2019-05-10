@@ -1,8 +1,6 @@
 package org.phoenixctms.ctsms.pdf;
 
-
 public interface EcrfPDFLabelCodes {
-
 
 	public static final String PAGE_TITLE = "page_title";
 	public final static String PAGE_NUMBER = "page_number";
@@ -15,14 +13,11 @@ public interface EcrfPDFLabelCodes {
 	public static final String SELECTION_SET_VALUE_NAME = "selection_set_value_name";
 	public static final String ECRF_FIELD_SECTION = "ecrf_field_section";
 	public static final String ECRF_FIELD_INDEX = "ecrf_field_index";
-
 	public static final String VALUE_SAVED_LABEL = "value_saved_label";
-
 	public static final String TRIAL_NAME_LABEL = "trial_name_label";
 	public static final String TRIAL_NAME = "trial_name";
 	public static final String PROBAND_NAME_LABEL = "proband_name_label";
 	public static final String PROBAND_NAME = "proband_name";
-
 	public static final String PROBAND_DATE_OF_BIRTH_LABEL = "proband_date_of_birth_label";
 	public static final String PROBAND_DATE_OF_BIRTH = "proband_date_of_birth";
 	public static final String ECRF_NAME_LABEL = "ecrf_name_label";

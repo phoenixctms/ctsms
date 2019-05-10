@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
  * @see TimelineEventType
  */
 public class TimelineEventTypeDaoImpl
-		extends TimelineEventTypeDaoBase
-{
+		extends TimelineEventTypeDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<TimelineEventType> handleFindByVisibleId(Boolean visible, Long typeId)
-	{
+	protected Collection<TimelineEventType> handleFindByVisibleId(Boolean visible, Long typeId) {
 		org.hibernate.Criteria typeCriteria = this.getSession().createCriteria(TimelineEventType.class);
 		typeCriteria.setCacheable(true);
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
@@ -37,8 +35,7 @@ public class TimelineEventTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TimelineEventType loadTimelineEventTypeFromTimelineEventTypeVO(TimelineEventTypeVO timelineEventTypeVO)
-	{
+	private TimelineEventType loadTimelineEventTypeFromTimelineEventTypeVO(TimelineEventTypeVO timelineEventTypeVO) {
 		// TODO implement loadTimelineEventTypeFromTimelineEventTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventTypeFromTimelineEventTypeVO(TimelineEventTypeVO) not yet implemented.");
 		TimelineEventType timelineEventType = null;
@@ -46,8 +43,7 @@ public class TimelineEventTypeDaoImpl
 		if (id != null) {
 			timelineEventType = this.load(id);
 		}
-		if (timelineEventType == null)
-		{
+		if (timelineEventType == null) {
 			timelineEventType = TimelineEventType.Factory.newInstance();
 		}
 		return timelineEventType;
@@ -57,8 +53,7 @@ public class TimelineEventTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEventType timelineEventTypeVOToEntity(TimelineEventTypeVO timelineEventTypeVO)
-	{
+	public TimelineEventType timelineEventTypeVOToEntity(TimelineEventTypeVO timelineEventTypeVO) {
 		TimelineEventType entity = this.loadTimelineEventTypeFromTimelineEventTypeVO(timelineEventTypeVO);
 		this.timelineEventTypeVOToEntity(timelineEventTypeVO, entity, true);
 		return entity;
@@ -71,8 +66,7 @@ public class TimelineEventTypeDaoImpl
 	public void timelineEventTypeVOToEntity(
 			TimelineEventTypeVO source,
 			TimelineEventType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.timelineEventTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -80,8 +74,7 @@ public class TimelineEventTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEventTypeVO toTimelineEventTypeVO(final TimelineEventType entity)
-	{
+	public TimelineEventTypeVO toTimelineEventTypeVO(final TimelineEventType entity) {
 		return super.toTimelineEventTypeVO(entity);
 	}
 
@@ -91,8 +84,7 @@ public class TimelineEventTypeDaoImpl
 	@Override
 	public void toTimelineEventTypeVO(
 			TimelineEventType source,
-			TimelineEventTypeVO target)
-	{
+			TimelineEventTypeVO target) {
 		super.toTimelineEventTypeVO(source, target);
 		target.setName(L10nUtil.getTimelineEventTypeName(Locales.USER, source.getNameL10nKey()));
 		String titlePresetL10nKey = source.getTitlePresetL10nKey();

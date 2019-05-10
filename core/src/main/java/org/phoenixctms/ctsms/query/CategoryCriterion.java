@@ -11,9 +11,7 @@ import org.hibernate.criterion.Restrictions;
 public class CategoryCriterion {
 
 	public enum EmptyPrefixModes {
-		NON_EMPTY_ROWS,
-		EMPTY_ROWS,
-		ALL_ROWS
+		NON_EMPTY_ROWS, EMPTY_ROWS, ALL_ROWS
 	}
 
 	public static void apply(Criteria criteria, CategoryCriterion categoryCriterion) {
@@ -82,7 +80,6 @@ public class CategoryCriterion {
 	}
 
 	private String prefix;
-
 	private String field;
 	private MatchMode matchMode;
 	// private boolean notEmpty; // true: return non-empty rows only for an empty search term

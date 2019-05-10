@@ -153,6 +153,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			in.setMaxOverlappingShifts(Settings.getLongNullable(SettingCodes.STAFF_MAX_OVERLAPPING_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_MAX_OVERLAPPING_PRESET));
 		}
 	}
+
 	private StaffInVO in;
 	private StaffOutVO out;
 	private ArrayList<SelectItem> categories;
@@ -161,7 +162,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private SexSelector gender;
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-
 	private String deferredDeleteReason;
 
 	public StaffBean() {
@@ -176,8 +176,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		StaffInVO backup = new StaffInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -447,8 +446,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
-			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : (out.isPerson() ? MessageCodes.STAFF_PERSON_TITLE
-					: MessageCodes.STAFF_ORGANISATION_TITLE), Long.toString(out.getId()), out.getNameWithTitles());
+			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE
+					: (out.isPerson() ? MessageCodes.STAFF_PERSON_TITLE
+							: MessageCodes.STAFF_ORGANISATION_TITLE),
+					Long.toString(out.getId()), out.getNameWithTitles());
 		} else {
 			return Messages.getString(operationSuccess ? MessageCodes.CREATE_NEW_STAFF : MessageCodes.ERROR_LOADING_STAFF);
 		}
@@ -636,7 +637,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		return WebUtil.getModuleEnabled(DBModule.STAFF_DB);
 	}
 
-
 	@Override
 	public boolean isCreated() {
 		return out != null;
@@ -646,6 +646,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		return Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.STAFF_DB) && super.isEditable();
 	}

@@ -660,10 +660,12 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		return Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB) && super.isEditable();
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.TRIAL_DB) && super.isRemovable();
 	}

@@ -37,7 +37,6 @@ public final class CVPDFDefaultSettings {
 	public final static String POSITION_DATE_PATTERN = "yyyy";
 	public static final Color TEXT_COLOR = Color.BLACK;
 	public static final Color FRAME_COLOR = Color.BLACK;
-
 	public static final boolean SHOW_IMAGES = true;
 	public static final Float IMAGE_WIDTH = null;
 	public static final Float IMAGE_HEIGHT = 180.0f;

@@ -27,5 +27,4 @@ public final class ProbandLetterPDFDefaultSettings {
 
 	private ProbandLetterPDFDefaultSettings() {
 	}
-
 }

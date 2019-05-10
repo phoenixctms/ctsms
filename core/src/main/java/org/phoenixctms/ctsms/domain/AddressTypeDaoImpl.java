@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.AddressTypeVO;
  * @see AddressType
  */
 public class AddressTypeDaoImpl
-extends AddressTypeDaoBase
-{
+		extends AddressTypeDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public AddressType addressTypeVOToEntity(AddressTypeVO addressTypeVO)
-	{
+	public AddressType addressTypeVOToEntity(AddressTypeVO addressTypeVO) {
 		AddressType entity = this.loadAddressTypeFromAddressTypeVO(addressTypeVO);
 		this.addressTypeVOToEntity(addressTypeVO, entity, true);
 		return entity;
@@ -38,8 +36,7 @@ extends AddressTypeDaoBase
 	public void addressTypeVOToEntity(
 			AddressTypeVO source,
 			AddressType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.addressTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -77,15 +74,13 @@ extends AddressTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private AddressType loadAddressTypeFromAddressTypeVO(AddressTypeVO addressTypeVO)
-	{
+	private AddressType loadAddressTypeFromAddressTypeVO(AddressTypeVO addressTypeVO) {
 		AddressType addressType = null;
 		Long id = addressTypeVO.getId();
 		if (id != null) {
 			addressType = this.load(id);
 		}
-		if (addressType == null)
-		{
+		if (addressType == null) {
 			addressType = AddressType.Factory.newInstance();
 		}
 		return addressType;
@@ -95,8 +90,7 @@ extends AddressTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public AddressTypeVO toAddressTypeVO(final AddressType entity)
-	{
+	public AddressTypeVO toAddressTypeVO(final AddressType entity) {
 		return super.toAddressTypeVO(entity);
 	}
 
@@ -106,8 +100,7 @@ extends AddressTypeDaoBase
 	@Override
 	public void toAddressTypeVO(
 			AddressType source,
-			AddressTypeVO target)
-	{
+			AddressTypeVO target) {
 		super.toAddressTypeVO(source, target);
 		target.setName(L10nUtil.getAddressTypeName(Locales.USER, source.getNameL10nKey()));
 	}

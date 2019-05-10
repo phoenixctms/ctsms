@@ -47,11 +47,9 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	private HashMap<Long, Collection<IDVO>> inquiryCache;
 	private HashMap<Long, Collection<IDVO>> listEntryTagCache;
 	private HashMap<Long, Collection<IDVO>> ecrfFieldCache;
-
 	private HashMap<Long, Map<IDVO, ArrayList<IDVO>>> inquiryTrialsCache;
 	private HashMap<Long, Map<IDVO, ArrayList<IDVO>>> listEntryTagTrialsCache;
 	private HashMap<Long, Map<IDVO, ArrayList<IDVO>>> ecrfFieldTrialsCache;
-
 	private final static String TRIAL_LIST_SEPARATOR = ", ";
 
 	public InputFieldSearchBean() {
@@ -119,17 +117,17 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		return new ArrayList<IDVO>();
 	}
 
-	public Map<IDVO,ArrayList<IDVO>> getEcrfFieldTrials(InputFieldOutVO inputField) {
+	public Map<IDVO, ArrayList<IDVO>> getEcrfFieldTrials(InputFieldOutVO inputField) {
 		if (inputField != null) {
 			if (!ecrfFieldTrialsCache.containsKey(inputField.getId())) {
 				Iterator<IDVO> it = getEcrfFields(inputField).iterator();
-				HashMap<IDVO,ArrayList<IDVO>> trialMap = new HashMap<IDVO,ArrayList<IDVO>>();
+				HashMap<IDVO, ArrayList<IDVO>> trialMap = new HashMap<IDVO, ArrayList<IDVO>>();
 				while (it.hasNext()) {
 					IDVO ecrfField = it.next();
 					IDVO trial = new IDVO(((ECRFFieldOutVO) ecrfField.getVo()).getTrial());
 					if (!trialMap.containsKey(trial)) {
 						ArrayList<IDVO> ecrfFieldList = new ArrayList<IDVO>();
-						trialMap.put(trial,ecrfFieldList);
+						trialMap.put(trial, ecrfFieldList);
 					}
 					trialMap.get(trial).add(ecrfField);
 				}
@@ -139,7 +137,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				return ecrfFieldTrialsCache.get(inputField.getId());
 			}
 		}
-		return new HashMap<IDVO,ArrayList<IDVO>>();
+		return new HashMap<IDVO, ArrayList<IDVO>>();
 	}
 
 	public boolean getEnableExports() {
@@ -167,7 +165,6 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	// public ArrayList<SelectItem> getFilterCategories() {
 	// return filterCategories;
 	// }
-
 	public InputFieldSearchResultLazyModel getInputFieldResultModel() {
 		return inputFieldResultModel;
 	}
@@ -245,17 +242,17 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		return new ArrayList<IDVO>();
 	}
 
-	public Map<IDVO,ArrayList<IDVO>> getProbandListEntryTagTrials(InputFieldOutVO inputField) {
+	public Map<IDVO, ArrayList<IDVO>> getProbandListEntryTagTrials(InputFieldOutVO inputField) {
 		if (inputField != null) {
 			if (!listEntryTagTrialsCache.containsKey(inputField.getId())) {
 				Iterator<IDVO> it = getProbandListEntryTags(inputField).iterator();
-				HashMap<IDVO,ArrayList<IDVO>> trialMap = new HashMap<IDVO,ArrayList<IDVO>>();
+				HashMap<IDVO, ArrayList<IDVO>> trialMap = new HashMap<IDVO, ArrayList<IDVO>>();
 				while (it.hasNext()) {
 					IDVO listEntryTag = it.next();
 					IDVO trial = new IDVO(((ProbandListEntryTagOutVO) listEntryTag.getVo()).getTrial());
 					if (!trialMap.containsKey(trial)) {
 						ArrayList<IDVO> listEntryTagList = new ArrayList<IDVO>();
-						trialMap.put(trial,listEntryTagList);
+						trialMap.put(trial, listEntryTagList);
 					}
 					trialMap.get(trial).add(listEntryTag);
 				}
@@ -265,7 +262,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				return listEntryTagTrialsCache.get(inputField.getId());
 			}
 		}
-		return new HashMap<IDVO,ArrayList<IDVO>>();
+		return new HashMap<IDVO, ArrayList<IDVO>>();
 	}
 
 	@Override

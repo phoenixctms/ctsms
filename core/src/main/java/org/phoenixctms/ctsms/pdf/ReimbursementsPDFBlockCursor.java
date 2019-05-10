@@ -7,9 +7,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 public class ReimbursementsPDFBlockCursor extends PDFBlockCursor {
 
 	private ReimbursementsPDFPainter painter;
-
 	private ProbandOutVO proband;
-
 	private TrialOutVO trial;
 
 	public ReimbursementsPDFBlockCursor(ReimbursementsPDFPainter painter) {

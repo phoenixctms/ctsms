@@ -22,11 +22,11 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 	}
 
 	public static <DAO> long remove(DAO dao, Search search, int pageSize) throws Exception {
-		return (new ChunkedRemoveAll(dao,search)).remove(pageSize);
+		return (new ChunkedRemoveAll(dao, search)).remove(pageSize);
 	}
 
 	public static <DAO> long remove(DAO dao, Search search, PageSizes pageSize) throws Exception {
-		return remove(dao,search, pageSize.value);
+		return remove(dao, search, pageSize.value);
 	}
 
 	public static <DAO> long remove(DAO dao, PageSizes pageSize) throws Exception {
@@ -78,6 +78,7 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 		}
 		return false;
 	}
+
 	@Override
 	protected boolean process(Object entity, Object passThrough) throws Exception {
 		Map<String, Object> inOut = (Map<String, Object>) passThrough;

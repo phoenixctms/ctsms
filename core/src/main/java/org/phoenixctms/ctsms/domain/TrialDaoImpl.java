@@ -44,8 +44,7 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
  * @see Trial
  */
 public class TrialDaoImpl
-extends TrialDaoBase
-{
+		extends TrialDaoBase {
 
 	private org.hibernate.Criteria createTrialCriteria(String alias) {
 		org.hibernate.Criteria trialCriteria;
@@ -104,7 +103,6 @@ extends TrialDaoBase
 			subQuery.add(Restrictions.gt("charge", 0.0f));
 		}
 		trialCriteria.add(Subqueries.lt(0l, subQuery));
-
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return trialCriteria.list();
 	}
@@ -155,11 +153,7 @@ extends TrialDaoBase
 								Subqueries.lt(0l, inquiriesSubQuery),
 								Restrictions.and(
 										Restrictions.eq("trialStatus.inquiryValueInputEnabled", true),
-										Restrictions.eq("trialStatus.lockdown", false)
-										)
-								)
-						)
-				);
+										Restrictions.eq("trialStatus.lockdown", false)))));
 		trialCriteria.addOrder(Order.asc("name"));
 		return trialCriteria.list();
 	}
@@ -209,15 +203,13 @@ extends TrialDaoBase
 				Restrictions.or(
 						Restrictions.eq("signupProbandList", true),
 						Restrictions.and(
-								ignoreSignupInquiries ? Subqueries.lt(0l, subQuery) : Restrictions.and(
-										Restrictions.eq("signupInquiries", true),
-										Subqueries.lt(0l, subQuery)
+								ignoreSignupInquiries ? Subqueries.lt(0l, subQuery)
+										: Restrictions.and(
+												Restrictions.eq("signupInquiries", true),
+												Subqueries.lt(0l, subQuery)
 										// Restrictions.sizeGt("inquiries", 0)
 										),
-										Restrictions.eq("trialStatus.inquiryValueInputEnabled", true)
-								)
-						)
-				);
+								Restrictions.eq("trialStatus.inquiryValueInputEnabled", true))));
 		// if (probandList != null) {
 		// trialCriteria.add(Restrictions.eq("signupProbandList", probandList.booleanValue()));
 		// }
@@ -242,15 +234,13 @@ extends TrialDaoBase
 				this.getCriterionRestrictionDao());
 	}
 
-	private Trial loadTrialFromTrialInVO(TrialInVO trialInVO)
-	{
+	private Trial loadTrialFromTrialInVO(TrialInVO trialInVO) {
 		Trial trial = null;
 		Long id = trialInVO.getId();
 		if (id != null) {
 			trial = this.load(id);
 		}
-		if (trial == null)
-		{
+		if (trial == null) {
 			trial = Trial.Factory.newInstance();
 		}
 		return trial;
@@ -261,25 +251,21 @@ extends TrialDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Trial loadTrialFromTrialOutVO(TrialOutVO trialOutVO)
-	{
+	private Trial loadTrialFromTrialOutVO(TrialOutVO trialOutVO) {
 		// TODO implement loadTrialFromTrialOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialFromTrialOutVO(TrialOutVO) not yet implemented.");
 		Trial trial = this.load(trialOutVO.getId());
-		if (trial == null)
-		{
+		if (trial == null) {
 			trial = Trial.Factory.newInstance();
 		}
 		return trial;
 	}
 
-	private Trial loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO trialRandomizationListVO)
-	{
+	private Trial loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO trialRandomizationListVO) {
 		// TODO implement loadTrialFromTrialRandomizationListVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO) not yet implemented.");
 		Trial trial = this.load(trialRandomizationListVO.getId());
-		if (trial == null)
-		{
+		if (trial == null) {
 			trial = Trial.Factory.newInstance();
 		}
 		return trial;
@@ -289,16 +275,14 @@ extends TrialDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TrialInVO toTrialInVO(final Trial entity)
-	{
+	public TrialInVO toTrialInVO(final Trial entity) {
 		return super.toTrialInVO(entity);
 	}
 
 	@Override
 	public void toTrialInVO(
 			Trial source,
-			TrialInVO target)
-	{
+			TrialInVO target) {
 		super.toTrialInVO(source, target);
 		Department department = source.getDepartment();
 		TrialStatusType status = source.getStatus();
@@ -326,8 +310,7 @@ extends TrialDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialOutVO toTrialOutVO(final Trial entity)
-	{
+	public TrialOutVO toTrialOutVO(final Trial entity) {
 		return super.toTrialOutVO(entity);
 	}
 
@@ -337,8 +320,7 @@ extends TrialDaoBase
 	@Override
 	public void toTrialOutVO(
 			Trial source,
-			TrialOutVO target)
-	{
+			TrialOutVO target) {
 		super.toTrialOutVO(source, target);
 		TrialStatusType status = source.getStatus();
 		Department department = source.getDepartment();
@@ -372,23 +354,19 @@ extends TrialDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialRandomizationListVO toTrialRandomizationListVO(final Trial entity)
-	{
+	public TrialRandomizationListVO toTrialRandomizationListVO(final Trial entity) {
 		return super.toTrialRandomizationListVO(entity);
 	}
 
 	@Override
 	public void toTrialRandomizationListVO(
 			Trial source,
-			TrialRandomizationListVO target)
-	{
+			TrialRandomizationListVO target) {
 		super.toTrialRandomizationListVO(source, target);
 		User modifiedUser = source.getModifiedUser();
-
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-
 	}
 
 	@Override

@@ -199,8 +199,9 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				dutyRoster = new ArrayList(dutyRoster);
 				Collections.sort((ArrayList) dutyRoster, new DutyRosterTurnIntervalScheduleComparator(false));
 				// xCollections.reverse((ArrayList) dutyRoster);
-				boolean showCollisions = (showCollisionsThresholdDays == null ? true : to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
-						showCollisionsThresholdDays, 1)) <= 0);
+				boolean showCollisions = (showCollisionsThresholdDays == null ? true
+						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
+								showCollisionsThresholdDays, 1)) <= 0);
 				Iterator<DutyRosterTurnOutVO> it = dutyRoster.iterator();
 				while (it.hasNext()) {
 					DutyRosterTurnOutVO dutyRosterTurn = it.next();
@@ -244,7 +245,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 								auth,
 								Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_ALL_COURSE_INVENTORY_BOOKINGS, Bundle.SETTINGS,
 										DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_ALL_COURSE_INVENTORY_BOOKINGS) ? null : teamMemberStaffId,
-												departmentId, courseCategoryId, from, to, true, false);
+								departmentId, courseCategoryId, from, to, true, false);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

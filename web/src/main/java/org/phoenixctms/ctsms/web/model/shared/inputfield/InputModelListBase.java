@@ -186,15 +186,12 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 				//				row[3] = result.size();
 				//				result.add(row);
 				//			}
-
 			} else { // if (fieldsPerRow <= ) {
-
 				ArrayList<MODEL> paddedList = new ArrayList<MODEL>(size);
 				MODEL model;
 				int j = 0;
 				for (int i = 0; i < size; i++) {
 					model = get(i);
-
 					if (j == 0) {
 						paddedList.add(model);
 						j = 1;
@@ -203,13 +200,12 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 						for (int k = j; k > 0; k--) {
 							width += getWidth(get(i - k));
 						}
-						if (width >widthThreshold) {
+						if (width > widthThreshold) {
 							for (int k = 0; k < fieldsPerRow; k++) {
 								paddedList.add(null);
 							}
 							paddedList.add(model);
 							j = 1;
-
 						} else {
 							paddedList.add(model);
 							if (j < fieldsPerRow - 1) {
@@ -217,11 +213,8 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 							} else {
 								j = 0;
 							}
-
-
 						}
 					}
-
 				}
 				result = new ArrayList<Object[]>((int) Math.ceil((double) paddedList.size() / (double) fieldsPerRow));
 				for (int i = 0; i < paddedList.size(); i = i + fieldsPerRow) {
@@ -268,7 +261,6 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 	// }
 	// return result;
 	// }
-
 	@Override
 	public MODEL get(int index) {
 		MODEL model = models.get(index);

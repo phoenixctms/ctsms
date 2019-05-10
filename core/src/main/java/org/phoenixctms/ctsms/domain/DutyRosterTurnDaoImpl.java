@@ -36,8 +36,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
  * @see DutyRosterTurn
  */
 public class DutyRosterTurnDaoImpl
-extends DutyRosterTurnDaoBase
-{
+		extends DutyRosterTurnDaoBase {
 
 	private org.hibernate.Criteria createDutyRosterTurnCriteria(String alias) {
 		org.hibernate.Criteria dutyRosterCriteria;
@@ -53,8 +52,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DutyRosterTurn dutyRosterTurnInVOToEntity(DutyRosterTurnInVO dutyRosterTurnInVO)
-	{
+	public DutyRosterTurn dutyRosterTurnInVOToEntity(DutyRosterTurnInVO dutyRosterTurnInVO) {
 		DutyRosterTurn entity = this.loadDutyRosterTurnFromDutyRosterTurnInVO(dutyRosterTurnInVO);
 		this.dutyRosterTurnInVOToEntity(dutyRosterTurnInVO, entity, true);
 		return entity;
@@ -67,8 +65,7 @@ extends DutyRosterTurnDaoBase
 	public void dutyRosterTurnInVOToEntity(
 			DutyRosterTurnInVO source,
 			DutyRosterTurn target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.dutyRosterTurnInVOToEntity(source, target, copyIfNull);
 		Long staffId = source.getStaffId();
 		Long trialId = source.getTrialId();
@@ -112,8 +109,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DutyRosterTurn dutyRosterTurnOutVOToEntity(DutyRosterTurnOutVO dutyRosterTurnOutVO)
-	{
+	public DutyRosterTurn dutyRosterTurnOutVOToEntity(DutyRosterTurnOutVO dutyRosterTurnOutVO) {
 		DutyRosterTurn entity = this.loadDutyRosterTurnFromDutyRosterTurnOutVO(dutyRosterTurnOutVO);
 		this.dutyRosterTurnOutVOToEntity(dutyRosterTurnOutVO, entity, true);
 		return entity;
@@ -126,8 +122,7 @@ extends DutyRosterTurnDaoBase
 	public void dutyRosterTurnOutVOToEntity(
 			DutyRosterTurnOutVO source,
 			DutyRosterTurn target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.dutyRosterTurnOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO staffVO = source.getStaff();
 		TrialOutVO trialVO = source.getTrial();
@@ -178,8 +173,7 @@ extends DutyRosterTurnDaoBase
 	 */
 	@Override
 	protected Collection<DutyRosterTurn> handleFindByDepartmentCategoryCalendarInterval(Long staffDepartmentId, Long staffCategoryId, Boolean allocatable, String calendar,
-			Timestamp from, Timestamp to)
-			{
+			Timestamp from, Timestamp to) {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		CriteriaUtil.applyClosedIntervalCriterion(dutyRosterCriteria, from, to, null);
 		Criteria staffCriteria = null;
@@ -201,12 +195,12 @@ extends DutyRosterTurnDaoBase
 		}
 		CategoryCriterion.apply(dutyRosterCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		return dutyRosterCriteria.list();
-			}
+	}
 
 	@Override
 	protected Collection<DutyRosterTurn> handleFindByDepartmentStatusStaffTrialCalendarInterval(
 			Long trialDepartmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, String calendar, Timestamp from, Timestamp to)
-					throws Exception {
+			throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		CriteriaUtil.applyClosedIntervalCriterion(dutyRosterCriteria, from, to, null);
 		Criteria trialCriteria = null;
@@ -242,8 +236,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<DutyRosterTurn> handleFindByStaff(Long staffId, PSFVO psf) throws Exception
-	{
+	protected Collection<DutyRosterTurn> handleFindByStaff(Long staffId, PSFVO psf) throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(DutyRosterTurn.class, dutyRosterCriteria);
 		if (staffId != null) {
@@ -257,8 +250,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<DutyRosterTurn> handleFindByStaffTrialCalendarInterval(Long staffId, Long trialId, String calendar, Timestamp from, Timestamp to)
-	{
+	protected Collection<DutyRosterTurn> handleFindByStaffTrialCalendarInterval(Long staffId, Long trialId, String calendar, Timestamp from, Timestamp to) {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria(null);
 		CriteriaUtil.applyClosedIntervalCriterion(dutyRosterCriteria, from, to, null);
 		if (staffId != null) {
@@ -286,7 +278,7 @@ extends DutyRosterTurnDaoBase
 	@Override
 	protected Collection<String> handleFindCalendars(Long trialDepartmentId,
 			Long staffId, Long trialId, String calendarPrefix, Integer limit)
-					throws Exception {
+			throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
@@ -316,7 +308,7 @@ extends DutyRosterTurnDaoBase
 	@Override
 	protected Collection<String> handleFindTitles(Long trialDepartmentId,
 			Long staffId, Long trialId, String titleInfix, Integer limit)
-					throws Exception {
+			throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
@@ -344,8 +336,7 @@ extends DutyRosterTurnDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long staffId, Long trialId) throws Exception
-	{
+	protected long handleGetCount(Long staffId, Long trialId) throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria(null);
 		if (staffId != null) {
 			dutyRosterCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
@@ -361,15 +352,13 @@ extends DutyRosterTurnDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private DutyRosterTurn loadDutyRosterTurnFromDutyRosterTurnInVO(DutyRosterTurnInVO dutyRosterTurnInVO)
-	{
+	private DutyRosterTurn loadDutyRosterTurnFromDutyRosterTurnInVO(DutyRosterTurnInVO dutyRosterTurnInVO) {
 		DutyRosterTurn dutyRosterTurn = null;
 		Long id = dutyRosterTurnInVO.getId();
 		if (id != null) {
 			dutyRosterTurn = this.load(id);
 		}
-		if (dutyRosterTurn == null)
-		{
+		if (dutyRosterTurn == null) {
 			dutyRosterTurn = DutyRosterTurn.Factory.newInstance();
 		}
 		return dutyRosterTurn;
@@ -380,11 +369,9 @@ extends DutyRosterTurnDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private DutyRosterTurn loadDutyRosterTurnFromDutyRosterTurnOutVO(DutyRosterTurnOutVO dutyRosterTurnOutVO)
-	{
+	private DutyRosterTurn loadDutyRosterTurnFromDutyRosterTurnOutVO(DutyRosterTurnOutVO dutyRosterTurnOutVO) {
 		DutyRosterTurn dutyRosterTurn = this.load(dutyRosterTurnOutVO.getId());
-		if (dutyRosterTurn == null)
-		{
+		if (dutyRosterTurn == null) {
 			dutyRosterTurn = DutyRosterTurn.Factory.newInstance();
 		}
 		return dutyRosterTurn;
@@ -394,8 +381,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DutyRosterTurnInVO toDutyRosterTurnInVO(final DutyRosterTurn entity)
-	{
+	public DutyRosterTurnInVO toDutyRosterTurnInVO(final DutyRosterTurn entity) {
 		return super.toDutyRosterTurnInVO(entity);
 	}
 
@@ -405,8 +391,7 @@ extends DutyRosterTurnDaoBase
 	@Override
 	public void toDutyRosterTurnInVO(
 			DutyRosterTurn source,
-			DutyRosterTurnInVO target)
-	{
+			DutyRosterTurnInVO target) {
 		super.toDutyRosterTurnInVO(source, target);
 		Staff staff = source.getStaff();
 		Trial trial = source.getTrial();
@@ -426,8 +411,7 @@ extends DutyRosterTurnDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public DutyRosterTurnOutVO toDutyRosterTurnOutVO(final DutyRosterTurn entity)
-	{
+	public DutyRosterTurnOutVO toDutyRosterTurnOutVO(final DutyRosterTurn entity) {
 		return super.toDutyRosterTurnOutVO(entity);
 	}
 
@@ -437,8 +421,7 @@ extends DutyRosterTurnDaoBase
 	@Override
 	public void toDutyRosterTurnOutVO(
 			DutyRosterTurn source,
-			DutyRosterTurnOutVO target)
-	{
+			DutyRosterTurnOutVO target) {
 		super.toDutyRosterTurnOutVO(source, target);
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO

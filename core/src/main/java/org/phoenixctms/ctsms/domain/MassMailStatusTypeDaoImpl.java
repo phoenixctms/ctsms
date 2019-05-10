@@ -23,8 +23,7 @@ import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
  * @see MassMailStatusType
  */
 public class MassMailStatusTypeDaoImpl
-extends MassMailStatusTypeDaoBase
-{
+		extends MassMailStatusTypeDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<MassMailStatusType>(false);
 
@@ -34,16 +33,16 @@ extends MassMailStatusTypeDaoBase
 		return massMailStatusTypeCriteria;
 	}
 
-	protected Collection<MassMailStatusType> handleFindInitialStates()
-	{
+	@Override
+	protected Collection<MassMailStatusType> handleFindInitialStates() {
 		org.hibernate.Criteria massMailStatusTypeCriteria = createMassMailStatusTypeCriteria();
 		massMailStatusTypeCriteria.add(Restrictions.eq("initial", true));
 		massMailStatusTypeCriteria.addOrder(Order.asc("id"));
 		return massMailStatusTypeCriteria.list();
 	}
 
-	protected Collection<MassMailStatusType> handleFindTransitions(Long statusTypeId)
-	{
+	@Override
+	protected Collection<MassMailStatusType> handleFindTransitions(Long statusTypeId) {
 		MassMailStatusType statusType = this.load(statusTypeId);
 		Iterator<MassMailStatusType> it = null;
 		if (statusType != null) {
@@ -59,56 +58,44 @@ extends MassMailStatusTypeDaoBase
 		return result;
 	}
 
-
-	private MassMailStatusType loadMassMailStatusTypeFromMassMailStatusTypeVO(MassMailStatusTypeVO massMailStatusTypeVO)
-	{
+	private MassMailStatusType loadMassMailStatusTypeFromMassMailStatusTypeVO(MassMailStatusTypeVO massMailStatusTypeVO) {
 		// TODO implement loadMassMailStatusTypeFromMassMailStatusTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailStatusTypeFromMassMailStatusTypeVO(MassMailStatusTypeVO) not yet implemented.");
-
 		MassMailStatusType massMailStatusType = null;
 		Long id = massMailStatusTypeVO.getId();
 		if (id != null) {
 			massMailStatusType = this.load(id);
 		}
-		if (massMailStatusType == null)
-		{
+		if (massMailStatusType == null) {
 			massMailStatusType = MassMailStatusType.Factory.newInstance();
 		}
 		return massMailStatusType;
-
 	}
 
-
-	public MassMailStatusType massMailStatusTypeVOToEntity(MassMailStatusTypeVO massMailStatusTypeVO)
-	{
+	@Override
+	public MassMailStatusType massMailStatusTypeVOToEntity(MassMailStatusTypeVO massMailStatusTypeVO) {
 		MassMailStatusType entity = this.loadMassMailStatusTypeFromMassMailStatusTypeVO(massMailStatusTypeVO);
 		this.massMailStatusTypeVOToEntity(massMailStatusTypeVO, entity, true);
 		return entity;
 	}
 
-
 	@Override
 	public void massMailStatusTypeVOToEntity(
 			MassMailStatusTypeVO source,
 			MassMailStatusType target,
-			boolean copyIfNull)
-	{
-
+			boolean copyIfNull) {
 		super.massMailStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
-
-	public MassMailStatusTypeVO toMassMailStatusTypeVO(final MassMailStatusType entity)
-	{
-
+	@Override
+	public MassMailStatusTypeVO toMassMailStatusTypeVO(final MassMailStatusType entity) {
 		return super.toMassMailStatusTypeVO(entity);
 	}
 
-
+	@Override
 	public void toMassMailStatusTypeVO(
 			MassMailStatusType source,
-			MassMailStatusTypeVO target)
-	{
+			MassMailStatusTypeVO target) {
 		super.toMassMailStatusTypeVO(source, target);
 		target.setName(L10nUtil.getMassMailStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

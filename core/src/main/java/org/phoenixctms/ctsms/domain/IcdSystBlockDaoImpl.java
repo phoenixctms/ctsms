@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.IcdSystBlockVO;
  * @see IcdSystBlock
  */
 public class IcdSystBlockDaoImpl
-extends IcdSystBlockDaoBase
-{
+		extends IcdSystBlockDaoBase {
 
 	@Override
 	protected Collection<String> handleFindBlockPreferredRubricLabels(
@@ -47,8 +46,7 @@ extends IcdSystBlockDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystBlock icdSystBlockVOToEntity(IcdSystBlockVO icdSystBlockVO)
-	{
+	public IcdSystBlock icdSystBlockVOToEntity(IcdSystBlockVO icdSystBlockVO) {
 		IcdSystBlock entity = this.loadIcdSystBlockFromIcdSystBlockVO(icdSystBlockVO);
 		this.icdSystBlockVOToEntity(icdSystBlockVO, entity, true);
 		return entity;
@@ -61,8 +59,7 @@ extends IcdSystBlockDaoBase
 	public void icdSystBlockVOToEntity(
 			IcdSystBlockVO source,
 			IcdSystBlock target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.icdSystBlockVOToEntity(source, target, copyIfNull);
 	}
 
@@ -71,8 +68,7 @@ extends IcdSystBlockDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private IcdSystBlock loadIcdSystBlockFromIcdSystBlockVO(IcdSystBlockVO icdSystBlockVO)
-	{
+	private IcdSystBlock loadIcdSystBlockFromIcdSystBlockVO(IcdSystBlockVO icdSystBlockVO) {
 		// TODO implement loadIcdSystBlockFromIcdSystBlockVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystBlockFromIcdSystBlockVO(IcdSystBlockVO) not yet implemented.");
 		Long id = icdSystBlockVO.getId();
@@ -80,8 +76,7 @@ extends IcdSystBlockDaoBase
 		if (id != null) {
 			icdSystBlock = this.load(id);
 		}
-		if (icdSystBlock == null)
-		{
+		if (icdSystBlock == null) {
 			icdSystBlock = IcdSystBlock.Factory.newInstance();
 		}
 		return icdSystBlock;
@@ -91,8 +86,7 @@ extends IcdSystBlockDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystBlockVO toIcdSystBlockVO(final IcdSystBlock entity)
-	{
+	public IcdSystBlockVO toIcdSystBlockVO(final IcdSystBlock entity) {
 		return super.toIcdSystBlockVO(entity);
 	}
 
@@ -102,8 +96,7 @@ extends IcdSystBlockDaoBase
 	@Override
 	public void toIcdSystBlockVO(
 			IcdSystBlock source,
-			IcdSystBlockVO target)
-	{
+			IcdSystBlockVO target) {
 		super.toIcdSystBlockVO(source, target);
 	}
 }

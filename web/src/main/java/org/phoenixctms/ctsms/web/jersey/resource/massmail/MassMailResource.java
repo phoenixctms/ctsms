@@ -58,6 +58,7 @@ public class MassMailResource extends ServiceResourceBase {
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
+
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -95,7 +96,6 @@ public class MassMailResource extends ServiceResourceBase {
 				.deleteMassMail(auth, id, Settings.getBoolean(SettingCodes.MASS_MAIL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_DEFERRED_DELETE), false, reason);
 	}
 
-
 	@Override
 	protected AuthenticationVO getAuth() {
 		return auth;
@@ -109,7 +109,6 @@ public class MassMailResource extends ServiceResourceBase {
 	// PSFUriPart psf;
 	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
 	// }
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -147,9 +146,6 @@ public class MassMailResource extends ServiceResourceBase {
 		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, journalModule, id, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
-
-
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
@@ -162,7 +158,7 @@ public class MassMailResource extends ServiceResourceBase {
 	public Page<MassMailOutVO> getMassMailList(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<MassMailOutVO>(WebUtil.getServiceLocator().getMassMailService().getMassMailList(auth, null,null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<MassMailOutVO>(WebUtil.getServiceLocator().getMassMailService().getMassMailList(auth, null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@Override
@@ -200,6 +196,4 @@ public class MassMailResource extends ServiceResourceBase {
 	public MassMailOutVO updateMassMail(MassMailInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getMassMailService().updateMassMail(auth, in);
 	}
-
-
 }

@@ -50,11 +50,9 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		inputFieldMap = new HashMap<String, InputField>();
 		selectionSetValueMap = new HashMap<String, Set<InputFieldSelectionSetValueInVO>>();
 	}
-
 	// public AuthenticationVO getAuth() {
 	// return auth;
 	// }
-
 
 	public void clearInputField(String fieldName) {
 		inputFieldMap.remove(fieldName);
@@ -102,6 +100,7 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		return selectionSetValueMap.get(fieldName);
 	}
 
+	@Override
 	public String getSheetName() {
 		// return context.getSheetName(this);
 		return SHEET_NAME;
@@ -132,16 +131,16 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		// .append(getFieldName(values))
-		// .append(getValue(values))
-		.append(getFieldName(values))
-		.append(getName(values))
-		.append(getValue(values))
-		.append(getLocalized(values))
-		.append(getPreset(values))
-		.append(getStrokesId(values))
-		.append(getInkRegions(values))
-		.toHashCode();
+				// .append(getFieldName(values))
+				// .append(getValue(values))
+				.append(getFieldName(values))
+				.append(getName(values))
+				.append(getValue(values))
+				.append(getLocalized(values))
+				.append(getPreset(values))
+				.append(getStrokesId(values))
+				.append(getInkRegions(values))
+				.toHashCode();
 	}
 
 	@Override
@@ -158,20 +157,16 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		}
 		InputField inputField = getInputField(fieldName);
 		InputFieldSelectionSetValue selectionSetValue = null;
-
 		if (inputField != null) {
 			try {
 				selectionSetValue = inputFieldSelectionSetValueDao.findByFieldValue(inputField.getId(), value).iterator().next();
 			} catch (NoSuchElementException e) {
 			}
 		}
-
 		InputFieldSelectionSetValueInVO selectionSetValueIn = new InputFieldSelectionSetValueInVO();
 		selectionSetValueIn.setId(selectionSetValue != null ? selectionSetValue.getId() : null);
 		selectionSetValueIn.setVersion(selectionSetValue != null ? selectionSetValue.getVersion() : 0l);
 		selectionSetValueIn.setFieldId(inputField != null ? inputField.getId() : null);
-
-
 		selectionSetValueIn.setName(name);
 		selectionSetValueIn.setLocalized(Boolean.parseBoolean(getLocalized(values)));
 		selectionSetValueIn.setValue(value);
@@ -192,7 +187,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 			jobOutput.println("selection set value for field '" + fieldName + "' SKIPPED: " + value);
 			return 0;
 		}
-
 	}
 
 	@Override

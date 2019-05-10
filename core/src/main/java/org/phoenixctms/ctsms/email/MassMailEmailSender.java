@@ -100,9 +100,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient> {
 
-
 	private final static boolean HTML = true;
-
 	private final static PaymentMethod PAYOFF_PAYMENT_METHOD = null;
 	private final static Boolean PAYOFF_PAID = false;
 	private final static Boolean INQUIRIES_ACTIVE = null;
@@ -116,6 +114,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public static String getBeaconImageHtmlElement(String beacon) {
 		return MessageFormat.format(ServiceUtil.BEACON_IMAGE_HTML_ELEMENT, Settings.getHttpBaseUrl(), CommonUtil.BEACON_PATH, beacon, CommonUtil.GIF_FILENAME_EXTENSION);
 	}
+
 	// public final static boolean STRICT_EMAIL_ADRESSES = false;
 	private MassMailRecipientDao massMailRecipientDao;
 	private TrialDao trialDao;
@@ -141,18 +140,13 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private TrialTagValueDao trialTagValueDao;
 	private ProbandListEntryDao probandListEntryDao;
 	private ProbandListEntryTagDao probandListEntryTagDao;
-
 	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
-
 	private InventoryBookingDao inventoryBookingDao;
 	private boolean strictEmailAddresses;
-
 	private VelocityEngine velocityEngine;
 	private ProbandTagValueDao probandTagValueDao;
 	private DiagnosisDao diagnosisDao;
-
 	private ProcedureDao procedureDao;
-
 	private MedicationDao medicationDao;
 	private StaffContactDetailValueDao staffContactDetailValueDao;
 	private MimeTypeDao mimeTypeDao;
@@ -314,10 +308,9 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		}
 	}
 
-	private  EmailAttachmentVO fileContentOutVOtoEmailAttachentVO(FileContentOutVO file) throws ServiceException {
-
+	private EmailAttachmentVO fileContentOutVOtoEmailAttachentVO(FileContentOutVO file) throws ServiceException {
 		if (file.isDecrypted()) {
-			EmailAttachmentVO attachment  = new EmailAttachmentVO();
+			EmailAttachmentVO attachment = new EmailAttachmentVO();
 			attachment.setDatas(file.getDatas());
 			attachment.setFileSize((long) attachment.getDatas().length);
 			attachment.setFileName(file.getFileName());
@@ -328,13 +321,11 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN, file.getContentType().getMimeType());
 			}
 			return attachment;
-
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
 		}
-
-
 	}
+
 	@Override
 	protected boolean isHtml() {
 		return HTML;
@@ -382,13 +373,11 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		// int toCount = 0;
 		MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ProbandOutVO probandVO = recipientVO.getProband();
-
 		if (probandVO != null && !probandVO.getDeferredDelete()) {
-			if (!probandVO.isDecrypted() ) {
+			if (!probandVO.isDecrypted()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
 			}
 			ServiceUtil.checkProbandLocked(recipient.getProband());
-
 			MassMailOutVO massMailVO = recipientVO.getMassMail();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEncoding());
 			if (!CommonUtil.isEmptyString(massMail.getFromName())) {
@@ -536,7 +525,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_BCC, massMail.getBcc(), e.getMessage());
 				}
 			}
-
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DELETED_OR_MARKED_FOR_DELETION);
 		}
@@ -659,12 +647,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						}
 					}
 				}
-
 			}
 		}
 		return result;
 	}
-
 
 	public void setBankAccountDao(BankAccountDao bankAccountDao) {
 		this.bankAccountDao = bankAccountDao;
@@ -677,11 +663,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void seteCRFDao(ECRFDao eCRFDao) {
 		this.eCRFDao = eCRFDao;
 	}
+
 	public void seteCRFFieldDao(ECRFFieldDao eCRFFieldDao) {
 		this.eCRFFieldDao = eCRFFieldDao;
 	}
-
-
 
 	public void seteCRFFieldStatusEntryDao(ECRFFieldStatusEntryDao eCRFFieldStatusEntryDao) {
 		this.eCRFFieldStatusEntryDao = eCRFFieldStatusEntryDao;
@@ -690,6 +675,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void seteCRFFieldStatusTypeDao(ECRFFieldStatusTypeDao eCRFFieldStatusTypeDao) {
 		this.eCRFFieldStatusTypeDao = eCRFFieldStatusTypeDao;
 	}
+
 	public void seteCRFFieldValueDao(ECRFFieldValueDao eCRFFieldValueDao) {
 		this.eCRFFieldValueDao = eCRFFieldValueDao;
 	}
@@ -717,12 +703,15 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setInquiryValueDao(InquiryValueDao inquiryValueDao) {
 		this.inquiryValueDao = inquiryValueDao;
 	}
+
 	public void setInventoryBookingDao(InventoryBookingDao inventoryBookingDao) {
 		this.inventoryBookingDao = inventoryBookingDao;
 	}
+
 	public void setJournalEntryDao(JournalEntryDao journalEntryDao) {
 		this.journalEntryDao = journalEntryDao;
 	}
+
 	public void setmassMailRecipientDao(MassMailRecipientDao massMailRecipientDao) {
 		this.massMailRecipientDao = massMailRecipientDao;
 	}
@@ -743,7 +732,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		this.probandAddressDao = probandAddressDao;
 	}
 
-
 	public void setProbandContactDetailValueDao(ProbandContactDetailValueDao probandContactDetailValueDao) {
 		this.probandContactDetailValueDao = probandContactDetailValueDao;
 	}
@@ -763,6 +751,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	public void setProbandListEntryTagValueDao(ProbandListEntryTagValueDao probandListEntryTagValueDao) {
 		this.probandListEntryTagValueDao = probandListEntryTagValueDao;
 	}
+
 	public void setProbandTagValueDao(ProbandTagValueDao probandTagValueDao) {
 		this.probandTagValueDao = probandTagValueDao;
 	}

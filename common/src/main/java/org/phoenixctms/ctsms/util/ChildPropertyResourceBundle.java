@@ -13,5 +13,4 @@ public class ChildPropertyResourceBundle extends PropertyResourceBundle {
 			this.setParent(parent);
 		}
 	}
-
 }

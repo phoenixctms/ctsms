@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
  * @see LecturerCompetence
  */
 public class LecturerCompetenceDaoImpl
-		extends LecturerCompetenceDaoBase
-{
+		extends LecturerCompetenceDaoBase {
 
 	@Override
 	protected Collection<LecturerCompetence> handleFindByVisibleId(Boolean visible, Long competenceId) throws Exception {
@@ -32,8 +31,7 @@ public class LecturerCompetenceDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public LecturerCompetence lecturerCompetenceVOToEntity(LecturerCompetenceVO lecturerCompetenceVO)
-	{
+	public LecturerCompetence lecturerCompetenceVOToEntity(LecturerCompetenceVO lecturerCompetenceVO) {
 		LecturerCompetence entity = this.loadLecturerCompetenceFromLecturerCompetenceVO(lecturerCompetenceVO);
 		this.lecturerCompetenceVOToEntity(lecturerCompetenceVO, entity, true);
 		return entity;
@@ -46,8 +44,7 @@ public class LecturerCompetenceDaoImpl
 	public void lecturerCompetenceVOToEntity(
 			LecturerCompetenceVO source,
 			LecturerCompetence target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.lecturerCompetenceVOToEntity(source, target, copyIfNull);
 	}
 
@@ -56,8 +53,7 @@ public class LecturerCompetenceDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private LecturerCompetence loadLecturerCompetenceFromLecturerCompetenceVO(LecturerCompetenceVO lecturerCompetenceVO)
-	{
+	private LecturerCompetence loadLecturerCompetenceFromLecturerCompetenceVO(LecturerCompetenceVO lecturerCompetenceVO) {
 		LecturerCompetence lecturerCompetence = null;
 		Long id = lecturerCompetenceVO.getId();
 		if (id != null) {
@@ -73,8 +69,7 @@ public class LecturerCompetenceDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public LecturerCompetenceVO toLecturerCompetenceVO(final LecturerCompetence entity)
-	{
+	public LecturerCompetenceVO toLecturerCompetenceVO(final LecturerCompetence entity) {
 		return super.toLecturerCompetenceVO(entity);
 	}
 
@@ -84,8 +79,7 @@ public class LecturerCompetenceDaoImpl
 	@Override
 	public void toLecturerCompetenceVO(
 			LecturerCompetence source,
-			LecturerCompetenceVO target)
-	{
+			LecturerCompetenceVO target) {
 		super.toLecturerCompetenceVO(source, target);
 		target.setName(L10nUtil.getLecturerCompetenceName(Locales.USER, source.getNameL10nKey()));
 	}

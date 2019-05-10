@@ -429,6 +429,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		return value.getInquiry().getDisabled();
 	}
 
+	@Override
 	protected boolean isInputFieldLongTitle() {
 		String title = getInputFieldTitle();
 		if (title != null && title.length() > Settings.getInt(InquiriesPDFSettingCodes.LONG_TITLE_LENGTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.LONG_TITLE_LENGTH)) {

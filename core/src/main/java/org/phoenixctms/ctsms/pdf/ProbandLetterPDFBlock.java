@@ -18,13 +18,7 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 public class ProbandLetterPDFBlock {
 
 	public enum BlockType {
-		NEW_LETTER,
-		NEW_PAGE,
-		ADDRESS,
-		PROBAND_ID,
-		FIRST_PAGE_DATE,
-		SECOND_PAGE_DATE,
-		SALUTATION
+		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION
 	}
 
 	private ProbandAddressOutVO address;
@@ -42,7 +36,6 @@ public class ProbandLetterPDFBlock {
 		this.now = now;
 		this.type = type;
 	}
-
 
 	public ProbandLetterPDFBlock(ProbandAddressOutVO address, BlockType type) {
 		this.address = address;
@@ -249,8 +242,9 @@ public class ProbandLetterPDFBlock {
 						Locales.PROBAND_LETTER_PDF,
 						ProbandLetterPDFLabelCodes.DATE,
 						PDFUtil.DEFAULT_LABEL,
-						now == null ? null : Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
-								ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
+						now == null ? null
+								: Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
+										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ProbandLetterPDFSettingCodes.FIRST_PAGE_DATE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.FIRST_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
@@ -276,8 +270,9 @@ public class ProbandLetterPDFBlock {
 						Locales.PROBAND_LETTER_PDF,
 						ProbandLetterPDFLabelCodes.DATE,
 						PDFUtil.DEFAULT_LABEL,
-						now == null ? null : Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
-								ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
+						now == null ? null
+								: Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
+										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ProbandLetterPDFSettingCodes.SECOND_PAGE_DATE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.SECOND_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {

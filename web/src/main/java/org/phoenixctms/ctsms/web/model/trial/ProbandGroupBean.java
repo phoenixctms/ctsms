@@ -72,8 +72,7 @@ public class ProbandGroupBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandGroupInVO backup = new ProbandGroupInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -114,7 +113,6 @@ public class ProbandGroupBean extends ManagedBeanBase {
 					WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
 		}
 	}
-
 
 	@Override
 	protected String changeAction(Long id) {

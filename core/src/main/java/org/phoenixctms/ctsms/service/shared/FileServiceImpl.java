@@ -74,8 +74,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
  * @see org.phoenixctms.ctsms.service.shared.FileService
  */
 public class FileServiceImpl
-extends FileServiceBase
-{
+		extends FileServiceBase {
 
 	private final static java.util.regex.Pattern FILE_PATH_REGEXP = Pattern.compile("^(" + java.util.regex.Pattern.quote(CommonUtil.LOGICAL_PATH_SEPARATOR) + "[^"
 			+ java.util.regex.Pattern.quote(CommonUtil.LOGICAL_PATH_SEPARATOR) + "]+)*" + java.util.regex.Pattern.quote(CommonUtil.LOGICAL_PATH_SEPARATOR) + "$");
@@ -113,7 +112,6 @@ extends FileServiceBase
 	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	// }
-
 	private static boolean mkDir(java.io.File file) throws Exception {
 		return file.getParentFile().mkdirs();
 	}
@@ -153,7 +151,7 @@ extends FileServiceBase
 				ProbandDao probandDao = this.getProbandDao();
 				Proband proband = probandDao.load(id);
 				ServiceUtil
-				.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao); // creates
+						.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao); // creates
 				// mixed
 				// encryptions!
 				break;
@@ -339,8 +337,7 @@ extends FileServiceBase
 		return result;
 	}
 
-	private FileOutVO deleteFileHelper(Long fileId,Timestamp now, User user) throws Exception {
-
+	private FileOutVO deleteFileHelper(Long fileId, Timestamp now, User user) throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao, LockMode.UPGRADE_NOWAIT);
 		FileOutVO result = fileDao.toFileOutVO(file);
@@ -420,8 +417,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleAddFile(AuthenticationVO auth, FileInVO newFile, FileContentInVO newFileContent)
-			throws Exception
-	{
+			throws Exception {
 		checkFileInput(newFile);
 		checkFileInput(newFileContent, newFile.getModule());
 		FileDao fileDao = this.getFileDao();
@@ -438,8 +434,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleAddFile(AuthenticationVO auth, FileInVO newFile, FileStreamInVO newFileStream)
-			throws Exception
-	{
+			throws Exception {
 		checkFileInput(newFile);
 		checkFileInput(newFileStream, newFile.getModule());
 		FileDao fileDao = this.getFileDao();
@@ -462,7 +457,7 @@ extends FileServiceBase
 	@Override
 	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
 			PSFVO psf)
-					throws Exception {
+			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -504,8 +499,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleDeleteFile(AuthenticationVO auth, Long fileId)
-			throws Exception
-	{
+			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return deleteFileHelper(fileId, now, user);
@@ -514,7 +508,7 @@ extends FileServiceBase
 	@Override
 	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
 			PSFVO psf)
-					throws Exception {
+			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -522,7 +516,7 @@ extends FileServiceBase
 		Iterator<File> it = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf).iterator();
 		ArrayList<FileOutVO> result = new ArrayList<FileOutVO>();
 		while (it.hasNext()) {
-			result.add(deleteFileHelper(it.next().getId(),now,user));
+			result.add(deleteFileHelper(it.next().getId(), now, user));
 		}
 		return result;
 	}
@@ -532,8 +526,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleGetFile(AuthenticationVO auth, Long fileId)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		FileOutVO result = fileDao.toFileOutVO(file);
@@ -545,8 +538,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileContentOutVO handleGetFileContent(AuthenticationVO auth, Long fileId)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		checkContentSize(file);
@@ -556,8 +548,7 @@ extends FileServiceBase
 
 	@Override
 	protected long handleGetFileCount(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
-			throws Exception
-	{
+			throws Exception {
 		checkFileModuleId(module, id);
 		return this.getFileDao().getCount(module, id, logicalPath, subTree, active, publicFile, null, null);
 	}
@@ -574,8 +565,7 @@ extends FileServiceBase
 	@Override
 	protected Collection<FileOutVO> handleGetFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
 			PSFVO psf)
-					throws Exception
-	{
+			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf);
@@ -588,8 +578,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileStreamOutVO handleGetFileStream(AuthenticationVO auth, Long fileId)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
@@ -598,8 +587,7 @@ extends FileServiceBase
 
 	@Override
 	protected long handleGetFolderSize(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
-			throws Exception
-	{
+			throws Exception {
 		checkFileModuleId(module, id);
 		return this.getFileDao().getFileSizeSum(module, id, logicalPath, subTree, active, publicFile, null, null);
 	}
@@ -609,8 +597,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);
@@ -632,8 +619,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile, FileContentInVO modifiedFileContent)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);
@@ -656,8 +642,7 @@ extends FileServiceBase
 	 */
 	@Override
 	protected FileOutVO handleUpdateFile(AuthenticationVO auth, FileInVO modifiedFile, FileStreamInVO modifiedFileStream)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
 		checkFileInput(modifiedFile);

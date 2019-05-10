@@ -33,6 +33,7 @@ import org.primefaces.context.RequestContext;
 public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
 
 	private static final int VALIDITY_PERIOD_PROPERTY_ID = 1;
+
 	public static void copyPasswordOutToIn(PasswordInVO in, PasswordOutVO out) {
 		if (in != null && out != null) {
 			VariablePeriodVO validityPeriodVO = out.getValidityPeriod();
@@ -47,6 +48,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setValidityPeriodDays(out.getValidityPeriodDays());
 		}
 	}
+
 	public static void initPasswordDefaultValues(PasswordInVO in) {
 		if (in != null) {
 			PasswordInVO newPassword = WebUtil.getNewPassword();
@@ -61,12 +63,11 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setValidityPeriodDays(newPassword.getValidityPeriodDays());
 		}
 	}
+
 	private Date now;
 	private PasswordInVO in;
 	private PasswordOutVO out;
-
 	private Long userId;
-
 	private VariablePeriodSelector validity;
 
 	public PasswordBean() {
@@ -75,9 +76,8 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	}
 
 	@Override
-	public String addAction()
-	{
-	    sanitizeInVals();
+	public String addAction() {
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in);
 			initIn();
@@ -243,7 +243,6 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -336,7 +335,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	public void setValidity(VariablePeriodSelector validity) {
 		this.validity = validity;
 	}
-	
+
 	private void sanitizeInVals() {
 		if (!in.getExpires()) {
 			in.setProlongable(false);

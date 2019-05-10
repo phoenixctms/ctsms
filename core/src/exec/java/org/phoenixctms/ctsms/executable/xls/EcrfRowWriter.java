@@ -41,6 +41,7 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = 0;
 	}
 
+	@Override
 	public String getSheetName() {
 		// return context.getSheetName(this);
 		return SHEET_NAME;
@@ -49,7 +50,6 @@ public class EcrfRowWriter extends RowWriter {
 	@Override
 	public void init() {
 		super.init();
-
 		maxColumnIndex = 0;
 		probandGroupColumnIndex = PROBAND_GROUP_COLUMN_INDEX;
 		maxColumnIndex = Math.max(probandGroupColumnIndex, maxColumnIndex);
@@ -73,7 +73,6 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(enrollmentStatusColumnIndex, maxColumnIndex);
 		chargeColumnIndex = CHARGE_COLUMN_INDEX;
 		maxColumnIndex = Math.max(chargeColumnIndex, maxColumnIndex);
-
 		context.getExporter().getEcrfFieldRowWriter().init();
 		context.getSpreadSheet(this);
 	}

@@ -74,20 +74,13 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
  * @see org.phoenixctms.ctsms.service.massmail.MassMailService
  */
 public class MassMailServiceImpl
-extends MassMailServiceBase
-{
-
-
-
+		extends MassMailServiceBase {
 	// private final static String VELOCITY_LOG_TAG = "massmail";
-
 	// private static JournalEntry logSystemMessage(Proband proband, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 	// JournalEntryDao journalEntryDao) throws Exception {
 	// return journalEntryDao.addSystemMessage(proband, now, user, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
 	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
 	// }
-
-
 
 	private static JournalEntry logSystemMessage(Trial trial, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -105,7 +98,6 @@ extends MassMailServiceBase
 	}
 
 	private VelocityEngine velocityEngine;
-
 	private MassMailEmailSender massMailEmailSender;
 
 	private void checkAddMassMailInput(MassMailInVO massMailIn, Date now) throws ServiceException {
@@ -123,7 +115,6 @@ extends MassMailServiceBase
 		if (!validState) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_TRIAL_STATUS_TYPE, L10nUtil.getMassMailStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
-
 	}
 
 	private void checkMassMailInput(MassMailInVO massMailIn, Date now) throws ServiceException {
@@ -156,11 +147,9 @@ extends MassMailServiceBase
 			}
 		}
 		ServiceUtil.checkLocale(massMailIn.getLocale());
-
 		ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(), L10nUtil.getLocales(massMailIn.getLocale()), massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				null, trialVO,
 				probandListStatusTypeVO);
-
 		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
 				this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
@@ -171,7 +160,6 @@ extends MassMailServiceBase
 				this.getMedicationDao(),
 				this.getBankAccountDao(),
 				this.getJournalEntryDao());
-
 		CoreUtil.checkEmailAddress(massMailIn.getFromAddress(), true);
 		CoreUtil.checkEmailAddress(massMailIn.getReplyToAddress(), true);
 		if (!CommonUtil.isEmptyString(massMailIn.getOtherTo())) {
@@ -242,81 +230,74 @@ extends MassMailServiceBase
 		}
 	}
 
-
-	private   MassMailOutVO createMassMailOutVO(MassMailInVO massMailIn) {
-
+	private MassMailOutVO createMassMailOutVO(MassMailInVO massMailIn) {
 		MassMailOutVO massMailVO = new MassMailOutVO();
-
 		DepartmentVO departmentVO = massMailIn.getDepartmentId() != null ? this.getDepartmentDao().toDepartmentVO(this.getDepartmentDao().load(massMailIn.getDepartmentId()))
 				: null;
 		MassMailStatusTypeVO statusVO = massMailIn.getStatusId() != null
-				? this.getMassMailStatusTypeDao().toMassMailStatusTypeVO(this.getMassMailStatusTypeDao().load(massMailIn.getStatusId())) : null;
-				MassMailTypeVO typeVO = massMailIn.getTypeId() != null ? this.getMassMailTypeDao().toMassMailTypeVO(this.getMassMailTypeDao().load(massMailIn.getTypeId())) : null;
-				ProbandListStatusTypeVO probandListStatusTypeVO = massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
-						.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null;
-						TrialOutVO trialVO = massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null;
-
-						if (massMailIn.getId() != null) {
-							massMailVO.setId(massMailIn.getId());
-						}
-						massMailVO.setName(massMailIn.getName());
-						massMailVO.setDescription(massMailIn.getDescription());
-						massMailVO.setDepartment(departmentVO);
-						massMailVO.setStart(massMailIn.getStart());
-						massMailVO.setStatus(statusVO );
-						massMailVO.setLockAfterSending(massMailIn.getLockAfterSending());
-						massMailVO.setType(typeVO );
-						massMailVO.setProbandListStatus(probandListStatusTypeVO);
-						massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());
-						massMailVO.setTrial(trialVO);
-						massMailVO.setFromAddress(massMailIn.getFromAddress());
-						massMailVO.setFromName(massMailIn.getFromName());
-						massMailVO.setLocale(massMailIn.getLocale());
-						massMailVO.setMaleSalutation(massMailIn.getMaleSalutation());
-						massMailVO.setFemaleSalutation(massMailIn.getFemaleSalutation());
-						massMailVO.setSubjectFormat(massMailIn.getSubjectFormat());
-						massMailVO.setTextTemplate(massMailIn.getTextTemplate());
-						massMailVO.setReplyToAddress(massMailIn.getReplyToAddress());
-						massMailVO.setReplyToName(massMailIn.getReplyToName());
-						massMailVO.setProbandTo(massMailIn.getProbandTo());
-						massMailVO.setPhysicianTo(massMailIn.getPhysicianTo());
-						massMailVO.setTrialTeamTo(massMailIn.getTrialTeamTo());
-						massMailVO.setOtherTo(massMailIn.getOtherTo());
-						massMailVO.setCc(massMailIn.getCc());
-						massMailVO.setBcc(massMailIn.getBcc());
-						massMailVO.setUseBeacon(massMailIn.getUseBeacon());
-						massMailVO.setAttachMassMailFiles(massMailIn.getAttachMassMailFiles());
-						massMailVO.setMassMailFilesLogicalPath(massMailIn.getMassMailFilesLogicalPath());
-						massMailVO.setAttachTrialFiles(massMailIn.getAttachTrialFiles());
-						massMailVO.setTrialFilesLogicalPath(massMailIn.getTrialFilesLogicalPath());
-						massMailVO.setAttachProbandFiles(massMailIn.getAttachProbandFiles());
-						massMailVO.setProbandFilesLogicalPath(massMailIn.getProbandFilesLogicalPath());
-						massMailVO.setAttachInquiries(massMailIn.getAttachInquiries());
-						massMailVO.setAttachProbandListEntryTags(massMailIn.getAttachProbandListEntryTags());
-						massMailVO.setAttachEcrfs(massMailIn.getAttachEcrfs());
-						massMailVO.setAttachProbandLetter(massMailIn.getAttachProbandLetter());
-						massMailVO.setAttachReimbursementsPdf(massMailIn.getAttachReimbursementsPdf());
-						if (massMailIn.getVersion() != null) {
-							massMailVO.setVersion(massMailIn.getVersion());
-						}
-						return massMailVO;
-
+				? this.getMassMailStatusTypeDao().toMassMailStatusTypeVO(this.getMassMailStatusTypeDao().load(massMailIn.getStatusId()))
+				: null;
+		MassMailTypeVO typeVO = massMailIn.getTypeId() != null ? this.getMassMailTypeDao().toMassMailTypeVO(this.getMassMailTypeDao().load(massMailIn.getTypeId())) : null;
+		ProbandListStatusTypeVO probandListStatusTypeVO = massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
+				.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null;
+		TrialOutVO trialVO = massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null;
+		if (massMailIn.getId() != null) {
+			massMailVO.setId(massMailIn.getId());
+		}
+		massMailVO.setName(massMailIn.getName());
+		massMailVO.setDescription(massMailIn.getDescription());
+		massMailVO.setDepartment(departmentVO);
+		massMailVO.setStart(massMailIn.getStart());
+		massMailVO.setStatus(statusVO);
+		massMailVO.setLockAfterSending(massMailIn.getLockAfterSending());
+		massMailVO.setType(typeVO);
+		massMailVO.setProbandListStatus(probandListStatusTypeVO);
+		massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());
+		massMailVO.setTrial(trialVO);
+		massMailVO.setFromAddress(massMailIn.getFromAddress());
+		massMailVO.setFromName(massMailIn.getFromName());
+		massMailVO.setLocale(massMailIn.getLocale());
+		massMailVO.setMaleSalutation(massMailIn.getMaleSalutation());
+		massMailVO.setFemaleSalutation(massMailIn.getFemaleSalutation());
+		massMailVO.setSubjectFormat(massMailIn.getSubjectFormat());
+		massMailVO.setTextTemplate(massMailIn.getTextTemplate());
+		massMailVO.setReplyToAddress(massMailIn.getReplyToAddress());
+		massMailVO.setReplyToName(massMailIn.getReplyToName());
+		massMailVO.setProbandTo(massMailIn.getProbandTo());
+		massMailVO.setPhysicianTo(massMailIn.getPhysicianTo());
+		massMailVO.setTrialTeamTo(massMailIn.getTrialTeamTo());
+		massMailVO.setOtherTo(massMailIn.getOtherTo());
+		massMailVO.setCc(massMailIn.getCc());
+		massMailVO.setBcc(massMailIn.getBcc());
+		massMailVO.setUseBeacon(massMailIn.getUseBeacon());
+		massMailVO.setAttachMassMailFiles(massMailIn.getAttachMassMailFiles());
+		massMailVO.setMassMailFilesLogicalPath(massMailIn.getMassMailFilesLogicalPath());
+		massMailVO.setAttachTrialFiles(massMailIn.getAttachTrialFiles());
+		massMailVO.setTrialFilesLogicalPath(massMailIn.getTrialFilesLogicalPath());
+		massMailVO.setAttachProbandFiles(massMailIn.getAttachProbandFiles());
+		massMailVO.setProbandFilesLogicalPath(massMailIn.getProbandFilesLogicalPath());
+		massMailVO.setAttachInquiries(massMailIn.getAttachInquiries());
+		massMailVO.setAttachProbandListEntryTags(massMailIn.getAttachProbandListEntryTags());
+		massMailVO.setAttachEcrfs(massMailIn.getAttachEcrfs());
+		massMailVO.setAttachProbandLetter(massMailIn.getAttachProbandLetter());
+		massMailVO.setAttachReimbursementsPdf(massMailIn.getAttachReimbursementsPdf());
+		if (massMailIn.getVersion() != null) {
+			massMailVO.setVersion(massMailIn.getVersion());
+		}
+		return massMailVO;
 	}
-
-
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.massmail.MassMailService#addMassMail(AuthenticationVO, MassMailInVO)
 	 */
+	@Override
 	protected MassMailOutVO handleAddMassMail(AuthenticationVO auth, MassMailInVO newMassMail)
-			throws Exception
-	{
+			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		checkAddMassMailInput(newMassMail, now);
 		MassMailDao massMailDao = this.getMassMailDao();
 		MassMail massMail = massMailDao.massMailInVOToEntity(newMassMail);
-
 		CoreUtil.modifyVersion(massMail, now, user);
 		massMail = massMailDao.create(massMail);
 		MassMailOutVO result = massMailDao.toMassMailOutVO(massMail);
@@ -370,6 +351,7 @@ extends MassMailServiceBase
 	/**
 	 * @see org.phoenixctms.ctsms.service.massmail.MassMailService#deleteMassMail(AuthenticationVO, Long, boolean, boolean)
 	 */
+	@Override
 	protected MassMailOutVO handleDeleteMassMail(AuthenticationVO auth, Long massMailId, boolean defer, boolean force, String deferredDeleteReason)
 			throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
@@ -504,9 +486,9 @@ extends MassMailServiceBase
 	/**
 	 * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getMassMail(AuthenticationVO, Long)
 	 */
+	@Override
 	protected MassMailOutVO handleGetMassMail(AuthenticationVO auth, Long massMailId)
-			throws Exception
-	{
+			throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
 		MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, massMailDao);
 		MassMailOutVO result = massMailDao.toMassMailOutVO(massMail);
@@ -524,13 +506,12 @@ extends MassMailServiceBase
 		return this.getMassMailDao().getCount(trialId, probandListStatusTypeId, locked, resendProbandId);
 	}
 
-
 	/**
 	 * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getMassMailList(AuthenticationVO, Long, Long, PSFVO)
 	 */
-	protected  Collection<MassMailOutVO> handleGetMassMailList(AuthenticationVO auth, Long massMailId, Long departmentId, PSFVO psf)
-			throws Exception
-	{
+	@Override
+	protected Collection<MassMailOutVO> handleGetMassMailList(AuthenticationVO auth, Long massMailId, Long departmentId, PSFVO psf)
+			throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
 		if (massMailId != null) {
 			CheckIDUtil.checkMassMailId(massMailId, massMailDao);
@@ -548,12 +529,10 @@ extends MassMailServiceBase
 		MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, this.getMassMailDao());
 		MassMailProgressVO massMailProgress = new MassMailProgressVO();
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-		massMailProgress.setRecipientTotalCount( massMailRecipientDao.getCount(massMailId, null, false));
-		massMailProgress.setRecipientPendingCount( massMailRecipientDao.getCount(massMailId, null, true));
+		massMailProgress.setRecipientTotalCount(massMailRecipientDao.getCount(massMailId, null, false));
+		massMailProgress.setRecipientPendingCount(massMailRecipientDao.getCount(massMailId, null, true));
 		return massMailProgress;
 	}
-
-
 
 	@Override
 	protected MassMailRecipientOutVO handleGetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId) throws Exception {
@@ -565,14 +544,12 @@ extends MassMailServiceBase
 
 	@Override
 	protected long handleGetMassMailRecipientCount(AuthenticationVO auth, Long massMailId, Long probandId, boolean pending) throws Exception {
-
 		if (massMailId != null) {
 			CheckIDUtil.checkMassMailId(massMailId, this.getMassMailDao());
 		}
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
-
 		return this.getMassMailRecipientDao().getCount(massMailId, probandId, pending);
 	}
 
@@ -609,25 +586,25 @@ extends MassMailServiceBase
 				L10nUtil.getLocales(massMailIn.getLocale()),
 				massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null,
-						// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) :
-						massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null,
-								massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
-										.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null);
+				// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) :
+				massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null,
+				massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
+						.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null);
 	}
 
 	@Override
 	protected String handleGetText(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws Exception {
 		return ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null,
-						// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) : null,
-						new Timestamp(System.currentTimeMillis()),
-						null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
-						this.getProbandTagValueDao(),
-						this.getProbandContactDetailValueDao(),
-						this.getProbandAddressDao(),
-						this.getDiagnosisDao(),
-						this.getProcedureDao(),
-						this.getMedicationDao(),
+				// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) : null,
+				new Timestamp(System.currentTimeMillis()),
+				null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
+				this.getProbandTagValueDao(),
+				this.getProbandContactDetailValueDao(),
+				this.getProbandAddressDao(),
+				this.getDiagnosisDao(),
+				this.getProcedureDao(),
+				this.getMedicationDao(),
 				this.getBankAccountDao(),
 				this.getJournalEntryDao());
 	}
@@ -671,7 +648,8 @@ extends MassMailServiceBase
 				if (toCount > 0) {
 					sent = true;
 					if (delayMillis > 0) {
-						Thread.currentThread().sleep(delayMillis);
+						Thread.currentThread();
+						Thread.sleep(delayMillis);
 					}
 				} else {
 					recipient.setErrorMessage(
@@ -681,7 +659,8 @@ extends MassMailServiceBase
 			} catch (Throwable t) {
 				recipient.setErrorMessage(t.getMessage());
 				if (delayMillis > 0) {
-					Thread.currentThread().sleep(delayMillis);
+					Thread.currentThread();
+					Thread.sleep(delayMillis);
 				}
 			}
 			recipient.setTimesProcessed(recipient.getTimesProcessed() + 1l);
@@ -734,7 +713,6 @@ extends MassMailServiceBase
 		ServiceUtil.resetMassMailRecipient(recipient, original);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-
 		CoreUtil.modifyVersion(recipient, version.longValue(), now, user);
 		massMailRecipientDao.update(recipient);
 		MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
@@ -744,6 +722,7 @@ extends MassMailServiceBase
 		return result;
 	}
 
+	@Override
 	protected MassMailOutVO handleUpdateMassMail(AuthenticationVO auth, MassMailInVO modifiedMassMail)
 			throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
@@ -801,7 +780,6 @@ extends MassMailServiceBase
 			ServiceUtil.logSystemMessage(massMail, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_DELETED, result, null, journalEntryDao);
 		}
 		// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
-
 		return result;
 	}
 

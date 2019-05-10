@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.JournalCategory
 */
-@Test(groups={"transform","JournalCategoryDao"})
+@Test(groups = { "transform", "JournalCategoryDao" })
 public class JournalCategoryDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method JournalCategoryDao.toJournalCategoryVO
-   *
-   * @see org.phoenixctms.ctsms.domain.JournalCategoryDao#toJournalCategoryVO(org.phoenixctms.ctsms.domain.JournalCategory source, org.phoenixctms.ctsms.vo.JournalCategoryVO target)
-   */
-  @Test
-  public void testToJournalCategoryVO() {
-    Assert.fail("Test 'JournalCategoryDaoTransformTest.testToJournalCategoryVO' not implemented!");
-  }
+	/**
+	 * Test for method JournalCategoryDao.toJournalCategoryVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.JournalCategoryDao#toJournalCategoryVO(org.phoenixctms.ctsms.domain.JournalCategory source, org.phoenixctms.ctsms.vo.JournalCategoryVO target)
+	 */
+	@Test
+	public void testToJournalCategoryVO() {
+		Assert.fail("Test 'JournalCategoryDaoTransformTest.testToJournalCategoryVO' not implemented!");
+	}
 
-    /**
-   * Test for method journalCategoryVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.JournalCategoryDao#journalCategoryVOToEntity(org.phoenixctms.ctsms.vo.JournalCategoryVO source, org.phoenixctms.ctsms.domain.JournalCategory target, boolean copyIfNull)
-   */
-  @Test
-  public void testJournalCategoryVOToEntity() {
-    Assert.fail("Test 'JournalCategoryDaoTransformTest.testJournalCategoryVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method journalCategoryVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.JournalCategoryDao#journalCategoryVOToEntity(org.phoenixctms.ctsms.vo.JournalCategoryVO source, org.phoenixctms.ctsms.domain.JournalCategory target, boolean copyIfNull)
+	*/
+	@Test
+	public void testJournalCategoryVOToEntity() {
+		Assert.fail("Test 'JournalCategoryDaoTransformTest.testJournalCategoryVOToEntity' not implemented!");
+	}
 }

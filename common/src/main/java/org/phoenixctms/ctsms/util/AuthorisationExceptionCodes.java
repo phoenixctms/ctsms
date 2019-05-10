@@ -15,5 +15,4 @@ public interface AuthorisationExceptionCodes {
 	public static final String PARAMETER_RESTRICTION_VIOLATED = "parameter_restriction_violated";
 	public final static String FILE_NOT_PUBLIC = "file_not_public";
 	public final static String ENCRYPTED_FILE = "encrypted_file";
-
 }

@@ -25,8 +25,7 @@ import org.phoenixctms.ctsms.vo.BankIdentificationVO;
  * @see BankIdentification
  */
 public class BankIdentificationDaoImpl
-		extends BankIdentificationDaoBase
-{
+		extends BankIdentificationDaoBase {
 
 	private static void applyBankIdentificationCriterions(org.hibernate.Criteria bankIdentificationCriteria, String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix) {
 		CategoryCriterion.applyAnd(bankIdentificationCriteria,
@@ -39,8 +38,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public BankIdentification bankIdentificationVOToEntity(BankIdentificationVO bankIdentificationVO)
-	{
+	public BankIdentification bankIdentificationVOToEntity(BankIdentificationVO bankIdentificationVO) {
 		BankIdentification entity = this.loadBankIdentificationFromBankIdentificationVO(bankIdentificationVO);
 		this.bankIdentificationVOToEntity(bankIdentificationVO, entity, true);
 		return entity;
@@ -53,8 +51,7 @@ public class BankIdentificationDaoImpl
 	public void bankIdentificationVOToEntity(
 			BankIdentificationVO source,
 			BankIdentification target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.bankIdentificationVOToEntity(source, target, copyIfNull);
 	}
 
@@ -68,8 +65,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<String> handleFindBankCodeNumbers(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit)
-	{
+	protected Collection<String> handleFindBankCodeNumbers(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit) {
 		org.hibernate.Criteria bankIdentificationCriteria = createBankIdentificationCriteria();
 		applyBankIdentificationCriterions(bankIdentificationCriteria, bankCodeNumberPrefix, bicPrefix, bankNameInfix);
 		bankIdentificationCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("bankCodeNumber", ""), Restrictions.isNull("bankCodeNumber"))));
@@ -84,8 +80,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<BankIdentificationVO> handleFindBankIdentifications(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit)
-	{
+	protected Collection<BankIdentificationVO> handleFindBankIdentifications(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit) {
 		org.hibernate.Criteria bankIdentificationCriteria = createBankIdentificationCriteria();
 		applyBankIdentificationCriterions(bankIdentificationCriteria, bankCodeNumberPrefix, bicPrefix, bankNameInfix);
 		bankIdentificationCriteria.addOrder(Order.asc("bankName"));
@@ -98,8 +93,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<String> handleFindBankNames(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit)
-	{
+	protected Collection<String> handleFindBankNames(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit) {
 		org.hibernate.Criteria bankIdentificationCriteria = createBankIdentificationCriteria();
 		applyBankIdentificationCriterions(bankIdentificationCriteria, bankCodeNumberPrefix, bicPrefix, bankNameInfix);
 		bankIdentificationCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("bankName", ""), Restrictions.isNull("bankName"))));
@@ -115,8 +109,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<String> handleFindBics(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit)
-	{
+	protected Collection<String> handleFindBics(String bankCodeNumberPrefix, String bicPrefix, String bankNameInfix, Integer limit) {
 		org.hibernate.Criteria bankIdentificationCriteria = createBankIdentificationCriteria();
 		applyBankIdentificationCriterions(bankIdentificationCriteria, bankCodeNumberPrefix, bicPrefix, bankNameInfix);
 		bankIdentificationCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("bic", ""), Restrictions.isNull("bic"))));
@@ -133,8 +126,7 @@ public class BankIdentificationDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private BankIdentification loadBankIdentificationFromBankIdentificationVO(BankIdentificationVO bankIdentificationVO)
-	{
+	private BankIdentification loadBankIdentificationFromBankIdentificationVO(BankIdentificationVO bankIdentificationVO) {
 		// // TODO implement loadBankIdentificationFromBankIdentificationVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankIdentificationFromBankIdentificationVO(BankIdentificationVO) not yet implemented.");
 		BankIdentification bankIdentification = null;
@@ -142,8 +134,7 @@ public class BankIdentificationDaoImpl
 		if (id != null) {
 			bankIdentification = this.load(id);
 		}
-		if (bankIdentification == null)
-		{
+		if (bankIdentification == null) {
 			bankIdentification = BankIdentification.Factory.newInstance();
 		}
 		return bankIdentification;
@@ -153,8 +144,7 @@ public class BankIdentificationDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public BankIdentificationVO toBankIdentificationVO(final BankIdentification entity)
-	{
+	public BankIdentificationVO toBankIdentificationVO(final BankIdentification entity) {
 		return super.toBankIdentificationVO(entity);
 	}
 
@@ -164,8 +154,7 @@ public class BankIdentificationDaoImpl
 	@Override
 	public void toBankIdentificationVO(
 			BankIdentification source,
-			BankIdentificationVO target)
-	{
+			BankIdentificationVO target) {
 		super.toBankIdentificationVO(source, target);
 	}
 }

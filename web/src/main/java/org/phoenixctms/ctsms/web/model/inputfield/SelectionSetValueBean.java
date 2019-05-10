@@ -78,7 +78,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	private InputFieldSelectionSetValueLazyModel selectionSetValueModel;
 	private String inkRegionsJson;
 	private boolean inkRegionsJsonVisible;
-
 	private String deferredDeleteReason;
 
 	public SelectionSetValueBean() {
@@ -88,8 +87,7 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InputFieldSelectionSetValueInVO backup = new InputFieldSelectionSetValueInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -148,7 +146,8 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	public String deleteAction(Long id) {
 		try {
 			out = WebUtil.getServiceLocator().getInputFieldService().deleteSelectionSetValue(WebUtil.getAuthentication(), id,
-					Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false, deferredDeleteReason);
+					Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false,
+					deferredDeleteReason);
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {

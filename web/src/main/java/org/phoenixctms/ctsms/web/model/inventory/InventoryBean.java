@@ -87,7 +87,8 @@ public class InventoryBean extends ManagedBeanBase {
 			in.setOwnerId(null);
 			in.setParentId(null);
 			in.setPieces(Settings.getLongNullable(SettingCodes.INVENTORY_PIECES_PRESET, Bundle.SETTINGS, DefaultSettings.INVENTORY_PIECES_PRESET));
-			in.setMaxOverlappingBookings(Settings.getLongNullable(SettingCodes.INVENTORY_MAX_OVERLAPPING_PRESET, Bundle.SETTINGS, DefaultSettings.INVENTORY_MAX_OVERLAPPING_PRESET));
+			in.setMaxOverlappingBookings(
+					Settings.getLongNullable(SettingCodes.INVENTORY_MAX_OVERLAPPING_PRESET, Bundle.SETTINGS, DefaultSettings.INVENTORY_MAX_OVERLAPPING_PRESET));
 		}
 	}
 
@@ -98,7 +99,6 @@ public class InventoryBean extends ManagedBeanBase {
 	private TreeNode inventoryRoot;
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-
 	private String deferredDeleteReason;
 
 	public InventoryBean() {
@@ -112,8 +112,7 @@ public class InventoryBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InventoryInVO backup = new InventoryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -494,15 +493,16 @@ public class InventoryBean extends ManagedBeanBase {
 		return out != null;
 	}
 
-
 	public boolean isDeferredDelete() {
 		return Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.INVENTORY_DB) && super.isEditable();
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.INVENTORY_DB) && super.isRemovable();
 	}

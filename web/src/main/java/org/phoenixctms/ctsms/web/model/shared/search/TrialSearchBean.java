@@ -90,7 +90,6 @@ public class TrialSearchBean extends SearchBeanBase {
 	// }
 	// return "";
 	// }
-
 	public boolean getEnableExports() {
 		return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_SEARCH_EXPORTS, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_SEARCH_EXPORTS);
 	}

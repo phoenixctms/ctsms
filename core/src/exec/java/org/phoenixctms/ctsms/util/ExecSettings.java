@@ -36,10 +36,10 @@ public final class ExecSettings {
 			return null;
 		}
 	}
+
 	public static float getFloat(String key, float defaultValue) {
 		return CommonUtil.getValue(key, getBundle(false), defaultValue);
 	}
-
 
 	public static int getInt(String key, int defaultValue) {
 		return CommonUtil.getValue(key, getBundle(false), defaultValue);
@@ -73,7 +73,6 @@ public final class ExecSettings {
 		bundleBasename = null;
 	}
 
-
 	private ExecSettings() {
 	}
 
@@ -82,6 +81,4 @@ public final class ExecSettings {
 			String defaultBundleBasename) {
 		setBundleBasename(defaultBundleBasename);
 	}
-
-
 }

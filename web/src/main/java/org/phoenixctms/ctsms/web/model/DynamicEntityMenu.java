@@ -599,5 +599,4 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 	protected abstract String getEntityHomeMenuItemLabel();
 
 	protected abstract String getEntityHomeMenuItemOnClick();
-
 }

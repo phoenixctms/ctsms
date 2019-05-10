@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -165,7 +166,7 @@ public class DemoDataProvider {
 				"Zigaretten pro Tag"), CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"), CHRONIC_DISEASE("Chronische Erkrankung"), EPILEPSY_YN("Epilepsie J/N"), EPILEPSY(
 						"Epilepsie"), CARDIAC_PROBLEMS_YN("Herzprobleme J/N"), CARDIAC_PROBLEMS(
 								"Herzprobleme"), HYPERTENSION_YN("Bluthochdruck J/N"), HYPERTENSION("Bluthochdruck"), RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
-																																													// insufficiencyYN//nieren
+		// insufficiencyYN//nieren
 		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"), LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
 		LIVER_DISEASE("Lebererkrankung"), ANEMIA_YN("Anemie J/N"), // anemiaYN
 		ANEMIA("Anemie"), IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
@@ -501,7 +502,7 @@ public class DemoDataProvider {
 	public DemoDataProvider() {
 		random = new Random();
 		prefix = RandomStringUtils.randomAlphanumeric(4).toLowerCase();
-		year = GregorianCalendar.getInstance().get(GregorianCalendar.YEAR);
+		year = Calendar.getInstance().get(Calendar.YEAR);
 	}
 
 	private void addInkRegions(AuthenticationVO auth, InputFieldOutVO inputField, TreeMap<InputFieldValues, Stroke> inkRegions) throws Exception {
@@ -2483,9 +2484,9 @@ public class DemoDataProvider {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
 		Date[] result = new Date[2];
-		result[0] = (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), hourStart, minuteStart, 0))
+		result[0] = (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourStart, minuteStart, 0))
 				.getTime();
-		result[1] = (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), hourEnd, minuteEnd, 0))
+		result[1] = (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourEnd, minuteEnd, 0))
 				.getTime();
 		return result;
 	}
@@ -2892,7 +2893,7 @@ public class DemoDataProvider {
 		} else if (p >= 100) {
 			return true;
 		} else {
-			return random.nextDouble() < (((double) p) / 100.0d);
+			return random.nextDouble() < ((p) / 100.0d);
 		}
 	}
 
@@ -2903,8 +2904,8 @@ public class DemoDataProvider {
 	private Date getRandomDate(Date minDate, Date maxDate) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(minDate == null ? (new GregorianCalendar(1900, 0, 1)).getTime() : minDate);
-		cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0);
-		cal.add(GregorianCalendar.DAY_OF_YEAR, random.nextInt(DateCalc.dateDeltaDays(minDate == null ? (new GregorianCalendar(1900, 0, 1)).getTime() : minDate,
+		cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+		cal.add(Calendar.DAY_OF_YEAR, random.nextInt(DateCalc.dateDeltaDays(minDate == null ? (new GregorianCalendar(1900, 0, 1)).getTime() : minDate,
 				maxDate == null ? (new GregorianCalendar(year, 11, 31)).getTime() : maxDate)));
 		return cal.getTime();
 	}

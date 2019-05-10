@@ -19,8 +19,7 @@ import org.phoenixctms.ctsms.vo.TrialTagVO;
  * @see TrialTag
  */
 public class TrialTagDaoImpl
-		extends TrialTagDaoBase
-{
+		extends TrialTagDaoBase {
 
 	private org.hibernate.Criteria createTrialTagCriteria() {
 		org.hibernate.Criteria trialTagCriteria = this.getSession().createCriteria(TrialTag.class);
@@ -57,8 +56,7 @@ public class TrialTagDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialTag loadTrialTagFromTrialTagVO(TrialTagVO trialTagVO)
-	{
+	private TrialTag loadTrialTagFromTrialTagVO(TrialTagVO trialTagVO) {
 		// TODO implement loadTrialTagFromTrialTagVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTagFromTrialTagVO(TrialTagVO) not yet implemented.");
 		TrialTag trialTag = null;
@@ -66,8 +64,7 @@ public class TrialTagDaoImpl
 		if (id != null) {
 			trialTag = this.load(id);
 		}
-		if (trialTag == null)
-		{
+		if (trialTag == null) {
 			trialTag = TrialTag.Factory.newInstance();
 		}
 		return trialTag;
@@ -77,8 +74,7 @@ public class TrialTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTagVO toTrialTagVO(final TrialTag entity)
-	{
+	public TrialTagVO toTrialTagVO(final TrialTag entity) {
 		return super.toTrialTagVO(entity);
 	}
 
@@ -88,8 +84,7 @@ public class TrialTagDaoImpl
 	@Override
 	public void toTrialTagVO(
 			TrialTag source,
-			TrialTagVO target)
-	{
+			TrialTagVO target) {
 		super.toTrialTagVO(source, target);
 		target.setName(L10nUtil.getTrialTagName(Locales.USER, source.getNameL10nKey()));
 	}
@@ -98,8 +93,7 @@ public class TrialTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialTag trialTagVOToEntity(TrialTagVO trialTagVO)
-	{
+	public TrialTag trialTagVOToEntity(TrialTagVO trialTagVO) {
 		TrialTag entity = this.loadTrialTagFromTrialTagVO(trialTagVO);
 		this.trialTagVOToEntity(trialTagVO, entity, true);
 		return entity;
@@ -112,8 +106,7 @@ public class TrialTagDaoImpl
 	public void trialTagVOToEntity(
 			TrialTagVO source,
 			TrialTag target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialTagVOToEntity(source, target, copyIfNull);
 	}
 }

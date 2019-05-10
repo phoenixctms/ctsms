@@ -37,7 +37,6 @@ public class AspRowProcessor extends RowProcessor {
 	private static final int DISTRIBUTION_COLUMN_INDEX = 14;
 	private static final int HUMAN_COLUMN_INDEX = 15;
 	private static final int CATEGORY_COLUMN_INDEX = 16;
-
 	// private static final int SPECIES_COLUMN_INDEX = 15;
 	// private static final int SPECIES_CATEGORY_COLUMN_INDEX = 16;
 	// private static final int APPLICATION_COLUMN_INDEX = 17;
@@ -46,9 +45,7 @@ public class AspRowProcessor extends RowProcessor {
 	// private static final int DEPLETION_TIME_VALUE_COLUMN_INDEX = 20;
 	// private static final int DEPLETION_TIME_UNIT_COLUMN_INDEX = 21;
 	// private static final int NOTE_COLUMN_INDEX = 22;
-
 	private final static Pattern SUBSTANCES_SEPARATOR_REGEXP = Pattern.compile(";");
-
 	private final static Pattern ATC_CODES_SEPARATOR_REGEXP = Pattern.compile(";");
 
 	private static boolean isAsp(String value) {
@@ -68,6 +65,7 @@ public class AspRowProcessor extends RowProcessor {
 			throw new IllegalArgumentException("cannot parse boolean value " + value);
 		}
 	}
+
 	private static java.util.Date parseDate(String value) {
 		SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -77,6 +75,7 @@ public class AspRowProcessor extends RowProcessor {
 			throw new IllegalArgumentException("cannot parse date value " + value, e);
 		}
 	}
+
 	private int nameColumnIndex;
 	private int typeColumnIndex;
 	private int labelingColumnIndex;
@@ -92,9 +91,7 @@ public class AspRowProcessor extends RowProcessor {
 	private int batchTestingExclusionColumnIndex;
 	private int prescriptionColumnIndex;
 	private int distributionColumnIndex;
-
 	private int humanColumnIndex;
-
 	private int categoryColumnIndex;
 	// private int speciesColumnIndex;
 	// private int speciesCategoryColumnIndex;
@@ -106,7 +103,6 @@ public class AspRowProcessor extends RowProcessor {
 	// private int noteColumnIndex;
 	private TreeMap<String, ArrayList<Asp>> substancesMap;
 	// private TreeMap<String, ArrayList<Asp>> atcCodesMap;
-
 	@Autowired
 	protected AspDao aspDao;
 	@Autowired
@@ -126,7 +122,6 @@ public class AspRowProcessor extends RowProcessor {
 	}
 
 	private Asp createAsp(String[] values) {
-
 		Asp asp = Asp.Factory.newInstance();
 		asp.setName(getName(values));
 		// asp.setType(getType(values));
@@ -177,11 +172,9 @@ public class AspRowProcessor extends RowProcessor {
 	// private String getApplication(String[] values) {
 	// return getColumnValue(values, applicationColumnIndex);
 	// }
-
 	private String getAtcCode(String[] values) {
 		return getColumnValue(values, atcCodeColumnIndex);
 	}
-
 
 	private String getBatchRelease(String[] values) {
 		return getColumnValue(values, batchReleaseColumnIndex);
@@ -222,7 +215,6 @@ public class AspRowProcessor extends RowProcessor {
 	// private String getDosing(String[] values) {
 	// return getColumnValue(values, dosingColumnIndex);
 	// }
-
 	private String getName(String[] values) {
 		return getColumnValue(values, nameColumnIndex);
 	}
@@ -238,7 +230,6 @@ public class AspRowProcessor extends RowProcessor {
 	// private String getNote(String[] values) {
 	// return getColumnValue(values, noteColumnIndex);
 	// }
-
 	private String getProprietor(String[] values) {
 		return getColumnValue(values, proprietorColumnIndex);
 	}
@@ -266,7 +257,6 @@ public class AspRowProcessor extends RowProcessor {
 	// private String getSpeciesCategory(String[] values) {
 	// return getColumnValue(values, speciesCategoryColumnIndex);
 	// }
-
 	private String getSubstances(String[] values) {
 		return getColumnValue(values, substancesColumnIndex);
 	}
@@ -274,7 +264,6 @@ public class AspRowProcessor extends RowProcessor {
 	// private String getTissue(String[] values) {
 	// return getColumnValue(values, tissueColumnIndex);
 	// }
-
 	private String getType(String[] values) {
 		return getColumnValue(values, typeColumnIndex);
 	}
@@ -453,7 +442,4 @@ public class AspRowProcessor extends RowProcessor {
 		// }
 		return true;
 	}
-
-
-
 }

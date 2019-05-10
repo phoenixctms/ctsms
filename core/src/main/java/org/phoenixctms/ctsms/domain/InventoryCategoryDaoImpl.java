@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.InventoryCategoryVO;
  * @see InventoryCategory
  */
 public class InventoryCategoryDaoImpl
-		extends InventoryCategoryDaoBase
-{
+		extends InventoryCategoryDaoBase {
 
 	@Override
 	protected Collection<InventoryCategory> handleFindByVisibleId(Boolean visible, Long categoryId)
@@ -33,8 +32,7 @@ public class InventoryCategoryDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryCategory inventoryCategoryVOToEntity(InventoryCategoryVO inventoryCategoryVO)
-	{
+	public InventoryCategory inventoryCategoryVOToEntity(InventoryCategoryVO inventoryCategoryVO) {
 		InventoryCategory entity = this.loadInventoryCategoryFromInventoryCategoryVO(inventoryCategoryVO);
 		this.inventoryCategoryVOToEntity(inventoryCategoryVO, entity, true);
 		return entity;
@@ -47,8 +45,7 @@ public class InventoryCategoryDaoImpl
 	public void inventoryCategoryVOToEntity(
 			InventoryCategoryVO source,
 			InventoryCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -57,15 +54,13 @@ public class InventoryCategoryDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryCategory loadInventoryCategoryFromInventoryCategoryVO(InventoryCategoryVO inventoryCategoryVO)
-	{
+	private InventoryCategory loadInventoryCategoryFromInventoryCategoryVO(InventoryCategoryVO inventoryCategoryVO) {
 		InventoryCategory inventoryCategory = null;
 		Long id = inventoryCategoryVO.getId();
 		if (id != null) {
 			inventoryCategory = this.load(id);
 		}
-		if (inventoryCategory == null)
-		{
+		if (inventoryCategory == null) {
 			inventoryCategory = InventoryCategory.Factory.newInstance();
 		}
 		return inventoryCategory;
@@ -75,8 +70,7 @@ public class InventoryCategoryDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryCategoryVO toInventoryCategoryVO(final InventoryCategory entity)
-	{
+	public InventoryCategoryVO toInventoryCategoryVO(final InventoryCategory entity) {
 		return super.toInventoryCategoryVO(entity);
 	}
 
@@ -86,8 +80,7 @@ public class InventoryCategoryDaoImpl
 	@Override
 	public void toInventoryCategoryVO(
 			InventoryCategory source,
-			InventoryCategoryVO target)
-	{
+			InventoryCategoryVO target) {
 		super.toInventoryCategoryVO(source, target);
 		target.setName(L10nUtil.getInventoryCategoryName(Locales.USER, source.getNameL10nKey()));
 	}

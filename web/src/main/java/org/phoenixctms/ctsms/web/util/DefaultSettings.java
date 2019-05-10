@@ -65,8 +65,7 @@ public final class DefaultSettings {
 	public final static String LOCAL_ADDR_REFERER = "LOCAL_ADDR";
 	public final static String LOCAL_NAME_REFERER = "LOCAL_NAME";
 	public final static String HTTP_DOMAIN_REFERER = "HTTP_DOMAIN_REFERER";
-	static
-	{
+	static {
 		INVENTORY_MAINTENANCE_DUE_IN_DURATIONS.add(Long.toString(1 * 24 * 60 * 60));
 		INVENTORY_MAINTENANCE_DUE_IN_COLORS.add(Color.ORANGERED.name());
 		INVENTORY_MAINTENANCE_DUE_IN_DURATIONS.add(Long.toString(3 * 24 * 60 * 60));
@@ -415,7 +414,6 @@ public final class DefaultSettings {
 	public static final Integer API_GRAPH_MAX_PROBAND_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_PROBAND_PARENTS_DEPTH = 2;
 	public static final Integer API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH = 2;
-
 	public static final boolean TIMELINE_SHOW_ALL_PRESET = false;
 	public static final boolean TIMELINE_SHOW_DESCRIPTION_PRESET = false;
 	public static final boolean TIMELINE_SHOW_START_STOP_PRESET = true;
@@ -561,16 +559,11 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_USER_SEARCH_EXPORTS = false;
 	public static final boolean ENABLE_JOURNAL_EXPORTS = false;
 	public static final boolean ENABLE_MASS_MAIL_SEARCH_EXPORTS = false;
-
 	public static final int TIME_PICKER_INTERVAL_MINUTES = 5;
-
 	public static final Float MEDICATION_DOSE_VALUE_PRESET = null;
-
 	public static final boolean VISIT_SCHEDULE_ITEM_NOTIFY_PRESET = false;
-
 	// public final static VariablePeriod MEDICATION_DOSE_PERIOD_PRESET = null;
 	// public static final Long MEDICATION_DOSE_PERIOD_DAYS_PRESET = null;
-
 	// public static final int PAGINATOR_PAGES_LIMIT = 15;
 	// public static final Long VISIT_SCHEDULE_ITEM_MATRIX_VISIT_LIMIT = null;
 	// public static final Long VISIT_SCHEDULE_ITEM_MATRIX_GROUP_LIMIT = 30l;
@@ -593,11 +586,9 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_INPUT_FIELD_MODULE = false;
 	public static final boolean ENABLE_USER_MODULE = false;
 	public static final boolean ENABLE_MASS_MAIL_MODULE = false;
-
 	public static final Long PROBAND_RATING_PRESET = null; // 3l;
 	public static final Long PROBAND_RATING_MAX_PRESET = null; // 5l;
 	public static final boolean SHOW_PROBAND_RATING = false;
-
 	public static final Long PROBAND_LIST_ENTRY_RATING_PRESET = null; // 3l;
 	public static final Long PROBAND_LIST_ENTRY_RATING_MAX_PRESET = null; // 5l;
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_RATING = false;
@@ -632,7 +623,6 @@ public final class DefaultSettings {
 	public static final boolean MASS_MAIL_TRIAL_TEAM_TO_PRESET = false;
 	public static final boolean PROBAND_ADDRESS_STRICT = false;
 	public static final boolean STAFF_ADDRESS_STRICT = false;
-
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
 	public static final boolean SHOW_LOCALE_MENU = true;
 	public static final boolean SHOW_TIMEZONE_MENU = false;

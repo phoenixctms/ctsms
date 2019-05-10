@@ -55,8 +55,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see JournalEntry
  */
 public class JournalEntryDaoImpl
-extends JournalEntryDaoBase
-{
+		extends JournalEntryDaoBase {
 
 	private final static int RECENT_JOURNAL_ENTRY_PAGE_SIZE_BASE = 10;
 
@@ -118,8 +117,7 @@ extends JournalEntryDaoBase
 		if (module != null) {
 			journalCriteria.add(Restrictions.or(
 					Restrictions.eq("systemMessage", false),
-					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module)))
-					);
+					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 			journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 			// criteriaMap.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 			if (id != null) {
@@ -335,8 +333,7 @@ extends JournalEntryDaoBase
 		if (module != null) {
 			journalCriteria.add(Restrictions.or(
 					Restrictions.eq("systemMessage", false),
-					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module)))
-					);
+					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 			criteriaMap.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 			switch (module) {
 				case INVENTORY_JOURNAL:
@@ -397,21 +394,16 @@ extends JournalEntryDaoBase
 		journalCriteria.add(Restrictions.or(
 				Restrictions.eq("systemMessage", false),
 				Restrictions.or(Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.TRIAL_JOURNAL)),
-						Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.INPUT_FIELD_JOURNAL))) )
-				);
+						Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", JournalModule.INPUT_FIELD_JOURNAL)))));
 		journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(
-				Restrictions.or(Restrictions.eq("module", JournalModule.TRIAL_JOURNAL),Restrictions.eq("module", JournalModule.INPUT_FIELD_JOURNAL)), Restrictions.isNull("module")));
-
+				Restrictions.or(Restrictions.eq("module", JournalModule.TRIAL_JOURNAL), Restrictions.eq("module", JournalModule.INPUT_FIELD_JOURNAL)),
+				Restrictions.isNull("module")));
 		journalCriteria.createCriteria("inputField", CriteriaSpecification.LEFT_JOIN).createCriteria("ecrfFields", "trialEcrfField", CriteriaSpecification.LEFT_JOIN);
-
 		journalCriteria.add(Restrictions.or(Restrictions.eq("trial.id", trailId.longValue()),
 				Restrictions.eq("trialEcrfField.trial.id", trailId.longValue())));
-
 		journalCriteria.addOrder(Order.asc("id"));
-
 		return CriteriaUtil.listDistinctRoot(journalCriteria, this);
 		//journalCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY); //loaded in memory anyway.
-
 		//return journalCriteria.list();
 	}
 
@@ -450,8 +442,7 @@ extends JournalEntryDaoBase
 		}
 		journalCriteria.add(Restrictions.or(
 				Restrictions.eq("systemMessage", false),
-				Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module)))
-				);
+				Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 		criteriaMap.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 		DetachedCriteria subQuery = DetachedCriteria.forClass(JournalEntryImpl.class, "journalEntry1"); // IMPL!!!!
 		subQuery.setProjection(Projections.max("id"));
@@ -526,8 +517,7 @@ extends JournalEntryDaoBase
 		}
 		journalCriteria.add(Restrictions.or(
 				Restrictions.eq("systemMessage", false),
-				Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module)))
-				);
+				Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 		journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 		String property = null;
 		org.hibernate.Criteria entityCriteria = null;
@@ -685,8 +675,7 @@ extends JournalEntryDaoBase
 		if (module != null) {
 			journalCriteria.add(Restrictions.or(
 					Restrictions.eq("systemMessage", false),
-					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module)))
-					);
+					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 			journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 			switch (module) {
 				case INVENTORY_JOURNAL:
@@ -789,8 +778,7 @@ extends JournalEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalEntry journalEntryInVOToEntity(JournalEntryInVO journalEntryInVO)
-	{
+	public JournalEntry journalEntryInVOToEntity(JournalEntryInVO journalEntryInVO) {
 		JournalEntry entity = this.loadJournalEntryFromJournalEntryInVO(journalEntryInVO);
 		this.journalEntryInVOToEntity(journalEntryInVO, entity, true);
 		return entity;
@@ -803,8 +791,7 @@ extends JournalEntryDaoBase
 	public void journalEntryInVOToEntity(
 			JournalEntryInVO source,
 			JournalEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.journalEntryInVOToEntity(source, target, copyIfNull);
 		Long categoryId = source.getCategoryId();
 		Long inventoryId = source.getInventoryId();
@@ -956,8 +943,7 @@ extends JournalEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalEntry journalEntryOutVOToEntity(JournalEntryOutVO journalEntryOutVO)
-	{
+	public JournalEntry journalEntryOutVOToEntity(JournalEntryOutVO journalEntryOutVO) {
 		JournalEntry entity = this.loadJournalEntryFromJournalEntryOutVO(journalEntryOutVO);
 		this.journalEntryOutVOToEntity(journalEntryOutVO, entity, true);
 		return entity;
@@ -970,8 +956,7 @@ extends JournalEntryDaoBase
 	public void journalEntryOutVOToEntity(
 			JournalEntryOutVO source,
 			JournalEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.journalEntryOutVOToEntity(source, target, copyIfNull);
 		JournalCategoryVO categoryVO = source.getCategory();
 		InventoryOutVO inventoryVO = source.getInventory();
@@ -1128,15 +1113,13 @@ extends JournalEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private JournalEntry loadJournalEntryFromJournalEntryInVO(JournalEntryInVO journalEntryInVO)
-	{
+	private JournalEntry loadJournalEntryFromJournalEntryInVO(JournalEntryInVO journalEntryInVO) {
 		JournalEntry journalEntry = null;
 		Long id = journalEntryInVO.getId();
 		if (id != null) {
 			journalEntry = this.load(id);
 		}
-		if (journalEntry == null)
-		{
+		if (journalEntry == null) {
 			journalEntry = JournalEntry.Factory.newInstance();
 		}
 		return journalEntry;
@@ -1147,11 +1130,9 @@ extends JournalEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private JournalEntry loadJournalEntryFromJournalEntryOutVO(JournalEntryOutVO journalEntryOutVO)
-	{
+	private JournalEntry loadJournalEntryFromJournalEntryOutVO(JournalEntryOutVO journalEntryOutVO) {
 		JournalEntry journalEntry = this.load(journalEntryOutVO.getId());
-		if (journalEntry == null)
-		{
+		if (journalEntry == null) {
 			journalEntry = JournalEntry.Factory.newInstance();
 		}
 		return journalEntry;
@@ -1161,8 +1142,7 @@ extends JournalEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalEntryInVO toJournalEntryInVO(final JournalEntry entity)
-	{
+	public JournalEntryInVO toJournalEntryInVO(final JournalEntry entity) {
 		return super.toJournalEntryInVO(entity);
 	}
 
@@ -1172,8 +1152,7 @@ extends JournalEntryDaoBase
 	@Override
 	public void toJournalEntryInVO(
 			JournalEntry source,
-			JournalEntryInVO target)
-	{
+			JournalEntryInVO target) {
 		super.toJournalEntryInVO(source, target);
 		JournalCategory category = source.getCategory();
 		Inventory inventory = source.getInventory();
@@ -1229,8 +1208,7 @@ extends JournalEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalEntryOutVO toJournalEntryOutVO(final JournalEntry entity)
-	{
+	public JournalEntryOutVO toJournalEntryOutVO(final JournalEntry entity) {
 		return super.toJournalEntryOutVO(entity);
 	}
 
@@ -1240,8 +1218,7 @@ extends JournalEntryDaoBase
 	@Override
 	public void toJournalEntryOutVO(
 			JournalEntry source,
-			JournalEntryOutVO target)
-	{
+			JournalEntryOutVO target) {
 		// TODO verify behavior of toJournalEntryOutVO
 		super.toJournalEntryOutVO(source, target);
 		// WARNING! No conversion for target.category (can't convert source.getCategory():org.phoenixctms.ctsms.domain.JournalEntryCategory to org.phoenixctms.ctsms.vo.JournalEntryCategoryVO

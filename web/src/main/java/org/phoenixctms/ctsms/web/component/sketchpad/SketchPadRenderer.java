@@ -26,14 +26,14 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.component.tooltip.Tooltip;
 
 @ResourceDependencies({
-	@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
-	@ResourceDependency(library = "js", name = "json2.min.js", target = "head"),
-	@ResourceDependency(library = "js", name = "raphael-2.2.0.min.js", target = "head"),
-	@ResourceDependency(library = "js", name = "raphael.sketchpad.min.js", target = "head"),
-	@ResourceDependency(library = "js", name = "jquery.colorPicker.min.js", target = "head"),
-	@ResourceDependency(library = "js", name = "sketch.min.js", target = "head"),
-	@ResourceDependency(library = "css", name = "colorPicker.min.css"),
-	@ResourceDependency(library = "css", name = "sketch.min.css") })
+		@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
+		@ResourceDependency(library = "js", name = "json2.min.js", target = "head"),
+		@ResourceDependency(library = "js", name = "raphael-2.2.0.min.js", target = "head"),
+		@ResourceDependency(library = "js", name = "raphael.sketchpad.min.js", target = "head"),
+		@ResourceDependency(library = "js", name = "jquery.colorPicker.min.js", target = "head"),
+		@ResourceDependency(library = "js", name = "sketch.min.js", target = "head"),
+		@ResourceDependency(library = "css", name = "colorPicker.min.css"),
+		@ResourceDependency(library = "css", name = "sketch.min.css") })
 @FacesRenderer(componentFamily = "javax.faces.Input", rendererType = "ctsms.SketchPad")
 public class SketchPadRenderer extends Renderer {
 
@@ -53,7 +53,7 @@ public class SketchPadRenderer extends Renderer {
 		if (sketchPad.isDisabled()) {
 			return;
 		}
-		String submittedValue = (String) context.getExternalContext().getRequestParameterMap().get(getInputId(sketchPad, context));
+		String submittedValue = context.getExternalContext().getRequestParameterMap().get(getInputId(sketchPad, context));
 		if (submittedValue != null) {
 			sketchPad.setSubmittedValue(submittedValue);
 		}
@@ -91,7 +91,8 @@ public class SketchPadRenderer extends Renderer {
 		writer.writeAttribute(
 				"style",
 				MessageFormat.format("width:{0}px;height:{1}px;{2}", Integer.toString(sketchPad.getWidth()), Integer.toString(sketchPad.getHeight()),
-						sketchPad.getSketchPadStyle() != null ? sketchPad.getSketchPadStyle() : ""), null);
+						sketchPad.getSketchPadStyle() != null ? sketchPad.getSketchPadStyle() : ""),
+				null);
 		writer.endElement("div");
 	}
 
@@ -121,8 +122,8 @@ public class SketchPadRenderer extends Renderer {
 		ResponseWriter writer = context.getResponseWriter();
 		String clientId = sketchPad.getClientId(context);
 		String styleClass = sketchPad.getStyleClass();
-		styleClass = styleClass == null ? sketchPad.CONTAINER_CLASS
-				: sketchPad.CONTAINER_CLASS + " " + styleClass;
+		styleClass = styleClass == null ? SketchPad.CONTAINER_CLASS
+				: SketchPad.CONTAINER_CLASS + " " + styleClass;
 		writer.startElement("span", null);
 		writer.writeAttribute("id", clientId, null);
 		writer.writeAttribute("class", styleClass, null);
@@ -172,18 +173,17 @@ public class SketchPadRenderer extends Renderer {
 		String widgetVar = sketchPad.getWidgetVar();
 		writer.write(MessageFormat.format(
 				(widgetVar != null && widgetVar.length() > 0 ? "window[''" + widgetVar + "''] = " : "")
-				+ "Sketch.initSketch(''{0}'', ''{1}'', ''{2}'', {3}, {4},{5}, {6}, {7}, {8}{9});",
+						+ "Sketch.initSketch(''{0}'', ''{1}'', ''{2}'', {3}, {4},{5}, {6}, {7}, {8}{9});",
 				value == null ? "" : value.toString(),
-						getInputId(sketchPad, context),
-						getDivId(sketchPad, context),
-						Integer.toString(sketchPad.getWidth()),
-						Integer.toString(sketchPad.getHeight()),
-						backgroundImage != null && backgroundImage.length() > 0 ? WebUtil.quoteJSString(backgroundImage, true) : "''",
-								!sketchPad.isDisabled(),
-								onChange != null && onChange.length() > 0 ? WebUtil.quoteJSString(onChange, true) : "''",
-										strokesId != null && strokesId.length() > 0 ? WebUtil.quoteJSString(strokesId, true) : "''",
-												regions != null && regions.size() > 0 ? ", " + WebUtil.escapeJSStringArray(regions, false, true) : ""
-				));
+				getInputId(sketchPad, context),
+				getDivId(sketchPad, context),
+				Integer.toString(sketchPad.getWidth()),
+				Integer.toString(sketchPad.getHeight()),
+				backgroundImage != null && backgroundImage.length() > 0 ? WebUtil.quoteJSString(backgroundImage, true) : "''",
+				!sketchPad.isDisabled(),
+				onChange != null && onChange.length() > 0 ? WebUtil.quoteJSString(onChange, true) : "''",
+				strokesId != null && strokesId.length() > 0 ? WebUtil.quoteJSString(strokesId, true) : "''",
+				regions != null && regions.size() > 0 ? ", " + WebUtil.escapeJSStringArray(regions, false, true) : ""));
 		endScript(writer);
 	}
 

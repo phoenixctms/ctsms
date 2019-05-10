@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Procedure
  */
 public class ProcedureDaoImpl
-extends ProcedureDaoBase
-{
+		extends ProcedureDaoBase {
 
 	private static final String PROCEDURE_NAME = "{0} ({1})";
 
@@ -53,8 +52,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Procedure> handleFindByProband(Long probandId, PSFVO psf) throws Exception
-	{
+	protected Collection<Procedure> handleFindByProband(Long probandId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria procedureCriteria = createProcedureCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Procedure.class, procedureCriteria);
 		if (probandId != null) {
@@ -68,8 +66,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Procedure> handleFindCollidingProbandCodeInterval(Long probandId, Long codeId, Timestamp from, Timestamp to)
-	{
+	protected Collection<Procedure> handleFindCollidingProbandCodeInterval(Long probandId, Long codeId, Timestamp from, Timestamp to) {
 		org.hibernate.Criteria procedureCriteria = createProcedureCriteria();
 		if (from != null) {
 			procedureCriteria.add(Restrictions.isNotNull("start"));
@@ -87,8 +84,7 @@ extends ProcedureDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long probandId) throws Exception
-	{
+	protected long handleGetCount(Long probandId) throws Exception {
 		org.hibernate.Criteria procedureCriteria = createProcedureCriteria();
 		if (probandId != null) {
 			procedureCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
@@ -101,8 +97,7 @@ extends ProcedureDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Procedure loadProcedureFromProcedureInVO(ProcedureInVO procedureInVO)
-	{
+	private Procedure loadProcedureFromProcedureInVO(ProcedureInVO procedureInVO) {
 		// TODO implement loadProcedureFromProcedureInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProcedureFromProcedureInVO(ProcedureInVO) not yet implemented.");
 		Long id = procedureInVO.getId();
@@ -110,8 +105,7 @@ extends ProcedureDaoBase
 		if (id != null) {
 			procedure = this.load(id);
 		}
-		if (procedure == null)
-		{
+		if (procedure == null) {
 			procedure = Procedure.Factory.newInstance();
 		}
 		return procedure;
@@ -122,13 +116,11 @@ extends ProcedureDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Procedure loadProcedureFromProcedureOutVO(ProcedureOutVO procedureOutVO)
-	{
+	private Procedure loadProcedureFromProcedureOutVO(ProcedureOutVO procedureOutVO) {
 		// TODO implement loadProcedureFromProcedureOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProcedureFromProcedureOutVO(ProcedureOutVO) not yet implemented.");
 		Procedure procedure = this.load(procedureOutVO.getId());
-		if (procedure == null)
-		{
+		if (procedure == null) {
 			procedure = Procedure.Factory.newInstance();
 		}
 		return procedure;
@@ -138,8 +130,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Procedure procedureInVOToEntity(ProcedureInVO procedureInVO)
-	{
+	public Procedure procedureInVOToEntity(ProcedureInVO procedureInVO) {
 		Procedure entity = this.loadProcedureFromProcedureInVO(procedureInVO);
 		this.procedureInVOToEntity(procedureInVO, entity, true);
 		return entity;
@@ -152,8 +143,7 @@ extends ProcedureDaoBase
 	public void procedureInVOToEntity(
 			ProcedureInVO source,
 			Procedure target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.procedureInVOToEntity(source, target, copyIfNull);
 		Long codeId = source.getCodeId();
 		Long probandId = source.getProbandId();
@@ -200,8 +190,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Procedure procedureOutVOToEntity(ProcedureOutVO procedureOutVO)
-	{
+	public Procedure procedureOutVOToEntity(ProcedureOutVO procedureOutVO) {
 		Procedure entity = this.loadProcedureFromProcedureOutVO(procedureOutVO);
 		this.procedureOutVOToEntity(procedureOutVO, entity, true);
 		return entity;
@@ -214,8 +203,7 @@ extends ProcedureDaoBase
 	public void procedureOutVOToEntity(
 			ProcedureOutVO source,
 			Procedure target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.procedureOutVOToEntity(source, target, copyIfNull);
 		OpsCodeVO codeVO = source.getCode();
 		ProbandOutVO probandVO = source.getProband();
@@ -268,8 +256,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProcedureInVO toProcedureInVO(final Procedure entity)
-	{
+	public ProcedureInVO toProcedureInVO(final Procedure entity) {
 		return super.toProcedureInVO(entity);
 	}
 
@@ -279,8 +266,7 @@ extends ProcedureDaoBase
 	@Override
 	public void toProcedureInVO(
 			Procedure source,
-			ProcedureInVO target)
-	{
+			ProcedureInVO target) {
 		super.toProcedureInVO(source, target);
 		OpsCode code = source.getCode();
 		Proband proband = source.getProband();
@@ -301,8 +287,7 @@ extends ProcedureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProcedureOutVO toProcedureOutVO(final Procedure entity)
-	{
+	public ProcedureOutVO toProcedureOutVO(final Procedure entity) {
 		return super.toProcedureOutVO(entity);
 	}
 
@@ -312,8 +297,7 @@ extends ProcedureDaoBase
 	@Override
 	public void toProcedureOutVO(
 			Procedure source,
-			ProcedureOutVO target)
-	{
+			ProcedureOutVO target) {
 		super.toProcedureOutVO(source, target);
 		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

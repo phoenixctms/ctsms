@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.vocycle;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -39,7 +40,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	private static final boolean LIMIT_INSTANCES = true;
 	private static final boolean LIMIT_PARENTS_DEPTH = true;
 	private static final boolean LIMIT_CHILDREN_DEPTH = true;
-
 	// private static final String getInitials(ProbandOutVO proband) {
 	// StringBuilder sb = new StringBuilder();
 	// if (proband != null) {
@@ -58,7 +58,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	// }
 	// return sb.toString();
 	// }
-
 	//
 	//
 	// private static final String getProbandName(ProbandOutVO proband, boolean withTitles) {
@@ -84,7 +83,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	// }
 	// return sb.toString();
 	// }
-
 	private final static int DEFAULT_MAX_INSTANCES = 1;
 	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
 	private final static int DEFAULT_PARENTS_DEPTH = Integer.MAX_VALUE >> 1;
@@ -250,7 +248,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 		if (source.isPerson()) {
 			ProbandContactParticulars personParticulars = source.getPersonParticulars();
 			if (personParticulars != null) {
-
 				try {
 					if (!CoreUtil.isPassDecryption()) {
 						throw new Exception();
@@ -268,8 +265,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 							personParticulars.getEncryptedPostpositionedTitle3()));
 					// target.setDateOfBirth((Date) CryptoUtil.decryptValue(personParticulars.getDateOfBirthIv(), personParticulars.getEncryptedDateOfBirth()));
 					target.setCitizenship((String) CryptoUtil.decryptValue(personParticulars.getCitizenshipIv(), personParticulars.getEncryptedCitizenship()));
-
-
 					target.setDecrypted(true);
 				} catch (Exception e) {
 					target.setPrefixedTitle1(null);
@@ -282,7 +277,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 					target.setPostpositionedTitle3(null);
 					// target.setDateOfBirth(null);
 					target.setCitizenship(null);
-
 					// target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
 					// target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1))
 					// .getTime()) : null);
@@ -296,11 +290,10 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 				} catch (Exception e) {
 					target.setDateOfBirth(null);
 					target.setComment(null);
-					target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1))
+					target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), Calendar.JULY, 1))
 							.getTime()) : null);
 					target.setDecrypted(false);
 				}
-
 				target.setGender(L10nUtil.createSexVO(Locales.USER, personParticulars.getGender()));
 				target.setAlias(personParticulars.getAlias());
 				target.setName(CommonUtil.getProbandName(target, false, true,
@@ -346,7 +339,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 						L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)));
 				target.setNameSortable(CommonUtil.getNameSortable(target));
 				target.setHasImage(animalParticulars.getFileSize() != null && animalParticulars.getFileSize() > 0l);
-
 			} else {
 				target.setDecrypted(true);
 			}

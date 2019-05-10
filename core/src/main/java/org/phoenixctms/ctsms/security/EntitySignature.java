@@ -196,7 +196,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 			} else {
 				signeeString = CommonUtil.userOutVOToString(signee);
 			}
-			SimpleDateFormat dateTimeFormat = Settings.getSimpleDateFormat(SettingCodes.SIGNATURE_DESCRIPTION_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SIGNATURE_DESCRIPTION_DATETIME_PATTERN, locale);
+			SimpleDateFormat dateTimeFormat = Settings.getSimpleDateFormat(SettingCodes.SIGNATURE_DESCRIPTION_DATETIME_PATTERN, Bundle.SETTINGS,
+					DefaultSettings.SIGNATURE_DESCRIPTION_DATETIME_PATTERN, locale);
 			String signatureDataBase64String = signature.getSignatureDataBase64();
 			if (signatureDataBase64Length != null) {
 				signatureDataBase64String = CommonUtil.clipString(signatureDataBase64String, signatureDataBase64Length);
@@ -222,19 +223,25 @@ public abstract class EntitySignature extends GraphEnumerator {
 						if (signature.getValid()) {
 							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_VALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_VALID_DESCRIPTION, signature
 									.getEcrfStatusEntry().getEcrf().getUniqueName(),
-									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()), signeeString, dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()),
-											signatureDataBase64String);
+									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
+											: Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()),
+									signeeString, dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()),
+									signatureDataBase64String);
 						} else {
 							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_INVALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_INVALID_DESCRIPTION, signature
 									.getEcrfStatusEntry().getEcrf().getUniqueName(),
-									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()), signeeString,
-											dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()));
+									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
+											: Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()),
+									signeeString,
+									dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()));
 						}
 					} else {
 						return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_AVAILABLE, DefaultMessages.ECRF_SIGNATURE_AVAILABLE, signature.getEcrfStatusEntry().getEcrf()
 								.getUniqueName(),
-								showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband()) : Long.toString(signature
-										.getEcrfStatusEntry().getListEntry().getProband().getId()), dateTimeFormat.format(signature.getTimestamp()));
+								showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
+										: Long.toString(signature
+												.getEcrfStatusEntry().getListEntry().getProband().getId()),
+								dateTimeFormat.format(signature.getTimestamp()));
 					}
 				default:
 			}
@@ -335,7 +342,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 				}
 				comment.append(key);
 				comment.append(keyValueSeparator);
-				comment.append(ReflectionToStringBuilder.toString(value,COMMENT_VALUE_TO_STRING_STYLE));
+				comment.append(ReflectionToStringBuilder.toString(value, COMMENT_VALUE_TO_STRING_STYLE));
 			}
 			signature.update(CoreUtil.serialize(key));
 			signature.update(CoreUtil.serialize(value));
@@ -350,14 +357,15 @@ public abstract class EntitySignature extends GraphEnumerator {
 				}
 				comment.append(key);
 				comment.append(keyValueSeparator);
-				comment.append(ReflectionToStringBuilder.toString(value,COMMENT_VALUE_TO_STRING_STYLE));
+				comment.append(ReflectionToStringBuilder.toString(value, COMMENT_VALUE_TO_STRING_STYLE));
 			}
 			signature.update(CoreUtil.serialize(key));
 			signature.update(CoreUtil.serialize(value));
 		}
 	}
 
-	protected static boolean verify(Class signatureClass, byte[] signatureData, Object entity, User signee, Timestamp timestamp, int depth, StringBuilder comment) throws Exception {
+	protected static boolean verify(Class signatureClass, byte[] signatureData, Object entity, User signee, Timestamp timestamp, int depth, StringBuilder comment)
+			throws Exception {
 		Signature signature = getSignature();
 		signature.initVerify(CryptoUtil.getPublicKey(signee.getKeyPair().getPublicKey()));
 		updateSignature(entity, getEntitySignatures(signatureClass, entity.getClass(), depth), signature, signee, timestamp, comment);

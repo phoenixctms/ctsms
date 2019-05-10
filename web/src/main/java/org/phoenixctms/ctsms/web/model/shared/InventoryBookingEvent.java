@@ -52,7 +52,7 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 	@Override
 	protected boolean copyOutToIn() {
 		if (out != null) {
-			InventoryBookingBean.copyBookingOutToIn(in, out);
+			InventoryBookingBeanBase.copyBookingOutToIn(in, out);
 			return true;
 		}
 		return false;

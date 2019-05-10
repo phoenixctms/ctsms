@@ -21,7 +21,6 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 
 public class GroupAdaptiveRandomization extends Randomization {
-
 	// https://www.phoenixctms.org/features/modules/trials/ecrf/
 	// p = (1 + $probandGroups[1].size) /
 	// (1 + $probandGroups[0].size + 1 + $probandGroups[1].size);
@@ -72,17 +71,10 @@ public class GroupAdaptiveRandomization extends Randomization {
 	protected GroupAdaptiveRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
-		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
+				probandListEntryTagValueDao);
 		// TODO Auto-generated constructor stub
 	}
-
-
-
-
-
-
-
-
 
 	private HashMap<Long, Long> getGroupSizes(Long excludeListEntryId, Collection<ProbandGroup> probandGroups) { // long trialId,
 		HashMap<Long, Long> result = new HashMap<Long, Long>();
@@ -113,15 +105,10 @@ public class GroupAdaptiveRandomization extends Randomization {
 		return null;
 	}
 
-
-
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.GROUP_ADAPTIVE;
 	}
-
-
-
 
 	@Override
 	public RandomizationType getType() {

@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
  * @see MaintenanceType
  */
 public class MaintenanceTypeDaoImpl
-		extends MaintenanceTypeDaoBase
-{
+		extends MaintenanceTypeDaoBase {
 
 	@Override
 	protected Collection<MaintenanceType> handleFindByVisibleId(Boolean visible, Long typeId)
@@ -34,15 +33,13 @@ public class MaintenanceTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MaintenanceType loadMaintenanceTypeFromMaintenanceTypeVO(MaintenanceTypeVO maintenanceTypeVO)
-	{
+	private MaintenanceType loadMaintenanceTypeFromMaintenanceTypeVO(MaintenanceTypeVO maintenanceTypeVO) {
 		MaintenanceType maintenanceType = null;
 		Long id = maintenanceTypeVO.getId();
 		if (id != null) {
 			maintenanceType = this.load(id);
 		}
-		if (maintenanceType == null)
-		{
+		if (maintenanceType == null) {
 			maintenanceType = MaintenanceType.Factory.newInstance();
 		}
 		return maintenanceType;
@@ -52,8 +49,7 @@ public class MaintenanceTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceType maintenanceTypeVOToEntity(MaintenanceTypeVO maintenanceTypeVO)
-	{
+	public MaintenanceType maintenanceTypeVOToEntity(MaintenanceTypeVO maintenanceTypeVO) {
 		MaintenanceType entity = this.loadMaintenanceTypeFromMaintenanceTypeVO(maintenanceTypeVO);
 		this.maintenanceTypeVOToEntity(maintenanceTypeVO, entity, true);
 		return entity;
@@ -66,8 +62,7 @@ public class MaintenanceTypeDaoImpl
 	public void maintenanceTypeVOToEntity(
 			MaintenanceTypeVO source,
 			MaintenanceType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.maintenanceTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -75,8 +70,7 @@ public class MaintenanceTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceTypeVO toMaintenanceTypeVO(final MaintenanceType entity)
-	{
+	public MaintenanceTypeVO toMaintenanceTypeVO(final MaintenanceType entity) {
 		return super.toMaintenanceTypeVO(entity);
 	}
 
@@ -86,8 +80,7 @@ public class MaintenanceTypeDaoImpl
 	@Override
 	public void toMaintenanceTypeVO(
 			MaintenanceType source,
-			MaintenanceTypeVO target)
-	{
+			MaintenanceTypeVO target) {
 		super.toMaintenanceTypeVO(source, target);
 		target.setName(L10nUtil.getMaintenanceTypeName(Locales.USER, source.getNameL10nKey()));
 		target.setTitlePreset(L10nUtil.getMaintenanceTitlePreset(Locales.USER, source.getTitlePresetL10nKey()));

@@ -661,7 +661,6 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		});
 	}
 
-
 	@Override
 	protected void addMenuItems(SessionScopeBean sessionScopeBean, MenuModel entityModel) {
 	}
@@ -691,8 +690,6 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		entityModel.addMenuItem(portalMenuItem);
 		return entityModel;
 	}
-
-
 
 	protected abstract String getSearchMenuItemOnClick();
 }

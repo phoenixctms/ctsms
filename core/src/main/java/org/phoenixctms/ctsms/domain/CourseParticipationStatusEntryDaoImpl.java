@@ -42,15 +42,13 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see CourseParticipationStatusEntry
  */
 public class CourseParticipationStatusEntryDaoImpl
-extends CourseParticipationStatusEntryDaoBase
-{
+		extends CourseParticipationStatusEntryDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusEntry courseParticipationStatusEntryInVOToEntity(CourseParticipationStatusEntryInVO courseParticipationStatusEntryInVO)
-	{
+	public CourseParticipationStatusEntry courseParticipationStatusEntryInVOToEntity(CourseParticipationStatusEntryInVO courseParticipationStatusEntryInVO) {
 		CourseParticipationStatusEntry entity = this.loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryInVO(courseParticipationStatusEntryInVO);
 		this.courseParticipationStatusEntryInVOToEntity(courseParticipationStatusEntryInVO, entity, true);
 		return entity;
@@ -63,8 +61,7 @@ extends CourseParticipationStatusEntryDaoBase
 	public void courseParticipationStatusEntryInVOToEntity(
 			CourseParticipationStatusEntryInVO source,
 			CourseParticipationStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseParticipationStatusEntryInVOToEntity(source, target, copyIfNull);
 		Long sectionId = source.getSectionId();
 		Long courseId = source.getCourseId();
@@ -108,8 +105,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusEntry courseParticipationStatusEntryOutVOToEntity(CourseParticipationStatusEntryOutVO courseParticipationStatusEntryOutVO)
-	{
+	public CourseParticipationStatusEntry courseParticipationStatusEntryOutVOToEntity(CourseParticipationStatusEntryOutVO courseParticipationStatusEntryOutVO) {
 		CourseParticipationStatusEntry entity = this.loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryOutVO(courseParticipationStatusEntryOutVO);
 		this.courseParticipationStatusEntryOutVOToEntity(courseParticipationStatusEntryOutVO, entity, true);
 		return entity;
@@ -122,8 +118,7 @@ extends CourseParticipationStatusEntryDaoBase
 	public void courseParticipationStatusEntryOutVOToEntity(
 			CourseParticipationStatusEntryOutVO source,
 			CourseParticipationStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseParticipationStatusEntryOutVOToEntity(source, target, copyIfNull);
 		CvSectionVO sectionVO = source.getSection();
 		CourseOutVO courseVO = source.getCourse();
@@ -178,8 +173,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusEntry cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO)
-	{
+	public CourseParticipationStatusEntry cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO) {
 		// TODO verify behavior of cvPositionPDFVOToEntity
 		CourseParticipationStatusEntry entity = this.loadCourseParticipationStatusEntryFromCvPositionPDFVO(cvPositionPDFVO);
 		this.cvPositionPDFVOToEntity(cvPositionPDFVO, entity, true);
@@ -193,8 +187,7 @@ extends CourseParticipationStatusEntryDaoBase
 	public void cvPositionPDFVOToEntity(
 			CvPositionPDFVO source,
 			CourseParticipationStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of cvPositionPDFVOToEntity
 		super.cvPositionPDFVOToEntity(source, target, copyIfNull);
 	}
@@ -215,8 +208,7 @@ extends CourseParticipationStatusEntryDaoBase
 
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffCourseRelevantForCourseAppointments(Long staffId, Long courseId, Boolean isRelevantForCourseAppointments)
-			throws Exception
-	{
+			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		if (staffId != null) {
 			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
@@ -234,7 +226,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffCourseStatus(
 			Long staffId, Long courseId, Long statusId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
 		if (staffId != null) {
@@ -255,8 +247,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 */
 	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindByStaffSection(Long staffId, Long sectionId, Boolean showCv, Boolean pass, Boolean showCvPreset, PSFVO psf)
-			throws Exception
-	{
+			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
 		if (staffId != null) {
@@ -283,7 +274,7 @@ extends CourseParticipationStatusEntryDaoBase
 			Long courseDepartmentId, Long courseCategoryId,
 			Long staffDepartmentId, Long staffCategoryId,
 			Long staffId, Boolean employee, VariablePeriod reminderPeriod, Long reminderPeriodDays, boolean includeAlreadyPassed, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
 		if (staffId != null) {
@@ -316,13 +307,13 @@ extends CourseParticipationStatusEntryDaoBase
 		ArrayList<CourseParticipationStatusEntry> resultSet = CriteriaUtil.listExpirations(courseParticipationStatusEntryCriteria, today, null, includeAlreadyPassed, null, null,
 				reminderPeriod,
 				reminderPeriodDays, particiaptionCourseIdsMap);
-		return (Collection<CourseParticipationStatusEntry>) CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
+		return CriteriaUtil.applyPVO(resultSet, psf, true); // eliminated dupes
 	}
 
 	@Override
 	protected long handleGetStaffCourseStatusCount(
 			Long staffId, Long courseId, Long statusId)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		if (staffId != null) {
 			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
@@ -342,15 +333,13 @@ extends CourseParticipationStatusEntryDaoBase
 	 * a new, blank entity is created
 	 */
 	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryInVO(
-			CourseParticipationStatusEntryInVO courseParticipationStatusEntryInVO)
-	{
+			CourseParticipationStatusEntryInVO courseParticipationStatusEntryInVO) {
 		CourseParticipationStatusEntry courseParticipationStatusEntry = null;
 		Long id = courseParticipationStatusEntryInVO.getId();
 		if (id != null) {
 			courseParticipationStatusEntry = this.load(id);
 		}
-		if (courseParticipationStatusEntry == null)
-		{
+		if (courseParticipationStatusEntry == null) {
 			courseParticipationStatusEntry = CourseParticipationStatusEntry.Factory.newInstance();
 		}
 		return courseParticipationStatusEntry;
@@ -362,11 +351,9 @@ extends CourseParticipationStatusEntryDaoBase
 	 * a new, blank entity is created
 	 */
 	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryOutVO(
-			CourseParticipationStatusEntryOutVO courseParticipationStatusEntryOutVO)
-	{
+			CourseParticipationStatusEntryOutVO courseParticipationStatusEntryOutVO) {
 		CourseParticipationStatusEntry courseParticipationStatusEntry = this.load(courseParticipationStatusEntryOutVO.getId());
-		if (courseParticipationStatusEntry == null)
-		{
+		if (courseParticipationStatusEntry == null) {
 			courseParticipationStatusEntry = CourseParticipationStatusEntry.Factory.newInstance();
 		}
 		return courseParticipationStatusEntry;
@@ -377,8 +364,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO)
-	{
+	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO) {
 		// TODO implement loadCourseParticipationStatusEntryFromCvPositionPDFVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCourseParticipationStatusEntryFromCvPositionPDFVO(CvPositionPDFVO) not yet implemented.");
 		/* A typical implementation looks like this: CourseParticipationStatusEntry courseParticipationStatusEntry = this.load(cvPositionPDFVO.getId()); if
@@ -390,8 +376,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusEntryInVO toCourseParticipationStatusEntryInVO(final CourseParticipationStatusEntry entity)
-	{
+	public CourseParticipationStatusEntryInVO toCourseParticipationStatusEntryInVO(final CourseParticipationStatusEntry entity) {
 		return super.toCourseParticipationStatusEntryInVO(entity);
 	}
 
@@ -401,8 +386,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	public void toCourseParticipationStatusEntryInVO(
 			CourseParticipationStatusEntry source,
-			CourseParticipationStatusEntryInVO target)
-	{
+			CourseParticipationStatusEntryInVO target) {
 		super.toCourseParticipationStatusEntryInVO(source, target);
 		CvSection section = source.getSection();
 		Course course = source.getCourse();
@@ -426,8 +410,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseParticipationStatusEntryOutVO toCourseParticipationStatusEntryOutVO(final CourseParticipationStatusEntry entity)
-	{
+	public CourseParticipationStatusEntryOutVO toCourseParticipationStatusEntryOutVO(final CourseParticipationStatusEntry entity) {
 		return super.toCourseParticipationStatusEntryOutVO(entity);
 	}
 
@@ -437,8 +420,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	public void toCourseParticipationStatusEntryOutVO(
 			CourseParticipationStatusEntry source,
-			CourseParticipationStatusEntryOutVO target)
-	{
+			CourseParticipationStatusEntryOutVO target) {
 		// TODO verify behavior of toCourseParticipationStatusEntryOutVO
 		super.toCourseParticipationStatusEntryOutVO(source, target);
 		// WARNING! No conversion for target.section (can't convert source.getSection():org.phoenixctms.ctsms.domain.CvSection to org.phoenixctms.ctsms.vo.CvSectionVO
@@ -473,8 +455,7 @@ extends CourseParticipationStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPositionPDFVO toCvPositionPDFVO(final CourseParticipationStatusEntry entity)
-	{
+	public CvPositionPDFVO toCvPositionPDFVO(final CourseParticipationStatusEntry entity) {
 		return super.toCvPositionPDFVO(entity);
 	}
 
@@ -484,8 +465,7 @@ extends CourseParticipationStatusEntryDaoBase
 	@Override
 	public void toCvPositionPDFVO(
 			CourseParticipationStatusEntry source,
-			CvPositionPDFVO target)
-	{
+			CvPositionPDFVO target) {
 		super.toCvPositionPDFVO(source, target);
 		CvSection section = source.getSection();
 		Course course = source.getCourse();

@@ -60,8 +60,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see org.phoenixctms.ctsms.service.shared.JournalService
  */
 public class JournalServiceImpl
-extends JournalServiceBase
-{
+		extends JournalServiceBase {
 
 	private final static HashSet<String> ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES = new HashSet<String>();
 	private final static HashSet<String> ECRF_INPUT_FIELD_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES = new HashSet<String>();
@@ -165,7 +164,6 @@ extends JournalServiceBase
 	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
 	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	// }
-
 	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -183,7 +181,6 @@ extends JournalServiceBase
 			//test =  matcher.group(1).replaceAll("(.))", "$1\u0336");
 			matcher.appendReplacement(stringBuffer, matcher.group(1).replaceAll("(.)", repl));
 			//System.out.println(matcher.group(1).replaceAll("(.)", repl));
-
 		}
 		matcher.appendTail(stringBuffer);
 		return stringBuffer.toString();
@@ -312,8 +309,7 @@ extends JournalServiceBase
 	 */
 	@Override
 	protected JournalEntryOutVO handleAddJournalEntry(AuthenticationVO auth, JournalEntryInVO newJournalEntry)
-			throws Exception
-			{
+			throws Exception {
 		checkJournalEntryInput(newJournalEntry);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		JournalEntry journalEntry = journalEntryDao.journalEntryInVOToEntity(newJournalEntry);
@@ -322,15 +318,14 @@ extends JournalServiceBase
 		CoreUtil.modifyVersion(journalEntry, now, user);
 		journalEntry = journalEntryDao.create(journalEntry);
 		return journalEntryDao.toJournalEntryOutVO(journalEntry);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.JournalService#deleteJournalEntry(Long)
 	 */
 	@Override
 	protected JournalEntryOutVO handleDeleteJournalEntry(AuthenticationVO auth, Long journalEntryId)
-			throws Exception
-			{
+			throws Exception {
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		JournalEntry journalEntry = CheckIDUtil.checkJournalEntryId(journalEntryId, journalEntryDao);
 		if (journalEntry.isSystemMessage()) {
@@ -396,7 +391,7 @@ extends JournalServiceBase
 		}
 		journalEntryDao.remove(journalEntry);
 		return result;
-			}
+	}
 
 	@Override
 	protected JournalExcelVO handleExportEcrfJournal(AuthenticationVO auth, Long trialId) throws Exception {
@@ -579,32 +574,29 @@ extends JournalServiceBase
 	 */
 	@Override
 	protected Collection<JournalEntryOutVO> handleGetJournal(AuthenticationVO auth, JournalModule module, Long id, PSFVO psf)
-			throws Exception
-			{
+			throws Exception {
 		checkJournalModuleId(module, id);
 		return getJournalHelper(module, id, psf);
-			}
+	}
 
 	@Override
 	protected long handleGetJournalCount(AuthenticationVO auth, JournalModule module, Long id)
-			throws Exception
-			{
+			throws Exception {
 		checkJournalModuleId(module, id);
 		return this.getJournalEntryDao().getCount(module, id);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.JournalService#getJournalEntry(Long)
 	 */
 	@Override
 	protected JournalEntryOutVO handleGetJournalEntry(AuthenticationVO auth, Long journalEntryId)
-			throws Exception
-			{
+			throws Exception {
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		JournalEntry journalEntry = CheckIDUtil.checkJournalEntryId(journalEntryId, journalEntryDao);
 		JournalEntryOutVO result = journalEntryDao.toJournalEntryOutVO(journalEntry);
 		return result;
-			}
+	}
 
 	@Override
 	protected Collection<UserOutVO> handleGetJournalUsers(AuthenticationVO auth, JournalModule module, Long id, boolean limit) throws Exception {
@@ -645,8 +637,7 @@ extends JournalServiceBase
 	 */
 	@Override
 	protected JournalEntryOutVO handleUpdateJournalEntry(AuthenticationVO auth, JournalEntryInVO modifiedJournalEntry)
-			throws Exception
-			{
+			throws Exception {
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		JournalEntry originalJournalEntry = CheckIDUtil.checkJournalEntryId(modifiedJournalEntry.getId(), journalEntryDao);
 		if (originalJournalEntry.isSystemMessage()) { // here first to avoid nullptrexc
@@ -663,7 +654,7 @@ extends JournalServiceBase
 		CoreUtil.modifyVersion(originalJournalEntry, journalEntry, now, user);
 		journalEntryDao.update(journalEntry);
 		return journalEntryDao.toJournalEntryOutVO(journalEntry);
-			}
+	}
 
 	private int numIdsSet(JournalEntryInVO journalEntry) {
 		int result = 0;

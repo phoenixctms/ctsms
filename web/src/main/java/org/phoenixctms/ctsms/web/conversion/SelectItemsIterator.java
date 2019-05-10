@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.conversion;
 
-
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -93,10 +92,12 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 		}
 
 		// ----------------------------------------------- Methods from Iterator
+		@Override
 		public boolean hasNext() {
 			return (index < count);
 		}
 
+		@Override
 		public SelectItem next() {
 			if (index >= count) {
 				throw new NoSuchElementException();
@@ -109,6 +110,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 			}
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -195,8 +197,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 			 * @param value the value to build the updated values from
 			 */
 			private void updateItem(FacesContext ctx, Object value) {
-				Map<String, Object> reqMap =
-						ctx.getExternalContext().getRequestMap();
+				Map<String, Object> reqMap = ctx.getExternalContext().getRequestMap();
 				Object oldVarValue = null;
 				if (var != null) {
 					oldVarValue = reqMap.put(var, value);
@@ -289,10 +290,12 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 		}
 
 		// ----------------------------------------------- Methods from Iterator
+		@Override
 		public boolean hasNext() {
 			return iterator.hasNext();
 		}
 
+		@Override
 		public SelectItem next() {
 			Object item = iterator.next();
 			if (item instanceof SelectItem) {
@@ -302,6 +305,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 			}
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -323,10 +327,12 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 		}
 
 		// ----------------------------------------------- Methods from Iterator
+		@Override
 		public boolean hasNext() {
 			return iterator.hasNext();
 		}
 
+		@Override
 		public SelectItem next() {
 			Map.Entry entry = (Map.Entry) iterator.next();
 			Object key = entry.getKey();
@@ -336,6 +342,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 			return item;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -350,10 +357,12 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 		private boolean nextCalled;
 
 		// ----------------------------------------------- Methods from Iterator
+		@Override
 		public boolean hasNext() {
 			return !nextCalled;
 		}
 
+		@Override
 		public SelectItem next() {
 			if (nextCalled) {
 				throw new NoSuchElementException();
@@ -362,6 +371,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 			return item;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -426,6 +436,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 	/**
 	 * <p>Return <code>true</code> if the iteration has more elements.</p>
 	 */
+	@Override
 	public boolean hasNext() {
 		if (items != null) {
 			if (items.hasNext()) {
@@ -496,6 +507,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 	 *
 	 * @throws NoSuchElementException if there are no more elements
 	 */
+	@Override
 	@SuppressWarnings({ "unchecked" })
 	public SelectItem next() {
 		if (!hasNext()) {
@@ -510,6 +522,7 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 	/**
 	 * <p>Throw UnsupportedOperationException.</p>
 	 */
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
@@ -526,4 +539,3 @@ public final class SelectItemsIterator implements Iterator<SelectItem> {
 		singleItemIterator.updateItem(item);
 	}
 }
-

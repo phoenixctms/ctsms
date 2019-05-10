@@ -76,8 +76,7 @@ public class ProbandContactDetailBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandContactDetailValueInVO backup = new ProbandContactDetailValueInVO(in);
 		in.setId(null);
 		in.setVersion(null);

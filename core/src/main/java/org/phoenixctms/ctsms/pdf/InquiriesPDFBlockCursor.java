@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.pdf;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -19,9 +18,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 	private InquiriesPDFBlock categoryBlock;
 	// private EcrfPDFBlock indexBlock;
 	private InquiriesPDFBlock probandTrialBlock;
-
 	private ProbandOutVO proband;
-
 	private TrialOutVO trial;
 
 	// private EcrfPDFBlock previousBlock;
@@ -39,10 +36,12 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		// this.block = null;
 	}
 
+	@Override
 	public float getBlockIndentedCenterX() throws Exception {
 		return getBlockIndentedX() + getBlockIndentedWidth() / 2.0f;
 	}
 
+	@Override
 	public float getBlockIndentedWidth() throws Exception {
 		return getBlockIndentedWidth(true);
 	}
@@ -60,6 +59,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		return width;
 	}
 
+	@Override
 	public float getBlockIndentedX() throws Exception {
 		float x = blockX;
 		if (hasCategory()) {
@@ -91,6 +91,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		return categoryY;
 	}
 
+	@Override
 	public PDFJpeg getCheckboxCheckedImage() {
 		return painter.getCheckboxCheckedImage();
 	}
@@ -100,18 +101,20 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		return painter.getCheckboxCheckedPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getCheckboxUncheckedImage() {
 		return painter.getCheckboxUncheckedImage();
 	}
 
+	@Override
 	public PDFont getFontA() {
 		return painter.getFontA();
 	}
 
+	@Override
 	public PDFont getFontB() {
 		return painter.getFontB();
 	}
-
 	// public float getIndexY() {
 	// return indexY;
 	// }
@@ -144,10 +147,12 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 	// public PDFont getFontF() {
 	// return painter.getFontF();
 	// }
+	@Override
 	public PDFont getFontC() {
 		return painter.getFontC();
 	}
 
+	@Override
 	public PDFont getFontD() {
 		return painter.getFontD();
 	}
@@ -160,6 +165,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		return probandTrialBlock;
 	}
 
+	@Override
 	public PDFJpeg getRadioOffImage() {
 		return painter.getRadioOffImage();
 	}
@@ -167,6 +173,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 	// public float getSectionWidth() throws Exception {
 	// return PDFUtil.renderTextLine(null, painter.getFontB(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
 	// }
+	@Override
 	public PDFJpeg getRadioOnImage() {
 		return painter.getRadioOnImage();
 	}
@@ -179,6 +186,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		return painter.getRadioOnPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getSelectboxCheckedImage() {
 		return painter.getSelectboxCheckedImage();
 	}
@@ -192,7 +200,7 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 	// // this.previousIndexY = this.indexY;
 	// this.indexY = indexY;
 	// }
-
+	@Override
 	public PDFJpeg getSelectboxUncheckedImage() {
 		return painter.getSelectboxUncheckedImage();
 	}

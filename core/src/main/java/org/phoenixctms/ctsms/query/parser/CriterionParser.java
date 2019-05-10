@@ -61,8 +61,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 
 	// Operators
 	private static final HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, OperandConfiguration> OPERATORS = new HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, OperandConfiguration>();
-	static
-	{
+	static {
 		OPERATORS.put(org.phoenixctms.ctsms.enumeration.CriterionTie.AND, new OperandConfiguration(5, Associativity.LEFT,
 				new ValueType[] { WhereTermValueType.VALUE_TYPE },
 				new ValueType[] { WhereTermValueType.VALUE_TYPE },
@@ -84,25 +83,22 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				new ValueType[] { WhereTermValueType.VALUE_TYPE, SelectValueType.VALUE_TYPE },
 				SelectValueType.VALUE_TYPE));
 	}
-
 	private final static String GET_DAO_METHOD_PREFIX = "get";
-
 	// private PermissionProfileDao permissionProfileDao;
 	// private AuthenticationTypeDao authenticationTypeDao;
 	// private boolean obfuscateCriterions;
 	// private boolean resolveProperties;
 	private final static boolean PRETTY_PRINT_SHOW_POSITION_NUMBERS = true;
-
 	private final static String PRETTY_PRINT_INDENTATION = "  ";
-
 	private final static String PRETTY_PRINT_EMPTY_VALUE = "";
 	private final static String PRETTY_PRINT_LINE_BREAK = "\n";
+
 	private static String getCriterionValueString(CriterionInstantVO token, CriterionProperty property) {
-		
 		return CommonUtil.getCriterionValueAsString(token, property.getValueType(), PRETTY_PRINT_EMPTY_VALUE,
 				CoreUtil.getUserContext().getDateFormat(),
 				CoreUtil.getUserContext().getDecimalSeparator());
 	}
+
 	private static Method getDaoTransformMethod(String entityName, Object dao) throws Exception {
 		try {
 			return CoreUtil.getDaoOutVOTransformMethod(entityName, dao);
@@ -110,6 +106,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			return CoreUtil.getDaoVOTransformMethod(entityName, dao);
 		}
 	}
+
 	private static boolean getObfuscateCriterionsArg(Object[] args) {
 		try {
 			return (Boolean) args[0];
@@ -117,6 +114,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			return false;
 		}
 	}
+
 	protected static boolean isSetOperator(org.phoenixctms.ctsms.enumeration.CriterionTie op) {
 		if (op != null) {
 			return org.phoenixctms.ctsms.enumeration.CriterionTie.UNION.equals(op)
@@ -125,6 +123,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		}
 		return false;
 	}
+
 	private HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionTie> tieMap;
 	private HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, String> tieNameMap;
 	private HashMap<Long, CriterionProperty> propertyMap;
@@ -238,7 +237,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 
 	protected final String getInfixStyleExpressionPrettyString(ArrayList<CriterionInstantVO> tokens, int positionDigits, boolean resolveCriterionValues,
 			boolean obfuscateCriterions)
-					throws ServiceException {
+			throws ServiceException {
 		StringBuilder result = new StringBuilder();
 		if (tokens != null && tokens.size() > 0) {
 			int indent = 0;
@@ -551,6 +550,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	public TrialTypeDao getTrialTypeDao() {
 		return trialTypeDao;
 	}
+
 	public UserDao getUserDao() {
 		return userDao;
 	}
@@ -578,8 +578,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		}
 		return PRETTY_PRINT_EMPTY_VALUE;
 	}
-
-
 
 	@Override
 	protected ValueType getValueType(CriterionInstantVO operand) {

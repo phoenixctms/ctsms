@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.pdf;
-
 
 public interface InquiriesPDFLabelCodes {
 
@@ -38,4 +36,3 @@ public interface InquiriesPDFLabelCodes {
 	public static final String CONTENT_TIMESTAMP = "content_timestamp";
 	public static final String MODIFIED_LABEL = "modified_label";
 }
-

@@ -25,21 +25,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 public class CourseCertificatePDFBlock {
 
 	public enum BlockType {
-		SPACER,
-		SPACER_SMALL,
-		HEAD,
-		CONFIRMATION_1,
-		PARTICIPANT,
-		COURSE_PERIOD,
-		CONFIRMATION_2,
-		COURSE_TITLE,
-		CONFIRMATION_3,
-		COURSE_DESCRIPTION,
-		TRIAL_TITLE,
-		COURSE_VALIDITY,
-		COURSE_COMPETENCE_LECTURERS,
-		INSTITUTION,
-		INSTITUTION_ADDRESS
+		SPACER, SPACER_SMALL, HEAD, CONFIRMATION_1, PARTICIPANT, COURSE_PERIOD, CONFIRMATION_2, COURSE_TITLE, CONFIRMATION_3, COURSE_DESCRIPTION, TRIAL_TITLE, COURSE_VALIDITY, COURSE_COMPETENCE_LECTURERS, INSTITUTION, INSTITUTION_ADDRESS
 	}
 
 	private static void populateOrganisationList(ArrayList<String> organisationList, StaffOutVO staff) {
@@ -79,7 +65,7 @@ public class CourseCertificatePDFBlock {
 		this.type = BlockType.CONFIRMATION_3;
 	}
 
-	public CourseCertificatePDFBlock(CourseParticipationStatusEntryOutVO participation,BlockType type) {
+	public CourseCertificatePDFBlock(CourseParticipationStatusEntryOutVO participation, BlockType type) {
 		this.participation = participation;
 		this.type = type;
 	}
@@ -331,9 +317,9 @@ public class CourseCertificatePDFBlock {
 						y,
 						PDFUtil.Alignment.TOP_CENTER,
 						cursor.getBlockWidth()
-						- 2.0f
-						* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-								CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
+								- 2.0f
+										* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+												CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
 				y -= Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - y;
 				break;
@@ -352,7 +338,7 @@ public class CourseCertificatePDFBlock {
 				break;
 			case COURSE_DESCRIPTION:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
@@ -375,17 +361,17 @@ public class CourseCertificatePDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth()
-						- Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-								CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
+								- Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+										CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-										CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+												CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				break;
 			case TRIAL_TITLE:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
@@ -408,17 +394,17 @@ public class CourseCertificatePDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth()
-						- Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-								CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
+								- Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+										CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-										CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+												CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				break;
 			case COURSE_VALIDITY:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
@@ -439,7 +425,7 @@ public class CourseCertificatePDFBlock {
 				break;
 			case COURSE_COMPETENCE_LECTURERS:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderMultilineText(
@@ -452,9 +438,9 @@ public class CourseCertificatePDFBlock {
 						y1,
 						PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
-						- 2.0f
-						* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-								CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
+								- 2.0f
+										* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+												CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
 				y1 -= Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
 						- Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
@@ -462,7 +448,7 @@ public class CourseCertificatePDFBlock {
 					x = cursor.getBlockX()
 							+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
 									CourseCertificatePDFDefaultSettings.X_COLUMN_INDENT)
-									+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
+							+ Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.X_FRAME_INDENT);
 					Iterator<LecturerOutVO> it = lecturers.iterator();
 					while (it.hasNext()) {
 						String lecturerName = getLecturerName(it.next());
@@ -505,9 +491,9 @@ public class CourseCertificatePDFBlock {
 							y,
 							PDFUtil.Alignment.TOP_CENTER,
 							cursor.getBlockWidth()
-							- 2.0f
-							* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
-									CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
+									- 2.0f
+											* Settings.getFloat(CourseCertificatePDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF,
+													CourseCertificatePDFDefaultSettings.X_FRAME_INDENT));
 					y -= Settings.getFloat(CourseCertificatePDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.Y_FRAME_INDENT);
 				}
 				height = cursor.getBlockY() - y;

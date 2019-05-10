@@ -16,15 +16,13 @@ import org.phoenixctms.ctsms.vo.CriterionTieVO;
  * @see CriterionTie
  */
 public class CriterionTieDaoImpl
-		extends CriterionTieDaoBase
-{
+		extends CriterionTieDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionTie criterionTieVOToEntity(CriterionTieVO criterionTieVO)
-	{
+	public CriterionTie criterionTieVOToEntity(CriterionTieVO criterionTieVO) {
 		CriterionTie entity = this.loadCriterionTieFromCriterionTieVO(criterionTieVO);
 		this.criterionTieVOToEntity(criterionTieVO, entity, true);
 		return entity;
@@ -37,8 +35,7 @@ public class CriterionTieDaoImpl
 	public void criterionTieVOToEntity(
 			CriterionTieVO source,
 			CriterionTie target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criterionTieVOToEntity(source, target, copyIfNull);
 	}
 
@@ -61,15 +58,13 @@ public class CriterionTieDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CriterionTie loadCriterionTieFromCriterionTieVO(CriterionTieVO criterionTieVO)
-	{
+	private CriterionTie loadCriterionTieFromCriterionTieVO(CriterionTieVO criterionTieVO) {
 		CriterionTie criterionTie = null;
 		Long id = criterionTieVO.getId();
 		if (id != null) {
 			criterionTie = this.load(id);
 		}
-		if (criterionTie == null)
-		{
+		if (criterionTie == null) {
 			criterionTie = CriterionTie.Factory.newInstance();
 		}
 		return criterionTie;
@@ -79,8 +74,7 @@ public class CriterionTieDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionTieVO toCriterionTieVO(final CriterionTie entity)
-	{
+	public CriterionTieVO toCriterionTieVO(final CriterionTie entity) {
 		return super.toCriterionTieVO(entity);
 	}
 
@@ -90,8 +84,7 @@ public class CriterionTieDaoImpl
 	@Override
 	public void toCriterionTieVO(
 			CriterionTie source,
-			CriterionTieVO target)
-	{
+			CriterionTieVO target) {
 		super.toCriterionTieVO(source, target);
 		target.setName(L10nUtil.getCriterionTieName(Locales.USER, source.getNameL10nKey()));
 	}

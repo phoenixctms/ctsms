@@ -41,10 +41,7 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean
 @ViewScoped
 public class MoneyTransferBean extends MoneyTransferBeanBase { // extends ManagedBeanBase implements PaymentMethodSelectorListener {
-
 	// private static final int METHOD_PROPERTY_ID = 1;
-
-
 
 	public static void initMoneyTransferDefaultValues(MoneyTransferInVO in, Long probandId) {
 		if (in != null) {
@@ -89,8 +86,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		MoneyTransferInVO backup = new MoneyTransferInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -130,7 +126,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 	}
 
-
 	@Override
 	protected String changeAction(Long id) {
 		LazyDataModelBase.clearFilters("moneytransfer_list");
@@ -145,7 +140,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// in.setCostType(query);
 	// return getCompleteCostTypeList(query);
 	// }
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -172,7 +166,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 		return ERROR_OUTCOME;
 	}
-
 	// public ArrayList<SelectItem> getBankAccounts() {
 	// return bankAccounts;
 	// }
@@ -196,7 +189,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// }
 	// return new ArrayList<String>();
 	// }
-
 	public ArrayList<SelectItem> getFilterBankAccounts() {
 		return filterBankAccounts;
 	}
@@ -208,7 +200,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	public ArrayList<SelectItem> getFilterTrials() {
 		return filterTrials;
 	}
-
 	// public MoneyTransferInVO getIn() {
 	// return in;
 	// }
@@ -225,7 +216,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// return super.getModifiedAnnotation();
 	// }
 	// }
-
 	public MoneyTransferLazyModel getMoneyTransferModel() {
 		return moneyTransferModel;
 	}
@@ -240,11 +230,9 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// } catch (IllegalArgumentException e) {
 	// }
 	// }
-
 	public MoneyTransferSummaryVO getOpenSummary() {
 		return openSummary;
 	}
-
 	// public MoneyTransferOutVO getOut() {
 	// return out;
 	// }
@@ -258,7 +246,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// return PaymentMethodSelectorListener.NO_SELECTION_PAYMENT_METHOD;
 	// }
 	// }
-
 	public StreamedContent getReimbursementsExcelStreamedContent() throws Exception {
 		try {
 			ReimbursementsExcelVO excel = WebUtil.getServiceLocator().getProbandService().exportReimbursements(WebUtil.getAuthentication(), probandId, null, null, null);
@@ -345,7 +332,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// return Messages.getString(MessageCodes.CREATE_NEW_MONEY_TRANSFER);
 	// }
 	// }
-
 	public String getTrialName() {
 		return WebUtil.trialIdToName(in.getTrialId());
 	}
@@ -368,7 +354,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// in.setVoucherCode(null);
 	// }
 	// }
-
 	@PostConstruct
 	private void init() {
 		// System.out.println("POSTCONSTRUCT: " + this.toString());
@@ -423,7 +408,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// public boolean isBankAccountVisible() {
 	// return PaymentMethod.WIRE_TRANSFER.equals(in.getMethod());
 	// }
-
 	@Override
 	public boolean isCreateable() {
 		return (in.getProbandId() == null ? false : !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband));
@@ -454,7 +438,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// public boolean isReferenceVisible() {
 	// return isBankAccountVisible();
 	// }
-
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
@@ -463,7 +446,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// public boolean isVoucherCodeVisible() {
 	// return PaymentMethod.VOUCHER.equals(in.getMethod());
 	// }
-
 	@Override
 	public String loadAction() {
 		return loadAction(in.getId());
@@ -503,7 +485,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		initSets(true);
 		return RESET_OUTCOME;
 	}
-
 	// private void sanitizeInVals() {
 	// if (!isBankAccountVisible()) {
 	// in.setBankAccountId(null);
@@ -532,7 +513,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	// default:
 	// }
 	// }
-
 	public void setSelectedMoneyTransfer(IDVO moneyTransfer) {
 		if (moneyTransfer != null) {
 			this.out = (MoneyTransferOutVO) moneyTransfer.getVo();

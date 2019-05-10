@@ -75,8 +75,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		StaffContactDetailValueInVO backup = new StaffContactDetailValueInVO(in);
 		in.setId(null);
 		in.setVersion(null);

@@ -1,9 +1,5 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
-
-
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,7 +56,6 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase {
 	// public Long getIndex() {
 	// return index;
 	// }
-
 	@Override
 	protected Collection<ECRFFieldStatusEntryOutVO> getEagerResult(PSFVO psf) {
 		if (status != null) {
@@ -87,22 +82,18 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase {
 	// public ECRFFieldStatusQueue getQueue() {
 	// return queue;
 	// }
-
 	@Override
 	protected ECRFFieldStatusEntryOutVO getRowElement(Long id) {
 		return WebUtil.getEcrfFieldStatusEntry(id);
 	}
 
-
 	public ECRFFieldStatusEntryOutVO getStatus() {
 		return status;
 	}
 
-
 	public void setStatus(ECRFFieldStatusEntryOutVO status) {
 		this.status = status;
 	}
-
 	// public void setEcrfFieldId(Long ecrfFieldId) {
 	// this.ecrfFieldId = ecrfFieldId;
 	// }
@@ -115,11 +106,7 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase {
 	// public void setListEntryId(Long listEntryId) {
 	// this.listEntryId = listEntryId;
 	// }
-
 	// public void setQueue(ECRFFieldStatusQueue queue) {
 	// this.queue = queue;
 	// }
-
-
-
 }

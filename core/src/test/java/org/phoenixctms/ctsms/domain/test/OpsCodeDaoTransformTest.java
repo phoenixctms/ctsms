@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.OpsCode
 */
-@Test(groups={"transform","OpsCodeDao"})
+@Test(groups = { "transform", "OpsCodeDao" })
 public class OpsCodeDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method OpsCodeDao.toOpsCodeVO
-   *
-   * @see org.phoenixctms.ctsms.domain.OpsCodeDao#toOpsCodeVO(org.phoenixctms.ctsms.domain.OpsCode source, org.phoenixctms.ctsms.vo.OpsCodeVO target)
-   */
-  @Test
-  public void testToOpsCodeVO() {
-    Assert.fail("Test 'OpsCodeDaoTransformTest.testToOpsCodeVO' not implemented!");
-  }
+	/**
+	 * Test for method OpsCodeDao.toOpsCodeVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.OpsCodeDao#toOpsCodeVO(org.phoenixctms.ctsms.domain.OpsCode source, org.phoenixctms.ctsms.vo.OpsCodeVO target)
+	 */
+	@Test
+	public void testToOpsCodeVO() {
+		Assert.fail("Test 'OpsCodeDaoTransformTest.testToOpsCodeVO' not implemented!");
+	}
 
-    /**
-   * Test for method opsCodeVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.OpsCodeDao#opsCodeVOToEntity(org.phoenixctms.ctsms.vo.OpsCodeVO source, org.phoenixctms.ctsms.domain.OpsCode target, boolean copyIfNull)
-   */
-  @Test
-  public void testOpsCodeVOToEntity() {
-    Assert.fail("Test 'OpsCodeDaoTransformTest.testOpsCodeVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method opsCodeVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.OpsCodeDao#opsCodeVOToEntity(org.phoenixctms.ctsms.vo.OpsCodeVO source, org.phoenixctms.ctsms.domain.OpsCode target, boolean copyIfNull)
+	*/
+	@Test
+	public void testOpsCodeVOToEntity() {
+		Assert.fail("Test 'OpsCodeDaoTransformTest.testOpsCodeVOToEntity' not implemented!");
+	}
 }

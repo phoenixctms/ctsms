@@ -14,10 +14,7 @@ public abstract class ExpressionParser<T> { // Binary operator precedence parser
 	// Shunting Yard expression parsing...
 	// http://www.technical-recipes.com/2011/a-mathematical-expression-parser-in-java/#comment-946
 	private enum TokenTypes {
-		LEFT_PARENTHESIS,
-		RIGHT_PARENTHESIS,
-		OPERATOR,
-		VALUE
+		LEFT_PARENTHESIS, RIGHT_PARENTHESIS, OPERATOR, VALUE
 	}
 
 	// http://stackoverflow.com/questions/3291992/shunting-yard-missing-argument-to-operator?rq=1
@@ -118,12 +115,10 @@ public abstract class ExpressionParser<T> { // Binary operator precedence parser
 	}
 
 	private int cmpPrecedence(T operatorA, T operatorB) throws SyntaxException {
-		if (!isOperator(operatorB))
-		{
+		if (!isOperator(operatorB)) {
 			throw new SyntaxException(SyntaxErrors.NO_OPERATOR, operatorB);
 		}
-		if (!isOperator(operatorA))
-		{
+		if (!isOperator(operatorA)) {
 			throw new SyntaxException(SyntaxErrors.NO_OPERATOR, operatorA);
 		}
 		return getOperandConfiguration(operatorA).getPrecedence() - getOperandConfiguration(operatorB).getPrecedence();
@@ -196,12 +191,14 @@ public abstract class ExpressionParser<T> { // Binary operator precedence parser
 					// is an operator
 					while (!stack.empty() && isOperator(stack.peek())) {
 						if ((isAssociative(token,
-								OperandConfiguration.Associativity.LEFT) && cmpPrecedence(
+								OperandConfiguration.Associativity.LEFT)
+								&& cmpPrecedence(
 										token, stack.peek()) <= 0)
-										|| (isAssociative(
-												token,
-												OperandConfiguration.Associativity.RIGHT) && cmpPrecedence(
-														token, stack.peek()) < 0)) {
+								|| (isAssociative(
+										token,
+										OperandConfiguration.Associativity.RIGHT)
+										&& cmpPrecedence(
+												token, stack.peek()) < 0)) {
 							out.add(stack.pop());
 							continue;
 						}
@@ -239,8 +236,7 @@ public abstract class ExpressionParser<T> { // Binary operator precedence parser
 	}
 
 	private boolean isAssociative(T operator, Associativity associativity) throws SyntaxException {
-		if (!isOperator(operator))
-		{
+		if (!isOperator(operator)) {
 			throw new SyntaxException(SyntaxErrors.NO_OPERATOR, operator);
 		}
 		if (getOperandConfiguration(operator).getAssociativity().equals(associativity)) {
@@ -306,7 +302,6 @@ public abstract class ExpressionParser<T> { // Binary operator precedence parser
 			}
 		}
 	}
-
 
 	protected void RPNEvalFinalize(ValueType resultType, Object context) throws ServiceException {
 	}

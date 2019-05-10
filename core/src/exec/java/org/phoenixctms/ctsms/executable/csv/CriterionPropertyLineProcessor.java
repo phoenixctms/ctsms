@@ -38,9 +38,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 	private final static int VALID_RESTRICTIONS_INDEX = 11;
 	private final static String DEFAULT_RESTRICTION_SEPARATOR_REGEXP_PATTERN = " *, *";
 	private static final String DEFAULT_EXCLUDE_RESTRICTION_CHAR = "/";
-
 	private final static Collection<String> SELECTION_SET_SERVICE_METHOD_NAMES = getServiceMethodNames(SelectionSetService.class);
-
 	private final static Collection<String> TOOLS_SERVICE_METHOD_NAMES = getServiceMethodNames(ToolsService.class);
 
 	private static Collection<String> getServiceMethodNames(Class serviceClass) {
@@ -51,10 +49,12 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 		}
 		return serviceMethods;
 	}
+
 	private static boolean isValidEntityName(String entityName) {
 		return CoreUtil.isEnumerationClass(entityName) || (CoreUtil.checkClassExists(CoreUtil.getOutVOClassNameFromEntityName(entityName))
 				|| CoreUtil.checkClassExists(CoreUtil.getVOClassNameFromEntityName(entityName)));
 	}
+
 	@Autowired
 	protected CriterionRestrictionDao criterionRestrictionDao;
 	@Autowired
@@ -214,14 +214,14 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 				property.getFullQualifiedPropertyName(),
 				CriterionValueType.fromString(getValueType(values)),
 				CommonUtil.isEmptyString(picker) ? null : DBModule.fromString(picker),
-						CommonUtil.isEmptyString(selectionSetServiceMethodName) ? null : selectionSetServiceMethodName,
-								CommonUtil.isEmptyString(getNameMethodName) ? null : getNameMethodName,
-										CommonUtil.isEmptyString(getValueMethodName) ? null : getValueMethodName,
-												CommonUtil.isEmptyString(completeMethodName) ? null : completeMethodName,
-														CommonUtil.isEmptyString(converter) ? null : converter,
-																CommonUtil.isEmptyString(entityName) ? null : entityName,
-																		getNameL10nKey(values),
-																		restrictions);
+				CommonUtil.isEmptyString(selectionSetServiceMethodName) ? null : selectionSetServiceMethodName,
+				CommonUtil.isEmptyString(getNameMethodName) ? null : getNameMethodName,
+				CommonUtil.isEmptyString(getValueMethodName) ? null : getValueMethodName,
+				CommonUtil.isEmptyString(completeMethodName) ? null : completeMethodName,
+				CommonUtil.isEmptyString(converter) ? null : converter,
+				CommonUtil.isEmptyString(entityName) ? null : entityName,
+				getNameL10nKey(values),
+				restrictions);
 		return 1;
 	}
 

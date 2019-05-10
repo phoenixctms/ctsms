@@ -12,16 +12,14 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusLogLevelVO;
  * @see ProbandListStatusLogLevel
  */
 public class ProbandListStatusLogLevelDaoImpl
-		extends ProbandListStatusLogLevelDaoBase
-{
+		extends ProbandListStatusLogLevelDaoBase {
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListStatusLogLevel loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(ProbandListStatusLogLevelVO probandListStatusLogLevelVO)
-	{
+	private ProbandListStatusLogLevel loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(ProbandListStatusLogLevelVO probandListStatusLogLevelVO) {
 		// TODO implement loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(ProbandListStatusLogLevelVO) not yet implemented.");
@@ -30,8 +28,7 @@ public class ProbandListStatusLogLevelDaoImpl
 		if (id != null) {
 			probandListStatusLogLevel = this.load(id);
 		}
-		if (probandListStatusLogLevel == null)
-		{
+		if (probandListStatusLogLevel == null) {
 			probandListStatusLogLevel = ProbandListStatusLogLevel.Factory.newInstance();
 		}
 		return probandListStatusLogLevel;
@@ -41,8 +38,7 @@ public class ProbandListStatusLogLevelDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListStatusLogLevel probandListStatusLogLevelVOToEntity(ProbandListStatusLogLevelVO probandListStatusLogLevelVO)
-	{
+	public ProbandListStatusLogLevel probandListStatusLogLevelVOToEntity(ProbandListStatusLogLevelVO probandListStatusLogLevelVO) {
 		ProbandListStatusLogLevel entity = this.loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(probandListStatusLogLevelVO);
 		this.probandListStatusLogLevelVOToEntity(probandListStatusLogLevelVO, entity, true);
 		return entity;
@@ -55,8 +51,7 @@ public class ProbandListStatusLogLevelDaoImpl
 	public void probandListStatusLogLevelVOToEntity(
 			ProbandListStatusLogLevelVO source,
 			ProbandListStatusLogLevel target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListStatusLogLevelVOToEntity(source, target, copyIfNull);
 	}
 
@@ -64,8 +59,7 @@ public class ProbandListStatusLogLevelDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListStatusLogLevelVO toProbandListStatusLogLevelVO(final ProbandListStatusLogLevel entity)
-	{
+	public ProbandListStatusLogLevelVO toProbandListStatusLogLevelVO(final ProbandListStatusLogLevel entity) {
 		return super.toProbandListStatusLogLevelVO(entity);
 	}
 
@@ -75,8 +69,7 @@ public class ProbandListStatusLogLevelDaoImpl
 	@Override
 	public void toProbandListStatusLogLevelVO(
 			ProbandListStatusLogLevel source,
-			ProbandListStatusLogLevelVO target)
-	{
+			ProbandListStatusLogLevelVO target) {
 		super.toProbandListStatusLogLevelVO(source, target);
 	}
 }

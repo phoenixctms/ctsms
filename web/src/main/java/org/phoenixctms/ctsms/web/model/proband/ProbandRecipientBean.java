@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.proband;
 
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -84,6 +83,7 @@ public class ProbandRecipientBean extends MassMailRecipientBeanBase {
 		}
 	}
 
+	@Override
 	protected void initIn() {
 		if (in == null) {
 			in = new MassMailRecipientInVO();
@@ -96,6 +96,7 @@ public class ProbandRecipientBean extends MassMailRecipientBeanBase {
 		}
 	}
 
+	@Override
 	protected void initSets() {
 		// now = new Date();
 		// emailMessageCache.clear();

@@ -30,8 +30,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see BankAccount
  */
 public class BankAccountDaoImpl
-extends BankAccountDaoBase
-{
+		extends BankAccountDaoBase {
 
 	private static final String BANK_ACCOUNT_NAME = "{0} - {1}/{2}";
 	private static final String BANK_ACCOUNT_NAME_NA = "{0} - n/a";
@@ -61,8 +60,7 @@ extends BankAccountDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public BankAccount bankAccountInVOToEntity(BankAccountInVO bankAccountInVO)
-	{
+	public BankAccount bankAccountInVOToEntity(BankAccountInVO bankAccountInVO) {
 		BankAccount entity = this.loadBankAccountFromBankAccountInVO(bankAccountInVO);
 		this.bankAccountInVOToEntity(bankAccountInVO, entity, true);
 		return entity;
@@ -75,8 +73,7 @@ extends BankAccountDaoBase
 	public void bankAccountInVOToEntity(
 			BankAccountInVO source,
 			BankAccount target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.bankAccountInVOToEntity(source, target, copyIfNull);
 		// No conversion for target.accountHolderName (can't convert source.getAccountHolderName():java.lang.String to byte[]
 		// No conversion for target.accountNumber (can't convert source.getAccountNumber():java.lang.String to byte[]
@@ -142,8 +139,7 @@ extends BankAccountDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public BankAccount bankAccountOutVOToEntity(BankAccountOutVO bankAccountOutVO)
-	{
+	public BankAccount bankAccountOutVOToEntity(BankAccountOutVO bankAccountOutVO) {
 		BankAccount entity = this.loadBankAccountFromBankAccountOutVO(bankAccountOutVO);
 		this.bankAccountOutVOToEntity(bankAccountOutVO, entity, true);
 		return entity;
@@ -156,8 +152,7 @@ extends BankAccountDaoBase
 	public void bankAccountOutVOToEntity(
 			BankAccountOutVO source,
 			BankAccount target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.bankAccountOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.accountHolderName (can't convert source.getAccountHolderName():java.lang.String to byte[]
 		// No conversion for target.accountNumber (can't convert source.getAccountNumber():java.lang.String to byte[]
@@ -236,8 +231,7 @@ extends BankAccountDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<BankAccount> handleFindByProband(Long probandId, Boolean active, Boolean na, PSFVO psf) throws Exception
-	{
+	protected Collection<BankAccount> handleFindByProband(Long probandId, Boolean active, Boolean na, PSFVO psf) throws Exception {
 		org.hibernate.Criteria bankAccountCriteria = createBankAccountCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(BankAccount.class, bankAccountCriteria);
 		if (probandId != null) {
@@ -254,8 +248,7 @@ extends BankAccountDaoBase
 	}
 
 	@Override
-	protected Collection<BankAccount> handleFindByProbandActiveId(Long probandId, Boolean active, Long bankAccountId)
-	{
+	protected Collection<BankAccount> handleFindByProbandActiveId(Long probandId, Boolean active, Long bankAccountId) {
 		org.hibernate.Criteria bankAccountCriteria = createBankAccountCriteria();
 		if (probandId != null) {
 			bankAccountCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
@@ -265,8 +258,7 @@ extends BankAccountDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long probandId) throws Exception
-	{
+	protected long handleGetCount(Long probandId) throws Exception {
 		org.hibernate.Criteria bankAccountCriteria = createBankAccountCriteria();
 		if (probandId != null) {
 			bankAccountCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
@@ -279,8 +271,7 @@ extends BankAccountDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private BankAccount loadBankAccountFromBankAccountInVO(BankAccountInVO bankAccountInVO)
-	{
+	private BankAccount loadBankAccountFromBankAccountInVO(BankAccountInVO bankAccountInVO) {
 		// TODO implement loadBankAccountFromBankAccountInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankAccountFromBankAccountInVO(BankAccountInVO) not yet implemented.");
 		BankAccount bankAccount = null;
@@ -288,8 +279,7 @@ extends BankAccountDaoBase
 		if (id != null) {
 			bankAccount = this.load(id);
 		}
-		if (bankAccount == null)
-		{
+		if (bankAccount == null) {
 			bankAccount = BankAccount.Factory.newInstance();
 		}
 		return bankAccount;
@@ -300,13 +290,11 @@ extends BankAccountDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private BankAccount loadBankAccountFromBankAccountOutVO(BankAccountOutVO bankAccountOutVO)
-	{
+	private BankAccount loadBankAccountFromBankAccountOutVO(BankAccountOutVO bankAccountOutVO) {
 		// TODO implement loadBankAccountFromBankAccountOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankAccountFromBankAccountOutVO(BankAccountOutVO) not yet implemented.");
 		BankAccount bankAccount = this.load(bankAccountOutVO.getId());
-		if (bankAccount == null)
-		{
+		if (bankAccount == null) {
 			bankAccount = BankAccount.Factory.newInstance();
 		}
 		return bankAccount;
@@ -316,8 +304,7 @@ extends BankAccountDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public BankAccountInVO toBankAccountInVO(final BankAccount entity)
-	{
+	public BankAccountInVO toBankAccountInVO(final BankAccount entity) {
 		return super.toBankAccountInVO(entity);
 	}
 
@@ -327,8 +314,7 @@ extends BankAccountDaoBase
 	@Override
 	public void toBankAccountInVO(
 			BankAccount source,
-			BankAccountInVO target)
-	{
+			BankAccountInVO target) {
 		super.toBankAccountInVO(source, target);
 		// WARNING! No conversion for target.accountHolderName (can't convert source.getAccountHolderName():byte[] to java.lang.String
 		// WARNING! No conversion for target.accountNumber (can't convert source.getAccountNumber():byte[] to java.lang.String
@@ -356,8 +342,7 @@ extends BankAccountDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public BankAccountOutVO toBankAccountOutVO(final BankAccount entity)
-	{
+	public BankAccountOutVO toBankAccountOutVO(final BankAccount entity) {
 		return super.toBankAccountOutVO(entity);
 	}
 
@@ -367,8 +352,7 @@ extends BankAccountDaoBase
 	@Override
 	public void toBankAccountOutVO(
 			BankAccount source,
-			BankAccountOutVO target)
-	{
+			BankAccountOutVO target) {
 		super.toBankAccountOutVO(source, target);
 		// WARNING! No conversion for target.accountHolderName (can't convert source.getAccountHolderName():byte[] to java.lang.String
 		// WARNING! No conversion for target.accountNumber (can't convert source.getAccountNumber():byte[] to java.lang.String

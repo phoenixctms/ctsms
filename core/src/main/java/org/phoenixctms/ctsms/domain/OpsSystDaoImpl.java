@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.OpsSystVO;
  * @see OpsSyst
  */
 public class OpsSystDaoImpl
-extends OpsSystDaoBase
-{
+		extends OpsSystDaoBase {
 
 	// Notation: erste drei Stellen numerisch, 4. Stelle alphanumerisch, 5./6. Stelle numerisch oder: x - sonstige Prozeduren, y - nicht naeher bezeichnet
 	private final static Pattern OPS_CODE_PATTERN_REGEXP = Pattern.compile("^(\\d-)(\\d{2,2}[\\da-z])((\\.[\\da-z])([\\da-z])?)?(#)?$");
@@ -43,8 +42,7 @@ extends OpsSystDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected OpsSyst handleFindByOpsCode(String firstCode, String secondCode, String revision)
-	{
+	protected OpsSyst handleFindByOpsCode(String firstCode, String secondCode, String revision) {
 		String code = CommonUtil.isEmptyString(firstCode) ? secondCode : firstCode;
 		if (!CommonUtil.isEmptyString(code)) {
 			Matcher matcher = OPS_CODE_PATTERN_REGEXP.matcher(code);
@@ -69,12 +67,11 @@ extends OpsSystDaoBase
 	}
 
 	@Override
-	protected long handleGetProcedureCount(String revision) throws Exception
-	{
+	protected long handleGetProcedureCount(String revision) throws Exception {
 		org.hibernate.Criteria opsSystCriteria = createOpsSystCriteria();
 		opsSystCriteria.add(Restrictions.eq("revision", revision));
-		opsSystCriteria.createCriteria("codes",CriteriaSpecification.INNER_JOIN)
-		.createCriteria("procedures", CriteriaSpecification.INNER_JOIN);
+		opsSystCriteria.createCriteria("codes", CriteriaSpecification.INNER_JOIN)
+				.createCriteria("procedures", CriteriaSpecification.INNER_JOIN);
 		return (Long) opsSystCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -122,8 +119,7 @@ extends OpsSystDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private OpsSyst loadOpsSystFromOpsSystVO(OpsSystVO opsSystVO)
-	{
+	private OpsSyst loadOpsSystFromOpsSystVO(OpsSystVO opsSystVO) {
 		// TODO implement loadOpsSystFromOpsSystVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystFromOpsSystVO(OpsSystVO) not yet implemented.");
 		Long id = opsSystVO.getId();
@@ -131,8 +127,7 @@ extends OpsSystDaoBase
 		if (id != null) {
 			opsSyst = this.load(id);
 		}
-		if (opsSyst == null)
-		{
+		if (opsSyst == null) {
 			opsSyst = OpsSyst.Factory.newInstance();
 		}
 		return opsSyst;
@@ -142,8 +137,7 @@ extends OpsSystDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSyst opsSystVOToEntity(OpsSystVO opsSystVO)
-	{
+	public OpsSyst opsSystVOToEntity(OpsSystVO opsSystVO) {
 		OpsSyst entity = this.loadOpsSystFromOpsSystVO(opsSystVO);
 		this.opsSystVOToEntity(opsSystVO, entity, true);
 		return entity;
@@ -156,8 +150,7 @@ extends OpsSystDaoBase
 	public void opsSystVOToEntity(
 			OpsSystVO source,
 			OpsSyst target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.opsSystVOToEntity(source, target, copyIfNull);
 		Collection blocks = source.getBlocks();
 		if (blocks.size() > 0) {
@@ -223,8 +216,7 @@ extends OpsSystDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystVO toOpsSystVO(final OpsSyst entity)
-	{
+	public OpsSystVO toOpsSystVO(final OpsSyst entity) {
 		return super.toOpsSystVO(entity);
 	}
 
@@ -234,8 +226,7 @@ extends OpsSystDaoBase
 	@Override
 	public void toOpsSystVO(
 			OpsSyst source,
-			OpsSystVO target)
-	{
+			OpsSystVO target) {
 		super.toOpsSystVO(source, target);
 		// WARNING! No conversion for target.blocks (can't convert source.getBlocks():org.phoenixctms.ctsms.domain.OpsSystBlock to org.phoenixctms.ctsms.vo.OpsSystBlockVO
 		// WARNING! No conversion for target.categories (can't convert source.getCategories():org.phoenixctms.ctsms.domain.OpsSystCategory to org.phoenixctms.ctsms.vo.OpsSystCategoryVO

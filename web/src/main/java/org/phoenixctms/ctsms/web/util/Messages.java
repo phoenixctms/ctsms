@@ -18,13 +18,11 @@ public final class Messages {
 	private static final ArrayList<String> DEFAULT_FACES_MESSAGE_LIST = new ArrayList<String>();
 	public static final String MESSAGE_BUNDLE_DEFAULT = Settings.WEB_ROOT_PACKAGE_NAME + ".messages";
 	private final static ArrayList<String> CRITERION_COMPONENT_CLIENT_ID_PREFIXES = new ArrayList<String>();
-	static
-	{
+	static {
 		CRITERION_COMPONENT_CLIENT_ID_PREFIXES.add("tie");
 	}
 	private final static ArrayList<String> INPUT_FIELD_COMPONENT_CLIENT_ID_PREFIXES = new ArrayList<String>();
-	static
-	{
+	static {
 		INPUT_FIELD_COMPONENT_CLIENT_ID_PREFIXES.add("singleLineText");
 		INPUT_FIELD_COMPONENT_CLIENT_ID_PREFIXES.add("multiLineText");
 		INPUT_FIELD_COMPONENT_CLIENT_ID_PREFIXES.add("selectOne");

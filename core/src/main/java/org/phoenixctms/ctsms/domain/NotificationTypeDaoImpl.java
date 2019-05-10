@@ -17,16 +17,14 @@ import org.phoenixctms.ctsms.vo.NotificationTypeVO;
  * @see NotificationType
  */
 public class NotificationTypeDaoImpl
-		extends NotificationTypeDaoBase
-{
+		extends NotificationTypeDaoBase {
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private NotificationType loadNotificationTypeFromNotificationTypeVO(NotificationTypeVO notificationTypeVO)
-	{
+	private NotificationType loadNotificationTypeFromNotificationTypeVO(NotificationTypeVO notificationTypeVO) {
 		// TODO implement loadNotificationTypeFromNotificationTypeVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationTypeFromNotificationTypeVO(NotificationTypeVO) not yet implemented.");
 		// NotificationType notificationType = null;
@@ -45,8 +43,7 @@ public class NotificationTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public NotificationType notificationTypeVOToEntity(NotificationTypeVO notificationTypeVO)
-	{
+	public NotificationType notificationTypeVOToEntity(NotificationTypeVO notificationTypeVO) {
 		NotificationType entity = this.loadNotificationTypeFromNotificationTypeVO(notificationTypeVO);
 		this.notificationTypeVOToEntity(notificationTypeVO, entity, true);
 		return entity;
@@ -59,8 +56,7 @@ public class NotificationTypeDaoImpl
 	public void notificationTypeVOToEntity(
 			NotificationTypeVO source,
 			NotificationType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.notificationTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -68,8 +64,7 @@ public class NotificationTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public NotificationTypeVO toNotificationTypeVO(final NotificationType entity)
-	{
+	public NotificationTypeVO toNotificationTypeVO(final NotificationType entity) {
 		return super.toNotificationTypeVO(entity);
 	}
 
@@ -79,8 +74,7 @@ public class NotificationTypeDaoImpl
 	@Override
 	public void toNotificationTypeVO(
 			NotificationType source,
-			NotificationTypeVO target)
-	{
+			NotificationTypeVO target) {
 		super.toNotificationTypeVO(source, target);
 		boolean sendToIdentityStaffCategory = false;
 		User user = CoreUtil.getUser();

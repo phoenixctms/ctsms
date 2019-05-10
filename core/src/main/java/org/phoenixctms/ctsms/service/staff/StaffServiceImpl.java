@@ -139,14 +139,11 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
 
-
-
 /**
  * @see org.phoenixctms.ctsms.service.staff.StaffService
  */
 public class StaffServiceImpl
-extends StaffServiceBase
-{
+		extends StaffServiceBase {
 
 	private static void checkDutyRosterTurnStaff(Staff staff) throws ServiceException {
 		// other input checks
@@ -190,7 +187,6 @@ extends StaffServiceBase
 	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
 	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 	// }
-
 	private static JournalEntry logSystemMessage(User user, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -200,7 +196,8 @@ extends StaffServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
-	private final void addStaffInactiveVisitScheduleItemNotification(VisitScheduleItem visitScheduleItem, StaffStatusEntry statusEntry, Date now, Date date, Collection inactiveStaff) {
+	private final void addStaffInactiveVisitScheduleItemNotification(VisitScheduleItem visitScheduleItem, StaffStatusEntry statusEntry, Date now, Date date,
+			Collection inactiveStaff) {
 		Integer staffLimit = Settings.getIntNullable(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT, Bundle.SETTINGS,
 				DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
 		NotificationDao notificationDao = this.getNotificationDao();
@@ -218,8 +215,7 @@ extends StaffServiceBase
 		notificationDao.addNotification(visitScheduleItem, statusEntry.getStaff(), now, messageParameters);
 	}
 
-	private void checkCvPositionInput(CvPositionInVO cvPositionIn) throws ServiceException
-	{
+	private void checkCvPositionInput(CvPositionInVO cvPositionIn) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(cvPositionIn.getStaffId(), this.getStaffDao());
 		if (cvPositionIn.getSectionId() != null) {
@@ -246,8 +242,7 @@ extends StaffServiceBase
 		}
 	}
 
-	private void checkDutyRosterTurnInput(DutyRosterTurnInVO dutyRosterTurnIn) throws ServiceException
-	{
+	private void checkDutyRosterTurnInput(DutyRosterTurnInVO dutyRosterTurnIn) throws ServiceException {
 		// referential checks
 		Staff staff = null;
 		if (dutyRosterTurnIn.getStaffId() != null) {
@@ -294,18 +289,15 @@ extends StaffServiceBase
 		}
 	}
 
-	private void checkStaffAddressInput(StaffAddressInVO addressIn) throws ServiceException
-	{
+	private void checkStaffAddressInput(StaffAddressInVO addressIn) throws ServiceException {
 		(new StaffAddressTypeTagAdapter(this.getStaffDao(), this.getAddressTypeDao(), this.getStaffAddressDao())).checkTagValueInput(addressIn);
 	}
 
-	private void checkStaffContactDetailValueInput(StaffContactDetailValueInVO contactValueIn) throws ServiceException
-	{
+	private void checkStaffContactDetailValueInput(StaffContactDetailValueInVO contactValueIn) throws ServiceException {
 		(new StaffContactDetailTypeTagAdapter(this.getStaffDao(), this.getContactDetailTypeDao())).checkTagValueInput(contactValueIn);
 	}
 
-	private void checkStaffImageInput(boolean isPerson, StaffImageInVO staffImage) throws ServiceException
-	{
+	private void checkStaffImageInput(boolean isPerson, StaffImageInVO staffImage) throws ServiceException {
 		// other input checks
 		if (isPerson) {
 			if (staffImage.getDatas() != null && staffImage.getDatas().length > 0) {
@@ -346,8 +338,7 @@ extends StaffServiceBase
 		}
 	}
 
-	private void checkStaffInput(StaffInVO staffIn) throws ServiceException
-	{
+	private void checkStaffInput(StaffInVO staffIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkDepartmentId(staffIn.getDepartmentId(), this.getDepartmentDao());
 		StaffCategory category = CheckIDUtil.checkStaffCategoryId(staffIn.getCategoryId(), this.getStaffCategoryDao());
@@ -441,8 +432,7 @@ extends StaffServiceBase
 		(new StaffReflexionGraph(this.getStaffDao())).checkGraphLoop(staff, true, false);
 	}
 
-	private void checkStaffStatusEntryInput(StaffStatusEntryInVO statusEntryIn) throws ServiceException
-	{
+	private void checkStaffStatusEntryInput(StaffStatusEntryInVO statusEntryIn) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(statusEntryIn.getStaffId(), this.getStaffDao());
 		StaffStatusType statusType = CheckIDUtil.checkStaffStatusTypeId(statusEntryIn.getTypeId(), this.getStaffStatusTypeDao());
@@ -461,8 +451,7 @@ extends StaffServiceBase
 		}
 	}
 
-	private void checkStaffTagValueInput(StaffTagValueInVO tagValueIn) throws ServiceException
-	{
+	private void checkStaffTagValueInput(StaffTagValueInVO tagValueIn) throws ServiceException {
 		(new StaffTagAdapter(this.getStaffDao(), this.getStaffTagDao())).checkTagValueInput(tagValueIn);
 	}
 
@@ -807,7 +796,6 @@ extends StaffServiceBase
 			}
 			staff.getNotificationReceipts().clear();
 			// staff.getNotifications().clear();
-
 		}
 		Iterator<Staff> childrenIt = staff.getChildren().iterator();
 		while (childrenIt.hasNext()) {
@@ -874,7 +862,7 @@ extends StaffServiceBase
 				ServiceUtil.logSystemMessage(staff, result.getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
 			} else if (result.getVisitScheduleItem() != null) {
 				ServiceUtil
-				.logSystemMessage(staff, result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
+						.logSystemMessage(staff, result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
 			} else {
 				logSystemMessage(staff, result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
 			}
@@ -890,7 +878,7 @@ extends StaffServiceBase
 		} else if (visitScheduleItem != null) {
 			if (result.getStaff() != null) {
 				ServiceUtil
-				.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
+						.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED, result, null, journalEntryDao);
 			} else {
 				ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_CREATED,
 						result, null, journalEntryDao);
@@ -904,8 +892,7 @@ extends StaffServiceBase
 	 */
 	@Override
 	protected StaffOutVO handleAddStaff(AuthenticationVO auth, StaffInVO newStaff, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
-			throws Exception
-	{
+			throws Exception {
 		checkStaffInput(newStaff);
 		StaffDao staffDao = this.getStaffDao();
 		Staff staff = staffDao.staffInVOToEntity(newStaff);
@@ -945,7 +932,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffContactDetailValueOutVO handleAddStaffContactDetailValue(
 			AuthenticationVO auth, StaffContactDetailValueInVO newStaffContactDetailValue)
-					throws Exception {
+			throws Exception {
 		checkStaffContactDetailValueInput(newStaffContactDetailValue);
 		StaffContactDetailValueDao contactValueDao = this.getStaffContactDetailValueDao();
 		StaffContactDetailValue contactValue = contactValueDao.staffContactDetailValueInVOToEntity(newStaffContactDetailValue);
@@ -1050,7 +1037,7 @@ extends StaffServiceBase
 				ServiceUtil.logSystemMessage(staff, result.getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
 			} else if (result.getVisitScheduleItem() != null) {
 				ServiceUtil
-				.logSystemMessage(staff, result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
+						.logSystemMessage(staff, result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
 			} else {
 				logSystemMessage(staff, result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
 			}
@@ -1064,7 +1051,7 @@ extends StaffServiceBase
 		} else if (visitScheduleItem != null) {
 			if (result.getStaff() != null) {
 				ServiceUtil
-				.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
+						.logSystemMessage(visitScheduleItem.getTrial(), result.getStaff(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED, result, null, journalEntryDao);
 			} else {
 				ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getVisitScheduleItem().getTrial(), now, user, SystemMessageCodes.DUTY_ROSTER_TURN_DELETED,
 						result, null, journalEntryDao);
@@ -1102,8 +1089,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffOutVO handleDeleteStaff(AuthenticationVO auth, Long staffId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
 			Integer maxParentDepth, Integer maxChildrenDepth)
-					throws Exception
-	{
+			throws Exception {
 		StaffDao staffDao = this.getStaffDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		User user = CoreUtil.getUser();
@@ -1316,7 +1302,6 @@ extends StaffServiceBase
 		return collidingDutyRosterTurns;
 	}
 
-
 	@Override
 	protected Collection<StaffStatusEntryOutVO> handleGetCollidingStaffStatusEntries(
 			AuthenticationVO auth, Long dutyRosterTurnId) throws Exception {
@@ -1458,7 +1443,7 @@ extends StaffServiceBase
 	@Override
 	protected Collection<DutyRosterTurnOutVO> handleGetDutyRosterInterval(
 			AuthenticationVO auth, Long departmentId, Long staffCategoryId, String calendar, Date from, Date to, boolean sort)
-					throws Exception {
+			throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -1602,7 +1587,7 @@ extends StaffServiceBase
 	@Override
 	protected ShiftDurationSummaryVO handleGetShiftDurationSummary(
 			AuthenticationVO auth, Long trialId, String calendar, Date from, Date to)
-					throws Exception {
+			throws Exception {
 		ShiftDurationSummaryVO result = new ShiftDurationSummaryVO();
 		if (trialId != null) {
 			result.setTrial(this.getTrialDao().toTrialOutVO(CheckIDUtil.checkTrialId(trialId, this.getTrialDao())));
@@ -1671,7 +1656,6 @@ extends StaffServiceBase
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
 		return this.getStaffContactDetailValueDao().getCount(staffId, null, na, null, null);
-
 	}
 
 	@Override
@@ -1752,7 +1736,7 @@ extends StaffServiceBase
 	@Override
 	protected Collection<StaffStatusEntryOutVO> handleGetStaffStatusEntryInterval(
 			AuthenticationVO auth, Long departmentId, Long staffCategoryId, Boolean hideAvailability, Date from, Date to, boolean sort)
-					throws Exception {
+			throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -1840,7 +1824,7 @@ extends StaffServiceBase
 	@Override
 	protected Collection<CourseOutVO> handleGetUpcomingRenewalCourses(
 			AuthenticationVO auth, Date now, Long courseId, Long staffId)
-					throws Exception {
+			throws Exception {
 		CourseDao courseDao = this.getCourseDao();
 		CheckIDUtil.checkCourseId(courseId, courseDao);
 		CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
@@ -1852,7 +1836,7 @@ extends StaffServiceBase
 	@Override
 	protected CourseParticipationStatusEntryOutVO handleParticipateSelfRegistrationCourse(
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry)
-					throws Exception {
+			throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, false, true,
 				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getCourseParticipationStatusTypeDao(), this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
@@ -1865,7 +1849,8 @@ extends StaffServiceBase
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(courseParticipation.getStaff(), result.getStaff(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
-		logSystemMessage(courseParticipation.getCourse(), result.getStaff(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
+		logSystemMessage(courseParticipation.getCourse(), result.getStaff(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null,
+				journalEntryDao);
 		return result;
 	}
 
@@ -1918,22 +1903,19 @@ extends StaffServiceBase
 		if (trial != null && dutyRosterTurn.getStart() != null && trial.isDutySelfAllocationLocked() && oldStaff != null) { // (oldStaff != null || lockEmpty)) {
 			if (trial.getDutySelfAllocationLockedUntil() == null && trial.getDutySelfAllocationLockedFrom() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED,
-						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
-						);
+						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 			} else if (trial.getDutySelfAllocationLockedUntil() != null && trial.getDutySelfAllocationLockedUntil().compareTo(dutyRosterTurn.getStart()) > 0) {
 				throw L10nUtil.initServiceException(
 						ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED_UNTIL,
 						Settings.getSimpleDateFormat(SettingCodes.EXCEPTION_DATE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.EXCEPTION_DATE_TIME_PATTERN, Locales.USER).format(
 								trial.getDutySelfAllocationLockedUntil()),
-						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
-						);
+						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 			} else if (trial.getDutySelfAllocationLockedFrom() != null && trial.getDutySelfAllocationLockedFrom().compareTo(dutyRosterTurn.getStart()) <= 0) {
 				throw L10nUtil.initServiceException(
 						ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED_FROM,
 						Settings.getSimpleDateFormat(SettingCodes.EXCEPTION_DATE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.EXCEPTION_DATE_TIME_PATTERN, Locales.USER).format(
 								trial.getDutySelfAllocationLockedFrom()),
-						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial))
-						);
+						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 			}
 		}
 		if (allocate) {
@@ -2006,8 +1988,10 @@ extends StaffServiceBase
 		CoreUtil.modifyVersion(originalStaff, staff, now, user);
 		staffDao.update(staff);
 		StaffImageOutVO result = staffDao.toStaffImageOutVO(staff);
-		logSystemMessage(staff, staffDao.toStaffOutVO(staff), now, user, cleared ? SystemMessageCodes.STAFF_IMAGE_CLEARED : hasImage ? SystemMessageCodes.STAFF_IMAGE_UPDATED
-				: SystemMessageCodes.STAFF_IMAGE_CREATED, result, original, this.getJournalEntryDao());
+		logSystemMessage(staff, staffDao.toStaffOutVO(staff), now, user, cleared ? SystemMessageCodes.STAFF_IMAGE_CLEARED
+				: hasImage ? SystemMessageCodes.STAFF_IMAGE_UPDATED
+						: SystemMessageCodes.STAFF_IMAGE_CREATED,
+				result, original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -2087,8 +2071,7 @@ extends StaffServiceBase
 	 */
 	@Override
 	protected StaffOutVO handleUpdateStaff(AuthenticationVO auth, StaffInVO modifiedStaff, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
-			throws Exception
-	{
+			throws Exception {
 		StaffDao staffDao = this.getStaffDao();
 		Staff originalStaff = CheckIDUtil.checkStaffId(modifiedStaff.getId(), staffDao, LockMode.PESSIMISTIC_WRITE);
 		checkStaffInput(modifiedStaff);
@@ -2130,7 +2113,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffContactDetailValueOutVO handleUpdateStaffContactDetailValue(
 			AuthenticationVO auth, StaffContactDetailValueInVO modifiedStaffContactDetailValue)
-					throws Exception {
+			throws Exception {
 		StaffContactDetailValueDao contactValueDao = this.getStaffContactDetailValueDao();
 		StaffContactDetailValue originalContactValue = CheckIDUtil.checkStaffContactDetailValueId(modifiedStaffContactDetailValue.getId(), contactValueDao);
 		checkStaffContactDetailValueInput(modifiedStaffContactDetailValue);
@@ -2168,7 +2151,7 @@ extends StaffServiceBase
 	@Override
 	protected StaffTagValueOutVO handleUpdateStaffTagValue(
 			AuthenticationVO auth, StaffTagValueInVO modifiedStaffTagValue)
-					throws Exception {
+			throws Exception {
 		StaffTagValueDao tagValueDao = this.getStaffTagValueDao();
 		StaffTagValue originalTagValue = CheckIDUtil.checkStaffTagValueId(modifiedStaffTagValue.getId(), tagValueDao);
 		checkStaffTagValueInput(modifiedStaffTagValue);
@@ -2187,7 +2170,7 @@ extends StaffServiceBase
 	@Override
 	protected CourseParticipationStatusEntryOutVO handleUserUpdateCourseParticipationStatusEntry(
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO modifiedCourseParticipationStatusEntry)
-					throws Exception {
+			throws Exception {
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry originalCourseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(modifiedCourseParticipationStatusEntry.getId(),
 				courseParticipationStatusEntryDao);
@@ -2251,7 +2234,6 @@ extends StaffServiceBase
 			while (dutyRosterTurnsIt.hasNext()) {
 				notificationDao.addNotification(dutyRosterTurnsIt.next(), statusEntry, now, null);
 			}
-
 			Integer staffLimit = Settings.getIntNullable(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT, Bundle.SETTINGS,
 					DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
 			if (staffLimit != null && staffLimit > 0 && !statusEntry.getType().isHideAvailability()
@@ -2265,7 +2247,8 @@ extends StaffServiceBase
 						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF);
 				StaffDao staffDao = this.getStaffDao();
 				HashMap<Date, Collection> dateMap = new HashMap<Date, Collection>();
-				Iterator<VisitScheduleItem> visitScheduleItemsIt = this.getVisitScheduleItemDao().findByDepartmentTravelInterval(allTrials ? null : statusEntry.getStaff().getDepartment().getId(), statusEntry.getStart(), statusEntry.getStop(), null)
+				Iterator<VisitScheduleItem> visitScheduleItemsIt = this.getVisitScheduleItemDao()
+						.findByDepartmentTravelInterval(allTrials ? null : statusEntry.getStaff().getDepartment().getId(), statusEntry.getStart(), statusEntry.getStop(), null)
 						.iterator();
 				while (visitScheduleItemsIt.hasNext()) {
 					VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
@@ -2299,11 +2282,9 @@ extends StaffServiceBase
 							staffDao.toStaffOutVOCollection(inactiveStaff);
 							addStaffInactiveVisitScheduleItemNotification(visitScheduleItem, statusEntry, now, null, inactiveStaff);
 						}
-
 					}
 				}
 			}
 		}
 	}
-
 }

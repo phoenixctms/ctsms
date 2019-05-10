@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
  * @see ProbandListStatusType
  */
 public class ProbandListStatusTypeDaoImpl
-extends ProbandListStatusTypeDaoBase
-{
+		extends ProbandListStatusTypeDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<ProbandListStatusType>(false);
 	private final static VOIDComparator LOG_LEVEL_ID_COMPARATOR = new VOIDComparator<ProbandListStatusLogLevelVO>(false);
@@ -50,8 +49,7 @@ extends ProbandListStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandListStatusType> handleFindInitialStates(Boolean signup, Boolean person)
-	{
+	protected Collection<ProbandListStatusType> handleFindInitialStates(Boolean signup, Boolean person) {
 		org.hibernate.Criteria probandListStatusTypeCriteria = createProbandListStatusTypeCriteria();
 		probandListStatusTypeCriteria.add(Restrictions.eq("initial", true));
 		if (signup != null) {
@@ -68,8 +66,7 @@ extends ProbandListStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandListStatusType> handleFindTransitions(Long statusTypeId)
-	{
+	protected Collection<ProbandListStatusType> handleFindTransitions(Long statusTypeId) {
 		ProbandListStatusType statusType = this.load(statusTypeId);
 		Iterator<ProbandListStatusType> it = null;
 		if (statusType != null) {
@@ -90,8 +87,7 @@ extends ProbandListStatusTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListStatusType loadProbandListStatusTypeFromProbandListStatusTypeVO(ProbandListStatusTypeVO probandListStatusTypeVO)
-	{
+	private ProbandListStatusType loadProbandListStatusTypeFromProbandListStatusTypeVO(ProbandListStatusTypeVO probandListStatusTypeVO) {
 		// TODO implement loadProbandListStatusTypeFromProbandListStatusTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusTypeFromProbandListStatusTypeVO(ProbandListStatusTypeVO) not yet implemented.");
 		ProbandListStatusType probandListStatusType = null;
@@ -99,8 +95,7 @@ extends ProbandListStatusTypeDaoBase
 		if (id != null) {
 			probandListStatusType = this.load(id);
 		}
-		if (probandListStatusType == null)
-		{
+		if (probandListStatusType == null) {
 			probandListStatusType = ProbandListStatusType.Factory.newInstance();
 		}
 		return probandListStatusType;
@@ -110,8 +105,7 @@ extends ProbandListStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListStatusType probandListStatusTypeVOToEntity(ProbandListStatusTypeVO probandListStatusTypeVO)
-	{
+	public ProbandListStatusType probandListStatusTypeVOToEntity(ProbandListStatusTypeVO probandListStatusTypeVO) {
 		ProbandListStatusType entity = this.loadProbandListStatusTypeFromProbandListStatusTypeVO(probandListStatusTypeVO);
 		this.probandListStatusTypeVOToEntity(probandListStatusTypeVO, entity, true);
 		return entity;
@@ -124,13 +118,12 @@ extends ProbandListStatusTypeDaoBase
 	public void probandListStatusTypeVOToEntity(
 			ProbandListStatusTypeVO source,
 			ProbandListStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListStatusTypeVOToEntity(source, target, copyIfNull);
 		Collection logLevels = source.getLogLevels();
 		if (copyIfNull || logLevels.size() > 0) {
 			this.getProbandListStatusLogLevelDao().probandListStatusLogLevelVOToEntityCollection(logLevels);
-			target.setLogLevels((Collection<ProbandListStatusLogLevel>) logLevels);
+			target.setLogLevels(logLevels);
 		}
 	}
 
@@ -150,8 +143,7 @@ extends ProbandListStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListStatusTypeVO toProbandListStatusTypeVO(final ProbandListStatusType entity)
-	{
+	public ProbandListStatusTypeVO toProbandListStatusTypeVO(final ProbandListStatusType entity) {
 		return super.toProbandListStatusTypeVO(entity);
 	}
 
@@ -161,8 +153,7 @@ extends ProbandListStatusTypeDaoBase
 	@Override
 	public void toProbandListStatusTypeVO(
 			ProbandListStatusType source,
-			ProbandListStatusTypeVO target)
-	{
+			ProbandListStatusTypeVO target) {
 		super.toProbandListStatusTypeVO(source, target);
 		// WARNING! No conversion for target.logLevels (can't convert source.getLogLevels():org.phoenixctms.ctsms.domain.ProbandListStatusLogLevel to
 		// org.phoenixctms.ctsms.vo.ProbandListStatusLogLevelVO

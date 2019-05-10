@@ -33,8 +33,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see MassMail
  */
 public class MassMailDaoImpl
-extends MassMailDaoBase
-{
+		extends MassMailDaoBase {
 
 	private org.hibernate.Criteria createMassMailCriteria(String alias) {
 		org.hibernate.Criteria massMailCriteria;
@@ -60,7 +59,6 @@ extends MassMailDaoBase
 				this.getCriterionRestrictionDao());
 		return query.list();
 	}
-
 
 	@Override
 	protected Collection<MassMail> handleFindByIdDepartment(Long massMailId,
@@ -92,7 +90,6 @@ extends MassMailDaoBase
 	@Override
 	protected long handleGetCount(Long trialId, Long probandListStatusTypeId, Boolean locked, Long resendProbandId) throws Exception {
 		org.hibernate.Criteria massMailCriteria = createMassMailCriteria("massMail0");
-
 		if (trialId != null) {
 			massMailCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
@@ -110,10 +107,8 @@ extends MassMailDaoBase
 			massMailCriteria.add(Restrictions.or(Restrictions.eq("probandListStatusResend", true),
 					Subqueries.eq(0l, recipientsSubQuery)));
 		}
-
 		return (Long) massMailCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
-
 
 	@Override
 	protected long handleGetCountByCriteria(CriteriaInstantVO criteria, PSFVO psf) throws Exception {
@@ -127,37 +122,30 @@ extends MassMailDaoBase
 				this.getCriterionRestrictionDao());
 	}
 
-	private MassMail loadMassMailFromMassMailInVO(MassMailInVO massMailInVO)
-	{
+	private MassMail loadMassMailFromMassMailInVO(MassMailInVO massMailInVO) {
 		MassMail massMail = null;
 		Long id = massMailInVO.getId();
 		if (id != null) {
 			massMail = this.load(id);
 		}
-		if (massMail == null)
-		{
+		if (massMail == null) {
 			massMail = MassMail.Factory.newInstance();
 		}
 		return massMail;
 	}
 
-	private MassMail loadMassMailFromMassMailOutVO(MassMailOutVO massMailOutVO)
-	{
+	private MassMail loadMassMailFromMassMailOutVO(MassMailOutVO massMailOutVO) {
 		// TODO implement loadMassMailFromMassMailOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailFromMassMailOutVO(MassMailOutVO) not yet implemented.");
-
 		MassMail massMail = this.load(massMailOutVO.getId());
-		if (massMail == null)
-		{
+		if (massMail == null) {
 			massMail = MassMail.Factory.newInstance();
 		}
 		return massMail;
 	}
 
-
 	@Override
-	public MassMail massMailInVOToEntity(MassMailInVO massMailInVO)
-	{
+	public MassMail massMailInVOToEntity(MassMailInVO massMailInVO) {
 		MassMail entity = this.loadMassMailFromMassMailInVO(massMailInVO);
 		this.massMailInVOToEntity(massMailInVO, entity, true);
 		return entity;
@@ -167,8 +155,7 @@ extends MassMailDaoBase
 	public void massMailInVOToEntity(
 			MassMailInVO source,
 			MassMail target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.massMailInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long statusId = source.getStatusId();
@@ -202,21 +189,18 @@ extends MassMailDaoBase
 		}
 	}
 
-
-	public MassMail massMailOutVOToEntity(MassMailOutVO massMailOutVO)
-	{
+	@Override
+	public MassMail massMailOutVOToEntity(MassMailOutVO massMailOutVO) {
 		MassMail entity = this.loadMassMailFromMassMailOutVO(massMailOutVO);
 		this.massMailOutVOToEntity(massMailOutVO, entity, true);
 		return entity;
 	}
 
-
 	@Override
 	public void massMailOutVOToEntity(
 			MassMailOutVO source,
 			MassMail target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.massMailOutVOToEntity(source, target, copyIfNull);
 		MassMailStatusTypeVO statusVO = source.getStatus();
 		DepartmentVO departmentVO = source.getDepartment();
@@ -256,17 +240,15 @@ extends MassMailDaoBase
 		}
 	}
 
-
-	public MassMailInVO toMassMailInVO(final MassMail entity)
-	{
+	@Override
+	public MassMailInVO toMassMailInVO(final MassMail entity) {
 		return super.toMassMailInVO(entity);
 	}
 
-
+	@Override
 	public void toMassMailInVO(
 			MassMail source,
-			MassMailInVO target)
-	{
+			MassMailInVO target) {
 		super.toMassMailInVO(source, target);
 		Department department = source.getDepartment();
 		MassMailStatusType status = source.getStatus();
@@ -290,16 +272,15 @@ extends MassMailDaoBase
 		}
 	}
 
-	public MassMailOutVO toMassMailOutVO(final MassMail entity)
-	{
+	@Override
+	public MassMailOutVO toMassMailOutVO(final MassMail entity) {
 		return super.toMassMailOutVO(entity);
 	}
 
+	@Override
 	public void toMassMailOutVO(
 			MassMail source,
-			MassMailOutVO target)
-	{
-
+			MassMailOutVO target) {
 		super.toMassMailOutVO(source, target);
 		MassMailStatusType status = source.getStatus();
 		Department department = source.getDepartment();

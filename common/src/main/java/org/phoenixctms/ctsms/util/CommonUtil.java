@@ -704,16 +704,16 @@ public final class CommonUtil {
 				sign = 1;
 				dob.setTime(dateOfBirth);
 			}
-			int year1 = today.get(GregorianCalendar.YEAR);
-			int year2 = dob.get(GregorianCalendar.YEAR);
+			int year1 = today.get(Calendar.YEAR);
+			int year2 = dob.get(Calendar.YEAR);
 			int age = year1 - year2;
-			int month1 = today.get(GregorianCalendar.MONTH);
-			int month2 = dob.get(GregorianCalendar.MONTH);
+			int month1 = today.get(Calendar.MONTH);
+			int month2 = dob.get(Calendar.MONTH);
 			if (month2 > month1) {
 				age--;
 			} else if (month1 == month2) {
-				int day1 = today.get(GregorianCalendar.DAY_OF_MONTH);
-				int day2 = dob.get(GregorianCalendar.DAY_OF_MONTH);
+				int day1 = today.get(Calendar.DAY_OF_MONTH);
+				int day2 = dob.get(Calendar.DAY_OF_MONTH);
 				if (day2 > day1) {
 					age--;
 				}
@@ -1776,7 +1776,7 @@ public final class CommonUtil {
 		if (dateOfBirth != null) {
 			GregorianCalendar dObCal = new GregorianCalendar();
 			dObCal.setTime(dateOfBirth);
-			return dObCal.get(GregorianCalendar.YEAR);
+			return dObCal.get(Calendar.YEAR);
 		}
 		return null;
 	}
@@ -2301,7 +2301,7 @@ public final class CommonUtil {
 		}
 		int quot = i / 26;
 		int rem = i % 26;
-		char letter = (char) ((int) 'A' + rem);
+		char letter = (char) ('A' + rem);
 		if (quot == 0) {
 			return "" + letter;
 		} else {

@@ -81,21 +81,20 @@ public class ProbandAddressBean extends ManagedBeanBase {
 	}
 
 	private ProbandAddressInVO in;
-
 	private ProbandAddressOutVO out;
 	private Long probandId;
 	private ProbandOutVO proband;
 	private ArrayList<SelectItem> availableTypes;
 	private ProbandAddressLazyModel addressModel;
 	private AddressTypeVO addressType;
+
 	public ProbandAddressBean() {
 		super();
 		addressModel = new ProbandAddressLazyModel();
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandAddressInVO backup = new ProbandAddressInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -320,7 +319,6 @@ public class ProbandAddressBean extends ManagedBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
 	}
-
 
 	@Override
 	public boolean isCreateable() {

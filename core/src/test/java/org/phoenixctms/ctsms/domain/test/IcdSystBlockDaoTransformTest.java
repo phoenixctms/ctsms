@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.IcdSystBlock
 */
-@Test(groups={"transform","IcdSystBlockDao"})
+@Test(groups = { "transform", "IcdSystBlockDao" })
 public class IcdSystBlockDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method IcdSystBlockDao.toIcdSystBlockVO
-   *
-   * @see org.phoenixctms.ctsms.domain.IcdSystBlockDao#toIcdSystBlockVO(org.phoenixctms.ctsms.domain.IcdSystBlock source, org.phoenixctms.ctsms.vo.IcdSystBlockVO target)
-   */
-  @Test
-  public void testToIcdSystBlockVO() {
-    Assert.fail("Test 'IcdSystBlockDaoTransformTest.testToIcdSystBlockVO' not implemented!");
-  }
+	/**
+	 * Test for method IcdSystBlockDao.toIcdSystBlockVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.IcdSystBlockDao#toIcdSystBlockVO(org.phoenixctms.ctsms.domain.IcdSystBlock source, org.phoenixctms.ctsms.vo.IcdSystBlockVO target)
+	 */
+	@Test
+	public void testToIcdSystBlockVO() {
+		Assert.fail("Test 'IcdSystBlockDaoTransformTest.testToIcdSystBlockVO' not implemented!");
+	}
 
-    /**
-   * Test for method icdSystBlockVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.IcdSystBlockDao#icdSystBlockVOToEntity(org.phoenixctms.ctsms.vo.IcdSystBlockVO source, org.phoenixctms.ctsms.domain.IcdSystBlock target, boolean copyIfNull)
-   */
-  @Test
-  public void testIcdSystBlockVOToEntity() {
-    Assert.fail("Test 'IcdSystBlockDaoTransformTest.testIcdSystBlockVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method icdSystBlockVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.IcdSystBlockDao#icdSystBlockVOToEntity(org.phoenixctms.ctsms.vo.IcdSystBlockVO source, org.phoenixctms.ctsms.domain.IcdSystBlock target, boolean copyIfNull)
+	*/
+	@Test
+	public void testIcdSystBlockVOToEntity() {
+		Assert.fail("Test 'IcdSystBlockDaoTransformTest.testIcdSystBlockVOToEntity' not implemented!");
+	}
 }

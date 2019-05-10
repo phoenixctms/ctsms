@@ -12,8 +12,7 @@ import org.phoenixctms.ctsms.util.ExecUtil;
 public class PermissionTemplateWriter extends LineWriter {
 
 	private static final ArrayList<String> PARAMETERS_TO_EXCLUDE = new ArrayList<String>();
-	static
-	{
+	static {
 		PARAMETERS_TO_EXCLUDE.add("auth");
 	}
 

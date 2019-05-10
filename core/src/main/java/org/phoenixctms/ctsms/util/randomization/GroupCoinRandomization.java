@@ -17,7 +17,6 @@ import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 
 public class GroupCoinRandomization extends Randomization {
 
-
 	protected GroupCoinRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -25,8 +24,6 @@ public class GroupCoinRandomization extends Randomization {
 				probandListEntryTagValueDao);
 		// TODO Auto-generated constructor stub
 	}
-
-
 
 	private ProbandGroup getRandomGroup(Trial trial, Collection<ProbandGroup> groups) throws Exception {
 		ProbandGroup result = null;
@@ -40,8 +37,6 @@ public class GroupCoinRandomization extends Randomization {
 		return result;
 	}
 
-
-
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.GROUP_COIN;
@@ -52,7 +47,6 @@ public class GroupCoinRandomization extends Randomization {
 		return RandomizationType.GROUP;
 	}
 
-
 	@Override
 	protected ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception {
 		Collection<ProbandGroup> probandGroups = getRandomizationGroups(trial);
@@ -60,6 +54,5 @@ public class GroupCoinRandomization extends Randomization {
 		ProbandGroup group = getRandomGroup(trial, probandGroups);
 		saveRandom(trial);
 		return group;
-
 	}
 }

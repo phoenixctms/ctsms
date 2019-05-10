@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.servlet;
 
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.Urls;
-
 
 public class UnsubscribeServlet extends HttpServlet {
 

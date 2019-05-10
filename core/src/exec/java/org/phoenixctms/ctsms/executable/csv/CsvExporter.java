@@ -27,7 +27,6 @@ public class CsvExporter {
 	protected PermissionDao permissionDao;
 	@Autowired
 	protected ProfilePermissionDao profilePermissionDao;
-
 	private JobOutput jobOutput;
 
 	public long exportPermissionDefinitions(String fileName, String encoding) throws Exception {

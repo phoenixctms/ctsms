@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.Signature
 */
-@Test(groups={"transform","SignatureDao"})
+@Test(groups = { "transform", "SignatureDao" })
 public class SignatureDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method SignatureDao.toSignatureVO
-   *
-   * @see org.phoenixctms.ctsms.domain.SignatureDao#toSignatureVO(org.phoenixctms.ctsms.domain.Signature source, org.phoenixctms.ctsms.vo.SignatureVO target)
-   */
-  @Test
-  public void testToSignatureVO() {
-    Assert.fail("Test 'SignatureDaoTransformTest.testToSignatureVO' not implemented!");
-  }
+	/**
+	 * Test for method SignatureDao.toSignatureVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.SignatureDao#toSignatureVO(org.phoenixctms.ctsms.domain.Signature source, org.phoenixctms.ctsms.vo.SignatureVO target)
+	 */
+	@Test
+	public void testToSignatureVO() {
+		Assert.fail("Test 'SignatureDaoTransformTest.testToSignatureVO' not implemented!");
+	}
 
-    /**
-   * Test for method signatureVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.SignatureDao#signatureVOToEntity(org.phoenixctms.ctsms.vo.SignatureVO source, org.phoenixctms.ctsms.domain.Signature target, boolean copyIfNull)
-   */
-  @Test
-  public void testSignatureVOToEntity() {
-    Assert.fail("Test 'SignatureDaoTransformTest.testSignatureVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method signatureVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.SignatureDao#signatureVOToEntity(org.phoenixctms.ctsms.vo.SignatureVO source, org.phoenixctms.ctsms.domain.Signature target, boolean copyIfNull)
+	*/
+	@Test
+	public void testSignatureVOToEntity() {
+		Assert.fail("Test 'SignatureDaoTransformTest.testSignatureVOToEntity' not implemented!");
+	}
 }

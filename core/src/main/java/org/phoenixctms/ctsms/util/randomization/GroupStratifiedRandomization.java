@@ -25,7 +25,6 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 
 public class GroupStratifiedRandomization extends Randomization {
 
-
 	protected GroupStratifiedRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -33,8 +32,6 @@ public class GroupStratifiedRandomization extends Randomization {
 				probandListEntryTagValueDao);
 		// TODO Auto-generated constructor stub
 	}
-
-
 
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
@@ -88,6 +85,4 @@ public class GroupStratifiedRandomization extends Randomization {
 		initStratificationValuesInfo(randomizationList);
 		return group;
 	}
-
-
 }

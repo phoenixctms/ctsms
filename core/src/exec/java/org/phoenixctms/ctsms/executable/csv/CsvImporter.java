@@ -30,10 +30,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CsvImporter {
 
-	private  static Search getRevisionSearch(String revision) {
+	private static Search getRevisionSearch(String revision) {
 		return new Search(new SearchParameter[] {
 				new SearchParameter("revision", revision, SearchParameter.EQUAL_COMPARATOR) });
 	}
+
 	@Autowired
 	protected MimeTypeDao mimeTypeDao;
 	@Autowired
@@ -77,7 +78,6 @@ public class CsvImporter {
 	@Autowired
 	protected OpsCodeLineProcessor opsCodeLineProcessor;
 	private JobOutput jobOutput;
-
 	@Autowired
 	protected PermissionDao permissionDao;
 
@@ -85,7 +85,6 @@ public class CsvImporter {
 	}
 
 	public long loadAlphaIds(String fileName, String encoding, boolean removeAllBeforeInsert, String revision, String icdSystRevision) throws Exception {
-
 		alphaIdLineProcessor.setJobOutput(jobOutput);
 		if (CommonUtil.isEmptyString(revision)) {
 			revision = ExecUtil.removeExtension((new File(fileName)).getName());
@@ -217,7 +216,6 @@ public class CsvImporter {
 	}
 
 	private long readLines(String fileName, String encoding, LineProcessor processor) throws Exception {
-
 		Scanner scanner = new Scanner(new FileInputStream(fileName), ExecUtil.sanitizeEncoding(encoding, jobOutput));
 		scanner.useDelimiter(processor.getLineTerminatorRegexpPattern());
 		String line = null;
@@ -238,12 +236,10 @@ public class CsvImporter {
 		}
 		jobOutput.println(rowCount + " rows processed");
 		processor.postProcess();
-
 		return rowCount;
 	}
 
 	public Collection<Permission> readPermissionDefinitionsPatchUserIdentityDepartmentPermission(String fileName, String encoding) throws Exception {
-
 		userIdentityDepartmentPermissionDefinitionLineProcessor.setJobOutput(jobOutput);
 		readLines(fileName, encoding, userIdentityDepartmentPermissionDefinitionLineProcessor);
 		return userIdentityDepartmentPermissionDefinitionLineProcessor.getPermissions();

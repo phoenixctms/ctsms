@@ -6,7 +6,6 @@ import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.exception.ServiceException;
 
-
 public final class CheckIDUtil {
 
 	private final static String CHECK_ENTITY_ID_METHOD_PREFIX = "check";
@@ -22,8 +21,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static AlphaId checkAlphaIdId(Long alphaIdId, AlphaIdDao alphaIdDao) throws ServiceException
-	{
+	public static AlphaId checkAlphaIdId(Long alphaIdId, AlphaIdDao alphaIdDao) throws ServiceException {
 		AlphaId alphaId = alphaIdDao.load(alphaIdId);
 		if (alphaId == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ALPHA_ID_ID, alphaIdId == null ? null : alphaIdId.toString());
@@ -31,8 +29,7 @@ public final class CheckIDUtil {
 		return alphaId;
 	}
 
-	public static AspAtcCode checkAspAtcCodeId(Long aspAtcCodeId, AspAtcCodeDao aspAtcCodeDao) throws ServiceException
-	{
+	public static AspAtcCode checkAspAtcCodeId(Long aspAtcCodeId, AspAtcCodeDao aspAtcCodeDao) throws ServiceException {
 		AspAtcCode aspAtcCode = aspAtcCodeDao.load(aspAtcCodeId);
 		if (aspAtcCode == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ASP_ATC_CODE_ID, aspAtcCodeId == null ? null : aspAtcCodeId.toString());
@@ -40,8 +37,7 @@ public final class CheckIDUtil {
 		return aspAtcCode;
 	}
 
-	public static Asp checkAspId(Long aspId, AspDao aspDao) throws ServiceException
-	{
+	public static Asp checkAspId(Long aspId, AspDao aspDao) throws ServiceException {
 		Asp asp = aspDao.load(aspId);
 		if (asp == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ASP_ID, aspId == null ? null : aspId.toString());
@@ -49,8 +45,7 @@ public final class CheckIDUtil {
 		return asp;
 	}
 
-	public static AspSubstance checkAspSubstanceId(Long aspSubstanceId, AspSubstanceDao aspSubstanceDao) throws ServiceException
-	{
+	public static AspSubstance checkAspSubstanceId(Long aspSubstanceId, AspSubstanceDao aspSubstanceDao) throws ServiceException {
 		AspSubstance aspSubstance = aspSubstanceDao.load(aspSubstanceId);
 		if (aspSubstance == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ASP_SUBSTANCE_ID, aspSubstanceId == null ? null : aspSubstanceId.toString());
@@ -58,8 +53,7 @@ public final class CheckIDUtil {
 		return aspSubstance;
 	}
 
-	public static BankAccount checkBankAccountId(Long bankAccountId, BankAccountDao bankAccountDao) throws ServiceException
-	{
+	public static BankAccount checkBankAccountId(Long bankAccountId, BankAccountDao bankAccountDao) throws ServiceException {
 		BankAccount bankAccount = bankAccountDao.load(bankAccountId);
 		if (bankAccount == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_BANK_ACCOUNT_ID, bankAccountId == null ? null : bankAccountId.toString());
@@ -83,8 +77,7 @@ public final class CheckIDUtil {
 		return category;
 	}
 
-	public static Course checkCourseId(Long courseId, CourseDao courseDao) throws ServiceException
-	{
+	public static Course checkCourseId(Long courseId, CourseDao courseDao) throws ServiceException {
 		Course course = courseDao.load(courseId);
 		if (course == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_COURSE_ID, courseId == null ? null : courseId.toString());
@@ -92,8 +85,7 @@ public final class CheckIDUtil {
 		return course;
 	}
 
-	public static Course checkCourseId(Long courseId, CourseDao courseDao, LockMode lockMode) throws ServiceException
-	{
+	public static Course checkCourseId(Long courseId, CourseDao courseDao, LockMode lockMode) throws ServiceException {
 		Course course = courseDao.load(courseId, lockMode);
 		if (course == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_COURSE_ID, courseId == null ? null : courseId.toString());
@@ -102,8 +94,7 @@ public final class CheckIDUtil {
 	}
 
 	public static CourseParticipationStatusEntry checkCourseParticipationStatusEntryId(Long courseParticipationId,
-			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException
-	{
+			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.load(courseParticipationId);
 		if (courseParticipation == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_COURSE_PARTICIPATION_STATUS_ENTRY_ID,
@@ -138,8 +129,7 @@ public final class CheckIDUtil {
 		return criteria;
 	}
 
-	public static CvPosition checkCvPositionId(Long cvPositionId, CvPositionDao cvPositionDao) throws ServiceException
-	{
+	public static CvPosition checkCvPositionId(Long cvPositionId, CvPositionDao cvPositionDao) throws ServiceException {
 		CvPosition cvPosition = cvPositionDao.load(cvPositionId);
 		if (cvPosition == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_CV_POSITION_ID, cvPositionId == null ? null : cvPositionId.toString());
@@ -163,8 +153,7 @@ public final class CheckIDUtil {
 		return department;
 	}
 
-	public static Diagnosis checkDiagnosisId(Long diagnosisId, DiagnosisDao diagnosisDao) throws ServiceException
-	{
+	public static Diagnosis checkDiagnosisId(Long diagnosisId, DiagnosisDao diagnosisDao) throws ServiceException {
 		Diagnosis diagnosis = diagnosisDao.load(diagnosisId);
 		if (diagnosis == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DIAGNOSIS_ID, diagnosisId == null ? null : diagnosisId.toString());
@@ -172,8 +161,7 @@ public final class CheckIDUtil {
 		return diagnosis;
 	}
 
-	public static DutyRosterTurn checkDutyRosterTurnId(Long dutyRosterTurnId, DutyRosterTurnDao dutyRosterTurnDao) throws ServiceException
-	{
+	public static DutyRosterTurn checkDutyRosterTurnId(Long dutyRosterTurnId, DutyRosterTurnDao dutyRosterTurnDao) throws ServiceException {
 		DutyRosterTurn dutyRosterTurn = dutyRosterTurnDao.load(dutyRosterTurnId);
 		if (dutyRosterTurn == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DUTY_ROSTER_TURN_ID, dutyRosterTurnId == null ? null : dutyRosterTurnId.toString());
@@ -189,11 +177,11 @@ public final class CheckIDUtil {
 		return ecrfField;
 	}
 
-	public static ECRFFieldStatusEntry checkEcrfFieldStatusEntryId(Long ecrfFieldStatusEntryId, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws ServiceException
-	{
+	public static ECRFFieldStatusEntry checkEcrfFieldStatusEntryId(Long ecrfFieldStatusEntryId, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws ServiceException {
 		ECRFFieldStatusEntry ecrfFieldStatusEntry = ecrfFieldStatusEntryDao.load(ecrfFieldStatusEntryId);
 		if (ecrfFieldStatusEntry == null) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ECRF_FIELD_STATUS_ENTRY_ID, ecrfFieldStatusEntryId == null ? null : ecrfFieldStatusEntryId.toString());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ECRF_FIELD_STATUS_ENTRY_ID,
+					ecrfFieldStatusEntryId == null ? null : ecrfFieldStatusEntryId.toString());
 		}
 		return ecrfFieldStatusEntry;
 	}
@@ -206,8 +194,7 @@ public final class CheckIDUtil {
 		return ecrfFieldState;
 	}
 
-	public static ECRFFieldValue checkEcrfFieldValueId(Long ecrfFieldValueId, ECRFFieldValueDao ecrfFieldValueDao) throws ServiceException
-	{
+	public static ECRFFieldValue checkEcrfFieldValueId(Long ecrfFieldValueId, ECRFFieldValueDao ecrfFieldValueDao) throws ServiceException {
 		ECRFFieldValue ecrfFieldValue = ecrfFieldValueDao.load(ecrfFieldValueId);
 		if (ecrfFieldValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ECRF_FIELD_VALUE_ID, ecrfFieldValueId == null ? null : ecrfFieldValueId.toString());
@@ -281,8 +268,7 @@ public final class CheckIDUtil {
 		return hyperlink;
 	}
 
-	public static InputField checkInputFieldId(Long inputFieldId, InputFieldDao inputFieldDao) throws ServiceException
-	{
+	public static InputField checkInputFieldId(Long inputFieldId, InputFieldDao inputFieldDao) throws ServiceException {
 		InputField inputField = inputFieldDao.load(inputFieldId);
 		if (inputField == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INPUT_FIELD_ID, inputFieldId == null ? null : inputFieldId.toString());
@@ -290,8 +276,7 @@ public final class CheckIDUtil {
 		return inputField;
 	}
 
-	public static InputField checkInputFieldId(Long inputFieldId, InputFieldDao inputFieldDao, LockMode lockMode) throws ServiceException
-	{
+	public static InputField checkInputFieldId(Long inputFieldId, InputFieldDao inputFieldDao, LockMode lockMode) throws ServiceException {
 		InputField inputField = inputFieldDao.load(inputFieldId, lockMode);
 		if (inputField == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INPUT_FIELD_ID, inputFieldId == null ? null : inputFieldId.toString());
@@ -300,8 +285,7 @@ public final class CheckIDUtil {
 	}
 
 	public static InputFieldSelectionSetValue checkInputFieldSelectionSetValueId(Long selectionSetValueId, InputFieldSelectionSetValueDao selectionSetValueDao)
-			throws ServiceException
-	{
+			throws ServiceException {
 		InputFieldSelectionSetValue selectionSetValue = selectionSetValueDao.load(selectionSetValueId);
 		if (selectionSetValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_SELECTION_SET_VALUE_ID, selectionSetValueId == null ? null : selectionSetValueId.toString());
@@ -309,8 +293,7 @@ public final class CheckIDUtil {
 		return selectionSetValue;
 	}
 
-	public static Inquiry checkInquiryId(Long inquiryId, InquiryDao inquiryDao) throws ServiceException
-	{
+	public static Inquiry checkInquiryId(Long inquiryId, InquiryDao inquiryDao) throws ServiceException {
 		Inquiry inquiry = inquiryDao.load(inquiryId);
 		if (inquiry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INQUIRY_ID, inquiryId == null ? null : inquiryId.toString());
@@ -318,8 +301,7 @@ public final class CheckIDUtil {
 		return inquiry;
 	}
 
-	public static InquiryValue checkInquiryValueId(Long inquiryValueId, InquiryValueDao inquiryValueDao) throws ServiceException
-	{
+	public static InquiryValue checkInquiryValueId(Long inquiryValueId, InquiryValueDao inquiryValueDao) throws ServiceException {
 		InquiryValue inquiryValue = inquiryValueDao.load(inquiryValueId);
 		if (inquiryValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INQUIRY_VALUE_ID, inquiryValueId == null ? null : inquiryValueId.toString());
@@ -327,8 +309,7 @@ public final class CheckIDUtil {
 		return inquiryValue;
 	}
 
-	public static InventoryBooking checkInventoryBookingId(Long bookingId, InventoryBookingDao inventoryBookingDao) throws ServiceException
-	{
+	public static InventoryBooking checkInventoryBookingId(Long bookingId, InventoryBookingDao inventoryBookingDao) throws ServiceException {
 		InventoryBooking booking = inventoryBookingDao.load(bookingId);
 		if (booking == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INVENTORY_BOOKING_ID, bookingId == null ? null : bookingId.toString());
@@ -344,8 +325,7 @@ public final class CheckIDUtil {
 		return category;
 	}
 
-	public static Inventory checkInventoryId(Long inventoryId, InventoryDao inventoryDao) throws ServiceException
-	{
+	public static Inventory checkInventoryId(Long inventoryId, InventoryDao inventoryDao) throws ServiceException {
 		Inventory inventory = inventoryDao.load(inventoryId);
 		if (inventory == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INVENTORY_ID, inventoryId == null ? null : inventoryId.toString());
@@ -353,8 +333,7 @@ public final class CheckIDUtil {
 		return inventory;
 	}
 
-	public static Inventory checkInventoryId(Long inventoryId, InventoryDao inventoryDao, LockMode lockMode) throws ServiceException
-	{
+	public static Inventory checkInventoryId(Long inventoryId, InventoryDao inventoryDao, LockMode lockMode) throws ServiceException {
 		Inventory inventory = inventoryDao.load(inventoryId, lockMode);
 		if (inventory == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INVENTORY_ID, inventoryId == null ? null : inventoryId.toString());
@@ -362,8 +341,7 @@ public final class CheckIDUtil {
 		return inventory;
 	}
 
-	public static InventoryStatusEntry checkInventoryStatusEntryId(Long statusEntryId, InventoryStatusEntryDao inventoryStatusEntryDao) throws ServiceException
-	{
+	public static InventoryStatusEntry checkInventoryStatusEntryId(Long statusEntryId, InventoryStatusEntryDao inventoryStatusEntryDao) throws ServiceException {
 		InventoryStatusEntry statusEntry = inventoryStatusEntryDao.load(statusEntryId);
 		if (statusEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INVENTORY_STATUS_ENTRY_ID, statusEntryId == null ? null : statusEntryId.toString());
@@ -387,8 +365,7 @@ public final class CheckIDUtil {
 		return tag;
 	}
 
-	public static InventoryTagValue checkInventoryTagValueId(Long tagValueId, InventoryTagValueDao inventoryTagValueDao) throws ServiceException
-	{
+	public static InventoryTagValue checkInventoryTagValueId(Long tagValueId, InventoryTagValueDao inventoryTagValueDao) throws ServiceException {
 		InventoryTagValue tagValue = inventoryTagValueDao.load(tagValueId);
 		if (tagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INVENTORY_TAG_VALUE_ID, tagValueId == null ? null : tagValueId.toString());
@@ -420,8 +397,7 @@ public final class CheckIDUtil {
 		return competence;
 	}
 
-	public static Lecturer checkLecturerId(Long lecturerId, LecturerDao lecturerDao) throws ServiceException
-	{
+	public static Lecturer checkLecturerId(Long lecturerId, LecturerDao lecturerDao) throws ServiceException {
 		Lecturer lecturer = lecturerDao.load(lecturerId);
 		if (lecturer == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_LECTURER_ID, lecturerId == null ? null : lecturerId.toString());
@@ -429,8 +405,7 @@ public final class CheckIDUtil {
 		return lecturer;
 	}
 
-	public static MaintenanceScheduleItem checkMaintenanceScheduleItemId(Long maintenanceItemId, MaintenanceScheduleItemDao maintenanceScheduleItemDao) throws ServiceException
-	{
+	public static MaintenanceScheduleItem checkMaintenanceScheduleItemId(Long maintenanceItemId, MaintenanceScheduleItemDao maintenanceScheduleItemDao) throws ServiceException {
 		MaintenanceScheduleItem maintenanceItem = maintenanceScheduleItemDao.load(maintenanceItemId);
 		if (maintenanceItem == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MAINTENANCE_SCHEDULE_ITEM_ID, maintenanceItemId == null ? null : maintenanceItemId.toString());
@@ -446,8 +421,7 @@ public final class CheckIDUtil {
 		return maintenanceType;
 	}
 
-	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao) throws ServiceException
-	{
+	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao) throws ServiceException {
 		MassMail massMail = massMailDao.load(massMailId);
 		if (massMail == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_ID, massMailId == null ? null : massMailId.toString());
@@ -455,8 +429,7 @@ public final class CheckIDUtil {
 		return massMail;
 	}
 
-	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao, LockMode lockMode) throws ServiceException
-	{
+	public static MassMail checkMassMailId(Long massMailId, MassMailDao massMailDao, LockMode lockMode) throws ServiceException {
 		MassMail massMail = massMailDao.load(massMailId, lockMode);
 		if (massMail == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MASS_MAIL_ID, massMailId == null ? null : massMailId.toString());
@@ -471,6 +444,7 @@ public final class CheckIDUtil {
 		}
 		return recipient;
 	}
+
 	public static MassMailRecipient checkMassMailRecipientId(Long massMailRecipientId, MassMailRecipientDao massMailRecipientDao, LockMode lockMode) throws ServiceException {
 		MassMailRecipient recipient = massMailRecipientDao.load(massMailRecipientId, lockMode);
 		if (recipient == null) {
@@ -495,8 +469,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static Medication checkMedicationId(Long medicationId, MedicationDao medicationDao) throws ServiceException
-	{
+	public static Medication checkMedicationId(Long medicationId, MedicationDao medicationDao) throws ServiceException {
 		Medication medication = medicationDao.load(medicationId);
 		if (medication == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MEDICATION_ID, medicationId == null ? null : medicationId.toString());
@@ -504,8 +477,7 @@ public final class CheckIDUtil {
 		return medication;
 	}
 
-	public static MoneyTransfer checkMoneyTransferId(Long moneyTransferId, MoneyTransferDao moneyTransferDao) throws ServiceException
-	{
+	public static MoneyTransfer checkMoneyTransferId(Long moneyTransferId, MoneyTransferDao moneyTransferDao) throws ServiceException {
 		MoneyTransfer moneyTransfer = moneyTransferDao.load(moneyTransferId);
 		if (moneyTransfer == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_MONEY_TRANSFER_ID, moneyTransferId == null ? null : moneyTransferId.toString());
@@ -513,8 +485,7 @@ public final class CheckIDUtil {
 		return moneyTransfer;
 	}
 
-	public static Notification checkNotificationId(Long notificationId, NotificationDao notificationDao) throws ServiceException
-	{
+	public static Notification checkNotificationId(Long notificationId, NotificationDao notificationDao) throws ServiceException {
 		Notification notification = notificationDao.load(notificationId);
 		if (notification == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_NOTIFICATION_ID, notificationId == null ? null : notificationId.toString());
@@ -522,8 +493,7 @@ public final class CheckIDUtil {
 		return notification;
 	}
 
-	public static OpsCode checkOpsCodeId(Long opsCodeId, OpsCodeDao opsCodeDao) throws ServiceException
-	{
+	public static OpsCode checkOpsCodeId(Long opsCodeId, OpsCodeDao opsCodeDao) throws ServiceException {
 		OpsCode opsCode = opsCodeDao.load(opsCodeId);
 		if (opsCode == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_OPS_CODE_ID, opsCodeId == null ? null : opsCodeId.toString());
@@ -541,8 +511,7 @@ public final class CheckIDUtil {
 		return privacyConsentState;
 	}
 
-	public static ProbandAddress checkProbandAddressId(Long addressId, ProbandAddressDao probandAddressDao) throws ServiceException
-	{
+	public static ProbandAddress checkProbandAddressId(Long addressId, ProbandAddressDao probandAddressDao) throws ServiceException {
 		ProbandAddress address = probandAddressDao.load(addressId);
 		if (address == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_ADDRESS_ID, addressId == null ? null : addressId.toString());
@@ -559,8 +528,7 @@ public final class CheckIDUtil {
 	}
 
 	public static ProbandContactDetailValue checkProbandContactDetailValueId(Long contactValueId, ProbandContactDetailValueDao probandContactDetailValueDao)
-			throws ServiceException
-	{
+			throws ServiceException {
 		ProbandContactDetailValue contactValue = probandContactDetailValueDao.load(contactValueId);
 		if (contactValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_CONTACT_DETAIL_VALUE_ID, contactValueId == null ? null : contactValueId.toString());
@@ -576,8 +544,7 @@ public final class CheckIDUtil {
 		return probandGroup;
 	}
 
-	public static Proband checkProbandId(Long probandId, ProbandDao probandDao) throws ServiceException
-	{
+	public static Proband checkProbandId(Long probandId, ProbandDao probandDao) throws ServiceException {
 		Proband proband = probandDao.load(probandId);
 		if (proband == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_ID, probandId == null ? null : probandId.toString());
@@ -585,8 +552,7 @@ public final class CheckIDUtil {
 		return proband;
 	}
 
-	public static Proband checkProbandId(Long probandId, ProbandDao probandDao, LockMode lockMode) throws ServiceException
-	{
+	public static Proband checkProbandId(Long probandId, ProbandDao probandDao, LockMode lockMode) throws ServiceException {
 		Proband proband = probandDao.load(probandId, lockMode);
 		if (proband == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_ID, probandId == null ? null : probandId.toString());
@@ -594,8 +560,7 @@ public final class CheckIDUtil {
 		return proband;
 	}
 
-	public static ProbandListEntry checkProbandListEntryId(Long probandListEntryId, ProbandListEntryDao probandListEntryDao) throws ServiceException
-	{
+	public static ProbandListEntry checkProbandListEntryId(Long probandListEntryId, ProbandListEntryDao probandListEntryDao) throws ServiceException {
 		ProbandListEntry probandListEntry = probandListEntryDao.load(probandListEntryId);
 		if (probandListEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_ENTRY_ID, probandListEntryId == null ? null : probandListEntryId.toString());
@@ -603,8 +568,7 @@ public final class CheckIDUtil {
 		return probandListEntry;
 	}
 
-	public static ProbandListEntry checkProbandListEntryId(Long probandListEntryId, ProbandListEntryDao probandListEntryDao, LockMode lockMode) throws ServiceException
-	{
+	public static ProbandListEntry checkProbandListEntryId(Long probandListEntryId, ProbandListEntryDao probandListEntryDao, LockMode lockMode) throws ServiceException {
 		ProbandListEntry probandListEntry = probandListEntryDao.load(probandListEntryId, lockMode);
 		if (probandListEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_ENTRY_ID, probandListEntryId == null ? null : probandListEntryId.toString());
@@ -612,8 +576,7 @@ public final class CheckIDUtil {
 		return probandListEntry;
 	}
 
-	public static ProbandListEntryTag checkProbandListEntryTagId(Long probandListEntryTagId, ProbandListEntryTagDao probandListEntryTagDao) throws ServiceException
-	{
+	public static ProbandListEntryTag checkProbandListEntryTagId(Long probandListEntryTagId, ProbandListEntryTagDao probandListEntryTagDao) throws ServiceException {
 		ProbandListEntryTag probandListEntryTag = probandListEntryTagDao.load(probandListEntryTagId);
 		if (probandListEntryTag == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_ENTRY_TAG_ID, probandListEntryTagId == null ? null : probandListEntryTagId.toString());
@@ -622,8 +585,7 @@ public final class CheckIDUtil {
 	}
 
 	public static ProbandListEntryTagValue checkProbandListEntryTagValueId(Long probandListEntryTagValueId, ProbandListEntryTagValueDao probandListEntryTagValueDao)
-			throws ServiceException
-	{
+			throws ServiceException {
 		ProbandListEntryTagValue probandListEntryTagValue = probandListEntryTagValueDao.load(probandListEntryTagValueId);
 		if (probandListEntryTagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_ENTRY_TAG_VALUE_ID, probandListEntryTagValueId == null ? null
@@ -632,8 +594,7 @@ public final class CheckIDUtil {
 		return probandListEntryTagValue;
 	}
 
-	public static ProbandListStatusEntry checkProbandListStatusEntryId(Long probandListStatusEntryId, ProbandListStatusEntryDao probandListStatusEntryDao) throws ServiceException
-	{
+	public static ProbandListStatusEntry checkProbandListStatusEntryId(Long probandListStatusEntryId, ProbandListStatusEntryDao probandListStatusEntryDao) throws ServiceException {
 		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.load(probandListStatusEntryId);
 		if (probandListStatusEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_STATUS_ENTRY_ID,
@@ -642,8 +603,7 @@ public final class CheckIDUtil {
 		return probandListStatusEntry;
 	}
 
-	public static ProbandListStatusType checkProbandListStatusTypeId(Long probandListStatusTypeId, ProbandListStatusTypeDao probandListStatusTypeDao) throws ServiceException
-	{
+	public static ProbandListStatusType checkProbandListStatusTypeId(Long probandListStatusTypeId, ProbandListStatusTypeDao probandListStatusTypeDao) throws ServiceException {
 		ProbandListStatusType probandListStatusType = probandListStatusTypeDao.load(probandListStatusTypeId);
 		if (probandListStatusType == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_LIST_STATUS_TYPE_ID,
@@ -652,8 +612,7 @@ public final class CheckIDUtil {
 		return probandListStatusType;
 	}
 
-	public static ProbandStatusEntry checkProbandStatusEntryId(Long statusEntryId, ProbandStatusEntryDao probandStatusEntryDao) throws ServiceException
-	{
+	public static ProbandStatusEntry checkProbandStatusEntryId(Long statusEntryId, ProbandStatusEntryDao probandStatusEntryDao) throws ServiceException {
 		ProbandStatusEntry statusEntry = probandStatusEntryDao.load(statusEntryId);
 		if (statusEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_STATUS_ENTRY_ID, statusEntryId == null ? null : statusEntryId.toString());
@@ -677,8 +636,7 @@ public final class CheckIDUtil {
 		return tag;
 	}
 
-	public static ProbandTagValue checkProbandTagValueId(Long tagValueId, ProbandTagValueDao probandTagValueDao) throws ServiceException
-	{
+	public static ProbandTagValue checkProbandTagValueId(Long tagValueId, ProbandTagValueDao probandTagValueDao) throws ServiceException {
 		ProbandTagValue tagValue = probandTagValueDao.load(tagValueId);
 		if (tagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_TAG_VALUE_ID, tagValueId == null ? null : tagValueId.toString());
@@ -686,8 +644,7 @@ public final class CheckIDUtil {
 		return tagValue;
 	}
 
-	public static Procedure checkProcedureId(Long procedureId, ProcedureDao procedureDao) throws ServiceException
-	{
+	public static Procedure checkProcedureId(Long procedureId, ProcedureDao procedureDao) throws ServiceException {
 		Procedure procedure = procedureDao.load(procedureId);
 		if (procedure == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROCEDURE_ID, procedureId == null ? null : procedureId.toString());
@@ -703,8 +660,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static StaffAddress checkStaffAddressId(Long addressId, StaffAddressDao staffAddressDao) throws ServiceException
-	{
+	public static StaffAddress checkStaffAddressId(Long addressId, StaffAddressDao staffAddressDao) throws ServiceException {
 		StaffAddress address = staffAddressDao.load(addressId);
 		if (address == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_ADDRESS_ID, addressId == null ? null : addressId.toString());
@@ -720,8 +676,7 @@ public final class CheckIDUtil {
 		return category;
 	}
 
-	public static StaffContactDetailValue checkStaffContactDetailValueId(Long contactValueId, StaffContactDetailValueDao staffContactDetailValueDao) throws ServiceException
-	{
+	public static StaffContactDetailValue checkStaffContactDetailValueId(Long contactValueId, StaffContactDetailValueDao staffContactDetailValueDao) throws ServiceException {
 		StaffContactDetailValue contactValue = staffContactDetailValueDao.load(contactValueId);
 		if (contactValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_CONTACT_DETAIL_VALUE_ID, contactValueId == null ? null : contactValueId.toString());
@@ -729,8 +684,7 @@ public final class CheckIDUtil {
 		return contactValue;
 	}
 
-	public static Staff checkStaffId(Long staffId, StaffDao staffDao) throws ServiceException
-	{
+	public static Staff checkStaffId(Long staffId, StaffDao staffDao) throws ServiceException {
 		Staff staff = staffDao.load(staffId);
 		if (staff == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_ID, staffId == null ? null : staffId.toString());
@@ -738,8 +692,7 @@ public final class CheckIDUtil {
 		return staff;
 	}
 
-	public static Staff checkStaffId(Long staffId, StaffDao staffDao, LockMode lockMode) throws ServiceException
-	{
+	public static Staff checkStaffId(Long staffId, StaffDao staffDao, LockMode lockMode) throws ServiceException {
 		Staff staff = staffDao.load(staffId, lockMode);
 		if (staff == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_ID, staffId == null ? null : staffId.toString());
@@ -747,8 +700,7 @@ public final class CheckIDUtil {
 		return staff;
 	}
 
-	public static StaffStatusEntry checkStaffStatusEntryId(Long statusEntryId, StaffStatusEntryDao staffStatusEntryDao) throws ServiceException
-	{
+	public static StaffStatusEntry checkStaffStatusEntryId(Long statusEntryId, StaffStatusEntryDao staffStatusEntryDao) throws ServiceException {
 		StaffStatusEntry statusEntry = staffStatusEntryDao.load(statusEntryId);
 		if (statusEntry == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_STATUS_ENTRY_ID, statusEntryId == null ? null : statusEntryId.toString());
@@ -772,8 +724,7 @@ public final class CheckIDUtil {
 		return tag;
 	}
 
-	public static StaffTagValue checkStaffTagValueId(Long tagValueId, StaffTagValueDao staffTagValueDao) throws ServiceException
-	{
+	public static StaffTagValue checkStaffTagValueId(Long tagValueId, StaffTagValueDao staffTagValueDao) throws ServiceException {
 		StaffTagValue tagValue = staffTagValueDao.load(tagValueId);
 		if (tagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STAFF_TAG_VALUE_ID, tagValueId == null ? null : tagValueId.toString());
@@ -782,8 +733,7 @@ public final class CheckIDUtil {
 	}
 
 	public static StratificationRandomizationList checkStratificationRandomizationListId(Long stratificationRandomizationListId,
-			StratificationRandomizationListDao stratificationRandomizationListDao) throws ServiceException
-	{
+			StratificationRandomizationListDao stratificationRandomizationListDao) throws ServiceException {
 		StratificationRandomizationList stratificationRandomizationList = stratificationRandomizationListDao.load(stratificationRandomizationListId);
 		if (stratificationRandomizationList == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_STRATIFICATION_RANDOMIZATION_LIST_ID,
@@ -800,8 +750,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static TeamMember checkTeamMemberId(Long teamMemberId, TeamMemberDao teamMemberDao) throws ServiceException
-	{
+	public static TeamMember checkTeamMemberId(Long teamMemberId, TeamMemberDao teamMemberDao) throws ServiceException {
 		TeamMember teamMember = teamMemberDao.load(teamMemberId);
 		if (teamMember == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TEAM_MEMBER_ID, teamMemberId == null ? null : teamMemberId.toString());
@@ -833,8 +782,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static Trial checkTrialId(Long trialId, TrialDao trialDao) throws ServiceException
-	{
+	public static Trial checkTrialId(Long trialId, TrialDao trialDao) throws ServiceException {
 		Trial trial = trialDao.load(trialId);
 		if (trial == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRIAL_ID, trialId == null ? null : trialId.toString());
@@ -842,8 +790,7 @@ public final class CheckIDUtil {
 		return trial;
 	}
 
-	public static Trial checkTrialId(Long trialId, TrialDao trialDao, LockMode lockMode) throws ServiceException
-	{
+	public static Trial checkTrialId(Long trialId, TrialDao trialDao, LockMode lockMode) throws ServiceException {
 		Trial trial = trialDao.load(trialId, lockMode);
 		if (trial == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRIAL_ID, trialId == null ? null : trialId.toString());
@@ -867,8 +814,7 @@ public final class CheckIDUtil {
 		return tag;
 	}
 
-	public static TrialTagValue checkTrialTagValueId(Long tagValueId, TrialTagValueDao trialTagValueDao) throws ServiceException
-	{
+	public static TrialTagValue checkTrialTagValueId(Long tagValueId, TrialTagValueDao trialTagValueDao) throws ServiceException {
 		TrialTagValue tagValue = trialTagValueDao.load(tagValueId);
 		if (tagValue == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRIAL_TAG_VALUE_ID, tagValueId == null ? null : tagValueId.toString());
@@ -884,8 +830,7 @@ public final class CheckIDUtil {
 		return type;
 	}
 
-	public static User checkUserId(Long userId, UserDao userDao) throws ServiceException
-	{
+	public static User checkUserId(Long userId, UserDao userDao) throws ServiceException {
 		User user = userDao.load(userId);
 		if (user == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_USER_ID, userId == null ? null : userId.toString());
@@ -893,8 +838,7 @@ public final class CheckIDUtil {
 		return user;
 	}
 
-	public static User checkUserId(Long userId, UserDao userDao, LockMode lockMode) throws ServiceException
-	{
+	public static User checkUserId(Long userId, UserDao userDao, LockMode lockMode) throws ServiceException {
 		User user = userDao.load(userId, lockMode);
 		if (user == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_USER_ID, userId == null ? null : userId.toString());
@@ -938,8 +882,6 @@ public final class CheckIDUtil {
 	private final static MethodTransfilter getLockModeMethodTransfilter() {
 		return new MethodTransfilter() {
 
-
-
 			@Override
 			public boolean include(Method method) {
 				return hasLockModeParameter(method);
@@ -949,15 +891,11 @@ public final class CheckIDUtil {
 			public String transform(String methodName) {
 				return methodName.toLowerCase();
 			}
-
-
 		};
 	}
 
 	private final static MethodTransfilter getNoLockModeMethodTransfilter() {
 		return new MethodTransfilter() {
-
-
 
 			@Override
 			public boolean exclude(Method method) {
@@ -968,7 +906,6 @@ public final class CheckIDUtil {
 			public String transform(String methodName) {
 				return methodName.toLowerCase();
 			}
-
 		};
 	}
 

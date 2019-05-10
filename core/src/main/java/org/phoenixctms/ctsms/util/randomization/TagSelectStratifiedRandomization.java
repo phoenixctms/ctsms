@@ -29,7 +29,6 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 
 public class TagSelectStratifiedRandomization extends Randomization {
 
-
 	protected TagSelectStratifiedRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -49,7 +48,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 	// protected void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException {
 	// checkProbandGroupToken(probandGroupIn.getToken());
 	// }
-
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
 		checkRandomizeProbandListEntryTag(trial);
@@ -67,7 +65,7 @@ public class TagSelectStratifiedRandomization extends Randomization {
 		return RandomizationMode.TAG_SELECT_STRATIFIED;
 	}
 
-	private int getTotalValuesSize( Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values, StratificationRandomizationList randomizationList) { // long trialId,
+	private int getTotalValuesSize(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values, StratificationRandomizationList randomizationList) { // long trialId,
 		int result = 0;
 		Set<Long> selectionSetValueIds = getInputFieldSelectionSetValueIdMap(randomizationList.getSelectionSetValues()).keySet();
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();

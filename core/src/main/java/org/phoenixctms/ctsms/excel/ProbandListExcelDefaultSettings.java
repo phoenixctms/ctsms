@@ -140,8 +140,7 @@ public final class ProbandListExcelDefaultSettings {
 	public final static ArrayList<String> SCREENING_LOG_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> PRE_SCREENING_LOG_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public final static ArrayList<String> SICL_VO_FIELD_COLUMNS = new ArrayList<String>();
-	static
-	{
+	static {
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("position");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "category" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

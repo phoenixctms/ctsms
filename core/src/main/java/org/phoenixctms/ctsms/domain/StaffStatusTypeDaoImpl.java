@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.StaffStatusTypeVO;
  * @see StaffStatusType
  */
 public class StaffStatusTypeDaoImpl
-		extends StaffStatusTypeDaoBase
-{
+		extends StaffStatusTypeDaoBase {
 
 	@Override
 	protected Collection<StaffStatusType> handleFindByVisibleId(Boolean visible, Long typeId)
@@ -34,15 +33,13 @@ public class StaffStatusTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffStatusType loadStaffStatusTypeFromStaffStatusTypeVO(StaffStatusTypeVO staffStatusTypeVO)
-	{
+	private StaffStatusType loadStaffStatusTypeFromStaffStatusTypeVO(StaffStatusTypeVO staffStatusTypeVO) {
 		StaffStatusType staffStatusType = null;
 		Long id = staffStatusTypeVO.getId();
 		if (id != null) {
 			staffStatusType = this.load(id);
 		}
-		if (staffStatusType == null)
-		{
+		if (staffStatusType == null) {
 			staffStatusType = StaffStatusType.Factory.newInstance();
 		}
 		return staffStatusType;
@@ -52,8 +49,7 @@ public class StaffStatusTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusType staffStatusTypeVOToEntity(StaffStatusTypeVO staffStatusTypeVO)
-	{
+	public StaffStatusType staffStatusTypeVOToEntity(StaffStatusTypeVO staffStatusTypeVO) {
 		StaffStatusType entity = this.loadStaffStatusTypeFromStaffStatusTypeVO(staffStatusTypeVO);
 		this.staffStatusTypeVOToEntity(staffStatusTypeVO, entity, true);
 		return entity;
@@ -66,8 +62,7 @@ public class StaffStatusTypeDaoImpl
 	public void staffStatusTypeVOToEntity(
 			StaffStatusTypeVO source,
 			StaffStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -75,8 +70,7 @@ public class StaffStatusTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffStatusTypeVO toStaffStatusTypeVO(final StaffStatusType entity)
-	{
+	public StaffStatusTypeVO toStaffStatusTypeVO(final StaffStatusType entity) {
 		return super.toStaffStatusTypeVO(entity);
 	}
 
@@ -86,8 +80,7 @@ public class StaffStatusTypeDaoImpl
 	@Override
 	public void toStaffStatusTypeVO(
 			StaffStatusType source,
-			StaffStatusTypeVO target)
-	{
+			StaffStatusTypeVO target) {
 		super.toStaffStatusTypeVO(source, target);
 		target.setName(L10nUtil.getStaffStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

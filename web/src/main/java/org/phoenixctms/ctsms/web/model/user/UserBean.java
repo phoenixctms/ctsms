@@ -51,8 +51,8 @@ import org.primefaces.event.UnselectEvent;
 public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelectorListener {
 
 	private static final int AUTH_METHOD_PROPERTY_ID = 1;
-
 	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
+
 	public static void copyUserOutToIn(UserInVO in, UserOutVO out) {
 		if (in != null && out != null) {
 			DepartmentVO departmentVO = out.getDepartment();
@@ -74,6 +74,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setTheme(out.getTheme());
 		}
 	}
+
 	public static void initUserDefaultValues(UserInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
@@ -92,6 +93,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
 		}
 	}
+
 	private UserInVO in;
 	private UserOutVO out;
 	private String remoteUserMessage;
@@ -101,16 +103,12 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> locales;
 	private TimeZoneVO timeZone;
-
 	private ArrayList<SelectItem> themes;
-
 	private ArrayList<SelectItem> dateFormats;
 	private ArrayList<SelectItem> decimalSeparators;
 	private AuthenticationTypeSelector authMethod;
-
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-
 	private String deferredDeleteReason;
 
 	public UserBean() {
@@ -126,8 +124,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		UserInVO backup = new UserInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -360,7 +357,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	// public ArrayList<SelectItem> getTimeZones() {
 	// return timeZones;
 	// }
-
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
 			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : MessageCodes.USER_TITLE, Long.toString(out.getId()),
@@ -421,12 +417,10 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	//			in.setTimeZone(timeZone.getTimeZoneID());
 	//		}
 	//	}
-	public void handleTimeZoneSelect( SelectEvent event) {
-
+	public void handleTimeZoneSelect(SelectEvent event) {
 	}
 
-	public void handleTimeZoneUnselect( UnselectEvent event) {
-
+	public void handleTimeZoneUnselect(UnselectEvent event) {
 	}
 
 	@PostConstruct
@@ -529,12 +523,10 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 				this.themes.add(new SelectItem(themeName, themeMap.get(themeName)));
 			}
 		}
-
 		this.dateFormats = WebUtil.getDateFormats(this.in.getDateFormat());
 		if (this.decimalSeparators == null) {
 			this.decimalSeparators = WebUtil.getDecimalSeparators();
 		}
-
 		if (WebUtil.isUserIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
@@ -561,7 +553,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return WebUtil.getModuleEnabled(DBModule.USER_DB);
 	}
 
-
 	@Override
 	public boolean isCreated() {
 		return out != null;
@@ -571,6 +562,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.USER_DB) && super.isEditable();
 	}

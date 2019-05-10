@@ -22,7 +22,6 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 
 public class TagTextListRandomization extends Randomization {
 
-
 	protected TagTextListRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -43,16 +42,13 @@ public class TagTextListRandomization extends Randomization {
 		checkRandomizeProbandListEntryTag(trial);
 	}
 
-
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_TEXT_LIST;
 	}
 
-
 	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId) { // long trialId,
 		return CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTextStratificationTagValuesCount(trial.getId(), false, null, excludeListEntryId));
-
 	}
 
 	@Override
@@ -66,7 +62,7 @@ public class TagTextListRandomization extends Randomization {
 		splitInputFieldTextValues(trial.getRandomizationList(), textValues);
 		String value = null;
 		if (textValues.size() > 0) {
-			int totalNonEmtpyTextsSize = getTotalNonEmptyTextsSize(trial,exclude != null ? exclude.getId() : null);
+			int totalNonEmtpyTextsSize = getTotalNonEmptyTextsSize(trial, exclude != null ? exclude.getId() : null);
 			value = textValues.get(totalNonEmtpyTextsSize % textValues.size());
 			randomizationInfo.setTotalSize(totalNonEmtpyTextsSize);
 		}

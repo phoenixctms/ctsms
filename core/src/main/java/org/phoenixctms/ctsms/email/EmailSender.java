@@ -21,18 +21,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 public abstract class EmailSender<ENTITY, RECIPIENT> {
 
 	protected final static String EMAIL_TO_PERSONAL_NAME = "{0} ({1})";
-
 	private final static String EMAIL_ENCODING = "UTF-8";
-
 	private static final String HTML_CONTENT_SUBTYPE = "html";
 	private static final String PLAIN_CONTENT_SUBTYPE = "plain";
-
 	protected JavaMailSender mailSender;
 
 	protected abstract void addAttachments(ENTITY entity, RECIPIENT recipient, ArrayList<EmailAttachmentVO> attachments) throws Exception;
 
-
-	private final MimeMessage createMessage(ENTITY entity, RECIPIENT recipient)  throws Exception {
+	private final MimeMessage createMessage(ENTITY entity, RECIPIENT recipient) throws Exception {
 		Date now = new Date();
 		MimeMessage mimeMessage = loadMessage(entity, recipient, now);
 		if (mimeMessage != null) {
@@ -40,12 +36,11 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 		} else {
 			mimeMessage = mailSender.createMimeMessage();
 			StringBuilder text = new StringBuilder();
-
 			prepareMessage(mimeMessage, entity, recipient, text, now);
 			if (getToCount(mimeMessage) > 0) {
 				ArrayList<EmailAttachmentVO> attachments = new ArrayList<EmailAttachmentVO>();
-				addAttachments(entity, recipient,attachments);
-				if ( attachments.size() > 0) {
+				addAttachments(entity, recipient, attachments);
+				if (attachments.size() > 0) {
 					Multipart multipart = new MimeMultipart();
 					Iterator<EmailAttachmentVO> it = attachments.iterator();
 					MimeBodyPart messageBodyPart = new MimeBodyPart();
@@ -86,7 +81,7 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 
 	public final int getToCount(MimeMessage mimeMessage) throws Exception {
 		if (mimeMessage != null) {
-			Address[] to = mimeMessage.getRecipients(RecipientType.TO);
+			Address[] to = mimeMessage.getRecipients(javax.mail.Message.RecipientType.TO);
 			if (to != null) {
 				return to.length;
 			}
@@ -103,7 +98,7 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 	}
 
 	public final int prepareAndSend(ENTITY entity, RECIPIENT recipient) throws Exception {
-		return send(prepare(entity,recipient));
+		return send(prepare(entity, recipient));
 	}
 
 	protected abstract void prepareMessage(MimeMessage mimeMessage, ENTITY entity, RECIPIENT recipient, StringBuilder text, Date now) throws Exception;

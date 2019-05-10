@@ -30,8 +30,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
  * @see Password
  */
 public class PasswordDaoImpl
-extends PasswordDaoBase
-{
+		extends PasswordDaoBase {
 
 	private org.hibernate.Criteria createPasswordCriteria(String alias) {
 		org.hibernate.Criteria passwordCriteria;
@@ -71,7 +70,7 @@ extends PasswordDaoBase
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
 		ArrayList<Password> resultSet = CriteriaUtil.listExpirations(passwordCriteria, today, notify, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
-		return (Collection<Password>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
+		return CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 
 	/**
@@ -100,8 +99,7 @@ extends PasswordDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Password loadPasswordFromPasswordInVO(PasswordInVO passwordInVO)
-	{
+	private Password loadPasswordFromPasswordInVO(PasswordInVO passwordInVO) {
 		// TODO implement loadPasswordFromPasswordInVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadPasswordFromPasswordInVO(PasswordInVO) not yet implemented.");
 		/* A typical implementation looks like this: Password password = this.load(passwordInVO.getId()); if (password == null) { password = Password.Factory.newInstance(); }
@@ -113,8 +111,7 @@ extends PasswordDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Password loadPasswordFromPasswordOutVO(PasswordOutVO passwordOutVO)
-	{
+	private Password loadPasswordFromPasswordOutVO(PasswordOutVO passwordOutVO) {
 		// TODO implement loadPasswordFromPasswordOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadPasswordFromPasswordOutVO(PasswordOutVO) not yet implemented.");
 		/* A typical implementation looks like this: Password password = this.load(passwordOutVO.getId()); if (password == null) { password = Password.Factory.newInstance(); }
@@ -125,8 +122,7 @@ extends PasswordDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Password passwordInVOToEntity(PasswordInVO passwordInVO)
-	{
+	public Password passwordInVOToEntity(PasswordInVO passwordInVO) {
 		// TODO verify behavior of passwordInVOToEntity
 		Password entity = Password.Factory.newInstance();
 		this.passwordInVOToEntity(passwordInVO, entity, true);
@@ -140,8 +136,7 @@ extends PasswordDaoBase
 	public void passwordInVOToEntity(
 			PasswordInVO source,
 			Password target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of passwordInVOToEntity
 		super.passwordInVOToEntity(source, target, copyIfNull);
 	}
@@ -150,8 +145,7 @@ extends PasswordDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Password passwordOutVOToEntity(PasswordOutVO passwordOutVO)
-	{
+	public Password passwordOutVOToEntity(PasswordOutVO passwordOutVO) {
 		// TODO verify behavior of passwordOutVOToEntity
 		Password entity = this.loadPasswordFromPasswordOutVO(passwordOutVO);
 		this.passwordOutVOToEntity(passwordOutVO, entity, true);
@@ -165,8 +159,7 @@ extends PasswordDaoBase
 	public void passwordOutVOToEntity(
 			PasswordOutVO source,
 			Password target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of passwordOutVOToEntity
 		super.passwordOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.validityPeriod (can't convert source.getValidityPeriod():org.phoenixctms.ctsms.vo.VariablePeriodVO to org.phoenixctms.ctsms.enumeration.VariablePeriod
@@ -176,8 +169,7 @@ extends PasswordDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public PasswordInVO toPasswordInVO(final Password entity)
-	{
+	public PasswordInVO toPasswordInVO(final Password entity) {
 		// TODO verify behavior of toPasswordInVO
 		return super.toPasswordInVO(entity);
 	}
@@ -188,8 +180,7 @@ extends PasswordDaoBase
 	@Override
 	public void toPasswordInVO(
 			Password source,
-			PasswordInVO target)
-	{
+			PasswordInVO target) {
 		// TODO verify behavior of toPasswordInVO
 		super.toPasswordInVO(source, target);
 	}
@@ -198,8 +189,7 @@ extends PasswordDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public PasswordOutVO toPasswordOutVO(final Password entity)
-	{
+	public PasswordOutVO toPasswordOutVO(final Password entity) {
 		// TODO verify behavior of toPasswordOutVO
 		return super.toPasswordOutVO(entity);
 	}
@@ -210,8 +200,7 @@ extends PasswordDaoBase
 	@Override
 	public void toPasswordOutVO(
 			Password source,
-			PasswordOutVO target)
-	{
+			PasswordOutVO target) {
 		// TODO verify behavior of toPasswordOutVO
 		super.toPasswordOutVO(source, target);
 		// WARNING! No conversion for target.validityPeriod (can't convert source.getValidityPeriod():org.phoenixctms.ctsms.enumeration.VariablePeriod to

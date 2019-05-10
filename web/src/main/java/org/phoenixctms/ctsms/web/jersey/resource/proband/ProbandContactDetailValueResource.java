@@ -19,8 +19,6 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api

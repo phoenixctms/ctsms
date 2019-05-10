@@ -47,6 +47,7 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 		this.textClipMaxLength = textClipMaxLength;
 	}
 
+	@Override
 	protected String getCheckboxString(boolean value) {
 		if (value) {
 			return Messages.getString(MessageCodes.CHECKBOX_CHECKED);
@@ -55,10 +56,12 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 		}
 	}
 
+	@Override
 	protected DateFormat getDateFormat(boolean isUserTimeZone) {
 		return DateUtil.getDateFormat(isUserTimeZone);
 	}
 
+	@Override
 	protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 		return DateUtil.getDateTimeFormat(isUserTimeZone);
 	}
@@ -68,16 +71,18 @@ public abstract class InputFieldValueStringAdapter<VALUEVO> extends InputFieldVa
 		return WebUtil.getDecimalSeparator();
 	}
 
+	@Override
 	protected String getSelectionSetValuesSeparator() {
 		return SELECTION_SET_VALUES_SEPARATOR;
 	}
 
+	@Override
 	protected Integer getTextClipMaxLength() {
 		return textClipMaxLength;
 	}
 
+	@Override
 	protected DateFormat getTimeFormat(boolean isUserTimeZone) {
 		return DateUtil.getTimeFormat(isUserTimeZone);
 	}
-
 }

@@ -33,8 +33,7 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
  * @see MaintenanceScheduleItem
  */
 public class MaintenanceScheduleItemDaoImpl
-extends MaintenanceScheduleItemDaoBase
-{
+		extends MaintenanceScheduleItemDaoBase {
 
 	private org.hibernate.Criteria createMaintenanceItemCriteria() {
 		org.hibernate.Criteria maintenanceItemCriteria = this.getSession().createCriteria(MaintenanceScheduleItem.class);
@@ -58,8 +57,7 @@ extends MaintenanceScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<MaintenanceScheduleItem> handleFindByInventoryActive(Long inventoryId, Boolean active, PSFVO psf) throws Exception
-	{
+	protected Collection<MaintenanceScheduleItem> handleFindByInventoryActive(Long inventoryId, Boolean active, PSFVO psf) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MaintenanceScheduleItem.class, maintenanceItemCriteria);
 		if (inventoryId != null) {
@@ -137,12 +135,11 @@ extends MaintenanceScheduleItemDaoBase
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
 		ArrayList<MaintenanceScheduleItem> resultSet = CriteriaUtil.listReminders(maintenanceItemCriteria, today, reminder, includeAlreadyPassed, null, null);
-		return (Collection<MaintenanceScheduleItem>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
+		return CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 
 	@Override
-	protected long handleGetCount(Long inventoryId, Boolean active) throws Exception
-	{
+	protected long handleGetCount(Long inventoryId, Boolean active) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		if (inventoryId != null) {
 			maintenanceItemCriteria.add(Restrictions.eq("inventory.id", inventoryId.longValue()));
@@ -158,15 +155,13 @@ extends MaintenanceScheduleItemDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MaintenanceScheduleItem loadMaintenanceScheduleItemFromMaintenanceScheduleItemInVO(MaintenanceScheduleItemInVO maintenanceScheduleItemInVO)
-	{
+	private MaintenanceScheduleItem loadMaintenanceScheduleItemFromMaintenanceScheduleItemInVO(MaintenanceScheduleItemInVO maintenanceScheduleItemInVO) {
 		MaintenanceScheduleItem maintenanceScheduleItem = null;
 		Long id = maintenanceScheduleItemInVO.getId();
 		if (id != null) {
 			maintenanceScheduleItem = this.load(id);
 		}
-		if (maintenanceScheduleItem == null)
-		{
+		if (maintenanceScheduleItem == null) {
 			maintenanceScheduleItem = MaintenanceScheduleItem.Factory.newInstance();
 		}
 		return maintenanceScheduleItem;
@@ -177,11 +172,9 @@ extends MaintenanceScheduleItemDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MaintenanceScheduleItem loadMaintenanceScheduleItemFromMaintenanceScheduleItemOutVO(MaintenanceScheduleItemOutVO maintenanceScheduleItemOutVO)
-	{
+	private MaintenanceScheduleItem loadMaintenanceScheduleItemFromMaintenanceScheduleItemOutVO(MaintenanceScheduleItemOutVO maintenanceScheduleItemOutVO) {
 		MaintenanceScheduleItem maintenanceScheduleItem = this.load(maintenanceScheduleItemOutVO.getId());
-		if (maintenanceScheduleItem == null)
-		{
+		if (maintenanceScheduleItem == null) {
 			maintenanceScheduleItem = MaintenanceScheduleItem.Factory.newInstance();
 		}
 		return maintenanceScheduleItem;
@@ -191,8 +184,7 @@ extends MaintenanceScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceScheduleItem maintenanceScheduleItemInVOToEntity(MaintenanceScheduleItemInVO maintenanceScheduleItemInVO)
-	{
+	public MaintenanceScheduleItem maintenanceScheduleItemInVOToEntity(MaintenanceScheduleItemInVO maintenanceScheduleItemInVO) {
 		MaintenanceScheduleItem entity = this.loadMaintenanceScheduleItemFromMaintenanceScheduleItemInVO(maintenanceScheduleItemInVO);
 		this.maintenanceScheduleItemInVOToEntity(maintenanceScheduleItemInVO, entity, true);
 		return entity;
@@ -205,8 +197,7 @@ extends MaintenanceScheduleItemDaoBase
 	public void maintenanceScheduleItemInVOToEntity(
 			MaintenanceScheduleItemInVO source,
 			MaintenanceScheduleItem target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.maintenanceScheduleItemInVOToEntity(source, target, copyIfNull);
 		Long companyContactId = source.getCompanyContactId();
 		Long responsiblePersonId = source.getResponsiblePersonId();
@@ -256,8 +247,7 @@ extends MaintenanceScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceScheduleItem maintenanceScheduleItemOutVOToEntity(MaintenanceScheduleItemOutVO maintenanceScheduleItemOutVO)
-	{
+	public MaintenanceScheduleItem maintenanceScheduleItemOutVOToEntity(MaintenanceScheduleItemOutVO maintenanceScheduleItemOutVO) {
 		MaintenanceScheduleItem entity = this.loadMaintenanceScheduleItemFromMaintenanceScheduleItemOutVO(maintenanceScheduleItemOutVO);
 		this.maintenanceScheduleItemOutVOToEntity(maintenanceScheduleItemOutVO, entity, true);
 		return entity;
@@ -270,8 +260,7 @@ extends MaintenanceScheduleItemDaoBase
 	public void maintenanceScheduleItemOutVOToEntity(
 			MaintenanceScheduleItemOutVO source,
 			MaintenanceScheduleItem target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.maintenanceScheduleItemOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO companyContactVO = source.getCompanyContact();
 		StaffOutVO responsiblePersonVO = source.getResponsiblePerson();
@@ -339,8 +328,7 @@ extends MaintenanceScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceScheduleItemInVO toMaintenanceScheduleItemInVO(final MaintenanceScheduleItem entity)
-	{
+	public MaintenanceScheduleItemInVO toMaintenanceScheduleItemInVO(final MaintenanceScheduleItem entity) {
 		return super.toMaintenanceScheduleItemInVO(entity);
 	}
 
@@ -350,8 +338,7 @@ extends MaintenanceScheduleItemDaoBase
 	@Override
 	public void toMaintenanceScheduleItemInVO(
 			MaintenanceScheduleItem source,
-			MaintenanceScheduleItemInVO target)
-	{
+			MaintenanceScheduleItemInVO target) {
 		super.toMaintenanceScheduleItemInVO(source, target);
 		Staff companyContact = source.getCompanyContact();
 		Staff responsiblePerson = source.getResponsiblePerson();
@@ -375,8 +362,7 @@ extends MaintenanceScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public MaintenanceScheduleItemOutVO toMaintenanceScheduleItemOutVO(final MaintenanceScheduleItem entity)
-	{
+	public MaintenanceScheduleItemOutVO toMaintenanceScheduleItemOutVO(final MaintenanceScheduleItem entity) {
 		return super.toMaintenanceScheduleItemOutVO(entity);
 	}
 
@@ -386,8 +372,7 @@ extends MaintenanceScheduleItemDaoBase
 	@Override
 	public void toMaintenanceScheduleItemOutVO(
 			MaintenanceScheduleItem source,
-			MaintenanceScheduleItemOutVO target)
-	{
+			MaintenanceScheduleItemOutVO target) {
 		super.toMaintenanceScheduleItemOutVO(source, target);
 		Staff companyContact = source.getCompanyContact();
 		Staff responsiblePerson = source.getResponsiblePerson();

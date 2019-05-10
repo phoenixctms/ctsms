@@ -8,7 +8,6 @@ import org.phoenixctms.ctsms.web.jersey.resource.Page;
 
 import com.google.gson.annotations.SerializedName;
 
-
 public class JsValuesOutVOPage<OUTVO extends Serializable, JsonVO extends Serializable> extends Page<OUTVO> implements Serializable {
 
 	@SerializedName("js_rows")
@@ -22,8 +21,6 @@ public class JsValuesOutVOPage<OUTVO extends Serializable, JsonVO extends Serial
 	public Collection<JsonVO> getJsRows() {
 		return jsRows;
 	}
-
-
 
 	public void setJsRows(Collection<JsonVO> jsRows) {
 		this.jsRows = jsRows;

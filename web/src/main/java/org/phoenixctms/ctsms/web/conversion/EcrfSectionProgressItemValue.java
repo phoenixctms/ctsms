@@ -2,10 +2,9 @@ package org.phoenixctms.ctsms.web.conversion;
 
 import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
 
-
 public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 
-	public EcrfSectionProgressItemValue( ) {
+	public EcrfSectionProgressItemValue() {
 		super();
 	}
 
@@ -14,8 +13,7 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 	}
 
 	@Override
-	public boolean equals(final Object obj)
-	{
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -34,8 +32,7 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return this.getSection();
 	}
 }

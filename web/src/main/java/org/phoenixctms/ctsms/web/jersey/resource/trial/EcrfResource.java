@@ -1,5 +1,3 @@
-
-
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
 import javax.ws.rs.Consumes;
@@ -62,7 +60,7 @@ public class EcrfResource {
 	@Path("{id}/ecrffieldvalues/maxindex")
 	public Long getEcrfFieldValuesSectionMaxIndex(@PathParam("id") Long id,
 			@QueryParam("section") String section)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, id, section, null);
 	}
 
@@ -73,4 +71,3 @@ public class EcrfResource {
 		return WebUtil.getServiceLocator().getTrialService().updateEcrf(auth, in);
 	}
 }
-

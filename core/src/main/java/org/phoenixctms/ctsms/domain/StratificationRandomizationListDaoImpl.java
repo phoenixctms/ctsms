@@ -33,8 +33,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see StratificationRandomizationList
  */
 public class StratificationRandomizationListDaoImpl
-extends StratificationRandomizationListDaoBase
-{
+		extends StratificationRandomizationListDaoBase {
 
 	private final static InputFieldSelectionSetValueOutVOComparator SELECTION_SET_VALUE_COMPARATOR = new InputFieldSelectionSetValueOutVOComparator();
 
@@ -179,27 +178,24 @@ extends StratificationRandomizationListDaoBase
 	 * a new, blank entity is created
 	 */
 	private StratificationRandomizationList loadStratificationRandomizationListFromStratificationRandomizationListOutVO(
-			StratificationRandomizationListOutVO stratificationRandomizationListOutVO)
-	{
+			StratificationRandomizationListOutVO stratificationRandomizationListOutVO) {
 		// TODO implement loadStratificationRandomizationListFromStratificationRandomizationListOutVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStratificationRandomizationListFromStratificationRandomizationListOutVO(StratificationRandomizationListOutVO)
 		// not
 		// yet implemented.");
-
 		StratificationRandomizationList stratificationRandomizationList = this.get(stratificationRandomizationListOutVO.getId());
-		if (stratificationRandomizationList == null)
-		{
+		if (stratificationRandomizationList == null) {
 			stratificationRandomizationList = StratificationRandomizationList.Factory.newInstance();
 		}
 		return stratificationRandomizationList;
-
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public StratificationRandomizationList stratificationRandomizationListInVOToEntity(StratificationRandomizationListInVO stratificationRandomizationListInVO)
-	{
+	@Override
+	public StratificationRandomizationList stratificationRandomizationListInVOToEntity(StratificationRandomizationListInVO stratificationRandomizationListInVO) {
 		StratificationRandomizationList entity = this.loadStratificationRandomizationListFromStratificationRandomizationListInVO(stratificationRandomizationListInVO);
 		this.stratificationRandomizationListInVOToEntity(stratificationRandomizationListInVO, entity, true);
 		return entity;
@@ -212,11 +208,9 @@ extends StratificationRandomizationListDaoBase
 	public void stratificationRandomizationListInVOToEntity(
 			StratificationRandomizationListInVO source,
 			StratificationRandomizationList target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.stratificationRandomizationListInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
-
 		if (trialId != null) {
 			Trial trial = this.getTrialDao().load(trialId);
 			target.setTrial(trial);
@@ -228,7 +222,6 @@ extends StratificationRandomizationListDaoBase
 				trial.removeRandomizationLists(target);
 			}
 		}
-
 		Collection selectionSetValueIds;
 		if ((selectionSetValueIds = source.getSelectionSetValueIds()).size() > 0 || copyIfNull) {
 			target.setSelectionSetValues(toInputFieldSelectionSetValueSet(selectionSetValueIds));
@@ -238,8 +231,8 @@ extends StratificationRandomizationListDaoBase
 	/**
 	 * {@inheritDoc}
 	 */
-	public StratificationRandomizationList stratificationRandomizationListOutVOToEntity(StratificationRandomizationListOutVO stratificationRandomizationListOutVO)
-	{
+	@Override
+	public StratificationRandomizationList stratificationRandomizationListOutVOToEntity(StratificationRandomizationListOutVO stratificationRandomizationListOutVO) {
 		StratificationRandomizationList entity = this.loadStratificationRandomizationListFromStratificationRandomizationListOutVO(stratificationRandomizationListOutVO);
 		this.stratificationRandomizationListOutVOToEntity(stratificationRandomizationListOutVO, entity, true);
 		return entity;
@@ -252,12 +245,10 @@ extends StratificationRandomizationListDaoBase
 	public void stratificationRandomizationListOutVOToEntity(
 			StratificationRandomizationListOutVO source,
 			StratificationRandomizationList target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.stratificationRandomizationListOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-
 		if (trialVO != null) {
 			Trial trial = this.getTrialDao().trialOutVOToEntity(trialVO);
 			target.setTrial(trial);
@@ -269,19 +260,16 @@ extends StratificationRandomizationListDaoBase
 				trial.removeRandomizationLists(target);
 			}
 		}
-
 		Collection selectionSetValues;
 		if ((selectionSetValues = source.getSelectionSetValues()).size() > 0 || copyIfNull) {
 			this.getInputFieldSelectionSetValueDao().inputFieldSelectionSetValueOutVOToEntityCollection(selectionSetValues);
-			target.setSelectionSetValues((Collection<InputFieldSelectionSetValue>) selectionSetValues); // hashset-exception!!!
+			target.setSelectionSetValues(selectionSetValues); // hashset-exception!!!
 		}
-
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
 		}
-
 	}
 
 	private ArrayList<InputFieldSelectionSetValueOutVO> toInputFieldSelectionSetValueOutVOCollection(Collection<InputFieldSelectionSetValue> selectionSetValues) { // lazyload persistentset prevention
@@ -309,8 +297,8 @@ extends StratificationRandomizationListDaoBase
 	/**
 	 * {@inheritDoc}
 	 */
-	public StratificationRandomizationListInVO toStratificationRandomizationListInVO(final StratificationRandomizationList entity)
-	{
+	@Override
+	public StratificationRandomizationListInVO toStratificationRandomizationListInVO(final StratificationRandomizationList entity) {
 		// TODO verify behavior of toStratificationRandomizationListInVO
 		return super.toStratificationRandomizationListInVO(entity);
 	}
@@ -318,6 +306,7 @@ extends StratificationRandomizationListDaoBase
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void toStratificationRandomizationListInVO(
 			StratificationRandomizationList source,
 			StratificationRandomizationListInVO target) {
@@ -328,6 +317,7 @@ extends StratificationRandomizationListDaoBase
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StratificationRandomizationListOutVO toStratificationRandomizationListOutVO(final StratificationRandomizationList entity) {
 		return super.toStratificationRandomizationListOutVO(entity);
 	}
@@ -335,6 +325,7 @@ extends StratificationRandomizationListDaoBase
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void toStratificationRandomizationListOutVO(
 			StratificationRandomizationList source,
 			StratificationRandomizationListOutVO target) {

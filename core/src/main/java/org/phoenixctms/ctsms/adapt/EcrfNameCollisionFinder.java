@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.adapt;
 
 import java.util.Collection;
@@ -45,4 +44,3 @@ public class EcrfNameCollisionFinder extends CollisionFinder<ECRFInVO, ECRF, Tri
 		return in.getId() == null;
 	}
 }
-

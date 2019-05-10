@@ -31,13 +31,13 @@ import org.phoenixctms.ctsms.vocycle.InventoryReflexionGraph;
  * @see ENTITY
  */
 public class InventoryDaoImpl
-extends InventoryDaoBase
-{
+		extends InventoryDaoBase {
 
 	private org.hibernate.Criteria createInventoryCriteria() {
 		org.hibernate.Criteria inventoryCriteria = this.getSession().createCriteria(Inventory.class);
 		return inventoryCriteria;
 	}
+
 	@Override
 	protected Collection<Inventory> handleFindByCriteria(
 			CriteriaInstantVO criteria, PSFVO psf) throws Exception {
@@ -97,8 +97,7 @@ extends InventoryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Inventory inventoryInVOToEntity(InventoryInVO inventoryInVO)
-	{
+	public Inventory inventoryInVOToEntity(InventoryInVO inventoryInVO) {
 		Inventory entity = this.loadInventoryFromInventoryInVO(inventoryInVO);
 		this.inventoryInVOToEntity(inventoryInVO, entity, true);
 		return entity;
@@ -111,8 +110,7 @@ extends InventoryDaoBase
 	public void inventoryInVOToEntity(
 			InventoryInVO source,
 			Inventory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long categoryId = source.getCategoryId();
@@ -159,8 +157,7 @@ extends InventoryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Inventory inventoryOutVOToEntity(InventoryOutVO inventoryOutVO)
-	{
+	public Inventory inventoryOutVOToEntity(InventoryOutVO inventoryOutVO) {
 		Inventory entity = this.loadInventoryFromInventoryOutVO(inventoryOutVO);
 		this.inventoryOutVOToEntity(inventoryOutVO, entity, true);
 		return entity;
@@ -173,8 +170,7 @@ extends InventoryDaoBase
 	public void inventoryOutVOToEntity(
 			InventoryOutVO source,
 			Inventory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryOutVOToEntity(source, target, copyIfNull);
 		InventoryCategoryVO categoryVO = source.getCategory();
 		DepartmentVO departmentVO = source.getDepartment();
@@ -228,15 +224,13 @@ extends InventoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Inventory loadInventoryFromInventoryInVO(InventoryInVO inventoryInVO)
-	{
+	private Inventory loadInventoryFromInventoryInVO(InventoryInVO inventoryInVO) {
 		Inventory inventory = null;
 		Long id = inventoryInVO.getId();
 		if (id != null) {
 			inventory = this.load(id);
 		}
-		if (inventory == null)
-		{
+		if (inventory == null) {
 			inventory = Inventory.Factory.newInstance();
 		}
 		return inventory;
@@ -247,8 +241,7 @@ extends InventoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Inventory loadInventoryFromInventoryOutVO(InventoryOutVO inventoryOutVO)
-	{
+	private Inventory loadInventoryFromInventoryOutVO(InventoryOutVO inventoryOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
@@ -256,8 +249,7 @@ extends InventoryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryInVO toInventoryInVO(final Inventory entity)
-	{
+	public InventoryInVO toInventoryInVO(final Inventory entity) {
 		return super.toInventoryInVO(entity);
 	}
 
@@ -267,8 +259,7 @@ extends InventoryDaoBase
 	@Override
 	public void toInventoryInVO(
 			Inventory source,
-			InventoryInVO target)
-	{
+			InventoryInVO target) {
 		super.toInventoryInVO(source, target);
 		Department department = source.getDepartment();
 		InventoryCategory category = source.getCategory();
@@ -292,8 +283,7 @@ extends InventoryDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InventoryOutVO toInventoryOutVO(final Inventory entity)
-	{
+	public InventoryOutVO toInventoryOutVO(final Inventory entity) {
 		return super.toInventoryOutVO(entity);
 	}
 
@@ -303,8 +293,7 @@ extends InventoryDaoBase
 	@Override
 	public void toInventoryOutVO(
 			Inventory source,
-			InventoryOutVO target)
-	{
+			InventoryOutVO target) {
 		(new InventoryReflexionGraph(this, this.getInventoryCategoryDao(), this.getDepartmentDao(), this.getStaffDao(), this.getUserDao())).toVOHelper(source, target,
 				new HashMap<Class, HashMap<Long, Object>>());
 	}
@@ -312,8 +301,7 @@ extends InventoryDaoBase
 	@Override
 	public void toInventoryOutVO(
 			Inventory source,
-			InventoryOutVO target, Integer... maxInstances)
-	{
+			InventoryOutVO target, Integer... maxInstances) {
 		(new InventoryReflexionGraph(this, this.getInventoryCategoryDao(), this.getDepartmentDao(), this.getStaffDao(), this.getUserDao(), maxInstances)).toVOHelper(source,
 				target, new HashMap<Class, HashMap<Long, Object>>());
 	}

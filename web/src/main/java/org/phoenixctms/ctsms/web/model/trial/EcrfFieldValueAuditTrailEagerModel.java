@@ -18,7 +18,6 @@ public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase {
 	// private Long listEntryId;
 	// private Long ecrfFieldId;
 	// private Long index;
-
 	private final static PSFVO INITIAL_PSF = new PSFVO();
 	static {
 		INITIAL_PSF.setSortField(WebUtil.ECRF_FIELD_VALUE_ID_PSF_PROPERTY_NAME);
@@ -69,8 +68,6 @@ public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase {
 		return new ArrayList<ECRFFieldValueOutVO>();
 	}
 
-
-
 	@Override
 	protected ECRFFieldValueOutVO getRowElement(Long id) {
 		return WebUtil.getEcrfFieldValue(id);
@@ -83,7 +80,4 @@ public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase {
 	public void setStatus(ECRFFieldStatusEntryOutVO status) {
 		this.status = status;
 	}
-
-
-
 }

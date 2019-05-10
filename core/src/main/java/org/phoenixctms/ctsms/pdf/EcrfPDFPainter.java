@@ -37,7 +37,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	private int blockIndex;
 	private ArrayList<EcrfPDFBlock> blocks;
 	private EcrfPDFBlockCursor cursor;
-	private HashMap<Long, HashMap<Long,PDFJpeg>> images;
+	private HashMap<Long, HashMap<Long, PDFJpeg>> images;
 	private ECRFPDFVO pdfVO;
 	private Collection<ProbandListEntryOutVO> listEntryVOs;
 	private HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap;
@@ -74,15 +74,15 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	public EcrfPDFPainter() {
 		super();
 		blocks = new ArrayList<EcrfPDFBlock>();
-		images = new HashMap<Long, HashMap<Long,PDFJpeg>>();
+		images = new HashMap<Long, HashMap<Long, PDFJpeg>>();
 		pdfVO = new ECRFPDFVO();
 		cursor = new EcrfPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(EcrfPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_PAGE_NUMBERS));
 	}
 
-	private void drawBlock(PDPageContentStream contentStream,EcrfPDFBlock block ) throws Exception {
+	private void drawBlock(PDPageContentStream contentStream, EcrfPDFBlock block) throws Exception {
 		if (// BlockType.NEW_LIST_ENTRY.equals(block.getType())
-				BlockType.NEW_ECRF.equals(block.getType())) {
+		BlockType.NEW_ECRF.equals(block.getType())) {
 			// || BlockType.ECRF_SIGNATURE.equals(block.getType())) {
 			cursor.setSectionY(cursor.getBlockY());
 			cursor.setIndexY(cursor.getBlockY());
@@ -94,12 +94,11 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 		cursor.setBlocks(block);
 		cursor.setBlockY(cursor.getBlockY() - block.renderBlock(contentStream, cursor));
-
 	}
 
 	@Override
 	public void drawNextBlock(PDPageContentStream contentStream) throws Exception {
-		drawBlock(contentStream,blocks.get(blockIndex));
+		drawBlock(contentStream, blocks.get(blockIndex));
 		blockIndex++;
 	}
 
@@ -116,9 +115,9 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		// EcrfPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
+	@Override
 	public void drawPageBreakNewPage(PDPageContentStream contentStream) throws Exception {
 		EcrfPDFBlock block = blocks.get(blockIndex);
-
 		if (BlockType.INPUT_FIELD.equals(block.getType())
 				|| BlockType.AUDIT_TRAIL_VALUE.equals(block.getType())
 				|| BlockType.FIELD_STATUS_ENTRY.equals(block.getType())
@@ -136,6 +135,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
+	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 		EcrfPDFBlock block = blocks.get(blockIndex - 1);
 		// if (BlockType.NEW_INDEX.equals(block.getType())) {
@@ -159,9 +159,9 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				Settings.getColor(EcrfPDFSettingCodes.TEXT_COLOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TEXT_COLOR),
 				L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
 				Settings.getFloat(EcrfPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LEFT_MARGIN)
-				+ (pageWidth - Settings.getFloat(EcrfPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(
-						EcrfPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
-						Settings.getFloat(EcrfPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_CENTER);
+						+ (pageWidth - Settings.getFloat(EcrfPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(
+								EcrfPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
+				Settings.getFloat(EcrfPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 
@@ -189,7 +189,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	// public PDFont getFontF() {
 	// return fontF;
 	// }
-
 	private ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId) {
 		if (statusEntryVOMap != null) {
 			HashMap<Long, ECRFStatusEntryVO> ecrfMap = statusEntryVOMap.get(listEntryId);
@@ -203,8 +202,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	public PDFont getFontA() {
 		return fontA;
 	}
-
-
 
 	public PDFont getFontB() {
 		return fontB;
@@ -294,7 +291,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return Settings.getPDFTemplateFilename(EcrfPDFSettingCodes.TEMPLATE_FILE_NAME, Bundle.ECRF_PDF, null);
 	}
 
-
 	private Collection getValueLog(ECRFFieldValueOutVO value) {
 		if (logVOMap != null) {
 			HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap = logVOMap.get(value.getListEntry().getId());
@@ -372,7 +368,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		if (imageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			// Integer width = Settings.getIntNullable(EcrfPDFSettingCodes.IMAGE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.IMAGE_WIDTH);
 			// Integer height = Settings.getIntNullable(EcrfPDFSettingCodes.IMAGE_HEIGHT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.IMAGE_HEIGHT);
-
 			if (valueVOMap != null) {
 				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> listEntryMapIt = valueVOMap.values().iterator();
 				while (listEntryMapIt.hasNext()) {
@@ -403,7 +398,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 					}
 				}
 			}
-
 			// Iterator<InputFieldImageVO> it = imageVOMap.values().iterator();
 			// while (it.hasNext()) {
 			// InputFieldImageVO inputFieldImage = it.next();
@@ -477,7 +471,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 								Iterator<ProbandListEntryTagValueOutVO> tagValueVOsIt = tagValueVOs.iterator();
 								while (tagValueVOsIt.hasNext()) {
 									ProbandListEntryTagValueOutVO tagValueVO = tagValueVOsIt.next();
-									blocks.add(new EcrfPDFBlock(tagValueVO,getSketchImage(tagValueVO), blank, tagValueVOsIt.hasNext()));
+									blocks.add(new EcrfPDFBlock(tagValueVO, getSketchImage(tagValueVO), blank, tagValueVOsIt.hasNext()));
 								}
 							}
 						}
@@ -539,7 +533,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 						// }
 					}
 				}
-
 			}
 		}
 	}
@@ -643,7 +636,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		images.clear();
 		updateECRFPDFVO();
 	}
-
 
 	@Override
 	public boolean save(ByteArrayOutputStream pdfStream) throws Exception {

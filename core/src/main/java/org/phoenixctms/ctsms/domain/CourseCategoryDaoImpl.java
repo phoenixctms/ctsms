@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.CourseCategoryVO;
  * @see CourseCategory
  */
 public class CourseCategoryDaoImpl
-		extends CourseCategoryDaoBase
-{
+		extends CourseCategoryDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseCategory courseCategoryVOToEntity(CourseCategoryVO courseCategoryVO)
-	{
+	public CourseCategory courseCategoryVOToEntity(CourseCategoryVO courseCategoryVO) {
 		CourseCategory entity = this.loadCourseCategoryFromCourseCategoryVO(courseCategoryVO);
 		this.courseCategoryVOToEntity(courseCategoryVO, entity, true);
 		return entity;
@@ -38,8 +36,7 @@ public class CourseCategoryDaoImpl
 	public void courseCategoryVOToEntity(
 			CourseCategoryVO source,
 			CourseCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.courseCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -47,8 +44,7 @@ public class CourseCategoryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<CourseCategory> handleFindByVisibleId(Boolean visible, Long categoryId)
-	{
+	protected Collection<CourseCategory> handleFindByVisibleId(Boolean visible, Long categoryId) {
 		org.hibernate.Criteria categoryCriteria = this.getSession().createCriteria(CourseCategory.class);
 		categoryCriteria.setCacheable(true);
 		CriteriaUtil.applyVisibleIdCriterion("visible", categoryCriteria, visible, categoryId);
@@ -60,15 +56,13 @@ public class CourseCategoryDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CourseCategory loadCourseCategoryFromCourseCategoryVO(CourseCategoryVO courseCategoryVO)
-	{
+	private CourseCategory loadCourseCategoryFromCourseCategoryVO(CourseCategoryVO courseCategoryVO) {
 		CourseCategory courseCategory = null;
 		Long id = courseCategoryVO.getId();
 		if (id != null) {
 			courseCategory = this.load(id);
 		}
-		if (courseCategory == null)
-		{
+		if (courseCategory == null) {
 			courseCategory = CourseCategory.Factory.newInstance();
 		}
 		return courseCategory;
@@ -78,8 +72,7 @@ public class CourseCategoryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CourseCategoryVO toCourseCategoryVO(final CourseCategory entity)
-	{
+	public CourseCategoryVO toCourseCategoryVO(final CourseCategory entity) {
 		return super.toCourseCategoryVO(entity);
 	}
 
@@ -89,8 +82,7 @@ public class CourseCategoryDaoImpl
 	@Override
 	public void toCourseCategoryVO(
 			CourseCategory source,
-			CourseCategoryVO target)
-	{
+			CourseCategoryVO target) {
 		super.toCourseCategoryVO(source, target);
 		target.setName(L10nUtil.getCourseCategoryName(Locales.USER, source.getNameL10nKey()));
 	}

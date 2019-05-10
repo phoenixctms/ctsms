@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
  * @see TeamMemberRole
  */
 public class TeamMemberRoleDaoImpl
-		extends TeamMemberRoleDaoBase
-{
+		extends TeamMemberRoleDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<TeamMemberRole> handleFindByVisibleId(Boolean visible, Long roleId)
-	{
+	protected Collection<TeamMemberRole> handleFindByVisibleId(Boolean visible, Long roleId) {
 		org.hibernate.Criteria roleCriteria = this.getSession().createCriteria(TeamMemberRole.class);
 		roleCriteria.setCacheable(true);
 		CriteriaUtil.applyVisibleIdCriterion("visible", roleCriteria, visible, roleId);
@@ -37,8 +35,7 @@ public class TeamMemberRoleDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TeamMemberRole loadTeamMemberRoleFromTeamMemberRoleVO(TeamMemberRoleVO teamMemberRoleVO)
-	{
+	private TeamMemberRole loadTeamMemberRoleFromTeamMemberRoleVO(TeamMemberRoleVO teamMemberRoleVO) {
 		// TODO implement loadTeamMemberRoleFromTeamMemberRoleVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberRoleFromTeamMemberRoleVO(TeamMemberRoleVO) not yet implemented.");
 		TeamMemberRole teamMemberRole = null;
@@ -46,8 +43,7 @@ public class TeamMemberRoleDaoImpl
 		if (id != null) {
 			teamMemberRole = this.load(id);
 		}
-		if (teamMemberRole == null)
-		{
+		if (teamMemberRole == null) {
 			teamMemberRole = TeamMemberRole.Factory.newInstance();
 		}
 		return teamMemberRole;
@@ -57,8 +53,7 @@ public class TeamMemberRoleDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMemberRole teamMemberRoleVOToEntity(TeamMemberRoleVO teamMemberRoleVO)
-	{
+	public TeamMemberRole teamMemberRoleVOToEntity(TeamMemberRoleVO teamMemberRoleVO) {
 		TeamMemberRole entity = this.loadTeamMemberRoleFromTeamMemberRoleVO(teamMemberRoleVO);
 		this.teamMemberRoleVOToEntity(teamMemberRoleVO, entity, true);
 		return entity;
@@ -71,8 +66,7 @@ public class TeamMemberRoleDaoImpl
 	public void teamMemberRoleVOToEntity(
 			TeamMemberRoleVO source,
 			TeamMemberRole target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.teamMemberRoleVOToEntity(source, target, copyIfNull);
 	}
 
@@ -80,8 +74,7 @@ public class TeamMemberRoleDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TeamMemberRoleVO toTeamMemberRoleVO(final TeamMemberRole entity)
-	{
+	public TeamMemberRoleVO toTeamMemberRoleVO(final TeamMemberRole entity) {
 		return super.toTeamMemberRoleVO(entity);
 	}
 
@@ -91,8 +84,7 @@ public class TeamMemberRoleDaoImpl
 	@Override
 	public void toTeamMemberRoleVO(
 			TeamMemberRole source,
-			TeamMemberRoleVO target)
-	{
+			TeamMemberRoleVO target) {
 		super.toTeamMemberRoleVO(source, target);
 		target.setName(L10nUtil.getTeamMemberRoleName(Locales.USER, source.getNameL10nKey()));
 	}

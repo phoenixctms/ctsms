@@ -34,11 +34,11 @@ public class Authenticator {
 	private static String obfuscateWrongPassword(String password) {
 		return OmittedFields.OBFUSCATED_STRING;
 	}
+
 	private PasswordDao passwordDao;
 	private UserDao userDao;
 	private JournalEntryDao journalEntryDao;
 	private LdapService ldapService1;
-
 	private LdapService ldapService2;
 
 	public Authenticator() {

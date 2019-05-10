@@ -83,8 +83,7 @@ public class InventoryStatusBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InventoryStatusEntryInVO backup = new InventoryStatusEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

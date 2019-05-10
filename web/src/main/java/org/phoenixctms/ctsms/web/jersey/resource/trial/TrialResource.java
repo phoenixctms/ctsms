@@ -61,6 +61,7 @@ public class TrialResource extends ServiceResourceBase {
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
+
 	// @GET
 	// @Produces({MediaType.APPLICATION_JSON})
 	// @Path("{psf:.*}")
@@ -163,8 +164,6 @@ public class TrialResource extends ServiceResourceBase {
 		return new Page<HyperlinkOutVO>(WebUtil.getServiceLocator().getHyperlinkService().getHyperlinks(auth, hyperlinkModule, id, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
-
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/journal")
@@ -212,7 +211,6 @@ public class TrialResource extends ServiceResourceBase {
 	// PSFUriPart psf;
 	// return new Page<TrialOutVO>(WebUtil.getServiceLocator().getTrialService().getSignupTrialList(auth, id, psf = new PSFUriPart(uriInfo)), psf);
 	// }
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("signup")

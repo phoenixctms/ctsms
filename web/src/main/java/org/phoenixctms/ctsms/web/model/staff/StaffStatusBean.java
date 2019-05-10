@@ -83,8 +83,7 @@ public class StaffStatusBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		StaffStatusEntryInVO backup = new StaffStatusEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
