@@ -13,9 +13,11 @@ import org.apache.commons.cli.Options;
 public final class DBToolOptions {
 
 	private enum LockId {
-		DEFAULT_LOCK_ID("dbtool.init"), NOTIFICATION_LOCK_ID("dbtool.notification"),
+		DEFAULT_LOCK_ID("dbtool.init"),
+		NOTIFICATION_LOCK_ID("dbtool.notification"),
 		//OPT_XY_LOCK_ID("dbtool." + XY_OPT),
-		MASS_MAIL_LOCK_ID("dbtool.massmail"), VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf");
+		MASS_MAIL_LOCK_ID("dbtool.massmail"),
+		VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf");
 
 		private final String fileNamePrefix;
 

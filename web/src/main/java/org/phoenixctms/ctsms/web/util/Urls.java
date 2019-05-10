@@ -7,14 +7,29 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 public enum Urls {
-	INVENTORY_PICKER("/shared/inventoryPicker.jsf"), STAFF_PICKER("/shared/staffPicker.jsf"), COURSE_PICKER("/shared/coursePicker.jsf"), USER_PICKER(
-			"/shared/userPicker.jsf"), TRIAL_PICKER("/shared/trialPicker.jsf"), PROBAND_PICKER("/shared/probandPicker.jsf"), INPUT_FIELD_PICKER(
-					"/shared/inputFieldPicker.jsf"), TEAM_MEMBER_PICKER("/shared/teamMemberPicker.jsf"), MASS_MAIL_PICKER("/shared/massMailPicker.jsf"), ECRF_SECTION(
-							"/shared/ecrfSection.jsf"), INVENTORY("/inventory/inventory.jsf"), STAFF("/staff/staff.jsf"), COURSE(
-									"/course/course.jsf"), USER("/user/user.jsf"), TRIAL("/trial/trial.jsf"), PROBAND("/proband/proband.jsf"), INPUT_FIELD(
-											"/inputfield/inputField.jsf"), MASS_MAIL("/massmail/massMail.jsf"), LOGIN("/login.jsf"), PORTAL("/portal.jsf"), ERROR(
-													"/error.jsf"), UNSUBSCRIBE("/unsubscribe.jsf"), INVENTORY_START(
-															Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)), // "/inventory/inventorySearch.jsf"),
+	INVENTORY_PICKER("/shared/inventoryPicker.jsf"),
+	STAFF_PICKER("/shared/staffPicker.jsf"),
+	COURSE_PICKER("/shared/coursePicker.jsf"),
+	USER_PICKER("/shared/userPicker.jsf"),
+	TRIAL_PICKER("/shared/trialPicker.jsf"),
+	PROBAND_PICKER("/shared/probandPicker.jsf"),
+	INPUT_FIELD_PICKER("/shared/inputFieldPicker.jsf"),
+	TEAM_MEMBER_PICKER("/shared/teamMemberPicker.jsf"),
+	MASS_MAIL_PICKER("/shared/massMailPicker.jsf"),
+	ECRF_SECTION("/shared/ecrfSection.jsf"),
+	INVENTORY("/inventory/inventory.jsf"),
+	STAFF("/staff/staff.jsf"),
+	COURSE("/course/course.jsf"),
+	USER("/user/user.jsf"),
+	TRIAL("/trial/trial.jsf"),
+	PROBAND("/proband/proband.jsf"),
+	INPUT_FIELD("/inputfield/inputField.jsf"),
+	MASS_MAIL("/massmail/massMail.jsf"),
+	LOGIN("/login.jsf"),
+	PORTAL("/portal.jsf"),
+	ERROR("/error.jsf"),
+	UNSUBSCRIBE("/unsubscribe.jsf"),
+	INVENTORY_START(Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)), // "/inventory/inventorySearch.jsf"),
 	STAFF_START(Settings.getString(SettingCodes.STAFF_START_URL, Bundle.SETTINGS, DefaultSettings.STAFF_START_URL)), // "/staff/staffSearch.jsf"),
 	COURSE_START(Settings.getString(SettingCodes.COURSE_START_URL, Bundle.SETTINGS, DefaultSettings.COURSE_START_URL)), // "/course/courseSearch.jsf"),
 	USER_START(Settings.getString(SettingCodes.USER_START_URL, Bundle.SETTINGS, DefaultSettings.USER_START_URL)), // "/user/userSearch.jsf"),
@@ -22,29 +37,35 @@ public enum Urls {
 	PROBAND_START(Settings.getString(SettingCodes.PROBAND_START_URL, Bundle.SETTINGS, DefaultSettings.PROBAND_START_URL)), // "/proband/probandSearch.jsf"),
 	INPUT_FIELD_START(Settings.getString(SettingCodes.INPUT_FIELD_START_URL, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
 	MASS_MAIL_START(Settings.getString(SettingCodes.MASS_MAIL_START_URL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
-	INVENTORY_SEARCH("/inventory/inventorySearch.jsf"), STAFF_SEARCH("/staff/staffSearch.jsf"), COURSE_SEARCH("/course/courseSearch.jsf"), USER_SEARCH(
-			"/user/userSearch.jsf"), TRIAL_SEARCH("/trial/trialSearch.jsf"), PROBAND_SEARCH("/proband/probandSearch.jsf"), INPUT_FIELD_SEARCH(
-					"/inputfield/inputFieldSearch.jsf"), MASS_MAIL_SEARCH("/massmail/massMailSearch.jsf"), CHANGE_PASSWORD(
-							"/user/changePassword.jsf"), ADMIN_UPCOMING_COURSE_OVERVIEW("/course/adminUpcomingCourseOverview.jsf"), EXPIRING_COURSE_OVERVIEW(
-									"/course/expiringCourseOverview.jsf"), ADMIN_EXPIRING_PARTICIPATION_OVERVIEW(
-											"/course/adminExpiringParticipationOverview.jsf"), INVENTORY_STATUS_OVERVIEW(
-													"/inventory/inventoryStatusOverview.jsf"), INVENTORY_MAINTENANCE_OVERVIEW(
-															"/inventory/inventoryMaintenanceOverview.jsf"), INVENTORY_BOOKING_SCHEDULE(
-																	"/inventory/inventoryBookingSchedule.jsf"), INVENTORY_BOOKING_SUMMARY_OVERVIEW(
-																			"/inventory/bookingSummaryOverview.jsf"), PROBAND_STATUS_OVERVIEW(
-																					"/proband/probandStatusOverview.jsf"), AUTO_DELETION_PROBAND_OVERVIEW(
-																							"/proband/autoDeletionProbandOverview.jsf"), STAFF_STATUS_OVERVIEW(
-																									"/staff/staffStatusOverview.jsf"), STAFF_SHIFT_SUMMARY_OVERVIEW(
-																											"/staff/staffShiftSummaryOverview.jsf"), UPCOMING_COURSE_OVERVIEW(
-																													"/staff/upcomingCourseOverview.jsf"), EXPIRING_PARTICIPATION_OVERVIEW(
-																															"/staff/expiringParticipationOverview.jsf"), TIMELINE_EVENT_OVERVIEW(
-																																	"/trial/timelineEventOverview.jsf"), TRIAL_TIMELINE(
-																																			"/trial/trialTimeline.jsf"), TRIAL_SHIFT_SUMMARY_OVERVIEW(
-																																					"/trial/trialShiftSummaryOverview.jsf"), RECIPIENT_OVERVIEW(
-																																							"/massmail/recipientOverview.jsf"), MONEY_TRANSFER_OVERVIEW(
-																																									"/trial/moneyTransferOverview.jsf"), ECRF_PROGRESS_OVERVIEW(
-																																											"/trial/ecrfProgressOverview.jsf"), DUTY_ROSTER_SCHEDULE(
-																																													"/trial/dutyRosterSchedule.jsf");
+	INVENTORY_SEARCH("/inventory/inventorySearch.jsf"),
+	STAFF_SEARCH("/staff/staffSearch.jsf"),
+	COURSE_SEARCH("/course/courseSearch.jsf"),
+	USER_SEARCH("/user/userSearch.jsf"),
+	TRIAL_SEARCH("/trial/trialSearch.jsf"),
+	PROBAND_SEARCH("/proband/probandSearch.jsf"),
+	INPUT_FIELD_SEARCH("/inputfield/inputFieldSearch.jsf"),
+	MASS_MAIL_SEARCH("/massmail/massMailSearch.jsf"),
+	CHANGE_PASSWORD("/user/changePassword.jsf"),
+	ADMIN_UPCOMING_COURSE_OVERVIEW("/course/adminUpcomingCourseOverview.jsf"),
+	EXPIRING_COURSE_OVERVIEW("/course/expiringCourseOverview.jsf"),
+	ADMIN_EXPIRING_PARTICIPATION_OVERVIEW("/course/adminExpiringParticipationOverview.jsf"),
+	INVENTORY_STATUS_OVERVIEW("/inventory/inventoryStatusOverview.jsf"),
+	INVENTORY_MAINTENANCE_OVERVIEW("/inventory/inventoryMaintenanceOverview.jsf"),
+	INVENTORY_BOOKING_SCHEDULE("/inventory/inventoryBookingSchedule.jsf"),
+	INVENTORY_BOOKING_SUMMARY_OVERVIEW("/inventory/bookingSummaryOverview.jsf"),
+	PROBAND_STATUS_OVERVIEW("/proband/probandStatusOverview.jsf"),
+	AUTO_DELETION_PROBAND_OVERVIEW("/proband/autoDeletionProbandOverview.jsf"),
+	STAFF_STATUS_OVERVIEW("/staff/staffStatusOverview.jsf"),
+	STAFF_SHIFT_SUMMARY_OVERVIEW("/staff/staffShiftSummaryOverview.jsf"),
+	UPCOMING_COURSE_OVERVIEW("/staff/upcomingCourseOverview.jsf"),
+	EXPIRING_PARTICIPATION_OVERVIEW("/staff/expiringParticipationOverview.jsf"),
+	TIMELINE_EVENT_OVERVIEW("/trial/timelineEventOverview.jsf"),
+	TRIAL_TIMELINE("/trial/trialTimeline.jsf"),
+	TRIAL_SHIFT_SUMMARY_OVERVIEW("/trial/trialShiftSummaryOverview.jsf"),
+	RECIPIENT_OVERVIEW("/massmail/recipientOverview.jsf"),
+	MONEY_TRANSFER_OVERVIEW("/trial/moneyTransferOverview.jsf"),
+	ECRF_PROGRESS_OVERVIEW("/trial/ecrfProgressOverview.jsf"),
+	DUTY_ROSTER_SCHEDULE("/trial/dutyRosterSchedule.jsf");
 
 	private static Urls fromValue(String viewId) {
 		if (viewId != null) {

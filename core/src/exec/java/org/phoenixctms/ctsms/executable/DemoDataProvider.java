@@ -158,37 +158,92 @@ import org.springframework.core.io.ClassPathResource;
 public class DemoDataProvider {
 
 	private enum InputFields {
-		HEIGHT("Körpergröße"), WEIGHT("Körpergewicht"), BMI("Body Mass Index"), DIABETES_YN("Diabetes J/N"), DIABETES_TYPE("Diabetes Typ"), DIABETES_SINCE(
-				"Diabetes seit"), DIABETES_HBA1C_MMOLPERMOL(
-						"HbA1C in mmol/mol"), DIABETES_HBA1C_PERCENT("HbA1C in prozent"), DIABETES_HBA1C_DATE("HbA1C Datum"), DIABETES_C_PEPTIDE("C-Peptid"), // µg/l
-		DIABETES_ATTENDING_PHYSICIAN("Arzt in Behandlung"), DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
-		DIABETES_MEDICATION("Diabetes Medikamente"), CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"), SMOKER_YN("Raucher J/N"), CIGARETTES_PER_DAY(
-				"Zigaretten pro Tag"), CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"), CHRONIC_DISEASE("Chronische Erkrankung"), EPILEPSY_YN("Epilepsie J/N"), EPILEPSY(
-						"Epilepsie"), CARDIAC_PROBLEMS_YN("Herzprobleme J/N"), CARDIAC_PROBLEMS(
-								"Herzprobleme"), HYPERTENSION_YN("Bluthochdruck J/N"), HYPERTENSION("Bluthochdruck"), RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
+		HEIGHT("Körpergröße"),
+		WEIGHT("Körpergewicht"),
+		BMI("Body Mass Index"),
+		DIABETES_YN("Diabetes J/N"),
+		DIABETES_TYPE("Diabetes Typ"),
+		DIABETES_SINCE("Diabetes seit"),
+		DIABETES_HBA1C_MMOLPERMOL("HbA1C in mmol/mol"),
+		DIABETES_HBA1C_PERCENT("HbA1C in prozent"),
+		DIABETES_HBA1C_DATE("HbA1C Datum"),
+		DIABETES_C_PEPTIDE("C-Peptid"), // µg/l
+		DIABETES_ATTENDING_PHYSICIAN("Arzt in Behandlung"),
+		DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
+		DIABETES_MEDICATION("Diabetes Medikamente"),
+		CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"),
+		SMOKER_YN("Raucher J/N"),
+		CIGARETTES_PER_DAY("Zigaretten pro Tag"),
+		CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"),
+		CHRONIC_DISEASE("Chronische Erkrankung"),
+		EPILEPSY_YN("Epilepsie J/N"),
+		EPILEPSY("Epilepsie"),
+		CARDIAC_PROBLEMS_YN("Herzprobleme J/N"),
+		CARDIAC_PROBLEMS("Herzprobleme"),
+		HYPERTENSION_YN("Bluthochdruck J/N"),
+		HYPERTENSION("Bluthochdruck"),
+		RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
 		// insufficiencyYN//nieren
-		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"), LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
-		LIVER_DISEASE("Lebererkrankung"), ANEMIA_YN("Anemie J/N"), // anemiaYN
-		ANEMIA("Anemie"), IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
-		IMMUNE_MEDAITED_DISEASE("Autoimmunerkrankung"), GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
-		GESTATION("schwanger, stillen etc."), GESTATION_TYPE("schwanger, stillen etc. Auswahl"), CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
-		CONTRACEPTION("Empfängnisverhütung"), CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"), ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
-		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"), PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
-		PSYCHIATRIC_CONDITION("Psychiatrische Erkrankung"), ALLERGY_YN("Allergien J/N"), // allergyYN
-		ALLERGY("Allergien"), MEDICATION_YN("Medikamente J/N"), // medicationYN
-		MEDICATION("Medikamente"), EYE_PROBLEMS_YN("Probleme mit den Augen J/N"), // eye_probalemsYN
-		EYE_PROBLEMS("Probleme mit den Augen"), FEET_PROBLEMS_YN("Probleme mit den Füßen J/N"), // feet_probalemsYN
-		FEET_PROBLEMS("Probleme mit den Füßen"), DIAGNOSTIC_FINDINGS_AVAILABLE_YN("Befunde zuhause J/N"), DIAGNOSTIC_FINDINGS_AVAILABLE("Befunde zuhause"), GENERAL_STATE_OF_HEALTH(
-				"Allgemeiner Gesundheitszustand"), NOTE("Anmerkung"), SUBJECT_NUMBER("Subject Number"), IC_DATE("Informed Consent Date"), SCREENING_DATE(
-						"Screening Date"), LAB_NUMBER("Lab Number"), RANDOM_NUMBER("Random Number"), LETTER_TO_PHYSICIAN_SENT(
-								"Letter to physician sent"), PARTICIPATION_LETTER_IN_MEDOCS("Participation letter in MR/Medocs"), LETTER_TO_SUBJECT_AT_END_OF_STUDY(
-										"Letter to subject at end of study"), COMPLETION_LETTER_IN_MEDOCS("Completion letter in MR/Medocs"), BODY_HEIGHT(
-												"Body Height"), BODY_WEIGHT("Body Weight"), BODY_MASS_INDEX("BMI"), OBESITY("Obesity"), EGFR("eGFR"), SERUM_CREATININ_CONCENTRATION(
-														"Serum Creatinin Concentration"), ETHNICITY("Ethnicity"), HBA1C_PERCENT("HbA1C (percent)"), HBA1C_MMOLPERMOL(
-																"HbA1C (mmol/mol)"), MANNEQUIN("Mannequin"), ESR("ESR"), VAS("VAS"), DAS28("DAS28"), DISTANCE("Distance"), ALPHA_ID(
-																		"Alpha-ID"), STRING_SINGLELINE("singleline text"), STRING_MULTILINE("multiline text"), FLOAT(
-																				"decimal"), INTEGER("integer"), DIAGNOSIS_START(
-																						"diagnosis from"), DIAGNOSIS_END("diagnosis to"), DIAGNOSIS_COUNT("diagnosis count");
+		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"),
+		LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
+		LIVER_DISEASE("Lebererkrankung"),
+		ANEMIA_YN("Anemie J/N"), // anemiaYN
+		ANEMIA("Anemie"),
+		IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
+		IMMUNE_MEDAITED_DISEASE("Autoimmunerkrankung"),
+		GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
+		GESTATION("schwanger, stillen etc."),
+		GESTATION_TYPE("schwanger, stillen etc. Auswahl"),
+		CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
+		CONTRACEPTION("Empfängnisverhütung"),
+		CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"),
+		ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
+		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"),
+		PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
+		PSYCHIATRIC_CONDITION("Psychiatrische Erkrankung"),
+		ALLERGY_YN("Allergien J/N"), // allergyYN
+		ALLERGY("Allergien"),
+		MEDICATION_YN("Medikamente J/N"), // medicationYN
+		MEDICATION("Medikamente"),
+		EYE_PROBLEMS_YN("Probleme mit den Augen J/N"), // eye_probalemsYN
+		EYE_PROBLEMS("Probleme mit den Augen"),
+		FEET_PROBLEMS_YN("Probleme mit den Füßen J/N"), // feet_probalemsYN
+		FEET_PROBLEMS("Probleme mit den Füßen"),
+		DIAGNOSTIC_FINDINGS_AVAILABLE_YN("Befunde zuhause J/N"),
+		DIAGNOSTIC_FINDINGS_AVAILABLE("Befunde zuhause"),
+		GENERAL_STATE_OF_HEALTH("Allgemeiner Gesundheitszustand"),
+		NOTE("Anmerkung"),
+		SUBJECT_NUMBER("Subject Number"),
+		IC_DATE("Informed Consent Date"),
+		SCREENING_DATE("Screening Date"),
+		LAB_NUMBER("Lab Number"),
+		RANDOM_NUMBER("Random Number"),
+		LETTER_TO_PHYSICIAN_SENT("Letter to physician sent"),
+		PARTICIPATION_LETTER_IN_MEDOCS("Participation letter in MR/Medocs"),
+		LETTER_TO_SUBJECT_AT_END_OF_STUDY("Letter to subject at end of study"),
+		COMPLETION_LETTER_IN_MEDOCS("Completion letter in MR/Medocs"),
+		BODY_HEIGHT("Body Height"),
+		BODY_WEIGHT("Body Weight"),
+		BODY_MASS_INDEX("BMI"),
+		OBESITY("Obesity"),
+		EGFR("eGFR"),
+		SERUM_CREATININ_CONCENTRATION("Serum Creatinin Concentration"),
+		ETHNICITY("Ethnicity"),
+		HBA1C_PERCENT("HbA1C (percent)"),
+		HBA1C_MMOLPERMOL("HbA1C (mmol/mol)"),
+		MANNEQUIN("Mannequin"),
+		ESR("ESR"),
+		VAS("VAS"),
+		DAS28("DAS28"),
+		DISTANCE("Distance"),
+		ALPHA_ID("Alpha-ID"),
+		STRING_SINGLELINE("singleline text"),
+		STRING_MULTILINE("multiline text"),
+		FLOAT("decimal"),
+		INTEGER("integer"),
+		DIAGNOSIS_START("diagnosis from"),
+		DIAGNOSIS_END("diagnosis to"),
+		DIAGNOSIS_COUNT("diagnosis count");
 
 		private final String value;
 
@@ -203,50 +258,73 @@ public class DemoDataProvider {
 	}
 
 	private enum InputFieldValues {
-		TYP_1_DIABETES("Typ 1 Diabetes"), TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"), TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION(
-				"Typ 2 Diabetes ohne Insulineigenproduktion"), DIAET("Diät"), SPORTLICHE_BETAETIGUNG(
-						"Sportliche Betätigung"), ORALE_ANTIDIABETIKA("Orale Antidiabetika"), INSULINTHERAPIE(
-								"Insulintherapie"), CIGARETTES_UNTER_5("Unter 5"), CIGARETTES_5_20("5-20"), CIGARETTES_20_40("20-40"), CIGARETTES_UEBER_40("über 40"), SCHWANGER(
-										"schwanger"), STILLEN("stillen"), HORMONELL("hormonell"), MECHANISCH("mechanisch"), INTRAUTERINPESSARE("Intrauterinpessare"), CHEMISCH(
-												"chemisch"), OPERATIV("operativ"), SHORTWEIGHT("shortweight"), NORMAL_WEIGHT("normal weight"), OVERWEIGHT(
-														"overweight"), ADIPOSITY_DEGREE_I("adiposity degree I"), ADIPOSITY_DEGREE_II("adiposity degree II"), ADIPOSITY_DEGREE_III(
-																"adiposity degree III"), AMERICAN_INDIAN_OR_ALASKA_NATIVE("American Indian or Alaska Native"), ASIAN(
-																		"Asian"), BLACK("Black"), NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER(
-																				"Native Hawaiian or Other Pacific Islander"), WHITE(
-																						"White"), SHOULDER_RIGHT("shoulder right"), SHOULDER_LEFT("shoulder left"), ELLBOW_RIGHT(
-																								"ellbow right"), ELLBOW_LEFT("ellbow left"), WRIST_RIGHT("wrist right"), WRIST_LEFT(
-																										"wrist left"), THUMB_BASE_RIGHT("thumb base right"), THUMB_MIDDLE_RIGHT(
-																												"thumb middle right"), THUMB_BASE_LEFT(
-																														"thumb base left"), THUMB_MIDDLE_LEFT(
-																																"thumb middle left"), INDEX_FINGER_BASE_RIGHT(
-																																		"index finger base right"), INDEX_FINGER_MIDDLE_RIGHT(
-																																				"index finger middle right"), MIDDLE_FINGER_BASE_RIGHT(
-																																						"middle finger base right"), MIDDLE_FINGER_MIDDLE_RIGHT(
-																																								"middle finger middle right"), RING_FINGER_BASE_RIGHT(
-																																										"ring finger base right"), RING_FINGER_MIDDLE_RIGHT(
-																																												"ring finger middle right"), LITTLE_FINGER_BASE_RIGHT(
-																																														"little finger base right"), LITTLE_FINGER_MIDDLE_RIGHT(
-																																																"little finger middle right"), INDEX_FINGER_BASE_LEFT(
-																																																		"index finger base left"), INDEX_FINGER_MIDDLE_LEFT(
-																																																				"index finger middle left"), MIDDLE_FINGER_BASE_LEFT(
-																																																						"middle finger base left"), MIDDLE_FINGER_MIDDLE_LEFT(
-																																																								"middle finger middle left"), RING_FINGER_BASE_LEFT(
-																																																										"ring finger base left"), RING_FINGER_MIDDLE_LEFT(
-																																																												"ring finger middle left"), LITTLE_FINGER_BASE_LEFT(
-																																																														"little finger base left"), LITTLE_FINGER_MIDDLE_LEFT(
-																																																																"little finger middle left"), KNEE_RIGHT(
-																																																																		"knee right"), KNEE_LEFT(
-																																																																				"knee left"), VAS_1(
-																																																																						"vas-1"), VAS_2(
-																																																																								"vas-2"), VAS_3(
-																																																																										"vas-3"), VAS_4(
-																																																																												"vas-4"), VAS_5(
-																																																																														"vas-5"), VAS_6(
-																																																																																"vas-6"), VAS_7(
-																																																																																		"vas-7"), VAS_8(
-																																																																																				"vas-8"), VAS_9(
-																																																																																						"vas-9"), VAS_10(
-																																																																																								"vas-10");
+		TYP_1_DIABETES("Typ 1 Diabetes"),
+		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
+		TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION("Typ 2 Diabetes ohne Insulineigenproduktion"),
+		DIAET("Diät"),
+		SPORTLICHE_BETAETIGUNG("Sportliche Betätigung"),
+		ORALE_ANTIDIABETIKA("Orale Antidiabetika"),
+		INSULINTHERAPIE("Insulintherapie"),
+		CIGARETTES_UNTER_5("Unter 5"),
+		CIGARETTES_5_20("5-20"),
+		CIGARETTES_20_40("20-40"),
+		CIGARETTES_UEBER_40("über 40"),
+		SCHWANGER("schwanger"),
+		STILLEN("stillen"),
+		HORMONELL("hormonell"),
+		MECHANISCH("mechanisch"),
+		INTRAUTERINPESSARE("Intrauterinpessare"),
+		CHEMISCH("chemisch"),
+		OPERATIV("operativ"),
+		SHORTWEIGHT("shortweight"),
+		NORMAL_WEIGHT("normal weight"),
+		OVERWEIGHT("overweight"),
+		ADIPOSITY_DEGREE_I("adiposity degree I"),
+		ADIPOSITY_DEGREE_II("adiposity degree II"),
+		ADIPOSITY_DEGREE_III("adiposity degree III"),
+		AMERICAN_INDIAN_OR_ALASKA_NATIVE("American Indian or Alaska Native"),
+		ASIAN("Asian"),
+		BLACK("Black"),
+		NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER("Native Hawaiian or Other Pacific Islander"),
+		WHITE("White"),
+		SHOULDER_RIGHT("shoulder right"),
+		SHOULDER_LEFT("shoulder left"),
+		ELLBOW_RIGHT("ellbow right"),
+		ELLBOW_LEFT("ellbow left"),
+		WRIST_RIGHT("wrist right"),
+		WRIST_LEFT("wrist left"),
+		THUMB_BASE_RIGHT("thumb base right"),
+		THUMB_MIDDLE_RIGHT("thumb middle right"),
+		THUMB_BASE_LEFT("thumb base left"),
+		THUMB_MIDDLE_LEFT("thumb middle left"),
+		INDEX_FINGER_BASE_RIGHT("index finger base right"),
+		INDEX_FINGER_MIDDLE_RIGHT("index finger middle right"),
+		MIDDLE_FINGER_BASE_RIGHT("middle finger base right"),
+		MIDDLE_FINGER_MIDDLE_RIGHT("middle finger middle right"),
+		RING_FINGER_BASE_RIGHT("ring finger base right"),
+		RING_FINGER_MIDDLE_RIGHT("ring finger middle right"),
+		LITTLE_FINGER_BASE_RIGHT("little finger base right"),
+		LITTLE_FINGER_MIDDLE_RIGHT("little finger middle right"),
+		INDEX_FINGER_BASE_LEFT("index finger base left"),
+		INDEX_FINGER_MIDDLE_LEFT("index finger middle left"),
+		MIDDLE_FINGER_BASE_LEFT("middle finger base left"),
+		MIDDLE_FINGER_MIDDLE_LEFT("middle finger middle left"),
+		RING_FINGER_BASE_LEFT("ring finger base left"),
+		RING_FINGER_MIDDLE_LEFT("ring finger middle left"),
+		LITTLE_FINGER_BASE_LEFT("little finger base left"),
+		LITTLE_FINGER_MIDDLE_LEFT("little finger middle left"),
+		KNEE_RIGHT("knee right"),
+		KNEE_LEFT("knee left"),
+		VAS_1("vas-1"),
+		VAS_2("vas-2"),
+		VAS_3("vas-3"),
+		VAS_4("vas-4"),
+		VAS_5("vas-5"),
+		VAS_6("vas-6"),
+		VAS_7("vas-7"),
+		VAS_8("vas-8"),
+		VAS_9("vas-9"),
+		VAS_10("vas-10");
 
 		private final String value;
 
@@ -261,8 +339,15 @@ public class DemoDataProvider {
 	}
 
 	public enum SearchCriteria {
-		ALL_INVENTORY("all inventory"), ALL_STAFF("all staff"), ALL_COURSES("all courses"), ALL_TRIALS("all trials"), ALL_PROBANDS("all probands"), ALL_INPUTFIELDS(
-				"all inputfields"), ALL_MASSMAILS("all_massmails"), ALL_USERS("all users"), SUBJECTS_1("subjects_1");
+		ALL_INVENTORY("all inventory"),
+		ALL_STAFF("all staff"),
+		ALL_COURSES("all courses"),
+		ALL_TRIALS("all trials"),
+		ALL_PROBANDS("all probands"),
+		ALL_INPUTFIELDS("all inputfields"),
+		ALL_MASSMAILS("all_massmails"),
+		ALL_USERS("all users"),
+		SUBJECTS_1("subjects_1");
 
 		private final String value;
 

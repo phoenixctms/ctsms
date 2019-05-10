@@ -27,7 +27,9 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	public enum BlockType {
 		// NEW_PAGE,
 		// NEW_LIST_ENTRY,
-		PAGE_TITLE, NEW_PROBAND_TRIAL, NEW_CATEGORY,
+		PAGE_TITLE,
+		NEW_PROBAND_TRIAL,
+		NEW_CATEGORY,
 		// NEW_INDEX,
 		INPUT_FIELD,
 		// END_OF_INDEX,
