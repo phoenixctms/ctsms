@@ -111,7 +111,6 @@ public class EcrfMoveAdapter extends MoveAdapter<Trial, ECRF, ECRFOutVO> {
 				return result;
 		}
 		journalEntryDao.addSystemMessage(item.getTrial(), now, modifiedUser, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(result.getTrial()) },
-
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
 		return result;
 	}
@@ -136,10 +135,9 @@ public class EcrfMoveAdapter extends MoveAdapter<Trial, ECRF, ECRFOutVO> {
 		journalEntryDao.addSystemMessage(root, now, modifiedUser,
 				systemMessageCode,
 				new Object[] { CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(root)), Integer.toString(updated.size()) },
-
 				new Object[] {
-				CoreUtil.getSystemMessageCommentContent(createUpdatedInfo(updated), null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null))
-		});
+						CoreUtil.getSystemMessageCommentContent(createUpdatedInfo(updated), null, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null))
+				});
 	}
 
 	public ArrayList<ECRFOutVO> normalizePositions(Long groupEcrfId) throws Exception {

@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.user.UserService#getNotificationList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups={"service","UserService"})
+@Test(groups = { "service", "UserService" })
 public class UserService_getNotificationListTest extends UserServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getNotificationList</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'UserService_getNotificationListTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.getNotificationList]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getNotificationList</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'UserService_getNotificationListTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.getNotificationList]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

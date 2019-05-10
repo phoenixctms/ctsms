@@ -30,24 +30,9 @@ import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 public class ReimbursementsPDFBlock {
 
 	public enum BlockType {
-		NEW_REIMBURSEMENT,
-		NEW_PAGE,
-		RECIPIENT_ADDRESS,
-		SENDER_ADDRESS,
-		FIRST_PAGE_DATE,
-		FIRST_PAGE_SUBJECT,
-		SALUTATION,
-		TRIAL_TITLE,
-		RETURN_ADDRESS,
-		SECOND_PAGE_DATE,
-		SECOND_PAGE_SUBJECT,
-		TRIAL_TAGS,
-		MONEY_TRANSFER_TABLE_HEAD,
-		BANK_ACCOUNT_TABLE_ROW,
-		PAYMENT_METHOD_TABLE_ROW,
+		NEW_REIMBURSEMENT, NEW_PAGE, RECIPIENT_ADDRESS, SENDER_ADDRESS, FIRST_PAGE_DATE, FIRST_PAGE_SUBJECT, SALUTATION, TRIAL_TITLE, RETURN_ADDRESS, SECOND_PAGE_DATE, SECOND_PAGE_SUBJECT, TRIAL_TAGS, MONEY_TRANSFER_TABLE_HEAD, BANK_ACCOUNT_TABLE_ROW, PAYMENT_METHOD_TABLE_ROW,
 		// COMPLETE_INSTRUCTION,
-		SIGNATURE_TOTAL,
-		SPACER,
+		SIGNATURE_TOTAL, SPACER,
 	}
 
 	private static String getAmount(Float amount) {
@@ -75,7 +60,6 @@ public class ReimbursementsPDFBlock {
 	private boolean firstTableRow;
 	private boolean lastTableRow;
 	private boolean newPage = false;
-
 
 	public ReimbursementsPDFBlock() {
 		type = BlockType.SPACER;
@@ -167,7 +151,8 @@ public class ReimbursementsPDFBlock {
 							bankAccount.getBankName()));
 					if (!CommonUtil.isEmptyString(bankAccount.getBic())) {
 						sb.append(PDFUtil.PDF_LINE_BREAK);
-						sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BIC_LABEL, PDFUtil.DEFAULT_LABEL, bankAccount.getBic()));
+						sb.append(
+								L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BIC_LABEL, PDFUtil.DEFAULT_LABEL, bankAccount.getBic()));
 					}
 					if (!CommonUtil.isEmptyString(bankAccount.getIban())) {
 						sb.append(PDFUtil.PDF_LINE_BREAK);
@@ -209,7 +194,6 @@ public class ReimbursementsPDFBlock {
 		return CommonUtil.getGenderSpecificSalutation(proband,
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_FEMALE_SALUTATION, PDFUtil.DEFAULT_LABEL));
-
 	}
 
 	private String getCareOf() {
@@ -234,7 +218,6 @@ public class ReimbursementsPDFBlock {
 		return CommonUtil.getGenderSpecificSalutation(proband,
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.FEMALE_SALUTATION, PDFUtil.DEFAULT_LABEL));
-
 	}
 
 	public float getHeight(ReimbursementsPDFBlockCursor cursor) throws Exception {
@@ -319,8 +302,9 @@ public class ReimbursementsPDFBlock {
 					ReimbursementsPDFLabelCodes.SIGNATURE_ANNOTATION,
 					PDFUtil.DEFAULT_LABEL,
 					getProbandName(true, true),
-					now == null ? null : Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-							ReimbursementsPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+					now == null ? null
+							: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
+									ReimbursementsPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
 		}
 		return "";
 	}
@@ -502,8 +486,9 @@ public class ReimbursementsPDFBlock {
 						Locales.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFLabelCodes.DATE,
 						PDFUtil.DEFAULT_LABEL,
-						now == null ? null : Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+						now == null ? null
+								: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ReimbursementsPDFSettingCodes.FIRST_PAGE_DATE_Y, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.FIRST_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
@@ -567,8 +552,9 @@ public class ReimbursementsPDFBlock {
 						Locales.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFLabelCodes.DATE,
 						PDFUtil.DEFAULT_LABEL,
-						now == null ? null : Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+						now == null ? null
+								: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ReimbursementsPDFSettingCodes.SECOND_PAGE_DATE_Y, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SECOND_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
@@ -597,7 +583,7 @@ public class ReimbursementsPDFBlock {
 				break;
 			case TRIAL_TAGS:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.Y_TRIAL_TAGS_INDENT);
+						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.Y_TRIAL_TAGS_INDENT);
 				y2 = y1;
 				x1 = cursor.getBlockX()
 						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.X_TRIAL_TAGS_INDENT);
@@ -621,9 +607,9 @@ public class ReimbursementsPDFBlock {
 								y2,
 								PDFUtil.Alignment.TOP_LEFT,
 								cursor.getBlockX() + cursor.getBlockWidth()
-								- x2
-								- Settings.getFloat(ReimbursementsPDFSettingCodes.X_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.X_TRIAL_TAGS_INDENT));
+										- x2
+										- Settings.getFloat(ReimbursementsPDFSettingCodes.X_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF,
+												ReimbursementsPDFDefaultSettings.X_TRIAL_TAGS_INDENT));
 						y1 = Math.min(y1, y2);
 						if (it.hasNext()) {
 							y1 -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TRIAL_TAGS_INDENT, Bundle.REIMBURSEMENTS_PDF,
@@ -637,14 +623,16 @@ public class ReimbursementsPDFBlock {
 				break;
 			case MONEY_TRANSFER_TABLE_HEAD:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
-						ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT);
+						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT) / 2.0f;
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.MEDIUM, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
-						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR), L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFLabelCodes.PAYMENT_METHOD_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), x, y1, PDFUtil.Alignment.TOP_CENTER);
+						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
+						L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFLabelCodes.PAYMENT_METHOD_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+						x, y1, PDFUtil.Alignment.TOP_CENTER);
 				y2 = cursor.getBlockY()
 						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT);
@@ -653,12 +641,16 @@ public class ReimbursementsPDFBlock {
 								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT)
 						+ (cursor.getBlockWidth()
 								- Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT) - Settings.getFloat(
-												ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-												ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH)) / 2.0f;
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT)
+								- Settings.getFloat(
+										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH))
+								/ 2.0f;
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.MEDIUM, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
-						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR), L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFLabelCodes.COST_TYPE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), x, y2, PDFUtil.Alignment.TOP_CENTER);
+						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
+						L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFLabelCodes.COST_TYPE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+						x, y2, PDFUtil.Alignment.TOP_CENTER);
 				y3 = cursor.getBlockY()
 						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT);
@@ -667,8 +659,10 @@ public class ReimbursementsPDFBlock {
 						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH) / 2.0f;
 				y3 -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.MEDIUM, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
-						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR), L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFLabelCodes.AMOUNT_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), x, y3, PDFUtil.Alignment.TOP_CENTER);
+						Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
+						L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFLabelCodes.AMOUNT_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+						x, y3, PDFUtil.Alignment.TOP_CENTER);
 				y = Math.min(y1, Math.min(y2, y3));
 				y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_HEAD_FRAME_INDENT);
@@ -682,31 +676,32 @@ public class ReimbursementsPDFBlock {
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
 						cursor.getBlockY(),
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT), cursor.getBlockY() - height, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+						cursor.getBlockY() - height, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderLine(
 						contentStream,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
 						cursor.getBlockY(),
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH), cursor.getBlockY() - height, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+						cursor.getBlockY() - height, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				break;
-
 			case BANK_ACCOUNT_TABLE_ROW:
 			case PAYMENT_METHOD_TABLE_ROW:
 				y1 = cursor.getBlockY();
@@ -742,9 +737,9 @@ public class ReimbursementsPDFBlock {
 						PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT)
-						- 2.0f
-						* Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT));
+								- 2.0f
+										* Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
+												ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT));
 				y2 = cursor.getBlockY();
 				if (firstTableRow || newPage) {
 					y2 -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
@@ -778,8 +773,9 @@ public class ReimbursementsPDFBlock {
 									y2,
 									PDFUtil.Alignment.TOP_LEFT,
 									x2
-									- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-											ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH) - x1);
+											- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+													ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH)
+											- x1);
 							if (costTypeDetail.getComments().size() > 0) {
 								Iterator<String> commentsIt = costTypeDetail.getComments().iterator();
 								while (commentsIt.hasNext()) {
@@ -794,8 +790,9 @@ public class ReimbursementsPDFBlock {
 											y2,
 											PDFUtil.Alignment.TOP_LEFT,
 											x2
-											- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-													ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH) - x1);
+													- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+															ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH)
+													- x1);
 								}
 							}
 							// if (costTypeDetail.getTotal() != null) {
@@ -815,15 +812,14 @@ public class ReimbursementsPDFBlock {
 							- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 									ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
 				}
-
 				if (lastTableRow) {
 					PDFUtil.renderLine(
 							contentStream,
 							Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 									ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 							cursor.getBlockX()
-							+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-									ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+									+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+											ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
 							y,
 							cursor.getBlockX() + cursor.getBlockWidth(),
 							y,
@@ -837,12 +833,14 @@ public class ReimbursementsPDFBlock {
 							Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
 									Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 							L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-									ReimbursementsPDFLabelCodes.TOTAL_LABEL, PDFUtil.DEFAULT_LABEL), x1, y2, PDFUtil.Alignment.TOP_LEFT);
+									ReimbursementsPDFLabelCodes.TOTAL_LABEL, PDFUtil.DEFAULT_LABEL),
+							x1, y2, PDFUtil.Alignment.TOP_LEFT);
 					y3 -= PDFUtil.renderTextLine(contentStream, cursor.getFontE(), PDFUtil.FontSize.MEDIUM,
 							Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
 									Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 							L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-									getAmount(total), PDFUtil.DEFAULT_LABEL), x2, y3, PDFUtil.Alignment.TOP_RIGHT);
+									getAmount(total), PDFUtil.DEFAULT_LABEL),
+							x2, y3, PDFUtil.Alignment.TOP_RIGHT);
 					y = Math.min(y1, Math.min(y2, y3));
 					y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
@@ -873,35 +871,36 @@ public class ReimbursementsPDFBlock {
 						// PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
-
 				PDFUtil.renderLine(
 						contentStream,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
 						cursor.getBlockY(),
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT), cursor.getBlockY() - height, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+						cursor.getBlockY() - height, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderLine(
 						contentStream,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
 						cursor.getBlockY(),
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH), cursor.getBlockY() - height, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+						cursor.getBlockY() - height, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				if (lastTableRow) {
 					PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY() - height,
@@ -915,12 +914,10 @@ public class ReimbursementsPDFBlock {
 				// PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 				// ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				break;
-
 			case SIGNATURE_TOTAL:
 				// case COMPLETE_INSTRUCTION:
-
 				y = cursor.getBlockY()
-				- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TOTALS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.Y_TOTALS_INDENT);
+						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TOTALS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.Y_TOTALS_INDENT);
 				y -= PDFUtil.renderMultilineText(
 						contentStream,
 						cursor.getFontD(),
@@ -962,19 +959,21 @@ public class ReimbursementsPDFBlock {
 						PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT)
-						- 2.0f
-						* Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT));
+								- 2.0f
+										* Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
+												ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT));
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
 								Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 						L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFLabelCodes.TOTAL_LABEL, PDFUtil.DEFAULT_LABEL), x1, y2, PDFUtil.Alignment.TOP_LEFT);
+								ReimbursementsPDFLabelCodes.TOTAL_LABEL, PDFUtil.DEFAULT_LABEL),
+						x1, y2, PDFUtil.Alignment.TOP_LEFT);
 				y3 -= PDFUtil.renderTextLine(contentStream, cursor.getFontE(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR,
 								Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 						L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF,
-								getAmount(total), PDFUtil.DEFAULT_LABEL), x2, y3, PDFUtil.Alignment.TOP_RIGHT);
+								getAmount(total), PDFUtil.DEFAULT_LABEL),
+						x2, y3, PDFUtil.Alignment.TOP_RIGHT);
 				y1 = Math.min(y1, Math.min(y2, y3));
 				y1 -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
@@ -983,29 +982,31 @@ public class ReimbursementsPDFBlock {
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
 						y,
 						cursor.getBlockX()
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT), y1, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_COLUMN_INDENT, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_COLUMN_INDENT),
+						y1, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderLine(
 						contentStream,
 						Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR),
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
 						y,
 						cursor.getBlockX()
-						+ cursor.getBlockWidth()
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH), y1, Settings.getFloat(
-										ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+								+ cursor.getBlockWidth()
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH),
+						y1, Settings.getFloat(
+								ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderFrame(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), y, cursor.getBlockWidth(), y - y1,
 						PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
@@ -1038,9 +1039,9 @@ public class ReimbursementsPDFBlock {
 						y,
 						PDFUtil.Alignment.TOP_LEFT,
 						x1
-						- x
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
+								- x
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
 				y1 = y;
 				PDFUtil.renderLine(
 						contentStream,
@@ -1048,8 +1049,9 @@ public class ReimbursementsPDFBlock {
 						x1,
 						y,
 						x1
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_LENGTH), y,
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_LENGTH),
+						y,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
 				y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_OFFSET_SIGNATURE_ANNOTATION, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.Y_OFFSET_SIGNATURE_ANNOTATION);
@@ -1060,8 +1062,9 @@ public class ReimbursementsPDFBlock {
 						Settings.getColor(ReimbursementsPDFSettingCodes.TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.TEXT_COLOR),
 						getSignatureLabel(),
 						x1
-						+ Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_LENGTH) / 2.0f, y, PDFUtil.Alignment.TOP_CENTER);
+								+ Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF,
+										ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_LENGTH) / 2.0f,
+						y, PDFUtil.Alignment.TOP_CENTER);
 				y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_FRAME_LOWER_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.Y_FRAME_LOWER_INDENT_SIGNATURE);
 				height = cursor.getBlockY() - y;
@@ -1083,26 +1086,27 @@ public class ReimbursementsPDFBlock {
 							y,
 							PDFUtil.Alignment.BOTTOM_LEFT,
 							x1
-							- x
-							- Settings.getFloat(ReimbursementsPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
-									ReimbursementsPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
+									- x
+									- Settings.getFloat(ReimbursementsPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
+											ReimbursementsPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
 					PDFUtil.renderLine(contentStream,
 							Settings.getColor(ReimbursementsPDFSettingCodes.FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.FRAME_COLOR), x1, y,
 							x1 + Settings.getFloat(ReimbursementsPDFSettingCodes.DATE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.DATE_LINE_LENGTH),
 							y,
-							Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
+							Settings.getFloat(ReimbursementsPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+									ReimbursementsPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
 					y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_OFFSET_SIGNATURE_ANNOTATION, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.Y_OFFSET_SIGNATURE_ANNOTATION);
 					y -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.TINY,
 							Settings.getColor(ReimbursementsPDFSettingCodes.TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.TEXT_COLOR),
 							L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.DATE_ANNOTATION, PDFUtil.DEFAULT_LABEL),
 							x1 + Settings.getFloat(ReimbursementsPDFSettingCodes.DATE_LINE_LENGTH, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.DATE_LINE_LENGTH)
-							/ 2.0f, y, PDFUtil.Alignment.TOP_CENTER);
+									/ 2.0f,
+							y, PDFUtil.Alignment.TOP_CENTER);
 					y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_FRAME_LOWER_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.Y_FRAME_LOWER_INDENT_SIGNATURE);
 				}
 				break;
-
 			case SPACER:
 				height = Settings.getFloat(ReimbursementsPDFSettingCodes.SPACER_HEIGHT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SPACER_HEIGHT);
 				break;

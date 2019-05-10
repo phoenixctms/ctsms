@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.pdf;
 
-
 public interface CourseParticipantListPDFSettingCodes {
 
 	public final static String GRAPH_MAX_COURSE_INSTANCES = "graph_max_course_instances";

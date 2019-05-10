@@ -56,7 +56,6 @@ public class TagAdaptiveRandomization extends Randomization {
 	// p2a: 2 + 1 / 2 + 2 = 3 / 4
 	// p2b: 0 + 1 / 2 + 2 = 1 / 4
 	// ->...
-
 	private final static long getOtherValuesSize(long valueId, Set<Entry<Long, Long>> valueSizes) {
 		Iterator<Entry<Long, Long>> it = valueSizes.iterator();
 		long otherValuesSize = 0l;
@@ -72,14 +71,10 @@ public class TagAdaptiveRandomization extends Randomization {
 	protected TagAdaptiveRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
-		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
+				probandListEntryTagValueDao);
 		// TODO Auto-generated constructor stub
 	}
-
-
-
-
-
 
 	@Override
 	protected RandomizationMode getRandomizationMode() {
@@ -148,5 +143,4 @@ public class TagAdaptiveRandomization extends Randomization {
 		saveRandom(trial);
 		return value;
 	}
-
 }

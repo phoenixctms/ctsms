@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.adapt;
 
 import java.util.Collection;
@@ -53,6 +52,4 @@ public class EcrfFieldValueInVOStringAdapter extends InputFieldValueStringAdapte
 	protected Date getTimeValue(ECRFFieldValueInVO value) {
 		return value.getTimeValue();
 	}
-
-
 }

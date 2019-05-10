@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
  * @see ContactDetailType
  */
 public class ContactDetailTypeDaoImpl
-extends ContactDetailTypeDaoBase
-{
+		extends ContactDetailTypeDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public ContactDetailType contactDetailTypeVOToEntity(ContactDetailTypeVO contactDetailTypeVO)
-	{
+	public ContactDetailType contactDetailTypeVOToEntity(ContactDetailTypeVO contactDetailTypeVO) {
 		ContactDetailType entity = this.loadContactDetailTypeFromContactDetailTypeVO(contactDetailTypeVO);
 		this.contactDetailTypeVOToEntity(contactDetailTypeVO, entity, true);
 		return entity;
@@ -38,8 +36,7 @@ extends ContactDetailTypeDaoBase
 	public void contactDetailTypeVOToEntity(
 			ContactDetailTypeVO source,
 			ContactDetailType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.contactDetailTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -77,15 +74,13 @@ extends ContactDetailTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ContactDetailType loadContactDetailTypeFromContactDetailTypeVO(ContactDetailTypeVO contactDetailTypeVO)
-	{
+	private ContactDetailType loadContactDetailTypeFromContactDetailTypeVO(ContactDetailTypeVO contactDetailTypeVO) {
 		ContactDetailType contactDetailType = null;
 		Long id = contactDetailTypeVO.getId();
 		if (id != null) {
 			contactDetailType = this.load(id);
 		}
-		if (contactDetailType == null)
-		{
+		if (contactDetailType == null) {
 			contactDetailType = ContactDetailType.Factory.newInstance();
 		}
 		return contactDetailType;
@@ -95,8 +90,7 @@ extends ContactDetailTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ContactDetailTypeVO toContactDetailTypeVO(final ContactDetailType entity)
-	{
+	public ContactDetailTypeVO toContactDetailTypeVO(final ContactDetailType entity) {
 		return super.toContactDetailTypeVO(entity);
 	}
 
@@ -106,8 +100,7 @@ extends ContactDetailTypeDaoBase
 	@Override
 	public void toContactDetailTypeVO(
 			ContactDetailType source,
-			ContactDetailTypeVO target)
-	{
+			ContactDetailTypeVO target) {
 		super.toContactDetailTypeVO(source, target);
 		target.setName(L10nUtil.getContactDetailTypeName(Locales.USER, source.getNameL10nKey()));
 	}

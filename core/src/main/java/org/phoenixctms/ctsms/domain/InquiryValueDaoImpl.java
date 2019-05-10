@@ -46,8 +46,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see InquiryValue
  */
 public class InquiryValueDaoImpl
-extends InquiryValueDaoBase
-{
+		extends InquiryValueDaoBase {
 
 	private final static VOIDComparator SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueOutVO>(false);
 	private final static VOIDComparator SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueJsonVO>(false);
@@ -63,7 +62,6 @@ extends InquiryValueDaoBase
 	private org.hibernate.Criteria createInquiryCriteria(Long probandId, Long trialId) {
 		org.hibernate.Criteria inquiryCriteria = this.getSession().createCriteria(Inquiry.class, ServiceUtil.INQUIRY_VALUE_DAO_INQUIRY_ALIAS);
 		inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-
 		org.hibernate.Criteria inquiryValueCriteria = inquiryCriteria.createCriteria("inquiryValues", ServiceUtil.INQUIRY_VALUE_DAO_INQUIRY_VALUE_ALIAS,
 				CriteriaSpecification.LEFT_JOIN,
 				Restrictions.eq(ServiceUtil.INQUIRY_VALUE_DAO_INQUIRY_VALUE_ALIAS + ".proband.id", probandId.longValue()));
@@ -85,7 +83,6 @@ extends InquiryValueDaoBase
 		//						Subqueries.propertyIn("id", subQuery)
 		//						)
 		//				));
-
 		// System.out.println(CriteriaUtil.criteriaToSql(ecrfFieldCriteria));
 		return inquiryCriteria;
 	}
@@ -264,8 +261,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValue inquiryValueInVOToEntity(InquiryValueInVO inquiryValueInVO)
-	{
+	public InquiryValue inquiryValueInVOToEntity(InquiryValueInVO inquiryValueInVO) {
 		InquiryValue entity = this.loadInquiryValueFromInquiryValueInVO(inquiryValueInVO);
 		this.inquiryValueInVOToEntity(inquiryValueInVO, entity, true);
 		return entity;
@@ -278,8 +274,7 @@ extends InquiryValueDaoBase
 	public void inquiryValueInVOToEntity(
 			InquiryValueInVO source,
 			InquiryValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inquiryValueInVOToEntity(source, target, copyIfNull);
 		Long probandId = source.getProbandId();
 		Long inquiryId = source.getInquiryId();
@@ -294,7 +289,6 @@ extends InquiryValueDaoBase
 				proband.removeInquiryValues(target);
 			}
 		}
-
 		if (inquiryId != null) {
 			Inquiry inquiry = this.getInquiryDao().load(inquiryId);
 			target.setInquiry(inquiry);
@@ -326,16 +320,13 @@ extends InquiryValueDaoBase
 		if (copyIfNull || source.getFloatValue() != null) {
 			value.setFloatValue(source.getFloatValue());
 		}
-		if (copyIfNull || source.getDateValue() != null)
-		{
+		if (copyIfNull || source.getDateValue() != null) {
 			value.setDateValue(CoreUtil.forceDate(source.getDateValue()));
 		}
-		if (copyIfNull || source.getTimestampValue() != null)
-		{
+		if (copyIfNull || source.getTimestampValue() != null) {
 			value.setTimestampValue((source.getTimestampValue() == null ? null : new Timestamp(source.getTimestampValue().getTime())));
 		}
-		if (copyIfNull || source.getTimeValue() != null)
-		{
+		if (copyIfNull || source.getTimeValue() != null) {
 			value.setTimeValue(CoreUtil.forceDate(source.getTimeValue()));
 		}
 		if (copyIfNull || source.getInkValues() != null) {
@@ -351,8 +342,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValue inquiryValueJsonVOToEntity(InquiryValueJsonVO inquiryValueJsonVO)
-	{
+	public InquiryValue inquiryValueJsonVOToEntity(InquiryValueJsonVO inquiryValueJsonVO) {
 		// TODO verify behavior of inquiryValueJsonVOToEntity
 		InquiryValue entity = this.loadInquiryValueFromInquiryValueJsonVO(inquiryValueJsonVO);
 		this.inquiryValueJsonVOToEntity(inquiryValueJsonVO, entity, true);
@@ -366,8 +356,7 @@ extends InquiryValueDaoBase
 	public void inquiryValueJsonVOToEntity(
 			InquiryValueJsonVO source,
 			InquiryValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of inquiryValueJsonVOToEntity
 		super.inquiryValueJsonVOToEntity(source, target, copyIfNull);
 	}
@@ -376,8 +365,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValue inquiryValueOutVOToEntity(InquiryValueOutVO inquiryValueOutVO)
-	{
+	public InquiryValue inquiryValueOutVOToEntity(InquiryValueOutVO inquiryValueOutVO) {
 		InquiryValue entity = this.loadInquiryValueFromInquiryValueOutVO(inquiryValueOutVO);
 		this.inquiryValueOutVOToEntity(inquiryValueOutVO, entity, true);
 		return entity;
@@ -390,8 +378,7 @@ extends InquiryValueDaoBase
 	public void inquiryValueOutVOToEntity(
 			InquiryValueOutVO source,
 			InquiryValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inquiryValueOutVOToEntity(source, target, copyIfNull);
 		ProbandOutVO probandVO = source.getProband();
 		InquiryOutVO inquiryVO = source.getInquiry();
@@ -458,7 +445,7 @@ extends InquiryValueDaoBase
 		Collection selectionValues;
 		if ((selectionValues = source.getSelectionValues()).size() > 0 || copyIfNull) {
 			this.getInputFieldSelectionSetValueDao().inputFieldSelectionSetValueOutVOToEntityCollection(selectionValues);
-			value.setSelectionValues((Collection<InputFieldSelectionSetValue>) selectionValues); // hashset-exception!!!
+			value.setSelectionValues(selectionValues); // hashset-exception!!!
 		}
 	}
 
@@ -467,8 +454,7 @@ extends InquiryValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InquiryValue loadInquiryValueFromInquiryValueInVO(InquiryValueInVO inquiryValueInVO)
-	{
+	private InquiryValue loadInquiryValueFromInquiryValueInVO(InquiryValueInVO inquiryValueInVO) {
 		// TODO implement loadInquiryValueFromInquiryValueInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryValueFromInquiryValueInVO(InquiryValueInVO) not yet implemented.");
 		InquiryValue inquiryValue = null;
@@ -476,8 +462,7 @@ extends InquiryValueDaoBase
 		if (id != null) {
 			inquiryValue = this.load(id);
 		}
-		if (inquiryValue == null)
-		{
+		if (inquiryValue == null) {
 			inquiryValue = InquiryValue.Factory.newInstance();
 		}
 		return inquiryValue;
@@ -488,8 +473,7 @@ extends InquiryValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InquiryValue loadInquiryValueFromInquiryValueJsonVO(InquiryValueJsonVO inquiryValueJsonVO)
-	{
+	private InquiryValue loadInquiryValueFromInquiryValueJsonVO(InquiryValueJsonVO inquiryValueJsonVO) {
 		// TODO implement loadInquiryValueFromInquiryValueJsonVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryValueFromInquiryValueJsonVO(InquiryValueJsonVO) not yet implemented.");
 		/* A typical implementation looks like this: InquiryValue inquiryValue = this.load(inquiryValueJsonVO.getId()); if (inquiryValue == null) { inquiryValue =
@@ -501,13 +485,11 @@ extends InquiryValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InquiryValue loadInquiryValueFromInquiryValueOutVO(InquiryValueOutVO inquiryValueOutVO)
-	{
+	private InquiryValue loadInquiryValueFromInquiryValueOutVO(InquiryValueOutVO inquiryValueOutVO) {
 		// TODO implement loadInquiryValueFromInquiryValueOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryValueFromInquiryValueOutVO(InquiryValueOutVO) not yet implemented.");
 		InquiryValue inquiryValue = this.load(inquiryValueOutVO.getId());
-		if (inquiryValue == null)
-		{
+		if (inquiryValue == null) {
 			inquiryValue = InquiryValue.Factory.newInstance();
 		}
 		return inquiryValue;
@@ -526,7 +508,6 @@ extends InquiryValueDaoBase
 	// }
 	// return result;
 	// }
-
 	private ArrayList<InputFieldSelectionSetValueJsonVO> toInputFieldSelectionSetValueJsonVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
 		// persistentset
 		// prevention
@@ -591,8 +572,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValueInVO toInquiryValueInVO(final InquiryValue entity)
-	{
+	public InquiryValueInVO toInquiryValueInVO(final InquiryValue entity) {
 		return super.toInquiryValueInVO(entity);
 	}
 
@@ -602,8 +582,7 @@ extends InquiryValueDaoBase
 	@Override
 	public void toInquiryValueInVO(
 			InquiryValue source,
-			InquiryValueInVO target)
-	{
+			InquiryValueInVO target) {
 		super.toInquiryValueInVO(source, target);
 		Proband proband = source.getProband();
 		Inquiry inquiry = source.getInquiry();
@@ -631,8 +610,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValueJsonVO toInquiryValueJsonVO(final InquiryValue entity)
-	{
+	public InquiryValueJsonVO toInquiryValueJsonVO(final InquiryValue entity) {
 		return super.toInquiryValueJsonVO(entity);
 	}
 
@@ -642,8 +620,7 @@ extends InquiryValueDaoBase
 	@Override
 	public void toInquiryValueJsonVO(
 			InquiryValue source,
-			InquiryValueJsonVO target)
-	{
+			InquiryValueJsonVO target) {
 		super.toInquiryValueJsonVO(source, target);
 		Inquiry inquiry = source.getInquiry();
 		if (inquiry != null) {
@@ -691,8 +668,7 @@ extends InquiryValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InquiryValueOutVO toInquiryValueOutVO(final InquiryValue entity)
-	{
+	public InquiryValueOutVO toInquiryValueOutVO(final InquiryValue entity) {
 		return super.toInquiryValueOutVO(entity);
 	}
 
@@ -702,8 +678,7 @@ extends InquiryValueDaoBase
 	@Override
 	public void toInquiryValueOutVO(
 			InquiryValue source,
-			InquiryValueOutVO target)
-	{
+			InquiryValueOutVO target) {
 		// TODO verify behavior of toInquiryValueOutVO
 		super.toInquiryValueOutVO(source, target);
 		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO

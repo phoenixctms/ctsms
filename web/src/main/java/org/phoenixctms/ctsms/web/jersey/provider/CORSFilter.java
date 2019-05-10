@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.provider;
 
-
 import javax.ws.rs.ext.Provider;
 
 import com.sun.jersey.spi.container.ContainerRequest;

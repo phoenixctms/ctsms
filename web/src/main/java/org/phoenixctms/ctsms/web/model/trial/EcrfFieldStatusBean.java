@@ -35,12 +35,10 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 	private Long trialId;
 	private ECRFFieldStatusQueue queue;
 	private EcrfFieldStatusEntryLogLazyModel ecrfFieldStatusEntryModel;
-
 	private HashMap<Long, EcrfFieldValueAuditTrailEagerModel> ecrfFieldAuditTrailLogModelCache;
 	private HashMap<Long, EcrfFieldStatusEntryEagerModel> fieldStatusEntryLogModelCache;
 	private ArrayList<SelectItem> filterVisits;
 	private ArrayList<SelectItem> filterProbandGroups;
-
 	private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusCache;
 	private TrialOutVO trial;
 
@@ -54,6 +52,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		filterProbandGroups = new ArrayList<SelectItem>();
 	}
 
+	@Override
 	protected void addMessages() {
 		super.addMessages();
 		if (getQueue() == null) {
@@ -107,6 +106,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		ecrfStatusCache.clear();
 	}
 
+	@Override
 	protected void clearFromCache(ECRFFieldStatusEntryOutVO status) {
 		clearFromEcrfFieldAuditTrailModelCache(status);
 		clearFromFieldStatusEntryModelCache(status);
@@ -163,7 +163,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 	}
 
 	public ECRFStatusEntryVO getEcrfStatusEntry(ECRFFieldStatusEntryOutVO statusVO) {
-		return getCachedEcrfStatusEntry(statusVO != null ? statusVO.getEcrfField().getEcrf() : null,statusVO != null ? statusVO.getListEntry() : null);
+		return getCachedEcrfStatusEntry(statusVO != null ? statusVO.getEcrfField().getEcrf() : null, statusVO != null ? statusVO.getListEntry() : null);
 	}
 
 	public EcrfFieldStatusEntryEagerModel getFieldStatusEntryLogModel(ECRFFieldStatusEntryOutVO statusVO) {
@@ -188,10 +188,12 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		return filterVisits;
 	}
 
+	@Override
 	protected String getMessagesId() {
 		return "ecrffieldstatus_messages";
 	}
 
+	@Override
 	public ECRFFieldStatusQueue getQueue() {
 		return queue;
 	}
@@ -215,6 +217,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		return trial;
 	}
 
+	@Override
 	protected void initSpecificSets() {
 		if (out != null) {
 			queue = out.getStatus().getQueue();

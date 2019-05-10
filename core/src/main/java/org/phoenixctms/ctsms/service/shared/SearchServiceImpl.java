@@ -160,8 +160,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see org.phoenixctms.ctsms.service.shared.SearchService
  */
 public class SearchServiceImpl
-extends SearchServiceBase
-{
+		extends SearchServiceBase {
 
 	private static CriterionProperty checkCriterionPropertyId(Long propertyId, CriterionInstantVO criterion, CriterionPropertyDao criterionPropertyDao, boolean logError)
 			throws ServiceException {
@@ -226,7 +225,7 @@ extends SearchServiceBase
 						throw initServiceExceptionWithPosition(ServiceExceptionCodes.CRITERION_DATE_VALUE_IS_NULL, logError, criterion);
 					}
 					if (// criterion.getDateValue() != null ||
-							criterion.getTimeValue() != null ||
+					criterion.getTimeValue() != null ||
 							criterion.getFloatValue() != null ||
 							criterion.getLongValue() != null ||
 							criterion.getStringValue() != null ||
@@ -242,7 +241,7 @@ extends SearchServiceBase
 						throw initServiceExceptionWithPosition(ServiceExceptionCodes.CRITERION_TIME_VALUE_IS_NULL, logError, criterion);
 					}
 					if (criterion.getDateValue() != null ||
-							// criterion.getTimeValue() != null ||
+					// criterion.getTimeValue() != null ||
 							criterion.getFloatValue() != null ||
 							criterion.getLongValue() != null ||
 							criterion.getStringValue() != null ||
@@ -413,7 +412,6 @@ extends SearchServiceBase
 	}
 
 	private CriterionIntermediateSetParser criterionIntermediateSetParser;
-
 	private CriterionSyntaxParser criterionSyntaxParser;
 
 	private void checkCriteriaInput(DBModule module, CriteriaInstantVO criteria, boolean logError, boolean checkValues) throws ServiceException {
@@ -671,7 +669,8 @@ extends SearchServiceBase
 			case PROBAND_DB:
 				VOs = searchProbandHelper(criteria,
 						Settings.getIntNullable(SearchResultExcelSettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SEARCH_RESULT_EXCEL,
-								SearchResultExcelDefaultSettings.GRAPH_MAX_PROBAND_INSTANCES), psf);
+								SearchResultExcelDefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
+						psf);
 				distinctColumnNames = new ArrayList<String>();
 				distinctFieldRows = new HashMap<Long, HashMap<String, Object>>(VOs.size());
 				prepareProbandDistinctColumns(writer, VOs, distinctColumnNames, distinctFieldRows);
@@ -958,7 +957,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<CourseOutVO> handleSearchCourseByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<CourseOutVO> result = searchCourseHelper(instantCriteria, maxInstances, psf);
@@ -969,7 +968,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InputFieldOutVO> handleSearchInputField(
 			AuthenticationVO auth, CriteriaInVO criteria, Set<CriterionInVO> criterions, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
 		Collection<InputFieldOutVO> result = searchInputFieldHelper(instantCriteria, psf);
 		logSearch(criteria.getId(), instantCriteria, psf, result);
@@ -979,7 +978,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InputFieldOutVO> handleSearchInputFieldByCriteria(
 			AuthenticationVO auth, Long criteriaId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<InputFieldOutVO> result = searchInputFieldHelper(instantCriteria, psf);
@@ -990,7 +989,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InventoryOutVO> handleSearchInventory(
 			AuthenticationVO auth, CriteriaInVO criteria, Set<CriterionInVO> criterions, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
 		Collection<InventoryOutVO> result = searchInventoryHelper(instantCriteria, maxInstances, psf);
 		logSearch(criteria.getId(), instantCriteria, psf, result);
@@ -1000,7 +999,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<InventoryOutVO> handleSearchInventoryByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<InventoryOutVO> result = searchInventoryHelper(instantCriteria, maxInstances, psf);
@@ -1011,7 +1010,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<MassMailOutVO> handleSearchMassMail(
 			AuthenticationVO auth, CriteriaInVO criteria, Set<CriterionInVO> criterions, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
 		Collection<MassMailOutVO> result = searchMassMailHelper(instantCriteria, psf);
 		logSearch(criteria.getId(), instantCriteria, psf, result);
@@ -1021,7 +1020,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<MassMailOutVO> handleSearchMassMailByCriteria(
 			AuthenticationVO auth, Long criteriaId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<MassMailOutVO> result = searchMassMailHelper(instantCriteria, psf);
@@ -1029,13 +1028,12 @@ extends SearchServiceBase
 		return result;
 	}
 
-
 	@Override
 	protected Collection<ProbandOutVO> handleSearchProband(
 			AuthenticationVO auth, CriteriaInVO criteria, Set<CriterionInVO> criterions, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
-		Collection<ProbandOutVO> result = searchProbandHelper(instantCriteria,  maxInstances, psf);
+		Collection<ProbandOutVO> result = searchProbandHelper(instantCriteria, maxInstances, psf);
 		logSearch(criteria.getId(), instantCriteria, psf, result);
 		return result;
 	}
@@ -1043,7 +1041,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<ProbandOutVO> handleSearchProbandByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<ProbandOutVO> result = searchProbandHelper(instantCriteria, maxInstances, psf);
@@ -1063,7 +1061,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<StaffOutVO> handleSearchStaffByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<StaffOutVO> result = searchStaffHelper(instantCriteria, maxInstances, psf);
@@ -1083,7 +1081,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<TrialOutVO> handleSearchTrialByCriteria(
 			AuthenticationVO auth, Long criteriaId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<TrialOutVO> result = searchTrialHelper(instantCriteria, psf);
@@ -1103,7 +1101,7 @@ extends SearchServiceBase
 	@Override
 	protected Collection<UserOutVO> handleSearchUserByCriteria(
 			AuthenticationVO auth, Long criteriaId, Integer maxInstances, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, this.getCriteriaDao());
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criteria.getCriterions(), this.getCriterionDao());
 		Collection<UserOutVO> result = searchUserHelper(instantCriteria, maxInstances, psf);
@@ -1149,8 +1147,6 @@ extends SearchServiceBase
 		logSystemMessage(criteria, result, now, user, SystemMessageCodes.CRITERIA_UPDATED, obfuscateCriterions(result), obfuscateCriterions(original), this.getJournalEntryDao());
 		return result;
 	}
-
-
 
 	private IntermediateSetSummaryVO intermediateSetHelper(DBModule module, CriteriaInstantVO criteria, boolean prettyPrint,
 			boolean obfuscateCriterions, PSFVO psf) throws Exception {
@@ -1301,7 +1297,6 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getCourses().size()) },
-
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1326,7 +1321,6 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getStafves().size()) },
-
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1351,7 +1345,6 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), result.getRowCount() },
-
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1376,7 +1369,6 @@ extends SearchServiceBase
 					user,
 					systemMessageCode,
 					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getProbands().size()) },
-
 					new Object[] {
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1411,7 +1403,6 @@ extends SearchServiceBase
 						systemMessageCode,
 						new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO),
 								psf == null ? Integer.toString(result.size()) : (psf.getRowCount() == null ? new Long(0) : psf.getRowCount()).toString() },
-
 						new Object[] {
 								CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 										!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
@@ -1559,7 +1550,6 @@ extends SearchServiceBase
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
-
 		Iterator<ProbandOutVO> probandVOsIt = probandVOs.iterator();
 		while (probandVOsIt.hasNext()) {
 			ProbandOutVO probandVO = probandVOsIt.next();
@@ -1710,10 +1700,10 @@ extends SearchServiceBase
 			InquiryOutVO inquiryVO = inquiriesIt.next();
 			if (showEmptyInquiryColumns || (inquiryValueCountMap.containsKey(inquiryVO.getId()) && inquiryValueCountMap.get(inquiryVO.getId()) > 0l)) {
 				if (showAllInquiries || inquiryVO.isExcelValue()) {
-					distinctColumnNames.add(writer.getInquiryColumnName(inquiryVO));
+					distinctColumnNames.add(SearchResultExcelWriter.getInquiryColumnName(inquiryVO));
 				}
 				if (showAllInquiryDates || inquiryVO.isExcelDate()) {
-					distinctColumnNames.add(writer.getInquiryDateColumnName(inquiryVO));
+					distinctColumnNames.add(SearchResultExcelWriter.getInquiryDateColumnName(inquiryVO));
 				}
 			}
 		}

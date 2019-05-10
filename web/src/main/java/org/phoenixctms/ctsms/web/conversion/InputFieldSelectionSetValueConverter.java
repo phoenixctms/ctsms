@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.conversion;
 
-
 import java.util.LinkedHashMap;
 
 import javax.faces.convert.FacesConverter;

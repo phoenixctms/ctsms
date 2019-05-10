@@ -18,8 +18,7 @@ import org.phoenixctms.ctsms.vo.StaffTagVO;
  * @see StaffTag
  */
 public class StaffTagDaoImpl
-		extends StaffTagDaoBase
-{
+		extends StaffTagDaoBase {
 
 	@Override
 	protected Collection<StaffTag> handleFindByPersonOrganisationIdExcel(
@@ -51,15 +50,13 @@ public class StaffTagDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffTag loadStaffTagFromStaffTagVO(StaffTagVO staffTagVO)
-	{
+	private StaffTag loadStaffTagFromStaffTagVO(StaffTagVO staffTagVO) {
 		StaffTag staffTag = null;
 		Long id = staffTagVO.getId();
 		if (id != null) {
 			staffTag = this.load(id);
 		}
-		if (staffTag == null)
-		{
+		if (staffTag == null) {
 			staffTag = StaffTag.Factory.newInstance();
 		}
 		return staffTag;
@@ -69,8 +66,7 @@ public class StaffTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTag staffTagVOToEntity(StaffTagVO staffTagVO)
-	{
+	public StaffTag staffTagVOToEntity(StaffTagVO staffTagVO) {
 		StaffTag entity = this.loadStaffTagFromStaffTagVO(staffTagVO);
 		this.staffTagVOToEntity(staffTagVO, entity, true);
 		return entity;
@@ -83,8 +79,7 @@ public class StaffTagDaoImpl
 	public void staffTagVOToEntity(
 			StaffTagVO source,
 			StaffTag target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffTagVOToEntity(source, target, copyIfNull);
 	}
 
@@ -92,8 +87,7 @@ public class StaffTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTagVO toStaffTagVO(final StaffTag entity)
-	{
+	public StaffTagVO toStaffTagVO(final StaffTag entity) {
 		return super.toStaffTagVO(entity);
 	}
 
@@ -103,8 +97,7 @@ public class StaffTagDaoImpl
 	@Override
 	public void toStaffTagVO(
 			StaffTag source,
-			StaffTagVO target)
-	{
+			StaffTagVO target) {
 		super.toStaffTagVO(source, target);
 		target.setName(L10nUtil.getStaffTagName(Locales.USER, source.getNameL10nKey()));
 	}

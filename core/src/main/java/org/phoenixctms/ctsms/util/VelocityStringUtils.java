@@ -7,5 +7,4 @@ public class VelocityStringUtils extends StringUtils {
 	public boolean isEmpty(String string) {
 		return CommonUtil.isEmptyString(string);
 	}
-
 }

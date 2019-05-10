@@ -112,8 +112,7 @@ public class IndexResource {
 	private final static Comparator<AbstractSubResourceMethod> SUB_RESOURCE_METHOD_COMPARATOR = new SubResourceMethodComparator();
 	private final static MethodTransfilter VO_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(false);
 
-	private static void addResource(JsonObject resourcesNode, String uriPrefix, AbstractResourceMethod method, String path) throws Exception
-	{
+	private static void addResource(JsonObject resourcesNode, String uriPrefix, AbstractResourceMethod method, String path) throws Exception {
 		if (resourcesNode.get(uriPrefix) == null) {
 			JsonObject resourceNode = new JsonObject();
 			resourceNode.addProperty(JS_PATH_FIELD, path);
@@ -179,7 +178,6 @@ public class IndexResource {
 				returnTypeNode = new JsonPrimitive(JS_JSON_VALUE);
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else if (JsValuesOutVOPage.class.isAssignableFrom(returnType)) {
-
 				try {
 					returnType = (Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
 				} catch (Exception e) {
@@ -214,9 +212,9 @@ public class IndexResource {
 			} else {
 				returnTypeNode = createVOReturnTypeNode(returnType, method.getGenericReturnType());
 				if (FilePDFVO.class.equals(returnType)
-						// || (ProbandListEntryTagValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
-						// || (InquiryValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
-						) {
+				// || (ProbandListEntryTagValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
+				// || (InquiryValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
+				) {
 					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
 				}
 				if (queryParams.size() > 0) {

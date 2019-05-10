@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model;
 
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -14,7 +13,6 @@ import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
-
 
 @ManagedBean
 @RequestScoped

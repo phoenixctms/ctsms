@@ -176,14 +176,14 @@ public abstract class FileDavResourceBase {
 	}
 
 	protected javax.ws.rs.core.Response davPropFind(Long id, String fileName, UriInfo uriInfo, Providers providers) throws AuthenticationException, AuthorisationException,
-	ServiceException {
+			ServiceException {
 		FileOutVO out = getFileFromDavFileName(id, fileName);
 		return javax.ws.rs.core.Response.status(MULTI_STATUS)
 				.entity(new MultiStatus(buildResponse(out, uriInfo.getAbsolutePathBuilder().build(), providers))).build();
 	}
 
 	protected javax.ws.rs.core.Response davPropFind(Long id, UriInfo uriInfo, String depth, Providers providers) throws AuthenticationException, AuthorisationException,
-	ServiceException {
+			ServiceException {
 		final Response folder = new Response(new HRef(uriInfo.getRequestUri()), null, null, null, new PropStat(new Prop(new DisplayName("My Collection"),
 				new CreationDate(new Date()), new GetLastModified(new Date()), COLLECTION), new Status((StatusType) OK)));
 		if (depth.equals(DEPTH_0) || id == null) {
@@ -327,7 +327,7 @@ public abstract class FileDavResourceBase {
 	// }
 	protected javax.ws.rs.core.Response davPut(InputStream input, Long id, String fileName,
 			long contentLength, HttpHeaders httpHeaders)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		// @Context final UriInfo uriInfo,
 		// @Context final Providers providers,
 		/* Workaround for Jersey issue #154 (see https://jersey.dev.java.net/issues/show_bug.cgi?id=154): Jersey will throw an exception and abstain from calling a method if the

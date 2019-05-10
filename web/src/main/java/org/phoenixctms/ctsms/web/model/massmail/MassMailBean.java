@@ -145,7 +145,6 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setAttachReimbursementsPdf(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET));
 			in.setVersion(null);
-
 		}
 	}
 
@@ -157,31 +156,23 @@ public class MassMailBean extends ManagedBeanBase {
 	private MassMailStatusTypeVO massMailStatusType;
 	private ArrayList<SelectItem> probandListStatusTypes;
 	private ArrayList<SelectItem> locales;
-
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
-
-
 	// private TrialOutVO trial;
-
 	private Long previewProbandId;
 	// private Long previewTrialId;
 	private String previewSubject;
 	private String previewText;
-
 	private String deferredDeleteReason;
 
 	public MassMailBean() {
 		super();
 		tabCountMap = new HashMap<String, Long>();
 		tabTitleMap = new HashMap<String, String>();
-
 	}
 
-
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		MassMailInVO backup = new MassMailInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -264,7 +255,6 @@ public class MassMailBean extends ManagedBeanBase {
 		return WebUtil.completeLogicalPath(FileModule.PROBAND_DOCUMENT, null, query);
 	}
 
-
 	public List<String> completeTrialFilesLogicalPath(String query) {
 		this.in.setTrialFilesLogicalPath(query);
 		return WebUtil.completeLogicalPath(FileModule.TRIAL_DOCUMENT, this.in.getTrialId(), query);
@@ -274,7 +264,6 @@ public class MassMailBean extends ManagedBeanBase {
 	public String deleteAction() {
 		return deleteAction(in.getId());
 	}
-
 
 	@Override
 	public String deleteAction(Long id) {
@@ -323,9 +312,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.MASS_MAIL_DOCUMENT,
-						in.getId(),in.getMassMailFilesLogicalPath(),true, null, null);
+						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.MASS_MAIL_DOCUMENT,
-						in.getId(),in.getMassMailFilesLogicalPath(),true, null, null);
+						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -365,15 +354,12 @@ public class MassMailBean extends ManagedBeanBase {
 	public String getPreviewProbandName() {
 		return WebUtil.probandIdToName(previewProbandId);
 	}
-
 	// public Long getPreviewTrialId() {
 	// return previewTrialId;
 	// }
-
 	// public String getPreviewTrialName() {
 	// return WebUtil.trialIdToName(previewTrialId);
 	// }
-
 
 	public String getPreviewSubject() {
 		return previewSubject;
@@ -389,9 +375,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.PROBAND_DOCUMENT,
-						previewProbandId,in.getProbandFilesLogicalPath(),true, null, null);
+						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.PROBAND_DOCUMENT,
-						previewProbandId,in.getProbandFilesLogicalPath(),true, null, null);
+						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -440,7 +426,6 @@ public class MassMailBean extends ManagedBeanBase {
 	// public void handleBlindedChange() {
 	// loadProbandCategories();
 	// }
-
 	@Override
 	public String getTitle() {
 		return getTitle(WebUtil.getLongParamValue(GetParamNames.MASS_MAIL_ID) == null);
@@ -461,9 +446,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.TRIAL_DOCUMENT,
-						in.getTrialId(),in.getTrialFilesLogicalPath(),true, null, null);
+						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.TRIAL_DOCUMENT,
-						in.getTrialId(),in.getTrialFilesLogicalPath(),true, null, null);
+						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -507,7 +492,6 @@ public class MassMailBean extends ManagedBeanBase {
 		in.setMassMailFilesLogicalPath((String) event.getObject());
 	}
 
-
 	public void handleProbandFilesLogicalPathSelect(SelectEvent event) {
 		in.setProbandFilesLogicalPath((String) event.getObject());
 	}
@@ -523,7 +507,6 @@ public class MassMailBean extends ManagedBeanBase {
 	public void handleUpdatePreview() { // ActionEvent event) {
 		updatePreview(true);
 	}
-
 
 	@PostConstruct
 	private void init() {
@@ -618,16 +601,16 @@ public class MassMailBean extends ManagedBeanBase {
 		return out != null;
 	}
 
-
-
 	public boolean isDeferredDelete() {
 		return Settings.getBoolean(SettingCodes.MASS_MAIL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.MASS_MAIL_DB) && super.isEditable();
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.MASS_MAIL_DB) && super.isRemovable();
 	}
@@ -635,8 +618,6 @@ public class MassMailBean extends ManagedBeanBase {
 	public boolean isTabEmphasized(String tab) {
 		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));
 	}
-
-
 
 	@Override
 	public String loadAction() {
@@ -669,11 +650,9 @@ public class MassMailBean extends ManagedBeanBase {
 		massMailStatusType = WebUtil.getMassMailStatusType(in.getStatusId());
 	}
 
-
 	// public void setPreviewTrialId(Long previewTrialId) {
 	// this.previewTrialId = previewTrialId;
 	// }
-
 	@Override
 	public String resetAction() {
 		out = null;

@@ -13,7 +13,6 @@ public final class ValidatorUtil {
 
 	// http://javalabor.blogspot.co.at/2012/02/jsf-2-conditional-validation.html
 	private final static ArrayList<String> VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES = new ArrayList<String>();
-
 	static {
 		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":update");
 		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":add");

@@ -62,7 +62,6 @@ public class CriterionIntermediateSetParser extends CriterionParser {
 
 	private HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, Long> tieIdMap;
 
-
 	public CriterionIntermediateSetParser() {
 		super();
 	}
@@ -125,6 +124,7 @@ public class CriterionIntermediateSetParser extends CriterionParser {
 		return getRPNEvalResult(context);
 	}
 
+	@Override
 	protected void RPNEvalFinalize(ValueType resultType, Object context) throws ServiceException {
 		if (context != null) {
 			Stack<ArrayList<CriterionInstantVO>> stack = getRPNEvalStack(context);
@@ -145,6 +145,7 @@ public class CriterionIntermediateSetParser extends CriterionParser {
 		}
 	}
 
+	@Override
 	protected void RPNEvalProcessOperator(CriterionInstantVO operator, ValueType firstOperandType, ValueType secondOperandType, Object context) throws ServiceException {
 		if (context != null) {
 			Stack<ArrayList<CriterionInstantVO>> stack = getRPNEvalStack(context);
@@ -196,6 +197,7 @@ public class CriterionIntermediateSetParser extends CriterionParser {
 		}
 	}
 
+	@Override
 	protected void RPNEvalProcessValue(CriterionInstantVO token, Object context) throws ServiceException {
 		if (context != null) {
 			ArrayList<CriterionInstantVO> tokens = new ArrayList<CriterionInstantVO>();

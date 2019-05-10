@@ -141,9 +141,7 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
  * @see org.phoenixctms.ctsms.service.shared.ToolsService
  */
 public class ToolsServiceImpl
-extends ToolsServiceBase
-{
-
+		extends ToolsServiceBase {
 
 	private static HashSet<Long> createSendDepartmentStaffCategorySet(NotificationType notificationType) {
 		Collection<StaffCategory> sendDepartmentStaffCategories = notificationType.getSendDepartmentStaffCategories();
@@ -167,6 +165,7 @@ extends ToolsServiceBase
 		}
 		return result;
 	}
+
 	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -176,11 +175,8 @@ extends ToolsServiceBase
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
-
 	private NotificationEmailSender notificationEmailSender;
-
 	private Authenticator authenticator;
-
 	private SessionFactory sessionFactory;
 
 	private Collection<LdapEntryVO> completeLdapEntry(String nameInfix,
@@ -273,7 +269,6 @@ extends ToolsServiceBase
 		}
 	}
 
-
 	@Override
 	protected void handleClearCache() throws Exception {
 		// TODO Auto-generated method stub
@@ -352,8 +347,6 @@ extends ToolsServiceBase
 		Collection asps = aspDao.findAsps(nameInfix, limit);
 		aspDao.toAspVOCollection(asps);
 		return asps;
-
-
 	}
 
 	@Override
@@ -461,8 +454,8 @@ extends ToolsServiceBase
 	}
 
 	@Override
-	protected Collection<InputFieldSelectionSetValueOutVO> handleCompleteInputFieldSelectionSetValue(AuthenticationVO auth, String nameInfix, Long inputFieldId, Integer limit
-			) throws Exception {
+	protected Collection<InputFieldSelectionSetValueOutVO> handleCompleteInputFieldSelectionSetValue(AuthenticationVO auth, String nameInfix, Long inputFieldId, Integer limit)
+			throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		// no check for inputFieldId for performance reasons...
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
@@ -472,8 +465,7 @@ extends ToolsServiceBase
 	}
 
 	@Override
-	protected Collection<String> handleCompleteInputFieldSelectionSetValueValue(AuthenticationVO auth, String valueInfix, Long inputFieldId, Integer limit
-			) throws Exception {
+	protected Collection<String> handleCompleteInputFieldSelectionSetValueValue(AuthenticationVO auth, String valueInfix, Long inputFieldId, Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		// no check for inputFieldId for performance reasons...
 		return this.getInputFieldSelectionSetValueDao().findValues(inputFieldId, valueInfix, limit);
@@ -601,7 +593,7 @@ extends ToolsServiceBase
 	@Override
 	protected Collection<String> handleCompleteStreetName(AuthenticationVO auth, String streetNameInfix, String countryName,
 			String zipCode, String cityName, Integer limit)
-					throws Exception {
+			throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getStreetDao().findStreetNames(countryName, zipCode, cityName, streetNameInfix, limit);
 	}
@@ -657,7 +649,6 @@ extends ToolsServiceBase
 		}
 		return result;
 	}
-
 
 	@Override
 	protected Collection<String> handleCompleteTitle(AuthenticationVO auth, String titlePrefix, Integer limit)
@@ -808,7 +799,6 @@ extends ToolsServiceBase
 		return result.toString();
 	}
 
-
 	@Override
 	protected AnnouncementVO handleGetAnnouncement() throws Exception {
 		AnnouncementDao announcementDao = this.getAnnouncementDao();
@@ -828,8 +818,6 @@ extends ToolsServiceBase
 	protected String handleGetCurrencySymbol() throws Exception {
 		return Settings.getString(SettingCodes.CURRENCY_SYMBOL, Bundle.SETTINGS, DefaultSettings.CURRENCY_SYMBOL);
 	}
-
-
 
 	@Override
 	protected String handleGetDefaultLocale() throws Exception {
@@ -902,8 +890,6 @@ extends ToolsServiceBase
 		return getLdapEntry(auth, username, AuthenticationType.LDAP2);
 	}
 
-
-
 	@Override
 	protected DBModuleVO handleGetLocalizedDBModule(AuthenticationVO auth, DBModule module) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
@@ -969,8 +955,7 @@ extends ToolsServiceBase
 
 	@Override
 	protected FileStreamOutVO handleGetPublicFileStream(Long fileId)
-			throws Exception
-	{
+			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		if (CommonUtil.getUseFileEncryption(file.getModule())) {
@@ -988,8 +973,6 @@ extends ToolsServiceBase
 			throws Exception {
 		return Settings.getIntNullable(SettingCodes.STAFF_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.STAFF_IMAGE_SIZE_LIMIT);
 	}
-
-
 
 	@Override
 	protected Integer handleGetUploadSizeLimit() throws Exception {
@@ -1174,7 +1157,6 @@ extends ToolsServiceBase
 				}
 			}
 		}
-
 		VariablePeriod visitScheduleItemReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD);
 		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
@@ -1190,7 +1172,6 @@ extends ToolsServiceBase
 				}
 			}
 		}
-
 		VariablePeriod expiringProbandAutoDeleteReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD,
 				Settings.Bundle.SETTINGS, DefaultSettings.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD);
 		Long expiringProbandAutoDeleteReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_EXPIRING_PROBAND_AUTO_DELETE_REMINDER_PERIOD_DAYS,
@@ -1251,7 +1232,8 @@ extends ToolsServiceBase
 					if (toCount > 0) {
 						sent = true;
 						if (delayMillis > 0) {
-							Thread.currentThread().sleep(delayMillis);
+							Thread.currentThread();
+							Thread.sleep(delayMillis);
 						}
 					} else {
 						dropped = true;
@@ -1259,7 +1241,8 @@ extends ToolsServiceBase
 				} catch (Throwable t) {
 					recipient.setErrorMessage(t.getMessage());
 					if (delayMillis > 0) {
-						Thread.currentThread().sleep(delayMillis);
+						Thread.currentThread();
+						Thread.sleep(delayMillis);
 					}
 				}
 			} else {
@@ -1273,7 +1256,6 @@ extends ToolsServiceBase
 			notificationRecipientDao.commitAndResumeTransaction();
 			// this.updateNotificationRecipient(recipient);
 			// sessionFactory.getCurrentSession().getTransaction().commit();
-
 			totalEmailCount += toCount;
 		}
 		return totalEmailCount;
@@ -1320,10 +1302,7 @@ extends ToolsServiceBase
 				}
 			}
 		}
-
 	}
-
-
 
 	public void setAuthenticator(Authenticator authenticator) {
 		this.authenticator = authenticator;

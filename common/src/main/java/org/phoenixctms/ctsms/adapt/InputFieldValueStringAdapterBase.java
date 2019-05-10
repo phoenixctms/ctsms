@@ -35,8 +35,6 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract Date getDateValue(VALUEVO value);
 
-
-
 	protected abstract String getDecimalSeparator();
 
 	protected abstract Float getFloatValue(VALUEVO value);
@@ -62,8 +60,6 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 	private final boolean getTimeUserTimeZone(InputFieldOutVO inputField) {
 		return false;
 	}
-
-
 
 	protected abstract Date getTimeValue(VALUEVO value);
 

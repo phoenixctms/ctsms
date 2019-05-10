@@ -16,15 +16,13 @@ import org.phoenixctms.ctsms.enumeration.HolidayBaseDate;
  * @see Holiday
  */
 public class HolidayDaoImpl
-		extends HolidayDaoBase
-{
+		extends HolidayDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<Holiday> handleFindByBaseHolidayActive(HolidayBaseDate base, Boolean holiday, Boolean active)
-	{
+	protected Collection<Holiday> handleFindByBaseHolidayActive(HolidayBaseDate base, Boolean holiday, Boolean active) {
 		org.hibernate.Criteria holidayCriteria = this.getSession().createCriteria(Holiday.class);
 		holidayCriteria.setCacheable(true);
 		if (base != null) {

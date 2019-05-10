@@ -17,25 +17,22 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-
 public abstract class GroupVisitMatrix<ITEM> {
 
 	private Long trialId;
 	private static final String MATRIX_ITEMS_SEPARATOR = ", ";
-
 	private LinkedHashMap<Long, ProbandGroupOutVO> matrixGroups;
 	private LinkedHashMap<Long, VisitOutVO> matrixVisits;
 	private HashMap<Long, HashMap<Long, ArrayList<ITEM>>> matrixItemMap;
 	private Paginator paginator;
-
 	private boolean matrixVisitsVertical;
 
 	public GroupVisitMatrix() {
-		matrixVisitsVertical = Settings.getBoolean(SettingCodes.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT, Bundle.SETTINGS, DefaultSettings.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT);
+		matrixVisitsVertical = Settings.getBoolean(SettingCodes.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT, Bundle.SETTINGS,
+				DefaultSettings.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT);
 		matrixGroups = new LinkedHashMap<Long, ProbandGroupOutVO>();
 		matrixVisits = new LinkedHashMap<Long, VisitOutVO>();
 		matrixItemMap = new HashMap<Long, HashMap<Long, ArrayList<ITEM>>>();
-
 		paginator = new Paginator() {
 
 			@Override
@@ -113,9 +110,10 @@ public abstract class GroupVisitMatrix<ITEM> {
 	public String getMatrixItemColor(VisitOutVO visit, ProbandGroupOutVO group, int visitIndex, int groupIndex) {
 		ArrayList<ITEM> items = getMatrixItems(visit, group);
 		if (items != null && items.size() > 0) {
-			return WebUtil.colorToStyleClass(visit != null ? visit.getType().getColor() : Settings.getColor(
-					SettingCodes.GROUP_VISIT_MATRIX_NO_VISIT_COLOR, Bundle.SETTINGS,
-					DefaultSettings.GROUP_VISIT_MATRIX_NO_VISIT_COLOR));
+			return WebUtil.colorToStyleClass(visit != null ? visit.getType().getColor()
+					: Settings.getColor(
+							SettingCodes.GROUP_VISIT_MATRIX_NO_VISIT_COLOR, Bundle.SETTINGS,
+							DefaultSettings.GROUP_VISIT_MATRIX_NO_VISIT_COLOR));
 		} else {
 			// if (paginator.getItemsOnPage() < getMatrixItemsSum(visitIndex,groupIndex)) {
 			if (paginator.getPsf().getPageSize() < paginator.getPsf().getRowCount()) {
@@ -184,7 +182,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 	// }
 	// return count;
 	// }
-
 	public VisitOutVO[] getMatrixVisits() {
 		return matrixVisits.values().toArray(new VisitOutVO[0]);
 	}
@@ -206,7 +203,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 	protected abstract VisitOutVO getVisitFromItem(ITEM item);
 
 	public void handleFieldsPerRowChange() {
-
 	}
 
 	public void handleFirstPage() {
@@ -347,7 +343,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 	// passThrough.put("error", error);
 	// //return limit || error;
 	// }
-
 	public void handlePrevPage() {
 		paginator.setToPrevPage();
 		handlePageChange();
@@ -360,7 +355,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 	public boolean isCreated() { // required by paginator
 		return false;
 	}
-
 
 	public boolean isMatrixVisitsVertical() {
 		return matrixVisitsVertical;

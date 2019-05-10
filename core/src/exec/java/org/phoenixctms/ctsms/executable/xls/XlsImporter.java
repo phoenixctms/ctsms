@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable.xls;
 
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -31,7 +30,6 @@ public class XlsImporter {
 				new SearchParameter("revision", revision, SearchParameter.EQUAL_COMPARATOR) });
 	}
 
-
 	@Autowired
 	protected SelectionSetValueRowProcessor selectionSetValueRowProcessor;
 	@Autowired
@@ -54,7 +52,7 @@ public class XlsImporter {
 	}
 
 	private XlsImporterContext createContext(RowProcessor processor, String fileName, boolean mandatory) {// , String sheetName) {
-		XlsImporterContext context = new XlsImporterContext(this,fileName);
+		XlsImporterContext context = new XlsImporterContext(this, fileName);
 		// context.setSheetName(processor, sheetName);
 		setContext(processor, context, mandatory);
 		// processor.setContext(context);
@@ -70,7 +68,7 @@ public class XlsImporter {
 		return selectionSetValueRowProcessor;
 	}
 
-	public long loadAsps(String fileName,  boolean removeAllBeforeInsert, String revision) throws Throwable {
+	public long loadAsps(String fileName, boolean removeAllBeforeInsert, String revision) throws Throwable {
 		XlsImporterContext context = createContext(aspRowProcessor, fileName, true);
 		if (CommonUtil.isEmptyString(revision)) {
 			revision = ExecUtil.removeExtension((new File(fileName)).getName());
@@ -87,7 +85,6 @@ public class XlsImporter {
 		if (medicationCount > 0) {
 			throw new IllegalArgumentException("asp substances of revision " + revision + " are used by medications " + medicationCount + " times");
 		}
-
 		if (removeAllBeforeInsert) {
 			removeAspRecords(revision);
 			jobOutput.println("asp revision " + revision + " cleared");
@@ -183,18 +180,22 @@ public class XlsImporter {
 		ChunkedRemoveAll<AspDao> aspRemover = new ChunkedRemoveAll<AspDao>(
 				aspDao, getRevisionSearch(revision)) {
 
+			@Override
 			protected Collection<Object> convertPage(Collection<Object> page) {
 				return new HashSet(page);
 			}
 
+			@Override
 			protected Method getRemoveMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeTxn", Long.class);
 			}
 
+			@Override
 			protected Method getRemovePageMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeAllTxn", Set.class);
 			}
 
+			@Override
 			protected boolean removePageDone(int pageSize, Object removePageResult) {
 				jobOutput.println(pageSize + " asp records removed");
 				return true;

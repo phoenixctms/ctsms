@@ -70,8 +70,7 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 				Long.toString(trial.getId()),
 				"",
 				trial.getStatus().getNodeStyleClass(),
-				WebUtil.quoteJSString(CommonUtil.trialOutVOToString(trial), false)
-				));
+				WebUtil.quoteJSString(CommonUtil.trialOutVOToString(trial), false)));
 	}
 
 	ArrayList<SelectItem> departments;

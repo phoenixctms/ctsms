@@ -7,7 +7,6 @@ import jxl.write.WritableWorkbook;
 
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 
-
 public class XlsExporterContext {
 
 	private HashMap<RowWriter, WritableSheet> spreadSheetMap;
@@ -45,7 +44,7 @@ public class XlsExporterContext {
 
 	public WritableSheet getSpreadSheet(RowWriter writer) {
 		if (!spreadSheetMap.containsKey(writer)) {
-			spreadSheetMap.put(writer,  workbook.createSheet(writer.getSheetName(), writer.getSheetNum()));
+			spreadSheetMap.put(writer, workbook.createSheet(writer.getSheetName(), writer.getSheetNum()));
 		}
 		return spreadSheetMap.get(writer);
 	}
@@ -60,7 +59,6 @@ public class XlsExporterContext {
 	// }
 	// return workbook;
 	// }
-
 	public WritableWorkbook getWorkbook() {
 		return workbook;
 	}
@@ -82,5 +80,4 @@ public class XlsExporterContext {
 	// public void setWorkbook(WritableWorkbook workbook) {
 	// this.workbook = workbook;
 	// }
-
 }

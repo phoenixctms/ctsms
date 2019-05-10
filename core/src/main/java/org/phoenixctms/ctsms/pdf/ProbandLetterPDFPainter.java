@@ -75,11 +75,13 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 				Settings.getColor(ProbandLetterPDFSettingCodes.TEXT_COLOR, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.TEXT_COLOR),
 				L10nUtil.getProbandLetterPDFLabel(Locales.PROBAND_LETTER_PDF, ProbandLetterPDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
 				Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LEFT_MARGIN)
-				+ (pageWidth
-						- Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings
-						.getFloat(ProbandLetterPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
-						Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LOWER_MARGIN),
-						PDFUtil.Alignment.BOTTOM_CENTER);
+						+ (pageWidth
+								- Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LEFT_MARGIN)
+								- Settings
+										.getFloat(ProbandLetterPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_RIGHT_MARGIN))
+								/ 2.0f,
+				Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LOWER_MARGIN),
+				PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 

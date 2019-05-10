@@ -15,41 +15,43 @@ package org.phoenixctms.ctsms.web.component.tagcloud;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class DefaultTagCloudModel implements TagCloudModel {
 
-    private List<TagCloudItem> tags;
+	private List<TagCloudItem> tags;
 
-    public DefaultTagCloudModel() {
-        tags = new ArrayList<TagCloudItem>();
-    }
+	public DefaultTagCloudModel() {
+		tags = new ArrayList<TagCloudItem>();
+	}
 
-    public DefaultTagCloudModel(Collection<TagCloudItem> collection) {
-        tags = new ArrayList<TagCloudItem>(collection);
-    }
+	public DefaultTagCloudModel(Collection<TagCloudItem> collection) {
+		tags = new ArrayList<TagCloudItem>(collection);
+	}
 
-    public List<TagCloudItem> getTags() {
-        return tags;
-    }
+	@Override
+	public List<TagCloudItem> getTags() {
+		return tags;
+	}
 
-    public void setTags(List<TagCloudItem> tags) {
-        this.tags = tags;
-    }
+	public void setTags(List<TagCloudItem> tags) {
+		this.tags = tags;
+	}
 
-    public void addTag(TagCloudItem item) {
-        tags.add(item);
-    }
+	@Override
+	public void addTag(TagCloudItem item) {
+		tags.add(item);
+	}
 
-    public void removeTag(TagCloudItem item) {
-        tags.remove(item);
-    }
+	@Override
+	public void removeTag(TagCloudItem item) {
+		tags.remove(item);
+	}
 
-    public void clear() {
-        tags.clear();
-    }
+	@Override
+	public void clear() {
+		tags.clear();
+	}
 }
-

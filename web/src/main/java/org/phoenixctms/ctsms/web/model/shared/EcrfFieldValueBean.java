@@ -258,8 +258,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			protected String getPageButtonLabelSeriesIndex(int i, int pageSize) {
 				ECRFSectionProgressVO sectionProgress = ((EcrfFieldValueBean) bean).getFilterSectionProgress();
 				if (sectionProgress != null && sectionProgress.getSeries() && sectionProgress.getFieldCount() > 0l) {
-					long pageStart = (long) (i * pageSize + 1);
-					long pageEnd = (long) ((i + 1) * pageSize);
+					long pageStart = i * pageSize + 1;
+					long pageEnd = (i + 1) * pageSize;
 					StringBuilder sb = new StringBuilder();
 					Long lastIndex = null;
 					long maxIndex = (sectionProgress.getIndex() != null ? sectionProgress.getIndex() : 0l);

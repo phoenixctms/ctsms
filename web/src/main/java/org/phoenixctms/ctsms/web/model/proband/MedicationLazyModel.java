@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.model.proband;
 
 import java.util.ArrayList;

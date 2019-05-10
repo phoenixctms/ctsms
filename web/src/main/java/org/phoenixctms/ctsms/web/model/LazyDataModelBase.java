@@ -98,7 +98,7 @@ public abstract class LazyDataModelBase extends LazyDataModel<IDVO> implements S
 			preparedFilters = new HashMap<String, String>(filters.size());
 			Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 			while (filterIt.hasNext()) {
-				Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
+				Map.Entry<String, String> filter = filterIt.next();
 				AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 				filterFieldAssociationPath.dropFirstPathElement();
 				preparedFilters.put(filterFieldAssociationPath.getFullQualifiedPropertyName(), filter.getValue());

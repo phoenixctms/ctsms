@@ -21,7 +21,6 @@ package org.phoenixctms.ctsms.security;
  * The original work by Santeri Paavolainen can be found a
  * http://santtu.iki.fi/md5/
  */
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,13 +57,12 @@ import org.phoenixctms.ctsms.util.MessageCodes;
  * @since ostermillerutils 1.00.00
  */
 public class VerifyMD5InputStream extends FilterInputStream {
+
 	/**
 	 * MD5 context
 	 */
 	private MessageDigest md5;
-
 	private String md5Hash;
-
 	private boolean on = true;
 
 	/**
@@ -72,9 +70,8 @@ public class VerifyMD5InputStream extends FilterInputStream {
 	 * @param in the underlying input stream
 	 * @throws NoSuchAlgorithmException
 	 */
-	public VerifyMD5InputStream (InputStream in, String md5) throws NoSuchAlgorithmException {
+	public VerifyMD5InputStream(InputStream in, String md5) throws NoSuchAlgorithmException {
 		super(in);
-
 		this.md5 = MessageDigest.getInstance("MD5");
 		this.md5Hash = md5;
 	}
@@ -97,18 +94,17 @@ public class VerifyMD5InputStream extends FilterInputStream {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	@Override public int read() throws IOException {
+	@Override
+	public int read() throws IOException {
 		int c = in.read();
 		if (c == -1) {
 			return -1;
 		}
 		if (on) {
-			md5.update((byte)(c & 0xff));
+			md5.update((byte) (c & 0xff));
 		}
 		return c;
 	}
-
-
 
 	/**
 	 * Reads up to length bytes of data from this input stream into an
@@ -121,13 +117,14 @@ public class VerifyMD5InputStream extends FilterInputStream {
 	 *
 	 * @since ostermillerutils 1.00.00
 	 */
-	@Override public int read(byte[] bytes, int offset, int length) throws IOException {
+	@Override
+	public int read(byte[] bytes, int offset, int length) throws IOException {
 		int r;
 		if ((r = in.read(bytes, offset, length)) == -1) {
 			if (on && !CommonUtil.getHex(md5.digest()).equalsIgnoreCase(md5Hash)) {
 				//due to PF3.0.1 bug...
 				//throw new RuntimeException(new GeneralSecurityException(L10nUtil.getMessage(MessageCodes.MD5_CHECK_FAILED,DefaultMessages.MD5_CHECK_FAILED)));
-				throw new IOException(L10nUtil.getMessage(MessageCodes.MD5_CHECK_FAILED,DefaultMessages.MD5_CHECK_FAILED));
+				throw new IOException(L10nUtil.getMessage(MessageCodes.MD5_CHECK_FAILED, DefaultMessages.MD5_CHECK_FAILED));
 			}
 			return r;
 		}
@@ -137,7 +134,8 @@ public class VerifyMD5InputStream extends FilterInputStream {
 		return r;
 	}
 
-	@Override public void reset() throws IOException {
+	@Override
+	public void reset() throws IOException {
 		super.reset();
 		md5.reset();
 	}
@@ -145,9 +143,4 @@ public class VerifyMD5InputStream extends FilterInputStream {
 	public void setOn(boolean on) {
 		this.on = on;
 	}
-
-
-
-
 }
-

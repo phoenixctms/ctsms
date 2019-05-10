@@ -12,16 +12,14 @@ import org.phoenixctms.ctsms.vo.OpsSystModifierVO;
  * @see OpsSystModifier
  */
 public class OpsSystModifierDaoImpl
-		extends OpsSystModifierDaoBase
-{
+		extends OpsSystModifierDaoBase {
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private OpsSystModifier loadOpsSystModifierFromOpsSystModifierVO(OpsSystModifierVO opsSystModifierVO)
-	{
+	private OpsSystModifier loadOpsSystModifierFromOpsSystModifierVO(OpsSystModifierVO opsSystModifierVO) {
 		// TODO implement loadOpsSystModifierFromOpsSystModifierVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystModifierFromOpsSystModifierVO(OpsSystModifierVO) not yet implemented.");
 		Long id = opsSystModifierVO.getId();
@@ -29,8 +27,7 @@ public class OpsSystModifierDaoImpl
 		if (id != null) {
 			opsSystModifier = this.load(id);
 		}
-		if (opsSystModifier == null)
-		{
+		if (opsSystModifier == null) {
 			opsSystModifier = OpsSystModifier.Factory.newInstance();
 		}
 		return opsSystModifier;
@@ -40,8 +37,7 @@ public class OpsSystModifierDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystModifier opsSystModifierVOToEntity(OpsSystModifierVO opsSystModifierVO)
-	{
+	public OpsSystModifier opsSystModifierVOToEntity(OpsSystModifierVO opsSystModifierVO) {
 		OpsSystModifier entity = this.loadOpsSystModifierFromOpsSystModifierVO(opsSystModifierVO);
 		this.opsSystModifierVOToEntity(opsSystModifierVO, entity, true);
 		return entity;
@@ -54,8 +50,7 @@ public class OpsSystModifierDaoImpl
 	public void opsSystModifierVOToEntity(
 			OpsSystModifierVO source,
 			OpsSystModifier target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.opsSystModifierVOToEntity(source, target, copyIfNull);
 	}
 
@@ -63,8 +58,7 @@ public class OpsSystModifierDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystModifierVO toOpsSystModifierVO(final OpsSystModifier entity)
-	{
+	public OpsSystModifierVO toOpsSystModifierVO(final OpsSystModifier entity) {
 		return super.toOpsSystModifierVO(entity);
 	}
 
@@ -74,8 +68,7 @@ public class OpsSystModifierDaoImpl
 	@Override
 	public void toOpsSystModifierVO(
 			OpsSystModifier source,
-			OpsSystModifierVO target)
-	{
+			OpsSystModifierVO target) {
 		super.toOpsSystModifierVO(source, target);
 	}
 }

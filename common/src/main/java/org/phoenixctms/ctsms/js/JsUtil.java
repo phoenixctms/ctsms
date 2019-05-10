@@ -45,7 +45,6 @@ public final class JsUtil {
 			new GsonExclusionStrategy(ProbandOutVO.class, "children"),
 			new GsonExclusionStrategy(ProbandOutVO.class, "parents"),
 	};
-
 	public static final HashMap<Class, JsonSerializer> GSON_SHORTCUT_SERIALISATIONS = new HashMap<Class, JsonSerializer>();
 	static {
 		GSON_SHORTCUT_SERIALISATIONS.put(UserOutVO.class, new JsonSerializer<UserOutVO>() {
@@ -60,20 +59,18 @@ public final class JsUtil {
 				object.addProperty("staffInitials", src.getIdentity() != null ? src.getIdentity().getInitials() : null);
 				return object;
 			}
-		}
-				);
+		});
 	}
 	private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
 			GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
-			.serializeNulls()
-			.setDateFormat(INPUT_JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
-			.create();
+					.serializeNulls()
+					.setDateFormat(INPUT_JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
+					.create();
 	private final static Gson VO_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
-			JsUtil.GSON_SHORTCUT_SERIALISATIONS
-			).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
-			.serializeNulls()
-			.setDateFormat(JSON_DATETIME_PATTERN)
-			.create();
+			JsUtil.GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
+					.serializeNulls()
+					.setDateFormat(JSON_DATETIME_PATTERN)
+					.create();
 
 	public static String decodeBase64(String base64String) {
 		if (base64String != null && base64String.length() > 0 && Base64.isBase64(base64String)) {

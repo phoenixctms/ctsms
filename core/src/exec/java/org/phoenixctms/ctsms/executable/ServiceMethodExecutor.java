@@ -81,7 +81,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class ServiceMethodExecutor {
 
-	private static CriteriaOutVO checkCriteriaDbModule(CriteriaOutVO criteriaOut,DBModule module) {
+	private static CriteriaOutVO checkCriteriaDbModule(CriteriaOutVO criteriaOut, DBModule module) {
 		if (!module.equals(criteriaOut.getModule())) {
 			throw new IllegalArgumentException("criteria ID " + Long.toString(criteriaOut.getId()) + " '" + criteriaOut.getLabel() + "' is a " + criteriaOut.getModule().name()
 					+ " query");
@@ -94,8 +94,7 @@ public class ServiceMethodExecutor {
 		final Method deleteMethod = sme.getClass().getMethod(deleteMethodName, AuthenticationVO.class, Long.class);
 		ChunkedDaoOperationAdapter<DAO, ENTITY> processor = new ChunkedDaoOperationAdapter<DAO, ENTITY>(dao,
 				new Search(new SearchParameter[] {
-						new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR) })
-				) {
+						new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR) })) {
 
 			@Override
 			protected boolean isIncrementPageNumber() {
@@ -133,11 +132,12 @@ public class ServiceMethodExecutor {
 			passThrough.put("removed", 0l);
 			passThrough.put("i", 0l);
 			processor.processEach(passThrough);
-			sme.jobOutput.println(((Long) passThrough.get("removed")) + " " + entityLabel + " entities removed");
+			sme.jobOutput.println((passThrough.get("removed")) + " " + entityLabel + " entities removed");
 			return ((Long) passThrough.get("removed"));
 		}
 		return totalCount;
 	}
+
 	@Autowired
 	private DepartmentDao departmentDao;
 	@Autowired
@@ -188,7 +188,6 @@ public class ServiceMethodExecutor {
 	private CriteriaDao criteriaDao;
 	@Autowired
 	private JournalService journalService;
-
 	private JobOutput jobOutput;
 
 	public ServiceMethodExecutor() {
@@ -423,15 +422,15 @@ public class ServiceMethodExecutor {
 		Date from = DateCalc.getStartOfDay(now);
 		Date to = DateCalc.getEndOfDay(now);
 		jobOutput
-		.println("timespan: "
-				+ CommonUtil.getDateStartStopString(from, to,
-						new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
-		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, from, to, true, true,null, null, null, null);
+				.println("timespan: "
+						+ CommonUtil.getDateStartStopString(from, to,
+								new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
+		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, from, to, true, true, null, null, null, null);
 		if (result != null) {
 			if (id != null) {
 				jobOutput.println("department ID " + Long.toString(id) + ": " + result.getRowCount() + " inventory bookings");
 			} else {
-				jobOutput.println( result.getRowCount() + " inventory bookings");
+				jobOutput.println(result.getRowCount() + " inventory bookings");
 			}
 			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
@@ -602,7 +601,6 @@ public class ServiceMethodExecutor {
 	}
 
 	public long renderEcrfPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {
-
 		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, false);
 		if (result != null) {
 			long ecrfCount = result.getStatusEntries().size();
@@ -612,7 +610,6 @@ public class ServiceMethodExecutor {
 		} else {
 			return 0l;
 		}
-
 	}
 
 	public long renderProbandLetterPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {

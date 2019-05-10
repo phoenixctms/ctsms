@@ -16,48 +16,26 @@ import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.phoenixctms.ctsms.util.CommonUtil;
 
-
 public final class PDFUtil {
 
 	public enum Alignment {
-		TOP_LEFT,
-		TOP_CENTER,
-		TOP_RIGHT,
-		MIDDLE_LEFT,
-		MIDDLE_CENTER,
-		MIDDLE_RIGHT,
-		BOTTOM_LEFT,
-		BOTTOM_CENTER,
-		BOTTOM_RIGHT
+		TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
 	}
 
 	public enum FontSize {
-		TINY,
-		SMALL,
-		MEDIUM,
-		BIG,
-		LARGE,
-		SIZE11,
-		SIZE12
+		TINY, SMALL, MEDIUM, BIG, LARGE, SIZE11, SIZE12
 	}
 
 	public enum LineStyle {
-		SOLID,
-		DASHED
+		SOLID, DASHED
 	}
 
 	public enum Rotation {
-		NONE,
-		HORIZONTAL,
-		VERTICAL,
-		CCW90,
-		CW90
+		NONE, HORIZONTAL, VERTICAL, CCW90, CW90
 	}
 
 	public enum TextDecoration {
-		NONE,
-		STRIKE_THROUGH,
-		UNDERLINE
+		NONE, STRIKE_THROUGH, UNDERLINE
 	}
 
 	public final static String DEFAULT_LABEL = "<label>";
@@ -88,8 +66,7 @@ public final class PDFUtil {
 	private final static float STRIKE_THROUGH_DECORATION_LINE_OFFSET = 0.44f;
 	private final static float UNDERLINE_DECORATION_LINE_OFFSET = -0.15f;
 	private final static ArrayList<Character> WORD_BOUNDARY_CHARS = new ArrayList<Character>();
-	static
-	{
+	static {
 		WORD_BOUNDARY_CHARS.add(' ');
 		WORD_BOUNDARY_CHARS.add('\t');
 		WORD_BOUNDARY_CHARS.add('/');
@@ -201,7 +178,6 @@ public final class PDFUtil {
 		return glyphUnits * fontSize / 1000.0f;
 	}
 
-
 	public static PDFont loadFont(String fontFileName, PDDocument doc, PDFont defaultBaseFont) throws IOException {
 		// public static PDFont loadFont(String fontFileName, PDDocument doc, PDFont defaultBaseFont, PDStream pdStream) throws IOException {
 		PDFont font = null;
@@ -244,7 +220,6 @@ public final class PDFUtil {
 	// return null;
 	// }
 	//
-
 	public static void renderFrame(PDPageContentStream contentStream, org.phoenixctms.ctsms.enumeration.Color color, float x, float y, float width, float height, Alignment align,
 			float lineWidth) throws IOException {
 		renderFrame(contentStream, color, x, y, width, height, align, lineWidth, LineStyle.SOLID);
@@ -348,14 +323,15 @@ public final class PDFUtil {
 		}
 	}
 
-	public static void renderLine(PDPageContentStream contentStream, org.phoenixctms.ctsms.enumeration.Color color, float xStart, float yStart, float xEnd, float yEnd, float lineWidth)
+	public static void renderLine(PDPageContentStream contentStream, org.phoenixctms.ctsms.enumeration.Color color, float xStart, float yStart, float xEnd, float yEnd,
+			float lineWidth)
 			throws IOException {
 		renderLine(contentStream, color, xStart, yStart, xEnd, yEnd, lineWidth, LineStyle.SOLID);
 	}
 
 	public static void renderLine(PDPageContentStream contentStream, org.phoenixctms.ctsms.enumeration.Color color, float xStart, float yStart, float xEnd, float yEnd,
 			float lineWidth, LineStyle lineStyle)
-					throws IOException {
+			throws IOException {
 		if (contentStream != null && lineWidth > 0.0f) {
 			contentStream.setStrokingColor(CommonUtil.convertColor(color));
 			setLineDashPattern(contentStream, lineStyle);
@@ -401,7 +377,8 @@ public final class PDFUtil {
 						for (int k = 0; k < chars.length; k++) {
 							word.append(chars[k]);
 							if (WORD_BOUNDARY_CHARS.contains(chars[k])) {
-								if ((glyphUnitsToPoints(font.getStringWidth(line.toString()), size) + glyphUnitsToPoints(font.getStringWidth(word.toString()), size)) > textBlockWidth) {
+								if ((glyphUnitsToPoints(font.getStringWidth(line.toString()), size)
+										+ glyphUnitsToPoints(font.getStringWidth(word.toString()), size)) > textBlockWidth) {
 									wrappedLines.add(line.toString());
 									line.delete(0, line.length());
 								}
@@ -411,7 +388,8 @@ public final class PDFUtil {
 						}
 						// handle any extra chars in current word
 						if (word.length() > 0) {
-							if ((glyphUnitsToPoints(font.getStringWidth(line.toString()), size) + glyphUnitsToPoints(font.getStringWidth(word.toString()), size)) > textBlockWidth) {
+							if ((glyphUnitsToPoints(font.getStringWidth(line.toString()), size)
+									+ glyphUnitsToPoints(font.getStringWidth(word.toString()), size)) > textBlockWidth) {
 								wrappedLines.add(line.toString());
 								line.delete(0, line.length());
 							}
@@ -562,7 +540,8 @@ public final class PDFUtil {
 		return totalHeight;
 	}
 
-	public static float renderTextLine(PDPageContentStream contentStream, PDFont font, FontSize fontSize, org.phoenixctms.ctsms.enumeration.Color color, String text, float x, float y,
+	public static float renderTextLine(PDPageContentStream contentStream, PDFont font, FontSize fontSize, org.phoenixctms.ctsms.enumeration.Color color, String text, float x,
+			float y,
 			Alignment align) throws IOException {
 		return renderTextLine(contentStream, font, fontSize, color, text, x, y, align, TextDecoration.NONE, Rotation.NONE);
 	}
@@ -690,7 +669,7 @@ public final class PDFUtil {
 			float phase;
 			switch (lineStyle) {
 				case DASHED:
-					pattern = new float[]{3.0f};
+					pattern = new float[] { 3.0f };
 					phase = 0.0f;
 					break;
 				default: //solid else...

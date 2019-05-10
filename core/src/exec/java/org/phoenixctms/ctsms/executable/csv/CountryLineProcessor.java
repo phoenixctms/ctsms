@@ -27,7 +27,6 @@ public class CountryLineProcessor extends LineProcessor {
 		return country;
 	}
 
-
 	private String getCountryCode(String[] values) {
 		return values[countryCodeColumnIndex];
 	}
@@ -54,8 +53,8 @@ public class CountryLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getCountryName(values))
-		.toHashCode();
+				.append(getCountryName(values))
+				.toHashCode();
 	}
 
 	@Override

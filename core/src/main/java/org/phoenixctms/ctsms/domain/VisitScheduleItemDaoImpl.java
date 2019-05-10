@@ -32,8 +32,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
  * @see VisitScheduleItem
  */
 public class VisitScheduleItemDaoImpl
-extends VisitScheduleItemDaoBase
-{
+		extends VisitScheduleItemDaoBase {
 
 	private final static String TOKEN_SEPARATOR_STRING = ":";
 
@@ -133,7 +132,7 @@ extends VisitScheduleItemDaoBase
 	@Override
 	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentStatusTypeIntervalId(Long trialId,
 			Long departmentId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to, Long id)
-					throws Exception {
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		org.hibernate.criterion.Criterion idCriterion;
 		if (id != null) {
@@ -166,8 +165,7 @@ extends VisitScheduleItemDaoBase
 	 */
 	@Override
 	protected Collection<VisitScheduleItem> handleFindByTrialGroupVisitProbandTravel(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, PSFVO psf)
-			throws Exception
-	{
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(VisitScheduleItem.class, visitScheduleItemCriteria);
 		if (trialId != null) {
@@ -198,8 +196,6 @@ extends VisitScheduleItemDaoBase
 		} else {
 			return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 		}
-
-
 	}
 
 	@Override
@@ -231,8 +227,7 @@ extends VisitScheduleItemDaoBase
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindCollidingTrialGroupVisit(Long trialId, Long groupId, Long visitId) throws Exception
-	{
+	protected Collection<VisitScheduleItem> handleFindCollidingTrialGroupVisit(Long trialId, Long groupId, Long visitId) throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		// if (trialId != null) {
 		// visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -251,9 +246,9 @@ extends VisitScheduleItemDaoBase
 		return visitScheduleItemCriteria.list();
 	}
 
+	@Override
 	protected Timestamp handleFindMaxStop(Long trialId, Long groupId, Long visitId)
-			throws Exception
-	{
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
 		//		if (groupId != null) {
@@ -264,16 +259,13 @@ extends VisitScheduleItemDaoBase
 		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
 		//					Restrictions.isNull("visit.id")));
 		//		}
-
 		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
 
-
-
+	@Override
 	protected Timestamp handleFindMaxStop(Long trialId, Long groupId, Long visitId, String token)
-			throws Exception
-	{
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitTokenCriterions(visitScheduleItemCriteria, trialId, groupId, visitId, token);
 		//		if (groupId != null) {
@@ -284,11 +276,11 @@ extends VisitScheduleItemDaoBase
 		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
 		//					Restrictions.isNull("visit.id")));
 		//		}
-
 		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
 
+	@Override
 	protected Timestamp handleFindMinStart(Long trialId, Long groupId, Long visitId)
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
@@ -305,6 +297,7 @@ extends VisitScheduleItemDaoBase
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
 
+	@Override
 	protected Timestamp handleFindMinStart(Long trialId, Long groupId, Long visitId, String token)
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
@@ -325,11 +318,9 @@ extends VisitScheduleItemDaoBase
 	protected Collection<VisitScheduleItem> handleFindVisitScheduleItemSchedule(
 			Date today, Long trialId, Long departmentId, Boolean notify, Boolean ignoreTimelineEvents, VariablePeriod reminderPeriod, Long reminderPeriodDays,
 			boolean includeAlreadyPassed, PSFVO psf)
-					throws Exception {
-
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(VisitScheduleItem.class, visitScheduleItemCriteria);
-
 		if (trialId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
@@ -339,7 +330,6 @@ extends VisitScheduleItemDaoBase
 		if (ignoreTimelineEvents != null) {
 			criteriaMap.createCriteria("trial.status").add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));
 		}
-
 		// if (teamMemberStaffId != null) {
 		// criteriaMap.createCriteria("trial.members").add(Restrictions.eq("staff.id", teamMemberStaffId.longValue())); // unique staff!
 		// if (notify != null) {
@@ -349,9 +339,7 @@ extends VisitScheduleItemDaoBase
 		if (notify != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("notify", notify.booleanValue()));
 		}
-
 		visitScheduleItemCriteria.add(Restrictions.ge("stop", CommonUtil.dateToTimestamp(today)));
-
 		if (psf != null) {
 			PSFVO sorterFilter = new PSFVO();
 			sorterFilter.setFilters(psf.getFilters());
@@ -359,17 +347,15 @@ extends VisitScheduleItemDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter); // staff is not unique in team members
 		} else {
-			visitScheduleItemCriteria.setResultTransformer(Criteria.ROOT_ENTITY);
+			visitScheduleItemCriteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
 		ArrayList<VisitScheduleItem> resultSet = CriteriaUtil.listReminders(visitScheduleItemCriteria, today, notify, includeAlreadyPassed, reminderPeriod, reminderPeriodDays);
-		return (Collection<VisitScheduleItem>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes here any more
-
+		return CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes here any more
 	}
 
 	@Override
 	protected long handleGetCount(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel)
-			throws Exception
-	{
+			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -403,8 +389,6 @@ extends VisitScheduleItemDaoBase
 			return (Long) visitScheduleItemCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
 			//			return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 		}
-
-
 	}
 
 	/**
@@ -412,8 +396,7 @@ extends VisitScheduleItemDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemInVO(VisitScheduleItemInVO visitScheduleItemInVO)
-	{
+	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemInVO(VisitScheduleItemInVO visitScheduleItemInVO) {
 		// TODO implement loadVisitScheduleItemFromVisitScheduleItemInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitScheduleItemFromVisitScheduleItemInVO(VisitScheduleItemInVO) not yet implemented.");
 		VisitScheduleItem visitScheduleItem = null;
@@ -421,8 +404,7 @@ extends VisitScheduleItemDaoBase
 		if (id != null) {
 			visitScheduleItem = this.load(id);
 		}
-		if (visitScheduleItem == null)
-		{
+		if (visitScheduleItem == null) {
 			visitScheduleItem = VisitScheduleItem.Factory.newInstance();
 		}
 		return visitScheduleItem;
@@ -433,13 +415,11 @@ extends VisitScheduleItemDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemOutVO(VisitScheduleItemOutVO visitScheduleItemOutVO)
-	{
+	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemOutVO(VisitScheduleItemOutVO visitScheduleItemOutVO) {
 		// TODO implement loadVisitScheduleItemFromVisitScheduleItemOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitScheduleItemFromVisitScheduleItemOutVO(VisitScheduleItemOutVO) not yet implemented.");
 		VisitScheduleItem visitScheduleItem = this.load(visitScheduleItemOutVO.getId());
-		if (visitScheduleItem == null)
-		{
+		if (visitScheduleItem == null) {
 			visitScheduleItem = VisitScheduleItem.Factory.newInstance();
 		}
 		return visitScheduleItem;
@@ -449,8 +429,7 @@ extends VisitScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitScheduleItemInVO toVisitScheduleItemInVO(final VisitScheduleItem entity)
-	{
+	public VisitScheduleItemInVO toVisitScheduleItemInVO(final VisitScheduleItem entity) {
 		return super.toVisitScheduleItemInVO(entity);
 	}
 
@@ -460,8 +439,7 @@ extends VisitScheduleItemDaoBase
 	@Override
 	public void toVisitScheduleItemInVO(
 			VisitScheduleItem source,
-			VisitScheduleItemInVO target)
-	{
+			VisitScheduleItemInVO target) {
 		super.toVisitScheduleItemInVO(source, target);
 		Trial trial = source.getTrial();
 		Visit visit = source.getVisit();
@@ -481,8 +459,7 @@ extends VisitScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitScheduleItemOutVO toVisitScheduleItemOutVO(final VisitScheduleItem entity)
-	{
+	public VisitScheduleItemOutVO toVisitScheduleItemOutVO(final VisitScheduleItem entity) {
 		return super.toVisitScheduleItemOutVO(entity);
 	}
 
@@ -492,8 +469,7 @@ extends VisitScheduleItemDaoBase
 	@Override
 	public void toVisitScheduleItemOutVO(
 			VisitScheduleItem source,
-			VisitScheduleItemOutVO target)
-	{
+			VisitScheduleItemOutVO target) {
 		super.toVisitScheduleItemOutVO(source, target);
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
@@ -515,16 +491,14 @@ extends VisitScheduleItemDaoBase
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-
-		target.setName(getVisitScheduleItemName(visit,group,source.getToken()));
+		target.setName(getVisitScheduleItemName(visit, group, source.getToken()));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitScheduleItem visitScheduleItemInVOToEntity(VisitScheduleItemInVO visitScheduleItemInVO)
-	{
+	public VisitScheduleItem visitScheduleItemInVOToEntity(VisitScheduleItemInVO visitScheduleItemInVO) {
 		VisitScheduleItem entity = this.loadVisitScheduleItemFromVisitScheduleItemInVO(visitScheduleItemInVO);
 		this.visitScheduleItemInVOToEntity(visitScheduleItemInVO, entity, true);
 		return entity;
@@ -537,8 +511,7 @@ extends VisitScheduleItemDaoBase
 	public void visitScheduleItemInVOToEntity(
 			VisitScheduleItemInVO source,
 			VisitScheduleItem target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.visitScheduleItemInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
 		Long visitId = source.getVisitId();
@@ -582,8 +555,7 @@ extends VisitScheduleItemDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitScheduleItem visitScheduleItemOutVOToEntity(VisitScheduleItemOutVO visitScheduleItemOutVO)
-	{
+	public VisitScheduleItem visitScheduleItemOutVOToEntity(VisitScheduleItemOutVO visitScheduleItemOutVO) {
 		VisitScheduleItem entity = this.loadVisitScheduleItemFromVisitScheduleItemOutVO(visitScheduleItemOutVO);
 		this.visitScheduleItemOutVOToEntity(visitScheduleItemOutVO, entity, true);
 		return entity;
@@ -596,8 +568,7 @@ extends VisitScheduleItemDaoBase
 	public void visitScheduleItemOutVOToEntity(
 			VisitScheduleItemOutVO source,
 			VisitScheduleItem target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.visitScheduleItemOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		VisitOutVO visitVO = source.getVisit();

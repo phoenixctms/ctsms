@@ -30,7 +30,6 @@ public class StaffNaCountEvent extends ScheduleEventBase<DateCountVO> {
 	// data.setCount(0l);
 	// }
 	// }
-
 	public StaffNaCountEvent() {
 		super();
 	}

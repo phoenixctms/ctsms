@@ -10,9 +10,7 @@ public class XlsImporterContext {
 	private String fileName;
 	private AuthenticationVO auth;
 	private Long entityId;
-
 	// private HashMap<RowProcessor, String> sheetNameMap;
-
 	private HashMap<RowProcessor, Boolean> mandatoryMap;
 
 	public XlsImporterContext(XlsImporter importer, String fileName) {
@@ -39,7 +37,6 @@ public class XlsImporterContext {
 	public XlsImporter getImporter() {
 		return importer;
 	}
-
 	// public String getSheetName(RowProcessor processor) {
 	// return sheetNameMap.get(processor);
 	// }
@@ -57,8 +54,6 @@ public class XlsImporterContext {
 	public void setAuth(AuthenticationVO auth) {
 		this.auth = auth;
 	}
-
-
 
 	public void setEntityId(Long entityId) {
 		this.entityId = entityId;

@@ -21,14 +21,11 @@ public abstract class Paginator {
 	private boolean isInputFieldForm;
 	private boolean isShowNavigatorButtons;
 	protected ManagedBeanBase bean;
-
 	private int fieldsPerRow;
-
 	// private int maxFieldsPerRow;
 	// private ArrayList<SelectItem> fieldsPerRows;
 
 	// private boolean pagesEnabled;
-
 	public Paginator() {
 		this(null);
 	}
@@ -68,8 +65,8 @@ public abstract class Paginator {
 
 	public ArrayList<SelectItem> getFieldsPerRows() {
 		ArrayList<SelectItem> fieldsPerRows = new ArrayList<SelectItem>();
-		for (int i = 1; i <= Math.max(fieldsPerRow,getMaxFieldsPerRow()); i++) {
-			fieldsPerRows.add(new SelectItem(Integer.toString(i),Messages.getMessage(MessageCodes.FIELDS_PER_ROW_LABEL, Integer.toString(i) )));
+		for (int i = 1; i <= Math.max(fieldsPerRow, getMaxFieldsPerRow()); i++) {
+			fieldsPerRows.add(new SelectItem(Integer.toString(i), Messages.getMessage(MessageCodes.FIELDS_PER_ROW_LABEL, Integer.toString(i))));
 		}
 		return fieldsPerRows;
 	}
@@ -194,7 +191,6 @@ public abstract class Paginator {
 	// public void setPagesEnabled(boolean pagesEnabled) {
 	// this.pagesEnabled = pagesEnabled;
 	// }
-
 	public boolean isShowNavigatorButtons() {
 		return isShowNavigatorButtons;
 	}
@@ -206,7 +202,6 @@ public abstract class Paginator {
 	public void setFieldsPerRow(int fieldsPerRow) {
 		this.fieldsPerRow = fieldsPerRow;
 	}
-
 
 	public void setInputFieldForm(boolean isInputFieldForm) {
 		this.isInputFieldForm = isInputFieldForm;

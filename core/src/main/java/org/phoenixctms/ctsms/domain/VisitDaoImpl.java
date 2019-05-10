@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.VisitTypeVO;
  * @see Visit
  */
 public class VisitDaoImpl
-extends VisitDaoBase
-{
+		extends VisitDaoBase {
 
 	private static final String UNIQUE_VISIT_NAME = "{0} - {1}";
 
@@ -84,8 +83,7 @@ extends VisitDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Visit loadVisitFromVisitInVO(VisitInVO visitInVO)
-	{
+	private Visit loadVisitFromVisitInVO(VisitInVO visitInVO) {
 		// TODO implement loadVisitFromVisitInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitFromVisitInVO(VisitInVO) not yet implemented.");
 		Visit visit = null;
@@ -93,8 +91,7 @@ extends VisitDaoBase
 		if (id != null) {
 			visit = this.load(id);
 		}
-		if (visit == null)
-		{
+		if (visit == null) {
 			visit = Visit.Factory.newInstance();
 		}
 		return visit;
@@ -105,13 +102,11 @@ extends VisitDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Visit loadVisitFromVisitOutVO(VisitOutVO visitOutVO)
-	{
+	private Visit loadVisitFromVisitOutVO(VisitOutVO visitOutVO) {
 		// TODO implement loadVisitFromVisitOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitFromVisitOutVO(VisitOutVO) not yet implemented.");
 		Visit visit = this.load(visitOutVO.getId());
-		if (visit == null)
-		{
+		if (visit == null) {
 			visit = Visit.Factory.newInstance();
 		}
 		return visit;
@@ -121,8 +116,7 @@ extends VisitDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitInVO toVisitInVO(final Visit entity)
-	{
+	public VisitInVO toVisitInVO(final Visit entity) {
 		return super.toVisitInVO(entity);
 	}
 
@@ -132,8 +126,7 @@ extends VisitDaoBase
 	@Override
 	public void toVisitInVO(
 			Visit source,
-			VisitInVO target)
-	{
+			VisitInVO target) {
 		super.toVisitInVO(source, target);
 		VisitType type = source.getType();
 		Trial trial = source.getTrial();
@@ -149,8 +142,7 @@ extends VisitDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public VisitOutVO toVisitOutVO(final Visit entity)
-	{
+	public VisitOutVO toVisitOutVO(final Visit entity) {
 		return super.toVisitOutVO(entity);
 	}
 
@@ -160,8 +152,7 @@ extends VisitDaoBase
 	@Override
 	public void toVisitOutVO(
 			Visit source,
-			VisitOutVO target)
-	{
+			VisitOutVO target) {
 		super.toVisitOutVO(source, target);
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
@@ -185,8 +176,7 @@ extends VisitDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Visit visitInVOToEntity(VisitInVO visitInVO)
-	{
+	public Visit visitInVOToEntity(VisitInVO visitInVO) {
 		Visit entity = this.loadVisitFromVisitInVO(visitInVO);
 		this.visitInVOToEntity(visitInVO, entity, true);
 		return entity;
@@ -199,8 +189,7 @@ extends VisitDaoBase
 	public void visitInVOToEntity(
 			VisitInVO source,
 			Visit target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.visitInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long trialId = source.getTrialId();
@@ -226,8 +215,7 @@ extends VisitDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Visit visitOutVOToEntity(VisitOutVO visitOutVO)
-	{
+	public Visit visitOutVOToEntity(VisitOutVO visitOutVO) {
 		Visit entity = this.loadVisitFromVisitOutVO(visitOutVO);
 		this.visitOutVOToEntity(visitOutVO, entity, true);
 		return entity;
@@ -240,8 +228,7 @@ extends VisitDaoBase
 	public void visitOutVOToEntity(
 			VisitOutVO source,
 			Visit target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.visitOutVOToEntity(source, target, copyIfNull);
 		VisitTypeVO typeVO = source.getType();
 		TrialOutVO trialVO = source.getTrial();

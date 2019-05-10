@@ -24,7 +24,6 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 
 public class TagTextStratifiedRandomization extends Randomization {
 
-
 	protected TagTextStratifiedRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -50,10 +49,9 @@ public class TagTextStratifiedRandomization extends Randomization {
 		return RandomizationMode.TAG_TEXT_STRATIFIED;
 	}
 
-	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId,StratificationRandomizationList randomizationList) { // long trialId,
+	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId, StratificationRandomizationList randomizationList) { // long trialId,
 		Set<Long> selectionSetValueIds = getInputFieldSelectionSetValueIdMap(randomizationList.getSelectionSetValues()).keySet();
 		return CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTextStratificationTagValuesCount(trial.getId(), false, selectionSetValueIds, excludeListEntryId));
-
 	}
 
 	@Override

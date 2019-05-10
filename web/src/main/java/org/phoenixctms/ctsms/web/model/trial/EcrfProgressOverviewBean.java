@@ -105,7 +105,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfDoneCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
-					* (trialProgressSummary.getEcrfDoneCount() - trialProgressSummary.getEcrfOverdueCount())) / ((float) trialProgressSummary.getEcrfDoneCount()));
+					* (trialProgressSummary.getEcrfDoneCount() - trialProgressSummary.getEcrfOverdueCount())) / (trialProgressSummary.getEcrfDoneCount()));
 		}
 		return 0;
 	}
@@ -115,7 +115,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfTotalCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * trialProgressSummary
-					.getEcrfDoneCount()) / ((float) trialProgressSummary.getEcrfTotalCount()));
+					.getEcrfDoneCount()) / (trialProgressSummary.getEcrfTotalCount()));
 		}
 		return 0;
 	}
@@ -158,7 +158,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		TrialECRFProgressSummaryVO trialProgressSummary = getCachedEcrfProgressSummary(trialVO);
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfStatusEntryCount() > 0l) {
 			Iterator<ECRFProgressSummaryVO> listEntryIt = trialProgressSummary.getListEntries().iterator();
-			HashMap<Long,Long> countMap = new HashMap<Long,Long>();
+			HashMap<Long, Long> countMap = new HashMap<Long, Long>();
 			while (listEntryIt.hasNext()) {
 				Iterator<ECRFProgressVO> ecrfIt = listEntryIt.next().getEcrfs().iterator();
 				while (ecrfIt.hasNext()) {
@@ -224,6 +224,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	public boolean isCreated() {
 		return false;
 	}
+
 	@Override
 	public String loadAction() {
 		initIn();

@@ -35,9 +35,9 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.primefaces.renderkit.CoreRenderer;
 
 @ResourceDependencies({
-	@ResourceDependency(library = "primefaces", name = "primefaces.css"),
-	@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
-	@ResourceDependency(library = "primefaces", name = "primefaces.js")
+		@ResourceDependency(library = "primefaces", name = "primefaces.css"),
+		@ResourceDependency(library = "primefaces", name = "jquery/jquery.js"),
+		@ResourceDependency(library = "primefaces", name = "primefaces.js")
 })
 @FacesRenderer(componentFamily = "javax.faces.Input", rendererType = "ctsms.Captcha")
 public class CaptchaRenderer extends CoreRenderer {
@@ -51,7 +51,6 @@ public class CaptchaRenderer extends CoreRenderer {
 	// String result = clientId.replaceAll("[^a-zA-Z0-9_]", "_");
 	// return "set" + WordUtils.capitalizeFully(result, '_').replaceAll("_", "");
 	// }
-
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
 		Captcha captcha = (Captcha) component;
@@ -98,7 +97,6 @@ public class CaptchaRenderer extends CoreRenderer {
 		// throw new FacesException("Cannot find public key for catpcha, use primefaces.PUBLIC_CAPTCHA_KEY context-param to define one");
 		// }
 		if (ReCaptchaVersions.V1.equals(Captcha.RECAPTCHA_VERSION)) {
-
 			writer.startElement("script", null);
 			writer.writeAttribute("type", "text/javascript", null);
 			writer.write("var RecaptchaOptions = {");

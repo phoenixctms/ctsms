@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.pdf;
 
 import org.phoenixctms.ctsms.enumeration.Color;
@@ -38,7 +37,6 @@ public final class InquiriesPDFDefaultSettings {
 	public final static float Y_VALUE_FRAME_INDENT = Y_FRAME_INDENT - 2.0f;
 	public final static float X_BOX_FRAME_INDENT = 6.0f;
 	public final static float Y_BOX_FRAME_INDENT = 6.0f;
-
 	// public final static float SPACER_HEIGHT = 20.0f;
 	// public static final float BLOCK_FRAME_LINE_WIDTH = 1.0f;
 	// public static final float COLUMN_LINE_WIDTH = 0.6f;

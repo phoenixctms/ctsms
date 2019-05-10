@@ -139,8 +139,7 @@ public class JournalBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		JournalEntryInVO backup = new JournalEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -243,7 +242,6 @@ public class JournalBean extends ManagedBeanBase {
 	public void changeInputField(String param) {
 		changeInputFieldAction(param);
 	}
-
 
 	public String changeInputFieldAction(String param) {
 		return changeAction(param, JournalModule.INPUT_FIELD_JOURNAL);

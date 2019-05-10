@@ -68,8 +68,7 @@ public class LecturerBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		LecturerInVO backup = new LecturerInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

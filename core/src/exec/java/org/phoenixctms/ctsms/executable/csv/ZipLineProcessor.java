@@ -73,10 +73,10 @@ public class ZipLineProcessor extends LineProcessor {
 
 	private int lineHashCode(String countryName, String cityName, String zipCode) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(countryName)
-		.append(zipCode)
-		.append(cityName)
-		.toHashCode();
+				.append(countryName)
+				.append(zipCode)
+				.append(cityName)
+				.toHashCode();
 	}
 
 	@Override

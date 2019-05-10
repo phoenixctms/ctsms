@@ -33,8 +33,7 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
  * @see TimelineEvent
  */
 public class TimelineEventDaoImpl
-extends TimelineEventDaoBase
-{
+		extends TimelineEventDaoBase {
 
 	private org.hibernate.Criteria createTimelineEventCriteria() {
 		org.hibernate.Criteria timelineEventCriteria = this.getSession().createCriteria(TimelineEvent.class);
@@ -56,7 +55,7 @@ extends TimelineEventDaoBase
 	@Override
 	protected Collection<TimelineEvent> handleFindByTrialDepartmentMemberInterval(
 			Long trialId, Long departmentId, Long teamMemberStaffId, Boolean notify, Boolean ignoreTimelineEvents, Timestamp from, Timestamp to)
-					throws Exception {
+			throws Exception {
 		Criteria timelineEventCriteria = createTimelineEventCriteria();
 		CriteriaUtil.applyStopOptionalIntervalCriterion(timelineEventCriteria, from, to, null, true);
 		boolean distinctRoot = false;
@@ -119,7 +118,7 @@ extends TimelineEventDaoBase
 	@Override
 	protected Collection<TimelineEvent> handleFindTimelineSchedule(Date today,
 			Long trialId, Long departmentId, Long teamMemberStaffId, Boolean notify, Boolean ignoreTimelineEvents, boolean includeAlreadyPassed, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		Criteria timelineEventCriteria = createTimelineEventCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(TimelineEvent.class, timelineEventCriteria);
 		if (trialId != null) {
@@ -145,10 +144,10 @@ extends TimelineEventDaoBase
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter); // staff is not unique in team members
 		} else {
-			timelineEventCriteria.setResultTransformer(Criteria.ROOT_ENTITY);
+			timelineEventCriteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
 		ArrayList<TimelineEvent> resultSet = CriteriaUtil.listReminders(timelineEventCriteria, today, notify, includeAlreadyPassed, null, null);
-		return (Collection<TimelineEvent>) CriteriaUtil.applyPVO(resultSet, psf, teamMemberStaffId != null); // no dupes here any more
+		return CriteriaUtil.applyPVO(resultSet, psf, teamMemberStaffId != null); // no dupes here any more
 	}
 
 	@Override
@@ -166,8 +165,7 @@ extends TimelineEventDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TimelineEvent loadTimelineEventFromTimelineEventInVO(TimelineEventInVO timelineEventInVO)
-	{
+	private TimelineEvent loadTimelineEventFromTimelineEventInVO(TimelineEventInVO timelineEventInVO) {
 		// TODO implement loadTimelineEventFromTimelineEventInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventFromTimelineEventInVO(TimelineEventInVO) not yet implemented.");
 		TimelineEvent timelineEvent = null;
@@ -175,8 +173,7 @@ extends TimelineEventDaoBase
 		if (id != null) {
 			timelineEvent = this.load(id);
 		}
-		if (timelineEvent == null)
-		{
+		if (timelineEvent == null) {
 			timelineEvent = TimelineEvent.Factory.newInstance();
 		}
 		return timelineEvent;
@@ -187,13 +184,11 @@ extends TimelineEventDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TimelineEvent loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO timelineEventOutVO)
-	{
+	private TimelineEvent loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO timelineEventOutVO) {
 		// TODO implement loadTimelineEventFromTimelineEventOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO) not yet implemented.");
 		TimelineEvent timelineEvent = this.load(timelineEventOutVO.getId());
-		if (timelineEvent == null)
-		{
+		if (timelineEvent == null) {
 			timelineEvent = TimelineEvent.Factory.newInstance();
 		}
 		return timelineEvent;
@@ -203,8 +198,7 @@ extends TimelineEventDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEvent timelineEventInVOToEntity(TimelineEventInVO timelineEventInVO)
-	{
+	public TimelineEvent timelineEventInVOToEntity(TimelineEventInVO timelineEventInVO) {
 		TimelineEvent entity = this.loadTimelineEventFromTimelineEventInVO(timelineEventInVO);
 		this.timelineEventInVOToEntity(timelineEventInVO, entity, true);
 		return entity;
@@ -217,8 +211,7 @@ extends TimelineEventDaoBase
 	public void timelineEventInVOToEntity(
 			TimelineEventInVO source,
 			TimelineEvent target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.timelineEventInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long trialId = source.getTrialId();
@@ -244,8 +237,7 @@ extends TimelineEventDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEvent timelineEventOutVOToEntity(TimelineEventOutVO timelineEventOutVO)
-	{
+	public TimelineEvent timelineEventOutVOToEntity(TimelineEventOutVO timelineEventOutVO) {
 		TimelineEvent entity = this.loadTimelineEventFromTimelineEventOutVO(timelineEventOutVO);
 		this.timelineEventOutVOToEntity(timelineEventOutVO, entity, true);
 		return entity;
@@ -258,8 +250,7 @@ extends TimelineEventDaoBase
 	public void timelineEventOutVOToEntity(
 			TimelineEventOutVO source,
 			TimelineEvent target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.timelineEventOutVOToEntity(source, target, copyIfNull);
 		TimelineEventTypeVO typeVO = source.getType();
 		TrialOutVO trialVO = source.getTrial();
@@ -303,8 +294,7 @@ extends TimelineEventDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEventInVO toTimelineEventInVO(final TimelineEvent entity)
-	{
+	public TimelineEventInVO toTimelineEventInVO(final TimelineEvent entity) {
 		return super.toTimelineEventInVO(entity);
 	}
 
@@ -314,8 +304,7 @@ extends TimelineEventDaoBase
 	@Override
 	public void toTimelineEventInVO(
 			TimelineEvent source,
-			TimelineEventInVO target)
-	{
+			TimelineEventInVO target) {
 		super.toTimelineEventInVO(source, target);
 		TimelineEventType type = source.getType();
 		Trial trial = source.getTrial();
@@ -331,8 +320,7 @@ extends TimelineEventDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TimelineEventOutVO toTimelineEventOutVO(final TimelineEvent entity)
-	{
+	public TimelineEventOutVO toTimelineEventOutVO(final TimelineEvent entity) {
 		return super.toTimelineEventOutVO(entity);
 	}
 
@@ -342,8 +330,7 @@ extends TimelineEventDaoBase
 	@Override
 	public void toTimelineEventOutVO(
 			TimelineEvent source,
-			TimelineEventOutVO target)
-	{
+			TimelineEventOutVO target) {
 		super.toTimelineEventOutVO(source, target);
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.TimelineEventType to org.phoenixctms.ctsms.vo.TimelineEventTypeVO

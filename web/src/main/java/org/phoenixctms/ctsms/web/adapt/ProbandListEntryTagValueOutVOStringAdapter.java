@@ -18,7 +18,6 @@ public class ProbandListEntryTagValueOutVOStringAdapter extends InputFieldValueS
 		return value.getBooleanValue();
 	}
 
-
 	@Override
 	protected Date getDateValue(ProbandListEntryTagValueOutVO value) {
 		return value.getDateValue();

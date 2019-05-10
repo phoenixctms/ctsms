@@ -66,8 +66,7 @@ public class InventoryTagBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InventoryTagValueInVO backup = new InventoryTagValueInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

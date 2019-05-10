@@ -274,7 +274,6 @@ public interface SettingCodes {
 	public static final String ECRF_CHARGE_DUE_PERIOD_DAYS = "ecrf_charge_due_period_days";
 	public static final String REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = "remove_mass_mail_check_proband_locked";
 	public static final String REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS = "remove_proband_keep_sent_mass_mail_recipients";
-
 	public static final String MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = "mass_mail_template_model_vo_depth";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES = "mass_mail_template_model_enumerate_entities";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "mass_mail_template_model_datetime_pattern";

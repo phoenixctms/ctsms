@@ -46,7 +46,6 @@ public class EcrfFieldValueOutVOComparator implements Comparator<ECRFFieldValueO
 						} else if (indexA != null && indexB == null) {
 							return 1;
 						}
-
 						if (ecrfFieldA.getPosition() < ecrfFieldB.getPosition()) {
 							return -1;
 						} else if (ecrfFieldA.getPosition() > ecrfFieldB.getPosition()) {

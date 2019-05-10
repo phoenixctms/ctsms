@@ -191,7 +191,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	@Override
 	protected void throwGraphLoopException(Course entity) throws ServiceException {
 		throw L10nUtil
-		.initServiceException(ServiceExceptionCodes.COURSE_GRAPH_LOOP, entity.getId().toString(), CommonUtil.courseOutVOToString(courseDao.toCourseOutVO(entity)));
+				.initServiceException(ServiceExceptionCodes.COURSE_GRAPH_LOOP, entity.getId().toString(), CommonUtil.courseOutVOToString(courseDao.toCourseOutVO(entity)));
 	}
 
 	@Override

@@ -84,11 +84,13 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
+	@Override
 	protected int getDefaultFieldsPerRow() {
 		return Settings.getInt(SettingCodes.INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW, Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW);
 	}
 
-	protected  int getDefaultPageSize() {
+	@Override
+	protected int getDefaultPageSize() {
 		return Settings.getInt(SettingCodes.INQUIRY_VALUES_DEFAULT_PAGE_SIZE, Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_DEFAULT_PAGE_SIZE);
 	}
 
@@ -96,7 +98,8 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		if (probandId != null) {
 			try {
 				InquiriesPDFVO inquiriesPdf = WebUtil.getServiceLocator().getProbandService().renderInquiries(WebUtil.getAuthentication(), null, probandId, true, null, blank);
-				return new DefaultStreamedContent(new ByteArrayInputStream(inquiriesPdf.getDocumentDatas()), inquiriesPdf.getContentType().getMimeType(), inquiriesPdf.getFileName());
+				return new DefaultStreamedContent(new ByteArrayInputStream(inquiriesPdf.getDocumentDatas()), inquiriesPdf.getContentType().getMimeType(),
+						inquiriesPdf.getFileName());
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
@@ -118,13 +121,11 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	}
 
 	public String getInquiryPdfButtonLabel(boolean blank) {
-
 		if (blank) {
 			return Messages.getMessage(MessageCodes.BLANK_INQUIRY_PDF_BUTTON_LABEL, CommonUtil.trialOutVOToString(trial));
 		} else {
 			return Messages.getMessage(MessageCodes.INQUIRY_PDF_BUTTON_LABEL, CommonUtil.trialOutVOToString(trial));
 		}
-
 	}
 
 	public StreamedContent getInquiryPdfStreamedContent(boolean blank) throws Exception {
@@ -176,7 +177,8 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		}
 	}
 
-	protected  ArrayList<String> getPageSizeStrings() {
+	@Override
+	protected ArrayList<String> getPageSizeStrings() {
 		return Settings.getStringList(SettingCodes.INQUIRY_VALUES_PAGE_SIZES, Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_PAGE_SIZES);
 	}
 

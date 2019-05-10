@@ -102,7 +102,6 @@ public final class QueryUtil {
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
-
 		// addPropertyCriterionTerms("proband.diagnoses.code",
 		// "proband.diagnoses.code.revision", "{0} = ?",
 		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
@@ -121,7 +120,6 @@ public final class QueryUtil {
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.categories",
 				"proband.diagnoses.code.systematics.categories.last", "{0} = ?",
 				new QueryParameterValue(true));
-
 		// addPropertyCriterionTerms("proband.procedures.code",
 		// "proband.procedures.code.revision", "{0} = ?",
 		// new QueryParameterValue(Settings.getString(SettingCodes.OPS_CODE_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_CODE_REVISION)));
@@ -140,7 +138,6 @@ public final class QueryUtil {
 		addPropertyCriterionTerms("proband.procedures.code.systematics.categories",
 				"proband.procedures.code.systematics.categories.last", "{0} = ?",
 				new QueryParameterValue(true));
-
 		// addPropertyCriterionTerms("proband.medications.asp",
 		// "proband.medications.asp.revision", "{0} = ?",
 		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
@@ -161,8 +158,7 @@ public final class QueryUtil {
 		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
 	}
 	private final static HashMap<DBModule, String> ENTITY_NAMES = new HashMap<DBModule, String>();
-	static
-	{
+	static {
 		ENTITY_NAMES.put(DBModule.INVENTORY_DB, "inventory");
 		ENTITY_NAMES.put(DBModule.STAFF_DB, "staff");
 		ENTITY_NAMES.put(DBModule.COURSE_DB, "course");
@@ -248,8 +244,6 @@ public final class QueryUtil {
 	private static void appendSelectHelper(StringBuilder setOperationExpression, int selectCount) {
 		setOperationExpression.append(CommonUtil.getSetOperationExpressionSelectLabel(selectCount));
 	}
-
-
 
 	private static Object appendStaticCriterionTerms(StringBuilder hqlTerm,
 			AssociationPath propertyNameAssociationPath, ArrayList<QueryParameterValue> queryValues, Class rootEntityClass, String rootEntityName,
@@ -438,7 +432,6 @@ public final class QueryUtil {
 	// }
 	// return propertyMap;
 	// }
-
 	public static HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> createCriterionRestrictionMap(
 			CriterionRestrictionDao criterionRestrictionDao) {
 		Collection<CriterionRestriction> criterionRestrictions = criterionRestrictionDao.loadAllSorted(0, 0);
@@ -968,18 +961,18 @@ public final class QueryUtil {
 							case TRUE:
 								hqlTerm.append("1 = 1"); // https://forum.hibernate.org/viewtopic.php?f=1&t=974534
 								break;
-								// case IS_ID_EQ_ENTITY_ID:
-								// hqlTerm.append(propertyName);
-								// hqlTerm.append(".id = ");
-								// hqlTerm.append(entityName);
-								// hqlTerm.append(".id");
-								// break;
-								// case IS_ID_NE_ENTITY_ID:
-								// hqlTerm.append(propertyName);
-								// hqlTerm.append(".id != ");
-								// hqlTerm.append(entityName);
-								// hqlTerm.append(".id");
-								// break;
+							// case IS_ID_EQ_ENTITY_ID:
+							// hqlTerm.append(propertyName);
+							// hqlTerm.append(".id = ");
+							// hqlTerm.append(entityName);
+							// hqlTerm.append(".id");
+							// break;
+							// case IS_ID_NE_ENTITY_ID:
+							// hqlTerm.append(propertyName);
+							// hqlTerm.append(".id != ");
+							// hqlTerm.append(entityName);
+							// hqlTerm.append(".id");
+							// break;
 							case HOUR_EQ:
 								hqlTerm.append("hour(");
 								hqlTerm.append(propertyName);
@@ -1062,7 +1055,7 @@ public final class QueryUtil {
 				boolean firstFilter = true;
 				Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 				while (filterIt.hasNext()) {
-					Map.Entry<String, String> filter = (Map.Entry<String, String>) filterIt.next();
+					Map.Entry<String, String> filter = filterIt.next();
 					AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 					String filterField = aliasPropertyName(entityClass, filterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
 					AssociationPath altFilterFieldAssociationPath = null;
@@ -1072,7 +1065,8 @@ public final class QueryUtil {
 						String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR
 								+ filterFieldAssociationPath.getPropertyName());
 						if (!CommonUtil.isEmptyString(altFilter)) {
-							altFilterFieldAssociationPath = new AssociationPath(filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+							altFilterFieldAssociationPath = new AssociationPath(
+									filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
 							altFilterField = aliasPropertyName(entityClass, altFilterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
 						}
 					}
@@ -1330,13 +1324,11 @@ public final class QueryUtil {
 				// null, // createCriterionPropertyNameMap(module, criterionPropertyDao),
 				createCriterionRestrictionMap(criterionRestrictionDao),
 				null); // createCriterionRestrictionNameMap(criterionRestrictionDao));
-
 		StringBuilder countStatement = new StringBuilder("select count(*) from (");
 		countStatement.append(sqlQuery);
 		countStatement.append(") as resultset");
 		Query countQuery = sessionFactory.getCurrentSession().createSQLQuery(countStatement.toString());
 		setQueryValues(countQuery, queryValues, namedParameterValuesCache);
-
 		Long count = new Long(countQuery.uniqueResult().toString());
 		if (psf != null) {
 			if (psf.getUpdateRowCount()) {
@@ -1344,7 +1336,6 @@ public final class QueryUtil {
 			}
 		}
 		return count;
-
 	}
 
 	public static String getSetExpressionTieName(org.phoenixctms.ctsms.enumeration.CriterionTie tie, HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, String> tieNameMap) {

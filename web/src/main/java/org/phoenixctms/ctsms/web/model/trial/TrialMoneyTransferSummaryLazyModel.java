@@ -47,7 +47,8 @@ public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 	@Override
 	protected Collection<MoneyTransferSummaryVO> getLazyResult(PSFVO psf) {
 		try {
-			return WebUtil.getServiceLocator().getTrialService().getTrialMoneyTransferSummaryList(WebUtil.getAuthentication(), departmentId,probandDepartmentId, costType, null, paid, psf);
+			return WebUtil.getServiceLocator().getTrialService().getTrialMoneyTransferSummaryList(WebUtil.getAuthentication(), departmentId, probandDepartmentId, costType, null,
+					paid, psf);
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

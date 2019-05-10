@@ -8,16 +8,13 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-
 public class AddBookingReimbursementBean extends AddReimbursementBeanBase {
-
 
 	private InventoryBookingOutVO booking;
 
 	public AddBookingReimbursementBean() {
 		super();
 	}
-
 
 	@Override
 	protected String changeAction(Long id) {
@@ -34,11 +31,9 @@ public class AddBookingReimbursementBean extends AddReimbursementBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
-
 	public InventoryBookingOutVO getBooking() {
 		return booking;
 	}
-
 
 	@Override
 	protected String getComment() {
@@ -69,7 +64,6 @@ public class AddBookingReimbursementBean extends AddReimbursementBeanBase {
 			addReimbursement = reimbursementAmount > 0.0f;
 			// addTravelExpense = address != null;
 		}
-
 	}
 
 	@Override

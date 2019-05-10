@@ -26,10 +26,6 @@ import org.phoenixctms.ctsms.vo.TrialInVO;
 
 public class GroupListRandomization extends Randomization {
 
-
-
-
-
 	protected GroupListRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -38,12 +34,9 @@ public class GroupListRandomization extends Randomization {
 		// TODO Auto-generated constructor stub
 	}
 
-
-
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
 		splitProbandGroupTokens(randomizationListIn.getRandomizationList(), getProbandGroupTokenMap(getRandomizationGroups(trial)), null);
-
 	}
 
 	@Override
@@ -81,9 +74,6 @@ public class GroupListRandomization extends Randomization {
 	public RandomizationType getType() {
 		return RandomizationType.GROUP;
 	}
-
-
-
 
 	@Override
 	public ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception {

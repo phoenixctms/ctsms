@@ -26,8 +26,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandContactDetailValue
  */
 public class ProbandContactDetailValueDaoImpl
-extends ProbandContactDetailValueDaoBase
-{
+		extends ProbandContactDetailValueDaoBase {
 
 	private org.hibernate.Criteria createContactDetailValueCriteria() {
 		org.hibernate.Criteria contactDetailValueCriteria = this.getSession().createCriteria(ProbandContactDetailValue.class);
@@ -96,15 +95,13 @@ extends ProbandContactDetailValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandContactDetailValue loadProbandContactDetailValueFromProbandContactDetailValueInVO(ProbandContactDetailValueInVO probandContactDetailValueInVO)
-	{
+	private ProbandContactDetailValue loadProbandContactDetailValueFromProbandContactDetailValueInVO(ProbandContactDetailValueInVO probandContactDetailValueInVO) {
 		ProbandContactDetailValue probandContactDetailValue = null;
 		Long id = probandContactDetailValueInVO.getId();
 		if (id != null) {
 			probandContactDetailValue = this.load(id);
 		}
-		if (probandContactDetailValue == null)
-		{
+		if (probandContactDetailValue == null) {
 			probandContactDetailValue = ProbandContactDetailValue.Factory.newInstance();
 		}
 		return probandContactDetailValue;
@@ -115,14 +112,12 @@ extends ProbandContactDetailValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandContactDetailValue loadProbandContactDetailValueFromProbandContactDetailValueOutVO(ProbandContactDetailValueOutVO probandContactDetailValueOutVO)
-	{
+	private ProbandContactDetailValue loadProbandContactDetailValueFromProbandContactDetailValueOutVO(ProbandContactDetailValueOutVO probandContactDetailValueOutVO) {
 		// TODO implement loadProbandContactDetailValueFromProbandContactDetailValueOutVO
 		// throw new
 		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandContactDetailValueFromProbandContactDetailValueOutVO(ProbandContactDetailValueOutVO) not yet implemented.");
 		ProbandContactDetailValue probandContactDetailValue = this.load(probandContactDetailValueOutVO.getId());
-		if (probandContactDetailValue == null)
-		{
+		if (probandContactDetailValue == null) {
 			probandContactDetailValue = ProbandContactDetailValue.Factory.newInstance();
 		}
 		return probandContactDetailValue;
@@ -132,8 +127,7 @@ extends ProbandContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandContactDetailValue probandContactDetailValueInVOToEntity(ProbandContactDetailValueInVO probandContactDetailValueInVO)
-	{
+	public ProbandContactDetailValue probandContactDetailValueInVOToEntity(ProbandContactDetailValueInVO probandContactDetailValueInVO) {
 		ProbandContactDetailValue entity = this.loadProbandContactDetailValueFromProbandContactDetailValueInVO(probandContactDetailValueInVO);
 		this.probandContactDetailValueInVOToEntity(probandContactDetailValueInVO, entity, true);
 		return entity;
@@ -146,8 +140,7 @@ extends ProbandContactDetailValueDaoBase
 	public void probandContactDetailValueInVOToEntity(
 			ProbandContactDetailValueInVO source,
 			ProbandContactDetailValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandContactDetailValueInVOToEntity(source, target, copyIfNull);
 		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		Long typeId = source.getTypeId();
@@ -190,8 +183,7 @@ extends ProbandContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandContactDetailValue probandContactDetailValueOutVOToEntity(ProbandContactDetailValueOutVO probandContactDetailValueOutVO)
-	{
+	public ProbandContactDetailValue probandContactDetailValueOutVOToEntity(ProbandContactDetailValueOutVO probandContactDetailValueOutVO) {
 		ProbandContactDetailValue entity = this.loadProbandContactDetailValueFromProbandContactDetailValueOutVO(probandContactDetailValueOutVO);
 		this.probandContactDetailValueOutVOToEntity(probandContactDetailValueOutVO, entity, true);
 		return entity;
@@ -204,8 +196,7 @@ extends ProbandContactDetailValueDaoBase
 	public void probandContactDetailValueOutVOToEntity(
 			ProbandContactDetailValueOutVO source,
 			ProbandContactDetailValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandContactDetailValueOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		ContactDetailTypeVO typeVO = source.getType();
@@ -238,8 +229,7 @@ extends ProbandContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandContactDetailValueInVO toProbandContactDetailValueInVO(final ProbandContactDetailValue entity)
-	{
+	public ProbandContactDetailValueInVO toProbandContactDetailValueInVO(final ProbandContactDetailValue entity) {
 		return super.toProbandContactDetailValueInVO(entity);
 	}
 
@@ -249,8 +239,7 @@ extends ProbandContactDetailValueDaoBase
 	@Override
 	public void toProbandContactDetailValueInVO(
 			ProbandContactDetailValue source,
-			ProbandContactDetailValueInVO target)
-	{
+			ProbandContactDetailValueInVO target) {
 		// TODO verify behavior of toProbandContactDetailValueInVO
 		super.toProbandContactDetailValueInVO(source, target);
 		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
@@ -274,8 +263,7 @@ extends ProbandContactDetailValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandContactDetailValueOutVO toProbandContactDetailValueOutVO(final ProbandContactDetailValue entity)
-	{
+	public ProbandContactDetailValueOutVO toProbandContactDetailValueOutVO(final ProbandContactDetailValue entity) {
 		return super.toProbandContactDetailValueOutVO(entity);
 	}
 
@@ -285,8 +273,7 @@ extends ProbandContactDetailValueDaoBase
 	@Override
 	public void toProbandContactDetailValueOutVO(
 			ProbandContactDetailValue source,
-			ProbandContactDetailValueOutVO target)
-	{
+			ProbandContactDetailValueOutVO target) {
 		super.toProbandContactDetailValueOutVO(source, target);
 		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializer {
 
 	private final static KeyValueLengthComparator TITLE_FORMAT_COMPARATOR = new KeyValueLengthComparator(true);
-
 	private final static ArrayList<Entry<String, Pattern>> LEGACY_TITLE_REGEXP = new ArrayList<Map.Entry<String, Pattern>>();
 	static {
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, "Wartungseintrag erstellt - {0}");
@@ -63,8 +62,6 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 			// e.printStackTrace();
 		}
 	}
-
-
 
 	private static ArrayList<Entry<String, Pattern>> createTitleRegexps(JobOutput jobOutput) throws Exception {
 		// if (titleRegexps == null) {
@@ -136,8 +133,7 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 		// final FileModule module = FileModule.TRIAL_DOCUMENT;
 		// ((JournalEntryDaoImpl) journalEntryDao).setUserDao(null);
 		final ArrayList<Map.Entry<String, Pattern>> titleRegexps = createTitleRegexps(jobOutput);
-		journalProcessor = new ChunkedDaoOperationAdapter<JournalEntryDao, JournalEntry>(journalEntryDao
-				) {
+		journalProcessor = new ChunkedDaoOperationAdapter<JournalEntryDao, JournalEntry>(journalEntryDao) {
 
 			// new Search(new SearchParameter[] {
 			// new SearchParameter("systemMessage", true, SearchParameter.EQUAL_COMPARATOR),

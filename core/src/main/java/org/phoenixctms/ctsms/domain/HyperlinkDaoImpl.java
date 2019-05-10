@@ -27,10 +27,9 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Hyperlink
  */
 public class HyperlinkDaoImpl
-extends HyperlinkDaoBase
-{
+		extends HyperlinkDaoBase {
 
-	private static void applyModuleIdCriterions(org.hibernate.Criteria criteria,HyperlinkModule module, Long id) {
+	private static void applyModuleIdCriterions(org.hibernate.Criteria criteria, HyperlinkModule module, Long id) {
 		if (module != null) {
 			criteria.createCriteria("category").add(Restrictions.eq("module", module));
 			//criteriaMap.createCriteria("category").add(Restrictions.eq("module", module));
@@ -87,8 +86,7 @@ extends HyperlinkDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Hyperlink hyperlinkInVOToEntity(HyperlinkInVO hyperlinkInVO)
-	{
+	public Hyperlink hyperlinkInVOToEntity(HyperlinkInVO hyperlinkInVO) {
 		Hyperlink entity = this.loadHyperlinkFromHyperlinkInVO(hyperlinkInVO);
 		this.hyperlinkInVOToEntity(hyperlinkInVO, entity, true);
 		return entity;
@@ -101,8 +99,7 @@ extends HyperlinkDaoBase
 	public void hyperlinkInVOToEntity(
 			HyperlinkInVO source,
 			Hyperlink target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.hyperlinkInVOToEntity(source, target, copyIfNull);
 		Long categoryId = source.getCategoryId();
 		Long inventoryId = source.getInventoryId();
@@ -164,8 +161,7 @@ extends HyperlinkDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Hyperlink hyperlinkOutVOToEntity(HyperlinkOutVO hyperlinkOutVO)
-	{
+	public Hyperlink hyperlinkOutVOToEntity(HyperlinkOutVO hyperlinkOutVO) {
 		Hyperlink entity = this.loadHyperlinkFromHyperlinkOutVO(hyperlinkOutVO);
 		this.hyperlinkOutVOToEntity(hyperlinkOutVO, entity, true);
 		return entity;
@@ -178,8 +174,7 @@ extends HyperlinkDaoBase
 	public void hyperlinkOutVOToEntity(
 			HyperlinkOutVO source,
 			Hyperlink target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.hyperlinkOutVOToEntity(source, target, copyIfNull);
 		HyperlinkCategoryVO categoryVO = source.getCategory();
 		InventoryOutVO inventoryVO = source.getInventory();
@@ -248,15 +243,13 @@ extends HyperlinkDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Hyperlink loadHyperlinkFromHyperlinkInVO(HyperlinkInVO hyperlinkInVO)
-	{
+	private Hyperlink loadHyperlinkFromHyperlinkInVO(HyperlinkInVO hyperlinkInVO) {
 		Hyperlink hyperlink = null;
 		Long id = hyperlinkInVO.getId();
 		if (id != null) {
 			hyperlink = this.load(id);
 		}
-		if (hyperlink == null)
-		{
+		if (hyperlink == null) {
 			hyperlink = Hyperlink.Factory.newInstance();
 		}
 		return hyperlink;
@@ -267,11 +260,9 @@ extends HyperlinkDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Hyperlink loadHyperlinkFromHyperlinkOutVO(HyperlinkOutVO hyperlinkOutVO)
-	{
+	private Hyperlink loadHyperlinkFromHyperlinkOutVO(HyperlinkOutVO hyperlinkOutVO) {
 		Hyperlink hyperlink = this.load(hyperlinkOutVO.getId());
-		if (hyperlink == null)
-		{
+		if (hyperlink == null) {
 			hyperlink = Hyperlink.Factory.newInstance();
 		}
 		return hyperlink;
@@ -281,8 +272,7 @@ extends HyperlinkDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public HyperlinkInVO toHyperlinkInVO(final Hyperlink entity)
-	{
+	public HyperlinkInVO toHyperlinkInVO(final Hyperlink entity) {
 		return super.toHyperlinkInVO(entity);
 	}
 
@@ -292,8 +282,7 @@ extends HyperlinkDaoBase
 	@Override
 	public void toHyperlinkInVO(
 			Hyperlink source,
-			HyperlinkInVO target)
-	{
+			HyperlinkInVO target) {
 		super.toHyperlinkInVO(source, target);
 		HyperlinkCategory category = source.getCategory();
 		Inventory inventory = source.getInventory();
@@ -321,8 +310,7 @@ extends HyperlinkDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public HyperlinkOutVO toHyperlinkOutVO(final Hyperlink entity)
-	{
+	public HyperlinkOutVO toHyperlinkOutVO(final Hyperlink entity) {
 		return super.toHyperlinkOutVO(entity);
 	}
 
@@ -332,8 +320,7 @@ extends HyperlinkDaoBase
 	@Override
 	public void toHyperlinkOutVO(
 			Hyperlink source,
-			HyperlinkOutVO target)
-	{
+			HyperlinkOutVO target) {
 		super.toHyperlinkOutVO(source, target);
 		// WARNING! No conversion for target.category (can't convert source.getCategory():org.phoenixctms.ctsms.domain.HyperlinkCategory to org.phoenixctms.ctsms.vo.HyperlinkCategoryVO
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.massmail;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,7 +31,6 @@ public class RecipientOverviewLazyModel extends MassMailRecipientLazyModelBase {
 	@Override
 	protected Collection<MassMailRecipientOutVO> getLazyResult(PSFVO psf) {
 		emailMessageCache.clear();
-
 		try {
 			return WebUtil.getServiceLocator().getMassMailService().getPendingRecipientList(
 					WebUtil.getAuthentication(), null, pending, scheduled, psf);
@@ -42,7 +40,6 @@ public class RecipientOverviewLazyModel extends MassMailRecipientLazyModelBase {
 		} catch (AuthorisationException e) {
 		} catch (IllegalArgumentException e) {
 		}
-
 		return new ArrayList<MassMailRecipientOutVO>();
 	}
 
@@ -62,4 +59,3 @@ public class RecipientOverviewLazyModel extends MassMailRecipientLazyModelBase {
 		this.scheduled = scheduled;
 	}
 }
-

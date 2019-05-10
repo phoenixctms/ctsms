@@ -13,11 +13,9 @@ import org.apache.commons.cli.Options;
 public final class DBToolOptions {
 
 	private enum LockId {
-		DEFAULT_LOCK_ID("dbtool.init"),
-		NOTIFICATION_LOCK_ID("dbtool.notification"),
+		DEFAULT_LOCK_ID("dbtool.init"), NOTIFICATION_LOCK_ID("dbtool.notification"),
 		//OPT_XY_LOCK_ID("dbtool." + XY_OPT),
-		MASS_MAIL_LOCK_ID("dbtool.massmail"),
-		VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf");
+		MASS_MAIL_LOCK_ID("dbtool.massmail"), VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf");
 
 		private final String fileNamePrefix;
 
@@ -25,15 +23,12 @@ public final class DBToolOptions {
 			this.fileNamePrefix = fileNamePrefix;
 		}
 
-
-
 		@Override
 		public String toString() {
 			return fileNamePrefix;
 		}
-
-
 	}
+
 	public static final String VARIABLE_PERIOD_OPT = "vp";
 	public static final String PROBAND_LIST_STATUS_LOG_LEVEL_OPT = "ll";
 	public static final String VARIABLE_PERIOD_EXPLICIT_DAYS_OPT = "ed";
@@ -334,7 +329,6 @@ public final class DBToolOptions {
 				"import input fields and selection set values", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_INPUT_FIELD_OPT, "export_input_field",
 				"export input field and selection set values", 1, allLockIds));
-
 		tasks.addOption(registerTaskOption(IMPORT_ECRFS_OPT, "import_ecrfs",
 				"import eCRFs, eCRF fields, input fields and selection set values", 1, allLockIds));
 		tasks.addOption(registerTaskOption(EXPORT_ECRFS_OPT, "export_ecrfs",
@@ -397,13 +391,13 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(USER_LANG_OPT, "user_lang", "user language", 1));
 	}
 
-
 	public static Option getTaskAndLockProcess(String opt) {
 		Iterator<LockId> lockIdsIt = taskLockIdsMap.get(opt).iterator();
 		while (lockIdsIt.hasNext()) {
 			ExecUtil.lockProcess(MessageFormat.format(
 					ExecSettings.getString(ExecSettingCodes.DBTOOL_LOCK_FILE_NAME,
-							ExecDefaultSettings.DBTOOL_LOCK_FILE_NAME), lockIdsIt.next().toString()));
+							ExecDefaultSettings.DBTOOL_LOCK_FILE_NAME),
+					lockIdsIt.next().toString()));
 		}
 		return taskOptionMap.get(opt);
 	}
@@ -417,7 +411,6 @@ public final class DBToolOptions {
 		optionalOptionMap.put(opt, option);
 		return option;
 	}
-
 
 	private static Option registerTaskOption(String opt, String longOpt, String description, int numArgs, LockId... lockIds) {
 		Option option = OptionBuilder.create(opt);

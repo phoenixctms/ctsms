@@ -66,8 +66,7 @@ import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
  * @see org.phoenixctms.ctsms.service.user.UserService
  */
 public class UserServiceImpl
-extends UserServiceBase
-{
+		extends UserServiceBase {
 
 	private static void checkActivityCount(Long userId, JournalEntryDao journalEntryDao) throws ServiceException {
 		Long activityCount = journalEntryDao.getActivityCount(null, userId, null, null, false);
@@ -139,8 +138,7 @@ extends UserServiceBase
 		return result;
 	}
 
-	private void checkUserPermissionProfileInput(UserPermissionProfileInVO userPermissionProfileIn) throws ServiceException
-	{
+	private void checkUserPermissionProfileInput(UserPermissionProfileInVO userPermissionProfileIn) throws ServiceException {
 		User user = CheckIDUtil.checkUserId(userPermissionProfileIn.getUserId(), this.getUserDao());
 		if ((new UserPermissionProfileCollisionFinder(this.getUserDao(), this.getUserPermissionProfileDao())).collides(userPermissionProfileIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.USER_PERMISSION_PROFILE_ALREADY_EXISTS, userPermissionProfileIn.getProfile(), user.getName());
@@ -270,7 +268,6 @@ extends UserServiceBase
 			userDao.remove(user);
 			this.getKeyPairDao().remove(keyPair);
 			logSystemMessage(modified, result, now, modified, SystemMessageCodes.USER_DELETED, result, null, journalEntryDao);
-
 		}
 		return result;
 	}
@@ -401,7 +398,7 @@ extends UserServiceBase
 	@Override
 	protected Collection<UserPermissionProfileOutVO> handleSetPermissionProfiles(
 			AuthenticationVO auth, Set<UserPermissionProfileInVO> userPermissionProfilesIn)
-					throws Exception {
+			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ArrayList<UserPermissionProfileOutVO> result;
@@ -546,8 +543,7 @@ extends UserServiceBase
 	private void notifyUserAccount(User user, User originalUser, Date now) throws Exception {
 		Long passwordCount;
 		if (!user.isLocked() && user.getIdentity() != null &&
-				((passwordCount = this.getPasswordDao().getCount(user.getId())) == 0 || originalUser == null || !user.getAuthMethod().equals(originalUser.getAuthMethod()))
-				) {
+				((passwordCount = this.getPasswordDao().getCount(user.getId())) == 0 || originalUser == null || !user.getAuthMethod().equals(originalUser.getAuthMethod()))) {
 			Map messageParameters = CoreUtil.createEmptyTemplateModel();
 			messageParameters.put(NotificationMessageTemplateParameters.NEW_USER, originalUser == null || passwordCount == 0);
 			messageParameters.put(NotificationMessageTemplateParameters.LOCAL_AUTH_METHOD, AuthenticationType.LOCAL.equals(user.getAuthMethod()));

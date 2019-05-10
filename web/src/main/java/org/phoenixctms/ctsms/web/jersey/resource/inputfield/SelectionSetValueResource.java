@@ -57,7 +57,6 @@ public class SelectionSetValueResource {
 	// throws AuthenticationException, AuthorisationException, ServiceException {
 	// return WebUtil.getServiceLocator().getInputFieldService().getInputFieldValueCount(auth, id);
 	// }
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")

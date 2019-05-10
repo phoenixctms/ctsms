@@ -50,10 +50,9 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see File
  */
 public class FileDaoImpl
-extends FileDaoBase
-{
+		extends FileDaoBase {
 
-	private final static void applyContentTypeCriterions(org.hibernate.Criteria criteria,Boolean image, String mimeType) {
+	private final static void applyContentTypeCriterions(org.hibernate.Criteria criteria, Boolean image, String mimeType) {
 		if (image != null || (mimeType != null && mimeType.length() > 0)) {
 			org.hibernate.Criteria contentTypeCriteria = criteria.createCriteria("contentType");
 			if (image != null) {
@@ -85,9 +84,9 @@ extends FileDaoBase
 					case PROBAND_DOCUMENT:
 						criteria.add(Restrictions.eq("proband.id", id.longValue()));
 						break;
-						// case INPUT_FIELD_DOCUMENT:
-						// fileCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
-						// break;
+					// case INPUT_FIELD_DOCUMENT:
+					// fileCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
+					// break;
 					case MASS_MAIL_DOCUMENT:
 						criteria.add(Restrictions.eq("massMail.id", id.longValue()));
 						break;
@@ -103,12 +102,11 @@ extends FileDaoBase
 			if (subTree) {
 				criteria.add(Restrictions.sqlRestriction("substr({alias}.logical_path, 1, length(?)) = ?",
 						new Object[] { logicalPath, logicalPath },
-						new  org.hibernate.type.NullableType[] { Hibernate.STRING, Hibernate.STRING }));
+						new org.hibernate.type.NullableType[] { Hibernate.STRING, Hibernate.STRING }));
 			} else {
 				criteria.add(Restrictions.eq("logicalPath", logicalPath));
 			}
 		}
-
 	}
 
 	private org.hibernate.Criteria createFileCriteria() {
@@ -120,8 +118,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public File fileContentOutVOToEntity(FileContentOutVO fileContentOutVO)
-	{
+	public File fileContentOutVOToEntity(FileContentOutVO fileContentOutVO) {
 		File entity = this.loadFileFromFileContentOutVO(fileContentOutVO);
 		this.fileContentOutVOToEntity(fileContentOutVO, entity, true);
 		return entity;
@@ -134,8 +131,7 @@ extends FileDaoBase
 	public void fileContentOutVOToEntity(
 			FileContentOutVO source,
 			File target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.fileContentOutVOToEntity(source, target, copyIfNull);
 		MimeTypeVO contentTypeVO = source.getContentType();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -151,8 +147,7 @@ extends FileDaoBase
 		}
 		if (CommonUtil.getUseFileEncryption(target.getModule())) {
 			try {
-				if (copyIfNull || source.getDatas() != null)
-				{
+				if (copyIfNull || source.getDatas() != null) {
 					CipherText cipherText = CryptoUtil.encrypt(source.getDatas());
 					target.setDataIv(cipherText.getIv());
 					target.setData(cipherText.getCipherText());
@@ -169,8 +164,7 @@ extends FileDaoBase
 				target.setFileName(null);
 			}
 		} else {
-			if (copyIfNull || source.getDatas() != null)
-			{
+			if (copyIfNull || source.getDatas() != null) {
 				target.setData(source.getDatas());
 			}
 			target.setFileNameIv(null);
@@ -183,8 +177,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public File fileInVOToEntity(FileInVO fileInVO)
-	{
+	public File fileInVOToEntity(FileInVO fileInVO) {
 		File entity = this.loadFileFromFileInVO(fileInVO);
 		this.fileInVOToEntity(fileInVO, entity, true);
 		return entity;
@@ -197,8 +190,7 @@ extends FileDaoBase
 	public void fileInVOToEntity(
 			FileInVO source,
 			File target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.fileInVOToEntity(source, target, copyIfNull);
 		Long inventoryId = source.getInventoryId();
 		Long staffId = source.getStaffId();
@@ -318,8 +310,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public File fileOutVOToEntity(FileOutVO fileOutVO)
-	{
+	public File fileOutVOToEntity(FileOutVO fileOutVO) {
 		File entity = this.loadFileFromFileOutVO(fileOutVO);
 		this.fileOutVOToEntity(fileOutVO, entity, true);
 		return entity;
@@ -332,8 +323,7 @@ extends FileDaoBase
 	public void fileOutVOToEntity(
 			FileOutVO source,
 			File target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.fileOutVOToEntity(source, target, copyIfNull);
 		MimeTypeVO contentTypeVO = source.getContentType();
 		InventoryOutVO inventoryVO = source.getInventory();
@@ -475,8 +465,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public File fileStreamOutVOToEntity(FileStreamOutVO fileStreamOutVO)
-	{
+	public File fileStreamOutVOToEntity(FileStreamOutVO fileStreamOutVO) {
 		File entity = this.loadFileFromFileStreamOutVO(fileStreamOutVO);
 		this.fileStreamOutVOToEntity(fileStreamOutVO, entity, true);
 		return entity;
@@ -489,8 +478,7 @@ extends FileDaoBase
 	public void fileStreamOutVOToEntity(
 			FileStreamOutVO source,
 			File target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.fileStreamOutVOToEntity(source, target, copyIfNull);
 		MimeTypeVO contentTypeVO = source.getContentType();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -652,12 +640,12 @@ extends FileDaoBase
 	}
 
 	@Override
-	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath,boolean subTree,
+	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType, PSFVO psf) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 		applyModuleIdCriterions(fileCriteria, module, id);
-		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
+		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		if (active != null) {
 			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
@@ -670,11 +658,11 @@ extends FileDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(FileModule module, Long id, String logicalPath,boolean subTree,
+	protected long handleGetCount(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
-		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
+		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		if (active != null) {
 			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
@@ -695,11 +683,11 @@ extends FileDaoBase
 	}
 
 	@Override
-	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath,boolean subTree,
+	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
-		applySubTreeCriterion(fileCriteria,subTree,logicalPath);
+		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		if (active != null) {
 			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
@@ -714,17 +702,14 @@ extends FileDaoBase
 		}
 	}
 
-
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private File loadFileFromFileContentOutVO(FileContentOutVO fileContentOutVO)
-	{
+	private File loadFileFromFileContentOutVO(FileContentOutVO fileContentOutVO) {
 		File file = this.load(fileContentOutVO.getId());
-		if (file == null)
-		{
+		if (file == null) {
 			file = File.Factory.newInstance();
 		}
 		return file;
@@ -735,15 +720,13 @@ extends FileDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private File loadFileFromFileInVO(FileInVO fileInVO)
-	{
+	private File loadFileFromFileInVO(FileInVO fileInVO) {
 		File file = null;
 		Long id = fileInVO.getId();
 		if (id != null) {
 			file = this.load(id);
 		}
-		if (file == null)
-		{
+		if (file == null) {
 			file = File.Factory.newInstance();
 		}
 		return file;
@@ -754,11 +737,9 @@ extends FileDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private File loadFileFromFileOutVO(FileOutVO fileOutVO)
-	{
+	private File loadFileFromFileOutVO(FileOutVO fileOutVO) {
 		File file = this.load(fileOutVO.getId());
-		if (file == null)
-		{
+		if (file == null) {
 			file = File.Factory.newInstance();
 		}
 		return file;
@@ -769,11 +750,9 @@ extends FileDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private File loadFileFromFileStreamOutVO(FileStreamOutVO fileStreamOutVO)
-	{
+	private File loadFileFromFileStreamOutVO(FileStreamOutVO fileStreamOutVO) {
 		File file = this.load(fileStreamOutVO.getId());
-		if (file == null)
-		{
+		if (file == null) {
 			file = File.Factory.newInstance();
 		}
 		return file;
@@ -783,8 +762,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public FileContentOutVO toFileContentOutVO(final File entity)
-	{
+	public FileContentOutVO toFileContentOutVO(final File entity) {
 		return super.toFileContentOutVO(entity);
 	}
 
@@ -794,8 +772,7 @@ extends FileDaoBase
 	@Override
 	public void toFileContentOutVO(
 			File source,
-			FileContentOutVO target)
-	{
+			FileContentOutVO target) {
 		super.toFileContentOutVO(source, target);
 		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
@@ -854,8 +831,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public FileInVO toFileInVO(final File entity)
-	{
+	public FileInVO toFileInVO(final File entity) {
 		return super.toFileInVO(entity);
 	}
 
@@ -865,8 +841,7 @@ extends FileDaoBase
 	@Override
 	public void toFileInVO(
 			File source,
-			FileInVO target)
-	{
+			FileInVO target) {
 		super.toFileInVO(source, target);
 		Inventory inventory = source.getInventory();
 		Staff staff = source.getStaff();
@@ -910,8 +885,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public FileOutVO toFileOutVO(final File entity)
-	{
+	public FileOutVO toFileOutVO(final File entity) {
 		return super.toFileOutVO(entity);
 	}
 
@@ -921,8 +895,7 @@ extends FileDaoBase
 	@Override
 	public void toFileOutVO(
 			File source,
-			FileOutVO target)
-	{
+			FileOutVO target) {
 		// TODO verify behavior of toFileOutVO
 		super.toFileOutVO(source, target);
 		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
@@ -992,8 +965,7 @@ extends FileDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public FileStreamOutVO toFileStreamOutVO(final File entity)
-	{
+	public FileStreamOutVO toFileStreamOutVO(final File entity) {
 		return super.toFileStreamOutVO(entity);
 	}
 
@@ -1003,8 +975,7 @@ extends FileDaoBase
 	@Override
 	public void toFileStreamOutVO(
 			File source,
-			FileStreamOutVO target)
-	{
+			FileStreamOutVO target) {
 		// TODO verify behavior of toFileStreamOutVO
 		super.toFileStreamOutVO(source, target);
 		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO

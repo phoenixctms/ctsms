@@ -170,7 +170,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private HashMap<String, String> tabTitleMap;
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
-
 	private String deferredDeleteReason;
 
 	protected SearchBeanBase() {
@@ -527,7 +526,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	// public List<Boolean> getIsPickerList() {
 	// return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap);
 	// }
-
 	public List<Boolean> getIsMoveCriterionUpEnabled() {
 		return new CriterionIsMoveCriterionUpEnabledList(criterionsIn);
 	}
@@ -942,14 +940,16 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
-		return  WebUtil.getModuleEnabled(getDBModule()) && super.isEditable();
+		return WebUtil.getModuleEnabled(getDBModule()) && super.isEditable();
 	}
 
 	public abstract boolean isMarkUnEncrypted();
 
+	@Override
 	public boolean isRemovable() {
-		return  WebUtil.getModuleEnabled(getDBModule()) && super.isRemovable();
+		return WebUtil.getModuleEnabled(getDBModule()) && super.isRemovable();
 	}
 
 	public boolean isTabEmphasized(String tab) {
@@ -1199,7 +1199,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Collection<IntermediateSetDetailVO> intermediateSets = null;
 		boolean operationSuccess = false;
 		try {
-			IntermediateSetSummaryVO intermediateSetSummary = WebUtil.getServiceLocator().getSearchService().getIntermediateSets(WebUtil.getAuthentication(), getDBModule(), getNewCriterions(), null);
+			IntermediateSetSummaryVO intermediateSetSummary = WebUtil.getServiceLocator().getSearchService().getIntermediateSets(WebUtil.getAuthentication(), getDBModule(),
+					getNewCriterions(), null);
 			operationSuccess = true;
 			instantCriteria = intermediateSetSummary.getParsed();
 			intermediateSets = intermediateSetSummary.getSets();

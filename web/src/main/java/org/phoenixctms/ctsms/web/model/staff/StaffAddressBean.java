@@ -91,8 +91,7 @@ public class StaffAddressBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		StaffAddressInVO backup = new StaffAddressInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

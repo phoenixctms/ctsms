@@ -94,8 +94,6 @@ public class EcrfSignature extends EntitySignature {
 		addFieldToMap(FIELDS_WHITELIST_MAP, ECRFFieldStatusEntry.class, "comment");
 	}
 
-
-
 	private static EcrfFieldValues getEntity(ECRFStatusEntry statusEntry, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		return new EcrfFieldValues(statusEntry.getEcrf(), statusEntry.getListEntry().getProband(),
 				ecrfFieldValueDao.findByListEntryEcrf(statusEntry.getListEntry().getId(), statusEntry.getEcrf().getId(), true, null),
@@ -108,12 +106,12 @@ public class EcrfSignature extends EntitySignature {
 				Settings.getInt(SettingCodes.ECRF_SIGNATURE_ENTITY_DEPTH, Bundle.SETTINGS, DefaultSettings.ECRF_SIGNATURE_ENTITY_DEPTH), comment);
 	}
 
-	public static boolean verify(Signature signature, StringBuilder comment, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
+	public static boolean verify(Signature signature, StringBuilder comment, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao)
+			throws Exception {
 		return verify(EcrfSignature.class, signature.getSignatureData(), getEntity(signature.getEcrfStatusEntry(), ecrfFieldValueDao, ecrfFieldStatusEntryDao),
 				signature.getSignee(), signature.getTimestamp(),
 				Settings.getInt(SettingCodes.ECRF_SIGNATURE_ENTITY_DEPTH, Bundle.SETTINGS, DefaultSettings.ECRF_SIGNATURE_ENTITY_DEPTH), comment);
 	}
-
 
 	@Override
 	protected boolean isFieldOmitted(Class graph, String field) {

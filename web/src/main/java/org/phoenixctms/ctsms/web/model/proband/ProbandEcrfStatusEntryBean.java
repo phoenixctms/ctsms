@@ -58,7 +58,8 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 	@Override
 	protected ProbandListEntryModel createProbandListEntryModel() {
 		return new ProbandListEntryModel(
-				Settings.getBoolean(SettingCodes.PROBAND_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN),
+				Settings.getBoolean(SettingCodes.PROBAND_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
+						DefaultSettings.TRIAL_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN),
 				Settings.getBoolean(SettingCodes.TRIAL_ECRF_DATA_ENTRIES_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_ECRF_DATA_ENTRIES_SHOW_INQUIRY_COLUMN), true);
 	}
 
@@ -76,10 +77,11 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		if (probandListEntry != null) {
 			return Messages.getMessage(MessageCodes.ECRF_LIST_HEADER, probandListEntry.getTrial().getName(), ecrfModel.getRowCount());
 		} else {
-			return Messages.getString( MessageCodes.SELECT_PROBAND_LIST_ENTRY);
+			return Messages.getString(MessageCodes.SELECT_PROBAND_LIST_ENTRY);
 		}
 	}
 
+	@Override
 	public ArrayList<SelectItem> getFilterProbandGroups() {
 		return filterProbandGroups;
 	}
@@ -103,7 +105,6 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 	// protected void initIn() {
 	// // TODO Auto-generated method stub
 	// }
-
 	@Override
 	protected void initSpecificSets() {
 		// clearCaches(select);

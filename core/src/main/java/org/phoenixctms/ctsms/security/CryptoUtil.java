@@ -55,7 +55,6 @@ public final class CryptoUtil {
 	private static final String ASYMMETRIC_ALGORITHM = "RSA";
 	private static final int ASYMMETRIC_KEY_LENGTH = 1024;
 	public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
-
 	public static final int SEED = 100; // (new Random()).nextInt(100);
 
 	public static boolean checkDepartmentPassword(Department department, String plainDepartmentPassword) throws Exception {
@@ -163,8 +162,6 @@ public final class CryptoUtil {
 	public static Object decryptValue(byte[] iv, byte[] salt, String password, byte[] encryptedValue) throws Exception {
 		return CoreUtil.deserialize(decrypt(iv, salt, password, encryptedValue));
 	}
-
-
 
 	public static CipherText encrypt(byte[] plainText) throws Exception {
 		Cipher cipher = getEncryptionCipher();
@@ -365,8 +362,6 @@ public final class CryptoUtil {
 	private static byte[] hashPassword(byte[] salt, String password) throws Exception {
 		return createPBEKey(salt, password).getEncoded();
 	}
-
-
 
 	public static byte[] verifyMD5(byte[] data, String md5) throws NoSuchAlgorithmException, IOException {
 		if (!CommonUtil.getHex(getMD5Digest(data)).equalsIgnoreCase(md5)) {

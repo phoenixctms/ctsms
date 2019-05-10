@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see StaffAddress
  */
 public class StaffAddressDaoImpl
-extends StaffAddressDaoBase
-{
+		extends StaffAddressDaoBase {
 
 	private static String getAddressString(StaffAddressOutVO address) {
 		StringBuilder sb = new StringBuilder();
@@ -100,15 +99,13 @@ extends StaffAddressDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffAddress loadStaffAddressFromStaffAddressInVO(StaffAddressInVO staffAddressInVO)
-	{
+	private StaffAddress loadStaffAddressFromStaffAddressInVO(StaffAddressInVO staffAddressInVO) {
 		StaffAddress staffAddress = null;
 		Long id = staffAddressInVO.getId();
 		if (id != null) {
 			staffAddress = this.load(id);
 		}
-		if (staffAddress == null)
-		{
+		if (staffAddress == null) {
 			staffAddress = StaffAddress.Factory.newInstance();
 		}
 		return staffAddress;
@@ -119,11 +116,9 @@ extends StaffAddressDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffAddress loadStaffAddressFromStaffAddressOutVO(StaffAddressOutVO staffAddressOutVO)
-	{
+	private StaffAddress loadStaffAddressFromStaffAddressOutVO(StaffAddressOutVO staffAddressOutVO) {
 		StaffAddress staffAddress = this.load(staffAddressOutVO.getId());
-		if (staffAddress == null)
-		{
+		if (staffAddress == null) {
 			staffAddress = StaffAddress.Factory.newInstance();
 		}
 		return staffAddress;
@@ -133,8 +128,7 @@ extends StaffAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffAddress staffAddressInVOToEntity(StaffAddressInVO staffAddressInVO)
-	{
+	public StaffAddress staffAddressInVOToEntity(StaffAddressInVO staffAddressInVO) {
 		StaffAddress entity = this.loadStaffAddressFromStaffAddressInVO(staffAddressInVO);
 		this.staffAddressInVOToEntity(staffAddressInVO, entity, true);
 		return entity;
@@ -147,8 +141,7 @@ extends StaffAddressDaoBase
 	public void staffAddressInVOToEntity(
 			StaffAddressInVO source,
 			StaffAddress target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffAddressInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long staffId = source.getStaffId();
@@ -174,8 +167,7 @@ extends StaffAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffAddress staffAddressOutVOToEntity(StaffAddressOutVO staffAddressOutVO)
-	{
+	public StaffAddress staffAddressOutVOToEntity(StaffAddressOutVO staffAddressOutVO) {
 		StaffAddress entity = this.loadStaffAddressFromStaffAddressOutVO(staffAddressOutVO);
 		this.staffAddressOutVOToEntity(staffAddressOutVO, entity, true);
 		return entity;
@@ -188,8 +180,7 @@ extends StaffAddressDaoBase
 	public void staffAddressOutVOToEntity(
 			StaffAddressOutVO source,
 			StaffAddress target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffAddressOutVOToEntity(source, target, copyIfNull);
 		AddressTypeVO typeVO = source.getType();
 		StaffOutVO staffVO = source.getStaff();
@@ -221,8 +212,7 @@ extends StaffAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffAddressInVO toStaffAddressInVO(final StaffAddress entity)
-	{
+	public StaffAddressInVO toStaffAddressInVO(final StaffAddress entity) {
 		return super.toStaffAddressInVO(entity);
 	}
 
@@ -232,8 +222,7 @@ extends StaffAddressDaoBase
 	@Override
 	public void toStaffAddressInVO(
 			StaffAddress source,
-			StaffAddressInVO target)
-	{
+			StaffAddressInVO target) {
 		super.toStaffAddressInVO(source, target);
 		AddressType type = source.getType();
 		Staff staff = source.getStaff();
@@ -249,8 +238,7 @@ extends StaffAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffAddressOutVO toStaffAddressOutVO(final StaffAddress entity)
-	{
+	public StaffAddressOutVO toStaffAddressOutVO(final StaffAddress entity) {
 		return super.toStaffAddressOutVO(entity);
 	}
 
@@ -260,8 +248,7 @@ extends StaffAddressDaoBase
 	@Override
 	public void toStaffAddressOutVO(
 			StaffAddress source,
-			StaffAddressOutVO target)
-	{
+			StaffAddressOutVO target) {
 		super.toStaffAddressOutVO(source, target);
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.AddressType to org.phoenixctms.ctsms.vo.AddresTypeVO

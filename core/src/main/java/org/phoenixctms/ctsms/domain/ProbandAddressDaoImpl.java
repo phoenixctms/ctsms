@@ -30,8 +30,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandAddress
  */
 public class ProbandAddressDaoImpl
-extends ProbandAddressDaoBase
-{
+		extends ProbandAddressDaoBase {
 
 	private static String getAddressString(ProbandAddressOutVO address) {
 		StringBuilder sb = new StringBuilder();
@@ -118,22 +117,18 @@ extends ProbandAddressDaoBase
 		return (Long) probandAddressCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
-
-
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandAddress loadProbandAddressFromProbandAddressInVO(ProbandAddressInVO probandAddressInVO)
-	{
+	private ProbandAddress loadProbandAddressFromProbandAddressInVO(ProbandAddressInVO probandAddressInVO) {
 		ProbandAddress probandAddress = null;
 		Long id = probandAddressInVO.getId();
 		if (id != null) {
 			probandAddress = this.load(id);
 		}
-		if (probandAddress == null)
-		{
+		if (probandAddress == null) {
 			probandAddress = ProbandAddress.Factory.newInstance();
 		}
 		return probandAddress;
@@ -144,11 +139,9 @@ extends ProbandAddressDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandAddress loadProbandAddressFromProbandAddressOutVO(ProbandAddressOutVO probandAddressOutVO)
-	{
+	private ProbandAddress loadProbandAddressFromProbandAddressOutVO(ProbandAddressOutVO probandAddressOutVO) {
 		ProbandAddress probandAddress = this.load(probandAddressOutVO.getId());
-		if (probandAddress == null)
-		{
+		if (probandAddress == null) {
 			probandAddress = ProbandAddress.Factory.newInstance();
 		}
 		return probandAddress;
@@ -158,8 +151,7 @@ extends ProbandAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandAddress probandAddressInVOToEntity(ProbandAddressInVO probandAddressInVO)
-	{
+	public ProbandAddress probandAddressInVOToEntity(ProbandAddressInVO probandAddressInVO) {
 		ProbandAddress entity = this.loadProbandAddressFromProbandAddressInVO(probandAddressInVO);
 		this.probandAddressInVOToEntity(probandAddressInVO, entity, true);
 		return entity;
@@ -172,8 +164,7 @@ extends ProbandAddressDaoBase
 	public void probandAddressInVOToEntity(
 			ProbandAddressInVO source,
 			ProbandAddress target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandAddressInVOToEntity(source, target, copyIfNull);
 		// No conversion for target.countryName (can't convert source.getCountryName():java.lang.String to byte[]
 		// No conversion for target.zipCode (can't convert source.getZipCode():java.lang.String to byte[]
@@ -259,8 +250,7 @@ extends ProbandAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandAddress probandAddressOutVOToEntity(ProbandAddressOutVO probandAddressOutVO)
-	{
+	public ProbandAddress probandAddressOutVOToEntity(ProbandAddressOutVO probandAddressOutVO) {
 		ProbandAddress entity = this.loadProbandAddressFromProbandAddressOutVO(probandAddressOutVO);
 		this.probandAddressOutVOToEntity(probandAddressOutVO, entity, true);
 		return entity;
@@ -273,8 +263,7 @@ extends ProbandAddressDaoBase
 	public void probandAddressOutVOToEntity(
 			ProbandAddressOutVO source,
 			ProbandAddress target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandAddressOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.countryName (can't convert source.getCountryName():java.lang.String to byte[]
 		// No conversion for target.zipCode (can't convert source.getZipCode():java.lang.String to byte[]
@@ -366,8 +355,7 @@ extends ProbandAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandAddressInVO toProbandAddressInVO(final ProbandAddress entity)
-	{
+	public ProbandAddressInVO toProbandAddressInVO(final ProbandAddress entity) {
 		return super.toProbandAddressInVO(entity);
 	}
 
@@ -377,8 +365,7 @@ extends ProbandAddressDaoBase
 	@Override
 	public void toProbandAddressInVO(
 			ProbandAddress source,
-			ProbandAddressInVO target)
-	{
+			ProbandAddressInVO target) {
 		super.toProbandAddressInVO(source, target);
 		// WARNING! No conversion for target.countryName (can't convert source.getCountryName():byte[] to java.lang.String
 		// WARNING! No conversion for target.zipCode (can't convert source.getZipCode():byte[] to java.lang.String
@@ -414,8 +401,7 @@ extends ProbandAddressDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandAddressOutVO toProbandAddressOutVO(final ProbandAddress entity)
-	{
+	public ProbandAddressOutVO toProbandAddressOutVO(final ProbandAddress entity) {
 		return super.toProbandAddressOutVO(entity);
 	}
 
@@ -425,8 +411,7 @@ extends ProbandAddressDaoBase
 	@Override
 	public void toProbandAddressOutVO(
 			ProbandAddress source,
-			ProbandAddressOutVO target)
-	{
+			ProbandAddressOutVO target) {
 		// TODO verify behavior of toProbandAddressOutVO
 		super.toProbandAddressOutVO(source, target);
 		// WARNING! No conversion for target.countryName (can't convert source.getCountryName():byte[] to java.lang.String

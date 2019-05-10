@@ -46,10 +46,10 @@ public class DataTableRenderer extends org.primefaces.component.datatable.DataTa
 				writer.writeAttribute("maxlength", column.getFilterMaxLength(), null);
 			}
 			writer.endElement("input");
-		}
-		else {
-			filterStyleClass = filterStyleClass == null ? DataTable.COLUMN_FILTER_CLASS : DataTable.COLUMN_FILTER_CLASS
-					+ " " + filterStyleClass;
+		} else {
+			filterStyleClass = filterStyleClass == null ? DataTable.COLUMN_FILTER_CLASS
+					: DataTable.COLUMN_FILTER_CLASS
+							+ " " + filterStyleClass;
 			writer.startElement("select", null);
 			writer.writeAttribute("id", filterId, null);
 			writer.writeAttribute("name", filterId, null);
@@ -74,8 +74,7 @@ public class DataTableRenderer extends org.primefaces.component.datatable.DataTa
 			String expressionString = expression.getExpressionString();
 			expressionString = expressionString.substring(2, expressionString.length() - 1); // Remove #{}
 			return expressionString.substring(expressionString.indexOf(".") + 1); // Remove var
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

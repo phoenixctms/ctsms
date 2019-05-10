@@ -77,7 +77,8 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 	@Override
 	protected ProbandListEntryModel createProbandListEntryModel() {
 		return new ProbandListEntryModel(
-				Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN),
+				Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
+						DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN),
 				Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN), true);
 	}
 
@@ -100,13 +101,11 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 	}
 
 	public String getProbandListEntryTagPdfButtonLabel(boolean blank) {
-
 		if (blank) {
 			return Messages.getMessage(MessageCodes.BLANK_PROBAND_LIST_ENTRY_TAG_PDF_BUTTON_LABEL, CommonUtil.trialOutVOToString(trial));
 		} else {
 			return Messages.getMessage(MessageCodes.PROBAND_LIST_ENTRY_TAG_PDF_BUTTON_LABEL, CommonUtil.trialOutVOToString(trial));
 		}
-
 	}
 
 	public StreamedContent getProbandListEntryTagsPdfStreamedContent(boolean blank) throws Exception {
@@ -170,8 +169,6 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 			initProbandListEntryDefaultValues(in, probandId);
 		}
 	}
-
-
 
 	@Override
 	protected void initSpecificSets(boolean reset, boolean deleted, boolean select) {

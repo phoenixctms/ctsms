@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-
 public class ExecDefaultSettings {
 
 	public final static String DEFAULT_ENCODING = "UTF-8";
@@ -12,4 +11,3 @@ public class ExecDefaultSettings {
 	private ExecDefaultSettings() {
 	}
 }
-

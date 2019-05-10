@@ -82,10 +82,8 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 
 	public void changeAddReimbursement() {
 		Long bookingId = WebUtil.getLongParamValue(GetParamNames.INVENTORY_BOOKING_ID);
-
 		addReimbursementBean.setProbandId(in.getProbandId());
 		addReimbursementBean.changeRootEntity(bookingId);
-
 	}
 
 	public AddBookingReimbursementBean getAddReimbursementBean() {

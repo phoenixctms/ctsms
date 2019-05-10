@@ -23,8 +23,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see StaffTagValue
  */
 public class StaffTagValueDaoImpl
-extends StaffTagValueDaoBase
-{
+		extends StaffTagValueDaoBase {
 
 	private org.hibernate.Criteria createTagValueCriteria() {
 		org.hibernate.Criteria tagValueCriteria = this.getSession().createCriteria(StaffTagValue.class);
@@ -46,7 +45,7 @@ extends StaffTagValueDaoBase
 	@Override
 	protected long handleGetCount(
 			Long staffId) throws Exception {
-		org.hibernate.Criteria tagValueCriteria =createTagValueCriteria();
+		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		if (staffId != null) {
 			tagValueCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
 		}
@@ -58,15 +57,13 @@ extends StaffTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffTagValue loadStaffTagValueFromStaffTagValueInVO(StaffTagValueInVO staffTagValueInVO)
-	{
+	private StaffTagValue loadStaffTagValueFromStaffTagValueInVO(StaffTagValueInVO staffTagValueInVO) {
 		StaffTagValue staffTagValue = null;
 		Long id = staffTagValueInVO.getId();
 		if (id != null) {
 			staffTagValue = this.load(id);
 		}
-		if (staffTagValue == null)
-		{
+		if (staffTagValue == null) {
 			staffTagValue = StaffTagValue.Factory.newInstance();
 		}
 		return staffTagValue;
@@ -77,11 +74,9 @@ extends StaffTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private StaffTagValue loadStaffTagValueFromStaffTagValueOutVO(StaffTagValueOutVO staffTagValueOutVO)
-	{
+	private StaffTagValue loadStaffTagValueFromStaffTagValueOutVO(StaffTagValueOutVO staffTagValueOutVO) {
 		StaffTagValue staffTagValue = this.load(staffTagValueOutVO.getId());
-		if (staffTagValue == null)
-		{
+		if (staffTagValue == null) {
 			staffTagValue = StaffTagValue.Factory.newInstance();
 		}
 		return staffTagValue;
@@ -91,8 +86,7 @@ extends StaffTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTagValue staffTagValueInVOToEntity(StaffTagValueInVO staffTagValueInVO)
-	{
+	public StaffTagValue staffTagValueInVOToEntity(StaffTagValueInVO staffTagValueInVO) {
 		StaffTagValue entity = this.loadStaffTagValueFromStaffTagValueInVO(staffTagValueInVO);
 		this.staffTagValueInVOToEntity(staffTagValueInVO, entity, true);
 		return entity;
@@ -105,8 +99,7 @@ extends StaffTagValueDaoBase
 	public void staffTagValueInVOToEntity(
 			StaffTagValueInVO source,
 			StaffTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffTagValueInVOToEntity(source, target, copyIfNull);
 		Long tagId = source.getTagId();
 		Long staffId = source.getStaffId();
@@ -132,8 +125,7 @@ extends StaffTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTagValue staffTagValueOutVOToEntity(StaffTagValueOutVO staffTagValueOutVO)
-	{
+	public StaffTagValue staffTagValueOutVOToEntity(StaffTagValueOutVO staffTagValueOutVO) {
 		StaffTagValue entity = this.loadStaffTagValueFromStaffTagValueOutVO(staffTagValueOutVO);
 		this.staffTagValueOutVOToEntity(staffTagValueOutVO, entity, true);
 		return entity;
@@ -146,8 +138,7 @@ extends StaffTagValueDaoBase
 	public void staffTagValueOutVOToEntity(
 			StaffTagValueOutVO source,
 			StaffTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffTagValueOutVOToEntity(source, target, copyIfNull);
 		StaffTagVO tagVO = source.getTag();
 		StaffOutVO staffVO = source.getStaff();
@@ -179,8 +170,7 @@ extends StaffTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTagValueInVO toStaffTagValueInVO(final StaffTagValue entity)
-	{
+	public StaffTagValueInVO toStaffTagValueInVO(final StaffTagValue entity) {
 		return super.toStaffTagValueInVO(entity);
 	}
 
@@ -190,8 +180,7 @@ extends StaffTagValueDaoBase
 	@Override
 	public void toStaffTagValueInVO(
 			StaffTagValue source,
-			StaffTagValueInVO target)
-	{
+			StaffTagValueInVO target) {
 		super.toStaffTagValueInVO(source, target);
 		StaffTag tag = source.getTag();
 		Staff staff = source.getStaff();
@@ -207,8 +196,7 @@ extends StaffTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffTagValueOutVO toStaffTagValueOutVO(final StaffTagValue entity)
-	{
+	public StaffTagValueOutVO toStaffTagValueOutVO(final StaffTagValue entity) {
 		return super.toStaffTagValueOutVO(entity);
 	}
 
@@ -218,8 +206,7 @@ extends StaffTagValueDaoBase
 	@Override
 	public void toStaffTagValueOutVO(
 			StaffTagValue source,
-			StaffTagValueOutVO target)
-	{
+			StaffTagValueOutVO target) {
 		super.toStaffTagValueOutVO(source, target);
 		// WARNING! No conversion for target.tag (can't convert source.getTag():org.phoenixctms.ctsms.domain.StaffTag to org.phoenixctms.ctsms.vo.StaffTagVO
 		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO

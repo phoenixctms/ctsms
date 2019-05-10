@@ -29,10 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class ClamlImporter {
 
-	private  static Search getRevisionSearch(String revision) {
+	private static Search getRevisionSearch(String revision) {
 		return new Search(new SearchParameter[] {
 				new SearchParameter("revision", revision, SearchParameter.EQUAL_COMPARATOR) });
 	}
+
 	@Autowired
 	protected IcdSystDao icdSystDao;
 	@Autowired
@@ -55,7 +56,6 @@ public class ClamlImporter {
 	protected OpsSystModifierDao opsSystModifierDao;
 	private Map<String, Map<String, Element>> classKinds; // treemap //chapter-category-block -> code -> object(class, preferred label etc)
 	private Map<String, Map<String, Element>> modifierClasses;
-
 	protected JobOutput jobOutput;
 
 	public ClamlImporter() {
@@ -85,7 +85,6 @@ public class ClamlImporter {
 			removeIcdSystRecords(revision);
 			jobOutput.println("icd systemtics revision " + revision + " cleared");
 		}
-
 		return parse(fileName, lang, icdSystClassProcessor);
 	}
 
@@ -253,18 +252,22 @@ public class ClamlImporter {
 		ChunkedRemoveAll<IcdSystDao> icdSystRemover = new ChunkedRemoveAll<IcdSystDao>(
 				icdSystDao, getRevisionSearch(revision)) {
 
+			@Override
 			protected Collection<Object> convertPage(Collection<Object> page) {
 				return new HashSet(page);
 			}
 
+			@Override
 			protected Method getRemoveMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeTxn", Long.class);
 			}
 
+			@Override
 			protected Method getRemovePageMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeAllTxn", Set.class);
 			}
 
+			@Override
 			protected boolean removePageDone(int pageSize, Object removePageResult) {
 				jobOutput.println(pageSize + " icd syst records removed");
 				return true;
@@ -277,17 +280,22 @@ public class ClamlImporter {
 		ChunkedRemoveAll<OpsSystDao> opsSystRemover = new ChunkedRemoveAll<OpsSystDao>(
 				opsSystDao, getRevisionSearch(revision)) {
 
+			@Override
 			protected Collection<Object> convertPage(Collection<Object> page) {
 				return new HashSet(page);
 			}
+
+			@Override
 			protected Method getRemoveMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeTxn", Long.class);
 			}
 
+			@Override
 			protected Method getRemovePageMethod(Class dao) throws NoSuchMethodException, SecurityException {
 				return dao.getMethod("removeAllTxn", Set.class);
 			}
 
+			@Override
 			protected boolean removePageDone(int pageSize, Object removePageResult) {
 				jobOutput.println(pageSize + " ops syst records removed");
 				return true;

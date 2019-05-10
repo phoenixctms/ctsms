@@ -55,7 +55,8 @@ public class JournalResource {
 	public Page<JournalEntryOutVO> getCourseJournal(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, JournalModule.COURSE_JOURNAL, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, JournalModule.COURSE_JOURNAL, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
@@ -101,7 +102,8 @@ public class JournalResource {
 	public Page<JournalEntryOutVO> getMassMailJournal(@Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, JournalModule.MASS_MAIL_JOURNAL, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, JournalModule.MASS_MAIL_JOURNAL, null, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET

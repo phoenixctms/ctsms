@@ -50,7 +50,6 @@ public class TrialMassMailLazyModel extends LazyDataModelBase {
 			}
 		}
 		return null;
-
 	}
 
 	@Override
@@ -61,6 +60,7 @@ public class TrialMassMailLazyModel extends LazyDataModelBase {
 	public Long getTrialId() {
 		return trialId;
 	}
+
 	public void setTrialId(Long trialId) {
 		this.trialId = trialId;
 	}

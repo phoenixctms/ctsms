@@ -129,7 +129,7 @@ public class KeyValueString extends GraphEnumerator {
 
 	public String getValue(Locales locale, Object vo, ArrayList<Object> indexesKeys, String datetimePattern, String datePattern, String timePattern, boolean enumerateEntities,
 			boolean omitFields)
-					throws Exception {
+			throws Exception {
 		return outVOValueToString(locale, returnType, getValueOf(vo, indexesKeys), datetimePattern, datePattern, timePattern, enumerateEntities, omitFields);
 	}
 
@@ -246,57 +246,57 @@ public class KeyValueString extends GraphEnumerator {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && StaffOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && CourseOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && TrialOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && ProbandOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && MassMailOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && UserOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && CriteriaOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "label", omitFields);
+				return getVOFieldValue(value, "label", omitFields);
 			} else if (!enumerateEntities && ProbandGroupOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "uniqueName", omitFields);
+				return getVOFieldValue(value, "uniqueName", omitFields);
 			} else if (!enumerateEntities && VisitOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "title", omitFields);
+				return getVOFieldValue(value, "title", omitFields);
 			} else if (!enumerateEntities && VisitScheduleItemOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "name", omitFields);
+				return getVOFieldValue(value, "name", omitFields);
 			} else if (!enumerateEntities && ProbandListStatusEntryOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
@@ -306,22 +306,22 @@ public class KeyValueString extends GraphEnumerator {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "uniqueName", omitFields);
+				return getVOFieldValue(value, "uniqueName", omitFields);
 			} else if (!enumerateEntities && ProbandListEntryTagOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "uniqueName", omitFields);
+				return getVOFieldValue(value, "uniqueName", omitFields);
 			} else if (!enumerateEntities && ECRFOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "uniqueName", omitFields);
+				return getVOFieldValue(value, "uniqueName", omitFields);
 			} else if (!enumerateEntities && ECRFFieldOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return (String) getVOFieldValue(value, "uniqueName", omitFields);
+				return getVOFieldValue(value, "uniqueName", omitFields);
 			} else if (valueClass.equals(CriterionTie.class)) {
 				if (value == null) {
 					return "";
@@ -681,5 +681,4 @@ public class KeyValueString extends GraphEnumerator {
 		}
 		return null;
 	}
-
 }

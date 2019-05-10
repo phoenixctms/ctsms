@@ -17,8 +17,7 @@ import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
  * @see SurveyStatusType
  */
 public class SurveyStatusTypeDaoImpl
-		extends SurveyStatusTypeDaoBase
-{
+		extends SurveyStatusTypeDaoBase {
 
 	private org.hibernate.Criteria createSurveyStatusTypeCriteria() {
 		org.hibernate.Criteria surveyStatusTypeCriteria = this.getSession().createCriteria(SurveyStatusType.class);
@@ -30,8 +29,7 @@ public class SurveyStatusTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<SurveyStatusType> handleFindByVisibleId(Boolean visible, Long typeId)
-	{
+	protected Collection<SurveyStatusType> handleFindByVisibleId(Boolean visible, Long typeId) {
 		org.hibernate.Criteria surveyStatusTypeCriteria = createSurveyStatusTypeCriteria();
 		CriteriaUtil.applyVisibleIdCriterion("visible", surveyStatusTypeCriteria, visible, typeId);
 		return surveyStatusTypeCriteria.list();
@@ -42,8 +40,7 @@ public class SurveyStatusTypeDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private SurveyStatusType loadSurveyStatusTypeFromSurveyStatusTypeVO(SurveyStatusTypeVO surveyStatusTypeVO)
-	{
+	private SurveyStatusType loadSurveyStatusTypeFromSurveyStatusTypeVO(SurveyStatusTypeVO surveyStatusTypeVO) {
 		// TODO implement loadSurveyStatusTypeFromSurveyStatusTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadSurveyStatusTypeFromSurveyStatusTypeVO(SurveyStatusTypeVO) not yet implemented.");
 		SurveyStatusType surveyStatusType = null;
@@ -51,8 +48,7 @@ public class SurveyStatusTypeDaoImpl
 		if (id != null) {
 			this.load(id);
 		}
-		if (surveyStatusType == null)
-		{
+		if (surveyStatusType == null) {
 			surveyStatusType = SurveyStatusType.Factory.newInstance();
 		}
 		return surveyStatusType;
@@ -62,8 +58,7 @@ public class SurveyStatusTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public SurveyStatusType surveyStatusTypeVOToEntity(SurveyStatusTypeVO surveyStatusTypeVO)
-	{
+	public SurveyStatusType surveyStatusTypeVOToEntity(SurveyStatusTypeVO surveyStatusTypeVO) {
 		SurveyStatusType entity = this.loadSurveyStatusTypeFromSurveyStatusTypeVO(surveyStatusTypeVO);
 		this.surveyStatusTypeVOToEntity(surveyStatusTypeVO, entity, true);
 		return entity;
@@ -76,8 +71,7 @@ public class SurveyStatusTypeDaoImpl
 	public void surveyStatusTypeVOToEntity(
 			SurveyStatusTypeVO source,
 			SurveyStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.surveyStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -85,8 +79,7 @@ public class SurveyStatusTypeDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public SurveyStatusTypeVO toSurveyStatusTypeVO(final SurveyStatusType entity)
-	{
+	public SurveyStatusTypeVO toSurveyStatusTypeVO(final SurveyStatusType entity) {
 		return super.toSurveyStatusTypeVO(entity);
 	}
 
@@ -96,8 +89,7 @@ public class SurveyStatusTypeDaoImpl
 	@Override
 	public void toSurveyStatusTypeVO(
 			SurveyStatusType source,
-			SurveyStatusTypeVO target)
-	{
+			SurveyStatusTypeVO target) {
 		super.toSurveyStatusTypeVO(source, target);
 		target.setName(L10nUtil.getSurveyStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

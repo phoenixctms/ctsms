@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.adapt;
 
 import org.hibernate.LockMode;
@@ -16,7 +15,6 @@ public class EcrfFieldValueCollisionFinder extends CollisionFinder<ECRFFieldValu
 	private ECRFFieldValueDao ecrfFieldValueDao;
 
 	// private ECRFFieldDao ecrfFieldDao;
-
 	public EcrfFieldValueCollisionFinder(ProbandListEntryDao probandListEntryDao, ECRFFieldValueDao ecrfFieldValueDao) { // , ECRFFieldDao ecrfFieldDao) {
 		this.ecrfFieldValueDao = ecrfFieldValueDao;
 		this.probandListEntryDao = probandListEntryDao;

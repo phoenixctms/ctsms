@@ -2,7 +2,6 @@ package org.phoenixctms.ctsms.compare;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 
-
 public class EntityPositionComparator<T> extends PositionComparatorBase<T> {
 
 	public EntityPositionComparator(boolean posDesc) {

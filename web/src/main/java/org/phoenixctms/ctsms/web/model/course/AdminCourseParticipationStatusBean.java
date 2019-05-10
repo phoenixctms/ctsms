@@ -73,8 +73,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		CourseParticipationStatusEntryInVO backup = new CourseParticipationStatusEntryInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -106,8 +105,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		actionPostProcess(addBulkAction());
 	}
 
-	public String addBulkAction()
-	{
+	public String addBulkAction() {
 		try {
 			Set<Long> ids = this.staffMultiPicker.getSelectionIds();
 			Iterator<CourseParticipationStatusEntryOutVO> it = WebUtil.getServiceLocator().getCourseService()

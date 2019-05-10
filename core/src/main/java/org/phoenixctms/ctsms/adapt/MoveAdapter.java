@@ -11,7 +11,6 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
-import org.phoenixctms.ctsms.util.ServiceUtil;
 
 public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 
@@ -162,17 +161,11 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				sourceIndex = i;
 			}
 			if (targetPosition == getPosition(items.get(i))
-					|| (
-							(
-									i == (items.size() - 1)
-									|| (i < (items.size() - 1) && targetPosition < getPosition(items.get(i + 1)))
-									)
-									&&
-									(
-											i == 0
-											|| (i > 0 && targetPosition > getPosition(items.get(i - 1)))
-											)
-							)) {
+					|| ((i == (items.size() - 1)
+							|| (i < (items.size() - 1) && targetPosition < getPosition(items.get(i + 1))))
+							&&
+							(i == 0
+									|| (i > 0 && targetPosition > getPosition(items.get(i - 1)))))) {
 				if (!minTargetSet) {
 					minTargetIndex = i;
 					minTargetSet = true;
@@ -264,7 +257,6 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				return updated;
 			}
 		}
-
 	}
 
 	protected ArrayList<LISTITEMVO> normalizePositions(LISTITEM groupItem, ROOT root) throws Exception {

@@ -42,8 +42,7 @@ import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
  * @see Staff
  */
 public class StaffDaoImpl
-extends StaffDaoBase
-{
+		extends StaffDaoBase {
 
 	private org.hibernate.Criteria createStaffCriteria() {
 		org.hibernate.Criteria staffCriteria = this.getSession().createCriteria(Staff.class);
@@ -67,14 +66,14 @@ extends StaffDaoBase
 	@Override
 	protected Collection<Staff> handleFindByDepartmentNotificationType(
 			Long departmentId, NotificationType notificationType)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria staffCriteria = createStaffCriteria();
 		if (departmentId != null) {
 			staffCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (notificationType != null) {
 			staffCriteria.createCriteria("category", CriteriaSpecification.INNER_JOIN).createCriteria("sendDepartmentNotificationTypes", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("type", notificationType));
+					.add(Restrictions.eq("type", notificationType));
 		}
 		return staffCriteria.list();
 	}
@@ -82,7 +81,7 @@ extends StaffDaoBase
 	@Override
 	protected Collection<Staff> handleFindByDepartmentStatusInterval(Long departmentId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable,
 			Boolean hideAvailability, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		org.hibernate.Criteria staffCriteria = createStaffCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Staff.class, staffCriteria);
 		if (departmentId != null) {
@@ -176,15 +175,13 @@ extends StaffDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Staff loadStaffFromStaffImageInVO(StaffImageInVO staffImageInVO)
-	{
+	private Staff loadStaffFromStaffImageInVO(StaffImageInVO staffImageInVO) {
 		Long id = staffImageInVO.getId();
 		Staff staff = null;
 		if (id != null) {
 			staff = this.load(id);
 		}
-		if (staff == null)
-		{
+		if (staff == null) {
 			staff = Staff.Factory.newInstance();
 		}
 		return staff;
@@ -195,8 +192,7 @@ extends StaffDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Staff loadStaffFromStaffImageOutVO(StaffImageOutVO staffImageOutVO)
-	{
+	private Staff loadStaffFromStaffImageOutVO(StaffImageOutVO staffImageOutVO) {
 		// TODO implement loadStaffFromStaffImageOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStaffFromStaffImageOutVO(StaffImageOutVO) not yet implemented.");
 		/* A typical implementation looks like this: Staff staff = this.load(staffImageOutVO.getId()); if (staff == null) { staff = Staff.Factory.newInstance(); } return staff; */
@@ -207,15 +203,13 @@ extends StaffDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Staff loadStaffFromStaffInVO(StaffInVO staffInVO)
-	{
+	private Staff loadStaffFromStaffInVO(StaffInVO staffInVO) {
 		Staff staff = null;
 		Long id = staffInVO.getId();
 		if (id != null) {
 			staff = this.load(id);
 		}
-		if (staff == null)
-		{
+		if (staff == null) {
 			staff = Staff.Factory.newInstance();
 		}
 		return staff;
@@ -226,8 +220,7 @@ extends StaffDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Staff loadStaffFromStaffOutVO(StaffOutVO staffOutVO)
-	{
+	private Staff loadStaffFromStaffOutVO(StaffOutVO staffOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 		// Staff staff = this.load(staffOutVO.getId());
 		// if (staff == null)
@@ -241,8 +234,7 @@ extends StaffDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Staff staffImageInVOToEntity(StaffImageInVO staffImageInVO)
-	{
+	public Staff staffImageInVOToEntity(StaffImageInVO staffImageInVO) {
 		Staff entity = this.loadStaffFromStaffImageInVO(staffImageInVO);
 		this.staffImageInVOToEntity(staffImageInVO, entity, true);
 		return entity;
@@ -255,8 +247,7 @@ extends StaffDaoBase
 	public void staffImageInVOToEntity(
 			StaffImageInVO source,
 			Staff target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffImageInVOToEntity(source, target, copyIfNull);
 		PersonContactParticulars personParticulars = null;
 		if (target.isPerson()) {
@@ -313,8 +304,7 @@ extends StaffDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Staff staffImageOutVOToEntity(StaffImageOutVO staffImageOutVO)
-	{
+	public Staff staffImageOutVOToEntity(StaffImageOutVO staffImageOutVO) {
 		// TODO verify behavior of staffImageOutVOToEntity
 		Staff entity = this.loadStaffFromStaffImageOutVO(staffImageOutVO);
 		this.staffImageOutVOToEntity(staffImageOutVO, entity, true);
@@ -328,8 +318,7 @@ extends StaffDaoBase
 	public void staffImageOutVOToEntity(
 			StaffImageOutVO source,
 			Staff target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of staffImageOutVOToEntity
 		super.staffImageOutVOToEntity(source, target, copyIfNull);
 	}
@@ -338,8 +327,7 @@ extends StaffDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Staff staffInVOToEntity(StaffInVO staffInVO)
-	{
+	public Staff staffInVOToEntity(StaffInVO staffInVO) {
 		Staff entity = this.loadStaffFromStaffInVO(staffInVO);
 		this.staffInVOToEntity(staffInVO, entity, true);
 		return entity;
@@ -352,8 +340,7 @@ extends StaffDaoBase
 	public void staffInVOToEntity(
 			StaffInVO source,
 			Staff target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long categoryId = source.getCategoryId();
@@ -454,8 +441,7 @@ extends StaffDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Staff staffOutVOToEntity(StaffOutVO staffOutVO)
-	{
+	public Staff staffOutVOToEntity(StaffOutVO staffOutVO) {
 		Staff entity = this.loadStaffFromStaffOutVO(staffOutVO);
 		this.staffOutVOToEntity(staffOutVO, entity, true);
 		return entity;
@@ -468,8 +454,7 @@ extends StaffDaoBase
 	public void staffOutVOToEntity(
 			StaffOutVO source,
 			Staff target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.staffOutVOToEntity(source, target, copyIfNull);
 		StaffCategoryVO categoryVO = source.getCategory();
 		DepartmentVO departmentVO = source.getDepartment();
@@ -579,8 +564,7 @@ extends StaffDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffImageInVO toStaffImageInVO(final Staff entity)
-	{
+	public StaffImageInVO toStaffImageInVO(final Staff entity) {
 		return super.toStaffImageInVO(entity);
 	}
 
@@ -590,8 +574,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffImageInVO(
 			Staff source,
-			StaffImageInVO target)
-	{
+			StaffImageInVO target) {
 		super.toStaffImageInVO(source, target);
 		if (source.isPerson()) {
 			PersonContactParticulars personParticulars = source.getPersonParticulars();
@@ -612,8 +595,7 @@ extends StaffDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public StaffImageOutVO toStaffImageOutVO(final Staff entity)
-	{
+	public StaffImageOutVO toStaffImageOutVO(final Staff entity) {
 		return super.toStaffImageOutVO(entity);
 	}
 
@@ -623,8 +605,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffImageOutVO(
 			Staff source,
-			StaffImageOutVO target)
-	{
+			StaffImageOutVO target) {
 		super.toStaffImageOutVO(source, target);
 		User modifiedUser = source.getModifiedUser();
 		if (modifiedUser != null) {
@@ -653,8 +634,7 @@ extends StaffDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StaffInVO toStaffInVO(final Staff entity)
-	{
+	public StaffInVO toStaffInVO(final Staff entity) {
 		return super.toStaffInVO(entity);
 	}
 
@@ -664,8 +644,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffInVO(
 			Staff source,
-			StaffInVO target)
-	{
+			StaffInVO target) {
 		super.toStaffInVO(source, target);
 		Department department = source.getDepartment();
 		StaffCategory category = source.getCategory();
@@ -708,8 +687,7 @@ extends StaffDaoBase
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StaffOutVO toStaffOutVO(final Staff entity)
-	{
+	public StaffOutVO toStaffOutVO(final Staff entity) {
 		return super.toStaffOutVO(entity);
 	}
 
@@ -719,8 +697,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffOutVO(
 			Staff source,
-			StaffOutVO target)
-	{
+			StaffOutVO target) {
 		HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>();
 		(new StaffReflexionGraph(this, this.getStaffCategoryDao(), this.getDepartmentDao(), this.getUserDao())).toVOHelper(source, target, voMap);
 		loadDeferredUserOutVOs(voMap);
@@ -729,8 +706,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffOutVO(
 			Staff source,
-			StaffOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			StaffOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new StaffReflexionGraph(this, this.getStaffCategoryDao(), this.getDepartmentDao(), this.getUserDao())).toVOHelper(source, target, voMap);
 		loadDeferredUserOutVOs(voMap);
 	}
@@ -738,8 +714,7 @@ extends StaffDaoBase
 	@Override
 	public void toStaffOutVO(
 			Staff source,
-			StaffOutVO target, HashMap<Class, HashMap<Long, Object>> voMap, Integer... maxInstances)
-	{
+			StaffOutVO target, HashMap<Class, HashMap<Long, Object>> voMap, Integer... maxInstances) {
 		(new StaffReflexionGraph(this, this.getStaffCategoryDao(), this.getDepartmentDao(), this.getUserDao(), maxInstances)).toVOHelper(source, target, voMap);
 		loadDeferredUserOutVOs(voMap);
 	}
@@ -747,11 +722,9 @@ extends StaffDaoBase
 	@Override
 	public void toStaffOutVO(
 			Staff source,
-			StaffOutVO target, Integer... maxInstances)
-	{
+			StaffOutVO target, Integer... maxInstances) {
 		HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>();
 		(new StaffReflexionGraph(this, this.getStaffCategoryDao(), this.getDepartmentDao(), this.getUserDao(), maxInstances)).toVOHelper(source, target, voMap);
 		loadDeferredUserOutVOs(voMap);
 	}
-
 }

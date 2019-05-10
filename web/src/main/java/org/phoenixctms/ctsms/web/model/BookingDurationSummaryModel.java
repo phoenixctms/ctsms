@@ -22,10 +22,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class BookingDurationSummaryModel extends EagerDataModelBase {
 
 	public enum BookingDurationSummaryType {
-		INVENTORY_OVERVIEW,
-		INVENTORY,
-		TRIAL,
-		UNDEFINED;
+		INVENTORY_OVERVIEW, INVENTORY, TRIAL, UNDEFINED;
 	}
 
 	private Date start;
@@ -133,8 +130,10 @@ public class BookingDurationSummaryModel extends EagerDataModelBase {
 				Settings.getLongNullable(SettingCodes.BOOKING_DURATION_SUMMARY_PERIOD_AFTER_DAYS, Bundle.SETTINGS, DefaultSettings.BOOKING_DURATION_SUMMARY_PERIOD_AFTER_DAYS), 1);
 		this.start = WebUtil
 				.subIntervals(now, Settings.getVariablePeriod(SettingCodes.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE, Bundle.SETTINGS,
-						DefaultSettings.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE), Settings.getLongNullable(SettingCodes.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE_DAYS,
-								Bundle.SETTINGS, DefaultSettings.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE_DAYS), 1);
+						DefaultSettings.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE),
+						Settings.getLongNullable(SettingCodes.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE_DAYS,
+								Bundle.SETTINGS, DefaultSettings.BOOKING_DURATION_SUMMARY_PERIOD_BEFORE_DAYS),
+						1);
 		this.calendar = null;
 		this.type = type;
 		this.id = id;

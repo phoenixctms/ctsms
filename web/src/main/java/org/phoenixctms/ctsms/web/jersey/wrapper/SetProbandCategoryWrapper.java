@@ -32,4 +32,3 @@ public class SetProbandCategoryWrapper implements Serializable {
 		this.version = version;
 	}
 }
-

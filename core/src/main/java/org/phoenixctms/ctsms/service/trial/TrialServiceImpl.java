@@ -926,7 +926,7 @@ public class TrialServiceImpl
 		}
 		Iterator<Map> ecrfFieldValuesIt = ecrfFieldValueDao.findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null).iterator();
 		while (ecrfFieldValuesIt.hasNext()) { // && (maxMissingCount == null || missingCount < maxMissingCount)) {
-			Map<String, Object> entities = (Map<String, Object>) ecrfFieldValuesIt.next();
+			Map<String, Object> entities = ecrfFieldValuesIt.next();
 			ECRFFieldValue ecrfFieldValue = (ECRFFieldValue) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS);
 			ECRFField ecrfField;
 			Long index;
@@ -1618,7 +1618,7 @@ public class TrialServiceImpl
 			InputFieldDao inputFieldDao = this.getInputFieldDao();
 			Iterator<Map> ecrfFieldValuesIt = this.getECRFFieldValueDao().findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null).iterator();
 			while (ecrfFieldValuesIt.hasNext() && (maxMissingCount == null || missingCount < maxMissingCount)) {
-				Map<String, Object> entities = (Map<String, Object>) ecrfFieldValuesIt.next();
+				Map<String, Object> entities = ecrfFieldValuesIt.next();
 				ECRFFieldValue ecrfFieldValue = (ECRFFieldValue) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS);
 				ECRFField ecrfField;
 				if (ecrfFieldValue == null) {

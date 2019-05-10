@@ -73,15 +73,12 @@ public class Application extends PackagesResourceConfig {
 
 	@Override
 	public Set<Class<?>> getClasses() {
-		Set<Class<?>> resources =super.getClasses();
-
+		Set<Class<?>> resources = super.getClasses();
 		//resources.add(FirstResource.class);
 		//resources.add(SecondResource.class);
 		//...
-
 		resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
 		resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
-
 		return resources;
 	}
 

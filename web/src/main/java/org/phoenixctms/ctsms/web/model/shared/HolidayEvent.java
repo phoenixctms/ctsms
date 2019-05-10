@@ -22,7 +22,6 @@ public class HolidayEvent extends ScheduleEventBase<HolidayVO> {
 	// data.getNames().clear();
 	// }
 	// }
-
 	public HolidayEvent() {
 		super();
 	}

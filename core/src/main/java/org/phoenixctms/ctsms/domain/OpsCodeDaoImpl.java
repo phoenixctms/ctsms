@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.OpsSystVO;
  * @see OpsCode
  */
 public class OpsCodeDaoImpl
-extends OpsCodeDaoBase
-{
+		extends OpsCodeDaoBase {
 
 	private final static boolean MATCH_FIRST_CODE = true;
 
@@ -75,8 +74,7 @@ extends OpsCodeDaoBase
 	}
 
 	@Override
-	protected Collection<OpsCode> handleFindOpsCodes(String textInfix, Integer limit)
-	{
+	protected Collection<OpsCode> handleFindOpsCodes(String textInfix, Integer limit) {
 		org.hibernate.Criteria opsCodeCriteria = createOpsCodeCriteria(true);
 		applyOpsCodeTextCriterions(opsCodeCriteria, textInfix);
 		opsCodeCriteria.addOrder(Order.asc("text"));
@@ -99,11 +97,10 @@ extends OpsCodeDaoBase
 	}
 
 	@Override
-	protected long handleGetProcedureCount(String revision) throws Exception
-	{
-		org.hibernate.Criteria opsCodeCriteria =createOpsCodeCriteria(false);
+	protected long handleGetProcedureCount(String revision) throws Exception {
+		org.hibernate.Criteria opsCodeCriteria = createOpsCodeCriteria(false);
 		opsCodeCriteria.add(Restrictions.eq("revision", revision));
-		opsCodeCriteria.createCriteria("procedures",CriteriaSpecification.INNER_JOIN);
+		opsCodeCriteria.createCriteria("procedures", CriteriaSpecification.INNER_JOIN);
 		return (Long) opsCodeCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -112,8 +109,7 @@ extends OpsCodeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private OpsCode loadOpsCodeFromOpsCodeVO(OpsCodeVO opsCodeVO)
-	{
+	private OpsCode loadOpsCodeFromOpsCodeVO(OpsCodeVO opsCodeVO) {
 		// TODO implement loadOpsCodeFromOpsCodeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsCodeFromOpsCodeVO(OpsCodeVO) not yet implemented.");
 		Long id = opsCodeVO.getId();
@@ -121,8 +117,7 @@ extends OpsCodeDaoBase
 		if (id != null) {
 			opsCode = this.load(id);
 		}
-		if (opsCode == null)
-		{
+		if (opsCode == null) {
 			opsCode = OpsCode.Factory.newInstance();
 		}
 		return opsCode;
@@ -132,8 +127,7 @@ extends OpsCodeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsCode opsCodeVOToEntity(OpsCodeVO opsCodeVO)
-	{
+	public OpsCode opsCodeVOToEntity(OpsCodeVO opsCodeVO) {
 		OpsCode entity = this.loadOpsCodeFromOpsCodeVO(opsCodeVO);
 		this.opsCodeVOToEntity(opsCodeVO, entity, true);
 		return entity;
@@ -146,8 +140,7 @@ extends OpsCodeDaoBase
 	public void opsCodeVOToEntity(
 			OpsCodeVO source,
 			OpsCode target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.opsCodeVOToEntity(source, target, copyIfNull);
 		OpsSystVO systematicsVO = source.getSystematics();
 		// if (systematicsVO != null) {
@@ -172,8 +165,7 @@ extends OpsCodeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsCodeVO toOpsCodeVO(final OpsCode entity)
-	{
+	public OpsCodeVO toOpsCodeVO(final OpsCode entity) {
 		return super.toOpsCodeVO(entity);
 	}
 
@@ -183,8 +175,7 @@ extends OpsCodeDaoBase
 	@Override
 	public void toOpsCodeVO(
 			OpsCode source,
-			OpsCodeVO target)
-	{
+			OpsCodeVO target) {
 		super.toOpsCodeVO(source, target);
 		// WARNING! No conversion for target.systematics (can't convert source.getSystematics():org.phoenixctms.ctsms.domain.OpsSyst to org.phoenixctms.ctsms.vo.OpsSystVO
 		OpsSyst systematics = source.getSystematics();

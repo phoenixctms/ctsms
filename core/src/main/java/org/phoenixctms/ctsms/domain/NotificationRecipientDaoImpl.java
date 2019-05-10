@@ -22,10 +22,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
  * @see NotificationRecipient
  */
 public class NotificationRecipientDaoImpl
-extends NotificationRecipientDaoBase
-{
-
-
+		extends NotificationRecipientDaoBase {
 
 	@Override
 	protected Collection<NotificationRecipient> handleFindPending(Long notificationId, Long departmentId,
@@ -50,15 +47,12 @@ extends NotificationRecipientDaoBase
 		return notificationRecipientCriteria.list();
 	}
 
-
-
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private NotificationRecipient loadNotificationRecipientFromNotificationRecipientVO(NotificationRecipientVO notificationRecipientVO)
-	{
+	private NotificationRecipient loadNotificationRecipientFromNotificationRecipientVO(NotificationRecipientVO notificationRecipientVO) {
 		// TODO implement loadNotificationRecipientFromNotificationRecipientVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationRecipientFromNotificationRecipientVO(NotificationRecipientVO) not yet implemented.");
 		/* A typical implementation looks like this: NotificationRecipient notificationRecipient = this.load(notificationRecipientVO.getId()); if (notificationRecipient == null) {
@@ -69,8 +63,7 @@ extends NotificationRecipientDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public NotificationRecipient notificationRecipientVOToEntity(NotificationRecipientVO notificationRecipientVO)
-	{
+	public NotificationRecipient notificationRecipientVOToEntity(NotificationRecipientVO notificationRecipientVO) {
 		// TODO verify behavior of notificationRecipientVOToEntity
 		NotificationRecipient entity = this.loadNotificationRecipientFromNotificationRecipientVO(notificationRecipientVO);
 		this.notificationRecipientVOToEntity(notificationRecipientVO, entity, true);
@@ -84,8 +77,7 @@ extends NotificationRecipientDaoBase
 	public void notificationRecipientVOToEntity(
 			NotificationRecipientVO source,
 			NotificationRecipient target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of notificationRecipientVOToEntity
 		super.notificationRecipientVOToEntity(source, target, copyIfNull);
 	}
@@ -94,8 +86,7 @@ extends NotificationRecipientDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public NotificationRecipientVO toNotificationRecipientVO(final NotificationRecipient entity)
-	{
+	public NotificationRecipientVO toNotificationRecipientVO(final NotificationRecipient entity) {
 		// TODO verify behavior of toNotificationRecipientVO
 		return super.toNotificationRecipientVO(entity);
 	}
@@ -106,8 +97,7 @@ extends NotificationRecipientDaoBase
 	@Override
 	public void toNotificationRecipientVO(
 			NotificationRecipient source,
-			NotificationRecipientVO target)
-	{
+			NotificationRecipientVO target) {
 		// TODO verify behavior of toNotificationRecipientVO
 		super.toNotificationRecipientVO(source, target);
 		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO

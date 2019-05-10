@@ -25,8 +25,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
  * @see org.phoenixctms.ctsms.domain.InputFieldValue
  */
 public class InputFieldValueDaoImpl
-		extends InputFieldValueDaoBase
-{
+		extends InputFieldValueDaoBase {
 
 	private org.hibernate.Criteria createInputFieldValueCriteria() {
 		org.hibernate.Criteria inputFieldValueCriteria = this.getSession().createCriteria(InputFieldValue.class);
@@ -37,8 +36,7 @@ public class InputFieldValueDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<String> handleFindTextValues(String textValueInfix, Integer limit)
-	{
+	protected Collection<String> handleFindTextValues(String textValueInfix, Integer limit) {
 		org.hibernate.Criteria inputFieldValueCriteria = createInputFieldValueCriteria();
 		CategoryCriterion.apply(inputFieldValueCriteria, new CategoryCriterion(textValueInfix, "truncatedStringValue", MatchMode.ANYWHERE));
 		inputFieldValueCriteria.addOrder(Order.asc("truncatedStringValue"));
@@ -49,8 +47,7 @@ public class InputFieldValueDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long selectionSetValueId)
-	{
+	protected long handleGetCount(Long selectionSetValueId) {
 		org.hibernate.Criteria inputFieldValueCriteria = createInputFieldValueCriteria();
 		if (selectionSetValueId != null) {
 			org.hibernate.Criteria selectionSetValueCriteria = inputFieldValueCriteria.createCriteria("selectionValues", CriteriaSpecification.INNER_JOIN);

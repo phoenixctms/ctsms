@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.user.UserService#getUserList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Integer, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups={"service","UserService"})
+@Test(groups = { "service", "UserService" })
 public class UserService_getUserListTest extends UserServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getUserList</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'UserService_getUserListTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.getUserList]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getUserList</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'UserService_getUserListTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.getUserList]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

@@ -65,8 +65,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandListStatusEntryInVO backup = new ProbandListStatusEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -142,16 +141,11 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			try {
 				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(), false,
 						probandListEntry.getProband().getId());
-
 			} catch (ServiceException e) {
-
 			} catch (AuthenticationException e) {
-
 				WebUtil.publishException(e);
 			} catch (AuthorisationException e) {
-
 			} catch (IllegalArgumentException e) {
-
 			}
 		}
 		return 0l;
@@ -282,7 +276,6 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
 		}
-
 	}
 
 	@Override

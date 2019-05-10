@@ -25,15 +25,13 @@ import org.phoenixctms.ctsms.vo.CountryVO;
  * @see Country
  */
 public class CountryDaoImpl
-		extends CountryDaoBase
-{
+		extends CountryDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public Country countryVOToEntity(CountryVO countryVO)
-	{
+	public Country countryVOToEntity(CountryVO countryVO) {
 		Country entity = this.loadCountryFromCountryVO(countryVO);
 		this.countryVOToEntity(countryVO, entity, true);
 		return entity;
@@ -46,8 +44,7 @@ public class CountryDaoImpl
 	public void countryVOToEntity(
 			CountryVO source,
 			Country target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.countryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -89,8 +86,7 @@ public class CountryDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Country loadCountryFromCountryVO(CountryVO countryVO)
-	{
+	private Country loadCountryFromCountryVO(CountryVO countryVO) {
 		// TODO implement loadCountryFromCountryVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCountryFromCountryVO(CountryVO) not yet implemented.");
 		Country country = null;
@@ -98,8 +94,7 @@ public class CountryDaoImpl
 		if (id != null) {
 			country = this.load(id);
 		}
-		if (country == null)
-		{
+		if (country == null) {
 			country = Country.Factory.newInstance();
 		}
 		return country;
@@ -109,8 +104,7 @@ public class CountryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CountryVO toCountryVO(final Country entity)
-	{
+	public CountryVO toCountryVO(final Country entity) {
 		return super.toCountryVO(entity);
 	}
 
@@ -120,8 +114,7 @@ public class CountryDaoImpl
 	@Override
 	public void toCountryVO(
 			Country source,
-			CountryVO target)
-	{
+			CountryVO target) {
 		super.toCountryVO(source, target);
 	}
 }

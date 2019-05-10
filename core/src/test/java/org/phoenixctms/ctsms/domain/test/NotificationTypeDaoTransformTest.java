@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.NotificationType
 */
-@Test(groups={"transform","NotificationTypeDao"})
+@Test(groups = { "transform", "NotificationTypeDao" })
 public class NotificationTypeDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method NotificationTypeDao.toNotificationTypeVO
-   *
-   * @see org.phoenixctms.ctsms.domain.NotificationTypeDao#toNotificationTypeVO(org.phoenixctms.ctsms.domain.NotificationType source, org.phoenixctms.ctsms.vo.NotificationTypeVO target)
-   */
-  @Test
-  public void testToNotificationTypeVO() {
-    Assert.fail("Test 'NotificationTypeDaoTransformTest.testToNotificationTypeVO' not implemented!");
-  }
+	/**
+	 * Test for method NotificationTypeDao.toNotificationTypeVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.NotificationTypeDao#toNotificationTypeVO(org.phoenixctms.ctsms.domain.NotificationType source, org.phoenixctms.ctsms.vo.NotificationTypeVO target)
+	 */
+	@Test
+	public void testToNotificationTypeVO() {
+		Assert.fail("Test 'NotificationTypeDaoTransformTest.testToNotificationTypeVO' not implemented!");
+	}
 
-    /**
-   * Test for method notificationTypeVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.NotificationTypeDao#notificationTypeVOToEntity(org.phoenixctms.ctsms.vo.NotificationTypeVO source, org.phoenixctms.ctsms.domain.NotificationType target, boolean copyIfNull)
-   */
-  @Test
-  public void testNotificationTypeVOToEntity() {
-    Assert.fail("Test 'NotificationTypeDaoTransformTest.testNotificationTypeVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method notificationTypeVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.NotificationTypeDao#notificationTypeVOToEntity(org.phoenixctms.ctsms.vo.NotificationTypeVO source, org.phoenixctms.ctsms.domain.NotificationType target, boolean copyIfNull)
+	*/
+	@Test
+	public void testNotificationTypeVOToEntity() {
+		Assert.fail("Test 'NotificationTypeDaoTransformTest.testNotificationTypeVOToEntity' not implemented!");
+	}
 }

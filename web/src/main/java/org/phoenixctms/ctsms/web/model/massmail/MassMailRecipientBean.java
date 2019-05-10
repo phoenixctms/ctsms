@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.massmail;
 
-
 import java.util.Iterator;
 import java.util.Set;
 
@@ -30,18 +29,14 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 
-
-
 	private static void initMassMailRecipientDefaultValues(MassMailRecipientInVO in, Long massMailId) {
 		if (in != null) {
 			in.setProbandId(null);
 			in.setMassMailId(massMailId);
 			in.setId(null);
 			in.setVersion(null);
-
 		}
 	}
-
 
 	private Long massMailId;
 	private MassMailOutVO massMail;
@@ -52,15 +47,11 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 	// private ArrayList<SelectItem> availableRoles;
 
 	// private HashMap<Long, EmailMessageVO> emailMessageCache;
-
 	public MassMailRecipientBean() {
 		super();
 		// emailMessageCache = new HashMap<Long, EmailMessageVO>();
-
 		probandMultiPicker = new ProbandMultiPickerModel();
 	}
-
-
 
 	public final void addBulk() {
 		actionPostProcess(addBulkAction());
@@ -126,8 +117,6 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
-
-
 	public final void deleteBulk() {
 		actionPostProcess(deleteBulkAction());
 	}
@@ -161,14 +150,6 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-
-
-
-
-
-
-
-
 	// public ShiftDurationSummaryModel getShiftDurationModel(StaffOutVO staff) {
 	// return ShiftDurationSummaryModel.getCachedShiftDurationModel(staff, now, shiftDurationModelCache);
 	// }
@@ -179,8 +160,6 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 	public String getProbandName() {
 		return WebUtil.probandIdToName(in.getProbandId());
 	}
-
-
 
 	// public StreamedContent getTeamMembersExcelStreamedContent() throws Exception {
 	// try {
@@ -224,6 +203,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 		}
 	}
 
+	@Override
 	protected void initIn() {
 		if (in == null) {
 			in = new MassMailRecipientInVO();
@@ -236,6 +216,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 		}
 	}
 
+	@Override
 	protected void initSets() {
 		// now = new Date();
 		// emailMessageCache.clear();
@@ -265,6 +246,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MASS_MAIL_LOCKED);
 		}
 	}
+
 	// public boolean isBulkAddNotifyTimelineEvent() {
 	// return bulkAddNotifyTimelineEvent;
 	// }
@@ -272,12 +254,9 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 	public boolean isCreateable() {
 		return (in.getMassMailId() == null ? false : !WebUtil.isMassMailLocked(massMail));
 	}
-
 	// public boolean isBulkAddAccess() {
 	// return bulkAddAccess;
 	// }
-
-
 
 	@Override
 	public boolean isEditable() {
@@ -300,23 +279,15 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isMassMailLocked(massMail);
 	}
-
-
-
-
-
-
 	// public void setBulkAddAccess(boolean bulkAddAccess) {
 	// this.bulkAddAccess = bulkAddAccess;
 	// }
 	// public void setBulkAddNotifyTimelineEvent(boolean bulkAddNotifyTimelineEvent) {
 	// this.bulkAddNotifyTimelineEvent = bulkAddNotifyTimelineEvent;
 	// }
-
 	// public void setBulkAddRoleId(Long bulkAddRoleId) {
 	// this.bulkAddRoleId = bulkAddRoleId;
 	// }
-
 	// @Override
 	// public String updateAction() {
 	// sanitizeInVals();

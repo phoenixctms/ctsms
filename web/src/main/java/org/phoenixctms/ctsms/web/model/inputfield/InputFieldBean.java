@@ -141,6 +141,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setTimePreset(DefaultSettings.INPUT_FIELD_TIME_PRESET_PRESET);
 		}
 	}
+
 	private InputFieldInVO in;
 	private InputFieldInVOConfig config;
 	private InputFieldOutVO out;
@@ -150,7 +151,6 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private HashMap<String, String> tabTitleMap;
 	private String allowTypes;
 	private Integer uploadSizeLimit;
-
 	private String deferredDeleteReason;
 
 	public InputFieldBean() {
@@ -162,8 +162,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InputFieldInVO backup = new InputFieldInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -196,8 +195,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		actionPostProcess(addCloneAction());
 	}
 
-	public String addCloneAction()
-	{
+	public String addCloneAction() {
 		try {
 			out = WebUtil.getServiceLocator().getInputFieldService().cloneInputField(WebUtil.getAuthentication(), in.getId(), in.getName());
 			initIn();
@@ -591,6 +589,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		return Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB) && super.isEditable();
 	}
@@ -603,6 +602,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		return false;
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.INPUT_FIELD_DB) && super.isRemovable();
 	}

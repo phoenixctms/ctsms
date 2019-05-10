@@ -62,7 +62,6 @@ public class ProbandOutVOComparator extends AlphanumComparatorBase implements Co
 					}
 				}
 			}
-
 		} else if (a == null && b != null) {
 			return -1;
 		} else if (a != null && b == null) {

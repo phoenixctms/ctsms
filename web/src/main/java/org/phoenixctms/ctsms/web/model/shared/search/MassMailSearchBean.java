@@ -86,7 +86,6 @@ public class MassMailSearchBean extends SearchBeanBase {
 		return WebUtil.getMassMailProgressValue(massMail, massMailResultModel.getMassMailProgress(massMail));
 	}
 
-
 	public MassMailSearchResultLazyModel getMassMailResultModel() {
 		return massMailResultModel;
 	}
@@ -129,8 +128,6 @@ public class MassMailSearchBean extends SearchBeanBase {
 	public boolean isMarkUnEncrypted() {
 		return true;
 	}
-
-
 
 	@Override
 	public String searchAction() {

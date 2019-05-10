@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
-
-
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -58,6 +56,4 @@ public class EcrfFieldValuesResource {
 		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in), null);
 		// return WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in);
 	}
-
 }
-

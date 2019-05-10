@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.SelectionSetService#getAllSurveyStatusTypes(org.phoenixctms.ctsms.vo.AuthenticationVO)
  */
-@Test(groups={"service","SelectionSetService"})
+@Test(groups = { "service", "SelectionSetService" })
 public class SelectionSetService_getAllSurveyStatusTypesTest extends SelectionSetServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getAllSurveyStatusTypes</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'SelectionSetService_getAllSurveyStatusTypesTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllSurveyStatusTypes]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getAllSurveyStatusTypes</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'SelectionSetService_getAllSurveyStatusTypesTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getAllSurveyStatusTypes]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

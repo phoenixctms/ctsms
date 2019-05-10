@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
  * @see TrialStatusType
  */
 public class TrialStatusTypeDaoImpl
-extends TrialStatusTypeDaoBase
-{
+		extends TrialStatusTypeDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<TrialStatusType>(false);
 	private final static VOIDComparator ACTION_ID_COMPARATOR = new VOIDComparator<TrialStatusActionVO>(false);
@@ -40,8 +39,7 @@ extends TrialStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<TrialStatusType> handleFindInitialStates()
-	{
+	protected Collection<TrialStatusType> handleFindInitialStates() {
 		org.hibernate.Criteria trialStatusTypeCriteria = createTrialStatusTypeCriteria();
 		trialStatusTypeCriteria.add(Restrictions.eq("initial", true));
 		trialStatusTypeCriteria.addOrder(Order.asc("id"));
@@ -52,8 +50,7 @@ extends TrialStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<TrialStatusType> handleFindTransitions(Long statusTypeId)
-	{
+	protected Collection<TrialStatusType> handleFindTransitions(Long statusTypeId) {
 		TrialStatusType statusType = this.load(statusTypeId);
 		Iterator<TrialStatusType> it = null;
 		if (statusType != null) {
@@ -74,8 +71,7 @@ extends TrialStatusTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialStatusType loadTrialStatusTypeFromTrialStatusTypeVO(TrialStatusTypeVO trialStatusTypeVO)
-	{
+	private TrialStatusType loadTrialStatusTypeFromTrialStatusTypeVO(TrialStatusTypeVO trialStatusTypeVO) {
 		// TODO implement loadTrialStatusTypeFromTrialStatusTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialStatusTypeFromTrialStatusTypeVO(TrialStatusTypeVO) not yet implemented.");
 		TrialStatusType trialStatusType = null;
@@ -83,8 +79,7 @@ extends TrialStatusTypeDaoBase
 		if (id != null) {
 			trialStatusType = this.load(id);
 		}
-		if (trialStatusType == null)
-		{
+		if (trialStatusType == null) {
 			trialStatusType = TrialStatusType.Factory.newInstance();
 		}
 		return trialStatusType;
@@ -106,8 +101,7 @@ extends TrialStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialStatusTypeVO toTrialStatusTypeVO(final TrialStatusType entity)
-	{
+	public TrialStatusTypeVO toTrialStatusTypeVO(final TrialStatusType entity) {
 		return super.toTrialStatusTypeVO(entity);
 	}
 
@@ -117,8 +111,7 @@ extends TrialStatusTypeDaoBase
 	@Override
 	public void toTrialStatusTypeVO(
 			TrialStatusType source,
-			TrialStatusTypeVO target)
-	{
+			TrialStatusTypeVO target) {
 		super.toTrialStatusTypeVO(source, target);
 		// WARNING! No conversion for target.actions (can't convert source.getActions():org.phoenixctms.ctsms.domain.TrialStatusAction to org.phoenixctms.ctsms.vo.TrialStatusActionVO
 		target.setName(L10nUtil.getTrialStatusTypeName(Locales.USER, source.getNameL10nKey()));
@@ -129,8 +122,7 @@ extends TrialStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialStatusType trialStatusTypeVOToEntity(TrialStatusTypeVO trialStatusTypeVO)
-	{
+	public TrialStatusType trialStatusTypeVOToEntity(TrialStatusTypeVO trialStatusTypeVO) {
 		TrialStatusType entity = this.loadTrialStatusTypeFromTrialStatusTypeVO(trialStatusTypeVO);
 		this.trialStatusTypeVOToEntity(trialStatusTypeVO, entity, true);
 		return entity;
@@ -143,13 +135,12 @@ extends TrialStatusTypeDaoBase
 	public void trialStatusTypeVOToEntity(
 			TrialStatusTypeVO source,
 			TrialStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialStatusTypeVOToEntity(source, target, copyIfNull);
 		Collection actions = source.getActions();
 		if (copyIfNull || actions.size() > 0) {
 			this.getTrialStatusActionDao().trialStatusActionVOToEntityCollection(actions);
-			target.setActions((Collection<TrialStatusAction>) actions);
+			target.setActions(actions);
 		}
 	}
 }

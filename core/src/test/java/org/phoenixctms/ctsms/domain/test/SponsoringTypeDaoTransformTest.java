@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.SponsoringType
 */
-@Test(groups={"transform","SponsoringTypeDao"})
+@Test(groups = { "transform", "SponsoringTypeDao" })
 public class SponsoringTypeDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method SponsoringTypeDao.toSponsoringTypeVO
-   *
-   * @see org.phoenixctms.ctsms.domain.SponsoringTypeDao#toSponsoringTypeVO(org.phoenixctms.ctsms.domain.SponsoringType source, org.phoenixctms.ctsms.vo.SponsoringTypeVO target)
-   */
-  @Test
-  public void testToSponsoringTypeVO() {
-    Assert.fail("Test 'SponsoringTypeDaoTransformTest.testToSponsoringTypeVO' not implemented!");
-  }
+	/**
+	 * Test for method SponsoringTypeDao.toSponsoringTypeVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.SponsoringTypeDao#toSponsoringTypeVO(org.phoenixctms.ctsms.domain.SponsoringType source, org.phoenixctms.ctsms.vo.SponsoringTypeVO target)
+	 */
+	@Test
+	public void testToSponsoringTypeVO() {
+		Assert.fail("Test 'SponsoringTypeDaoTransformTest.testToSponsoringTypeVO' not implemented!");
+	}
 
-    /**
-   * Test for method sponsoringTypeVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.SponsoringTypeDao#sponsoringTypeVOToEntity(org.phoenixctms.ctsms.vo.SponsoringTypeVO source, org.phoenixctms.ctsms.domain.SponsoringType target, boolean copyIfNull)
-   */
-  @Test
-  public void testSponsoringTypeVOToEntity() {
-    Assert.fail("Test 'SponsoringTypeDaoTransformTest.testSponsoringTypeVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method sponsoringTypeVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.SponsoringTypeDao#sponsoringTypeVOToEntity(org.phoenixctms.ctsms.vo.SponsoringTypeVO source, org.phoenixctms.ctsms.domain.SponsoringType target, boolean copyIfNull)
+	*/
+	@Test
+	public void testSponsoringTypeVOToEntity() {
+		Assert.fail("Test 'SponsoringTypeDaoTransformTest.testSponsoringTypeVOToEntity' not implemented!");
+	}
 }

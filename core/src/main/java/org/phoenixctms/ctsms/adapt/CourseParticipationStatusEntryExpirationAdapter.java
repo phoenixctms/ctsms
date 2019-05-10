@@ -82,7 +82,7 @@ public class CourseParticipationStatusEntryExpirationAdapter extends CourseExpir
 
 	@Override
 	public void setCaches(Map... caches) {
-		particiaptionCourseIdsMap = (Map<Long, Set<Long>>) caches[0];
+		particiaptionCourseIdsMap = caches[0];
 	}
 
 	@Override

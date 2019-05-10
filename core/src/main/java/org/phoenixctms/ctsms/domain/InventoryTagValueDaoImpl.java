@@ -23,8 +23,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see InventoryTagValue
  */
 public class InventoryTagValueDaoImpl
-extends InventoryTagValueDaoBase
-{
+		extends InventoryTagValueDaoBase {
 
 	private org.hibernate.Criteria createTagValueCriteria() {
 		org.hibernate.Criteria tagValueCriteria = this.getSession().createCriteria(InventoryTagValue.class);
@@ -46,7 +45,7 @@ extends InventoryTagValueDaoBase
 	@Override
 	protected long handleGetCount(
 			Long inventoryId) throws Exception {
-		org.hibernate.Criteria tagValueCriteria =createTagValueCriteria();
+		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		if (inventoryId != null) {
 			tagValueCriteria.add(Restrictions.eq("inventory.id", inventoryId.longValue()));
 		}
@@ -57,8 +56,7 @@ extends InventoryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTagValue inventoryTagValueInVOToEntity(InventoryTagValueInVO inventoryTagValueInVO)
-	{
+	public InventoryTagValue inventoryTagValueInVOToEntity(InventoryTagValueInVO inventoryTagValueInVO) {
 		InventoryTagValue entity = this.loadInventoryTagValueFromInventoryTagValueInVO(inventoryTagValueInVO);
 		this.inventoryTagValueInVOToEntity(inventoryTagValueInVO, entity, true);
 		return entity;
@@ -71,8 +69,7 @@ extends InventoryTagValueDaoBase
 	public void inventoryTagValueInVOToEntity(
 			InventoryTagValueInVO source,
 			InventoryTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryTagValueInVOToEntity(source, target, copyIfNull);
 		Long tagId = source.getTagId();
 		Long inventoryId = source.getInventoryId();
@@ -98,8 +95,7 @@ extends InventoryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTagValue inventoryTagValueOutVOToEntity(InventoryTagValueOutVO inventoryTagValueOutVO)
-	{
+	public InventoryTagValue inventoryTagValueOutVOToEntity(InventoryTagValueOutVO inventoryTagValueOutVO) {
 		InventoryTagValue entity = this.loadInventoryTagValueFromInventoryTagValueOutVO(inventoryTagValueOutVO);
 		this.inventoryTagValueOutVOToEntity(inventoryTagValueOutVO, entity, true);
 		return entity;
@@ -112,8 +108,7 @@ extends InventoryTagValueDaoBase
 	public void inventoryTagValueOutVOToEntity(
 			InventoryTagValueOutVO source,
 			InventoryTagValue target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryTagValueOutVOToEntity(source, target, copyIfNull);
 		InventoryTagVO tagVO = source.getTag();
 		InventoryOutVO inventoryVO = source.getInventory();
@@ -146,15 +141,13 @@ extends InventoryTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryTagValue loadInventoryTagValueFromInventoryTagValueInVO(InventoryTagValueInVO inventoryTagValueInVO)
-	{
+	private InventoryTagValue loadInventoryTagValueFromInventoryTagValueInVO(InventoryTagValueInVO inventoryTagValueInVO) {
 		InventoryTagValue inventoryTagValue = null;
 		Long id = inventoryTagValueInVO.getId();
 		if (id != null) {
 			inventoryTagValue = this.load(id);
 		}
-		if (inventoryTagValue == null)
-		{
+		if (inventoryTagValue == null) {
 			inventoryTagValue = InventoryTagValue.Factory.newInstance();
 		}
 		return inventoryTagValue;
@@ -165,11 +158,9 @@ extends InventoryTagValueDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryTagValue loadInventoryTagValueFromInventoryTagValueOutVO(InventoryTagValueOutVO inventoryTagValueOutVO)
-	{
+	private InventoryTagValue loadInventoryTagValueFromInventoryTagValueOutVO(InventoryTagValueOutVO inventoryTagValueOutVO) {
 		InventoryTagValue inventoryTagValue = this.load(inventoryTagValueOutVO.getId());
-		if (inventoryTagValue == null)
-		{
+		if (inventoryTagValue == null) {
 			inventoryTagValue = InventoryTagValue.Factory.newInstance();
 		}
 		return inventoryTagValue;
@@ -179,8 +170,7 @@ extends InventoryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTagValueInVO toInventoryTagValueInVO(final InventoryTagValue entity)
-	{
+	public InventoryTagValueInVO toInventoryTagValueInVO(final InventoryTagValue entity) {
 		return super.toInventoryTagValueInVO(entity);
 	}
 
@@ -190,8 +180,7 @@ extends InventoryTagValueDaoBase
 	@Override
 	public void toInventoryTagValueInVO(
 			InventoryTagValue source,
-			InventoryTagValueInVO target)
-	{
+			InventoryTagValueInVO target) {
 		super.toInventoryTagValueInVO(source, target);
 		InventoryTag tag = source.getTag();
 		Inventory inventory = source.getInventory();
@@ -207,8 +196,7 @@ extends InventoryTagValueDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTagValueOutVO toInventoryTagValueOutVO(final InventoryTagValue entity)
-	{
+	public InventoryTagValueOutVO toInventoryTagValueOutVO(final InventoryTagValue entity) {
 		return super.toInventoryTagValueOutVO(entity);
 	}
 
@@ -218,8 +206,7 @@ extends InventoryTagValueDaoBase
 	@Override
 	public void toInventoryTagValueOutVO(
 			InventoryTagValue source,
-			InventoryTagValueOutVO target)
-	{
+			InventoryTagValueOutVO target) {
 		super.toInventoryTagValueOutVO(source, target);
 		InventoryTag tag = source.getTag();
 		Inventory inventory = source.getInventory();

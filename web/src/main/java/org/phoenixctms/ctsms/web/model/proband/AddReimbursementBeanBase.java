@@ -55,24 +55,17 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	protected Long probandId;
 	private ProbandAddressOutVO address;
 	private float distance;
-
-
-
 	private boolean addTravelExpense;
 	private boolean addAccommodationExpense;
 	private boolean addTicketExpense;
-
 	private float travelExpenseFactor;
 	private boolean travelOneWay;
-
 	private float travelExpenseAmount;
 	private float accommodationExpenseAmount;
 	private float ticketExpenseAmount;
 	private ArrayList<SelectItem> ticketTypes;
 	private String ticketType;
-
 	protected boolean addReimbursement;
-
 	protected float reimbursementAmount;
 
 	public AddReimbursementBeanBase() {
@@ -81,8 +74,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		MoneyTransferInVO backup = new MoneyTransferInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -111,21 +103,20 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	protected void appendAccommodationExpenseComment(StringBuilder comment,Date start,Date stop) {
+	protected void appendAccommodationExpenseComment(StringBuilder comment, Date start, Date stop) {
 		if (addAccommodationExpense) {
 			if (comment.length() > 0) {
 				comment.append(MONEY_TRANSFER_COMMENT_SEPRATOR);
 			}
 			comment.append(Messages.getMessage(
 					MessageCodes.ADD_ACCOMMODATION_EXPENSE_COMMENT,
-					CommonUtil.formatDate(start, Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
+					CommonUtil.formatDate(start,
+							Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
 					CommonUtil.formatDate(stop,
 							Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
-							accommodationExpenseAmount,
-							WebUtil.getCurrencySymbol()
-					));
+					accommodationExpenseAmount,
+					WebUtil.getCurrencySymbol()));
 		}
-
 	}
 
 	protected void appendReimbursementComment(StringBuilder comment, Date start, String title) {
@@ -140,10 +131,9 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 					MessageCodes.ADD_REIMBURSEMENT_COMMENT,
 					CommonUtil.formatDate(start,
 							Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
-							title,
-							reimbursementAmount,
-							WebUtil.getCurrencySymbol()
-					));
+					title,
+					reimbursementAmount,
+					WebUtil.getCurrencySymbol()));
 		}
 	}
 
@@ -160,7 +150,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 		}
 	}
 
-	protected void appendTicketExpenseComment(StringBuilder comment,Date start,String title) {
+	protected void appendTicketExpenseComment(StringBuilder comment, Date start, String title) {
 		if (CommonUtil.isEmptyString(title)) {
 			title = "";
 		}
@@ -168,17 +158,15 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 			if (comment.length() > 0) {
 				comment.append(MONEY_TRANSFER_COMMENT_SEPRATOR);
 			}
-
 			comment.append(Messages.getMessage(
 					MessageCodes.ADD_TICKET_EXPENSE_COMMENT,
-					CommonUtil.formatDate(start, Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
+					CommonUtil.formatDate(start,
+							Settings.getString(SettingCodes.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_COMMENT_DATE_PATTERN)),
 					title,
 					CommonUtil.isEmptyString(ticketType) ? Messages.getString(MessageCodes.EMPTY_TRAVEL_TICKET_TYPE) : ticketType,
-							ticketExpenseAmount,
-							WebUtil.getCurrencySymbol()
-					));
+					ticketExpenseAmount,
+					WebUtil.getCurrencySymbol()));
 		}
-
 	}
 
 	protected void appendTravelExpenseComment(StringBuilder comment, Date start, String title) {
@@ -198,8 +186,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 					distance,
 					travelExpenseFactor,
 					travelExpenseAmount,
-					WebUtil.getCurrencySymbol()
-					));
+					WebUtil.getCurrencySymbol()));
 		}
 	}
 
@@ -235,7 +222,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	// public String getAliquotReimbursementLabel() {
 	// return "";
 	// }
-
 	public float getDistance() {
 		return distance;
 	}
@@ -270,15 +256,12 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	// return Messages.getString(MessageCodes.CREATE_NEW_MONEY_TRANSFER);
 	// }
 	// }
-
 	public float getTicketExpenseAmount() {
 		return ticketExpenseAmount;
 	}
-
 	// public float getTravelExpenseFactor() {
 	// return travelExpenseFactor;
 	// }
-
 
 	public String getTicketType() {
 		return ticketType;
@@ -293,9 +276,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	}
 
 	public void handleDistanceOneWayChange() {
-
 		travelExpenseAmount = (travelOneWay ? distance : 2.0f * distance) * travelExpenseFactor;
-
 	}
 
 	protected void initIn() {
@@ -316,8 +297,8 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 		if (reset) {
 			distance = 0.0f;
 			travelOneWay = false;
-			travelExpenseFactor = Settings.getFloat(SettingCodes.ADD_REIMBURSEMENT_TRAVEL_EXPENSES_FACTOR, Bundle.SETTINGS, DefaultSettings.ADD_REIMBURSEMENT_TRAVEL_EXPENSES_FACTOR);
-
+			travelExpenseFactor = Settings.getFloat(SettingCodes.ADD_REIMBURSEMENT_TRAVEL_EXPENSES_FACTOR, Bundle.SETTINGS,
+					DefaultSettings.ADD_REIMBURSEMENT_TRAVEL_EXPENSES_FACTOR);
 			proband = WebUtil.getProband(in.getProbandId(), null, null, null);
 			address = null;
 			if (in.getProbandId() != null) {
@@ -333,15 +314,13 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 			travelExpenseAmount = 0.0f;
 			addTravelExpense = address != null; // must be true, otherwise distance value is not retrieved && travelExpenseAmount > 0.0f;
 			ticketExpenseAmount = 0.0f;
-
 			ticketTypes = new ArrayList<SelectItem>();
 			Iterator<String> it = Messages.getStringList(MessageCodes.TRAVEL_TICKET_TYPES).iterator();
 			while (it.hasNext()) {
 				String ticketType = it.next();
-				ticketTypes.add(new SelectItem(ticketType,ticketType));
+				ticketTypes.add(new SelectItem(ticketType, ticketType));
 			}
-			ticketType=null;
-
+			ticketType = null;
 			addTicketExpense = ticketExpenseAmount > 0.0f;
 			accommodationExpenseAmount = 0.0f;
 			addAccommodationExpense = accommodationExpenseAmount > 0.0f;
@@ -396,7 +375,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	// public void setTravelExpenseFactor(float travelExpenseFactor) {
 	// this.travelExpenseFactor = travelExpenseFactor;
 	// }
-
 	public void setAddTicketExpense(boolean addTicketExpense) {
 		this.addTicketExpense = addTicketExpense;
 	}

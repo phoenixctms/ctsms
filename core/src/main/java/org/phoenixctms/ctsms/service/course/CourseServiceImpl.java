@@ -90,8 +90,7 @@ import org.phoenixctms.ctsms.vocycle.CourseReflexionGraph;
  * @see org.phoenixctms.ctsms.service.course.CourseService
  */
 public class CourseServiceImpl
-extends CourseServiceBase
-{
+		extends CourseServiceBase {
 
 	private static JournalEntry logSystemMessage(Course course, CourseOutVO courseVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -139,12 +138,12 @@ extends CourseServiceBase
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(courseParticipation.getCourse(), result.getCourse(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null,
 				journalEntryDao);
-		logSystemMessage(courseParticipation.getStaff(), result.getCourse(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
+		logSystemMessage(courseParticipation.getStaff(), result.getCourse(), now, user, SystemMessageCodes.COURSE_PARTICIPATION_STATUS_ENTRY_CREATED, result, null,
+				journalEntryDao);
 		return result;
 	}
 
-	private void checkCourseInput(CourseInVO courseIn) throws ServiceException
-	{
+	private void checkCourseInput(CourseInVO courseIn) throws ServiceException {
 		// referential checks
 		CheckIDUtil.checkDepartmentId(courseIn.getDepartmentId(), this.getDepartmentDao());
 		CourseCategory category = CheckIDUtil.checkCourseCategoryId(courseIn.getCategoryId(), this.getCourseCategoryDao());
@@ -230,8 +229,7 @@ extends CourseServiceBase
 		(new CourseReflexionGraph(this.getCourseDao())).checkGraphLoop(course, true, false);
 	}
 
-	private void checkLecturerInput(LecturerInVO lecturerIn) throws ServiceException
-	{
+	private void checkLecturerInput(LecturerInVO lecturerIn) throws ServiceException {
 		(new LecturerCompetenceTagAdapter(this.getCourseDao(), this.getLecturerCompetenceDao(), this.getStaffDao())).checkTagValueInput(lecturerIn);
 	}
 
@@ -401,7 +399,7 @@ extends CourseServiceBase
 	@Override
 	protected CourseParticipationStatusEntryOutVO handleAddCourseParticipationStatusEntry(
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry)
-					throws Exception {
+			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return addCourseParticipationStatusEntry(newCourseParticipationStatusEntry, now, user);
@@ -427,7 +425,7 @@ extends CourseServiceBase
 	@Override
 	protected CourseParticipationStatusEntryOutVO handleAdminUpdateCourseParticipationStatusEntry(
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO modifiedCourseParticipationStatusEntry)
-					throws Exception {
+			throws Exception {
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry originalCourseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(modifiedCourseParticipationStatusEntry.getId(),
 				courseParticipationStatusEntryDao);
@@ -613,7 +611,7 @@ extends CourseServiceBase
 		if (courseId != null) {
 			CheckIDUtil.checkCourseId(courseId, this.getCourseDao());
 		}
-		return this.getInventoryBookingDao().getCount(null,null,null,courseId,null);
+		return this.getInventoryBookingDao().getCount(null, null, null, courseId, null);
 	}
 
 	@Override
@@ -631,7 +629,7 @@ extends CourseServiceBase
 	@Override
 	protected Collection<InventoryBookingOutVO> handleGetCourseInventoryBookingParticipantInterval(
 			AuthenticationVO auth, Long staffId, Long courseDepartmentId, Long courseCategoryId, Date from, Date to, Boolean isRelevantForCourseAppointments, boolean sort)
-					throws Exception {
+			throws Exception {
 		if (staffId != null) {
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
@@ -682,7 +680,7 @@ extends CourseServiceBase
 	@Override
 	protected long handleGetCourseParticipationStatusEntryCount(
 			AuthenticationVO auth, Long staffId, Long courseId, Long statusId)
-					throws Exception {
+			throws Exception {
 		if (staffId != null) {
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
@@ -698,7 +696,7 @@ extends CourseServiceBase
 	@Override
 	protected Collection<CourseParticipationStatusEntryOutVO> handleGetCourseParticipationStatusEntryList(
 			AuthenticationVO auth, Long staffId, Long courseId, Long statusId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (staffId != null) {
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
@@ -718,7 +716,7 @@ extends CourseServiceBase
 	protected Collection<CourseOutVO> handleGetExpiringCourses(AuthenticationVO auth, Date today,
 			Long departmentId, Long courseCategoryId,
 			VariablePeriod reminderPeriod, Long reminderPeriodDays, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -737,7 +735,7 @@ extends CourseServiceBase
 			AuthenticationVO auth, Date today, Long courseDepartmentId, Long courseCategoryId,
 			Long staffDepartmentId, Long staffCategoryId,
 			VariablePeriod reminderPeriod, Long reminderPeriodDays, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (courseDepartmentId != null) {
 			CheckIDUtil.checkDepartmentId(courseDepartmentId, this.getDepartmentDao());
 		}
@@ -796,7 +794,7 @@ extends CourseServiceBase
 	@Override
 	protected Collection<CourseOutVO> handleGetUpcomingCourses(AuthenticationVO auth, Date now,
 			Long departmentId, Long courseCategoryId, PSFVO psf)
-					throws Exception {
+			throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -837,7 +835,7 @@ extends CourseServiceBase
 	@Override
 	protected CourseCertificatePDFVO handleRenderCourseCertificate(
 			AuthenticationVO auth, Long courseParticipationStatusEntryId)
-					throws Exception {
+			throws Exception {
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId, courseParticipationStatusEntryDao);
 		ArrayList<CourseParticipationStatusEntryOutVO> participantVOs = new ArrayList<CourseParticipationStatusEntryOutVO>();
@@ -979,7 +977,8 @@ extends CourseServiceBase
 					DateCalc.dateDeltaDays(now, DateCalc.addInterval(course.getStop(), course.getValidityPeriod(), course.getValidityPeriodDays())));
 		}
 		if (course.isExpires()
-				&& now.compareTo(ExpirationEntityAdapter.getInstance(course, now).getReminderStart(null, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays)) >= 0) {
+				&& now.compareTo(
+						ExpirationEntityAdapter.getInstance(course, now).getReminderStart(null, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays)) >= 0) {
 			notificationDao.addExpiringCourseNotification(course, now, messageParameters);
 		} else {
 			ServiceUtil.cancelNotifications(course.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE);

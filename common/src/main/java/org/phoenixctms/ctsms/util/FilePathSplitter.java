@@ -39,8 +39,7 @@ public class FilePathSplitter {
 	public String joinFilePath(String directoryFormat, String fileNameFormat) {
 		return (new java.io.File(
 				MessageFormat.format(directoryFormat, directory),
-				MessageFormat.format(fileNameFormat, name,extension)
-				)).toString();
+				MessageFormat.format(fileNameFormat, name, extension))).toString();
 	}
 
 	public void splitFilePath(String filePath) {

@@ -75,19 +75,18 @@ public class BankAccountBean extends ManagedBeanBase {
 	}
 
 	private BankAccountInVO in;
-
 	private BankAccountOutVO out;
 	private Long probandId;
 	private ProbandOutVO proband;
 	private BankAccountLazyModel bankAccountModel;
+
 	public BankAccountBean() {
 		super();
 		bankAccountModel = new BankAccountLazyModel();
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		BankAccountInVO backup = new BankAccountInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -199,14 +198,9 @@ public class BankAccountBean extends ManagedBeanBase {
 		}
 	}
 
-
-
 	public Long getMoneyTransferCount(BankAccountOutVO bankAccount) {
 		if (bankAccount != null) {
-
-
-
-			return WebUtil.getMoneyTransferCount(null,bankAccount.getId());
+			return WebUtil.getMoneyTransferCount(null, bankAccount.getId());
 		}
 		return null;
 	}
@@ -253,7 +247,7 @@ public class BankAccountBean extends ManagedBeanBase {
 			in.setAccountNumber(null);
 			in.setBankCodeNumber(null);
 		} else if (CommonUtil.isEmptyString(in.getAccountHolderName())) {
-			in.setAccountHolderName( loadAccountHolderName(probandId));
+			in.setAccountHolderName(loadAccountHolderName(probandId));
 		}
 	}
 

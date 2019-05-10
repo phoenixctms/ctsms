@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.util;
 import java.util.Collection;
 import java.util.HashSet;
 
-
 public final class JSFVOConverterIDs {
 
 	public final static String ALPHA_ID_CONVERTER_ID = "ctsms.AlphaId";

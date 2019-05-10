@@ -66,8 +66,7 @@ public class StaffTagBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		StaffTagValueInVO backup = new StaffTagValueInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

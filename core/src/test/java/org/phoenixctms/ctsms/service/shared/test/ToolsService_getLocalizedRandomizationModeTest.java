@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.ToolsService#getLocalizedRandomizationMode(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.RandomizationMode)
  */
-@Test(groups={"service","ToolsService"})
+@Test(groups = { "service", "ToolsService" })
 public class ToolsService_getLocalizedRandomizationModeTest extends ToolsServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getLocalizedRandomizationMode</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'ToolsService_getLocalizedRandomizationModeTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getLocalizedRandomizationMode]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getLocalizedRandomizationMode</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'ToolsService_getLocalizedRandomizationModeTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getLocalizedRandomizationMode]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

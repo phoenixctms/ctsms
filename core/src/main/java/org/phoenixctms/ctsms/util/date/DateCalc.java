@@ -54,73 +54,73 @@ public final class DateCalc {
 				cal.setTime(date);
 				switch (period) {
 					case EXPLICIT:
-						cal.add(GregorianCalendar.DATE, mult * CommonUtil.safeLongToInt(explicitDays));
+						cal.add(Calendar.DATE, mult * CommonUtil.safeLongToInt(explicitDays));
 						break;
 					case MONTH:
-						cal.add(GregorianCalendar.MONTH, mult * 1);
+						cal.add(Calendar.MONTH, mult * 1);
 						break;
 					case TWO_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 2);
+						cal.add(Calendar.MONTH, mult * 2);
 						break;
 					case THREE_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 3);
+						cal.add(Calendar.MONTH, mult * 3);
 						break;
 					case FOUR_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 4);
+						cal.add(Calendar.MONTH, mult * 4);
 						break;
 					case FIVE_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 5);
+						cal.add(Calendar.MONTH, mult * 5);
 						break;
 					case SIX_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 6);
+						cal.add(Calendar.MONTH, mult * 6);
 						break;
 					case SEVEN_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 7);
+						cal.add(Calendar.MONTH, mult * 7);
 						break;
 					case EIGHT_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 8);
+						cal.add(Calendar.MONTH, mult * 8);
 						break;
 					case NINE_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 9);
+						cal.add(Calendar.MONTH, mult * 9);
 						break;
 					case TEN_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 10);
+						cal.add(Calendar.MONTH, mult * 10);
 						break;
 					case ELEVEN_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 11);
+						cal.add(Calendar.MONTH, mult * 11);
 						break;
 					case YEAR:
-						cal.add(GregorianCalendar.YEAR, mult * 1);
+						cal.add(Calendar.YEAR, mult * 1);
 						break;
 					case EIGHTEEN_MONTHS:
-						cal.add(GregorianCalendar.MONTH, mult * 18);
+						cal.add(Calendar.MONTH, mult * 18);
 						break;
 					case TWO_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 2);
+						cal.add(Calendar.YEAR, mult * 2);
 						break;
 					case THREE_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 3);
+						cal.add(Calendar.YEAR, mult * 3);
 						break;
 					case FOUR_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 4);
+						cal.add(Calendar.YEAR, mult * 4);
 						break;
 					case FIVE_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 5);
+						cal.add(Calendar.YEAR, mult * 5);
 						break;
 					case SIX_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 6);
+						cal.add(Calendar.YEAR, mult * 6);
 						break;
 					case SEVEN_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 7);
+						cal.add(Calendar.YEAR, mult * 7);
 						break;
 					case EIGHT_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 8);
+						cal.add(Calendar.YEAR, mult * 8);
 						break;
 					case NINE_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 9);
+						cal.add(Calendar.YEAR, mult * 9);
 						break;
 					case TEN_YEARS:
-						cal.add(GregorianCalendar.YEAR, mult * 10);
+						cal.add(Calendar.YEAR, mult * 10);
 						break;
 					default:
 						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_VARIABLE_PERIOD, DefaultMessages.UNSUPPORTED_VARIABLE_PERIOD, period));
@@ -171,34 +171,34 @@ public final class DateCalc {
 	public static CalendarWeekVO getCalendarWeek(Date date) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		int year = cal.get(GregorianCalendar.YEAR);
+		int year = cal.get(Calendar.YEAR);
 		int period;
-		switch ((new GregorianCalendar(year, 0, 1)).get(GregorianCalendar.DAY_OF_WEEK)) {
-			case GregorianCalendar.SUNDAY:
+		switch ((new GregorianCalendar(year, 0, 1)).get(Calendar.DAY_OF_WEEK)) {
+			case Calendar.SUNDAY:
 				period = -1;
 				break;
-			case GregorianCalendar.MONDAY:
+			case Calendar.MONDAY:
 				period = 0;
 				break;
-			case GregorianCalendar.TUESDAY:
+			case Calendar.TUESDAY:
 				period = 1;
 				break;
-			case GregorianCalendar.WEDNESDAY:
+			case Calendar.WEDNESDAY:
 				period = 2;
 				break;
-			case GregorianCalendar.THURSDAY:
+			case Calendar.THURSDAY:
 				period = 3;
 				break;
-			case GregorianCalendar.FRIDAY:
+			case Calendar.FRIDAY:
 				period = -3;
 				break;
-			case GregorianCalendar.SATURDAY:
+			case Calendar.SATURDAY:
 				period = -2;
 				break;
 			default:
 				period = 0;
 		}
-		int week = (int) ((cal.get(GregorianCalendar.DAY_OF_YEAR) - 1 + period) / 7d + 1);
+		int week = (int) ((cal.get(Calendar.DAY_OF_YEAR) - 1 + period) / 7d + 1);
 		if (week > getWeeksOfYear(year)) {
 			return new CalendarWeekVO(cal.getTime(), 1, year + 1);
 		} else if (week == 0) {
@@ -235,7 +235,8 @@ public final class DateCalc {
 			}
 			return cal.getTime();
 		} else {
-			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.EASTER_DATE_YEAR_UNSUPPORTED, DefaultMessages.EASTER_DATE_YEAR_UNSUPPORTED, Integer.toString(year)));
+			throw new IllegalArgumentException(
+					L10nUtil.getMessage(MessageCodes.EASTER_DATE_YEAR_UNSUPPORTED, DefaultMessages.EASTER_DATE_YEAR_UNSUPPORTED, Integer.toString(year)));
 		}
 	}
 
@@ -243,8 +244,8 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 23, 59, 59);
-			cal.set(GregorianCalendar.MILLISECOND, 999);
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+			cal.set(Calendar.MILLISECOND, 999);
 			return cal.getTime();
 		}
 		return null;
@@ -254,8 +255,8 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), 11, 31, 23, 59, 59);
-			cal.set(GregorianCalendar.MILLISECOND, 999);
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), 11, 31, 23, 59, 59);
+			cal.set(Calendar.MILLISECOND, 999);
 			return cal.getTime();
 		}
 		return null;
@@ -266,8 +267,8 @@ public final class DateCalc {
 		calStart.setTime(start);
 		GregorianCalendar calStop = new GregorianCalendar();
 		calStop.setTime(stop);
-		int startYear = calStart.get(GregorianCalendar.YEAR);
-		int stopYear = calStop.get(GregorianCalendar.YEAR);
+		int startYear = calStart.get(Calendar.YEAR);
+		int stopYear = calStop.get(Calendar.YEAR);
 		ArrayList<HolidayVO> holidays;
 		if (startYear < stopYear) {
 			holidays = new ArrayList<HolidayVO>((stopYear - startYear + 1) * YEAR_MIN_DAYS); // assume each day is a holiday for hashmap initial load...
@@ -341,7 +342,7 @@ public final class DateCalc {
 								}
 								cal.set(year, holiday.getMonth() - 1, holiday.getDay());
 								try {
-									cal.add(GregorianCalendar.DAY_OF_MONTH, offset);
+									cal.add(Calendar.DAY_OF_MONTH, offset);
 									storeHoliday(year, cal, holiday, holidayMap);
 								} catch (IllegalArgumentException e) {
 									if (!(holiday.getMonth() == 2 && holiday.getDay() == 29)) {
@@ -351,7 +352,7 @@ public final class DateCalc {
 								break;
 							case EASTER_DATE:
 								cal.setTime(easterDate);
-								cal.add(GregorianCalendar.DAY_OF_MONTH, offset);
+								cal.add(Calendar.DAY_OF_MONTH, offset);
 								storeHoliday(year, cal, holiday, holidayMap);
 								break;
 							case NTH_WEEKDAY_AFTER_DATE:
@@ -370,7 +371,7 @@ public final class DateCalc {
 								cal.set(year, holiday.getMonth() - 1, holiday.getDay());
 								try {
 									cal.setTime(getNthWeekdayAfterDate(cal.getTime(), holiday.getWeekday(), holiday.getN()));
-									cal.add(GregorianCalendar.DAY_OF_MONTH, offset);
+									cal.add(Calendar.DAY_OF_MONTH, offset);
 									storeHoliday(year, cal, holiday, holidayMap);
 								} catch (IllegalArgumentException e) {
 									if (!(holiday.getMonth() == 2 && holiday.getDay() == 29)) {
@@ -394,7 +395,7 @@ public final class DateCalc {
 								cal.set(year, holiday.getMonth() - 1, holiday.getDay());
 								try {
 									cal.setTime(getNthWeekdayBeforeDate(cal.getTime(), holiday.getWeekday(), holiday.getN()));
-									cal.add(GregorianCalendar.DAY_OF_MONTH, offset);
+									cal.add(Calendar.DAY_OF_MONTH, offset);
 									storeHoliday(year, cal, holiday, holidayMap);
 								} catch (IllegalArgumentException e) {
 									if (!(holiday.getMonth() == 2 && holiday.getDay() == 29)) {
@@ -411,7 +412,7 @@ public final class DateCalc {
 								GregorianCalendar nextYear = new GregorianCalendar(year + 1, 0, 1);
 								while (cal.before(nextYear)) {
 									storeHoliday(year, cal, holiday, holidayMap);
-									cal.add(GregorianCalendar.DAY_OF_MONTH, 7);
+									cal.add(Calendar.DAY_OF_MONTH, 7);
 								}
 								break;
 							default:
@@ -447,7 +448,7 @@ public final class DateCalc {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
 			//cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), cal.get(GregorianCalendar.HOUR), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
-			cal.set(GregorianCalendar.MILLISECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
 			return cal.getTime();
 		}
 		return null;
@@ -489,7 +490,7 @@ public final class DateCalc {
 	private static Date getNthWeekdayAfterDate(Date date, Weekday weekday, int n) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		int delta = getWeekdayNum(weekday) - cal.get(GregorianCalendar.DAY_OF_WEEK); // sunday ..1, monday ..2, ...
+		int delta = getWeekdayNum(weekday) - cal.get(Calendar.DAY_OF_WEEK); // sunday ..1, monday ..2, ...
 		if (delta < 0) {
 			delta += 7;
 		}
@@ -500,7 +501,7 @@ public final class DateCalc {
 	private static Date getNthWeekdayBeforeDate(Date date, Weekday weekday, int n) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		int delta = getWeekdayNum(weekday) - cal.get(GregorianCalendar.DAY_OF_WEEK); // sunday ..1, monday ..2, ...
+		int delta = getWeekdayNum(weekday) - cal.get(Calendar.DAY_OF_WEEK); // sunday ..1, monday ..2, ...
 		if (delta > 0) {
 			delta -= 7;
 		}
@@ -512,7 +513,7 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			return (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+			return (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
 		}
 		return null;
 	}
@@ -521,7 +522,7 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			return (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), 0, 1, 0, 0, 0)).getTime();
+			return (new GregorianCalendar(cal.get(Calendar.YEAR), 0, 1, 0, 0, 0)).getTime();
 		}
 		return null;
 	}
@@ -582,19 +583,19 @@ public final class DateCalc {
 	private static int getWeekdayNum(Weekday weekday) {
 		switch (weekday) {
 			case SUNDAY:
-				return GregorianCalendar.SUNDAY;
+				return Calendar.SUNDAY;
 			case MONDAY:
-				return GregorianCalendar.MONDAY;
+				return Calendar.MONDAY;
 			case TUESDAY:
-				return GregorianCalendar.TUESDAY;
+				return Calendar.TUESDAY;
 			case WEDNESDAY:
-				return GregorianCalendar.WEDNESDAY;
+				return Calendar.WEDNESDAY;
 			case THURSDAY:
-				return GregorianCalendar.THURSDAY;
+				return Calendar.THURSDAY;
 			case FRIDAY:
-				return GregorianCalendar.FRIDAY;
+				return Calendar.FRIDAY;
 			case SATURDAY:
-				return GregorianCalendar.SATURDAY;
+				return Calendar.SATURDAY;
 			default:
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_WEEKDAY, DefaultMessages.UNSUPPORTED_WEEKDAY, weekday));
 		}
@@ -604,8 +605,8 @@ public final class DateCalc {
 		// Get the number of calendar weeks of a given year. DIN 1355:
 		// 'Ein Jahr hat 53 Wochen wenn es an einem Do beginnt oder endet'
 		int weeks = YEAR_MIN_WEEKS;
-		if ((new GregorianCalendar(year, 0, 1)).get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.THURSDAY ||
-				(new GregorianCalendar(year, 11, 31)).get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.THURSDAY) {
+		if ((new GregorianCalendar(year, 0, 1)).get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY ||
+				(new GregorianCalendar(year, 11, 31)).get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
 			weeks++;
 		}
 		return weeks;
@@ -615,8 +616,8 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			if (cal.get(GregorianCalendar.HOUR) != 0 || cal.get(GregorianCalendar.MINUTE) != 0 || cal.get(GregorianCalendar.SECOND) != 0
-					|| cal.get(GregorianCalendar.MILLISECOND) != 0) {
+			if (cal.get(Calendar.HOUR) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0
+					|| cal.get(Calendar.MILLISECOND) != 0) {
 				return true;
 			} else {
 				return false;
@@ -628,7 +629,7 @@ public final class DateCalc {
 	public static boolean isHoliday(Date date, HolidayDao holidayDao) throws Exception {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		HolidayVO holidayVO = getHolidayTable(cal.get(GregorianCalendar.YEAR), true, holidayDao).get(date);
+		HolidayVO holidayVO = getHolidayTable(cal.get(Calendar.YEAR), true, holidayDao).get(date);
 		if (holidayVO != null && holidayVO.isHoliday()) {
 			return true;
 		}
@@ -639,7 +640,7 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			if (cal.get(GregorianCalendar.DAY_OF_MONTH) == 1 && cal.get(GregorianCalendar.MONTH) == 0 && cal.get(GregorianCalendar.YEAR) == 1970) {
+			if (cal.get(Calendar.DAY_OF_MONTH) == 1 && cal.get(Calendar.MONTH) == 0 && cal.get(Calendar.YEAR) == 1970) {
 				return true;
 			} else {
 				return false;
@@ -659,7 +660,7 @@ public final class DateCalc {
 
 	private static boolean storeHoliday(int year, GregorianCalendar cal, Holiday holiday, HashMap<Date, HolidayVO> holidayMap) {
 		boolean inserted;
-		if (cal.get(GregorianCalendar.YEAR) == year) {
+		if (cal.get(Calendar.YEAR) == year) {
 			HolidayVO holidayVO;
 			Date date = cal.getTime();
 			if (holidayMap.containsKey(date)) {
@@ -691,9 +692,9 @@ public final class DateCalc {
 	private static int toJulian(Date date) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		int year = cal.get(GregorianCalendar.YEAR) - 1900;
-		int month = cal.get(GregorianCalendar.MONTH) + 1; // jan=1, feb=2,...
-		int day = cal.get(GregorianCalendar.DAY_OF_MONTH);
+		int year = cal.get(Calendar.YEAR) - 1900;
+		int month = cal.get(Calendar.MONTH) + 1; // jan=1, feb=2,...
+		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int julianYear = year;
 		if (year < 0) {
 			julianYear++;

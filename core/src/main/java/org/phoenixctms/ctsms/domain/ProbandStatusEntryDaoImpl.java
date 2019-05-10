@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see ProbandStatusEntry
  */
 public class ProbandStatusEntryDaoImpl
-extends ProbandStatusEntryDaoBase
-{
+		extends ProbandStatusEntryDaoBase {
 
 	private org.hibernate.Criteria createStatusEntryCriteria() {
 		org.hibernate.Criteria probandStatusEntryCriteria = this.getSession().createCriteria(ProbandStatusEntry.class);
@@ -41,8 +40,7 @@ extends ProbandStatusEntryDaoBase
 	 */
 	@Override
 	protected Collection<ProbandStatusEntry> handleFindByDepartmentCategoryInterval(Long departmentId, Long probandCategoryId, Timestamp from, Timestamp to, Boolean probandActive,
-			Boolean available, Boolean hideAvailability)
-	{
+			Boolean available, Boolean hideAvailability) {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (probandActive != null || hideAvailability != null) {
@@ -74,8 +72,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandStatusEntry> handleFindByProband(Long probandId, PSFVO psf) throws Exception
-	{
+	protected Collection<ProbandStatusEntry> handleFindByProband(Long probandId, PSFVO psf) throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandStatusEntry.class, statusEntryCriteria);
 		if (probandId != null) {
@@ -89,8 +86,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandStatusEntry> handleFindByProbandInterval(Long probandId, Timestamp from, Timestamp to, Boolean probandActive, Boolean hideAvailability)
-	{
+	protected Collection<ProbandStatusEntry> handleFindByProbandInterval(Long probandId, Timestamp from, Timestamp to, Boolean probandActive, Boolean hideAvailability) {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
 		if (probandActive != null || hideAvailability != null) {
@@ -114,8 +110,7 @@ extends ProbandStatusEntryDaoBase
 	 */
 	@Override
 	protected Collection<ProbandStatusEntry> handleFindProbandStatus(Timestamp now, Long probandId, Long departmentId, Long probandCategoryId, Boolean probandActive,
-			Boolean hideAvailability, PSFVO psf) throws Exception
-	{
+			Boolean hideAvailability, PSFVO psf) throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandStatusEntry.class, statusEntryCriteria);
 		if (probandId != null) {
@@ -152,15 +147,13 @@ extends ProbandStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandStatusEntry loadProbandStatusEntryFromProbandStatusEntryInVO(ProbandStatusEntryInVO probandStatusEntryInVO)
-	{
+	private ProbandStatusEntry loadProbandStatusEntryFromProbandStatusEntryInVO(ProbandStatusEntryInVO probandStatusEntryInVO) {
 		ProbandStatusEntry probandStatusEntry = null;
 		Long id = probandStatusEntryInVO.getId();
 		if (id != null) {
 			probandStatusEntry = this.load(id);
 		}
-		if (probandStatusEntry == null)
-		{
+		if (probandStatusEntry == null) {
 			probandStatusEntry = ProbandStatusEntry.Factory.newInstance();
 		}
 		return probandStatusEntry;
@@ -171,11 +164,9 @@ extends ProbandStatusEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandStatusEntry loadProbandStatusEntryFromProbandStatusEntryOutVO(ProbandStatusEntryOutVO probandStatusEntryOutVO)
-	{
+	private ProbandStatusEntry loadProbandStatusEntryFromProbandStatusEntryOutVO(ProbandStatusEntryOutVO probandStatusEntryOutVO) {
 		ProbandStatusEntry probandStatusEntry = this.load(probandStatusEntryOutVO.getId());
-		if (probandStatusEntry == null)
-		{
+		if (probandStatusEntry == null) {
 			probandStatusEntry = ProbandStatusEntry.Factory.newInstance();
 		}
 		return probandStatusEntry;
@@ -185,8 +176,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusEntry probandStatusEntryInVOToEntity(ProbandStatusEntryInVO probandStatusEntryInVO)
-	{
+	public ProbandStatusEntry probandStatusEntryInVOToEntity(ProbandStatusEntryInVO probandStatusEntryInVO) {
 		ProbandStatusEntry entity = this.loadProbandStatusEntryFromProbandStatusEntryInVO(probandStatusEntryInVO);
 		this.probandStatusEntryInVOToEntity(probandStatusEntryInVO, entity, true);
 		return entity;
@@ -199,8 +189,7 @@ extends ProbandStatusEntryDaoBase
 	public void probandStatusEntryInVOToEntity(
 			ProbandStatusEntryInVO source,
 			ProbandStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandStatusEntryInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long probandId = source.getProbandId();
@@ -236,8 +225,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusEntry probandStatusEntryOutVOToEntity(ProbandStatusEntryOutVO probandStatusEntryOutVO)
-	{
+	public ProbandStatusEntry probandStatusEntryOutVOToEntity(ProbandStatusEntryOutVO probandStatusEntryOutVO) {
 		ProbandStatusEntry entity = this.loadProbandStatusEntryFromProbandStatusEntryOutVO(probandStatusEntryOutVO);
 		this.probandStatusEntryOutVOToEntity(probandStatusEntryOutVO, entity, true);
 		return entity;
@@ -250,8 +238,7 @@ extends ProbandStatusEntryDaoBase
 	public void probandStatusEntryOutVOToEntity(
 			ProbandStatusEntryOutVO source,
 			ProbandStatusEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandStatusEntryOutVOToEntity(source, target, copyIfNull);
 		ProbandStatusTypeVO typeVO = source.getType();
 		ProbandOutVO probandVO = source.getProband();
@@ -293,8 +280,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusEntryInVO toProbandStatusEntryInVO(final ProbandStatusEntry entity)
-	{
+	public ProbandStatusEntryInVO toProbandStatusEntryInVO(final ProbandStatusEntry entity) {
 		return super.toProbandStatusEntryInVO(entity);
 	}
 
@@ -304,8 +290,7 @@ extends ProbandStatusEntryDaoBase
 	@Override
 	public void toProbandStatusEntryInVO(
 			ProbandStatusEntry source,
-			ProbandStatusEntryInVO target)
-	{
+			ProbandStatusEntryInVO target) {
 		super.toProbandStatusEntryInVO(source, target);
 		ProbandStatusType type = source.getType();
 		Proband proband = source.getProband();
@@ -326,8 +311,7 @@ extends ProbandStatusEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusEntryOutVO toProbandStatusEntryOutVO(final ProbandStatusEntry entity)
-	{
+	public ProbandStatusEntryOutVO toProbandStatusEntryOutVO(final ProbandStatusEntry entity) {
 		return super.toProbandStatusEntryOutVO(entity);
 	}
 
@@ -337,8 +321,7 @@ extends ProbandStatusEntryDaoBase
 	@Override
 	public void toProbandStatusEntryOutVO(
 			ProbandStatusEntry source,
-			ProbandStatusEntryOutVO target)
-	{
+			ProbandStatusEntryOutVO target) {
 		super.toProbandStatusEntryOutVO(source, target);
 		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.ProbandStatusType to org.phoenixctms.ctsms.vo.ProbandStatusTypeVO
 		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO

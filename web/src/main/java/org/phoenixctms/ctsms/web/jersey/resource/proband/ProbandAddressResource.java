@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.jersey.resource.proband;
 
 import io.swagger.annotations.Api;
@@ -58,7 +57,7 @@ public class ProbandAddressResource {
 	@GET
 	@Path("{id}/probandletterpdf")
 	public Response renderProbandLetterPDF(@PathParam("id") Long id) throws AuthenticationException,
-	AuthorisationException, ServiceException {
+			AuthorisationException, ServiceException {
 		ProbandLetterPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderProbandLetterPDF(auth, id);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed

@@ -77,11 +77,11 @@ public class StreetLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getCountryName(values))
-		.append(getCityName(values))
-		.append(getZipCode(values))
-		.append(getStreetName(values))
-		.toHashCode();
+				.append(getCountryName(values))
+				.append(getCityName(values))
+				.append(getZipCode(values))
+				.append(getStreetName(values))
+				.toHashCode();
 	}
 
 	@Override

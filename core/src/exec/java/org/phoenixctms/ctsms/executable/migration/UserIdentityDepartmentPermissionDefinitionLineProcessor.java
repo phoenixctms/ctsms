@@ -11,12 +11,9 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 
 public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends PermissionDefinitionLineProcessor {
 
-
 	public UserIdentityDepartmentPermissionDefinitionLineProcessor() {
 		super();
-
 	}
-
 
 	private boolean addProfiles(String serviceMethod, ArrayList<String> profiles, int i) {
 		boolean result = false;
@@ -31,8 +28,7 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 		return result;
 	}
 
-	private  String buildNewProfile(String profiles, boolean addExisitng) {
-
+	private String buildNewProfile(String profiles, boolean addExisitng) {
 		StringBuilder newProfile = new StringBuilder();
 		String[] profileNames = Pattern.compile(getProfileSplitRegexpPattern()).split(profiles, -1);
 		for (int j = 0; j < profileNames.length; j++) {
@@ -50,121 +46,105 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.INVENTORY_MASTER_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case INVENTORY_DETAIL_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.INVENTORY_DETAIL_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case INVENTORY_VIEW_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.INVENTORY_VIEW_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case STAFF_MASTER_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.STAFF_MASTER_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case STAFF_DETAIL_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.STAFF_DETAIL_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case STAFF_VIEW_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.STAFF_VIEW_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case COURSE_MASTER_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.COURSE_MASTER_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case COURSE_DETAIL_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.COURSE_DETAIL_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case COURSE_VIEW_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.COURSE_VIEW_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case TRIAL_MASTER_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.TRIAL_MASTER_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case TRIAL_DETAIL_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.TRIAL_DETAIL_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case TRIAL_VIEW_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.TRIAL_VIEW_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case MASS_MAIL_MASTER_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.MASS_MAIL_MASTER_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case MASS_MAIL_DETAIL_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.MASS_MAIL_DETAIL_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case MASS_MAIL_VIEW_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.MASS_MAIL_VIEW_IDENTITY_DEPARTMENT.toString());
-
 						break;
 					case USER_USER_DEPARTMENT:
 						if (newProfile.length() > 0) {
 							newProfile.append(":");
 						}
 						newProfile.append(PermissionProfile.USER_IDENTITY_DEPARTMENT.toString());
-
 						break;
-
 					default:
-
 				}
 			}
 		}
 		return newProfile.toString();
 	}
+
+	@Override
 	protected void injectOverrides(String serviceMethod, ArrayList<String> profiles, ArrayList<ServiceMethodParameterOverride> overrides) {
 		ArrayList<String> newProfiles = new ArrayList<String>(profiles);
 		ArrayList<ServiceMethodParameterOverride> newOverrides = new ArrayList<ServiceMethodParameterOverride>();
@@ -196,6 +176,7 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 		overrides.addAll(newOverrides);
 	}
 
+	@Override
 	protected void injectProfiles(String serviceMethod, ArrayList<String> profiles) {
 		// ArrayList<String> newProfiles = new ArrayList<String>(profiles);
 		profiles.set(0, buildNewProfile(profiles.get(0), true));
@@ -204,6 +185,7 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 		// profiles.addAll(newProfiles);
 	}
 
+	@Override
 	protected void injectRestrictions(String serviceMethod, ArrayList<String> profiles, ArrayList<ServiceMethodParameterRestriction> restrictions) {
 		ArrayList<String> newProfiles = new ArrayList<String>(profiles);
 		ArrayList<ServiceMethodParameterRestriction> newRestrictions = new ArrayList<ServiceMethodParameterRestriction>();
@@ -270,6 +252,7 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 		restrictions.addAll(newRestrictions);
 	}
 
+	@Override
 	protected boolean isWrite() {
 		return false;
 	}

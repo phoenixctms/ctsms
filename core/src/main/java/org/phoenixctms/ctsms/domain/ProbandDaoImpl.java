@@ -180,7 +180,7 @@ public class ProbandDaoImpl
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);
 		}
 		ArrayList<Proband> resultSet = CriteriaUtil.listExpirations(probandCriteria, today, null, includeAlreadyPassed, null, null, reminderPeriod, reminderPeriodDays);
-		return (Collection<Proband>) CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
+		return CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes by default
 	}
 
 	@Override

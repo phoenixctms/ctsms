@@ -8,8 +8,7 @@ import org.phoenixctms.ctsms.domain.InputFieldValue;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 
-public class EcrfFieldValueInVOInputFieldValueEqualsAdapter extends InputFieldValueEqualsAdapterBase<ECRFFieldValueInVO,InputFieldValue> {
-
+public class EcrfFieldValueInVOInputFieldValueEqualsAdapter extends InputFieldValueEqualsAdapterBase<ECRFFieldValueInVO, InputFieldValue> {
 
 	@Override
 	protected Boolean getABoolean(ECRFFieldValueInVO a) {
@@ -42,8 +41,6 @@ public class EcrfFieldValueInVOInputFieldValueEqualsAdapter extends InputFieldVa
 		Collections.sort(selectionValueIds);
 		return selectionValueIds;
 	}
-
-
 
 	@Override
 	protected String getAText(ECRFFieldValueInVO a) {
@@ -89,8 +86,6 @@ public class EcrfFieldValueInVOInputFieldValueEqualsAdapter extends InputFieldVa
 	protected ArrayList getBSelectionSetSorted(InputFieldValue b) {
 		return ServiceUtil.toInputFieldSelectionSetValueIdCollection(b.getSelectionValues());
 	}
-
-
 
 	@Override
 	protected String getBText(InputFieldValue b) {

@@ -2603,7 +2603,7 @@ public final class ServiceUtil {
 			if (showAliquotVisitReimbursement) {
 				fieldKey = VisitScheduleExcelWriter.getAliquotVisitReimbursementColumnName();
 				if (visit != null) {
-					fieldValue = (Float) (visit.getReimbursement() / ((float) itemsPerGroupVisitCountMap.get(groupId).get(visitId)));
+					fieldValue = visit.getReimbursement() / ((float) itemsPerGroupVisitCountMap.get(groupId).get(visitId));
 				} else {
 					fieldValue = null;
 				}

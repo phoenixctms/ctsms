@@ -37,8 +37,7 @@ import org.phoenixctms.ctsms.vocycle.CriteriaGraph;
  * @see Criteria
  */
 public class CriteriaDaoImpl
-extends CriteriaDaoBase
-{
+		extends CriteriaDaoBase {
 
 	private org.hibernate.Criteria createCriteriaCriteria() {
 		org.hibernate.Criteria criteriaCriteria = this.getSession().createCriteria(Criteria.class);
@@ -49,8 +48,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Criteria criteriaInstantVOToEntity(CriteriaInstantVO criteriaInstantVO)
-	{
+	public Criteria criteriaInstantVOToEntity(CriteriaInstantVO criteriaInstantVO) {
 		Criteria entity = this.loadCriteriaFromCriteriaInstantVO(criteriaInstantVO);
 		this.criteriaInstantVOToEntity(criteriaInstantVO, entity, true);
 		return entity;
@@ -63,13 +61,12 @@ extends CriteriaDaoBase
 	public void criteriaInstantVOToEntity(
 			CriteriaInstantVO source,
 			Criteria target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criteriaInstantVOToEntity(source, target, copyIfNull);
 		Collection criterions = source.getCriterions();
 		if (copyIfNull || criterions.size() > 0) {
 			this.getCriterionDao().criterionInstantVOToEntityCollection(criterions);
-			target.setCriterions((Collection<Criterion>) criterions);
+			target.setCriterions(criterions);
 		}
 	}
 
@@ -77,8 +74,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Criteria criteriaInVOToEntity(CriteriaInVO criteriaInVO)
-	{
+	public Criteria criteriaInVOToEntity(CriteriaInVO criteriaInVO) {
 		Criteria entity = this.loadCriteriaFromCriteriaInVO(criteriaInVO);
 		this.criteriaInVOToEntity(criteriaInVO, entity, true);
 		return entity;
@@ -91,8 +87,7 @@ extends CriteriaDaoBase
 	public void criteriaInVOToEntity(
 			CriteriaInVO source,
 			Criteria target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criteriaInVOToEntity(source, target, copyIfNull);
 	}
 
@@ -100,8 +95,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Criteria criteriaOutVOToEntity(CriteriaOutVO criteriaOutVO)
-	{
+	public Criteria criteriaOutVOToEntity(CriteriaOutVO criteriaOutVO) {
 		Criteria entity = this.loadCriteriaFromCriteriaOutVO(criteriaOutVO);
 		this.criteriaOutVOToEntity(criteriaOutVO, entity, true);
 		return entity;
@@ -114,14 +108,13 @@ extends CriteriaDaoBase
 	public void criteriaOutVOToEntity(
 			CriteriaOutVO source,
 			Criteria target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criteriaOutVOToEntity(source, target, copyIfNull);
 		Collection criterions = source.getCriterions();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (copyIfNull || criterions.size() > 0) {
 			this.getCriterionDao().criterionOutVOToEntityCollection(criterions); // copyifnull!!
-			target.setCriterions((Collection<Criterion>) criterions);
+			target.setCriterions(criterions);
 		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
@@ -185,12 +178,11 @@ extends CriteriaDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criteria loadCriteriaFromCriteriaInstantVO(CriteriaInstantVO criteriaInstantVO)
-	{
+	private Criteria loadCriteriaFromCriteriaInstantVO(CriteriaInstantVO criteriaInstantVO) {
 		Criteria criteria = Criteria.Factory.newInstance();
 		Collection criterions = criteriaInstantVO.getCriterions();
 		this.getCriterionDao().criterionInstantVOToEntityCollection(criterions);
-		criteria.setCriterions((Collection<Criterion>) criterions);
+		criteria.setCriterions(criterions);
 		return criteria;
 	}
 
@@ -199,15 +191,13 @@ extends CriteriaDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criteria loadCriteriaFromCriteriaInVO(CriteriaInVO criteriaInVO)
-	{
+	private Criteria loadCriteriaFromCriteriaInVO(CriteriaInVO criteriaInVO) {
 		Criteria criteria = null;
 		Long id = criteriaInVO.getId();
 		if (id != null) {
 			criteria = load(id);
 		}
-		if (criteria == null)
-		{
+		if (criteria == null) {
 			criteria = Criteria.Factory.newInstance();
 		}
 		return criteria;
@@ -218,8 +208,7 @@ extends CriteriaDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criteria loadCriteriaFromCriteriaOutVO(CriteriaOutVO criteriaOutVO)
-	{
+	private Criteria loadCriteriaFromCriteriaOutVO(CriteriaOutVO criteriaOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
@@ -227,8 +216,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CriteriaInstantVO toCriteriaInstantVO(final Criteria entity)
-	{
+	public CriteriaInstantVO toCriteriaInstantVO(final Criteria entity) {
 		return super.toCriteriaInstantVO(entity);
 	}
 
@@ -238,8 +226,7 @@ extends CriteriaDaoBase
 	@Override
 	public void toCriteriaInstantVO(
 			Criteria source,
-			CriteriaInstantVO target)
-	{
+			CriteriaInstantVO target) {
 		super.toCriteriaInstantVO(source, target);
 		// WARNING! No conversion for target.criterions (can't convert source.getCriterions():org.phoenixctms.ctsms.domain.Criterion to org.phoenixctms.ctsms.vo.CriterionInstantVO
 		target.setCriterions(toCriterionInstantVOCollection(source.getCriterions()));
@@ -249,8 +236,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CriteriaInVO toCriteriaInVO(final Criteria entity)
-	{
+	public CriteriaInVO toCriteriaInVO(final Criteria entity) {
 		return super.toCriteriaInVO(entity);
 	}
 
@@ -260,8 +246,7 @@ extends CriteriaDaoBase
 	@Override
 	public void toCriteriaInVO(
 			Criteria source,
-			CriteriaInVO target)
-	{
+			CriteriaInVO target) {
 		super.toCriteriaInVO(source, target);
 	}
 
@@ -269,8 +254,7 @@ extends CriteriaDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CriteriaOutVO toCriteriaOutVO(final Criteria entity)
-	{
+	public CriteriaOutVO toCriteriaOutVO(final Criteria entity) {
 		return super.toCriteriaOutVO(entity);
 	}
 
@@ -280,16 +264,14 @@ extends CriteriaDaoBase
 	@Override
 	public void toCriteriaOutVO(
 			Criteria source,
-			CriteriaOutVO target)
-	{
+			CriteriaOutVO target) {
 		(new CriteriaGraph(this, this.getCriterionDao(), this.getUserDao())).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toCriteriaOutVO(
 			Criteria source,
-			CriteriaOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			CriteriaOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new CriteriaGraph(this, this.getCriterionDao(), this.getUserDao())).toVOHelper(source, target, voMap);
 	}
 
@@ -304,5 +286,4 @@ extends CriteriaDaoBase
 		Collections.sort(result, new FieldComparator(false, "getPosition"));
 		return result;
 	}
-
 }

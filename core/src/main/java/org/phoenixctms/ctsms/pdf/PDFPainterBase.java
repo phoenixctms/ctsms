@@ -33,10 +33,11 @@ public abstract class PDFPainterBase implements PDFContentPainter {
 		totalPageCounts = new ArrayList<Integer>();
 	}
 
+	@Override
 	public void drawPageBreakNewPage(PDPageContentStream contentStream) throws Exception {
-
 	}
 
+	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 	}
 
@@ -121,12 +122,10 @@ public abstract class PDFPainterBase implements PDFContentPainter {
 			templatePageNum++;
 			// totalPageCounts.set(totalPageCounts.size() - 1, templatePageNum);
 		}
-
 		if (resetPageCount) {
 			totalPageCounts.add(1);
 		} else {
 			totalPageCounts.set(totalPageCounts.size() - 1, totalPageCounts.get(totalPageCounts.size() - 1) + 1);
 		}
-
 	}
 }

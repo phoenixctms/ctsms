@@ -60,7 +60,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	private VisitScheduleItemLazyModel visitScheduleItemModel;
 	private HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache;
 	private HashMap<Long, HashMap<Long, ProbandListStatusEntryOutVO>> statusEntryCache;
-
 	private AddVisitScheduleItemReimbursementBean addReimbursementBean;
 
 	public ProbandVisitScheduleBean() {
@@ -73,7 +72,8 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
-		RequestContext requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT,
+		RequestContext requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64,
+				JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT,
 				MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT, new Long(visitScheduleItemModel.getRowCount()));
 		//		if (operationSuccess && in.getProbandId() != null) {
 		//			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
@@ -93,10 +93,8 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 
 	public void changeAddReimbursement() {
 		Long visitScheduleItemId = WebUtil.getLongParamValue(GetParamNames.VISIT_SCHEDULE_ITEM_ID);
-
 		addReimbursementBean.setProbandId(probandId);
 		addReimbursementBean.changeRootEntity(visitScheduleItemId);
-
 	}
 
 	public AddVisitScheduleItemReimbursementBean getAddReimbursementBean() {
@@ -146,7 +144,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	}
 
 	public StreamedContent getTravelExpensesVisitScheduleExcelStreamedContent(Long trialId) throws Exception {
-
 		try {
 			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(WebUtil.getAuthentication(), trialId, probandId);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
@@ -160,7 +157,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
-
 	}
 
 	public ArrayList<SelectItem> getTrials() {
@@ -184,7 +180,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	}
 
 	public StreamedContent getVisitScheduleExcelStreamedContent(Long trialId) throws Exception {
-
 		try {
 			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getProbandService().exportVisitSchedule(WebUtil.getAuthentication(), probandId, trialId);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
@@ -198,7 +193,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
-
 	}
 
 	public VisitScheduleItemLazyModel getVisitScheduleItemModel() {
@@ -250,6 +244,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		}
 	}
 
+	@Override
 	public String loadAction() {
 		initSets();
 		LazyDataModelBase.clearFilters("probandvisitschedule_list");

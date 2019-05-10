@@ -56,7 +56,6 @@ public class InputFieldSelectionSetValueOutVOComparator extends AlphanumComparat
 				} else {
 					return 0;
 				}
-
 			} else if (fieldA == null && fieldB != null) {
 				return -1;
 			} else if (fieldA != null && fieldB == null) {

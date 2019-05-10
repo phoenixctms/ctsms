@@ -67,8 +67,7 @@ public class TrialTagBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		TrialTagValueInVO backup = new TrialTagValueInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

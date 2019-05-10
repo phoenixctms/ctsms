@@ -309,8 +309,6 @@ public class ApplicationScopeBean {
 		return WebUtil.getInquiryValueCount(inquiry);
 	}
 
-
-
 	public int getIntegerMaxValue() {
 		return Integer.MAX_VALUE;
 	}
@@ -348,7 +346,7 @@ public class ApplicationScopeBean {
 	}
 
 	public String getMetaDescription() {
-		return MessageFormat.format(Settings.getString(SettingCodes.META_DESCRIPTION, Bundle.SETTINGS, DefaultSettings.META_DESCRIPTION),WebUtil.getInstanceName());
+		return MessageFormat.format(Settings.getString(SettingCodes.META_DESCRIPTION, Bundle.SETTINGS, DefaultSettings.META_DESCRIPTION), WebUtil.getInstanceName());
 	}
 
 	public String getNoCoursePickedMessage() {
@@ -435,11 +433,9 @@ public class ApplicationScopeBean {
 	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
 	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
-
 	public String getScheduleRightHeaderTemplate() {
 		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
 	}
-
 	// public boolean getProbandListShowInquiryColumn() {
 	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_INQUIRY_COLUMN);
 	// }
@@ -447,7 +443,6 @@ public class ApplicationScopeBean {
 	// public boolean getProbandListShowProbandListEntryTagColumn() {
 	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
-
 
 	public String getScheduleTimePattern() {
 		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
@@ -464,7 +459,6 @@ public class ApplicationScopeBean {
 	// public String getSignatureDescription(SignatureVO signature) {
 	// x
 	// }
-
 	public String getStringDigest(String string) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		if (string != null) {
@@ -499,7 +493,6 @@ public class ApplicationScopeBean {
 	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
 	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
 	// }
-
 	public String getUserIdentityString(UserOutVO user) {
 		return WebUtil.getUserIdentityString(user);
 	}
@@ -563,7 +556,6 @@ public class ApplicationScopeBean {
 		return WebUtil.isTrustedHost();
 	}
 
-
 	public String journalEntryToColor(JournalEntryOutVO journalEntry) {
 		return ((journalEntry != null && !journalEntry.isSystemMessage()) ? WebUtil.colorToStyleClass(journalEntry.getCategory().getColor()) : "");
 	}
@@ -588,7 +580,6 @@ public class ApplicationScopeBean {
 	}
 
 	public String localeToDisplayString(String locale) {
-
 		return CommonUtil.localeToDisplayString(CommonUtil.localeFromString(locale), WebUtil.getLocale());
 	}
 

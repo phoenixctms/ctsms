@@ -19,8 +19,7 @@ import org.phoenixctms.ctsms.vo.InventoryTagVO;
  * @see InventoryTag
  */
 public class InventoryTagDaoImpl
-		extends InventoryTagDaoBase
-{
+		extends InventoryTagDaoBase {
 
 	@Override
 	protected Collection<InventoryTag> handleFindByVisibleIdExcel(Boolean visible, Long tagId, Boolean excel)
@@ -38,8 +37,7 @@ public class InventoryTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTag inventoryTagVOToEntity(InventoryTagVO inventoryTagVO)
-	{
+	public InventoryTag inventoryTagVOToEntity(InventoryTagVO inventoryTagVO) {
 		InventoryTag entity = this.loadInventoryTagFromInventoryTagVO(inventoryTagVO);
 		this.inventoryTagVOToEntity(inventoryTagVO, entity, true);
 		return entity;
@@ -52,8 +50,7 @@ public class InventoryTagDaoImpl
 	public void inventoryTagVOToEntity(
 			InventoryTagVO source,
 			InventoryTag target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inventoryTagVOToEntity(source, target, copyIfNull);
 	}
 
@@ -62,15 +59,13 @@ public class InventoryTagDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InventoryTag loadInventoryTagFromInventoryTagVO(InventoryTagVO inventoryTagVO)
-	{
+	private InventoryTag loadInventoryTagFromInventoryTagVO(InventoryTagVO inventoryTagVO) {
 		InventoryTag inventoryTag = null;
 		Long id = inventoryTagVO.getId();
 		if (id != null) {
 			inventoryTag = this.load(id);
 		}
-		if (inventoryTag == null)
-		{
+		if (inventoryTag == null) {
 			inventoryTag = InventoryTag.Factory.newInstance();
 		}
 		return inventoryTag;
@@ -80,8 +75,7 @@ public class InventoryTagDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public InventoryTagVO toInventoryTagVO(final InventoryTag entity)
-	{
+	public InventoryTagVO toInventoryTagVO(final InventoryTag entity) {
 		return super.toInventoryTagVO(entity);
 	}
 
@@ -91,8 +85,7 @@ public class InventoryTagDaoImpl
 	@Override
 	public void toInventoryTagVO(
 			InventoryTag source,
-			InventoryTagVO target)
-	{
+			InventoryTagVO target) {
 		super.toInventoryTagVO(source, target);
 		target.setName(L10nUtil.getInventoryTagName(Locales.USER, source.getNameL10nKey()));
 	}

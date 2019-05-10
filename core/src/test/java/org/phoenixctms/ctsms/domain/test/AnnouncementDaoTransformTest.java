@@ -10,27 +10,26 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.Announcement
 */
-@Test(groups={"transform","AnnouncementDao"})
+@Test(groups = { "transform", "AnnouncementDao" })
 public class AnnouncementDaoTransformTest extends DaoTransformTestBase {
 
-  /**
-   * Test for method AnnouncementDao.toAnnouncementVO
-   *
-   * @see org.phoenixctms.ctsms.domain.AnnouncementDao#toAnnouncementVO(org.phoenixctms.ctsms.domain.Announcement source, org.phoenixctms.ctsms.vo.AnnouncementVO target)
-   */
-  @Test
-  public void testToAnnouncementVO() {
-    Assert.fail("Test 'AnnouncementDaoTransformTest.testToAnnouncementVO' not implemented!");
-  }
+	/**
+	 * Test for method AnnouncementDao.toAnnouncementVO
+	 *
+	 * @see org.phoenixctms.ctsms.domain.AnnouncementDao#toAnnouncementVO(org.phoenixctms.ctsms.domain.Announcement source, org.phoenixctms.ctsms.vo.AnnouncementVO target)
+	 */
+	@Test
+	public void testToAnnouncementVO() {
+		Assert.fail("Test 'AnnouncementDaoTransformTest.testToAnnouncementVO' not implemented!");
+	}
 
-    /**
-   * Test for method announcementVOToEntity
-   *
-   * @see org.phoenixctms.ctsms.domain.AnnouncementDao#announcementVOToEntity(org.phoenixctms.ctsms.vo.AnnouncementVO source, org.phoenixctms.ctsms.domain.Announcement target, boolean copyIfNull)
-   */
-  @Test
-  public void testAnnouncementVOToEntity() {
-    Assert.fail("Test 'AnnouncementDaoTransformTest.testAnnouncementVOToEntity' not implemented!");
-  }
-
+	/**
+	* Test for method announcementVOToEntity
+	*
+	* @see org.phoenixctms.ctsms.domain.AnnouncementDao#announcementVOToEntity(org.phoenixctms.ctsms.vo.AnnouncementVO source, org.phoenixctms.ctsms.domain.Announcement target, boolean copyIfNull)
+	*/
+	@Test
+	public void testAnnouncementVOToEntity() {
+		Assert.fail("Test 'AnnouncementDaoTransformTest.testAnnouncementVOToEntity' not implemented!");
+	}
 }

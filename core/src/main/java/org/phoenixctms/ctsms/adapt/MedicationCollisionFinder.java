@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.adapt;
 
 import java.util.Collection;

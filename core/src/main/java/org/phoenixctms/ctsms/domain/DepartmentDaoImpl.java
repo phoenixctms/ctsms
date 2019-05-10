@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.DepartmentVO;
  * @see Department
  */
 public class DepartmentDaoImpl
-		extends DepartmentDaoBase
-{
+		extends DepartmentDaoBase {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Department departmentVOToEntity(DepartmentVO departmentVO)
-	{
+	public Department departmentVOToEntity(DepartmentVO departmentVO) {
 		Department entity = this.loadDepartmentFromDepartmentVO(departmentVO);
 		this.departmentVOToEntity(departmentVO, entity, true);
 		return entity;
@@ -38,8 +36,7 @@ public class DepartmentDaoImpl
 	public void departmentVOToEntity(
 			DepartmentVO source,
 			Department target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.departmentVOToEntity(source, target, copyIfNull);
 	}
 
@@ -57,15 +54,13 @@ public class DepartmentDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Department loadDepartmentFromDepartmentVO(DepartmentVO departmentVO)
-	{
+	private Department loadDepartmentFromDepartmentVO(DepartmentVO departmentVO) {
 		Department department = null;
 		Long id = departmentVO.getId();
 		if (id != null) {
 			department = this.load(id);
 		}
-		if (department == null)
-		{
+		if (department == null) {
 			department = Department.Factory.newInstance();
 		}
 		return department;
@@ -75,8 +70,7 @@ public class DepartmentDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DepartmentVO toDepartmentVO(final Department entity)
-	{
+	public DepartmentVO toDepartmentVO(final Department entity) {
 		return super.toDepartmentVO(entity);
 	}
 
@@ -86,8 +80,7 @@ public class DepartmentDaoImpl
 	@Override
 	public void toDepartmentVO(
 			Department source,
-			DepartmentVO target)
-	{
+			DepartmentVO target) {
 		super.toDepartmentVO(source, target);
 		target.setName(L10nUtil.getDepartmentName(Locales.USER, source.getNameL10nKey()));
 	}

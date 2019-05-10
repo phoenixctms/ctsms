@@ -69,6 +69,7 @@ public class ToolsResource {
 	public final static CompleteIndex COMPLETE_INDEX = new CompleteIndex(getCompleteIndexNode(
 			ResourceUtils.getMethodPath(ToolsResource.class, "complete").replaceFirst("/\\{resource\\}", ""), // "completeIndex"),
 			getArgsUriPart("")));
+
 	private static ArgsUriPart getArgsUriPart(String resource) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, COMPLETE_METHOD_NAME_TRANSFORMER);
 		// args.getExcludePrimitiveConversion()
@@ -101,7 +102,8 @@ public class ToolsResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("user")
 	public NoShortcutSerializationWrapper<UserOutVO> addUser(AddUserWrapper in) throws Exception {
-		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getToolsService().addUser(in.getUser(), in.getPassword(), in.getPlainDepartmentPassword()));
+		return new NoShortcutSerializationWrapper<UserOutVO>(
+				WebUtil.getServiceLocator().getToolsService().addUser(in.getUser(), in.getPassword(), in.getPlainDepartmentPassword()));
 	}
 
 	@GET
@@ -151,7 +153,6 @@ public class ToolsResource {
 	// public LdapEntryVO getLdapEntry2(@QueryParam("username") String username) throws AuthorisationException, ServiceException, AuthenticationException {
 	// return WebUtil.getServiceLocator().getToolsService().getLdapEntry2(auth, username);
 	// }
-
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("passwordpolicy")
@@ -164,7 +165,7 @@ public class ToolsResource {
 	public Response getPublicFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
 		// FileStreamOutVO f = WebUtil.getServiceLocator().getFileService().getFileStream(auth, fileId);
 		// return Response.ok(f.getStream(), f.getContentType().getMimeType()).build();
-		FileStreamOutVO stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream( id);
+		FileStreamOutVO stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream(id);
 		ResponseBuilder response = javax.ws.rs.core.Response.ok(stream.getStream(), stream.getContentType().getMimeType());
 		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
 		return response.build();
@@ -177,7 +178,6 @@ public class ToolsResource {
 		// String basePath = request.getRequestURL().toString();
 		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request)); // basePath));
 	}
-
 	// @GET
 	// @Produces({ MediaType.APPLICATION_JSON })
 	// @Path("logon")

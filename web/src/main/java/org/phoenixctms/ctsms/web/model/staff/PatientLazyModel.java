@@ -11,7 +11,6 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-
 public class PatientLazyModel extends LazyDataModelBase {
 
 	private Long staffId;

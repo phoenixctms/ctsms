@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.proband.ProbandService#updateBankAccount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.BankAccountInVO)
  */
-@Test(groups={"service","ProbandService"})
+@Test(groups = { "service", "ProbandService" })
 public class ProbandService_updateBankAccountTest extends ProbandServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>updateBankAccount</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'ProbandService_updateBankAccountTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.updateBankAccount]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>updateBankAccount</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'ProbandService_updateBankAccountTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.updateBankAccount]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

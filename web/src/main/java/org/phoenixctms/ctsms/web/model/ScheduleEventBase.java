@@ -9,16 +9,12 @@ import org.primefaces.model.ScheduleEvent;
 public abstract class ScheduleEventBase<IN> implements ScheduleEvent {
 
 	protected enum InitSource {
-		NONE,
-		DEFAULT_VALUES,
-		OUT,
-		EVENT
+		NONE, DEFAULT_VALUES, OUT, EVENT
 	}
 
 	protected final static ColorOpacity DEFAULT_COLOR_OPACITY = ColorOpacity.ALPHA50;
 	protected IN in;
 	private ScheduleEvent event;
-
 	private String id;
 
 	public ScheduleEventBase() {
@@ -27,7 +23,6 @@ public abstract class ScheduleEventBase<IN> implements ScheduleEvent {
 
 	public ScheduleEventBase(IN in) {
 		setIn(in);
-
 	}
 
 	public ScheduleEventBase(ScheduleEvent event) {

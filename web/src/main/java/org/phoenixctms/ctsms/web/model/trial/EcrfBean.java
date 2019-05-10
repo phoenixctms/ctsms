@@ -115,7 +115,6 @@ public class EcrfBean extends ManagedBeanBase {
 	private EcrfLazyModel ecrfModel;
 	private GroupVisitMatrix<ECRFOutVO> matrix;
 	private Long cloneAddTrialId;
-
 	private String deferredDeleteReason;
 
 	public EcrfBean() {
@@ -185,8 +184,7 @@ public class EcrfBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ECRFInVO backup = new ECRFInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -220,8 +218,7 @@ public class EcrfBean extends ManagedBeanBase {
 		actionPostProcess(addCloneAction());
 	}
 
-	public String addCloneAction()
-	{
+	public String addCloneAction() {
 		try {
 			if (cloneAddTrialId != null) {
 				if (isCloneAddTrialEnabled() || cloneAddTrialId.equals(trialId)) {

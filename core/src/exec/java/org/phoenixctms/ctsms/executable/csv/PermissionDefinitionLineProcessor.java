@@ -37,7 +37,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private final static String DEFAULT_RESTRICTION_OVERRIDE_PROFILE_SEPARATOR_REGEXP_PATTERN = " *, *";
 	private final static String DEFAULT_PROFILE_SPLIT_REGEXP_PATTERN = " *: *";
 	private static final String DEFAULT_EXCLUDE_RESTRICTION_OVERRIDE_PROFILE_CHAR = "/";
-
 	private static Collection<String> SERVICE_METHOD_NAMES = getServiceMethodNames();
 
 	private static void addServiceMethodName(Collection<String> serviceMethodNames, Class serviceClass) {
@@ -100,6 +99,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		}
 		return serviceMethods;
 	}
+
 	@Autowired
 	protected PermissionDao permissionDao;
 	@Autowired
@@ -108,10 +108,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private Pattern restrictionOverrideProfileSeparatorRegexp;
 	private Pattern profileSplitRegexp;
 	private String excludeRestrictionOverrideProfileChar;
-
 	private ArrayList<Permission> allPermissions;
-
-
 
 	public PermissionDefinitionLineProcessor() {
 		super();
@@ -220,7 +217,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 		return values[RESTRICTIONS_COLUMN_INDEX];
 	}
 
-
 	private String getServiceMethod(String[] values) {
 		return values[SERVICE_METHOD_COLUMN_INDEX];
 	}
@@ -228,8 +224,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	private String getTransformation(String[] values) {
 		return values[TRANSFORMATION_COLUMN_INDEX];
 	}
-
-
 
 	@Override
 	public void init() {
@@ -292,19 +286,19 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 					String transformationName = getTransformation(values);
 					ServiceMethodParameterTransformation transformation = !CommonUtil.isEmptyString(transformationName) ? ServiceMethodParameterTransformation
 							.fromString(transformationName) : null;
-							String[] restrictionNames = restrictionOverrideProfileSeparatorRegexp.split(getRestrictions(values), -1);
-							ArrayList<ServiceMethodParameterRestriction> restrictions = new ArrayList<ServiceMethodParameterRestriction>();
-							for (int i = 0; i < restrictionNames.length; i++) {
-								if (restrictionNames[i].length() > 0 && !restrictionNames[i].startsWith(excludeRestrictionOverrideProfileChar)) {
-									restrictions.add(ServiceMethodParameterRestriction.fromString(restrictionNames[i]));
-								}
-							}
-							injectRestrictions(serviceMethod, profiles, restrictions);
-							if (profiles.size() > restrictions.size()) {
-								throw new IllegalArgumentException("more profiles than restrictions for service method " + serviceMethod + " parameter " + parameterGetter);
-							}
-							String disjunctionGroup = !CommonUtil.isEmptyString(getDisjunctionGroup(values)) ? getDisjunctionGroup(values) : null;
-							permissions.addAll(generatePermissionsFromRestrictions(getIpRanges(values), parameterGetter, transformation, restrictions, disjunctionGroup));
+					String[] restrictionNames = restrictionOverrideProfileSeparatorRegexp.split(getRestrictions(values), -1);
+					ArrayList<ServiceMethodParameterRestriction> restrictions = new ArrayList<ServiceMethodParameterRestriction>();
+					for (int i = 0; i < restrictionNames.length; i++) {
+						if (restrictionNames[i].length() > 0 && !restrictionNames[i].startsWith(excludeRestrictionOverrideProfileChar)) {
+							restrictions.add(ServiceMethodParameterRestriction.fromString(restrictionNames[i]));
+						}
+					}
+					injectRestrictions(serviceMethod, profiles, restrictions);
+					if (profiles.size() > restrictions.size()) {
+						throw new IllegalArgumentException("more profiles than restrictions for service method " + serviceMethod + " parameter " + parameterGetter);
+					}
+					String disjunctionGroup = !CommonUtil.isEmptyString(getDisjunctionGroup(values)) ? getDisjunctionGroup(values) : null;
+					permissions.addAll(generatePermissionsFromRestrictions(getIpRanges(values), parameterGetter, transformation, restrictions, disjunctionGroup));
 				} else if (!CommonUtil.isEmptyString(parameterSetter)) {
 					String[] overrideNames = restrictionOverrideProfileSeparatorRegexp.split(getOverrides(values), -1);
 					ArrayList<ServiceMethodParameterOverride> overrides = new ArrayList<ServiceMethodParameterOverride>();

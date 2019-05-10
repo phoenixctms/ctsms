@@ -2,7 +2,6 @@ package org.phoenixctms.ctsms.util;
 
 import java.util.ArrayList;
 
-
 public class GermanPersonNames {
 
 	public final static ArrayList<String> FEMALE_FIRST_NAMES = new ArrayList<String>();

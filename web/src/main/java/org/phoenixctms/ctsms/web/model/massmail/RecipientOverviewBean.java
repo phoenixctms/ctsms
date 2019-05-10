@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.massmail;
 
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -67,7 +66,6 @@ public class RecipientOverviewBean extends ManagedBeanBase {
 	}
 
 	public void resetMassMailRecipient(MassMailRecipientOutVO recipient) {
-
 		if (recipient != null) {
 			try {
 				WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(WebUtil.getAuthentication(), recipient.getId(), recipient.getVersion());

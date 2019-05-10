@@ -32,10 +32,6 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-
-
-
-
 @Api
 @Path("/ecrfstatusentry")
 public class EcrfStatusEntryResource {
@@ -63,7 +59,8 @@ public class EcrfStatusEntryResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/ecrffieldvalue/{ecrfFieldId}/{index}")
-	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId,@PathParam("index") Long index)
+	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId,
+			@PathParam("index") Long index)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(auth, listEntryId, ecrfFieldId, index);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
@@ -74,7 +71,7 @@ public class EcrfStatusEntryResource {
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues")
 	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValues(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
 			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf = new PSFUriPart(uriInfo, "load_all_js_values");
 		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, ecrfId, listEntryId, false, loadAllJsValues, psf);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
@@ -85,7 +82,7 @@ public class EcrfStatusEntryResource {
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues/maxindex")
 	public Long getEcrfFieldValuesSectionMaxIndex(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
 			@QueryParam("section") String section)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, ecrfId, section, listEntryId);
 	}
 
@@ -146,8 +143,9 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}")
 	public ECRFStatusEntryVO setEcrfStatusEntry(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("version") Long version, @QueryParam("ecrf_status_type_id") Long ecrfStatusTypeId, @QueryParam("proband_list_status_entry_id") Long probandListStatusEntryId)
-					throws AuthenticationException, AuthorisationException, ServiceException {
+			@QueryParam("version") Long version, @QueryParam("ecrf_status_type_id") Long ecrfStatusTypeId,
+			@QueryParam("proband_list_status_entry_id") Long probandListStatusEntryId)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().setEcrfStatusEntry(auth, ecrfId, listEntryId, version, ecrfStatusTypeId, probandListStatusEntryId);
 	}
 }

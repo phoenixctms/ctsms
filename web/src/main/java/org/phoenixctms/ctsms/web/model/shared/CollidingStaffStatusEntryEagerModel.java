@@ -157,7 +157,6 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		return dutyRosterTurnId;
 	}
 
-
 	@Override
 	protected Collection<StaffStatusEntryOutVO> getEagerResult(PSFVO psf) {
 		if (dutyRosterTurnId != null) {

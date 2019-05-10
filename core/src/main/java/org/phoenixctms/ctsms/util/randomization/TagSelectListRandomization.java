@@ -28,8 +28,6 @@ import org.phoenixctms.ctsms.vo.TrialInVO;
 
 public class TagSelectListRandomization extends Randomization {
 
-
-
 	protected TagSelectListRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
@@ -49,7 +47,6 @@ public class TagSelectListRandomization extends Randomization {
 	// protected void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException {
 	// checkProbandGroupToken(probandGroupIn.getToken());
 	// }
-
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
 		checkRandomizeProbandListEntryTag(trial);
@@ -111,7 +108,4 @@ public class TagSelectListRandomization extends Randomization {
 		randomizationInfo.setRandomizationListItems(valueValues);
 		return value;
 	}
-
-
-
 }

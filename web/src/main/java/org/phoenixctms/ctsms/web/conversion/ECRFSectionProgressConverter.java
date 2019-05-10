@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.conversion;
 
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
-
 
 @FacesConverter(value = ECRFSectionProgressConverter.CONVERTER_ID)
 public class ECRFSectionProgressConverter implements Converter {
@@ -55,7 +53,7 @@ public class ECRFSectionProgressConverter implements Converter {
 				return (String) value;
 			}
 		} else if (value instanceof ECRFSectionProgressVO) {
-			return (String) ((ECRFSectionProgressVO) value).getSection();
+			return ((ECRFSectionProgressVO) value).getSection();
 		} else {
 			return CommonUtil.NO_SELECTION_VALUE;
 		}

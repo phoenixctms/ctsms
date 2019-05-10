@@ -63,7 +63,7 @@ public class PSFUriPart extends PSFVO implements UriPart {
 			if (psf.slurp && filter != null && filter.size() > 0) {
 				Map<String, String> filters;
 				if (psf.getFilters() != null) {
-					filters = (Map<String, String>) psf.getFilters();
+					filters = psf.getFilters();
 				} else {
 					filters = new HashMap<String, String>(filter.size());
 					psf.setFilters(filters);

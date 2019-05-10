@@ -13,14 +13,12 @@ import java.util.Map;
 public class Accessor {
 
 	public enum AccessorType {
-		REFERENCE,
-		COLLECTION,
-		MAP
+		REFERENCE, COLLECTION, MAP
 	}
 
 	private Method method;
 	private AccessorType type;
-	private HashMap<Object,ArrayList> sortedCollectionsCache;
+	private HashMap<Object, ArrayList> sortedCollectionsCache;
 	private Comparator compare;
 
 	public Accessor(Method method, AccessorType type) {
@@ -93,7 +91,6 @@ public class Accessor {
 	//	public Method getMethod1() {
 	//		return method;
 	//	}
-
 	public Class getReturnType() {
 		return method.getReturnType();
 	}

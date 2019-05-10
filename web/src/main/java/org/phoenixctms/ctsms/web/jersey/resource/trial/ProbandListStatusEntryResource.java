@@ -43,7 +43,6 @@ public class ProbandListStatusEntryResource {
 	// throws AuthenticationException, AuthorisationException, ServiceException {
 	// return WebUtil.getServiceLocator().getTrialService().addProbandListStatusEntry(auth, true, in);
 	// }
-
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")

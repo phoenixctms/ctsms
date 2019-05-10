@@ -118,6 +118,7 @@ public class EcrfFieldInputModel extends InputModel {
 		return ecrfFieldValue;
 	}
 
+	@Override
 	protected Color getFieldColor() {
 		return fieldColor;
 	}
@@ -460,6 +461,7 @@ public class EcrfFieldInputModel extends InputModel {
 		}
 	}
 
+	@Override
 	protected void setErrorMessageFromServiceException(Object data, String exceptionMessage) {
 		HashMap<Long, HashMap<Long, String>> errorMessagesMap;
 		try {

@@ -18,7 +18,6 @@ public abstract class IntervalScheduleComparatorBase<T> extends IntervalComparat
 			Date intervalBStart = getStart(b);
 			Date intervalBStop = getStop(b);
 			if (intervalAStart != null && intervalAStop != null) {
-
 				if (intervalBStart != null && intervalBStop != null) {
 					long intervalADuration = CommonUtil.dateDeltaSecs(intervalAStart, intervalAStop);
 					long intervalBDuration = CommonUtil.dateDeltaSecs(intervalBStart, intervalBStop);
@@ -41,6 +40,4 @@ public abstract class IntervalScheduleComparatorBase<T> extends IntervalComparat
 			return super.compare(a, b);
 		}
 	}
-
-
 }

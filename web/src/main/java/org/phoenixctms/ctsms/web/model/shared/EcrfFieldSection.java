@@ -3,8 +3,6 @@ package org.phoenixctms.ctsms.web.model.shared;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
 
-
-
 public class EcrfFieldSection {
 
 	private String section;
@@ -89,6 +87,7 @@ public class EcrfFieldSection {
 		this.seriesIndex = seriesIndex;
 	}
 
+	@Override
 	public String toString() {
 		if (isSeries()) {
 			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, seriesIndex, section);
@@ -96,5 +95,4 @@ public class EcrfFieldSection {
 			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_LABEL, section);
 		}
 	}
-
 }

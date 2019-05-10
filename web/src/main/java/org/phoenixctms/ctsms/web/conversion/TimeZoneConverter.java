@@ -39,6 +39,4 @@ public class TimeZoneConverter implements Converter {
 			return CommonUtil.NO_SELECTION_VALUE;
 		}
 	}
-
 }
-

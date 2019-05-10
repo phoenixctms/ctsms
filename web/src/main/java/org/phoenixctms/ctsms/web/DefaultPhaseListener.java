@@ -12,7 +12,6 @@ package org.phoenixctms.ctsms.web;
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
@@ -45,5 +44,4 @@ public abstract class DefaultPhaseListener implements PhaseListener {
 	public PhaseId getPhaseId() {
 		return phaseId;
 	}
-
 }

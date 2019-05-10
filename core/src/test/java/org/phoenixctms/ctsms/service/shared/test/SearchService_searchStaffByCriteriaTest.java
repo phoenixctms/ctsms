@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.SearchService#searchStaffByCriteria(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Integer, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups={"service","SearchService"})
+@Test(groups = { "service", "SearchService" })
 public class SearchService_searchStaffByCriteriaTest extends SearchServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>searchStaffByCriteria</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'SearchService_searchStaffByCriteriaTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchStaffByCriteria]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>searchStaffByCriteria</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'SearchService_searchStaffByCriteriaTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'SearchService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SearchService.searchStaffByCriteria]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

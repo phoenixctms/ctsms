@@ -85,8 +85,8 @@ public class MimeTypeLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getMimeType(values))
-		.toHashCode();
+				.append(getMimeType(values))
+				.toHashCode();
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase {
 	private ArrayList<SelectItem> filterTrials;
 	private boolean allProbandGroups;
 
-	public CollidingVisitScheduleItemEagerModel(){
+	public CollidingVisitScheduleItemEagerModel() {
 		super();
 		resetRows();
 	}
@@ -88,7 +88,6 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase {
 	// this.allProbandGroups = allProbandGroups;
 	// initSets();
 	// }
-
 	@Override
 	protected Collection<VisitScheduleItemOutVO> getEagerResult(PSFVO psf) {
 		if (probandStatusEntryId != null) {

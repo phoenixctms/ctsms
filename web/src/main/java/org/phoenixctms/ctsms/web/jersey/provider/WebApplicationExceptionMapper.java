@@ -10,7 +10,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 
 @Provider
 public class WebApplicationExceptionMapper extends ExceptionMapperBase implements
-ExceptionMapper<WebApplicationException> {
+		ExceptionMapper<WebApplicationException> {
 
 	@Override
 	public Response toResponse(WebApplicationException ex) {

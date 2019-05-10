@@ -166,5 +166,4 @@ public abstract class RecentEntityMenuBase {
 	protected abstract String getRecentEntityMenuItemLabel(JournalEntryOutVO journalEntry);
 
 	protected abstract boolean hasEntity(JournalEntryOutVO journalEntry);
-
 }

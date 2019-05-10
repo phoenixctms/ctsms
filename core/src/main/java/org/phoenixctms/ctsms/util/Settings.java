@@ -37,25 +37,7 @@ import org.springframework.stereotype.Component;
 public final class Settings {
 
 	public enum Bundle {
-		SETTINGS,
-		TRUSTED_HOSTS,
-		CV_PDF,
-		REIMBURSEMENTS_PDF,
-		COURSE_PARTICIPANT_LIST_PDF,
-		PROBAND_LETTER_PDF,
-		COURSE_CERTIFICATE_PDF,
-		JOURNAL_EXCEL,
-		PROBAND_LIST_EXCEL,
-		SEARCH_RESULT_EXCEL,
-		VISIT_SCHEDULE_EXCEL,
-		TEAM_MEMBERS_EXCEL,
-		REIMBURSEMENTS_EXCEL,
-		ECRF_PDF,
-		INQUIRIES_PDF,
-		PROBAND_LIST_ENTRY_TAGS_PDF,
-		AUDIT_TRAIL_EXCEL,
-		INVENTORY_BOOKINGS_EXCEL,
-		DATE_FORMATS,
+		SETTINGS, TRUSTED_HOSTS, CV_PDF, REIMBURSEMENTS_PDF, COURSE_PARTICIPANT_LIST_PDF, PROBAND_LETTER_PDF, COURSE_CERTIFICATE_PDF, JOURNAL_EXCEL, PROBAND_LIST_EXCEL, SEARCH_RESULT_EXCEL, VISIT_SCHEDULE_EXCEL, TEAM_MEMBERS_EXCEL, REIMBURSEMENTS_EXCEL, ECRF_PDF, INQUIRIES_PDF, PROBAND_LIST_ENTRY_TAGS_PDF, AUDIT_TRAIL_EXCEL, INVENTORY_BOOKINGS_EXCEL, DATE_FORMATS,
 	}
 
 	private static String settingsBundleBasename;
@@ -83,7 +65,6 @@ public final class Settings {
 	// CLASS_PATH_ELEMENTS.add("");
 	// CLASS_PATH_ELEMENTS.addAll(Arrays.asList(System.getProperty("java.class.path", ".").split(System.getProperty("path.separator"))));
 	// }
-
 	private static String checkDirectory(String externalFileDataDir) throws IOException, IllegalArgumentException {
 		String directory;
 		File file = new File(externalFileDataDir);
@@ -120,14 +101,12 @@ public final class Settings {
 			if (file.exists()) {
 				if (file.isFile()) {
 					if (file.canRead()) {
-
-						if ( ImageIO.read(file) != null) {
+						if (ImageIO.read(file) != null) {
 							image = file.getCanonicalPath();
 						} else {
 							throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.IMAGE_FILE_INVALID_IMAGE_ERROR,
 									DefaultMessages.IMAGE_FILE_INVALID_IMAGE_ERROR, imageFileName));
 						}
-
 					} else {
 						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.IMAGE_FILE_ACCESS_ERROR, DefaultMessages.IMAGE_FILE_ACCESS_ERROR,
 								imageFileName));
@@ -261,7 +240,7 @@ public final class Settings {
 	}
 
 	public static boolean containsKey(String key, Bundle bundle) {
-		return CommonUtil.bundleContainsKey(key,getBundle(bundle));
+		return CommonUtil.bundleContainsKey(key, getBundle(bundle));
 	}
 
 	public static boolean getBoolean(String key, Bundle bundle, boolean defaultValue) {
@@ -348,7 +327,8 @@ public final class Settings {
 	}
 
 	public static String getDocumentRootReplacement() {
-		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT_REPLACEMENT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT_REPLACEMENT),getHttpBaseUrl());
+		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT_REPLACEMENT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT_REPLACEMENT),
+				getHttpBaseUrl());
 	}
 
 	public static ECRFFieldStatusQueue getEcrfFieldStatusQueue(String key, Bundle bundle, ECRFFieldStatusQueue defaultValue) {
@@ -420,7 +400,7 @@ public final class Settings {
 	}
 
 	public static String getHttpDomainName() {
-		return  Settings.getString(SettingCodes.HTTP_DOMAIN_NAME, Bundle.SETTINGS, DefaultSettings.HTTP_DOMAIN_NAME);
+		return Settings.getString(SettingCodes.HTTP_DOMAIN_NAME, Bundle.SETTINGS, DefaultSettings.HTTP_DOMAIN_NAME);
 	}
 
 	public static String getHttpHost() {
@@ -456,7 +436,6 @@ public final class Settings {
 	// }
 	// return "";
 	// }
-
 	public static String getInstanceName() {
 		return MessageFormat
 				.format(Settings.getString(SettingCodes.INSTANCE_NAME, Bundle.SETTINGS, DefaultSettings.INSTANCE_NAME), CommonUtil.LOCAL_HOST_NAME, getHttpDomainName());
@@ -502,7 +481,6 @@ public final class Settings {
 	// }
 	// return "";
 	// }
-
 	public static long getLong(String key, Bundle bundle, long defaultValue) {
 		return CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 	}
@@ -536,7 +514,6 @@ public final class Settings {
 	// }
 	// return "";
 	// }
-
 	public static String getPDFTemplateFilename(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
 		return checkPDFTemplateFileName(CommonUtil.getValue(key, getBundle(bundle), defaultValue), null);
 	}
@@ -562,7 +539,6 @@ public final class Settings {
 	// }
 	// return "";
 	// }
-
 	public static Pattern getRegexp(String key, Bundle bundle, String defaultValue) {
 		String pattern = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 		if (pattern != null && pattern.length() > 0) {
@@ -575,8 +551,6 @@ public final class Settings {
 			return null;
 		}
 	}
-
-
 
 	public static SimpleDateFormat getSimpleDateFormat(String key, Bundle bundle, String defaultValue, Locales locale) {
 		String dateFormat = CommonUtil.getValue(key, getBundle(bundle), defaultValue);

@@ -49,8 +49,6 @@ import org.primefaces.model.StreamedContent;
 @ViewScoped
 public class VisitScheduleBean extends ManagedBeanBase {
 
-
-
 	public static void copyVisitScheduleItemOutToIn(VisitScheduleItemInVO in, VisitScheduleItemOutVO out) {
 		if (in != null && out != null) {
 			ProbandGroupOutVO probandGroupVO = out.getGroup();
@@ -93,12 +91,10 @@ public class VisitScheduleBean extends ManagedBeanBase {
 	private VisitScheduleItemLazyModel visitScheduleItemModel;
 	private HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache;
 	private HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
-
 	private GroupVisitMatrix<VisitScheduleItemOutVO> matrix;
 
 	public VisitScheduleBean() {
 		super();
-
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
 		collidingStaffStatusEntryModelCache = new HashMap<Long, CollidingStaffStatusEntryEagerModel>();
 		visitScheduleItemModel = new VisitScheduleItemLazyModel();
@@ -163,12 +159,10 @@ public class VisitScheduleBean extends ManagedBeanBase {
 				in.setVisitId(visitId);
 			}
 		};
-
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		VisitScheduleItemInVO backup = new VisitScheduleItemInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -221,8 +215,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		matrix.loadMatrix();
 		return CHANGE_OUTCOME;
 	}
-
-
 
 	@Override
 	public String deleteAction() {
@@ -278,17 +270,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		return in;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	public GroupVisitMatrix getMatrix() {
 		return matrix;
 	}
@@ -301,8 +282,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 			return super.getModifiedAnnotation();
 		}
 	}
-
-
 
 	public VisitScheduleItemOutVO getOut() {
 		return out;
@@ -348,8 +327,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 			throw e;
 		}
 	}
-
-
 
 	public VisitScheduleItemLazyModel getVisitScheduleItemModel() {
 		return visitScheduleItemModel;
@@ -412,13 +389,9 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		return isCreated() && !WebUtil.isTrialLocked(trial);
 	}
 
-
-
 	public boolean isInputVisible() {
 		return isCreated() || !WebUtil.isTrialLocked(trial);
 	}
-
-
 
 	@Override
 	public boolean isRemovable() {
@@ -429,8 +402,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 	public String loadAction() {
 		return loadAction(in.getId());
 	}
-
-
 
 	@Override
 	public String loadAction(Long id) {
@@ -455,9 +426,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-
-
-
 	@Override
 	public String resetAction() {
 		out = null;
@@ -466,7 +434,6 @@ public class VisitScheduleBean extends ManagedBeanBase {
 		matrix.loadMatrix();
 		return RESET_OUTCOME;
 	}
-
 
 	public void setSelectedVisitScheduleItem(IDVO visitScheduleItem) {
 		if (visitScheduleItem != null) {

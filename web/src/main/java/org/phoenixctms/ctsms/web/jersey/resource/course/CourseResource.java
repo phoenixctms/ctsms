@@ -242,8 +242,6 @@ public class CourseResource extends ServiceResourceBase {
 		return WebUtil.getServiceLocator().getCourseService()
 				.updateCourse(auth, in, Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_COURSE_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PRECEDING_DEPTH),
-						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_RENEWALS_DEPTH)
-						);
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_RENEWALS_DEPTH));
 	}
-
 }

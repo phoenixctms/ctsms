@@ -20,15 +20,13 @@ import org.phoenixctms.ctsms.vocycle.CriterionGraph;
  * @see Criterion
  */
 public class CriterionDaoImpl
-		extends CriterionDaoBase
-{
+		extends CriterionDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public Criterion criterionInstantVOToEntity(CriterionInstantVO criterionInstantVO)
-	{
+	public Criterion criterionInstantVOToEntity(CriterionInstantVO criterionInstantVO) {
 		Criterion entity = this.loadCriterionFromCriterionInstantVO(criterionInstantVO);
 		this.criterionInstantVOToEntity(criterionInstantVO, entity, true);
 		return entity;
@@ -41,8 +39,7 @@ public class CriterionDaoImpl
 	public void criterionInstantVOToEntity(
 			CriterionInstantVO source,
 			Criterion target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criterionInstantVOToEntity(source, target, copyIfNull);
 		Long propertyId = source.getPropertyId();
 		Long restrictionId = source.getRestrictionId();
@@ -73,8 +70,7 @@ public class CriterionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public Criterion criterionInVOToEntity(CriterionInVO criterionInVO)
-	{
+	public Criterion criterionInVOToEntity(CriterionInVO criterionInVO) {
 		Criterion entity = this.loadCriterionFromCriterionInVO(criterionInVO);
 		this.criterionInVOToEntity(criterionInVO, entity, true);
 		return entity;
@@ -87,8 +83,7 @@ public class CriterionDaoImpl
 	public void criterionInVOToEntity(
 			CriterionInVO source,
 			Criterion target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criterionInVOToEntity(source, target, copyIfNull);
 		Long propertyId = source.getPropertyId();
 		Long restrictionId = source.getRestrictionId();
@@ -119,8 +114,7 @@ public class CriterionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public Criterion criterionOutVOToEntity(CriterionOutVO criterionOutVO)
-	{
+	public Criterion criterionOutVOToEntity(CriterionOutVO criterionOutVO) {
 		Criterion entity = this.loadCriterionFromCriterionOutVO(criterionOutVO);
 		this.criterionOutVOToEntity(criterionOutVO, entity, true);
 		return entity;
@@ -133,8 +127,7 @@ public class CriterionDaoImpl
 	public void criterionOutVOToEntity(
 			CriterionOutVO source,
 			Criterion target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.criterionOutVOToEntity(source, target, copyIfNull);
 		CriterionPropertyVO propertyVO = source.getProperty();
 		CriterionRestrictionVO restrictionVO = source.getRestriction();
@@ -166,8 +159,7 @@ public class CriterionDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criterion loadCriterionFromCriterionInstantVO(CriterionInstantVO criterionInstantVO)
-	{
+	private Criterion loadCriterionFromCriterionInstantVO(CriterionInstantVO criterionInstantVO) {
 		return Criterion.Factory.newInstance();
 	}
 
@@ -176,8 +168,7 @@ public class CriterionDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criterion loadCriterionFromCriterionInVO(CriterionInVO criterionInVO)
-	{
+	private Criterion loadCriterionFromCriterionInVO(CriterionInVO criterionInVO) {
 		return Criterion.Factory.newInstance();
 	}
 
@@ -186,8 +177,7 @@ public class CriterionDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Criterion loadCriterionFromCriterionOutVO(CriterionOutVO criterionOutVO)
-	{
+	private Criterion loadCriterionFromCriterionOutVO(CriterionOutVO criterionOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 		/* A typical implementation looks like this: Criterion criterion = this.load(criterionOutVO.getId()); if (criterion == null) { criterion = Criterion.Factory.newInstance();
 		 * } return criterion; */
@@ -197,8 +187,7 @@ public class CriterionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionInstantVO toCriterionInstantVO(final Criterion entity)
-	{
+	public CriterionInstantVO toCriterionInstantVO(final Criterion entity) {
 		return super.toCriterionInstantVO(entity);
 	}
 
@@ -208,8 +197,7 @@ public class CriterionDaoImpl
 	@Override
 	public void toCriterionInstantVO(
 			Criterion source,
-			CriterionInstantVO target)
-	{
+			CriterionInstantVO target) {
 		super.toCriterionInstantVO(source, target);
 		CriterionProperty property = this.getCriterionPropertyDao().findByNameL10nKey(source.getPropertyNameL10nKey());
 		CriterionRestriction restriction = this.getCriterionRestrictionDao().findByRestriction(source.getRestriction());
@@ -229,8 +217,7 @@ public class CriterionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionInVO toCriterionInVO(final Criterion entity)
-	{
+	public CriterionInVO toCriterionInVO(final Criterion entity) {
 		return super.toCriterionInVO(entity);
 	}
 
@@ -240,8 +227,7 @@ public class CriterionDaoImpl
 	@Override
 	public void toCriterionInVO(
 			Criterion source,
-			CriterionInVO target)
-	{
+			CriterionInVO target) {
 		super.toCriterionInVO(source, target);
 		CriterionProperty property = this.getCriterionPropertyDao().findByNameL10nKey(source.getPropertyNameL10nKey());
 		CriterionRestriction restriction = this.getCriterionRestrictionDao().findByRestriction(source.getRestriction());
@@ -261,8 +247,7 @@ public class CriterionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CriterionOutVO toCriterionOutVO(final Criterion entity)
-	{
+	public CriterionOutVO toCriterionOutVO(final Criterion entity) {
 		return super.toCriterionOutVO(entity);
 	}
 
@@ -272,8 +257,7 @@ public class CriterionDaoImpl
 	@Override
 	public void toCriterionOutVO(
 			Criterion source,
-			CriterionOutVO target)
-	{
+			CriterionOutVO target) {
 		(new CriterionGraph(this, this.getCriteriaDao(), this.getCriterionPropertyDao(), this.getCriterionRestrictionDao(), this.getCriterionTieDao())).toVOHelper(source, target,
 				new HashMap<Class, HashMap<Long, Object>>());
 	}
@@ -281,8 +265,7 @@ public class CriterionDaoImpl
 	@Override
 	public void toCriterionOutVO(
 			Criterion source,
-			CriterionOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			CriterionOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new CriterionGraph(this, this.getCriteriaDao(), this.getCriterionPropertyDao(), this.getCriterionRestrictionDao(), this.getCriterionTieDao())).toVOHelper(source, target,
 				voMap);
 	}

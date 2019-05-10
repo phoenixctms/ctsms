@@ -8,7 +8,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 
 @Provider
 public class ServiceExceptionMapper extends ExceptionMapperBase implements
-ExceptionMapper<ServiceException> {
+		ExceptionMapper<ServiceException> {
 
 	private final static int UNPROCESSABLE_ENTITY_STATUS = 422;
 

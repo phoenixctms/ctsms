@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.model.trial;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -51,7 +52,6 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 	private boolean stacked;
 
 	// protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA50;
-
 	public EnrollmentChartBean() {
 		super();
 		chartModel = new CartesianChartModel();
@@ -172,7 +172,6 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 	// initIn();
 	// initSets();
 	// }
-
 	private void initIn() {
 		stacked = true;
 	}
@@ -245,7 +244,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 			Long statusId = probandListStatusEntry.getStatus().getId();
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(probandListStatusEntry.getRealTimestamp());
-			Date date = (new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+			Date date = (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
 			dates.add(date);
 			TreeMap<Long, ProbandListStatusEntryOutVO> enrollmentStatusMap = probandMap.get(probandListStatusEntry.getListEntry().getProband().getId());
 			Entry<Long, ProbandListStatusEntryOutVO> previousStatus = enrollmentStatusMap.lowerEntry(probandListStatusEntry.getId());

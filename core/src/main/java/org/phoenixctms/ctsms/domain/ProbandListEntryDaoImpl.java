@@ -35,10 +35,9 @@ import org.phoenixctms.ctsms.vocycle.ProbandListEntryGraph;
  * @see ProbandListEntry
  */
 public class ProbandListEntryDaoImpl
-extends ProbandListEntryDaoBase
-{
+		extends ProbandListEntryDaoBase {
 
-	private static Criteria applyStratificationTagValuesCriterions(org.hibernate.Criteria listEntryCriteria,Set<Long> selectionSetValueIds) {
+	private static Criteria applyStratificationTagValuesCriterions(org.hibernate.Criteria listEntryCriteria, Set<Long> selectionSetValueIds) {
 		org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
 		tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("stratification", true));
 		org.hibernate.Criteria selectionValuesCriteria = tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", // "selectionValues0",
@@ -94,8 +93,6 @@ extends ProbandListEntryDaoBase
 		return listEntryCriteria.list();
 	}
 
-
-
 	@Override
 	protected Collection<ProbandListEntry> handleFindByTrialPosition(
 			Long trialId, Long position) throws Exception {
@@ -132,7 +129,7 @@ extends ProbandListEntryDaoBase
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (probandDepartmentId != null) {
-			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add( Restrictions.eq("department.id", probandDepartmentId.longValue()));
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
 		}
 		return listEntryCriteria.list();
 	}
@@ -162,12 +159,10 @@ extends ProbandListEntryDaoBase
 		return (Long) listEntryCriteria.uniqueResult();
 	}
 
-
-
 	@Override
 	protected Collection<ProbandListEntry> handleGetProbandList(
 			Long trialId, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel logLevel, boolean last)
-					throws Exception {
+			throws Exception {
 		// http://stackoverflow.com/questions/1648426/hibernate-detached-queries-as-a-part-of-the-criteria-query
 		// https://forum.hibernate.org/viewtopic.php?p=2317841#2317841
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
@@ -219,7 +214,7 @@ extends ProbandListEntryDaoBase
 		}
 		if (!total) {
 			listEntryCriteria.createCriteria("lastStatus", CriteriaSpecification.INNER_JOIN).createCriteria("status", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.eq("count", true));
+					.add(Restrictions.eq("count", true));
 			// istEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		return (Long) listEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -227,7 +222,7 @@ extends ProbandListEntryDaoBase
 
 	@Override
 	protected long handleGetTrialGroupStratificationTagValuesCount(
-			Long trialId,Long probandGroupId, Set<Long> selectionSetValueIds, Long excludeId) throws Exception {
+			Long trialId, Long probandGroupId, Set<Long> selectionSetValueIds, Long excludeId) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -252,7 +247,6 @@ extends ProbandListEntryDaoBase
 		} else {
 			return (Long) listEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 		}
-
 	}
 
 	@Override
@@ -263,14 +257,14 @@ extends ProbandListEntryDaoBase
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (randomizeSelectionSetValueId != null) {
-			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues",  CriteriaSpecification.INNER_JOIN);
-			tagValuesCriteria.createCriteria("tag",  CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("randomize", true));
+			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
+			tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("randomize", true));
 			tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", CriteriaSpecification.INNER_JOIN)
-			.add(Restrictions.idEq(randomizeSelectionSetValueId.longValue()));
+					.add(Restrictions.idEq(randomizeSelectionSetValueId.longValue()));
 		} else {
-			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues",  CriteriaSpecification.LEFT_JOIN);
-			tagValuesCriteria.createCriteria("tag",  CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.isNull("randomize"),Restrictions.eq("randomize", true)));
-			tagValuesCriteria.createCriteria("value",  CriteriaSpecification.LEFT_JOIN).add(Restrictions.isEmpty("selectionValues"));
+			org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.LEFT_JOIN);
+			tagValuesCriteria.createCriteria("tag", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.isNull("randomize"), Restrictions.eq("randomize", true)));
+			tagValuesCriteria.createCriteria("value", CriteriaSpecification.LEFT_JOIN).add(Restrictions.isEmpty("selectionValues"));
 		}
 		if (excludeId != null) {
 			listEntryCriteria.add(Restrictions.ne("id", excludeId.longValue()));
@@ -309,7 +303,7 @@ extends ProbandListEntryDaoBase
 				org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.LEFT_JOIN);
 				tagValuesCriteria.createCriteria("tag", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.isNull("randomize"), Restrictions.eq("randomize", true)));
 				tagValuesCriteria.createCriteria("value", CriteriaSpecification.LEFT_JOIN)
-				.add(Restrictions.or(Restrictions.isNull("stringValue"), Restrictions.eq("stringValue", "")));
+						.add(Restrictions.or(Restrictions.isNull("stringValue"), Restrictions.eq("stringValue", "")));
 			}
 		}
 		if (excludeId != null) {
@@ -337,8 +331,7 @@ extends ProbandListEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListEntry loadProbandListEntryFromProbandListEntryInVO(ProbandListEntryInVO probandListEntryInVO)
-	{
+	private ProbandListEntry loadProbandListEntryFromProbandListEntryInVO(ProbandListEntryInVO probandListEntryInVO) {
 		// TODO implement loadProbandListEntryFromProbandListEntryInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryFromProbandListEntryInVO(ProbandListEntryInVO) not yet implemented.");
 		ProbandListEntry probandListEntry = null;
@@ -346,8 +339,7 @@ extends ProbandListEntryDaoBase
 		if (id != null) {
 			probandListEntry = this.load(id);
 		}
-		if (probandListEntry == null)
-		{
+		if (probandListEntry == null) {
 			probandListEntry = ProbandListEntry.Factory.newInstance();
 		}
 		return probandListEntry;
@@ -358,8 +350,7 @@ extends ProbandListEntryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandListEntry loadProbandListEntryFromProbandListEntryOutVO(ProbandListEntryOutVO probandListEntryOutVO)
-	{
+	private ProbandListEntry loadProbandListEntryFromProbandListEntryOutVO(ProbandListEntryOutVO probandListEntryOutVO) {
 		// TODO implement loadProbandListEntryFromProbandListOutVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryFromProbandListOutVO(ProbandListOutVO) not yet implemented.");
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
@@ -375,8 +366,7 @@ extends ProbandListEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntry probandListEntryInVOToEntity(ProbandListEntryInVO probandListEntryInVO)
-	{
+	public ProbandListEntry probandListEntryInVOToEntity(ProbandListEntryInVO probandListEntryInVO) {
 		ProbandListEntry entity = this.loadProbandListEntryFromProbandListEntryInVO(probandListEntryInVO);
 		this.probandListEntryInVOToEntity(probandListEntryInVO, entity, true);
 		return entity;
@@ -389,8 +379,7 @@ extends ProbandListEntryDaoBase
 	public void probandListEntryInVOToEntity(
 			ProbandListEntryInVO source,
 			ProbandListEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListEntryInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
 		Long probandId = source.getProbandId();
@@ -434,8 +423,7 @@ extends ProbandListEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntry probandListEntryOutVOToEntity(ProbandListEntryOutVO probandListEntryOutVO)
-	{
+	public ProbandListEntry probandListEntryOutVOToEntity(ProbandListEntryOutVO probandListEntryOutVO) {
 		ProbandListEntry entity = this.loadProbandListEntryFromProbandListEntryOutVO(probandListEntryOutVO);
 		this.probandListEntryOutVOToEntity(probandListEntryOutVO, entity, true);
 		return entity;
@@ -448,8 +436,7 @@ extends ProbandListEntryDaoBase
 	public void probandListEntryOutVOToEntity(
 			ProbandListEntryOutVO source,
 			ProbandListEntry target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandListEntryOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		ProbandOutVO probandVO = source.getProband();
@@ -499,8 +486,7 @@ extends ProbandListEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryInVO toProbandListEntryInVO(final ProbandListEntry entity)
-	{
+	public ProbandListEntryInVO toProbandListEntryInVO(final ProbandListEntry entity) {
 		return super.toProbandListEntryInVO(entity);
 	}
 
@@ -510,8 +496,7 @@ extends ProbandListEntryDaoBase
 	@Override
 	public void toProbandListEntryInVO(
 			ProbandListEntry source,
-			ProbandListEntryInVO target)
-	{
+			ProbandListEntryInVO target) {
 		super.toProbandListEntryInVO(source, target);
 		Trial trial = source.getTrial();
 		Proband proband = source.getProband();
@@ -531,8 +516,7 @@ extends ProbandListEntryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandListEntryOutVO toProbandListEntryOutVO(final ProbandListEntry entity)
-	{
+	public ProbandListEntryOutVO toProbandListEntryOutVO(final ProbandListEntry entity) {
 		return super.toProbandListEntryOutVO(entity);
 	}
 
@@ -542,8 +526,7 @@ extends ProbandListEntryDaoBase
 	@Override
 	public void toProbandListEntryOutVO(
 			ProbandListEntry source,
-			ProbandListEntryOutVO target)
-	{
+			ProbandListEntryOutVO target) {
 		(new ProbandListEntryGraph(this, this.getProbandListStatusEntryDao(), this.getTrialDao(), this.getProbandDao(), this.getProbandGroupDao(), this.getUserDao())).toVOHelper(
 				source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
@@ -551,8 +534,7 @@ extends ProbandListEntryDaoBase
 	@Override
 	public void toProbandListEntryOutVO(
 			ProbandListEntry source,
-			ProbandListEntryOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			ProbandListEntryOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new ProbandListEntryGraph(this, this.getProbandListStatusEntryDao(), this.getTrialDao(), this.getProbandDao(), this.getProbandGroupDao(), this.getUserDao())).toVOHelper(
 				source, target, voMap);
 	}

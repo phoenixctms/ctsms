@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.pdf;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -15,7 +14,6 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// private ProbandListEntryTagsPDFBlock sectionBlock;
 	// private ProbandListEntryTagsPDFBlock indexBlock;
 	private ProbandListEntryTagsPDFBlock listEntryBlock;
-
 	private ProbandListEntryOutVO listEntry;
 
 	public ProbandListEntryTagsPDFBlockCursor(ProbandListEntryTagsPDFPainter painter) {
@@ -33,10 +31,12 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		// this.block = null;
 	}
 
+	@Override
 	public float getBlockIndentedCenterX() throws Exception {
 		return getBlockIndentedX() + getBlockIndentedWidth() / 2.0f;
 	}
 
+	@Override
 	public float getBlockIndentedWidth() throws Exception {
 		return getBlockIndentedWidth(true);
 	}
@@ -54,6 +54,7 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		return width;
 	}
 
+	@Override
 	public float getBlockIndentedX() throws Exception {
 		float x = blockX;
 		// if (hasSection()) {
@@ -67,6 +68,7 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		return x;
 	}
 
+	@Override
 	public PDFJpeg getCheckboxCheckedImage() {
 		return painter.getCheckboxCheckedImage();
 	}
@@ -76,14 +78,17 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		return painter.getCheckboxCheckedPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getCheckboxUncheckedImage() {
 		return painter.getCheckboxUncheckedImage();
 	}
 
+	@Override
 	public PDFont getFontA() {
 		return painter.getFontA();
 	}
 
+	@Override
 	public PDFont getFontB() {
 		return painter.getFontB();
 	}
@@ -95,18 +100,18 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// public PDFont getFontF() {
 	// return painter.getFontF();
 	// }
+	@Override
 	public PDFont getFontC() {
 		return painter.getFontC();
 	}
 
+	@Override
 	public PDFont getFontD() {
 		return painter.getFontD();
 	}
-
 	// public ProbandListEntryTagsPDFBlock getIndexBlock() {
 	// return indexBlock;
 	// }
-
 	// public float getIndexWidth() throws Exception {
 	// return 0.0f; //PDFUtil.renderTextLine(null, painter.getFontA(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
 	// }
@@ -129,7 +134,6 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// public float getIndexY() {
 	// return indexY;
 	// }
-
 	public ProbandListEntryOutVO getListEntry() {
 		return listEntry;
 	}
@@ -138,14 +142,13 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		return listEntryBlock;
 	}
 
+	@Override
 	public PDFJpeg getRadioOffImage() {
 		return painter.getRadioOffImage();
 	}
-
 	// public ProbandListEntryTagsPDFBlock getSectionBlock() {
 	// return sectionBlock;
 	// }
-
 	// public float getSectionWidth() throws Exception {
 	// return PDFUtil.renderTextLine(null, painter.getFontB(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
 	// }
@@ -165,7 +168,7 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// public float getSectionY() {
 	// return sectionY;
 	// }
-
+	@Override
 	public PDFJpeg getRadioOnImage() {
 		return painter.getRadioOnImage();
 	}
@@ -175,10 +178,10 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		return painter.getRadioOnPresetImage();
 	}
 
+	@Override
 	public PDFJpeg getSelectboxCheckedImage() {
 		return painter.getSelectboxCheckedImage();
 	}
-
 	// public PDFJpeg getSignatureAvailableImage() {
 	// return painter.getSignatureAvailableImage();
 	// }
@@ -198,7 +201,6 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// public boolean hasSection() {
 	// return !CommonUtil.isEmptyString(getSectionLabel());
 	// }
-
 	@Override
 	public PDFJpeg getSelectboxCheckedPresetImage() {
 		return painter.getSelectboxCheckedPresetImage();
@@ -213,6 +215,7 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 	// // this.previousSectionY = this.sectionY;
 	// this.sectionY = sectionY;
 	// }
+	@Override
 	public PDFJpeg getSelectboxUncheckedImage() {
 		return painter.getSelectboxUncheckedImage();
 	}
@@ -244,4 +247,3 @@ public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implement
 		this.listEntry = listEntry;
 	}
 }
-

@@ -34,7 +34,6 @@ import org.springframework.core.io.ClassPathResource;
 import jdk.nashorn.api.scripting.JSObject;
 
 //import sun.org.mozilla.javascript.internal.Scriptable;
-
 public class FieldCalculation {
 
 	private final static String ENV_JS_FILE_NAME = "env.js";
@@ -48,13 +47,11 @@ public class FieldCalculation {
 	private final static String REST_API_JS_FILE_NAME = "restApi.js";
 	private final static String JSON2_JS_FILE_NAME = "json2.min.js";
 	private final static String LOCATION_DISTANCE_JS_FILE_NAME = "locationDistance.js";
-
 	private final static String AJAX_OPERATION_SUCCESS = "operationSuccess";
 	private final static String AJAX_FIELD_DELTA_ERROR_MESSAGE_ID = "fieldDeltaErrorMessageId";
 	private final static String AJAX_INPUT_FIELD_PROBAND_BASE64 = "inputFieldProbandBase64";
 	private final static String AJAX_INPUT_FIELD_TRIAL_BASE64 = "inputFieldTrialBase64";
 	private final static String AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64 = "inputFieldProbandAddressesBase64";
-
 	private final static String AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64 = "inputFieldProbandListEntryBase64";
 	private final static String AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64 = "inputFieldVisitScheduleItemsBase64";
 	private final static String AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64 = "inputFieldProbandGroupsBase64";
@@ -62,10 +59,8 @@ public class FieldCalculation {
 	private final static String AJAX_INPUT_FIELD_LOCALE = "inputFieldLocale";
 	private final static String AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64 = "inputFieldVariableValuesBase64";
 	private final static String AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_TAG_VALUES_BASE64 = "probandListEntryTagValuesBase64";
-
 	private final static String DUMMY_ERROR_MESSAGE_ID = "dummy_error_message_id";
 	private final static boolean FIELD_CALCULATION_ENCODE_BASE64 = false;
-
 	private final static String INIT_INPUT_FIELD_VARIABLES = "initInputFieldVariables";
 	private final static String UPDATE_INPUT_FIELD_VARIABLES = "updateInputFieldVariables";
 	//private final static CompiledScript SCRIPT;
@@ -97,17 +92,14 @@ public class FieldCalculation {
 	//				LOCATION_DISTANCE_JS_FILE_NAME,
 	//				FIELD_CALCULATION_JS_FILE_NAME));
 	//	}
-
 	private static Invocable createEngine() throws ScriptException, IOException {
 		ScriptEngine engine = CoreUtil.getJsEngine();
 		//engine.put(ScriptEngine.FILENAME, FIELD_CALCULATION_JS_FILE_NAME);
 		//ScriptContext context = engine.getContext();
-
 		//context.setAttribute("window", file.getParent(), ScriptContext.ENGINE_SCOPE);//$NON-NLS-1$
 		//context.setAttribute("items", this.items.toArray(), ScriptContext.ENGINE_SCOPE); //$NON-NLS-1$
 		//context.setAttribute("baseDir", file.getParent(), ScriptContext.ENGINE_SCOPE);//$NON-NLS-1$
 		// context.setBindings(new Bindings(ScriptEngine.FILENAME, FIELD_CALCULATION_JS_FILE_NAME),ScriptContext.ENGINE_SCOPE));
-
 		// try {
 		// engine.eval(new FileReader(ENV_JS_FILE_NAME));
 		// engine.eval(new FileReader(SPRINTF_JS_FILE_NAME));
@@ -141,7 +133,7 @@ public class FieldCalculation {
 		// CoreUtil.getUserContext().getDateFormat(),
 		// CoreUtil.getUserContext().getDecimalSeparator());
 		if (FIELD_CALCULATION_ENCODE_BASE64) {
-			return JsUtil.encodeBase64(json,false);
+			return JsUtil.encodeBase64(json, false);
 		}
 		return json;
 	}
@@ -149,10 +141,11 @@ public class FieldCalculation {
 	private static String encodeVO(Object src) {
 		String json = JsUtil.voToJson(src);
 		if (FIELD_CALCULATION_ENCODE_BASE64) {
-			return JsUtil.encodeBase64(json,false);
+			return JsUtil.encodeBase64(json, false);
 		}
 		return json;
 	}
+
 	private static InputStreamReader getJsFile(String fileName) throws IOException {
 		ClassPathResource resource = new ClassPathResource("/" + fileName);
 		return new InputStreamReader(resource.getInputStream());
@@ -186,13 +179,11 @@ public class FieldCalculation {
 		}
 		engine.eval(sb.toString());
 	}
-
 	//	private static Bindings newBindings() throws ScriptException {
 	//		//Bindings bindings = SCRIPT.getEngine().createBindings();
 	//		SCRIPT.eval(BINDINGS);
 	//		//return bindings;
 	//	}
-
 
 	private Invocable invocable;
 	// private static Long getJsMap() {
@@ -201,9 +192,7 @@ public class FieldCalculation {
 	// nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
 	// }
 	// }
-
 	//private Bindings bindings;
-
 	private HashMap<String, Object> args;
 
 	public FieldCalculation() throws ScriptException, IOException {
@@ -252,6 +241,7 @@ public class FieldCalculation {
 		// }
 		// return result;
 	}
+
 	public void reset() throws ScriptException {
 		args.clear();
 		args.put(AJAX_OPERATION_SUCCESS, true);
@@ -268,7 +258,7 @@ public class FieldCalculation {
 	}
 
 	public void setLocale(Locales locale) {
-		args.put(AJAX_INPUT_FIELD_LOCALE,CommonUtil.localeToString(L10nUtil.getLocale(locale)));
+		args.put(AJAX_INPUT_FIELD_LOCALE, CommonUtil.localeToString(L10nUtil.getLocale(locale)));
 	}
 
 	public void setProband(ProbandOutVO proband) {
@@ -302,6 +292,4 @@ public class FieldCalculation {
 	public ArrayList<ValidationError> updateInputFieldVariables() throws ScriptException, NoSuchMethodException {
 		return invoke(UPDATE_INPUT_FIELD_VARIABLES);
 	}
-
-
 }

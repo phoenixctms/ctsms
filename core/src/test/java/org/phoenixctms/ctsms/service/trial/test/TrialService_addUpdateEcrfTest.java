@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.trial.TrialService#addUpdateEcrf(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.ECRFInVO, org.phoenixctms.ctsms.vo.ECRFFieldInVO)
  */
-@Test(groups={"service","TrialService"})
+@Test(groups = { "service", "TrialService" })
 public class TrialService_addUpdateEcrfTest extends TrialServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>addUpdateEcrf</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'TrialService_addUpdateEcrfTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addUpdateEcrf]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>addUpdateEcrf</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'TrialService_addUpdateEcrfTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addUpdateEcrf]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

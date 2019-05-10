@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
  * @see org.phoenixctms.ctsms.domain.Title
  */
 public class TitleDaoImpl
-		extends TitleDaoBase
-{
+		extends TitleDaoBase {
 
 	@Override
 	protected Collection<String> handleFindTitles(String titlePrefix, Integer limit)

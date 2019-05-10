@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -298,7 +297,6 @@ public class ProductionDataProvider {
 	protected SponsoringTypeDao sponsoringTypeDao;
 	@Autowired
 	protected SurveyStatusTypeDao surveyStatusTypeDao;
-
 	@Autowired
 	protected ECRFDao eCRFDao; // varnames must match bean ids in applicationContext.xml
 	@Autowired
@@ -603,43 +601,35 @@ public class ProductionDataProvider {
 		CourseParticipationStatusType passedParticipationStatusType = createCourseParticipationStatusType("passed", Color.LIGHTGREEN,
 				false, false, false, false,
 				false, false, true, false,
-				true
-				);
+				true);
 		CourseParticipationStatusType failedParticipationStatusType = createCourseParticipationStatusType("failed", Color.RED,
 				false, false, false, false,
 				false, false, false, false,
-				true
-				);
+				true);
 		CourseParticipationStatusType cancelledParticipationStatusType = createCourseParticipationStatusType("cancelled", Color.DARKORANGE,
 				false, false, false, false,
 				false, true, false, false,
-				true
-				);
+				true);
 		CourseParticipationStatusType unregisteredParticipationStatusType = createCourseParticipationStatusType("unregistered", Color.LIGHTGREY,
 				false, false, false, false,
 				false, false, false, false,
-				true
-				);
+				true);
 		CourseParticipationStatusType absentParticipationStatusType = createCourseParticipationStatusType("absent", Color.DARKORANGE,
 				false, false, false, false,
 				false, false, false, false,
-				true
-				);
+				true);
 		CourseParticipationStatusType acknowledgedParticipationStatusType = createCourseParticipationStatusType("acknowledged", Color.ORANGE,
 				false, true, false, false,
 				true, false, false, true,
-				true
-				);
+				true);
 		CourseParticipationStatusType invitedParticipationStatusType = createCourseParticipationStatusType("invited", Color.YELLOW,
 				false, false, false, true,
 				false, false, false, true,
-				true
-				);
+				true);
 		CourseParticipationStatusType registeredParticipationStatusType = createCourseParticipationStatusType("registered", Color.ORANGE,
 				false, false, true, false,
 				false, false, false, true,
-				true
-				);
+				true);
 		updateCourseParticipationStatusType(
 				passedParticipationStatusType,
 				getCourseParticipationTransitions(passedParticipationStatusType),
@@ -648,7 +638,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		updateCourseParticipationStatusType(
 				failedParticipationStatusType,
 				getCourseParticipationTransitions(),
@@ -657,7 +647,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		updateCourseParticipationStatusType(
 				cancelledParticipationStatusType,
 				getCourseParticipationTransitions(cancelledParticipationStatusType, registeredParticipationStatusType, acknowledgedParticipationStatusType),
@@ -666,7 +656,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		updateCourseParticipationStatusType(
 				unregisteredParticipationStatusType,
 				getCourseParticipationTransitions(),
@@ -675,7 +665,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		updateCourseParticipationStatusType(
 				absentParticipationStatusType,
 				getCourseParticipationTransitions(),
@@ -684,7 +674,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		updateCourseParticipationStatusType(
 				acknowledgedParticipationStatusType,
 				getCourseParticipationTransitions(cancelledParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
@@ -693,7 +683,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
-				);
+		);
 		updateCourseParticipationStatusType(
 				invitedParticipationStatusType,
 				getCourseParticipationTransitions(),
@@ -702,7 +692,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
-				);
+		);
 		updateCourseParticipationStatusType(
 				registeredParticipationStatusType,
 				getCourseParticipationTransitions(registeredParticipationStatusType, acknowledgedParticipationStatusType, cancelledParticipationStatusType),
@@ -711,7 +701,7 @@ public class ProductionDataProvider {
 						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
 						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-				);
+		);
 		jobOutput.println("course participation states created");
 	}
 
@@ -779,6 +769,7 @@ public class ProductionDataProvider {
 			boolean unlockValue) {
 		return createEcrfFieldStatusType(nameL10nKey, color, queue, initial, updated, proposed, resolved, false, false, false, commentRequired, unlockValue);
 	}
+
 	private ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			ECRFFieldStatusQueue queue,
@@ -804,11 +795,9 @@ public class ProductionDataProvider {
 		ecrfFieldStatusType.setValidationFailed(validationFailed);
 		ecrfFieldStatusType.setValidationSuccess(validationSuccess);
 		ecrfFieldStatusType.setNameL10nKey(nameL10nKey);
-
 		ecrfFieldStatusType = eCRFFieldStatusTypeDao.create(ecrfFieldStatusType);
 		return ecrfFieldStatusType;
 	}
-
 
 	private void createEcrfFieldStatusTypeEntries() {
 		// boolean initial,
@@ -829,11 +818,8 @@ public class ProductionDataProvider {
 				true,
 				true,
 				false);
-
 		updateEcrfFieldStatusType(annotationEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				annotationEcrfFieldStatusType
-				));
-
+				annotationEcrfFieldStatusType));
 		ECRFFieldStatusType validationSuccessEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_success",
 				Color.LIMEGREEN,
@@ -897,7 +883,6 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false);
-
 		ECRFFieldStatusType validationCorrectedEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_corrected",
 				Color.LIMEGREEN, // PALEGREEN,
@@ -930,32 +915,27 @@ public class ProductionDataProvider {
 				false);
 		updateEcrfFieldStatusType(validationSuccessEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationFailedEcrfFieldStatusType,
-				validationErrorEcrfFieldStatusType
-				));
+				validationErrorEcrfFieldStatusType));
 		updateEcrfFieldStatusType(validationFailedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationSuccessEcrfFieldStatusType,
 				validationFailedEcrfFieldStatusType,
 				validationErrorEcrfFieldStatusType,
-				validationClosedEcrfFieldStatusType
-				));
+				validationClosedEcrfFieldStatusType));
 		updateEcrfFieldStatusType(validationErrorEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationSuccessEcrfFieldStatusType,
 				validationFailedEcrfFieldStatusType,
 				validationErrorEcrfFieldStatusType,
 				validationUpdateEcrfFieldStatusType,
 				validationProposedResolutionEcrfFieldStatusType,
-				validationClosedEcrfFieldStatusType
-				));
+				validationClosedEcrfFieldStatusType));
 		updateEcrfFieldStatusType(validationUpdateEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationUpdateEcrfFieldStatusType,
-				validationProposedResolutionEcrfFieldStatusType
-				));
+				validationProposedResolutionEcrfFieldStatusType));
 		updateEcrfFieldStatusType(validationProposedResolutionEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationUpdateEcrfFieldStatusType,
 				validationCorrectedEcrfFieldStatusType,
 				validationDataNaEcrfFieldStatusType,
-				validationClosedEcrfFieldStatusType
-				));
+				validationClosedEcrfFieldStatusType));
 		//never re-raise once closed:
 		//updateEcrfFieldStatusType(validationCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 		//		validationSuccessEcrfFieldStatusType,
@@ -972,7 +952,6 @@ public class ProductionDataProvider {
 		//		validationFailedEcrfFieldStatusType,
 		//		validationErrorEcrfFieldStatusType
 		//		));
-
 		ECRFFieldStatusType queryNewEcrfFieldStatusType = createEcrfFieldStatusType(
 				"query_new",
 				Color.SALMON,
@@ -1045,30 +1024,24 @@ public class ProductionDataProvider {
 				false);
 		updateEcrfFieldStatusType(queryNewEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				queryUpdateEcrfFieldStatusType,
-				queryProposedResolutionEcrfFieldStatusType
-				));
+				queryProposedResolutionEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryUpdateEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				queryUpdateEcrfFieldStatusType,
-				queryProposedResolutionEcrfFieldStatusType
-				));
+				queryProposedResolutionEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryProposedResolutionEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				queryUpdateEcrfFieldStatusType,
 				queryCorrectedEcrfFieldStatusType,
 				queryDataNaEcrfFieldStatusType,
-				queryClosedEcrfFieldStatusType
-				));
+				queryClosedEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				// queryResolutionEcrfFieldStatusType,
-				queryNewEcrfFieldStatusType
-				));
+				queryNewEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryDataNaEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				// queryResolutionEcrfFieldStatusType,
-				queryNewEcrfFieldStatusType
-				));
+				queryNewEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryClosedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				// queryResolutionEcrfFieldStatusType,
-				queryNewEcrfFieldStatusType
-				));
+				queryNewEcrfFieldStatusType));
 		jobOutput.println("eCRF field states created");
 	}
 
@@ -1123,7 +1096,6 @@ public class ProductionDataProvider {
 	}
 
 	private void createEcrfStatusTypeEntries() {
-
 		ECRFStatusType inProgressEcrfStatusType = createEcrfStatusType("in_progress", Color.ANTIQUEWHITE,
 				"ui-icon-pencil",
 				true,
@@ -1138,8 +1110,7 @@ public class ProductionDataProvider {
 				false,
 				getEcrfStatusActions(
 						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType skippedEcrfStatusType = createEcrfStatusType("skipped", Color.DARKGREY,
 				"ui-icon-arrowthick-1-e", // "ui-icon-cancel", // "ui-icon-seek-end",
 				true,
@@ -1155,8 +1126,8 @@ public class ProductionDataProvider {
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_STATUS_ENTRIES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_VALUES,
 						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
+		// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
+		);
 		ECRFStatusType skippedVerifiedEcrfStatusType = createEcrfStatusType(
 				"skipped_verified",
 				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
@@ -1172,8 +1143,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType skippedSignedEcrfStatusType = createEcrfStatusType("skipped_signed", Color.ORCHID,
 				"ui-icon-radio-on", // "ui-icon-locked",
 				false,
@@ -1188,8 +1158,7 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType validatedEcrfStatusType = createEcrfStatusType("validated", Color.YELLOWGREEN,
 				"ui-icon-gear", // "ui-icon-check",
 				false,
@@ -1202,10 +1171,9 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES,org.phoenixctms.ctsms.enumeration.ECRFStatusAction.VALIDATE_VALUES,
+				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.VALIDATE_VALUES,
 						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeEcrfStatusType = createEcrfStatusType(
 				"complete",
 				Color.LIGHTYELLOW,
@@ -1220,8 +1188,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				);
+				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeVerifiedEcrfStatusType = createEcrfStatusType(
 				"complete_verified",
 				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
@@ -1237,8 +1204,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeSignedEcrfStatusType = createEcrfStatusType("complete_signed", Color.ORCHID,
 				"ui-icon-bullet", // "ui-icon-locked",
 				false,
@@ -1253,8 +1219,7 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType incompleteEcrfStatusType = createEcrfStatusType("incomplete", Color.TOMATO,
 				"ui-icon-close", // "ui-icon-circle-close",
 				false,
@@ -1269,8 +1234,8 @@ public class ProductionDataProvider {
 				false, // true,
 				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
+		// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
+		);
 		ECRFStatusType incompleteVerifiedEcrfStatusType = createEcrfStatusType(
 				"incomplete_verified",
 				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
@@ -1286,8 +1251,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-				);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType incompleteSignedEcrfStatusType = createEcrfStatusType("incomplete_signed", Color.ORCHID,
 				"ui-icon-radio-off", // "ui-icon-locked",
 				false,
@@ -1302,67 +1266,52 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-				);
-
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		updateEcrfStatusType(inProgressEcrfStatusType,
 				getEcrfStatusTransitions(
 						skippedEcrfStatusType,
 						validatedEcrfStatusType,
-						incompleteEcrfStatusType
-						));
-
+						incompleteEcrfStatusType));
 		updateEcrfStatusType(skippedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						skippedVerifiedEcrfStatusType
-						));
+						skippedVerifiedEcrfStatusType));
 		updateEcrfStatusType(skippedVerifiedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						skippedSignedEcrfStatusType
-						));
+						skippedSignedEcrfStatusType));
 		updateEcrfStatusType(skippedSignedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						skippedSignedEcrfStatusType
-						));
+						skippedSignedEcrfStatusType));
 		updateEcrfStatusType(validatedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						completeEcrfStatusType
-						));
+						completeEcrfStatusType));
 		updateEcrfStatusType(completeEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						completeVerifiedEcrfStatusType
-						));
+						completeVerifiedEcrfStatusType));
 		updateEcrfStatusType(completeVerifiedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						completeSignedEcrfStatusType
-						));
+						completeSignedEcrfStatusType));
 		updateEcrfStatusType(completeSignedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						completeSignedEcrfStatusType
-						));
+						completeSignedEcrfStatusType));
 		updateEcrfStatusType(incompleteEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						incompleteVerifiedEcrfStatusType
-						));
+						incompleteVerifiedEcrfStatusType));
 		updateEcrfStatusType(incompleteVerifiedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						incompleteSignedEcrfStatusType
-						));
+						incompleteSignedEcrfStatusType));
 		updateEcrfStatusType(incompleteSignedEcrfStatusType,
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
-						incompleteSignedEcrfStatusType
-						));
-
+						incompleteSignedEcrfStatusType));
 		jobOutput.println("eCRF states created");
 	}
 
@@ -1423,7 +1372,6 @@ public class ProductionDataProvider {
 		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("22 - DCF"));
 		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("23 - Final Report"));
 		// /1. Projektmanagement
-
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.1. PM Dokumente"));
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.2. Projektmeetingaufzeichungen"));
 		// /2. Prüferinformation
@@ -2083,28 +2031,23 @@ public class ProductionDataProvider {
 		PrivacyConsentStatusType registeredPrivacyConsentStatusType = createPrivacyConsentStatusType("registered",
 				Color.LIMEGREEN,
 				true,
-				true
-				);
+				true);
 		PrivacyConsentStatusType existingPrivacyConsentOkPrivacyConsentStatusType = createPrivacyConsentStatusType("existing_privacy_consent_ok",
 				Color.YELLOW,
 				false,
-				false
-				);
+				false);
 		PrivacyConsentStatusType privacyConsentSentPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_sent",
 				Color.LEMONCHIFFON,
 				false,
-				true
-				);
+				true);
 		PrivacyConsentStatusType privacyConsentReceivedPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_received",
 				Color.KHAKI,
 				false,
-				false
-				);
+				false);
 		PrivacyConsentStatusType privacyConsentNotReceivedPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_not_received",
 				Color.PAPAYAWHIP,
 				false,
-				true
-				);
+				true);
 		updatePrivacyConsentStatusType(
 				registeredPrivacyConsentStatusType,
 				getPrivacyConsentStatusTransitions(registeredPrivacyConsentStatusType, existingPrivacyConsentOkPrivacyConsentStatusType,
@@ -2221,8 +2164,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType signupProbandListStatusType = createProbandListStatusType("signup", Color.YELLOW,
 				true,
 				false,
@@ -2233,8 +2175,7 @@ public class ProductionDataProvider {
 				true,
 				true,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType contactedProbandListStatusType = createProbandListStatusType("contacted", Color.ORANGE,
 				false,
 				false,
@@ -2245,8 +2186,8 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PRE_SCREENING, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SICL)
-				);
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PRE_SCREENING,
+						org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SICL));
 		ProbandListStatusType cancelledProbandListStatusType = createProbandListStatusType("cancelled", Color.RED,
 				false,
 				false,
@@ -2257,8 +2198,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType acceptanceProbandListStatusType = createProbandListStatusType("acceptance", Color.DARKORANGE,
 				false,
 				false,
@@ -2269,8 +2209,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType icSignedProbandListStatusType = createProbandListStatusType("ic_signed", Color.SPRINGGREEN,
 				false,
 				false,
@@ -2281,8 +2220,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType screeningOkProbandListStatusType = createProbandListStatusType("screening_ok", Color.LIMEGREEN,
 				false,
 				false,
@@ -2293,8 +2231,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING)
-				);
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
 		ProbandListStatusType screeningFailureProbandListStatusType = createProbandListStatusType("screening_failure", Color.ORANGERED,
 				false,
 				true,
@@ -2305,8 +2242,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				true,
-				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING)
-				);
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
 		ProbandListStatusType ongoingProbandListStatusType = createProbandListStatusType("ongoing", Color.LIME,
 				false,
 				false,
@@ -2317,8 +2253,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT)
-				);
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT));
 		ProbandListStatusType droppedOutProbandListStatusType = createProbandListStatusType("dropped_out", Color.TOMATO,
 				false,
 				true,
@@ -2329,8 +2264,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType completedProbandListStatusType = createProbandListStatusType("completed", Color.MEDIUMSEAGREEN,
 				false,
 				false,
@@ -2341,8 +2275,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				true,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		updateProbandListStatusType(candidateProbandListStatusType,
 				getProbandListStatusTransitions(candidateProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType));
 		updateProbandListStatusType(signupProbandListStatusType,
@@ -2377,8 +2310,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT)
-				);
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT));
 		ProbandListStatusType animalDroppedOutProbandListStatusType = createProbandListStatusType("animal_dropped_out", Color.TOMATO,
 				false,
 				true,
@@ -2389,8 +2321,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				false,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		ProbandListStatusType animalCompletedProbandListStatusType = createProbandListStatusType("animal_completed", Color.MEDIUMSEAGREEN,
 				false,
 				false,
@@ -2401,8 +2332,7 @@ public class ProductionDataProvider {
 				true, // false,
 				false,
 				false,
-				getProbandListStatusLogLevels()
-				);
+				getProbandListStatusLogLevels());
 		updateProbandListStatusType(animalUnderTestProbandListStatusType,
 				getProbandListStatusTransitions(animalUnderTestProbandListStatusType, animalDroppedOutProbandListStatusType, animalCompletedProbandListStatusType));
 		updateProbandListStatusType(animalDroppedOutProbandListStatusType,
@@ -2607,9 +2537,9 @@ public class ProductionDataProvider {
 		jobOutput.println("trial team member roles created");
 	}
 
-
 	private TimelineEventType createTimelineEventType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean showPreset, boolean notifyPreset,
-			EventImportance importancePreset, String nodeStyleClass, Color color, TimelineEventTitlePresetType titlePresetType, String titlePresetL10nKey, boolean titlePresetFixed) {
+			EventImportance importancePreset, String nodeStyleClass, Color color, TimelineEventTitlePresetType titlePresetType, String titlePresetL10nKey,
+			boolean titlePresetFixed) {
 		TimelineEventType type = TimelineEventType.Factory.newInstance();
 		type.setNameL10nKey(nameL10nKey);
 		type.setMaxOccurrence(maxOccurrence);
@@ -2715,8 +2645,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getTrialStatusActions()
-				);
+				getTrialStatusActions());
 		TrialStatusType fixedTrialStatusType = createTrialStatusType("fixed", Color.GREENYELLOW,
 				"ctsms-trialstatus-fixed",
 				true,
@@ -2724,8 +2653,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getTrialStatusActions()
-				);
+				getTrialStatusActions());
 		TrialStatusType startedTrialStatusType = createTrialStatusType("started", Color.LIME,
 				"ctsms-trialstatus-started",
 				false,
@@ -2733,8 +2661,7 @@ public class ProductionDataProvider {
 				true,
 				true,
 				false,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType closedTrialStatusType = createTrialStatusType("closed", Color.ORCHID,
 				"ctsms-trialstatus-closed",
 				false,
@@ -2742,8 +2669,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS, org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_MISSING_TRIAL_TAG)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS,
+						org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_MISSING_TRIAL_TAG));
 		TrialStatusType lockdownTrialStatusType = createTrialStatusType("lockdown", Color.MISTYROSE,
 				"ctsms-trialstatus-lockdown",
 				false,
@@ -2751,8 +2678,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				true,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL));
 		TrialStatusType cancelledTrialStatusType = createTrialStatusType("cancelled", Color.LIGHTGREY,
 				"ctsms-trialstatus-cancelled",
 				false,
@@ -2760,8 +2686,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				true,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType interruptedTrialStatusType = createTrialStatusType("interrupted", Color.TOMATO,
 				"ctsms-trialstatus-interrupted",
 				false,
@@ -2769,8 +2694,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType migrationStartedTrialStatusType = createTrialStatusType("migration_started", Color.DARKSEAGREEN,
 				"ctsms-trialstatus-migrationstarted",
 				true,
@@ -2778,8 +2702,7 @@ public class ProductionDataProvider {
 				true,
 				true,
 				false,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType migratedTrialStatusType = createTrialStatusType("migrated", Color.DARKGREY,
 				"ctsms-trialstatus-migrated",
 				false,
@@ -2787,8 +2710,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS, org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_MISSING_TRIAL_TAG)
-				);
+				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS,
+						org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_MISSING_TRIAL_TAG));
 		updateTrialStatusType(plannedTrialStatusType,
 				getTrialStatusTransitions(plannedTrialStatusType, fixedTrialStatusType, startedTrialStatusType, cancelledTrialStatusType));
 		updateTrialStatusType(fixedTrialStatusType,

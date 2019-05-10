@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.pdf;
 
-
 public interface EcrfPDFSettingCodes {
 
 	// public final static String POSITION_DATE_PATTERN = "position_date_pattern"; // "yyyy";
@@ -11,22 +10,18 @@ public interface EcrfPDFSettingCodes {
 	public final static String FONT_D = "font_d";
 	public final static String LANDSCAPE = "landscape";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
-
 	public static final String PROBAND_DATE_OF_BIRTH_DATE_PATTERN = "proband_date_of_birth_date_pattern";
 	public static final String CONTENT_TIMESTAMP_DATETIME_PATTERN = "content_timestamp_datetime_pattern";
 	public static final String MODIFIED_TIMESTAMP_PATTERN = "modified_timestamp_pattern";
-
 	public final static String PAGE_UPPER_MARGIN = "page_upper_margin";
 	public final static String PAGE_LOWER_MARGIN = "page_lower_margin";
 	public final static String PAGE_LEFT_MARGIN = "page_left_margin";
 	public final static String PAGE_RIGHT_MARGIN = "page_right_margin";
-
 	public static final String SECTION_PAGE_BREAK_LOWER_MARGIN = "section_page_break_lower_margin";
 	public final static String BLOCKS_UPPER_MARGIN = "blocks_upper_margin";
 	public final static String BLOCKS_LOWER_MARGIN = "blocks_lower_margin";
 	public final static String BLOCKS_LEFT_MARGIN = "blocks_left_margin";
 	public final static String BLOCKS_RIGHT_MARGIN = "blocks_right_margin";
-
 	// public static final String SHOW_VALIDATION_ERROR_MESSAGES = "show_validation_error_messages";
 	public static final String MULTI_LINE_TEXT_MIN_HEIGHT = "multi_line_text_min_height";
 	public static final String FIELD_FRAME_LINE_WIDTH = "field_frame_line_width";
@@ -36,7 +31,6 @@ public interface EcrfPDFSettingCodes {
 	public static final String INDEX_FRAME_LINE_WIDTH = "index_frame_line_width";
 	public static final String HEAD_FRAME_LINE_WIDTH = "head_frame_line_width";
 	// public static final String SIGNATURE_FRAME_LINE_WIDTH = "signature_frame_line_width";
-
 	public static final String PAGE_TITLE_Y = "page_title_y";
 	public static final String Y_HEADLINE_INDENT = "y_headline_indent";
 	public static final String X_HEAD_COLUMN_INDENT = "x_head_column_indent";
@@ -49,19 +43,16 @@ public interface EcrfPDFSettingCodes {
 	public final static String X_BOX_FRAME_INDENT = "x_box_frame_indent";
 	public final static String Y_BOX_FRAME_INDENT = "y_box_frame_indent";
 	public final static String Y_BOX_LOG_FRAME_INDENT = "y_box_log_frame_indent";
-
 	public static final String TEXT_COLOR = "text_color";
 	public static final String PRESET_TEXT_COLOR = "preset_text_color";
 	public static final String FRAME_COLOR = "frame_color";
 	public static final String VALIDATION_ERROR_MESSAGE_TEXT_COLOR = "validation_error_message_text_color";
-
 	public static final String DATE_VALUE_PATTERN = "date_value_pattern";
 	public static final String TIMESTAMP_VALUE_PATTERN = "timestamp_value_pattern";
 	public static final String TIME_VALUE_PATTERN = "time_value_pattern";
 	public static final String FLOAT_VALUE_PATTERN = "float_value_pattern";
 	public static final String INTEGER_VALUE_PATTERN = "integer_value_pattern";
 	public static final String DECIMAL_SEPARATOR = "decimal_separator";
-
 	public static final String CHECKBOX_CHECKED_IMAGE_FILE_NAME = "checkbox_checked_image_file_name";
 	public static final String CHECKBOX_CHECKED_PRESET_IMAGE_FILE_NAME = "checkbox_checked_preset_image_file_name";
 	public static final String CHECKBOX_UNCHECKED_IMAGE_FILE_NAME = "checkbox_unchecked_image_file_name";
@@ -91,17 +82,13 @@ public interface EcrfPDFSettingCodes {
 	public static final String X_SELECTION_ITEM_IMAGE_LABEL_OFFSET = "x_selection_item_image_label_offset";
 	public static final String Y_SELECTION_ITEM_IMAGE_LABEL_OFFSET = "y_selection_item_image_label_offset";
 	public static final String SHOW_PRESET_VALUES = "show_preset_values";
-
 	public static final String SKETCH_IMAGE_QUALITY = "sketch_image_quality";
 	public static final String SKETCH_IMAGE_DPI = "sketch_image_dpi";
 	public static final String SKETCH_IMAGE_BG_COLOR = "sketch_image_bg_color";
 	public static final String RENDER_SKETCH_IMAGES = "render_sketch_images";
 	public final static String SHOW_SKETCH_REGIONS = "show_sketch_regions";
-
-
 	// public final static String BLOCK_FRAME_LINE_WIDTH = "block_frame_line_width";
 	// public final static String PAGE_FRAME_LINE_WIDTH = "page_frame_line_width";
-
 	// public final static String X_COLUMN_INDENT_PHOTO = "x_column_indent_photo";
 	// public final static String SPACER_HEIGHT = "spacer_height";
 	public static final String LONG_TITLE_LENGTH = "long_title_length";
@@ -110,5 +97,4 @@ public interface EcrfPDFSettingCodes {
 	public static final String AUDIT_TRAIL = "audit_trail";
 	public static final String SHOW_PROBAND_LIST_ENTRY_TAGS = "show_proband_list_entry_tags";
 	public static final String SHOW_ALL_PROBAND_LIST_ENTRY_TAGS = "show_all_proband_list_entry_tags";
-
 }

@@ -12,16 +12,14 @@ import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
  * @see TrialStatusAction
  */
 public class TrialStatusActionDaoImpl
-		extends TrialStatusActionDaoBase
-{
+		extends TrialStatusActionDaoBase {
 
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private TrialStatusAction loadTrialStatusActionFromTrialStatusActionVO(TrialStatusActionVO trialStatusActionVO)
-	{
+	private TrialStatusAction loadTrialStatusActionFromTrialStatusActionVO(TrialStatusActionVO trialStatusActionVO) {
 		// TODO implement loadTrialStatusActionFromTrialStatusActionVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialStatusActionFromTrialStatusActionVO(TrialStatusActionVO) not yet implemented.");
 		TrialStatusAction trialStatusAction = null;
@@ -29,8 +27,7 @@ public class TrialStatusActionDaoImpl
 		if (id != null) {
 			trialStatusAction = this.load(id);
 		}
-		if (trialStatusAction == null)
-		{
+		if (trialStatusAction == null) {
 			trialStatusAction = TrialStatusAction.Factory.newInstance();
 		}
 		return trialStatusAction;
@@ -40,8 +37,7 @@ public class TrialStatusActionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialStatusActionVO toTrialStatusActionVO(final TrialStatusAction entity)
-	{
+	public TrialStatusActionVO toTrialStatusActionVO(final TrialStatusAction entity) {
 		return super.toTrialStatusActionVO(entity);
 	}
 
@@ -51,8 +47,7 @@ public class TrialStatusActionDaoImpl
 	@Override
 	public void toTrialStatusActionVO(
 			TrialStatusAction source,
-			TrialStatusActionVO target)
-	{
+			TrialStatusActionVO target) {
 		super.toTrialStatusActionVO(source, target);
 	}
 
@@ -60,8 +55,7 @@ public class TrialStatusActionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public TrialStatusAction trialStatusActionVOToEntity(TrialStatusActionVO trialStatusActionVO)
-	{
+	public TrialStatusAction trialStatusActionVOToEntity(TrialStatusActionVO trialStatusActionVO) {
 		TrialStatusAction entity = this.loadTrialStatusActionFromTrialStatusActionVO(trialStatusActionVO);
 		this.trialStatusActionVOToEntity(trialStatusActionVO, entity, true);
 		return entity;
@@ -74,8 +68,7 @@ public class TrialStatusActionDaoImpl
 	public void trialStatusActionVOToEntity(
 			TrialStatusActionVO source,
 			TrialStatusAction target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.trialStatusActionVOToEntity(source, target, copyIfNull);
 	}
 }

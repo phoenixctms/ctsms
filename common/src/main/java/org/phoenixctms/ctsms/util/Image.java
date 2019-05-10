@@ -22,14 +22,9 @@ public class Image {
 	private final static int DEFAULT_SCALE_MODE = java.awt.Image.SCALE_SMOOTH;
 	private final static int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
 
-
-
 	// public Image(byte[] imageData) throws IOException {
 	// this(imageData, DEFAULT_BG_COLOR);
 	// }
-
-
-
 	public Image(byte[] imageData, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
 		this.image = ImageIO.read(new ByteArrayInputStream(imageData));
 		this.bgColor = CommonUtil.convertColor(bgColor == null ? DEFAULT_BG_COLOR : bgColor);
@@ -46,7 +41,7 @@ public class Image {
 	}
 
 	public byte[] convert(String outputFormat) throws Exception {
-		drawImage(image,image.getWidth(), image.getHeight());
+		drawImage(image, image.getWidth(), image.getHeight());
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ImageIO.write(image, outputFormat, buffer);
 		return buffer.toByteArray();
@@ -60,14 +55,15 @@ public class Image {
 			height = image.getHeight();
 		}
 		BufferedImage croppedImage = image.getSubimage(0, 0, width, height);
-		image= croppedImage;
+		image = croppedImage;
 		drawn = false;
 		//		BufferedImage croppedImage = image.getSubimage(0, 0, width, height);
 		//		image = new BufferedImage(width, height, DEFAULT_IMAGE_TYPE);
 		//		image.getGraphics().drawImage(croppedImage, 0, 0, bgColor, null);
 		return this;
 	}
-	private void drawImage(java.awt.Image image,int width, int height) {
+
+	private void drawImage(java.awt.Image image, int width, int height) {
 		if (!drawn) {
 			BufferedImage imageBuffer = new BufferedImage(width, height, DEFAULT_IMAGE_TYPE);
 			imageBuffer.getGraphics().drawImage(image, 0, 0, bgColor, null);
@@ -77,12 +73,10 @@ public class Image {
 	}
 
 	public void drawInk(byte[]... inkValues) throws Exception {
-
 		Document svg = CommonUtil.inkValueToSvg(inkValues);
 		if (svg != null) {
 			getSvgTranscoder().transcode(new TranscoderInput(svg), null);
 		}
-
 	}
 
 	public BufferedImage getImage() {
@@ -96,19 +90,16 @@ public class Image {
 			imageTranscoder = new ImageTranscoder() {
 
 				@Override
-				public BufferedImage createImage(int w, int h)
-				{
+				public BufferedImage createImage(int w, int h) {
 					return img.getImage();
 				}
 
-				public BufferedImage getBufferedImage()
-				{
+				public BufferedImage getBufferedImage() {
 					return img.getImage();
 				}
 
 				@Override
-				public void writeImage(BufferedImage imgage, TranscoderOutput output)
-				{
+				public void writeImage(BufferedImage imgage, TranscoderOutput output) {
 					img.setImage(imgage);
 				}
 			};
@@ -117,8 +108,6 @@ public class Image {
 		}
 		return imageTranscoder;
 	}
-
-
 
 	public Image scale(int width, int height) throws Exception {
 		if (width == 0) {

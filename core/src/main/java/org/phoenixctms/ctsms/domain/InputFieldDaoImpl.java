@@ -42,16 +42,15 @@ import org.phoenixctms.ctsms.vocycle.InputFieldGraph;
  * @see InputField
  */
 public class InputFieldDaoImpl
-extends InputFieldDaoBase
-{
+		extends InputFieldDaoBase {
 
 	private final static Object[] SELECT_FIELD_TYPES = new Object[] {
-		InputFieldType.SELECT_MANY_H,
-		InputFieldType.SELECT_MANY_V,
-		InputFieldType.SELECT_ONE_RADIO_H,
-		InputFieldType.SELECT_ONE_RADIO_V,
-		InputFieldType.SELECT_ONE_DROPDOWN,
-		InputFieldType.SKETCH
+			InputFieldType.SELECT_MANY_H,
+			InputFieldType.SELECT_MANY_V,
+			InputFieldType.SELECT_ONE_RADIO_H,
+			InputFieldType.SELECT_ONE_RADIO_V,
+			InputFieldType.SELECT_ONE_DROPDOWN,
+			InputFieldType.SKETCH
 	};
 
 	private static void applySortOrders(org.hibernate.Criteria inputFieldCriteria) {
@@ -61,7 +60,7 @@ extends InputFieldDaoBase
 		}
 	}
 
-	private  static void applyUsedByCriterions(org.hibernate.Criteria inputFieldCriteria, String fieldNameInfix, String inputFieldProperty) {
+	private static void applyUsedByCriterions(org.hibernate.Criteria inputFieldCriteria, String fieldNameInfix, String inputFieldProperty) {
 		if (inputFieldCriteria != null) {
 			if (!CommonUtil.isEmptyString(inputFieldProperty)) {
 				inputFieldCriteria.add(Restrictions.not(Restrictions.isEmpty(inputFieldProperty)));
@@ -70,7 +69,6 @@ extends InputFieldDaoBase
 			if (!CommonUtil.isEmptyString(fieldNameInfix)) {
 				CategoryCriterion.apply(inputFieldCriteria, new CategoryCriterion(fieldNameInfix, "nameL10nKey", MatchMode.ANYWHERE));
 			}
-
 		}
 	}
 
@@ -80,8 +78,7 @@ extends InputFieldDaoBase
 	}
 
 	@Override
-	protected Collection<InputField> handleFindByCriteria(CriteriaInstantVO criteria, PSFVO psf) throws Exception
-	{
+	protected Collection<InputField> handleFindByCriteria(CriteriaInstantVO criteria, PSFVO psf) throws Exception {
 		Query query = QueryUtil.createSearchQuery(
 				criteria,
 				DBModule.INPUT_FIELD_DB,
@@ -157,7 +154,7 @@ extends InputFieldDaoBase
 	@Override
 	protected Collection<InputField> handleFindUsedByInquiriesSorted(String fieldNameInfix, Integer limit) throws Exception {
 		org.hibernate.Criteria inputFieldCriteria = createInputFieldCriteria();
-		applyUsedByCriterions(inputFieldCriteria,fieldNameInfix,"inquiries");
+		applyUsedByCriterions(inputFieldCriteria, fieldNameInfix, "inquiries");
 		applySortOrders(inputFieldCriteria);
 		return inputFieldCriteria.list();
 	}
@@ -197,20 +194,17 @@ extends InputFieldDaoBase
 				Restrictions.in("fieldType", SELECT_FIELD_TYPES)); // no AUTOCOMPLETE!
 		org.hibernate.Criteria ecrfFieldCriteria = inputFieldCriteria.createCriteria("ecrfFields", "ecrfFields0", CriteriaSpecification.INNER_JOIN);
 		ecrfFieldCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-
-		org.hibernate.Criteria selectionSetValueCriteria = inputFieldCriteria.createCriteria("selectionSetValues","inputFieldSelectionSetValues", CriteriaSpecification.INNER_JOIN);
-
+		org.hibernate.Criteria selectionSetValueCriteria = inputFieldCriteria.createCriteria("selectionSetValues", "inputFieldSelectionSetValues",
+				CriteriaSpecification.INNER_JOIN);
 		inputFieldCriteria.setProjection(Projections.projectionList()
 				.add(Projections.groupProperty("ecrfFields0.id"))
-				.add(Projections.alias(Projections.count("inputFieldSelectionSetValues.id"),"selectionSetValuesCount")));
-
+				.add(Projections.alias(Projections.count("inputFieldSelectionSetValues.id"), "selectionSetValuesCount")));
 		inputFieldCriteria.addOrder(Order.desc("selectionSetValuesCount"));
 		inputFieldCriteria.setMaxResults(1);
 		long maxSelectionSetValues = 0l;
 		try {
 			maxSelectionSetValues = (Long) ((Object[]) inputFieldCriteria.list().iterator().next())[1];
 		} catch (Exception e) {
-
 		}
 		return maxSelectionSetValues;
 	}
@@ -219,8 +213,7 @@ extends InputFieldDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputField inputFieldImageVOToEntity(InputFieldImageVO inputFieldImageVO)
-	{
+	public InputField inputFieldImageVOToEntity(InputFieldImageVO inputFieldImageVO) {
 		InputField entity = this.loadInputFieldFromInputFieldImageVO(inputFieldImageVO);
 		this.inputFieldImageVOToEntity(inputFieldImageVO, entity, true);
 		return entity;
@@ -233,8 +226,7 @@ extends InputFieldDaoBase
 	public void inputFieldImageVOToEntity(
 			InputFieldImageVO source,
 			InputField target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inputFieldImageVOToEntity(source, target, copyIfNull);
 		MimeTypeVO contentTypeVO = source.getContentType();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -248,8 +240,7 @@ extends InputFieldDaoBase
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
 		}
-		if (copyIfNull || source.getDatas() != null)
-		{
+		if (copyIfNull || source.getDatas() != null) {
 			target.setData(source.getDatas());
 		}
 	}
@@ -258,8 +249,7 @@ extends InputFieldDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputField inputFieldInVOToEntity(InputFieldInVO inputFieldInVO)
-	{
+	public InputField inputFieldInVOToEntity(InputFieldInVO inputFieldInVO) {
 		InputField entity = this.loadInputFieldFromInputFieldInVO(inputFieldInVO);
 		this.inputFieldInVOToEntity(inputFieldInVO, entity, true);
 		return entity;
@@ -272,8 +262,7 @@ extends InputFieldDaoBase
 	public void inputFieldInVOToEntity(
 			InputFieldInVO source,
 			InputField target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.inputFieldInVOToEntity(source, target, copyIfNull);
 		target.setLocalized(false);
 		target.setTextPresetL10nKey(source.getTextPreset());
@@ -307,8 +296,7 @@ extends InputFieldDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputField inputFieldOutVOToEntity(InputFieldOutVO inputFieldOutVO)
-	{
+	public InputField inputFieldOutVOToEntity(InputFieldOutVO inputFieldOutVO) {
 		// TODO verify behavior of inputFieldOutVOToEntity
 		InputField entity = this.loadInputFieldFromInputFieldOutVO(inputFieldOutVO);
 		this.inputFieldOutVOToEntity(inputFieldOutVO, entity, true);
@@ -322,8 +310,7 @@ extends InputFieldDaoBase
 	public void inputFieldOutVOToEntity(
 			InputFieldOutVO source,
 			InputField target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of inputFieldOutVOToEntity
 		super.inputFieldOutVOToEntity(source, target, copyIfNull);
 		// No conversion for target.fieldType (can't convert source.getFieldType():org.phoenixctms.ctsms.vo.InputFieldTypeVO to InputFieldType
@@ -334,11 +321,9 @@ extends InputFieldDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputField loadInputFieldFromInputFieldImageVO(InputFieldImageVO inputFieldImageVO)
-	{
+	private InputField loadInputFieldFromInputFieldImageVO(InputFieldImageVO inputFieldImageVO) {
 		InputField inputField = this.load(inputFieldImageVO.getId());
-		if (inputField == null)
-		{
+		if (inputField == null) {
 			inputField = InputField.Factory.newInstance();
 		}
 		return inputField;
@@ -349,8 +334,7 @@ extends InputFieldDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputField loadInputFieldFromInputFieldInVO(InputFieldInVO inputFieldInVO)
-	{
+	private InputField loadInputFieldFromInputFieldInVO(InputFieldInVO inputFieldInVO) {
 		// TODO implement loadInputFieldFromInputFieldInVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldFromInputFieldInVO(InputFieldInVO) not yet implemented.");
 		InputField inputField = null;
@@ -358,8 +342,7 @@ extends InputFieldDaoBase
 		if (id != null) {
 			inputField = this.load(id);
 		}
-		if (inputField == null)
-		{
+		if (inputField == null) {
 			inputField = InputField.Factory.newInstance();
 		}
 		return inputField;
@@ -370,8 +353,7 @@ extends InputFieldDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private InputField loadInputFieldFromInputFieldOutVO(InputFieldOutVO inputFieldOutVO)
-	{
+	private InputField loadInputFieldFromInputFieldOutVO(InputFieldOutVO inputFieldOutVO) {
 		// TODO implement loadInputFieldFromInputFieldOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldFromInputFieldOutVO(InputFieldOutVO) not yet implemented.");
 		/* A typical implementation looks like this: InputField inputField = this.load(inputFieldOutVO.getId()); if (inputField == null) { inputField =
@@ -382,8 +364,7 @@ extends InputFieldDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldImageVO toInputFieldImageVO(final InputField entity)
-	{
+	public InputFieldImageVO toInputFieldImageVO(final InputField entity) {
 		// TODO verify behavior of toInputFieldImageVO
 		return super.toInputFieldImageVO(entity);
 	}
@@ -394,8 +375,7 @@ extends InputFieldDaoBase
 	@Override
 	public void toInputFieldImageVO(
 			InputField source,
-			InputFieldImageVO target)
-	{
+			InputFieldImageVO target) {
 		// TODO verify behavior of toInputFieldImageVO
 		super.toInputFieldImageVO(source, target);
 		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
@@ -410,15 +390,13 @@ extends InputFieldDaoBase
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		target.setDatas(source.getData());
-
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldInVO toInputFieldInVO(final InputField entity)
-	{
+	public InputFieldInVO toInputFieldInVO(final InputField entity) {
 		return super.toInputFieldInVO(entity);
 	}
 
@@ -428,8 +406,7 @@ extends InputFieldDaoBase
 	@Override
 	public void toInputFieldInVO(
 			InputField source,
-			InputFieldInVO target)
-	{
+			InputFieldInVO target) {
 		super.toInputFieldInVO(source, target);
 		MimeType contentType = source.getContentType();
 		// if (source.isLocalized()) {
@@ -455,8 +432,7 @@ extends InputFieldDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public InputFieldOutVO toInputFieldOutVO(final InputField entity)
-	{
+	public InputFieldOutVO toInputFieldOutVO(final InputField entity) {
 		// TODO verify behavior of toInputFieldOutVO
 		return super.toInputFieldOutVO(entity);
 	}
@@ -467,16 +443,14 @@ extends InputFieldDaoBase
 	@Override
 	public void toInputFieldOutVO(
 			InputField source,
-			InputFieldOutVO target)
-	{
+			InputFieldOutVO target) {
 		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao())).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toInputFieldOutVO(
 			InputField source,
-			InputFieldOutVO target, HashMap<Class, HashMap<Long, Object>> voMap)
-	{
+			InputFieldOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao())).toVOHelper(source, target, voMap);
 	}
 }

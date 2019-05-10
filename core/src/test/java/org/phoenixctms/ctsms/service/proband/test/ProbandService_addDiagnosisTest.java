@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.proband.ProbandService#addDiagnosis(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.DiagnosisInVO)
  */
-@Test(groups={"service","ProbandService"})
+@Test(groups = { "service", "ProbandService" })
 public class ProbandService_addDiagnosisTest extends ProbandServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>addDiagnosis</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'ProbandService_addDiagnosisTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.addDiagnosis]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>addDiagnosis</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'ProbandService_addDiagnosisTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.addDiagnosis]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

@@ -105,8 +105,7 @@ public final class JournalExcelDefaultSettings {
 	public static final ArrayList<String> INPUT_FIELD_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> ECRF_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> MASS_MAIL_VO_FIELD_COLUMNS = new ArrayList<String>();
-	static
-	{
+	static {
 		INVENTORY_VO_FIELD_COLUMNS.add("id");
 		INVENTORY_VO_FIELD_COLUMNS.add("systemMessage");
 		INVENTORY_VO_FIELD_COLUMNS.add("modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

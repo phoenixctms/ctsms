@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.pdf;
-
 
 public interface ProbandListEntryTagsPDFLabelCodes {
 

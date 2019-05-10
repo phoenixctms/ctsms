@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.excel;
 
 import java.security.MessageDigest;
@@ -22,8 +21,6 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 
-
-
 public class InventoryBookingsExcelWriter extends WorkbookWriter {
 
 	// public static String getCityNamesColumnName() {
@@ -33,7 +30,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	// public static String getCvAddressBlockColumnName() {
 	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.CV_ADDRESS_BLOCK_HEAD, ExcelUtil.DEFAULT_LABEL);
 	// }
-
 	private InventoryBookingsExcelVO excelVO;
 	private DepartmentVO probandDepartment;
 	private DepartmentVO courseDepartment;
@@ -59,27 +55,26 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	// public static String getZipCodesColumnName() {
 	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	// }
-
 	public InventoryBookingsExcelWriter(boolean omitFields) {
 		super();
 		excelVO = new InventoryBookingsExcelVO();
 		getSpreadSheetWriters()
-		.add(new SpreadSheetWriter(
-				this,
-				getColumnIndexMap(L10nUtil.getInventoryBookingsExcelColumns(Locales.USER, InventoryBookingsExcelLabelCodes.VO_FIELD_COLUMNS,
-						InventoryBookingsExcelDefaultSettings.VO_FIELD_COLUMNS)),
+				.add(new SpreadSheetWriter(
+						this,
+						getColumnIndexMap(L10nUtil.getInventoryBookingsExcelColumns(Locales.USER, InventoryBookingsExcelLabelCodes.VO_FIELD_COLUMNS,
+								InventoryBookingsExcelDefaultSettings.VO_FIELD_COLUMNS)),
 						Settings.getInt(InventoryBookingsExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.INVENTORY_BOOKINGS_EXCEL,
 								InventoryBookingsExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
-								omitFields,
-								Settings.getBoolean(InventoryBookingsExcelSettingCodes.AUTOSIZE, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.AUTOSIZE),
-								Settings.getBoolean(InventoryBookingsExcelSettingCodes.WRITEHEAD, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.WRITEHEAD),
-								Settings.getIntNullable(InventoryBookingsExcelSettingCodes.PAGE_BREAK_AT_ROW, Bundle.INVENTORY_BOOKINGS_EXCEL,
-										InventoryBookingsExcelDefaultSettings.PAGE_BREAK_AT_ROW),
-										Settings.getBoolean(InventoryBookingsExcelSettingCodes.ROW_COLORS, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.ROW_COLORS),
-										Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.HEAD_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
-												InventoryBookingsExcelDefaultSettings.HEAD_FORMAT),
-												Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.ROW_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
-														InventoryBookingsExcelDefaultSettings.ROW_FORMAT)));
+						omitFields,
+						Settings.getBoolean(InventoryBookingsExcelSettingCodes.AUTOSIZE, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.AUTOSIZE),
+						Settings.getBoolean(InventoryBookingsExcelSettingCodes.WRITEHEAD, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.WRITEHEAD),
+						Settings.getIntNullable(InventoryBookingsExcelSettingCodes.PAGE_BREAK_AT_ROW, Bundle.INVENTORY_BOOKINGS_EXCEL,
+								InventoryBookingsExcelDefaultSettings.PAGE_BREAK_AT_ROW),
+						Settings.getBoolean(InventoryBookingsExcelSettingCodes.ROW_COLORS, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.ROW_COLORS),
+						Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.HEAD_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
+								InventoryBookingsExcelDefaultSettings.HEAD_FORMAT),
+						Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.ROW_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
+								InventoryBookingsExcelDefaultSettings.ROW_FORMAT)));
 	}
 
 	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
@@ -88,8 +83,8 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		temp = getDepartmentsHeader();
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getLeft()
-			.append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.DEPARTMENTS_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
-					temp));
+					.append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.DEPARTMENTS_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
+							temp));
 		}
 		header.getCentre().clear();
 		temp = calendar;
@@ -101,7 +96,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		temp = CommonUtil.getDateStartStopString(from, to, new SimpleDateFormat(ExcelUtil.EXCEL_DATE_TIME_PATTERN));
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getRight()
-			.append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.FROM_TO_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
+					.append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.FROM_TO_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
 		}
 		footer.getLeft().clear();
 		// footer.getLeft().append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));
@@ -248,8 +243,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().get(0).setDistinctFieldRows(distinctFieldRows);
 	}
 
-
-
 	public void setExcelVO(InventoryBookingsExcelVO excelVO) {
 		this.excelVO = excelVO;
 	}
@@ -257,7 +250,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	// public TrialOutVO getTrial() {
 	// return trial;
 	// }
-
 	public void setFrom(Date from) {
 		this.from = from;
 	}
@@ -289,7 +281,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	// this.trial = trial;
 	// setSpreadSheetName(CommonUtil.trialOutVOToString(trial));
 	// }
-
 	public void setVOs(Collection VOs) {
 		getSpreadSheetWriters().get(0).setVOs(VOs);
 	}

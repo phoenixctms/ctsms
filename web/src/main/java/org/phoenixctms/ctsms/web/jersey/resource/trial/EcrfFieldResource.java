@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
 import javax.ws.rs.Consumes;
@@ -63,6 +62,4 @@ public class EcrfFieldResource {
 	public ECRFFieldOutVO updateEcrf(ECRFFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().updateEcrfField(auth, in);
 	}
-
 }
-

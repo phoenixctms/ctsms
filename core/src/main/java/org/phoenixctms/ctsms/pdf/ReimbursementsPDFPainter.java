@@ -59,7 +59,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		// protected abstract long getCount(T detail);
 		//
 		// protected abstract float getTotal(T detail);
-
 		protected abstract Collection<MoneyTransferByCostTypeSummaryDetailVO> getByCostTypes(T detail);
 
 		@Override
@@ -86,7 +85,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 					commentsIt = current.getComments().iterator();
 					next.setTotal(current.getTotal());
 				}
-
 				next.setCostType(current.getCostType());
 				next.setCount(current.getCount());
 				// next.setTotal(current.getTotal());
@@ -121,7 +119,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-
 		// protected abstract void setCount(T detail, long count);
 		//
 		// protected abstract void setTotal(T detail, float total);
@@ -142,7 +139,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 			// bankAccount = detail.getBankAccount();
 			// count = detail
 			// }
-
 			@Override
 			protected MoneyTransferByBankAccountSummaryDetailVO createNewDetail() {
 				MoneyTransferByBankAccountSummaryDetailVO newDetail = new MoneyTransferByBankAccountSummaryDetailVO();
@@ -200,7 +196,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 			// {
 			// method = detail.getMethod();
 			// }
-
 			@Override
 			protected MoneyTransferByPaymentMethodSummaryDetailVO createNewDetail() {
 				MoneyTransferByPaymentMethodSummaryDetailVO newDetail = new MoneyTransferByPaymentMethodSummaryDetailVO();
@@ -246,6 +241,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 			// }
 		};
 	}
+
 	private int blockIndex;
 	private ArrayList<ReimbursementsPDFBlock> blocks;
 	private ReimbursementsPDFBlockCursor cursor;
@@ -265,9 +261,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 	private PDFont fontF;
 	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
 	private static final String REIMBURSEMENTS_PDF_FILENAME_PREFIX = "reimbursements_";
-
 	private static final String REIMBURSEMENTS_PDF_FILENAME_TRIAL = "trial_";
-
 	private static final String REIMBURSEMENTS_PDF_FILENAME_PROBAND = "proband_";
 
 	public ReimbursementsPDFPainter() {
@@ -276,7 +270,6 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		pdfVO = new ReimbursementsPDFVO();
 		cursor = new ReimbursementsPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(ReimbursementsPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SHOW_PAGE_NUMBERS));
-
 	}
 
 	@Override
@@ -296,18 +289,18 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		// Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
+	@Override
 	public void drawPageBreakNewPage(PDPageContentStream contentStream) throws Exception {
 		ReimbursementsPDFBlock block = blocks.get(blockIndex);
-
 		if (BlockType.PAYMENT_METHOD_TABLE_ROW.equals(block.getType())
 				|| BlockType.BANK_ACCOUNT_TABLE_ROW.equals(block.getType())) {
 			// paint ecrf header again
 			cursor.setBlockY(cursor.getBlockY() - (new ReimbursementsPDFBlock(BlockType.MONEY_TRANSFER_TABLE_HEAD)).renderBlock(contentStream, cursor));
 			block.setNewPage(true);
 		}
-
 	}
 
+	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 		ReimbursementsPDFBlock block = blocks.get(blockIndex - 1);
 		// if (BlockType.NEW_INDEX.equals(block.getType())) {
@@ -317,8 +310,8 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 				|| BlockType.BANK_ACCOUNT_TABLE_ROW.equals(block.getType())) {
 			if (!block.isLastTableRow()) {
 				PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
-						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(),// - height,
-						cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY(),// - height, // height,
+						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), // - height,
+						cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY(), // - height, // height,
 						// PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
@@ -336,12 +329,13 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 				Settings.getColor(ReimbursementsPDFSettingCodes.TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.TEXT_COLOR),
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
 				Settings.getFloat(ReimbursementsPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LEFT_MARGIN)
-				+ (pageWidth
-						- Settings.getFloat(ReimbursementsPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings
-						.getFloat(ReimbursementsPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_RIGHT_MARGIN))
-						/ 2.0f,
-						Settings.getFloat(ReimbursementsPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LOWER_MARGIN),
-						PDFUtil.Alignment.BOTTOM_CENTER);
+						+ (pageWidth
+								- Settings.getFloat(ReimbursementsPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LEFT_MARGIN)
+								- Settings
+										.getFloat(ReimbursementsPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_RIGHT_MARGIN))
+								/ 2.0f,
+				Settings.getFloat(ReimbursementsPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAGE_LOWER_MARGIN),
+				PDFUtil.Alignment.BOTTOM_CENTER);
 		writer.closeContentStream();
 	}
 
@@ -570,7 +564,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 	public void startNewPage() {
 		super.startNewPage(!hasNextBlock() || BlockType.NEW_REIMBURSEMENT.equals(blocks.get(blockIndex).getType()),
 				!hasNextBlock() || BlockType.NEW_REIMBURSEMENT.equals(blocks.get(blockIndex).getType())
-				|| BlockType.NEW_PAGE.equals(blocks.get(blockIndex).getType()));
+						|| BlockType.NEW_PAGE.equals(blocks.get(blockIndex).getType()));
 		cursor.setBlockY(pageHeight
 				- Settings.getFloat(ReimbursementsPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
 		cursor.setBlockX(Settings.getFloat(ReimbursementsPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.BLOCKS_LEFT_MARGIN));

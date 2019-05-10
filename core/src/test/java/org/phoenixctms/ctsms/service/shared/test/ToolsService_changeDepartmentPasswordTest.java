@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.ToolsService#changeDepartmentPassword(java.lang.Long, java.lang.String, java.lang.String)
  */
-@Test(groups={"service","ToolsService"})
+@Test(groups = { "service", "ToolsService" })
 public class ToolsService_changeDepartmentPasswordTest extends ToolsServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>changeDepartmentPassword</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'ToolsService_changeDepartmentPasswordTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.changeDepartmentPassword]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>changeDepartmentPassword</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'ToolsService_changeDepartmentPasswordTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.changeDepartmentPassword]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.compare;
 
-
 import java.util.Comparator;
 import java.util.Date;
 

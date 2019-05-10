@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,4 +51,3 @@ public class RandomizationListLazyModel extends LazyDataModelBase {
 		this.trialId = trialId;
 	}
 }
-

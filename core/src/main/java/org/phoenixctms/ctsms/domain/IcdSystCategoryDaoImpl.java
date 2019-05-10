@@ -29,8 +29,7 @@ import org.phoenixctms.ctsms.vo.IcdSystModifierVO;
  * @see IcdSystCategory
  */
 public class IcdSystCategoryDaoImpl
-extends IcdSystCategoryDaoBase
-{
+		extends IcdSystCategoryDaoBase {
 
 	@Override
 	protected Collection<String> handleFindCategoryPreferredRubricLabels(
@@ -52,8 +51,7 @@ extends IcdSystCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystCategory icdSystCategoryVOToEntity(IcdSystCategoryVO icdSystCategoryVO)
-	{
+	public IcdSystCategory icdSystCategoryVOToEntity(IcdSystCategoryVO icdSystCategoryVO) {
 		IcdSystCategory entity = this.loadIcdSystCategoryFromIcdSystCategoryVO(icdSystCategoryVO);
 		this.icdSystCategoryVOToEntity(icdSystCategoryVO, entity, true);
 		return entity;
@@ -66,8 +64,7 @@ extends IcdSystCategoryDaoBase
 	public void icdSystCategoryVOToEntity(
 			IcdSystCategoryVO source,
 			IcdSystCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.icdSystCategoryVOToEntity(source, target, copyIfNull);
 		Collection modifiers = source.getModifiers();
 		if (modifiers.size() > 0) {
@@ -83,8 +80,7 @@ extends IcdSystCategoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private IcdSystCategory loadIcdSystCategoryFromIcdSystCategoryVO(IcdSystCategoryVO icdSystCategoryVO)
-	{
+	private IcdSystCategory loadIcdSystCategoryFromIcdSystCategoryVO(IcdSystCategoryVO icdSystCategoryVO) {
 		// TODO implement loadIcdSystCategoryFromIcdSystCategoryVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystCategoryFromIcdSystCategoryVO(IcdSystCategoryVO) not yet implemented.");
 		Long id = icdSystCategoryVO.getId();
@@ -92,8 +88,7 @@ extends IcdSystCategoryDaoBase
 		if (id != null) {
 			icdSystCategory = this.load(id);
 		}
-		if (icdSystCategory == null)
-		{
+		if (icdSystCategory == null) {
 			icdSystCategory = IcdSystCategory.Factory.newInstance();
 		}
 		return icdSystCategory;
@@ -103,8 +98,7 @@ extends IcdSystCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystCategoryVO toIcdSystCategoryVO(final IcdSystCategory entity)
-	{
+	public IcdSystCategoryVO toIcdSystCategoryVO(final IcdSystCategory entity) {
 		return super.toIcdSystCategoryVO(entity);
 	}
 
@@ -114,8 +108,7 @@ extends IcdSystCategoryDaoBase
 	@Override
 	public void toIcdSystCategoryVO(
 			IcdSystCategory source,
-			IcdSystCategoryVO target)
-	{
+			IcdSystCategoryVO target) {
 		super.toIcdSystCategoryVO(source, target);
 		target.setModifiers(toIcdSystModifierVOCollection(source.getModifiers()));
 	}

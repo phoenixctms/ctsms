@@ -44,22 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public final class L10nUtil {
 
 	public enum Locales {
-		USER,
-		JOURNAL,
-		AUDIT_TRAIL,
-		NOTIFICATION,
-		PROBAND_LIST_STATUS_ENTRY_REASON,
-		CV_PDF,
-		REIMBURSEMENTS_PDF,
-		COURSE_PARTICIPANT_LIST_PDF,
-		PROBAND_LETTER_PDF,
-		COURSE_CERTIFICATE_PDF,
-		ECRF_PDF,
-		INQUIRIES_PDF,
-		PROBAND_LIST_ENTRY_TAGS_PDF,
-		DEFAULT,
-		DE,
-		EN
+		USER, JOURNAL, AUDIT_TRAIL, NOTIFICATION, PROBAND_LIST_STATUS_ENTRY_REASON, CV_PDF, REIMBURSEMENTS_PDF, COURSE_PARTICIPANT_LIST_PDF, PROBAND_LETTER_PDF, COURSE_CERTIFICATE_PDF, ECRF_PDF, INQUIRIES_PDF, PROBAND_LIST_ENTRY_TAGS_PDF, DEFAULT, DE, EN
 	}
 
 	private final static String CREATE_ENUMERATION_VO_METHOD_PREFIX = "create";
@@ -167,6 +152,7 @@ public final class L10nUtil {
 	private static String inputFieldTextPresetsBundleBasename;
 	private static String inputFieldNamesBundleBasename;
 	private static String inputFieldCommentsBundleBasename;
+
 	public static boolean containsAuditTrailChangeCommentFieldLabel(Locales locale, String l10nKey) {
 		return CommonUtil.bundleContainsKey(l10nKey, getBundle(locale, auditTrailChangeCommentFieldLabelsBundleBasename));
 	}
@@ -354,7 +340,6 @@ public final class L10nUtil {
 		return CommonUtil.getString(l10nKey, getBundle(locale, addressTypesBundleBasename), DefaultMessages.ADDRESS_TYPE_NAME);
 	}
 
-
 	public static String getAuditTrailChangeCommentFieldLabel(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, auditTrailChangeCommentFieldLabelsBundleBasename), DefaultMessages.AUDIT_TRAIL_CHANGE_COMMENT_FIELD_LABEL);
 	}
@@ -374,7 +359,6 @@ public final class L10nUtil {
 	private static ResourceBundle getBundle(Locales locale, String baseName) {
 		return CommonUtil.getBundle(baseName, getLocale(locale));
 	}
-
 
 	public static String getContactDetailTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, contactDetailTypesBundleBasename), DefaultMessages.CONTACT_DETAIL_TYPE_NAME);
@@ -430,7 +414,7 @@ public final class L10nUtil {
 
 	public static String getDepartmentL10nKey(String l10nKey, CourseOutVO course) {
 		if (course != null) {
-			return getDepartmentL10nKey(l10nKey,course.getDepartment());
+			return getDepartmentL10nKey(l10nKey, course.getDepartment());
 		}
 		return l10nKey;
 	}
@@ -446,10 +430,11 @@ public final class L10nUtil {
 
 	public static String getDepartmentL10nKey(String l10nKey, ProbandOutVO proband) {
 		if (proband != null) {
-			return getDepartmentL10nKey(l10nKey,proband.getDepartment());
+			return getDepartmentL10nKey(l10nKey, proband.getDepartment());
 		}
 		return l10nKey;
 	}
+
 	//	public static String getDepartmentL10nKey(String l10nKey, InventoryOutVO inventory) {
 	//		if (inventory != null) {
 	//			return getDepartmentL10nKey(l10nKey,inventory.getDepartment());
@@ -458,7 +443,7 @@ public final class L10nUtil {
 	//	}
 	public static String getDepartmentL10nKey(String l10nKey, StaffOutVO staff) {
 		if (staff != null) {
-			return getDepartmentL10nKey(l10nKey,staff.getDepartment());
+			return getDepartmentL10nKey(l10nKey, staff.getDepartment());
 		}
 		return l10nKey;
 	}
@@ -643,7 +628,7 @@ public final class L10nUtil {
 
 	public static Locales getLocales(String locale) {
 		try {
-			return getLocales( CommonUtil.localeFromString(locale));
+			return getLocales(CommonUtil.localeFromString(locale));
 		} catch (Exception e) {
 			return Locales.DEFAULT;
 		}
@@ -781,7 +766,7 @@ public final class L10nUtil {
 		return CommonUtil.getString(l10nKey, getBundle(locale, staffTagsBundleBasename), DefaultMessages.STAFF_TAG_NAME);
 	}
 
-	public static String getString(Locales locale,String l10nKey, String defaultName) {
+	public static String getString(Locales locale, String l10nKey, String defaultName) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, messagesBundleBasename), defaultName);
 	}
 

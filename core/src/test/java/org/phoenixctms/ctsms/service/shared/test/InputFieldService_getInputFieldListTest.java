@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.InputFieldService#getInputFieldList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups={"service","InputFieldService"})
+@Test(groups = { "service", "InputFieldService" })
 public class InputFieldService_getInputFieldListTest extends InputFieldServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getInputFieldList</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'InputFieldService_getInputFieldListTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getInputFieldList]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getInputFieldList</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'InputFieldService_getInputFieldListTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'InputFieldService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.InputFieldService.getInputFieldList]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

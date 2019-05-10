@@ -12,12 +12,10 @@ import org.hibernate.Transaction;
  * @see org.phoenixctms.ctsms.domain.Error
  */
 public class ErrorDaoImpl
-extends ErrorDaoBase
-{
+		extends ErrorDaoBase {
 
 	@Override
-	public void handleCreateTxn(Error error) throws Exception
-	{
+	public void handleCreateTxn(Error error) throws Exception {
 		// http://www.koders.com/java/fidDC3AD0DFC450E26BD45E4A8FA856716E422119F3.aspx?s=Closer
 		Transaction transaction = this.getSession(true).beginTransaction();
 		try {

@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.jersey.provider;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
 
 import org.phoenixctms.ctsms.js.JsUtil;
@@ -19,8 +20,8 @@ import com.sun.jersey.spi.inject.InjectableProvider;
 
 @Provider
 public class BasicAuthenticationProvider
-extends AbstractHttpContextInjectable<AuthenticationVO>
-implements InjectableProvider<Context, Type> {
+		extends AbstractHttpContextInjectable<AuthenticationVO>
+		implements InjectableProvider<Context, Type> {
 
 	@Context
 	javax.servlet.http.HttpServletRequest request;
@@ -41,7 +42,7 @@ implements InjectableProvider<Context, Type> {
 	@Override
 	public AuthenticationVO getValue(HttpContext c) {
 		// if (c.getRequest().getAuthenticationScheme() == HttpRequestContext.BASIC_AUTH) {
-		String authHeaderValue = c.getRequest().getHeaderValue(HttpRequestContext.AUTHORIZATION);
+		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
 		String[] credentials = null;
 		if (authHeaderValue != null) {
 			credentials = JsUtil.decodeBase64(authHeaderValue.replaceFirst("[B|b]asic ", "")).split(":", 2);

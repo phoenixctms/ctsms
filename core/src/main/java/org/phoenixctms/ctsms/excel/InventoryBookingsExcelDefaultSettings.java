@@ -1,8 +1,5 @@
 package org.phoenixctms.ctsms.excel;
 
-
-
-
 import java.util.ArrayList;
 
 public final class InventoryBookingsExcelDefaultSettings {
@@ -26,8 +23,7 @@ public final class InventoryBookingsExcelDefaultSettings {
 	// public static final boolean AGGREGATE_ADDRESSES = false;
 	// public static final boolean AGGREGATE_CONTACT_DETAILS = false;
 	public static final boolean APPEND_HEADER_FOOTER = true;
-	static
-	{
+	static {
 		VO_FIELD_COLUMNS.add("calendar");
 		VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "nameWithTitles");
 		VO_FIELD_COLUMNS.add("trial" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.trial.TrialService#renderReimbursements(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, org.phoenixctms.ctsms.enumeration.PaymentMethod, java.lang.Boolean)
  */
-@Test(groups={"service","TrialService"})
+@Test(groups = { "service", "TrialService" })
 public class TrialService_renderReimbursementsTest extends TrialServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>renderReimbursements</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'TrialService_renderReimbursementsTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.renderReimbursements]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>renderReimbursements</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'TrialService_renderReimbursementsTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.renderReimbursements]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

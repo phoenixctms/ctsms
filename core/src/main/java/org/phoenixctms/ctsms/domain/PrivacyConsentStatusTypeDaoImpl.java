@@ -22,8 +22,7 @@ import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
  * @see PrivacyConsentStatusType
  */
 public class PrivacyConsentStatusTypeDaoImpl
-extends PrivacyConsentStatusTypeDaoBase
-{
+		extends PrivacyConsentStatusTypeDaoBase {
 
 	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<PrivacyConsentStatusType>(false);
 
@@ -37,8 +36,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<PrivacyConsentStatusType> handleFindInitialStates()
-	{
+	protected Collection<PrivacyConsentStatusType> handleFindInitialStates() {
 		org.hibernate.Criteria privacyConsentStatusTypeCriteria = createPrivacyConsentStatusTypeCriteria();
 		privacyConsentStatusTypeCriteria.add(Restrictions.eq("initial", true));
 		privacyConsentStatusTypeCriteria.addOrder(Order.asc("id"));
@@ -49,8 +47,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<PrivacyConsentStatusType> handleFindTransitions(Long statusTypeId)
-	{
+	protected Collection<PrivacyConsentStatusType> handleFindTransitions(Long statusTypeId) {
 		PrivacyConsentStatusType statusType = this.load(statusTypeId);
 		Iterator<PrivacyConsentStatusType> it = null;
 		if (statusType != null) {
@@ -71,15 +68,13 @@ extends PrivacyConsentStatusTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private PrivacyConsentStatusType loadPrivacyConsentStatusTypeFromPrivacyConsentStatusTypeVO(PrivacyConsentStatusTypeVO privacyConsentStatusTypeVO)
-	{
+	private PrivacyConsentStatusType loadPrivacyConsentStatusTypeFromPrivacyConsentStatusTypeVO(PrivacyConsentStatusTypeVO privacyConsentStatusTypeVO) {
 		PrivacyConsentStatusType privacyConsentStatusType = null;
 		Long id = privacyConsentStatusTypeVO.getId();
 		if (id != null) {
 			privacyConsentStatusType = this.load(id);
 		}
-		if (privacyConsentStatusType == null)
-		{
+		if (privacyConsentStatusType == null) {
 			privacyConsentStatusType = PrivacyConsentStatusType.Factory.newInstance();
 		}
 		return privacyConsentStatusType;
@@ -89,8 +84,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public PrivacyConsentStatusType privacyConsentStatusTypeVOToEntity(PrivacyConsentStatusTypeVO privacyConsentStatusTypeVO)
-	{
+	public PrivacyConsentStatusType privacyConsentStatusTypeVOToEntity(PrivacyConsentStatusTypeVO privacyConsentStatusTypeVO) {
 		PrivacyConsentStatusType entity = this.loadPrivacyConsentStatusTypeFromPrivacyConsentStatusTypeVO(privacyConsentStatusTypeVO);
 		this.privacyConsentStatusTypeVOToEntity(privacyConsentStatusTypeVO, entity, true);
 		return entity;
@@ -103,8 +97,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	public void privacyConsentStatusTypeVOToEntity(
 			PrivacyConsentStatusTypeVO source,
 			PrivacyConsentStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.privacyConsentStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -112,8 +105,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public PrivacyConsentStatusTypeVO toPrivacyConsentStatusTypeVO(final PrivacyConsentStatusType entity)
-	{
+	public PrivacyConsentStatusTypeVO toPrivacyConsentStatusTypeVO(final PrivacyConsentStatusType entity) {
 		return super.toPrivacyConsentStatusTypeVO(entity);
 	}
 
@@ -123,8 +115,7 @@ extends PrivacyConsentStatusTypeDaoBase
 	@Override
 	public void toPrivacyConsentStatusTypeVO(
 			PrivacyConsentStatusType source,
-			PrivacyConsentStatusTypeVO target)
-	{
+			PrivacyConsentStatusTypeVO target) {
 		super.toPrivacyConsentStatusTypeVO(source, target);
 		target.setName(L10nUtil.getPrivacyConsentStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

@@ -81,7 +81,6 @@ public class AutoDeletionProbandOverviewBean extends ManagedBeanBase implements 
 		return WebUtil.getProbandLettersPdfStreamedContent(probandId);
 	}
 
-
 	public VariablePeriodSelector getReminder() {
 		return reminder;
 	}
@@ -90,9 +89,9 @@ public class AutoDeletionProbandOverviewBean extends ManagedBeanBase implements 
 		if (proband != null) {
 			try {
 				WebUtil.getServiceLocator()
-				.getProbandService()
-				.updatePrivacyConsentStatus(WebUtil.getAuthentication(), proband.getId(), proband.getVersion(),
-						autoDeletionProbandModel.getProbandPrivacyConsentTypeMap().get(proband.getId()));
+						.getProbandService()
+						.updatePrivacyConsentStatus(WebUtil.getAuthentication(), proband.getId(), proband.getVersion(),
+								autoDeletionProbandModel.getProbandPrivacyConsentTypeMap().get(proband.getId()));
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

@@ -41,7 +41,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	private static final String AUDIT_TRAIL_EXCEL_FILENAME_ECRF = "ecrf_";
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
-
 		@Override
 		protected boolean getBooleanValue(ECRFFieldValueOutVO value) {
 			return value.getBooleanValue();
@@ -49,7 +48,8 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 
 		@Override
 		protected String getCheckboxString(boolean value) {
-			return L10nUtil.getAuditTrailExcelLabel(Locales.USER, value ? AuditTrailExcelLabelCodes.CHECKBOX_CHECKED : AuditTrailExcelLabelCodes.CHECKBOX_UNCHECKED, ExcelUtil.DEFAULT_LABEL);
+			return L10nUtil.getAuditTrailExcelLabel(Locales.USER, value ? AuditTrailExcelLabelCodes.CHECKBOX_CHECKED : AuditTrailExcelLabelCodes.CHECKBOX_UNCHECKED,
+					ExcelUtil.DEFAULT_LABEL);
 		}
 
 		@Override
@@ -121,11 +121,12 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		protected Date getTimeValue(ECRFFieldValueOutVO value) {
 			return value.getTimeValue();
 		}
-
 	};
+
 	private static String getEcrfFieldValueColumnName() {
 		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_VALUE_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
+
 	// public static String getCityNamesColumnName() {
 	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	// }
@@ -134,13 +135,9 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	// private PaymentMethodVO method;
 	// private Boolean paid;
 	private TrialOutVO trial;
-
 	private ProbandListEntryOutVO listEntry;
-
 	private ECRFOutVO ecrf;
-
 	// private HashMap<Integer,ECRFFieldStatusQueue> sheetIndexQueueMap;
-
 	private LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
 
 	// public static String getStreetsColumnName() {
@@ -180,9 +177,9 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		header.getCentre().clear();
 		if (listEntry != null) {
 			header.getCentre()
-			.append(L10nUtil
-					.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PROBAND_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
-							Long.toString(listEntry.getProband().getId())));
+					.append(L10nUtil
+							.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PROBAND_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
+									Long.toString(listEntry.getProband().getId())));
 		}
 		header.getRight().clear();
 		if (ecrf != null) {
@@ -281,8 +278,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_FORMAT));
 	}
 
-
-
 	@Override
 	public String getColumnTitle(String l10nKey) {
 		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, l10nKey, ExcelUtil.DEFAULT_LABEL);
@@ -305,7 +300,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	public AuditTrailExcelVO getExcelVO() {
 		return excelVO;
 	}
-
 	// public void setCostType(String costType) {
 	// this.costType = costType;
 	// }
@@ -325,8 +319,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	// this.proband = proband;
 	// setSpreadSheetName(null);
 	// }
-
-
 
 	public ProbandListEntryOutVO getListEntry() {
 		return listEntry;
@@ -377,8 +369,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).getVOs();
 	}
 
-
-
 	@Override
 	public boolean save() throws Exception {
 		byte[] documentData = buffer.toByteArray();
@@ -402,8 +392,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	public void setSpreadSheetName(String spreadSheetName) {
 		String labelCode = AuditTrailExcelLabelCodes.AUDIT_TRAIL_SPREADSHEET_NAME;
 		getSpreadSheetWriters().get(0).setSpreadSheetName(
-				L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName)
-				);
+				L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
 		Iterator<Entry<ECRFFieldStatusQueue, Integer>> it = queueSheetIndexMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<ECRFFieldStatusQueue, Integer> queueSheetIndex = it.next();
@@ -421,11 +410,9 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 					continue;
 			}
 			getSpreadSheetWriters().get(queueSheetIndex.getValue()).setSpreadSheetName(
-					L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName)
-					);
+					L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
 		}
 	}
-
 
 	public void setTrial(TrialOutVO trial) {
 		this.trial = trial;
@@ -456,7 +443,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	public void setVOs(ECRFFieldStatusQueue queue, Collection VOs) {
 		getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).setVOs(VOs);
 	}
-
 
 	@Override
 	protected void updateExcelVO() {
@@ -510,5 +496,4 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 		return null;
 	}
-
 }

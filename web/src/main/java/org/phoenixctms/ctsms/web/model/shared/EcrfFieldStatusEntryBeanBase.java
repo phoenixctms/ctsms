@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.model.shared;
 
 import java.util.ArrayList;
@@ -78,8 +77,7 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ECRFFieldStatusEntryInVO backup = new ECRFFieldStatusEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -110,8 +108,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-
-
 	protected void addMessages() {
 		if (WebUtil.isProbandLocked(probandListEntry)) {
 			Messages.addLocalizedMessageClientId(getMessagesId(), FacesMessage.SEVERITY_WARN,
@@ -139,13 +135,11 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	}
 
 	protected void clearFromCache(ECRFFieldStatusEntryOutVO status) {
-
 	}
 
 	// protected abstract String getDataTableId(); // {
 	// return "ecrffieldstatus_" + ecrfFieldStatusEntryModel.getQueue().getValue() + "_list";
 	// }
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -155,7 +149,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	public String deleteAction(Long id) {
 		clearFromCache(out);
 		try {
-
 			out = WebUtil.getServiceLocator().getTrialService().deleteEcrfFieldStatusEntry(WebUtil.getAuthentication(), id);
 			initIn();
 			initSets();
@@ -249,8 +242,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		}
 		return false;
 	}
-
-
 
 	public ArrayList<SelectItem> getStatusTypes() {
 		return statusTypes;
@@ -419,8 +410,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		return false;
 	}
 
-
-
 	protected boolean isEnabled() {
 		if (out == null && statusTypes != null && statusTypes.size() == 0) {
 			return false;
@@ -456,11 +445,9 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		return isLastStatus && isEnabled();
 	}
 
-
-
 	public boolean isUpdateCommentEnabled() {
 		//&& CommonUtil.isEmptyString(in.getComment())
-		return statusType != null && statusType.isProposed()  && value != null && !CommonUtil.isEmptyString(value.getReasonForChange());
+		return statusType != null && statusType.isProposed() && value != null && !CommonUtil.isEmptyString(value.getReasonForChange());
 	}
 
 	@Override
@@ -514,8 +501,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		return RESET_OUTCOME;
 	}
 
-
-
 	// public void setProbandListEntry(ProbandListEntryOutVO probandListEntry) {
 	// this.probandListEntry = probandListEntry;
 	// }
@@ -526,7 +511,6 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	// public void setEcrfStatus(ECRFStatusEntryVO ecrfStatus) {
 	// this.ecrfStatus = ecrfStatus;
 	// }
-
 	public void setSelectedEcrfFieldStatusEntry(IDVO ecrfFieldStatusEntry) {
 		if (ecrfFieldStatusEntry != null) {
 			this.out = (ECRFFieldStatusEntryOutVO) ecrfFieldStatusEntry.getVo();

@@ -19,15 +19,13 @@ import org.phoenixctms.ctsms.vo.CvSectionVO;
  * @see CvSection
  */
 public class CvSectionDaoImpl
-		extends CvSectionDaoBase
-{
+		extends CvSectionDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	public CvSection cvSectionVOToEntity(CvSectionVO cvSectionVO)
-	{
+	public CvSection cvSectionVOToEntity(CvSectionVO cvSectionVO) {
 		CvSection entity = this.loadCvSectionFromCvSectionVO(cvSectionVO);
 		this.cvSectionVOToEntity(cvSectionVO, entity, true);
 		return entity;
@@ -40,8 +38,7 @@ public class CvSectionDaoImpl
 	public void cvSectionVOToEntity(
 			CvSectionVO source,
 			CvSection target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.cvSectionVOToEntity(source, target, copyIfNull);
 	}
 
@@ -59,15 +56,13 @@ public class CvSectionDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CvSection loadCvSectionFromCvSectionVO(CvSectionVO cvSectionVO)
-	{
+	private CvSection loadCvSectionFromCvSectionVO(CvSectionVO cvSectionVO) {
 		CvSection cvSection = null;
 		Long id = cvSectionVO.getId();
 		if (id != null) {
 			cvSection = this.load(id);
 		}
-		if (cvSection == null)
-		{
+		if (cvSection == null) {
 			cvSection = CvSection.Factory.newInstance();
 		}
 		return cvSection;
@@ -77,8 +72,7 @@ public class CvSectionDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public CvSectionVO toCvSectionVO(final CvSection entity)
-	{
+	public CvSectionVO toCvSectionVO(final CvSection entity) {
 		return super.toCvSectionVO(entity);
 	}
 
@@ -88,8 +82,7 @@ public class CvSectionDaoImpl
 	@Override
 	public void toCvSectionVO(
 			CvSection source,
-			CvSectionVO target)
-	{
+			CvSectionVO target) {
 		super.toCvSectionVO(source, target);
 		target.setName(L10nUtil.getCvSectionName(Locales.USER, source.getNameL10nKey()));
 		target.setTitlePreset(L10nUtil.getCvSectionTitlePreset(Locales.USER, source.getTitlePresetL10nKey()));

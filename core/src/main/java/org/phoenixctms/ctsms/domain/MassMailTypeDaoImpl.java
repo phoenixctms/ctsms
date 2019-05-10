@@ -18,8 +18,7 @@ import org.phoenixctms.ctsms.vo.MassMailTypeVO;
  * @see MassMailType
  */
 public class MassMailTypeDaoImpl
-extends MassMailTypeDaoBase
-{
+		extends MassMailTypeDaoBase {
 
 	private org.hibernate.Criteria createMassMailTypeCriteria() {
 		org.hibernate.Criteria massMailTypeCriteria = this.getSession().createCriteria(MassMailType.class);
@@ -28,8 +27,7 @@ extends MassMailTypeDaoBase
 	}
 
 	@Override
-	protected Collection<MassMailType> handleFindByVisibleId(Boolean visible, Long typeId)
-	{
+	protected Collection<MassMailType> handleFindByVisibleId(Boolean visible, Long typeId) {
 		org.hibernate.Criteria typeCriteria = createMassMailTypeCriteria();
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
 		return typeCriteria.list();
@@ -40,55 +38,47 @@ extends MassMailTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private MassMailType loadMassMailTypeFromMassMailTypeVO(MassMailTypeVO massMailTypeVO)
-	{
+	private MassMailType loadMassMailTypeFromMassMailTypeVO(MassMailTypeVO massMailTypeVO) {
 		// TODO implement loadMassMailTypeFromMassMailTypeVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailTypeFromMassMailTypeVO(MassMailTypeVO) not yet implemented.");
-
 		MassMailType massMailType = null;
 		Long id = massMailTypeVO.getId();
 		if (id != null) {
 			massMailType = this.load(id);
 		}
-		if (massMailType == null)
-		{
+		if (massMailType == null) {
 			massMailType = MassMailType.Factory.newInstance();
 		}
 		return massMailType;
 	}
 
-
-	public MassMailType massMailTypeVOToEntity(MassMailTypeVO massMailTypeVO)
-	{
+	@Override
+	public MassMailType massMailTypeVOToEntity(MassMailTypeVO massMailTypeVO) {
 		MassMailType entity = this.loadMassMailTypeFromMassMailTypeVO(massMailTypeVO);
 		this.massMailTypeVOToEntity(massMailTypeVO, entity, true);
 		return entity;
 	}
 
-
 	@Override
 	public void massMailTypeVOToEntity(
 			MassMailTypeVO source,
 			MassMailType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.massMailTypeVOToEntity(source, target, copyIfNull);
 	}
 
-
-	public MassMailTypeVO toMassMailTypeVO(final MassMailType entity)
-	{
+	@Override
+	public MassMailTypeVO toMassMailTypeVO(final MassMailType entity) {
 		return super.toMassMailTypeVO(entity);
-
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void toMassMailTypeVO(
 			MassMailType source,
-			MassMailTypeVO target)
-	{
+			MassMailTypeVO target) {
 		super.toMassMailTypeVO(source, target);
 		target.setName(L10nUtil.getMassMailTypeName(Locales.USER, source.getNameL10nKey()));
 	}

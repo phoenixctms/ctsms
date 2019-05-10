@@ -19,7 +19,6 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 public class TrialSignature extends EntitySignature {
 
 	private final static HashMap<Class, HashSet<String>> FIELDS_BLACKLIST_MAP = new HashMap<Class, HashSet<String>>();
-
 	static {
 		addFieldToMap(FIELDS_BLACKLIST_MAP, Signature.class, null);
 		addFieldToMap(FIELDS_BLACKLIST_MAP, Notification.class, null);
@@ -27,7 +26,6 @@ public class TrialSignature extends EntitySignature {
 		addFieldToMap(FIELDS_BLACKLIST_MAP, DutyRosterTurn.class, null);
 		addFieldToMap(FIELDS_BLACKLIST_MAP, ECRFFieldValue.class, null);
 		addFieldToMap(FIELDS_BLACKLIST_MAP, ECRFStatusEntry.class, null);
-
 	}
 
 	public static byte[] sign(Trial trial, Timestamp now, StringBuilder comment) throws Exception {

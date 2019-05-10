@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.OpsSystBlockVO;
  * @see OpsSystBlock
  */
 public class OpsSystBlockDaoImpl
-extends OpsSystBlockDaoBase
-{
+		extends OpsSystBlockDaoBase {
 
 	@Override
 	protected Collection<String> handleFindBlockPreferredRubricLabels(
@@ -48,8 +47,7 @@ extends OpsSystBlockDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private OpsSystBlock loadOpsSystBlockFromOpsSystBlockVO(OpsSystBlockVO opsSystBlockVO)
-	{
+	private OpsSystBlock loadOpsSystBlockFromOpsSystBlockVO(OpsSystBlockVO opsSystBlockVO) {
 		// TODO implement loadOpsSystBlockFromOpsSystBlockVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystBlockFromOpsSystBlockVO(OpsSystBlockVO) not yet implemented.");
 		Long id = opsSystBlockVO.getId();
@@ -57,8 +55,7 @@ extends OpsSystBlockDaoBase
 		if (id != null) {
 			opsSystBlock = this.load(id);
 		}
-		if (opsSystBlock == null)
-		{
+		if (opsSystBlock == null) {
 			opsSystBlock = OpsSystBlock.Factory.newInstance();
 		}
 		return opsSystBlock;
@@ -68,8 +65,7 @@ extends OpsSystBlockDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystBlock opsSystBlockVOToEntity(OpsSystBlockVO opsSystBlockVO)
-	{
+	public OpsSystBlock opsSystBlockVOToEntity(OpsSystBlockVO opsSystBlockVO) {
 		OpsSystBlock entity = this.loadOpsSystBlockFromOpsSystBlockVO(opsSystBlockVO);
 		this.opsSystBlockVOToEntity(opsSystBlockVO, entity, true);
 		return entity;
@@ -82,8 +78,7 @@ extends OpsSystBlockDaoBase
 	public void opsSystBlockVOToEntity(
 			OpsSystBlockVO source,
 			OpsSystBlock target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.opsSystBlockVOToEntity(source, target, copyIfNull);
 	}
 
@@ -91,8 +86,7 @@ extends OpsSystBlockDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public OpsSystBlockVO toOpsSystBlockVO(final OpsSystBlock entity)
-	{
+	public OpsSystBlockVO toOpsSystBlockVO(final OpsSystBlock entity) {
 		return super.toOpsSystBlockVO(entity);
 	}
 
@@ -102,8 +96,7 @@ extends OpsSystBlockDaoBase
 	@Override
 	public void toOpsSystBlockVO(
 			OpsSystBlock source,
-			OpsSystBlockVO target)
-	{
+			OpsSystBlockVO target) {
 		super.toOpsSystBlockVO(source, target);
 	}
 }

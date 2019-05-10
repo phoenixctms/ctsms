@@ -25,11 +25,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class ShiftDurationSummaryModel extends EagerDataModelBase {
 
 	public enum ShiftDurationSummaryType {
-		STAFF,
-		TRIAL,
-		STAFF_OVERVIEW,
-		TRIAL_OVERVIEW,
-		UNDEFINED;
+		STAFF, TRIAL, STAFF_OVERVIEW, TRIAL_OVERVIEW, UNDEFINED;
 	}
 
 	public static ShiftDurationSummaryModel getCachedShiftDurationModel(StaffOutVO staff, Date now, HashMap<Long, ShiftDurationSummaryModel> shiftDurationModelCache) {

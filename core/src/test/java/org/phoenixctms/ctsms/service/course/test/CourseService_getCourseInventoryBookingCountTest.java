@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.course.CourseService#getCourseInventoryBookingCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
  */
-@Test(groups={"service","CourseService"})
+@Test(groups = { "service", "CourseService" })
 public class CourseService_getCourseInventoryBookingCountTest extends CourseServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getCourseInventoryBookingCount</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'CourseService_getCourseInventoryBookingCountTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.getCourseInventoryBookingCount]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getCourseInventoryBookingCount</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'CourseService_getCourseInventoryBookingCountTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'CourseService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.course.CourseService.getCourseInventoryBookingCount]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

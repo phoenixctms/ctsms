@@ -18,7 +18,6 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
-
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -26,9 +25,7 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
-
 	private int maxColumnIndex;
-
 	@Autowired
 	protected InputFieldService inputFieldService;
 
@@ -37,6 +34,7 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		maxColumnIndex = 0;
 	}
 
+	@Override
 	public String getSheetName() {
 		// return context.getSheetName(this);
 		return SHEET_NAME;
@@ -45,7 +43,6 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	@Override
 	public void init() {
 		super.init();
-
 		maxColumnIndex = 0;
 		fieldNameColumnIndex = FIELD_NAME_COLUMN_INDEX;
 		maxColumnIndex = Math.max(fieldNameColumnIndex, maxColumnIndex);

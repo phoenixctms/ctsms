@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.js;
 import jdk.nashorn.api.scripting.JSObject;
 //import sun.org.mozilla.javascript.internal.Scriptable;
 
-
 public class ValidationError {
 
 	private final static String ECRF_FIELD_ID = "ecrfFieldId";
@@ -12,6 +11,7 @@ public class ValidationError {
 	private final static String INDEX = "index";
 	private final static String SERIES = "series";
 	private final static String OUTPUT = "output";
+
 	private static Boolean convertToBoolean(Object o) {
 		try {
 			return Boolean.valueOf(o.toString());
@@ -19,6 +19,7 @@ public class ValidationError {
 		}
 		return null;
 	}
+
 	private static Long convertToLong(Object o) {
 		try {
 			return Long.parseLong(String.valueOf(o));
@@ -30,6 +31,7 @@ public class ValidationError {
 		}
 		return null;
 	}
+
 	private static String convertToString(Object o) {
 		try {
 			return o.toString();
@@ -37,14 +39,12 @@ public class ValidationError {
 		}
 		return null;
 	}
+
 	private Long ecrfFieldId;
 	private Long inquiryId;
 	private Long tagId;
-
 	private Boolean series;
-
 	private Long index;
-
 	private String output;
 
 	public ValidationError(JSObject msg) {

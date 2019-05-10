@@ -28,8 +28,7 @@ import org.phoenixctms.ctsms.vo.IcdSystVO;
  * @see IcdSyst
  */
 public class IcdSystDaoImpl
-extends IcdSystDaoBase
-{
+		extends IcdSystDaoBase {
 
 	private final static Pattern ICD_CODE_PATTERN_REGEXP = Pattern.compile("^([A-Z])(\\d{2,2})((\\.\\d)(\\d)?)?(\\*|\\+|!)?$");
 
@@ -39,8 +38,7 @@ extends IcdSystDaoBase
 	}
 
 	@Override
-	protected IcdSyst handleFindByIcdCode(String primaryCode, String asteriskCode, String optionalCode, String revision)
-	{
+	protected IcdSyst handleFindByIcdCode(String primaryCode, String asteriskCode, String optionalCode, String revision) {
 		String code = CommonUtil.isEmptyString(primaryCode) ? optionalCode : primaryCode;
 		if (!CommonUtil.isEmptyString(code)) {
 			Matcher matcher = ICD_CODE_PATTERN_REGEXP.matcher(code);
@@ -65,12 +63,11 @@ extends IcdSystDaoBase
 	}
 
 	@Override
-	protected long handleGetDiagnosisCount(String revision) throws Exception
-	{
+	protected long handleGetDiagnosisCount(String revision) throws Exception {
 		org.hibernate.Criteria icdSystCriteria = createIcdSystCriteria();
 		icdSystCriteria.add(Restrictions.eq("revision", revision));
 		icdSystCriteria.createCriteria("alphaIds", CriteriaSpecification.INNER_JOIN)
-		.createCriteria("diagnoses",CriteriaSpecification.INNER_JOIN);
+				.createCriteria("diagnoses", CriteriaSpecification.INNER_JOIN);
 		return (Long) icdSystCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -117,8 +114,7 @@ extends IcdSystDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSyst icdSystVOToEntity(IcdSystVO icdSystVO)
-	{
+	public IcdSyst icdSystVOToEntity(IcdSystVO icdSystVO) {
 		IcdSyst entity = this.loadIcdSystFromIcdSystVO(icdSystVO);
 		this.icdSystVOToEntity(icdSystVO, entity, true);
 		return entity;
@@ -131,8 +127,7 @@ extends IcdSystDaoBase
 	public void icdSystVOToEntity(
 			IcdSystVO source,
 			IcdSyst target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.icdSystVOToEntity(source, target, copyIfNull);
 		Collection blocks = source.getBlocks();
 		if (blocks.size() > 0) {
@@ -155,8 +150,7 @@ extends IcdSystDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private IcdSyst loadIcdSystFromIcdSystVO(IcdSystVO icdSystVO)
-	{
+	private IcdSyst loadIcdSystFromIcdSystVO(IcdSystVO icdSystVO) {
 		// TODO implement loadIcdSystFromIcdSystVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystFromIcdSystVO(IcdSystVO) not yet implemented.");
 		Long id = icdSystVO.getId();
@@ -164,8 +158,7 @@ extends IcdSystDaoBase
 		if (id != null) {
 			icdSyst = this.load(id);
 		}
-		if (icdSyst == null)
-		{
+		if (icdSyst == null) {
 			icdSyst = IcdSyst.Factory.newInstance();
 		}
 		return icdSyst;
@@ -219,8 +212,7 @@ extends IcdSystDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public IcdSystVO toIcdSystVO(final IcdSyst entity)
-	{
+	public IcdSystVO toIcdSystVO(final IcdSyst entity) {
 		return super.toIcdSystVO(entity);
 	}
 
@@ -230,8 +222,7 @@ extends IcdSystDaoBase
 	@Override
 	public void toIcdSystVO(
 			IcdSyst source,
-			IcdSystVO target)
-	{
+			IcdSystVO target) {
 		super.toIcdSystVO(source, target);
 		// WARNING! No conversion for target.blocks (can't convert source.getBlocks():org.phoenixctms.ctsms.domain.IcdSystBlock to org.phoenixctms.ctsms.vo.IcdSystBlockVO
 		// WARNING! No conversion for target.categories (can't convert source.getCategories():org.phoenixctms.ctsms.domain.IcdSystCategory to org.phoenixctms.ctsms.vo.IcdSystCategoryVO

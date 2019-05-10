@@ -81,8 +81,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		ProbandStatusEntryInVO backup = new ProbandStatusEntryInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();
@@ -251,7 +250,6 @@ public class ProbandStatusBean extends ManagedBeanBase {
 		proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);
 		Collection<ProbandStatusTypeVO> statusTypeVOs = null;
 		if (proband != null) {
-
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getProbandStatusTypes(WebUtil.getAuthentication(), proband.getPerson() ? true : null, !proband.getPerson() ? true : null, in.getTypeId());

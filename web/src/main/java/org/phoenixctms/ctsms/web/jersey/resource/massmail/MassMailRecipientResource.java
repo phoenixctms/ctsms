@@ -72,7 +72,6 @@ public class MassMailRecipientResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		EmailAttachmentVO out = (new ArrayList<EmailAttachmentVO>(WebUtil.getServiceLocator().getMassMailService().getEmailMessage(auth, id).getAttachments())).get(index);
 		out.setDatas(null);
-		
 		return out;
 	}
 

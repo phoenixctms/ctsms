@@ -61,8 +61,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		InventoryBookingInVO backup = new InventoryBookingInVO(in);
 		// Long idBackup = in.getId();
 		// Long versionBackup = in.getVersion();

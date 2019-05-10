@@ -44,4 +44,3 @@ public class EcrfPositionCollisionFinder extends CollisionFinder<ECRFInVO, ECRF,
 		return in.getId() == null;
 	}
 }
-

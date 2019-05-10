@@ -15,7 +15,6 @@ public class TitleLineProcessor extends LineProcessor {
 
 	public TitleLineProcessor() {
 		super();
-
 	}
 
 	private Title createTitle(String[] values) {
@@ -42,8 +41,8 @@ public class TitleLineProcessor extends LineProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getTitle(values))
-		.toHashCode();
+				.append(getTitle(values))
+				.toHashCode();
 	}
 
 	@Override

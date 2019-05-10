@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.proband;
 
-
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -19,7 +18,6 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 	private VisitScheduleItemOutVO visitScheduleItem;
 	private float visitReimbursementAmount;
 	private int visitScheduleItemCount;
-
 	private final static boolean ALIQUOT_VISIT_REIMBURSEMENT = false;
 
 	public AddVisitScheduleItemReimbursementBean() {
@@ -41,9 +39,6 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 		return CHANGE_OUTCOME;
 	}
 
-
-
-
 	@Override
 	protected String getComment() {
 		StringBuilder comment = new StringBuilder();
@@ -52,7 +47,6 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 			appendTicketExpenseComment(comment, visitScheduleItem.getStart(), getReimbursementTitle());
 			appendAccommodationExpenseComment(comment, visitScheduleItem.getStart(), visitScheduleItem.getStop());
 			appendReimbursementComment(comment, visitScheduleItem.getStart(), getReimbursementTitle());
-
 		}
 		return comment.toString();
 	}
@@ -100,7 +94,7 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 							.getTrialService()
 							.getVisitScheduleItemCount(WebUtil.getAuthentication(), visitScheduleItem.getTrial().getId(),
 									visitScheduleItem.getGroup() != null ? visitScheduleItem.getGroup().getId() : null,
-											visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId));
+									visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId));
 					// count = psf.getRowCount();
 				} catch (ServiceException e) {
 				} catch (AuthenticationException e) {
@@ -110,7 +104,7 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 				}
 			}
 			if (visitScheduleItemCount > 1) {
-				reimbursementAmount = (Float) (reimbursementAmount / ((float) visitScheduleItemCount));
+				reimbursementAmount = reimbursementAmount / (visitScheduleItemCount);
 			}
 			addReimbursement = reimbursementAmount > 0.0f;
 			// addTravelExpense = address != null;

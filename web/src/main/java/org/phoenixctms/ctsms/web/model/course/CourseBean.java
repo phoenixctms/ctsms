@@ -99,6 +99,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setValidityPeriodDays(out.getValidityPeriodDays());
 		}
 	}
+
 	private static CourseOutVO createCourseOutFromIn(CourseInVO in) {
 		CourseOutVO result = new CourseOutVO();
 		if (in != null) {
@@ -130,6 +131,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 		return result;
 	}
+
 	public static void initCourseDefaultValues(CourseInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setCategoryId(null);
@@ -148,7 +150,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					DefaultSettings.COURSE_MAX_NUMBER_OF_PARTICIPANTS_PRESET));
 			in.setName(Messages.getString(MessageCodes.COURSE_NAME_PRESET));
 			in.setPrecedingCourseIds(new ArrayList<Long>());
-			in.setShowCommentCvPreset(Settings.getBoolean(SettingCodes.COURSE_SHOW_COMMENT_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_COMMENT_CV_PRESET_PRESET));
+			in.setShowCommentCvPreset(
+					Settings.getBoolean(SettingCodes.COURSE_SHOW_COMMENT_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_COMMENT_CV_PRESET_PRESET));
 			in.setShowCvPreset(Settings.getBoolean(SettingCodes.COURSE_SHOW_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_CV_PRESET_PRESET));
 			int courseDurationDays = Settings.getInt(SettingCodes.COURSE_DURATION_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_DURATION_DAYS_PRESET);
 			if (courseDurationDays > 0) {
@@ -162,9 +165,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					DefaultSettings.COURSE_DEADLINE_START_DAYS_PRESET);
 			in.setParticipationDeadline(courseDeadlineStartDays == null ? null : DateUtil.addDayMinuteDelta(in.getStart(), -1 * courseDeadlineStartDays, 0));
 			in.setValidityPeriod(Settings.getVariablePeriod(SettingCodes.COURSE_VALIDITY_PERIOD_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_VALIDITY_PERIOD_PRESET));
-			in.setValidityPeriodDays(Settings.getLongNullable(SettingCodes.COURSE_VALIDITY_PERIOD_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_VALIDITY_PERIOD_DAYS_PRESET));
+			in.setValidityPeriodDays(
+					Settings.getLongNullable(SettingCodes.COURSE_VALIDITY_PERIOD_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_VALIDITY_PERIOD_DAYS_PRESET));
 		}
 	}
+
 	private CourseInVO in;
 	private CourseOutVO out;
 	private ArrayList<SelectItem> categories;
@@ -174,12 +179,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private TreeNode renewalsRoot;
 	private TreeNode precedingCoursesRoot;
 	private CourseMultiPickerModel precedingCourseMultiPicker;
-
 	private VariablePeriodSelector validity;
 	private String deferredDeleteReason;
-
 	private Date today;
-
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 
@@ -202,8 +204,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	}
 
 	@Override
-	public String addAction()
-	{
+	public String addAction() {
 		CourseInVO backup = new CourseInVO(in);
 		in.setId(null);
 		in.setVersion(null);
@@ -256,7 +257,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					JSValues.AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT, MessageCodes.ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE,
 					MessageCodes.ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_COURSE_HYPERLINK_TAB_TITLE_BASE64, JSValues.AJAX_COURSE_HYPERLINK_COUNT,
-					MessageCodes.COURSE_HYPERLINKS_TAB_TITLE, MessageCodes.COURSE_HYPERLINKS_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString()));
+					MessageCodes.COURSE_HYPERLINKS_TAB_TITLE, MessageCodes.COURSE_HYPERLINKS_TAB_TITLE_WITH_COUNT,
+					tabCountMap.get(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_COURSE_FILE_TAB_TITLE_BASE64, JSValues.AJAX_COURSE_FILE_COUNT,
 					MessageCodes.COURSE_FILES_TAB_TITLE, MessageCodes.COURSE_FILES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_COURSE_FILE_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_COURSE_JOURNAL_ENTRY_COUNT,
@@ -646,7 +648,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
 		Long count = (out == null ? null : WebUtil.getLecturerCount(in.getId(), null));
@@ -675,7 +676,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		today = new Date();
 		renewalsRoot.getChildren().clear();
 		precedingCoursesRoot.getChildren().clear();
-
 		if (out != null) {
 			// courseOutVOtoRenewalTreeNode1
 			courseOutVOtoPrecedingCourseTreeNode(out, precedingCoursesRoot, new ArrayList<IDVOTreeNode>(),
@@ -721,10 +721,12 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		return Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE);
 	}
 
+	@Override
 	public boolean isEditable() {
 		return WebUtil.getModuleEnabled(DBModule.COURSE_DB) && super.isEditable();
 	}
 
+	@Override
 	public boolean isRemovable() {
 		return WebUtil.getModuleEnabled(DBModule.COURSE_DB) && super.isRemovable();
 	}

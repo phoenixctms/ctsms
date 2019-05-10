@@ -24,8 +24,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see Signature
  */
 public class SignatureDaoImpl
-extends SignatureDaoBase
-{
+		extends SignatureDaoBase {
 
 	@Override
 	protected Signature handleAddEcrfSignature(ECRFStatusEntry ecrfStatusEntry, Timestamp now)
@@ -57,8 +56,7 @@ extends SignatureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Signature handleFindRecentSignature(SignatureModule module, Long id)
-	{
+	protected Signature handleFindRecentSignature(SignatureModule module, Long id) {
 		org.hibernate.Criteria signatureCriteria = this.getSession().createCriteria(Signature.class);
 		if (module != null) {
 			signatureCriteria.add(Restrictions.eq("module", module));
@@ -84,15 +82,13 @@ extends SignatureDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Signature loadSignatureFromSignatureVO(SignatureVO signatureVO)
-	{
+	private Signature loadSignatureFromSignatureVO(SignatureVO signatureVO) {
 		Long id = signatureVO.getId();
 		Signature signature = null;
 		if (id != null) {
 			signature = this.load(id);
 		}
-		if (signature == null)
-		{
+		if (signature == null) {
 			signature = Signature.Factory.newInstance();
 		}
 		return signature;
@@ -102,8 +98,7 @@ extends SignatureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public Signature signatureVOToEntity(SignatureVO signatureVO)
-	{
+	public Signature signatureVOToEntity(SignatureVO signatureVO) {
 		Signature entity = this.loadSignatureFromSignatureVO(signatureVO);
 		this.signatureVOToEntity(signatureVO, entity, true);
 		return entity;
@@ -116,8 +111,7 @@ extends SignatureDaoBase
 	public void signatureVOToEntity(
 			SignatureVO source,
 			Signature target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.signatureVOToEntity(source, target, copyIfNull);
 		UserOutVO signeeVO = source.getSignee();
 		TrialOutVO trialVO = source.getTrial();
@@ -161,8 +155,7 @@ extends SignatureDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public SignatureVO toSignatureVO(final Signature entity)
-	{
+	public SignatureVO toSignatureVO(final Signature entity) {
 		return super.toSignatureVO(entity);
 	}
 
@@ -172,8 +165,7 @@ extends SignatureDaoBase
 	@Override
 	public void toSignatureVO(
 			Signature source,
-			SignatureVO target)
-	{
+			SignatureVO target) {
 		super.toSignatureVO(source, target);
 		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		// WARNING! No conversion for target.signee (can't convert source.getSignee():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO

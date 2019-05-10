@@ -181,7 +181,6 @@ public interface SystemMessageCodes {
 	public final static String INQUIRY_POSITIONS_NORMALIZED = "inquiry_positions_normalized";
 	public final static String INQUIRY_POSITIONS_ROTATED_DOWN = "inquiry_positions_rotated_down";
 	public final static String INQUIRY_POSITIONS_ROTATED_UP = "inquiry_positions_rotated_up";
-
 	public final static String PROBAND_LIST_ENTRY_MOVED_TO_FIRST_POSITION = "proband_list_entry_moved_to_first_position";
 	public final static String PROBAND_LIST_ENTRY_MOVED_UP = "proband_list_entry_moved_up";
 	public final static String PROBAND_LIST_ENTRY_MOVED_DOWN = "proband_list_entry_moved_down";

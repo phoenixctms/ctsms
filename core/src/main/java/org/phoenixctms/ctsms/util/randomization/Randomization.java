@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.util.randomization;
 
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -69,8 +68,9 @@ public abstract class Randomization {
 	private final static boolean TRIM_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = true;
 	private final static boolean TRIM_INPUT_FIELD_TEXT_VALUE = true;
 
-	public final static void checkInputFieldSelectionSetValueInput(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueIn, ProbandListEntryTagDao probandListEntryTagDao) throws ServiceException {
-		if ( probandListEntryTagDao.getCountByFieldStratificationRandomize(inputFieldSelectionSetValueIn.getFieldId(), null, true) > 0) {
+	public final static void checkInputFieldSelectionSetValueInput(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueIn, ProbandListEntryTagDao probandListEntryTagDao)
+			throws ServiceException {
+		if (probandListEntryTagDao.getCountByFieldStratificationRandomize(inputFieldSelectionSetValueIn.getFieldId(), null, true) > 0) {
 			checkInputFieldSelectionSetValueValue(inputFieldSelectionSetValueIn.getValue());
 		}
 	}
@@ -115,7 +115,7 @@ public abstract class Randomization {
 			ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao)
-					throws ServiceException {
+			throws ServiceException {
 		if (listTagIn.isStratification()) {
 			if (listTagIn.isRandomize()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_STRATIFIKATION_AND_RANDOMIZE);
@@ -131,7 +131,6 @@ public abstract class Randomization {
 				getInstance(trial.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
 						inputFieldSelectionSetValueDao, probandListEntryTagValueDao).checkProbandListEntryTagField(trial, field);
 			}
-
 			if ((new ProbandListEntryTagRandomizeCollisionFinder(trialDao, probandListEntryTagDao)).collides(listTagIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_NOT_UNIQUE);
 			}
@@ -289,12 +288,12 @@ public abstract class Randomization {
 		return result;
 	}
 
-	protected final static void splitInputFieldSelectionSetValueValues(String randomizationBlock, HashMap<String, InputFieldSelectionSetValue> inputFieldSelectionSetValueMap, ArrayList<String> values)
+	protected final static void splitInputFieldSelectionSetValueValues(String randomizationBlock, HashMap<String, InputFieldSelectionSetValue> inputFieldSelectionSetValueMap,
+			ArrayList<String> values)
 			throws ServiceException {
 		// ArrayList<String> result = new ArrayList<String>();
-
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
-			String[] block  =RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
+			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
 			for (int i = 0; i < block.length; i++) {
 				String value = (TRIM_INPUT_FIELD_SELECTION_SET_VALUE_VALUE ? block[i].trim() : block[i]);
 				if (!CommonUtil.isEmptyString(value)) {
@@ -335,9 +334,8 @@ public abstract class Randomization {
 	protected final static void splitProbandGroupTokens(String randomizationBlock, HashMap<String, ProbandGroup> probandGroupMap, ArrayList<String> tokens)
 			throws ServiceException {
 		// ArrayList<String> result = new ArrayList<String>();
-
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
-			String[] block  =RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
+			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
 			for (int i = 0; i < block.length; i++) {
 				String token = (TRIM_PROBAND_GROUP_TOKEN ? block[i].trim() : block[i]);
 				if (!CommonUtil.isEmptyString(token)) {
@@ -346,7 +344,7 @@ public abstract class Randomization {
 							tokens.add(token);
 						}
 					} else {
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_PROBAND_GROUP_TOKEN,token);
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_PROBAND_GROUP_TOKEN, token);
 					}
 				}
 			}
@@ -355,26 +353,16 @@ public abstract class Randomization {
 	}
 
 	protected TrialDao trialDao;
-
 	protected ProbandGroupDao probandGroupDao;
-
 	protected ProbandListEntryDao probandListEntryDao;
-
 	protected StratificationRandomizationListDao stratificationRandomizationListDao;
-
 	protected ProbandListEntryTagDao probandListEntryTagDao;
-
 	protected InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao;
 	protected ProbandListEntryTagValueDao probandListEntryTagValueDao;
-
 	private Random random;
-
 	private boolean locked;
-
 	protected RandomizationInfoVO randomizationInfo;
-
 	private RandomizationListInfoVO randomizationListInfo;
-
 
 	protected Randomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
@@ -405,11 +393,9 @@ public abstract class Randomization {
 		checkProbandListEntryTagField(trial, randomizationTag.getField());
 		return randomizationTag;
 	}
-
 	// protected abstract void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException;
 
 	// protected abstract void checkProbandListEntryTagInputFieldSelectionSetValueValuesInput() throws ServiceException ;
-
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn)
 			throws ServiceException {
 	}
@@ -420,11 +406,10 @@ public abstract class Randomization {
 	public final String generateRandomizationList(Trial trial, int n) throws Exception {
 		randomizationListInfo = new RandomizationListInfoVO();
 		TreeSet<String> items = getRandomizationListItems(trial);
-
 		randomizationListInfo.setItems(new ArrayList<String>(items));
 		if (n > 0) {
 			randomizationListInfo.setN(n);
-			StringBuilder sb =  new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			//ArrayList<String> result = new ArrayList<String>(tokens.size() * n);
 			int blocks = (int) Math.ceil(((double) n) / ((double) items.size()));
 			int count = 0;
@@ -457,7 +442,6 @@ public abstract class Randomization {
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.POPULATION_LESS_THAN_ONE);
 		}
-
 	}
 
 	protected final Random getRandom(Trial trial) throws NoSuchAlgorithmException, ClassNotFoundException, IOException {
@@ -474,7 +458,6 @@ public abstract class Randomization {
 		}
 		return random;
 	}
-
 
 	protected final Collection<ProbandGroup> getRandomizationGroups(Trial trial) throws ServiceException {
 		return probandGroupDao.findByTrialRandomize(trial.getId(), true);
@@ -525,8 +508,6 @@ public abstract class Randomization {
 		return randomizationListInfo;
 	}
 
-
-
 	protected final TreeSet<String> getRandomizationListInputFieldSelectionSetValueValues(Trial trial) throws Exception {
 		TreeSet<String> values = new TreeSet<String>();
 		Iterator<InputFieldSelectionSetValue> it = getRandomizationInputFieldSelectionSetValues(trial).iterator();
@@ -540,7 +521,6 @@ public abstract class Randomization {
 		}
 		return values;
 	}
-
 
 	protected TreeSet<String> getRandomizationListItems(Trial trial) throws Exception {
 		throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_LISTS_NOT_SUPPORTED,
@@ -597,20 +577,20 @@ public abstract class Randomization {
 		return group;
 	}
 
-	protected final StratificationRandomizationList getStratificationRandomizationList(Trial trial,ProbandListEntry exclude) throws ServiceException {
+	protected final StratificationRandomizationList getStratificationRandomizationList(Trial trial, ProbandListEntry exclude) throws ServiceException {
 		if (exclude != null) {
-
 			Iterator<ProbandListEntryTag> tagIt = probandListEntryTagDao.findByTrialFieldStratificationRandomize(trial.getId(), null, true, null).iterator();
 			HashSet<Long> selectionSetValueIds = new HashSet<Long>();
 			StringBuilder sb = new StringBuilder();
-
 			while (tagIt.hasNext()) {
 				ProbandListEntryTag tag = tagIt.next();
 				InputFieldSelectionSetValue selectionSetValue;
 				try {
-					selectionSetValue = probandListEntryTagValueDao.findByListEntryListEntryTag(exclude.getId(), tag.getId()).iterator().next().getValue().getSelectionValues().iterator().next();
+					selectionSetValue = probandListEntryTagValueDao.findByListEntryListEntryTag(exclude.getId(), tag.getId()).iterator().next().getValue().getSelectionValues()
+							.iterator().next();
 				} catch (NoSuchElementException e) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.STRATIFICATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED,probandListEntryTagDao.toProbandListEntryTagOutVO(tag).getUniqueName());
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.STRATIFICATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED,
+							probandListEntryTagDao.toProbandListEntryTagOutVO(tag).getUniqueName());
 				}
 				selectionSetValueIds.add(selectionSetValue.getId());
 				if (sb.length() > 0) {
@@ -635,7 +615,6 @@ public abstract class Randomization {
 	// protected abstract InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception;
 	// protected abstract String randomizeInputFieldTextValue(Trial trial, ProbandListEntry exclude) throws Exception;
 	// protected abstract ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception;
-
 	protected final void initGroupsInfo(Collection<ProbandGroup> probandGroups) {
 		randomizationInfo.setSizes(new HashMap<String, Long>());
 		Iterator<ProbandGroup> it = probandGroups.iterator();
@@ -649,7 +628,6 @@ public abstract class Randomization {
 		while (it.hasNext()) {
 			randomizationInfo.getStratificationValues().add(it.next().getValue());
 		}
-
 	}
 
 	protected final void initValuesInfo(Collection<InputFieldSelectionSetValue> values) {

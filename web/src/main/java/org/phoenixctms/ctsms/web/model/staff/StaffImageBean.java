@@ -41,8 +41,9 @@ public class StaffImageBean extends PhotoBeanBase {
 			in.setFileTimestamp(out.getFileTimestamp());
 			in.setId(out.getId());
 			in.setMimeType(contentTypeVO == null ? null : contentTypeVO.getMimeType());
-			in.setShowCv(out.getHasImage() ? out.getShowCv() : Settings.getBoolean(SettingCodes.STAFF_IMAGE_SHOW_CV_PRESET, Bundle.SETTINGS,
-					DefaultSettings.STAFF_IMAGE_SHOW_CV_PRESET));
+			in.setShowCv(out.getHasImage() ? out.getShowCv()
+					: Settings.getBoolean(SettingCodes.STAFF_IMAGE_SHOW_CV_PRESET, Bundle.SETTINGS,
+							DefaultSettings.STAFF_IMAGE_SHOW_CV_PRESET));
 			in.setVersion(out.getVersion());
 		}
 	}

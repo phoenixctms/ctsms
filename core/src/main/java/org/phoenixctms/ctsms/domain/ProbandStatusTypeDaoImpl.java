@@ -17,15 +17,13 @@ import org.phoenixctms.ctsms.vo.ProbandStatusTypeVO;
  * @see ProbandStatusType
  */
 public class ProbandStatusTypeDaoImpl
-extends ProbandStatusTypeDaoBase
-{
+		extends ProbandStatusTypeDaoBase {
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<ProbandStatusType> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long typeId)
-	{
+	protected Collection<ProbandStatusType> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long typeId) {
 		org.hibernate.Criteria statusTypeCriteria = this.getSession().createCriteria(ProbandStatusType.class);
 		statusTypeCriteria.setCacheable(true);
 		// CriteriaUtil.applyVisibleIdCriterion("visible", statusTypeCriteria, visible, typeId);
@@ -51,15 +49,13 @@ extends ProbandStatusTypeDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private ProbandStatusType loadProbandStatusTypeFromProbandStatusTypeVO(ProbandStatusTypeVO probandStatusTypeVO)
-	{
+	private ProbandStatusType loadProbandStatusTypeFromProbandStatusTypeVO(ProbandStatusTypeVO probandStatusTypeVO) {
 		ProbandStatusType probandStatusType = null;
 		Long id = probandStatusTypeVO.getId();
 		if (id != null) {
 			probandStatusType = this.load(id);
 		}
-		if (probandStatusType == null)
-		{
+		if (probandStatusType == null) {
 			probandStatusType = ProbandStatusType.Factory.newInstance();
 		}
 		return probandStatusType;
@@ -69,8 +65,7 @@ extends ProbandStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusType probandStatusTypeVOToEntity(ProbandStatusTypeVO probandStatusTypeVO)
-	{
+	public ProbandStatusType probandStatusTypeVOToEntity(ProbandStatusTypeVO probandStatusTypeVO) {
 		ProbandStatusType entity = this.loadProbandStatusTypeFromProbandStatusTypeVO(probandStatusTypeVO);
 		this.probandStatusTypeVOToEntity(probandStatusTypeVO, entity, true);
 		return entity;
@@ -83,8 +78,7 @@ extends ProbandStatusTypeDaoBase
 	public void probandStatusTypeVOToEntity(
 			ProbandStatusTypeVO source,
 			ProbandStatusType target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.probandStatusTypeVOToEntity(source, target, copyIfNull);
 	}
 
@@ -92,8 +86,7 @@ extends ProbandStatusTypeDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public ProbandStatusTypeVO toProbandStatusTypeVO(final ProbandStatusType entity)
-	{
+	public ProbandStatusTypeVO toProbandStatusTypeVO(final ProbandStatusType entity) {
 		return super.toProbandStatusTypeVO(entity);
 	}
 
@@ -103,8 +96,7 @@ extends ProbandStatusTypeDaoBase
 	@Override
 	public void toProbandStatusTypeVO(
 			ProbandStatusType source,
-			ProbandStatusTypeVO target)
-	{
+			ProbandStatusTypeVO target) {
 		super.toProbandStatusTypeVO(source, target);
 		target.setName(L10nUtil.getProbandStatusTypeName(Locales.USER, source.getNameL10nKey()));
 	}

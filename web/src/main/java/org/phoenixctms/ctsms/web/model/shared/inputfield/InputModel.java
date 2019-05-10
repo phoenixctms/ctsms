@@ -53,7 +53,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			// appendRequestContextCallbackArgs(new ArrayList());
 		} else if (out instanceof Collection) {
 			if (((Collection) out).size() > 0) {
-				appendRequestContextCallbackArgs((Collection) out);
+				appendRequestContextCallbackArgs(out);
 			}
 		} else {
 			ArrayList collection = new ArrayList();

@@ -1,4 +1,3 @@
-
 package org.phoenixctms.ctsms.web.model.shared.search;
 
 import java.util.ArrayList;

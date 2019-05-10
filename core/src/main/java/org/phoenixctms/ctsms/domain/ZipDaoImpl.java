@@ -25,8 +25,7 @@ import org.phoenixctms.ctsms.vo.ZipVO;
  * @see Zip
  */
 public class ZipDaoImpl
-		extends ZipDaoBase
-{
+		extends ZipDaoBase {
 
 	private static void applyZipCriterions(org.hibernate.Criteria zipCriteria, String countryNameInfix,
 			String zipCodePrefix, String cityNameInfix) {
@@ -88,8 +87,7 @@ public class ZipDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Zip loadZipFromZipVO(ZipVO zipVO)
-	{
+	private Zip loadZipFromZipVO(ZipVO zipVO) {
 		// TODO implement loadZipFromZipVO
 		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadZipFromZipVO(ZipVO) not yet implemented.");
 		Zip zip = null;
@@ -97,8 +95,7 @@ public class ZipDaoImpl
 		if (id != null) {
 			zip = this.load(id);
 		}
-		if (zip == null)
-		{
+		if (zip == null) {
 			zip = Zip.Factory.newInstance();
 		}
 		return zip;
@@ -108,8 +105,7 @@ public class ZipDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public ZipVO toZipVO(final Zip entity)
-	{
+	public ZipVO toZipVO(final Zip entity) {
 		return super.toZipVO(entity);
 	}
 
@@ -119,8 +115,7 @@ public class ZipDaoImpl
 	@Override
 	public void toZipVO(
 			Zip source,
-			ZipVO target)
-	{
+			ZipVO target) {
 		super.toZipVO(source, target);
 	}
 
@@ -128,8 +123,7 @@ public class ZipDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	public Zip zipVOToEntity(ZipVO zipVO)
-	{
+	public Zip zipVOToEntity(ZipVO zipVO) {
 		Zip entity = this.loadZipFromZipVO(zipVO);
 		this.zipVOToEntity(zipVO, entity, true);
 		return entity;
@@ -142,8 +136,7 @@ public class ZipDaoImpl
 	public void zipVOToEntity(
 			ZipVO source,
 			Zip target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.zipVOToEntity(source, target, copyIfNull);
 	}
 }

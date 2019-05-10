@@ -130,7 +130,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private Collection<ProbandListEntryTagValueJsonVO> jsTagValuesOut;
 	private ProbandListEntryTagInputModelList inputModels;
 	private List<Object[]> paddedInputModels;
-
 	// private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<ProbandGroupOutVO> probandGroups;
 
@@ -319,8 +318,10 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	public StreamedContent getProbandListEntryTagPdfStreamedContent(boolean blank) throws Exception {
 		if (probandListEntry != null) {
 			try {
-				ProbandListEntryTagsPDFVO probandListEntryTagPdf = WebUtil.getServiceLocator().getTrialService().renderProbandListEntryTags(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), probandListEntry.getProband().getId(), blank);
-				return new DefaultStreamedContent(new ByteArrayInputStream(probandListEntryTagPdf.getDocumentDatas()), probandListEntryTagPdf.getContentType().getMimeType(), probandListEntryTagPdf.getFileName());
+				ProbandListEntryTagsPDFVO probandListEntryTagPdf = WebUtil.getServiceLocator().getTrialService().renderProbandListEntryTags(WebUtil.getAuthentication(),
+						probandListEntry.getTrial().getId(), probandListEntry.getProband().getId(), blank);
+				return new DefaultStreamedContent(new ByteArrayInputStream(probandListEntryTagPdf.getDocumentDatas()), probandListEntryTagPdf.getContentType().getMimeType(),
+						probandListEntryTagPdf.getFileName());
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
@@ -436,7 +437,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	// public boolean isInputVisible() {
 	// return isCreated() || (!WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry));
 	// }
-
 	@Override
 	public boolean isEditable() {
 		return ((probandListEntryId != null && tagValuesIn.size() > 0 && !WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry)) ? true : false);
@@ -456,7 +456,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 					.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, true, paginator.getPsf()));
 			return LOAD_OUTCOME;
 		} catch (ServiceException e) {
-			Messages.addMessageClientId("probandListEntryTagValueMessages",FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
@@ -470,7 +470,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 		return ERROR_OUTCOME;
 	}
-
 	// private Collection<ProbandAddressOutVO> loadProbandAddresses(Long probandId) {
 	// if ( probandId != null) {
 	// try {
@@ -502,7 +501,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	// }
 	// return null;
 	// }
-
 	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
 		if (listEntry != null) { // && listEntry.getGroup() == null) {
 			try {

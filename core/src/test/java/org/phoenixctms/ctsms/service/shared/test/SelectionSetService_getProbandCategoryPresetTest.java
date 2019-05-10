@@ -13,29 +13,27 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.SelectionSetService#getProbandCategoryPreset(org.phoenixctms.ctsms.vo.AuthenticationVO, boolean, boolean)
  */
-@Test(groups={"service","SelectionSetService"})
+@Test(groups = { "service", "SelectionSetService" })
 public class SelectionSetService_getProbandCategoryPresetTest extends SelectionSetServiceBaseTest {
 
-  /**
-   * Test succes path for service method <code>getProbandCategoryPreset</code>
-   *
-   * Tests expected behaviour of service method.
-   */
-  @Test
-  public void testSuccessPath() {
-    Assert.fail( "Test 'SelectionSetService_getProbandCategoryPresetTest.testSuccessPath()}' not implemented." );
-  }
-
-  /*
-   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getProbandCategoryPreset]()' service method.
-   */
-
-  /**
-   * Test special case XYZ for service method <code></code>
-   */
-  /*
-  @Test
-  public void testCaseXYZ() {
-  }
-  */
+	/**
+	 * Test succes path for service method <code>getProbandCategoryPreset</code>
+	 *
+	 * Tests expected behaviour of service method.
+	 */
+	@Test
+	public void testSuccessPath() {
+		Assert.fail("Test 'SelectionSetService_getProbandCategoryPresetTest.testSuccessPath()}' not implemented.");
+	}
+	/*
+	 * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getProbandCategoryPreset]()' service method.
+	 */
+	/**
+	 * Test special case XYZ for service method <code></code>
+	 */
+	/*
+	@Test
+	public void testCaseXYZ() {
+	}
+	*/
 }

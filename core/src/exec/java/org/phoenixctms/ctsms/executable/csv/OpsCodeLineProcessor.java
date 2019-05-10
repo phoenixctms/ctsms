@@ -71,11 +71,11 @@ public class OpsCodeLineProcessor extends LineProcessor {
 
 	private HashCodeBuilder getHashCodeBuilder(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-		.append(getType(values))
-		.append(getDimdiId(values))
-		.append(getFirstCode(values))
-		.append(getSecondCode(values))
-		.append(getText(values));
+				.append(getType(values))
+				.append(getDimdiId(values))
+				.append(getFirstCode(values))
+				.append(getSecondCode(values))
+				.append(getText(values));
 	}
 
 	public String getOpsSystRevision() {

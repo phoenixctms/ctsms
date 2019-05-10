@@ -19,8 +19,7 @@ import org.phoenixctms.ctsms.vo.JournalCategoryVO;
  * @see JournalCategory
  */
 public class JournalCategoryDaoImpl
-extends JournalCategoryDaoBase
-{
+		extends JournalCategoryDaoBase {
 
 	private org.hibernate.Criteria createCategoryCriteria() {
 		org.hibernate.Criteria categoryCriteria = this.getSession().createCriteria(JournalCategory.class);
@@ -62,8 +61,7 @@ extends JournalCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalCategory journalCategoryVOToEntity(JournalCategoryVO journalCategoryVO)
-	{
+	public JournalCategory journalCategoryVOToEntity(JournalCategoryVO journalCategoryVO) {
 		JournalCategory entity = this.loadJournalCategoryFromJournalCategoryVO(journalCategoryVO);
 		this.journalCategoryVOToEntity(journalCategoryVO, entity, true);
 		return entity;
@@ -76,8 +74,7 @@ extends JournalCategoryDaoBase
 	public void journalCategoryVOToEntity(
 			JournalCategoryVO source,
 			JournalCategory target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.journalCategoryVOToEntity(source, target, copyIfNull);
 	}
 
@@ -86,15 +83,13 @@ extends JournalCategoryDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private JournalCategory loadJournalCategoryFromJournalCategoryVO(JournalCategoryVO journalCategoryVO)
-	{
+	private JournalCategory loadJournalCategoryFromJournalCategoryVO(JournalCategoryVO journalCategoryVO) {
 		JournalCategory journalCategory = null;
 		Long id = journalCategoryVO.getId();
 		if (id != null) {
 			journalCategory = this.load(id);
 		}
-		if (journalCategory == null)
-		{
+		if (journalCategory == null) {
 			journalCategory = JournalCategory.Factory.newInstance();
 		}
 		return journalCategory;
@@ -104,8 +99,7 @@ extends JournalCategoryDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public JournalCategoryVO toJournalCategoryVO(final JournalCategory entity)
-	{
+	public JournalCategoryVO toJournalCategoryVO(final JournalCategory entity) {
 		return super.toJournalCategoryVO(entity);
 	}
 
@@ -115,8 +109,7 @@ extends JournalCategoryDaoBase
 	@Override
 	public void toJournalCategoryVO(
 			JournalCategory source,
-			JournalCategoryVO target)
-	{
+			JournalCategoryVO target) {
 		super.toJournalCategoryVO(source, target);
 		target.setName(L10nUtil.getJournalCategoryName(Locales.USER, source.getNameL10nKey()));
 		target.setTitlePreset(L10nUtil.getJournalTitlePreset(Locales.USER, source.getTitlePresetL10nKey()));

@@ -47,8 +47,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
  * @see org.phoenixctms.ctsms.service.shared.HyperlinkService
  */
 public class HyperlinkServiceImpl
-extends HyperlinkServiceBase
-{
+		extends HyperlinkServiceBase {
 
 	private final static java.util.regex.Pattern URL_REGEXP = Pattern.compile("^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$", Pattern.CASE_INSENSITIVE);
 
@@ -146,8 +145,7 @@ extends HyperlinkServiceBase
 	 */
 	@Override
 	protected HyperlinkOutVO handleAddHyperlink(AuthenticationVO auth, HyperlinkInVO newHyperlink)
-			throws Exception
-			{
+			throws Exception {
 		checkHyperlinkInput(newHyperlink);
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink hyperlink = hyperlinkDao.hyperlinkInVOToEntity(newHyperlink);
@@ -176,15 +174,14 @@ extends HyperlinkServiceBase
 						new Object[] { hyperlink.getCategory().getModule().toString() }));
 		}
 		return result;
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.HyperlinkService#deleteHyperlink(Long)
 	 */
 	@Override
 	protected HyperlinkOutVO handleDeleteHyperlink(AuthenticationVO auth, Long hyperlinkId)
-			throws Exception
-			{
+			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink hyperlink = CheckIDUtil.checkHyperlinkId(hyperlinkId, hyperlinkDao);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
@@ -227,50 +224,46 @@ extends HyperlinkServiceBase
 						new Object[] { hyperlink.getCategory().getModule().toString() }));
 		}
 		return result;
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.HyperlinkService#getHyperlink(Long)
 	 */
 	@Override
 	protected HyperlinkOutVO handleGetHyperlink(AuthenticationVO auth, Long hyperlinkId)
-			throws Exception
-			{
+			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink hyperlink = CheckIDUtil.checkHyperlinkId(hyperlinkId, hyperlinkDao);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
 		return result;
-			}
+	}
 
 	@Override
 	protected long handleGetHyperlinkCount(AuthenticationVO auth, HyperlinkModule module, Long id, Boolean active)
-			throws Exception
-			{
+			throws Exception {
 		checkHyperlinkModuleId(module, id);
 		return this.getHyperlinkDao().getCount(module, id, active);
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.HyperlinkService#getHyperlinks(HyperlinkModule, Long, PSFVO)
 	 */
 	@Override
 	protected Collection<HyperlinkOutVO> handleGetHyperlinks(AuthenticationVO auth, HyperlinkModule module, Long id, Boolean active, PSFVO psf)
-			throws Exception
-			{
+			throws Exception {
 		checkHyperlinkModuleId(module, id);
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Collection hyperlinks = hyperlinkDao.findHyperlinks(module, id, active, psf);
 		hyperlinkDao.toHyperlinkOutVOCollection(hyperlinks);
 		return hyperlinks;
-			}
+	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.HyperlinkService#updateHyperlink(HyperlinkInVO, Long)
 	 */
 	@Override
 	protected HyperlinkOutVO handleUpdateHyperlink(AuthenticationVO auth, HyperlinkInVO modifiedHyperlink)
-			throws Exception
-			{
+			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink originalHyperlink = CheckIDUtil.checkHyperlinkId(modifiedHyperlink.getId(), hyperlinkDao);
 		checkHyperlinkInput(modifiedHyperlink);
@@ -302,7 +295,7 @@ extends HyperlinkServiceBase
 						new Object[] { hyperlink.getCategory().getModule().toString() }));
 		}
 		return result;
-			}
+	}
 
 	private int numIdsSet(HyperlinkInVO hyperlink) {
 		int result = 0;

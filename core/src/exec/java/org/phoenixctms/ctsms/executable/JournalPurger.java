@@ -24,7 +24,6 @@ public class JournalPurger {
 
 	@Autowired
 	protected JournalEntryDao journalEntryDao;
-
 	private JobOutput jobOutput;
 
 	public JournalPurger() {

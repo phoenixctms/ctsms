@@ -65,23 +65,19 @@ import com.sun.faces.application.view.ViewScopeManager;
 public final class WebUtil {
 
 	public enum ColorOpacity {
-		ALPHA100(""),
-		ALPHA50("-50"),
-		ALPHA25("-25");
+		ALPHA100(""), ALPHA50("-50"), ALPHA25("-25");
 
 		private final String suffix;
 
 		private ColorOpacity(final String suffix) {
 			this.suffix = suffix;
 		}
-
 		// public float alpha() {
 		// if (this.equals(ALPHA100)) {
 		// return 1.0f;
 		// }
 		// return Float.parseFloat(suffix.substring(1))/100.0f;
 		// }
-
 
 		@Override
 		public String toString() {
@@ -103,8 +99,6 @@ public final class WebUtil {
 	public static final String MENU_BOLD_STYLECLASS = "ctsms-menu-bold";
 	public final static String ID_SEPARATOR_STRING = ",";
 	public final static Pattern ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ID_SEPARATOR_STRING));
-
-
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
 	// private final static String BASE64_CHARSET = "UTF8";
 	private final static String REFERER_HEADER_NAME = "Referer";
@@ -184,11 +178,8 @@ public final class WebUtil {
 	private final static Gson JSON_COMPRESSOR = new GsonBuilder().serializeNulls()
 			.setDateFormat(JsUtil.JSON_DATETIME_PATTERN)
 			.create();
-
 	private final static JsonParser JSON_PARSER = new JsonParser();
-
 	private final static String EL_ENUM_LIST_DEFAULT_SEPARATOR = ",";
-
 	private final static Pattern EL_ENUM_LIST_REGEXP = Pattern.compile(Pattern.quote(EL_ENUM_LIST_DEFAULT_SEPARATOR));
 
 	public static Date addIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
@@ -277,6 +268,7 @@ public final class WebUtil {
 		}
 		return new ArrayList<String>();
 	}
+
 	public static List<String> completeBankName(String bankCodeNumberPrefix, String bicPrefix, String query) {
 		Collection<String> bankNames = null;
 		try {
@@ -511,7 +503,6 @@ public final class WebUtil {
 	// }
 	// return "";
 	// }
-
 	public static String escapeHtml(String string) {
 		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(string);
 	}
@@ -1298,8 +1289,6 @@ public final class WebUtil {
 		}
 	}
 
-
-
 	public static ApplicationScopeBean getApplicationScopeBean(HttpServletRequest request) {
 		if (request != null) {
 			return getApplicationScopeBean(request.getSession());
@@ -1488,7 +1477,6 @@ public final class WebUtil {
 		return types;
 	}
 
-
 	public static ArrayList<SelectItem> getAvailableStaffAddressTypes(Long staffId, Long typeId) {
 		ArrayList<SelectItem> types;
 		Collection<AddressTypeVO> typeVOs = null;
@@ -1630,8 +1618,6 @@ public final class WebUtil {
 		// }
 		// return type;
 	}
-
-
 
 	public static CourseOutVO getCourse(Long courseId, Integer maxInstances, Integer maxPrecedingCoursesDepth, Integer maxRenewalsDepth) {
 		if (courseId != null) {
@@ -1860,13 +1846,12 @@ public final class WebUtil {
 	public static String getDateFormat() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
-			return  sessionScopeBean.getLogon().getUser().getDateFormat();
+			return sessionScopeBean.getLogon().getUser().getDateFormat();
 		}
 		return null;
 	}
 
 	public static ArrayList<SelectItem> getDateFormats(String existing) {
-
 		ArrayList<SelectItem> result;
 		Collection<String> dateFormats = null;
 		try {
@@ -1934,13 +1919,12 @@ public final class WebUtil {
 	public static String getDecimalSeparator() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
-			return  sessionScopeBean.getLogon().getUser().getDecimalSeparator();
+			return sessionScopeBean.getLogon().getUser().getDecimalSeparator();
 		}
 		return null;
 	}
 
 	public static ArrayList<SelectItem> getDecimalSeparators() {
-
 		ArrayList<SelectItem> result;
 		Collection<String> deciamlSeparators = null;
 		try {
@@ -2191,7 +2175,6 @@ public final class WebUtil {
 				case QUERY:
 					return Messages.getString(MessageCodes.QUERY_ECRF_FIELD_STATUS_QUEUE_NAME);
 				default:
-
 			}
 		}
 		return "";
@@ -2262,14 +2245,11 @@ public final class WebUtil {
 					.append(ecrfFieldStatusEntry.getIndex())
 					.toHashCode();
 		}
-
 		return null;
 	}
 
 	public static Integer getEcrfSectionHashCode(Long ecrfFieldStatusEntryId) {
-
 		return getEcrfSectionHashCode(getEcrfFieldStatusEntry(ecrfFieldStatusEntryId));
-
 	}
 
 	public static ECRFStatusEntryVO getEcrfStatusEntry(Long ecrfId, Long listEntryId) {
@@ -2308,9 +2288,7 @@ public final class WebUtil {
 	public static Collection<ECRFStatusTypeVO> getEcrfStatusTypes() {
 		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
-
 			return getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
-
 		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -2343,7 +2321,6 @@ public final class WebUtil {
 	}
 
 	public static EmailMessageVO getEmailMessage(Long massMailRecipientId) {
-
 		if (massMailRecipientId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getEmailMessage(getAuthentication(), massMailRecipientId);
@@ -2357,8 +2334,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static ArrayList<Enum> getEnumList(String value,Class enumeration) {
-
+	public static ArrayList<Enum> getEnumList(String value, Class enumeration) {
 		ArrayList<Enum> result;
 		if (value != null && value.length() > 0) {
 			String[] list = EL_ENUM_LIST_REGEXP.split(value, -1);
@@ -2422,7 +2398,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
 
 	public static Boolean getExpired(Date today, Date date, VariablePeriod validityPeriod, Long validityPeriodDays) {
 		if (today != null && date != null && validityPeriod != null) {
@@ -2963,7 +2938,6 @@ public final class WebUtil {
 			locales = new ArrayList<SelectItem>();
 		}
 		return locales;
-
 	}
 
 	public static Long getLongParamValue(GetParamNames paramName) {
@@ -2992,7 +2966,6 @@ public final class WebUtil {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			} catch (AuthorisationException e) {
-
 			} catch (IllegalArgumentException e) {
 			}
 		}
@@ -3012,7 +2985,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
 	// public static ArrayList<SelectItem> getSupportedLocales() {
 	// return getLocales(getLocale());
 	// }
@@ -3039,7 +3011,6 @@ public final class WebUtil {
 	// }
 	// return locales;
 	// }
-
 	public static MassMailOutVO getMassMail(Long massMailId) {
 		if (massMailId != null) {
 			try {
@@ -3069,7 +3040,6 @@ public final class WebUtil {
 	}
 
 	public static String getMassMailProgressLabel(MassMailOutVO massMail, MassMailProgressVO massMailProgress) {
-
 		if (massMailProgress != null && massMailProgress.getRecipientTotalCount() > 0l) {
 			return Messages.getMessage(MessageCodes.MASS_MAIL_PROGRESS_LABEL, massMailProgress.getRecipientTotalCount() - massMailProgress.getRecipientPendingCount(),
 					massMailProgress.getRecipientTotalCount());
@@ -3077,10 +3047,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static int getMassMailProgressValue(MassMailOutVO massMail,MassMailProgressVO massMailProgress) {
+	public static int getMassMailProgressValue(MassMailOutVO massMail, MassMailProgressVO massMailProgress) {
 		if (massMailProgress != null && massMailProgress.getRecipientTotalCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
-					* (massMailProgress.getRecipientTotalCount() - massMailProgress.getRecipientPendingCount())) / ((float) massMailProgress.getRecipientTotalCount()));
+					* (massMailProgress.getRecipientTotalCount() - massMailProgress.getRecipientPendingCount())) / (massMailProgress.getRecipientTotalCount()));
 		}
 		return 0;
 	}
@@ -3114,7 +3084,6 @@ public final class WebUtil {
 	}
 
 	public static MassMailStatusTypeVO getMassMailStatusType(Long statusTypeId) {
-
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getMassMailStatusType(getAuthentication(), statusTypeId);
@@ -3127,7 +3096,6 @@ public final class WebUtil {
 			}
 		}
 		return null;
-
 	}
 
 	public static Long getMedicationCount(Long probandId, Long diagnosisId, Long procedureId) {
@@ -3464,7 +3432,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long  getProbandGroupCount(Long trialId) {
+	public static Long getProbandGroupCount(Long trialId) {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandGroupCount(WebUtil.getAuthentication(), trialId);
@@ -3565,7 +3533,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
 
 	public static ProbandListEntryTagOutVO getProbandListEntryTag(Long probandListEntryTagId) {
 		if (probandListEntryTagId != null) {
@@ -3753,7 +3720,6 @@ public final class WebUtil {
 		return procedures;
 	}
 
-
 	public static ArrayList<SelectItem> getRandomizationModes() {
 		ArrayList<SelectItem> modes;
 		Collection<RandomizationModeVO> modeVOs = null;
@@ -3798,7 +3764,6 @@ public final class WebUtil {
 	// }
 	// return null;
 	// }
-
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
 		ArrayList<SelectItem> trials;
@@ -3828,7 +3793,6 @@ public final class WebUtil {
 	// public static String getSeriesColors(ArrayList<Color> colors) {
 	// return getSeriesColors(colors, null);
 	// }
-
 	public static String getRemoteHost() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
@@ -4106,7 +4070,6 @@ public final class WebUtil {
 		return Messages.getMessage(titleMsgCode, args);
 	}
 
-
 	public static TeamMemberOutVO getTeamMember(Long teamMemberId) {
 		if (teamMemberId != null) {
 			try {
@@ -4203,9 +4166,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
-
-
 	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
 	// long result = 0l;
 	// if (counts != null) {
@@ -4241,7 +4201,6 @@ public final class WebUtil {
 	// }
 	// return timeZones;
 	// }
-
 	public static Long getTotalFileCount(FileModule module, Long id) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4259,7 +4218,6 @@ public final class WebUtil {
 		}
 		return null;
 	}
-
 
 	public static TrialOutVO getTrial(Long trialId) {
 		if (trialId != null) {
@@ -4432,7 +4390,6 @@ public final class WebUtil {
 	// }
 	// return result;
 	// }
-
 	public static Long getTrialTagValueCount(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -4684,7 +4641,6 @@ public final class WebUtil {
 		return categories;
 	}
 
-
 	public static ArrayList<SelectItem> getVisibleMassMailTypes(Long typeId) {
 		ArrayList<SelectItem> massMailTypes;
 		Collection<MassMailTypeVO> massMailTypeVOs = null;
@@ -4903,8 +4859,6 @@ public final class WebUtil {
 		return null;
 	}
 
-
-
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -4974,7 +4928,6 @@ public final class WebUtil {
 	// public static String inputFieldVariableValueToJson(Object src) {
 	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
 	// }
-
 	public static String inventoryIdToName(Long id) {
 		if (id == null) {
 			return getNoInventoryPickedMessage();
@@ -5032,7 +4985,6 @@ public final class WebUtil {
 		}
 		return true;
 	}
-
 
 	public static Boolean isLocalAuthMethod(UserOutVO user) {
 		if (user != null) {
@@ -5157,7 +5109,6 @@ public final class WebUtil {
 	}
 
 	public static boolean isTrustedReferer(HttpServletRequest request) {
-
 		return isTrustedReferer(request.getHeader(REFERER_HEADER_NAME), request);
 	}
 
@@ -5251,7 +5202,6 @@ public final class WebUtil {
 	// System.out.println(label + (t2 - t1) + " ms");
 	// return t2;
 	// }
-
 	public static JsonElement parseJson(String json) {
 		return JSON_PARSER.parse(json);
 	}
@@ -5262,7 +5212,6 @@ public final class WebUtil {
 	// sessionScopeBean.putSelectionSetServiceCache(key, value);
 	// }
 	// }
-
 	public static String probandIdToName(Long id) {
 		if (id == null) {
 			return getNoProbandPickedMessage();
@@ -5296,7 +5245,6 @@ public final class WebUtil {
 	// }
 	// return builder;
 	// }
-
 	public static void publishException(Exception e) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(context, e);
@@ -5339,8 +5287,6 @@ public final class WebUtil {
 		setSessionTimeout(null);
 	}
 
-
-
 	public static void setSessionTimeout(HttpSession session) {
 		int maxInactiveInterval;
 		if (isTrustedHost()) {
@@ -5356,8 +5302,6 @@ public final class WebUtil {
 			context.getExternalContext().setSessionMaxInactiveInterval(maxInactiveInterval);
 		}
 	}
-
-
 
 	public static String staffIdToName(Long id) {
 		if (id == null) {
@@ -5524,7 +5468,6 @@ public final class WebUtil {
 	// public static String voToJson(Object src) {
 	// return VO_JSON_SERIALIZER.toJson(src);
 	// }
-
 	public static String variablePeriodToString(VariablePeriodVO periodVO, Long days) {
 		if (periodVO != null) {
 			if (VariablePeriod.EXPLICIT.equals(periodVO.getPeriod())) {

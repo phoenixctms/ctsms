@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.web.model.shared.search;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,7 +32,6 @@ public class CriterionIDVOList extends CriterionListBase<IDVO> {
 			try {
 				converter = (IDVOConverter) converterMap.get(propertyVO.getId());
 			} catch (Exception e) {
-
 			}
 			if (converter != null) {
 				Object vo = converter.getVo(criterionIn.getLongValue());
@@ -61,4 +59,3 @@ public class CriterionIDVOList extends CriterionListBase<IDVO> {
 		return null;
 	}
 }
-

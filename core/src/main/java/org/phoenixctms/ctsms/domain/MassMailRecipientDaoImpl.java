@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import javax.activation.DataHandler;
 import javax.mail.Address;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -53,14 +54,13 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see MassMailRecipient
  */
 public class MassMailRecipientDaoImpl
-extends MassMailRecipientDaoBase {
+		extends MassMailRecipientDaoBase {
 
 	private static void applyPendingCriteria(org.hibernate.Criteria recipientCriteria, boolean not) { // , org.hibernate.Criteria probandCriteria, org.hibernate.Criteria
 		// probandCategoryCriteria) {
 		Conjunction criterions = Restrictions.conjunction();
 		criterions.add(Restrictions.eq("sent", false));
 		criterions.add(Restrictions.eq("cancelled", false));
-
 		Long processMassMailsMax = Settings.getLongNullable(SettingCodes.EMAIL_PROCESS_MASS_MAILS_MAX, Bundle.SETTINGS, DefaultSettings.EMAIL_PROCESS_MASS_MAILS_MAX);
 		if (processMassMailsMax != null) {
 			criterions.add(Restrictions.lt("timesProcessed", processMassMailsMax.longValue()));
@@ -70,7 +70,6 @@ extends MassMailRecipientDaoBase {
 		} else {
 			recipientCriteria.add(criterions);
 		}
-
 		// if (probandCriteria == null) {
 		// probandCriteria = recipientCriteria.createCriteria("proband");
 		// }
@@ -81,11 +80,8 @@ extends MassMailRecipientDaoBase {
 		// probandCategoryCriteria.add(Restrictions.eq("locked", false));
 	}
 
-
-
 	private static EmailAddressVO internetAddressToEmailAddressVO(InternetAddress address) {
-		return new EmailAddressVO(address.getAddress(),address.getPersonal());
-
+		return new EmailAddressVO(address.getAddress(), address.getPersonal());
 	}
 
 	private MassMailEmailSender massMailEmailSender;
@@ -98,16 +94,13 @@ extends MassMailRecipientDaoBase {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public MassMailRecipient emailMessageVOToEntity(EmailMessageVO emailMessageVO) {
 		// TODO verify behavior of emailMessageVOToEntity
 		MassMailRecipient entity = this.loadMassMailRecipientFromEmailMessageVO(emailMessageVO);
 		this.emailMessageVOToEntity(emailMessageVO, entity, true);
 		return entity;
 	}
-
-
-
-
 
 	/**
 	 * {@inheritDoc}
@@ -141,7 +134,6 @@ extends MassMailRecipientDaoBase {
 			throws Exception {
 		org.hibernate.Criteria recipientCriteria = createRecipientCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MassMailRecipient.class, recipientCriteria);
-
 		if (departmentId != null) {
 			criteriaMap.createCriteria("massMail").add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
@@ -152,10 +144,7 @@ extends MassMailRecipientDaoBase {
 			criteriaMap.createCriteria("massMail.status").add(Restrictions.eq("sending", true));
 			criteriaMap.createCriteria("massMail").add(Restrictions.le("start", now));
 		}
-
-
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-
 		return recipientCriteria.list();
 	}
 
@@ -163,12 +152,12 @@ extends MassMailRecipientDaoBase {
 	protected MassMailRecipient handleFindByMassMailProband(Long massMailId, Long probandId) throws Exception {
 		org.hibernate.Criteria recipientCriteria = createRecipientCriteria();
 		recipientCriteria.add(Restrictions.eq("massMail.id", massMailId.longValue()));
-
 		recipientCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		recipientCriteria.setMaxResults(1);
 		return (MassMailRecipient) recipientCriteria.uniqueResult();
 	}
 
+	@Override
 	protected Collection<MassMailRecipient> handleFindByMassMailProband(Long massMailId, Long probandId, PSFVO psf) throws Exception {
 		org.hibernate.Criteria recipientCriteria = createRecipientCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MassMailRecipient.class, recipientCriteria);
@@ -230,7 +219,6 @@ extends MassMailRecipientDaoBase {
 		if (pending) {
 			applyPendingCriteria(recipientCriteria, false); // , null, null);
 		}
-
 		return (Long) recipientCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -268,6 +256,7 @@ extends MassMailRecipientDaoBase {
 		return massMailRecipient;
 	}
 
+	@Override
 	public MassMailRecipient massMailRecipientInVOToEntity(MassMailRecipientInVO massMailRecipientInVO) {
 		MassMailRecipient entity = this.loadMassMailRecipientFromMassMailRecipientInVO(massMailRecipientInVO);
 		this.massMailRecipientInVOToEntity(massMailRecipientInVO, entity, true);
@@ -318,6 +307,7 @@ extends MassMailRecipientDaoBase {
 		// }
 	}
 
+	@Override
 	public MassMailRecipient massMailRecipientOutVOToEntity(MassMailRecipientOutVO massMailRecipientOutVO) {
 		MassMailRecipient entity = this.loadMassMailRecipientFromMassMailRecipientOutVO(massMailRecipientOutVO);
 		this.massMailRecipientOutVOToEntity(massMailRecipientOutVO, entity, true);
@@ -348,7 +338,6 @@ extends MassMailRecipientDaoBase {
 				massMail.removeRecipients(target);
 			}
 		}
-
 		if (probandVO != null) {
 			Proband proband = this.getProbandDao().probandOutVOToEntity(probandVO);
 			target.setProband(proband);
@@ -382,10 +371,12 @@ extends MassMailRecipientDaoBase {
 		this.massMailEmailSender = massMailEmailSender;
 	}
 
+	@Override
 	public EmailMessageVO toEmailMessageVO(final MassMailRecipient entity) {
 		return super.toEmailMessageVO(entity);
 	}
 
+	@Override
 	public void toEmailMessageVO(
 			MassMailRecipient source,
 			EmailMessageVO target) {
@@ -401,21 +392,21 @@ extends MassMailRecipientDaoBase {
 				stream = CryptoUtil.createDecryptionStream(source.getMimeMessageDataIv(), new ByteArrayInputStream(source.getEncryptedMimeMessageData()));
 				MimeMessage mimeMessage = massMailEmailSender.getMailSender().createMimeMessage(stream);
 				target.setSubject(mimeMessage.getSubject());
-				Address[] to = mimeMessage.getRecipients(MimeMessage.RecipientType.TO);
+				Address[] to = mimeMessage.getRecipients(RecipientType.TO);
 				target.getToAddresses().clear();
 				if (to != null) {
 					for (int i = 0; i < to.length; i++) {
 						target.getToAddresses().add(internetAddressToEmailAddressVO((InternetAddress) to[i]));
 					}
 				}
-				Address[] cc = mimeMessage.getRecipients(MimeMessage.RecipientType.CC);
+				Address[] cc = mimeMessage.getRecipients(RecipientType.CC);
 				target.getCcAddresses().clear();
 				if (cc != null) {
 					for (int i = 0; i < cc.length; i++) {
 						target.getCcAddresses().add(internetAddressToEmailAddressVO((InternetAddress) cc[i]));
 					}
 				}
-				Address[] bcc = mimeMessage.getRecipients(MimeMessage.RecipientType.BCC);
+				Address[] bcc = mimeMessage.getRecipients(RecipientType.BCC);
 				target.getBccAddresses().clear();
 				if (bcc != null) {
 					for (int i = 0; i < bcc.length; i++) {
@@ -487,10 +478,12 @@ extends MassMailRecipientDaoBase {
 		}
 	}
 
+	@Override
 	public MassMailRecipientInVO toMassMailRecipientInVO(final MassMailRecipient entity) {
 		return super.toMassMailRecipientInVO(entity);
 	}
 
+	@Override
 	public void toMassMailRecipientInVO(
 			MassMailRecipient source,
 			MassMailRecipientInVO target) {
@@ -509,6 +502,7 @@ extends MassMailRecipientDaoBase {
 		// }
 	}
 
+	@Override
 	public MassMailRecipientOutVO toMassMailRecipientOutVO(final MassMailRecipient entity) {
 		return super.toMassMailRecipientOutVO(entity);
 	}
@@ -516,6 +510,7 @@ extends MassMailRecipientDaoBase {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void toMassMailRecipientOutVO(
 			MassMailRecipient source,
 			MassMailRecipientOutVO target) {

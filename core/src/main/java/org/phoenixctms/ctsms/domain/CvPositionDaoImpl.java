@@ -34,8 +34,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  * @see CvPosition
  */
 public class CvPositionDaoImpl
-extends CvPositionDaoBase
-{
+		extends CvPositionDaoBase {
 
 	private org.hibernate.Criteria createCvPositionCriteria() {
 		org.hibernate.Criteria cvPositionCriteria = this.getSession().createCriteria(CvPosition.class);
@@ -46,8 +45,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPosition cvPositionInVOToEntity(CvPositionInVO cvPositionInVO)
-	{
+	public CvPosition cvPositionInVOToEntity(CvPositionInVO cvPositionInVO) {
 		CvPosition entity = this.loadCvPositionFromCvPositionInVO(cvPositionInVO);
 		this.cvPositionInVOToEntity(cvPositionInVO, entity, true);
 		return entity;
@@ -60,8 +58,7 @@ extends CvPositionDaoBase
 	public void cvPositionInVOToEntity(
 			CvPositionInVO source,
 			CvPosition target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.cvPositionInVOToEntity(source, target, copyIfNull);
 		Long sectionId = source.getSectionId();
 		Long institutionId = source.getInstitutionId();
@@ -99,8 +96,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPosition cvPositionOutVOToEntity(CvPositionOutVO cvPositionOutVO)
-	{
+	public CvPosition cvPositionOutVOToEntity(CvPositionOutVO cvPositionOutVO) {
 		CvPosition entity = this.loadCvPositionFromCvPositionOutVO(cvPositionOutVO);
 		this.cvPositionOutVOToEntity(cvPositionOutVO, entity, true);
 		return entity;
@@ -113,8 +109,7 @@ extends CvPositionDaoBase
 	public void cvPositionOutVOToEntity(
 			CvPositionOutVO source,
 			CvPosition target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		super.cvPositionOutVOToEntity(source, target, copyIfNull);
 		CvSectionVO sectionVO = source.getSection();
 		StaffOutVO institutionVO = source.getInstitution();
@@ -158,8 +153,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPosition cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO)
-	{
+	public CvPosition cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO) {
 		// TODO verify behavior of cvPositionPDFVOToEntity
 		CvPosition entity = this.loadCvPositionFromCvPositionPDFVO(cvPositionPDFVO);
 		this.cvPositionPDFVOToEntity(cvPositionPDFVO, entity, true);
@@ -173,8 +167,7 @@ extends CvPositionDaoBase
 	public void cvPositionPDFVOToEntity(
 			CvPositionPDFVO source,
 			CvPosition target,
-			boolean copyIfNull)
-	{
+			boolean copyIfNull) {
 		// TODO verify behavior of cvPositionPDFVOToEntity
 		super.cvPositionPDFVOToEntity(source, target, copyIfNull);
 	}
@@ -196,8 +189,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<CvPosition> handleFindByStaffSection(Long staffId, Long sectionId, Boolean showCv, PSFVO psf) throws Exception
-	{
+	protected Collection<CvPosition> handleFindByStaffSection(Long staffId, Long sectionId, Boolean showCv, PSFVO psf) throws Exception {
 		org.hibernate.Criteria cvPositionCriteria = createCvPositionCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CvPosition.class, cvPositionCriteria);
 		if (staffId != null) {
@@ -214,8 +206,7 @@ extends CvPositionDaoBase
 	}
 
 	@Override
-	protected long handleGetCount(Long staffId, Long sectionId, Boolean showCv) throws Exception
-	{
+	protected long handleGetCount(Long staffId, Long sectionId, Boolean showCv) throws Exception {
 		org.hibernate.Criteria cvPositionCriteria = createCvPositionCriteria();
 		if (staffId != null) {
 			cvPositionCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
@@ -234,15 +225,13 @@ extends CvPositionDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CvPosition loadCvPositionFromCvPositionInVO(CvPositionInVO cvPositionInVO)
-	{
+	private CvPosition loadCvPositionFromCvPositionInVO(CvPositionInVO cvPositionInVO) {
 		CvPosition cvPosition = null;
 		Long id = cvPositionInVO.getId();
 		if (id != null) {
 			cvPosition = this.load(id);
 		}
-		if (cvPosition == null)
-		{
+		if (cvPosition == null) {
 			cvPosition = CvPosition.Factory.newInstance();
 		}
 		return cvPosition;
@@ -253,11 +242,9 @@ extends CvPositionDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CvPosition loadCvPositionFromCvPositionOutVO(CvPositionOutVO cvPositionOutVO)
-	{
+	private CvPosition loadCvPositionFromCvPositionOutVO(CvPositionOutVO cvPositionOutVO) {
 		CvPosition cvPosition = this.load(cvPositionOutVO.getId());
-		if (cvPosition == null)
-		{
+		if (cvPosition == null) {
 			cvPosition = CvPosition.Factory.newInstance();
 		}
 		return cvPosition;
@@ -268,8 +255,7 @@ extends CvPositionDaoBase
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private CvPosition loadCvPositionFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO)
-	{
+	private CvPosition loadCvPositionFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO) {
 		// TODO implement loadCvPositionFromCvPositionPDFVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCvPositionFromCvPositionPDFVO(CvPositionPDFVO) not yet implemented.");
 		/* A typical implementation looks like this: CvPosition cvPosition = this.load(cvPositionPDFVO.getId()); if (cvPosition == null) { cvPosition =
@@ -280,8 +266,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPositionInVO toCvPositionInVO(final CvPosition entity)
-	{
+	public CvPositionInVO toCvPositionInVO(final CvPosition entity) {
 		return super.toCvPositionInVO(entity);
 	}
 
@@ -291,8 +276,7 @@ extends CvPositionDaoBase
 	@Override
 	public void toCvPositionInVO(
 			CvPosition source,
-			CvPositionInVO target)
-	{
+			CvPositionInVO target) {
 		super.toCvPositionInVO(source, target);
 		CvSection section = source.getSection();
 		Staff institution = source.getInstitution();
@@ -312,8 +296,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPositionOutVO toCvPositionOutVO(final CvPosition entity)
-	{
+	public CvPositionOutVO toCvPositionOutVO(final CvPosition entity) {
 		return super.toCvPositionOutVO(entity);
 	}
 
@@ -323,8 +306,7 @@ extends CvPositionDaoBase
 	@Override
 	public void toCvPositionOutVO(
 			CvPosition source,
-			CvPositionOutVO target)
-	{
+			CvPositionOutVO target) {
 		super.toCvPositionOutVO(source, target);
 		// WARNING! No conversion for target.institution (can't convert source.getInstitution():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
@@ -352,8 +334,7 @@ extends CvPositionDaoBase
 	 * @inheritDoc
 	 */
 	@Override
-	public CvPositionPDFVO toCvPositionPDFVO(final CvPosition entity)
-	{
+	public CvPositionPDFVO toCvPositionPDFVO(final CvPosition entity) {
 		// TODO verify behavior of toCvPositionPDFVO
 		return super.toCvPositionPDFVO(entity);
 	}
@@ -364,8 +345,7 @@ extends CvPositionDaoBase
 	@Override
 	public void toCvPositionPDFVO(
 			CvPosition source,
-			CvPositionPDFVO target)
-	{
+			CvPositionPDFVO target) {
 		// TODO verify behavior of toCvPositionPDFVO
 		super.toCvPositionPDFVO(source, target);
 		CvSection section = source.getSection();

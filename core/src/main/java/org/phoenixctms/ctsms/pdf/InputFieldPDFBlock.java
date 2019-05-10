@@ -469,7 +469,7 @@ public abstract class InputFieldPDFBlock {
 				value = getLongValue(blank);
 				numberFormat = getIntegerValueFormat();
 				if (value != null) {
-					string = numberFormat.format((Long) value);
+					string = numberFormat.format(value);
 				} else {
 					string = (isShowPresetValues() ? getIntegerValueFormatPattern() : null); // numberFormat.toString(); // .toLocalizedPattern();
 					isPresetColor = true;
@@ -481,7 +481,7 @@ public abstract class InputFieldPDFBlock {
 				value = getFloatValue(blank);
 				numberFormat = getFloatValueFormat();
 				if (value != null) {
-					string = numberFormat.format((Float) value);
+					string = numberFormat.format(value);
 				} else {
 					string = (isShowPresetValues() ? getFloatValueFormatPattern() : null); // numberFormat.toString(); // .toLocalizedPattern();
 					isPresetColor = true;

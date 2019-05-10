@@ -28,9 +28,7 @@ import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 public final class Settings {
 
 	public enum Bundle {
-		SETTINGS("settings"),
-		WINDOWS("windows"),
-		THEMES("themes");
+		SETTINGS("settings"), WINDOWS("windows"), THEMES("themes");
 
 		private final String var;
 
@@ -113,7 +111,7 @@ public final class Settings {
 	}
 
 	public static String getContactEmail() {
-		return MessageFormat.format(Settings.getString(SettingCodes.CONTACT_EMAIL, Bundle.SETTINGS, DefaultSettings.CONTACT_EMAIL),WebUtil.getEmailDomainName());
+		return MessageFormat.format(Settings.getString(SettingCodes.CONTACT_EMAIL, Bundle.SETTINGS, DefaultSettings.CONTACT_EMAIL), WebUtil.getEmailDomainName());
 	}
 
 	public static synchronized Map<Long, Color> getCourseExpirationDueInColorMap() {
@@ -190,7 +188,7 @@ public final class Settings {
 			inventoryMaintenanceDueInColorMap = createColorMap(CommonUtil.getValueStringList(SettingCodes.INVENTORY_MAINTENANCE_DUE_IN_DURATIONS, getBundle(Bundle.SETTINGS),
 					DefaultSettings.INVENTORY_MAINTENANCE_DUE_IN_DURATIONS),
 					CommonUtil
-					.getValueStringList(SettingCodes.INVENTORY_MAINTENANCE_DUE_IN_COLORS, getBundle(Bundle.SETTINGS), DefaultSettings.INVENTORY_MAINTENANCE_DUE_IN_COLORS));
+							.getValueStringList(SettingCodes.INVENTORY_MAINTENANCE_DUE_IN_COLORS, getBundle(Bundle.SETTINGS), DefaultSettings.INVENTORY_MAINTENANCE_DUE_IN_COLORS));
 		}
 		return inventoryMaintenanceDueInColorMap;
 	}

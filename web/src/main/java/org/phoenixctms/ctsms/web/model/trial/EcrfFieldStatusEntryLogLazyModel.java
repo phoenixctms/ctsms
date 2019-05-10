@@ -29,7 +29,8 @@ public class EcrfFieldStatusEntryLogLazyModel extends LazyDataModelBase {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, trialId, null, null, true, psf == null || CommonUtil.isEmptyString(psf.getSortField()), psf);
+						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, trialId, null, null, true, psf == null || CommonUtil.isEmptyString(psf.getSortField()),
+								psf);
 			} catch (ServiceException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

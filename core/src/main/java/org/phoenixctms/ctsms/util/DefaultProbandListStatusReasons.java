@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-
 public interface DefaultProbandListStatusReasons {
 
 	public static final String DEFAULT_REASON = "<enrollment status reason>";

@@ -23,21 +23,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 public class CourseParticipantListPDFBlock {
 
 	public enum BlockType {
-		SPACER,
-		HEAD,
-		COURSE_NAME,
-		DATA_AS_OF,
-		COURSE_SELF_REGISTRATION,
-		COURSE_PERIOD,
-		COURSE_VALIDITY,
-		COURSE_DESCRIPTION,
-		TRIAL_TITLE,
-		COURSE_CV_TITLE,
-		COURSE_INSTITUTION,
-		COURSE_CV_COMMENT_PRESET,
-		COURSE_COMPETENCE_LECTURERS,
-		PARTICIPANT_TABLE_HEAD,
-		PARTICIPANT_TABLE_ROW
+		SPACER, HEAD, COURSE_NAME, DATA_AS_OF, COURSE_SELF_REGISTRATION, COURSE_PERIOD, COURSE_VALIDITY, COURSE_DESCRIPTION, TRIAL_TITLE, COURSE_CV_TITLE, COURSE_INSTITUTION, COURSE_CV_COMMENT_PRESET, COURSE_COMPETENCE_LECTURERS, PARTICIPANT_TABLE_HEAD, PARTICIPANT_TABLE_ROW
 	}
 
 	private CourseOutVO course;
@@ -230,12 +216,12 @@ public class CourseParticipantListPDFBlock {
 			columnWidth = blockWidth
 					- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 							CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT)
-							- Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-									CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH);
+					- Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH);
 			if (bookings.size() < bookingColumnCount) {
-				columnWidth = columnWidth / ((float) bookings.size());
+				columnWidth = columnWidth / (bookings.size());
 			} else {
-				columnWidth = columnWidth / ((float) bookingColumnCount);
+				columnWidth = columnWidth / (bookingColumnCount);
 			}
 		}
 		return columnWidth;
@@ -270,8 +256,9 @@ public class CourseParticipantListPDFBlock {
 						Locales.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFLabelCodes.HEADLINE_LINE2,
 						PDFUtil.DEFAULT_LABEL,
-						now == null ? null : Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now));
+						now == null ? null
+								: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now));
 				x = cursor.getBlockCenterX();
 				y = cursor.getBlockY();
 				if (!CommonUtil.isEmptyString(line1)) {
@@ -303,17 +290,19 @@ public class CourseParticipantListPDFBlock {
 					x = cursor.getBlockX()
 							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-									+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 					y2 -= PDFUtil.renderTextLine(
 							contentStream,
 							cursor.getFontB(),
 							PDFUtil.FontSize.MEDIUM,
 							Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
-									now == null ? "" : Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now), x, y2,
-											PDFUtil.Alignment.TOP_LEFT);
+							now == null ? ""
+									: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+											CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now),
+							x, y2,
+							PDFUtil.Alignment.TOP_LEFT);
 					y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 							CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 					height = cursor.getBlockY() - Math.min(y1, y2);
@@ -323,8 +312,8 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_NAME:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -340,8 +329,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCourseName(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -351,16 +340,18 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_SELF_REGISTRATION:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil
 						.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR,
-								Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(
-										Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_SELF_REGISTRATION, PDFUtil.DEFAULT_LABEL), x, y1,
-										PDFUtil.Alignment.TOP_LEFT);
+								Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
+								L10nUtil.getCourseParticipantListPDFLabel(
+										Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_SELF_REGISTRATION, PDFUtil.DEFAULT_LABEL),
+								x, y1,
+								PDFUtil.Alignment.TOP_LEFT);
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -369,8 +360,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCourseSelfRegistrationString(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -380,8 +371,8 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_PERIOD:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -397,8 +388,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCoursePeriodString(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -408,14 +399,16 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_DESCRIPTION:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR,
-						Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(
-								Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_DESCRIPTION, PDFUtil.DEFAULT_LABEL), x, y1, PDFUtil.Alignment.TOP_LEFT);
+						Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
+						L10nUtil.getCourseParticipantListPDFLabel(
+								Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_DESCRIPTION, PDFUtil.DEFAULT_LABEL),
+						x, y1, PDFUtil.Alignment.TOP_LEFT);
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -424,8 +417,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderMultilineText(
 						contentStream,
 						cursor.getFontA(),
@@ -436,19 +429,19 @@ public class CourseParticipantListPDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth()
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
+								- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+												CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				break;
 			case TRIAL_TITLE:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -464,8 +457,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderMultilineText(
 						contentStream,
 						cursor.getFontA(),
@@ -476,19 +469,19 @@ public class CourseParticipantListPDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth()
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
+								- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+												CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				break;
 			case COURSE_VALIDITY:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -504,8 +497,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCourseValidityString(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -515,14 +508,16 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_INSTITUTION:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR,
-						Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(
-								Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_INSTITUTION, PDFUtil.DEFAULT_LABEL), x, y1, PDFUtil.Alignment.TOP_LEFT);
+						Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
+						L10nUtil.getCourseParticipantListPDFLabel(
+								Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_INSTITUTION, PDFUtil.DEFAULT_LABEL),
+						x, y1, PDFUtil.Alignment.TOP_LEFT);
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -531,8 +526,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCourseInstitutionString(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -542,8 +537,8 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_CV_TITLE:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -559,8 +554,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 						getCourseCvTitle(), x, y2, PDFUtil.Alignment.TOP_LEFT);
@@ -570,16 +565,18 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case COURSE_CV_COMMENT_PRESET:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y1 -= PDFUtil
 						.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR,
-								Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(
-										Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_CV_COMMENT_PRESET, PDFUtil.DEFAULT_LABEL), x, y1,
-										PDFUtil.Alignment.TOP_LEFT);
+								Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
+								L10nUtil.getCourseParticipantListPDFLabel(
+										Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_CV_COMMENT_PRESET, PDFUtil.DEFAULT_LABEL),
+								x, y1,
+								PDFUtil.Alignment.TOP_LEFT);
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -588,8 +585,8 @@ public class CourseParticipantListPDFBlock {
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderMultilineText(
 						contentStream,
 						cursor.getFontA(),
@@ -600,19 +597,19 @@ public class CourseParticipantListPDFBlock {
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth()
-						- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
+								- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+												CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
 				break;
 			case COURSE_COMPETENCE_LECTURERS:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
@@ -628,8 +625,8 @@ public class CourseParticipantListPDFBlock {
 						Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
 								- 2.0f
-								* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
+										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+												CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -639,8 +636,8 @@ public class CourseParticipantListPDFBlock {
 					x = cursor.getBlockX()
 							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
-									+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
+							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
 					Iterator<LecturerOutVO> it = lecturers.iterator();
 					while (it.hasNext()) {
 						String lecturerName = getLecturerName(it.next());
@@ -657,15 +654,17 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case PARTICIPANT_TABLE_HEAD:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT) / 2.0f;
 				y1 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(
 						CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFLabelCodes.PARTICIPANT_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), x, y1, PDFUtil.Alignment.TOP_CENTER);
+						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR),
+						L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFLabelCodes.PARTICIPANT_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+						x, y1, PDFUtil.Alignment.TOP_CENTER);
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT);
 				y2 = cursor.getBlockY()
@@ -676,10 +675,10 @@ public class CourseParticipantListPDFBlock {
 					x = cursor.getBlockX()
 							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT)
-									+ columnWidth
+							+ columnWidth
 									/ 2.0f
-									+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT);
+							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT);
 					float headHeight = 0.0f;
 					Iterator<InventoryBookingOutVO> bookingIt = bookings.iterator();
 					while (bookingIt.hasNext()) {
@@ -690,14 +689,14 @@ public class CourseParticipantListPDFBlock {
 								PDFUtil.FontSize.SMALL,
 								Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 										CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR),
-										getBookingString(booking),
-										x,
-										y2,
-										PDFUtil.Alignment.TOP_CENTER,
-										columnWidth
+								getBookingString(booking),
+								x,
+								y2,
+								PDFUtil.Alignment.TOP_CENTER,
+								columnWidth
 										- 2
-										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-												CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT)));
+												* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+														CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT)));
 						x += columnWidth;
 					}
 					y2 -= headHeight;
@@ -705,15 +704,19 @@ public class CourseParticipantListPDFBlock {
 					x = cursor.getBlockX()
 							+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT)
-									+ (cursor.getBlockWidth()
-											- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-													CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT) - Settings.getFloat(
-															CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-															CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH)) / 2.0f;
+							+ (cursor.getBlockWidth()
+									- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+											CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT)
+									- Settings.getFloat(
+											CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+											CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH))
+									/ 2.0f;
 					y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM, Settings.getColor(
 							CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
-									CourseParticipantListPDFLabelCodes.SIGNATURE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), x, y2, PDFUtil.Alignment.TOP_CENTER);
+							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR),
+							L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFLabelCodes.SIGNATURE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+							x, y2, PDFUtil.Alignment.TOP_CENTER);
 				}
 				columnWidth = Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH);
@@ -723,9 +726,11 @@ public class CourseParticipantListPDFBlock {
 									CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT);
 					y3 -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, Settings.getColor(
 							CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
-									CourseParticipantListPDFLabelCodes.LECTURER_COLUMN_NAME, PDFUtil.DEFAULT_LABEL), cursor.getBlockX() + cursor.getBlockWidth() - columnWidth / 2.0f, y3,
-									PDFUtil.Alignment.TOP_CENTER);
+							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR),
+							L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFLabelCodes.LECTURER_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+							cursor.getBlockX() + cursor.getBlockWidth() - columnWidth / 2.0f, y3,
+							PDFUtil.Alignment.TOP_CENTER);
 					y2 = Math.min(y2, y3);
 				}
 				y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
@@ -739,15 +744,16 @@ public class CourseParticipantListPDFBlock {
 						contentStream,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR),
-								cursor.getBlockX()
+						cursor.getBlockX()
 								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 										CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT),
-										cursor.getBlockY(),
-										cursor.getBlockX()
-										+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-												CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT), cursor.getBlockY() - height, Settings.getFloat(
-														CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-														CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+						cursor.getBlockY(),
+						cursor.getBlockX()
+								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT),
+						cursor.getBlockY() - height, Settings.getFloat(
+								CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				if (columnWidth > 0.0f) {
 					PDFUtil.renderLine(contentStream, Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR), cursor.getBlockX() + cursor.getBlockWidth() - columnWidth, cursor.getBlockY(),
@@ -759,14 +765,15 @@ public class CourseParticipantListPDFBlock {
 				break;
 			case PARTICIPANT_TABLE_ROW:
 				y1 = cursor.getBlockY()
-				- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_FRAME_INDENT);
+						- Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_FRAME_INDENT);
 				x = cursor.getBlockX()
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT);
 				y1 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM, Settings.getColor(
 						CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), getParticipantName(), x, y1, PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(
+						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), getParticipantName(), x, y1, PDFUtil.Alignment.TOP_LEFT,
+						Settings.getFloat(
 								CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT));
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
@@ -780,15 +787,16 @@ public class CourseParticipantListPDFBlock {
 						contentStream,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR),
-								cursor.getBlockX()
+						cursor.getBlockX()
 								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 										CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT),
-										cursor.getBlockY(),
-										cursor.getBlockX()
-										+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-												CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT), cursor.getBlockY() - height, Settings.getFloat(
-														CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-														CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+						cursor.getBlockY(),
+						cursor.getBlockX()
+								+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT),
+						cursor.getBlockY() - height, Settings.getFloat(
+								CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				columnWidth = Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LECTURER_WIDTH);
 				dateColumn = Settings.getBoolean(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_SIGNATURE_DATE_COLUMN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
@@ -805,12 +813,12 @@ public class CourseParticipantListPDFBlock {
 						PDFUtil.renderLine(contentStream,
 								Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 										CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR),
-										cursor.getBlockX() + cursor.getBlockWidth() - signatureColumnWidth,
-										cursor.getBlockY(),
-										cursor.getBlockX() + cursor.getBlockWidth() - signatureColumnWidth,
-										cursor.getBlockY() - height,
-										Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-												CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH));
+								cursor.getBlockX() + cursor.getBlockWidth() - signatureColumnWidth,
+								cursor.getBlockY(),
+								cursor.getBlockX() + cursor.getBlockWidth() - signatureColumnWidth,
+								cursor.getBlockY() - height,
+								Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH));
 					}
 				}
 				renderBookingColumnBorders(contentStream, cursor, height, dateColumn);
@@ -835,11 +843,13 @@ public class CourseParticipantListPDFBlock {
 			columnWidth = getSignatureColumnWidth(cursor.getBlockWidth());
 			x = cursor.getBlockX()
 					+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-							CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT) + columnWidth;
+							CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT)
+					+ columnWidth;
 			for (int i = 0; i < bookings.size(); i++) {
 				if (i < bookings.size() - 1) {
 					PDFUtil.renderLine(contentStream, Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR), x, cursor.getBlockY(), x, cursor.getBlockY() - height, Settings.getFloat(
+							CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR), x, cursor.getBlockY(), x, cursor.getBlockY() - height,
+							Settings.getFloat(
 									CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH));
 				}
@@ -847,13 +857,12 @@ public class CourseParticipantListPDFBlock {
 					PDFUtil.renderLine(contentStream,
 							Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR),
-									x - signatureColumnWidth,
-									cursor.getBlockY(),
-									x - signatureColumnWidth,
-									cursor.getBlockY() - height,
-									Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH)
-							);
+							x - signatureColumnWidth,
+							cursor.getBlockY(),
+							x - signatureColumnWidth,
+							cursor.getBlockY() - height,
+							Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+									CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH));
 				}
 				x += columnWidth;
 			}
@@ -870,13 +879,12 @@ public class CourseParticipantListPDFBlock {
 				PDFUtil.renderLine(contentStream,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR),
-								x - signatureColumnWidth,
-								cursor.getBlockY(),
-								x - signatureColumnWidth,
-								cursor.getBlockY() - height,
-								Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH)
-						);
+						x - signatureColumnWidth,
+						cursor.getBlockY(),
+						x - signatureColumnWidth,
+						cursor.getBlockY() - height,
+						Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_LINE_WIDTH));
 			}
 		}
 	}

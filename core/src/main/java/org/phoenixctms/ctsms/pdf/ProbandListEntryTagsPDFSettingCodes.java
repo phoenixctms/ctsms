@@ -1,6 +1,4 @@
-
 package org.phoenixctms.ctsms.pdf;
-
 
 public interface ProbandListEntryTagsPDFSettingCodes {
 
@@ -93,4 +91,3 @@ public interface ProbandListEntryTagsPDFSettingCodes {
 	public static final String LONG_TITLE_LENGTH = "long_title_length";
 	public static final String SHOW_MODIFIED_LABEL = "show_modified_label";
 }
-

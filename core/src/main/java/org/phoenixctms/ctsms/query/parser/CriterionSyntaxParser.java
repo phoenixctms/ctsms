@@ -57,6 +57,4 @@ public class CriterionSyntaxParser extends CriterionParser {
 		}
 		return infixStyleExpression;
 	}
-
-
 }

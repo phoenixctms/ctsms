@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.excel;
 
-
 public interface AuditTrailExcelLabelCodes {
 
 	public static final String TRIAL_HEADER_FOOTER = "trial_header_footer";
@@ -16,7 +15,6 @@ public interface AuditTrailExcelLabelCodes {
 	public static final String ANNOTATION_ECRF_STATUS_SPREADSHEET_NAME = "annotation_ecrf_status_spreadsheet_name";
 	public static final String AUDIT_TRAIL_VO_FIELD_COLUMNS = "audit_trail_vo_field_columns";
 	public static final String ECRF_FIELD_STATUS_VO_FIELD_COLUMNS = "ecrf_field_status_vo_field_columns";
-
 	public static final String ECRF_FIELD_VALUE_HEAD = "ecrf_field_value_head";
 	public static final String CHECKBOX_UNCHECKED = "checkbox_unchecked";
 	public static final String CHECKBOX_CHECKED = "checkbox_checked";
