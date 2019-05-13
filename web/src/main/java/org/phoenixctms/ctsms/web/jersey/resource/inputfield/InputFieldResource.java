@@ -66,13 +66,6 @@ public class InputFieldResource extends ServiceResourceBase {
 	AuthenticationVO auth;
 
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
-	}
-
-	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public InputFieldOutVO addInputField(@FormDataParam("json") InputFieldInVO in,
