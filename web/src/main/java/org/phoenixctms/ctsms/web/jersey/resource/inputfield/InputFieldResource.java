@@ -66,15 +66,9 @@ public class InputFieldResource extends ServiceResourceBase {
 	AuthenticationVO auth;
 
 	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO addInputField(@FormDataParam("json") InputFieldInVO in,
-			@FormDataParam("data") FormDataBodyPart content,
-			@FormDataParam("data") FormDataContentDisposition contentDisposition,
-			@FormDataParam("data") final InputStream input) throws Exception {
-		in.setDatas(CommonUtil.inputStreamToByteArray(input));
-		in.setMimeType(content.getMediaType().toString());
-		in.setFileName(contentDisposition.getFileName());
+	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
 	}
 
@@ -199,19 +193,6 @@ public class InputFieldResource extends ServiceResourceBase {
 		in.setDatas(out.getDatas());
 		in.setMimeType(out.getContentType().getMimeType());
 		in.setFileName(out.getFileName());
-		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
-	}
-
-	@PUT
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO updateInputField(@FormDataParam("json") InputFieldInVO in,
-			@FormDataParam("data") FormDataBodyPart content,
-			@FormDataParam("data") FormDataContentDisposition contentDisposition,
-			@FormDataParam("data") final InputStream input) throws Exception {
-		in.setDatas(CommonUtil.inputStreamToByteArray(input));
-		in.setMimeType(content.getMediaType().toString());
-		in.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
 	}
 }
