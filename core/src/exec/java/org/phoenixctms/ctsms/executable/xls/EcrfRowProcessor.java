@@ -3,7 +3,7 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.ECRF;
 import org.phoenixctms.ctsms.domain.ProbandListStatusType;
 import org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao;

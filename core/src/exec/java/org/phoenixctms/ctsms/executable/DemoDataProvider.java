@@ -22,7 +22,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.phoenixctms.ctsms.Search;
 import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.CourseCategory;

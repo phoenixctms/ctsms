@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.Permission;
 import org.phoenixctms.ctsms.domain.PermissionDao;
 import org.phoenixctms.ctsms.domain.ProfilePermission;

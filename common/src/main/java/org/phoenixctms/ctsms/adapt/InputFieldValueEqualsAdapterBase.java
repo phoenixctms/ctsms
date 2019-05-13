@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 
 public abstract class InputFieldValueEqualsAdapterBase<A, B> {

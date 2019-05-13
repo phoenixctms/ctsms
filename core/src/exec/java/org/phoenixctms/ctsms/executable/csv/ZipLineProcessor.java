@@ -2,7 +2,7 @@ package org.phoenixctms.ctsms.executable.csv;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.Zip;
 import org.phoenixctms.ctsms.domain.ZipDao;
 import org.phoenixctms.ctsms.util.CommonUtil;

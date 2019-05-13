@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
 import org.phoenixctms.ctsms.domain.CriterionPropertyDao;
 import org.phoenixctms.ctsms.domain.CriterionRestriction;
