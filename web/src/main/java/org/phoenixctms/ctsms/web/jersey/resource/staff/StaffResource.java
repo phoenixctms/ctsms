@@ -55,7 +55,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="staff")
 @Path("/staff")
 public class StaffResource extends ServiceResourceBase {
 

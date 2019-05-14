@@ -20,7 +20,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/probandliststatusentry")
 public class ProbandListStatusEntryResource {
 

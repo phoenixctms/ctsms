@@ -40,7 +40,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="user")
 @Path("/user")
 public class UserResource extends ServiceResourceBase {
 

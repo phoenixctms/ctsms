@@ -32,7 +32,7 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/ecrfstatusentry")
 public class EcrfStatusEntryResource {
 

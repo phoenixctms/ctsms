@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.vo.BankAccountInVO;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="proband")
 @Path("/bankaccount")
 public class BankAccountResource {
 

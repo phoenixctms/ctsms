@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="proband")
 @Path("/probandaddress")
 public class ProbandAddressResource {
 

@@ -48,7 +48,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="shared")
 @Path("/search")
 public class SearchResource {
 

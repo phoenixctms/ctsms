@@ -49,7 +49,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="inputfield")
 @Path("/inputfield")
 public class InputFieldResource extends ServiceResourceBase {
 

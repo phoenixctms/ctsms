@@ -46,7 +46,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="inventory")
 @Path("/inventory")
 public class InventoryResource extends ServiceResourceBase {
 

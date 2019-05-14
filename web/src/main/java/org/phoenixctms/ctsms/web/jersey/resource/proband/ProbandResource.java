@@ -58,7 +58,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="proband")
 @Path("/proband")
 public class ProbandResource extends ServiceResourceBase {
 

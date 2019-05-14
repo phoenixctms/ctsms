@@ -27,7 +27,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.google.gson.JsonElement;
 import com.sun.jersey.api.NotFoundException;
 
-@Api
+@Api(value="shared")
 @Path("/selectionset")
 public class SelectionSetResource {
 

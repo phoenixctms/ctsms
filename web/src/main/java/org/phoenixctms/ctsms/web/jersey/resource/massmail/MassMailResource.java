@@ -42,7 +42,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="massmail")
 @Path("/massmail")
 public class MassMailResource extends ServiceResourceBase {
 

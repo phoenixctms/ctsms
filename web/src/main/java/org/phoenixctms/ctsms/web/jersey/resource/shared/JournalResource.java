@@ -28,7 +28,7 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="shared")
 @Path("/journal")
 public class JournalResource {
 

@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.vo.ProbandContactDetailValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="proband")
 @Path("/probandcontactdetailvalue")
 public class ProbandContactDetailValueResource {
 

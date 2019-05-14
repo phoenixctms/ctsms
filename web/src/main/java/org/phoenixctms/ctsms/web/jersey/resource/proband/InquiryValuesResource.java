@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="proband")
 @Path("/inquiryvalue")
 public class InquiryValuesResource {
 

@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="inputfield")
 @Path("/inputfieldselectionsetvalue")
 public class SelectionSetValueResource {
 

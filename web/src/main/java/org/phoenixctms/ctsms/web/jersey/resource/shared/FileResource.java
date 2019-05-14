@@ -39,7 +39,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="shared")
 @Path("/file")
 public class FileResource {
 

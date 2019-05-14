@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/probandlistentrytag")
 public class ProbandListEntryTagResource {
 

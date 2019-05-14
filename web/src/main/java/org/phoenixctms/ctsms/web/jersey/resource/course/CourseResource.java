@@ -46,7 +46,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="course")
 @Path("/course")
 public class CourseResource extends ServiceResourceBase {
 

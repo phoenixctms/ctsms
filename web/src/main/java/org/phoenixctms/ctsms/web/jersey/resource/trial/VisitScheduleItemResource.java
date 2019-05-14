@@ -27,7 +27,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.jersey.resource.StringConverter;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/visitscheduleitem")
 public class VisitScheduleItemResource {
 
