@@ -79,7 +79,7 @@ public abstract class FileDavResourceBase {
 
 	private static final Prop buildProp(final FileOutVO f, final Providers providers) {
 		return new Prop(new GetETag(String.valueOf(f.getVersion())),
-				new DisplayName(f.getFileName()), // format("%s %s", c.getLastName(), c.getFirstName())),
+				new DisplayName(f.getFileName()),
 				new GetLastModified(f.getModifiedTimestamp()),
 				new GetContentLength(f.getSize()),
 				new GetContentType(f.getContentType().getMimeType()));
