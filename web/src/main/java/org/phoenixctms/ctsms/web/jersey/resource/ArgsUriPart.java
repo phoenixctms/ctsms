@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
@@ -20,7 +19,7 @@ import org.andromda.spring.MethodParameterNames;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 
-public class ArgsUriPart implements UriPart {
+public class ArgsUriPart {
 
 	private final static Comparator<String> PARAMETER_TO_ARGUMENT_SORTING = null;
 	private boolean slurp;
@@ -31,18 +30,6 @@ public class ArgsUriPart implements UriPart {
 	private Class<?> declaringInterface;
 	private ArrayList<StringConverter<?>> primitiveConversionPrecedence;
 	private MethodTransfilter methodTransfilter;
-
-	public ArgsUriPart(Class<?> declaringInterface) {
-		this(declaringInterface, null, MethodTransfilter.DEFAULT_TRANSFILTER);
-	}
-
-	public ArgsUriPart(Class<?> declaringInterface, MethodTransfilter methodTransfilter) {
-		this(declaringInterface, null, methodTransfilter);
-	}
-
-	public ArgsUriPart(Class<?> declaringInterface, String resource) {
-		this(declaringInterface, resource, MethodTransfilter.DEFAULT_TRANSFILTER);
-	}
 
 	public ArgsUriPart(Class<?> declaringInterface, String resource, MethodTransfilter methodTransfilter) {
 		excludePrimitiveConversion = new HashSet<String>();
@@ -84,10 +71,6 @@ public class ArgsUriPart implements UriPart {
 		return arguments;
 	}
 
-	public LinkedHashMap<String, Object> getArgMap(UriInfo uriInfo) throws Exception {
-		return getArgMap(uriInfo.getQueryParameters(true));
-	}
-
 	private Object[] getArgs(MultivaluedMap<String, String> queryParameters) throws Exception {
 		return getArgMap(queryParameters).values().toArray();
 	}
@@ -114,10 +97,6 @@ public class ArgsUriPart implements UriPart {
 		} else {
 			return null;
 		}
-	}
-
-	public LinkedHashMap<String, Object> getDefaults() {
-		return defaults;
 	}
 
 	public HashSet<String> getExcludePrimitiveConversion() {
@@ -169,20 +148,6 @@ public class ArgsUriPart implements UriPart {
 		return overrides;
 	}
 
-	public ArrayList<StringConverter<?>> getPrimitiveConversionPrecedence() {
-		return primitiveConversionPrecedence;
-	}
-
-	@Override
-	public Set<NamedParameter> getStaticQueryParameterNames() throws Exception {
-		return getNamedParameters(resource, true);
-	}
-
-	@Override
-	public boolean isSlurpQueryParameter() throws Exception {
-		return slurp && getNamedParameters(resource, false).size() == 0;
-	}
-
 	public void reset(Class<?> declaringInterface, String resource, MethodTransfilter methodTransfilter) {
 		excludePrimitiveConversion.clear();
 		overrides.clear();
@@ -194,20 +159,6 @@ public class ArgsUriPart implements UriPart {
 		slurp = true;
 	}
 
-	public void setDeclaringInterface(Class<?> declaringInterface) {
-		this.declaringInterface = declaringInterface;
-	}
-
-	public void setMethodTransfilter(MethodTransfilter methodTransfilter) {
-		this.methodTransfilter = methodTransfilter;
-	}
-
-	@Override
-	public void setSlurpQueryParameter(boolean slurp) {
-		this.slurp = slurp;
-	}
-
-	@Override
 	public Object shiftParameters(MultivaluedMap<String, String> queryParameters) throws Exception {
 		return getArgs(queryParameters);
 	}
