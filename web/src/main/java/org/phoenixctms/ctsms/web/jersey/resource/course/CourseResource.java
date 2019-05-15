@@ -50,7 +50,6 @@ import io.swagger.annotations.Api;
 @Path("/course")
 public class CourseResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.COURSE_DB;
 	private final static FileModule fileModule = FileModule.COURSE_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.COURSE_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.COURSE_HYPERLINK;
@@ -132,14 +131,6 @@ public class CourseResource extends ServiceResourceBase {
 				.getCourseList(auth, null, null, ResourceUtils.LIST_GRAPH_MAX_COURSE_INSTANCES, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")

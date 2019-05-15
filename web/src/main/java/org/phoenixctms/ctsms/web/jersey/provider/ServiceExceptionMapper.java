@@ -14,7 +14,6 @@ public class ServiceExceptionMapper extends ExceptionMapperBase implements
 
 	@Override
 	public Response toResponse(ServiceException ex) {
-		// return buildJsonResponse(Status.CONFLICT, ex).build();
 		return buildJsonResponse(UNPROCESSABLE_ENTITY_STATUS, ex).build();
 	}
 }

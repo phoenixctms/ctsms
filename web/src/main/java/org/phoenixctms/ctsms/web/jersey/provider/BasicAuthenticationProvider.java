@@ -41,7 +41,6 @@ public class BasicAuthenticationProvider
 
 	@Override
 	public AuthenticationVO getValue(HttpContext c) {
-		// if (c.getRequest().getAuthenticationScheme() == HttpRequestContext.BASIC_AUTH) {
 		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
 		String[] credentials = null;
 		if (authHeaderValue != null) {

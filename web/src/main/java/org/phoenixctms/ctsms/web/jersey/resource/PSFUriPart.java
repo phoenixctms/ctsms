@@ -73,13 +73,6 @@ public class PSFUriPart extends PSFVO implements UriPart {
 					Entry<String, List<String>> param = it.next();
 					if (!psf.slurpExcludes.contains(param.getKey())) {
 						filters.put(param.getKey(), ResourceUtils.popQueryParamValue(param.getKey(), filter));
-						// List<String> values = param.getValue();
-						// if (values != null && values.iterator().hasNext()) {
-						// String value = values.iterator().next();
-						// if (!CommonUtil.isEmptyString(value)) {
-						// filters.put(param.getKey(), value);
-						// }
-						// }
 					}
 				}
 			}

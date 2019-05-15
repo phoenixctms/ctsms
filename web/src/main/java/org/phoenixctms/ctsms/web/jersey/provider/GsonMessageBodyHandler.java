@@ -72,10 +72,7 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 					ArrayList<T> result = new ArrayList<T>();
 					Iterator<JsonElement> it = collection.getAsJsonArray().iterator();
 					while (it.hasNext()) {
-						// JsonElement json2 = it.next();
-						// T object = (T) gson.fromJson(json2, (Class<?>)type);
 						result.add((T) context.deserialize(it.next(), (Class<?>) type));
-						// result.add(object);
 					}
 					return result;
 				}
@@ -154,11 +151,7 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
 			throws IOException, WebApplicationException {
 		InputStreamReader r = new InputStreamReader(entityStream, API_JSON_DESERIALIZE_VALUE_CHARSET);
-		// if (genericType != null) {
 		return getDeserializer().fromJson(r, genericType); // type);
-		// } else {
-		// return getDeserializer().fromJson(r, type); // type);
-		// }
 	}
 
 	@Override

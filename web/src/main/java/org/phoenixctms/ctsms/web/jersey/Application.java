@@ -25,8 +25,6 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 public class Application extends PackagesResourceConfig {
 
 	static {
-		// Handler fh = new ConsoleHandler(); // FileHandler("/tmp/jersey_test.log");
-		// Logger.getLogger("").addHandler(fh);
 		Logger logger = Logger.getLogger("com.sun.jersey");
 		logger.addHandler(new ConsoleHandler());
 		logger.setLevel(Level.INFO);
@@ -39,44 +37,15 @@ public class Application extends PackagesResourceConfig {
 		beanConfig.setHost(WebUtil.getHttpHost());
 		beanConfig.setBasePath("/" + WebUtil.REST_API_PATH);
 		beanConfig.setTitle(Settings.getString(SettingCodes.API_TITLE, Bundle.SETTINGS, DefaultSettings.API_TITLE));
-		// beanConfig.setDescription(Settings.getString(SettingCodes.API_INSTANCE, Bundle.SETTINGS, DefaultSettings.API_INSTANCE));
 		beanConfig.setVersion(Settings.getString(SettingCodes.API_VERSION, Bundle.SETTINGS, DefaultSettings.API_VERSION));
 		beanConfig.setContact(Settings.getContactEmail());
-		// beanConfig.setResourcePackage("io.swagger.resources");
 		beanConfig.setResourcePackage(Settings.WEB_ROOT_PACKAGE_NAME + ".jersey.resource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.HyperlinkResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.course.CourseResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.inventory.InventoryResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.staff.StaffResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.SearchResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.VisitResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.proband.ProbandResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.inputfield.InputFieldResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.VisitScheduleItemResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.user.UserResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.InquiryResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.FileResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.ProbandListEntryResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.ProbandListEntryTagResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.ProbandListEntryTagValuesResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.ProbandListStatusEntryResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.JournalResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.proband.InquiryValuesResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.IndexResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.SelectionSetResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.shared.ToolsResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.inputfield.SelectionSetValueResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.ProbandGroupResource");
-		// beanConfig.setResourcePackage("org.phoenixctms.ctsms.web.jersey.resource.trial.TrialResource");
 		beanConfig.setScan(true);
 	}
 
 	@Override
 	public Set<Class<?>> getClasses() {
 		Set<Class<?>> resources = super.getClasses();
-		//resources.add(FirstResource.class);
-		//resources.add(SecondResource.class);
-		//...
 		resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
 		resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
 		return resources;

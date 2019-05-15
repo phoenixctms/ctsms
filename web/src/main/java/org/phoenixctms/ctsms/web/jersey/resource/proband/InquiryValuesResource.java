@@ -39,12 +39,6 @@ public class InquiryValuesResource {
 		return WebUtil.getServiceLocator().getProbandService().getInquiryValueById(auth, id);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// public InquiryValuesOutVO getInquiryValues(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getTrialService().getInquiryValues(auth, null, null, false, new PSFUriPart(uriInfo));
-	// }
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -52,7 +46,5 @@ public class InquiryValuesResource {
 			ServiceException {
 		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, new LinkedHashSet<InquiryValueInVO>(in));
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
-		// return new InquiryValuesOutVOPage(WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, in), null);
-		// return WebUtil.getServiceLocator().getProbandService().setInquiryValues(auth, in);
 	}
 }

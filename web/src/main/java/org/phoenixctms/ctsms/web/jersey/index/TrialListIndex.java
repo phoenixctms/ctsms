@@ -6,6 +6,5 @@ public class TrialListIndex extends IndexBase {
 
 	public TrialListIndex(JsonElement indexNode) {
 		super(indexNode);
-		// TODO Auto-generated constructor stub
 	}
 }

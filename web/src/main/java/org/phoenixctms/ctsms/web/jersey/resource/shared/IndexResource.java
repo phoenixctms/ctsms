@@ -190,8 +190,6 @@ public class IndexResource {
 					jsValuesReturnType = Object.class;
 				}
 				returnTypeNode = createJsValuesPageNode(returnType, jsValuesReturnType);
-				// queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
-				// methodNode.add(JS_QUERY_PARAMS_FIELD, createQueryParameterNode(queryParams));
 				if (hasUriInfo && HttpMethod.GET.equals(method.getHttpMethod())) {
 					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
 				}
@@ -212,8 +210,6 @@ public class IndexResource {
 			} else {
 				returnTypeNode = createVOReturnTypeNode(returnType, method.getGenericReturnType());
 				if (FilePDFVO.class.equals(returnType)
-				// || (ProbandListEntryTagValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
-				// || (InquiryValuesOutVO.class.equals(returnType) && HttpMethod.GET.equals(method.getHttpMethod()))
 				) {
 					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
 				}
@@ -466,8 +462,6 @@ public class IndexResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
-		// String basePath = getBasePath(request);
 		JsonObject rootNode = new JsonObject();
 		JsonArray classesNode = new JsonArray();
 		rootNode.addProperty(JS_TITLE_FIELD, Settings.getString(SettingCodes.API_TITLE, Bundle.SETTINGS, DefaultSettings.API_TITLE));
@@ -489,11 +483,6 @@ public class IndexResource {
 				classesNode.add(getResourceIndexNode(resourceClass, request)); // basePath));
 			}
 		}
-		// return Response.ok().entity(rootNode).build();
 		return new ResourceIndex(rootNode);
 	}
-	// @Path("/swagger")
-	// public ApiListingResource swagger() {
-	// return new ApiListingSubResource(context);
-	// }
 }

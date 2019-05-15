@@ -6,6 +6,5 @@ public class InputFieldListIndex extends IndexBase {
 
 	public InputFieldListIndex(JsonElement indexNode) {
 		super(indexNode);
-		// TODO Auto-generated constructor stub
 	}
 }

@@ -39,12 +39,6 @@ public class EcrfFieldValuesResource {
 		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueById(auth, id);
 	}
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValues(auth, null, false, new PSFUriPart(uriInfo));
-	// }
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -53,7 +47,5 @@ public class EcrfFieldValuesResource {
 			ServiceException {
 		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null, null);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
-		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in), null);
-		// return WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in);
 	}
 }

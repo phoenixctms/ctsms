@@ -157,11 +157,4 @@ public class JournalResource {
 	public JournalEntryOutVO updateTrial(JournalEntryInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getJournalService().updateJournalEntry(auth, in);
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public Page<JournalEntryOutVO> getJournal(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, null, null, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 }

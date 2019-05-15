@@ -46,7 +46,6 @@ import io.swagger.annotations.Api;
 @Path("/massmail")
 public class MassMailResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
 	private final static FileModule fileModule = FileModule.MASS_MAIL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.MASS_MAIL_JOURNAL;
 	private final static Class SERVICE_INTERFACE = MassMailService.class;
@@ -101,14 +100,6 @@ public class MassMailResource extends ServiceResourceBase {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")

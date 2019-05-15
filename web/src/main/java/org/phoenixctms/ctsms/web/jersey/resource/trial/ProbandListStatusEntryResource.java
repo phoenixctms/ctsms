@@ -35,14 +35,6 @@ public class ProbandListStatusEntryResource {
 		return WebUtil.getServiceLocator().getTrialService().addProbandListStatusEntry(auth, false, in);
 	}
 
-	// @POST
-	// @Consumes({ MediaType.APPLICATION_JSON })
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("signup")
-	// public ProbandListStatusEntryOutVO addProbandListStatusEntrySignup(ProbandListStatusEntryInVO in)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getTrialService().addProbandListStatusEntry(auth, true, in);
-	// }
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
@@ -58,11 +50,4 @@ public class ProbandListStatusEntryResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntry(auth, id);
 	}
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// public Page<ProbandListStatusEntryOutVO> getProbandListStatusEntryList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<ProbandListStatusEntryOutVO>(WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntryList(auth, null, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 }

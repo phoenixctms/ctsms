@@ -50,7 +50,6 @@ import io.swagger.annotations.Api;
 @Path("/inventory")
 public class InventoryResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INVENTORY_DB;
 	private final static FileModule fileModule = FileModule.INVENTORY_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.INVENTORY_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.INVENTORY_HYPERLINK;
@@ -132,14 +131,6 @@ public class InventoryResource extends ServiceResourceBase {
 				.getChildren();
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")

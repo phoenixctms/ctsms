@@ -53,7 +53,6 @@ import io.swagger.annotations.Api;
 @Path("/inputfield")
 public class InputFieldResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
 	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
 	private final static Class SERVICE_INTERFACE = InputFieldService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
@@ -82,27 +81,11 @@ public class InputFieldResource extends ServiceResourceBase {
 						reason);
 	}
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// @Path("{id}/selectionsetvalues")
-	// public Page<InputFieldSelectionSetValueOutVO> getSelectionSetValueList(@PathParam("id") Long id,@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<InputFieldSelectionSetValueOutVO>(WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValueList(auth, id, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 	@Override
 	protected AuthenticationVO getAuth() {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@Override
 	protected FileModule getFileModule() {
 		return null;

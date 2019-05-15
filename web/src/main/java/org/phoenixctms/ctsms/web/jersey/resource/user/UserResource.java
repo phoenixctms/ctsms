@@ -45,7 +45,6 @@ import io.swagger.annotations.Api;
 public class UserResource extends ServiceResourceBase {
 
 	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
-	// private final static DBModule dbModule = DBModule.USER_DB;
 	private final static JournalModule journalModule = JournalModule.USER_JOURNAL;
 	private final static Class SERVICE_INTERFACE = UserService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "userId";
@@ -78,14 +77,6 @@ public class UserResource extends ServiceResourceBase {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@Override
 	protected FileModule getFileModule() {
 		return null;

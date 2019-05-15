@@ -15,14 +15,9 @@ public abstract class StringConverter<T> {
 	private final static String QUERY_PARAM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private static final String INVALID_BOOLEAN_STRING = "cannot convert '{0}' to boolean value";
 	private static final String UNSUPPORTED_RESULT_TYPE = "converting to {0} not supported";
-	// public final static ArrayList<StringConverter> BOOL_INT_FLOAT_ENUM = new ArrayList<StringConverter>();
 	public final static ArrayList<StringConverter> BOOL_INT_FLOAT = new ArrayList<StringConverter>();
 	public final static ArrayList<StringConverter> BOOL_LONG = new ArrayList<StringConverter>();
 	static {
-		// BOOL_INT_FLOAT_ENUM.add(getBooleanConverter());
-		// BOOL_INT_FLOAT_ENUM.add(getIntegerConverter());
-		// BOOL_INT_FLOAT_ENUM.add(getFloatConverter());
-		// BOOL_INT_FLOAT_ENUM.add(getECRFFieldStatusQueueConverter());
 		BOOL_INT_FLOAT.add(getBooleanConverter());
 		BOOL_INT_FLOAT.add(getIntegerConverter());
 		BOOL_INT_FLOAT.add(getFloatConverter());

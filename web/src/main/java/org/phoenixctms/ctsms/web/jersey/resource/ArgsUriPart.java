@@ -23,7 +23,6 @@ import org.phoenixctms.ctsms.util.MethodTransfilter;
 public class ArgsUriPart implements UriPart {
 
 	private final static Comparator<String> PARAMETER_TO_ARGUMENT_SORTING = null;
-	// private Method method;
 	private boolean slurp;
 	private String resource;
 	private LinkedHashMap<String, Object> overrides;
@@ -33,13 +32,6 @@ public class ArgsUriPart implements UriPart {
 	private ArrayList<StringConverter> primitiveConversionPrecedence;
 	private MethodTransfilter methodTransfilter;
 
-	// public ArgsUriPart(Method method) {
-	// this(method, null);
-	// }
-	// return arguments.toArray()
-	// public ArgsUriPart() {
-	// this(null, null, null);
-	// }
 	public ArgsUriPart(Class declaringInterface) {
 		this(declaringInterface, null, MethodTransfilter.DEFAULT_TRANSFILTER);
 	}

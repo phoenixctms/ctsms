@@ -39,12 +39,6 @@ public class ProbandListEntryTagValuesResource {
 		return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValueById(auth, id);
 	}
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValues(auth, null, false, new PSFUriPart(uriInfo));
-	// }
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -54,7 +48,5 @@ public class ProbandListEntryTagValuesResource {
 		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth,
 				new LinkedHashSet<ProbandListEntryTagValueInVO>(in));
 		return new JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
-		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in), null);
-		// return WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(auth, in);
 	}
 }

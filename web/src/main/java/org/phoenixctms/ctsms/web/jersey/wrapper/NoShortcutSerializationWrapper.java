@@ -8,9 +8,6 @@ import org.apache.commons.collections.Transformer;
 
 public class NoShortcutSerializationWrapper<T> implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public static void transformVoCollection(Collection vos) {

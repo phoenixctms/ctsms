@@ -31,12 +31,9 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 		args.getOverrides().put("auth", auth);
 		args.getOverrides().put(rootEntityIdMethodParamName, id);
 		args.getOverrides().put("psf", psf);
-		// args.getPrimitiveConversionPrecedence().addAll(StringConverter.BOOL_LONG);
-		// args.setDeclaringInterface(SelectionSetService.class);
 		return args;
 	}
 
-	//private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER;
 	protected static MethodTransfilter getGetListMethodNameTransformer(final String rootEntityIdMethodParamName, final Class rootOutVo) {
 		return new MethodTransfilter() {
 
@@ -58,11 +55,6 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 					return true;
 				}
 				return false;
-				//			Class returnType = method.getReturnType();
-				//			if (Collection.class.isAssignableFrom(method.getReturnType())) {
-				//				(Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
-				//			}
-				//			return (paramTypes == null || !PSFVO.class.equals(paramTypes[paramTypes.length - 1]));
 			};
 
 			@Override

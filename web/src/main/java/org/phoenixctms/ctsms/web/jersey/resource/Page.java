@@ -15,7 +15,6 @@ public class Page<T extends Serializable> implements Serializable {
 	private transient PSFVO psf;
 	@SerializedName("psf")
 	private PSFVOWrapper jsPsf;
-	// @SerializedName("items")
 	private Collection<T> rows;
 
 	public Page(Collection<T> rows, PSFVO psf) {

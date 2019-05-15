@@ -6,6 +6,5 @@ public class InventoryListIndex extends IndexBase {
 
 	public InventoryListIndex(JsonElement indexNode) {
 		super(indexNode);
-		// TODO Auto-generated constructor stub
 	}
 }

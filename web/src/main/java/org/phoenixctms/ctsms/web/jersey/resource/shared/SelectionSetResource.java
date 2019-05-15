@@ -57,8 +57,6 @@ public class SelectionSetResource {
 	private static ArgsUriPart getArgsUriPart(String resource, AuthenticationVO auth) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, SELECTION_SET_SERVICE_METHOD_NAME_TRANSFORMER);
 		args.getOverrides().put("auth", auth);
-		// args.getPrimitiveConversionPrecedence().addAll(StringConverter.BOOL_LONG);
-		// args.setDeclaringInterface(SelectionSetService.class);
 		return args;
 	}
 
@@ -82,12 +80,6 @@ public class SelectionSetResource {
 						WebUtil.getServiceLocator().getSelectionSetService(),
 						SelectionSetService.class,
 						SELECTION_SET_SERVICE_METHOD_NAME_TRANSFORMER, true, args.getArgs(uriInfo));
-				// if (!(result instanceof Collection)) {
-				// ArrayList wrapper = new ArrayList(1);
-				// wrapper.add(result);
-				// result = wrapper;
-				// }
-				// return (Collection) result;
 			} catch (InvocationTargetException e) {
 				throw e.getCause();
 			} catch (Exception e) {

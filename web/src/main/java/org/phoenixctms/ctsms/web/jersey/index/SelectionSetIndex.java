@@ -6,6 +6,5 @@ public class SelectionSetIndex extends IndexBase {
 
 	public SelectionSetIndex(JsonElement indexNode) {
 		super(indexNode);
-		// TODO Auto-generated constructor stub
 	}
 }

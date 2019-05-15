@@ -110,11 +110,4 @@ public class HyperlinkResource {
 	public HyperlinkOutVO updateHyperlink(HyperlinkInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getHyperlinkService().updateHyperlink(auth, in);
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public Page<HyperlinkOutVO> getHyperlinks(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<HyperlinkOutVO>(WebUtil.getServiceLocator().getHyperlinkService().getHyperlinks(auth, null, null, null, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 }

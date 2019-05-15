@@ -53,8 +53,6 @@ public class FileResource {
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws AuthenticationException, AuthorisationException, ServiceException {
-		// in.setTrialId(trialId);
-		// in.setModule(FileModule.TRIAL_DOCUMENT);
 		// https://stackoverflow.com/questions/27609569/file-upload-along-with-other-object-in-jersey-restful-web-service
 		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		FileInVO in = json.getValueAs(FileInVO.class);
@@ -95,8 +93,6 @@ public class FileResource {
 	@GET
 	@Path("{id}")
 	public Response getFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
-		// FileStreamOutVO f = WebUtil.getServiceLocator().getFileService().getFileStream(auth, fileId);
-		// return Response.ok(f.getStream(), f.getContentType().getMimeType()).build();
 		FileStreamOutVO stream = WebUtil.getServiceLocator().getFileService().getFileStream(auth, id);
 		ResponseBuilder response = javax.ws.rs.core.Response.ok(stream.getStream(), stream.getContentType().getMimeType());
 		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
@@ -171,7 +167,6 @@ public class FileResource {
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws AuthenticationException, AuthorisationException, ServiceException {
-		// in.setId(fileId);
 		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		FileInVO in = json.getValueAs(FileInVO.class);
 		FileStreamInVO stream = new FileStreamInVO();
@@ -181,11 +176,4 @@ public class FileResource {
 		stream.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getFileService().updateFile(auth, in, stream);
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public Page<FileOutVO> getFiles(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, null, null, null, null, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 }
