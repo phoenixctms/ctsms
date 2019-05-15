@@ -99,7 +99,6 @@ public class IndexResource {
 	private final static String JS_PRODUCES_FIELD = "mime_out";
 	private final static String JS_IN_VO_FIELD = "json_in";
 	private final static String JS_OUT_VO_FIELD = "json_out";
-	// private final static String JS_VO_MAP_KEY_FIELD = "key";
 	private final static String JS_JSON_VALUE = "json data";
 	private final static String JS_INDEX_VALUE = "json index";
 	private final static String JS_INDEX_FIELD = "index";
@@ -107,7 +106,7 @@ public class IndexResource {
 	private final static String JS_PAGE_PSF_FIELD = "psf";
 	private final static String JS_PAGE_ROWS_FIELD = "rows";
 	private final static String JS_PAGE_JS_ROWS_FIELD = "js_rows";
-	private final static Comparator<Class> RESOURCE_CLASS_COMPARATOR = new ResourceClassComparator();
+	private final static Comparator<Class<?>> RESOURCE_CLASS_COMPARATOR = new ResourceClassComparator();
 	private final static Comparator<AbstractResourceMethod> RESOURCE_METHOD_COMPARATOR = new ResourceMethodComparator();
 	private final static Comparator<AbstractSubResourceMethod> SUB_RESOURCE_METHOD_COMPARATOR = new SubResourceMethodComparator();
 	private final static MethodTransfilter VO_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(false);
@@ -146,7 +145,7 @@ public class IndexResource {
 				queryParams.add(new NamedParameter(parameter.getAnnotation(QueryParam.class).value(), parameter.getParameterClass()));
 			}
 		}
-		Class returnType = method.getReturnType();
+		Class<?> returnType = method.getReturnType();
 		if (method.areOutputTypesDeclared() && !Response.class.isAssignableFrom(returnType)) {
 			JsonElement returnTypeNode;
 			if (IndexBase.class.isAssignableFrom(returnType)) {
@@ -179,13 +178,13 @@ public class IndexResource {
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else if (JsValuesOutVOPage.class.isAssignableFrom(returnType)) {
 				try {
-					returnType = (Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
+					returnType = (Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					returnType = Object.class;
 				}
-				Class jsValuesReturnType;
+				Class<?> jsValuesReturnType;
 				try {
-					jsValuesReturnType = (Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[1];
+					jsValuesReturnType = (Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[1];
 				} catch (Exception e) {
 					jsValuesReturnType = Object.class;
 				}
@@ -199,7 +198,7 @@ public class IndexResource {
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else if (Page.class.isAssignableFrom(returnType)) {
 				try {
-					returnType = (Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
+					returnType = (Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					returnType = Object.class;
 				}
@@ -228,7 +227,7 @@ public class IndexResource {
 		resourcesNode.getAsJsonObject(uriPrefix).getAsJsonArray(JS_METHODS_FIELD).add(methodNode);
 	}
 
-	private static JsonObject createJsValuesPageNode(Class pageValuesReturnType, Class jsValuesReturnType) throws Exception {
+	private static JsonObject createJsValuesPageNode(Class<?> pageValuesReturnType, Class<?> jsValuesReturnType) throws Exception {
 		JsonObject pageNode = new JsonObject();
 		JsonElement voNode;
 		Collection<Method> fields = AssociationPath.listMethods(pageValuesReturnType, VO_METHOD_TRANSFILTER);
@@ -260,7 +259,7 @@ public class IndexResource {
 		return typesNode;
 	}
 
-	private static JsonObject createPageNode(Class returnType) throws Exception {
+	private static JsonObject createPageNode(Class<?> returnType) throws Exception {
 		JsonObject pageNode = new JsonObject();
 		JsonElement voNode;
 		Collection<Method> fields = AssociationPath.listMethods(returnType, VO_METHOD_TRANSFILTER);
@@ -284,7 +283,7 @@ public class IndexResource {
 		return queryParamsNode;
 	}
 
-	private static JsonElement createVOInputTypeNode(Class inputType, Type genericType) throws Exception {
+	private static JsonElement createVOInputTypeNode(Class<?> inputType, Type genericType) throws Exception {
 		// no input maps:
 		if (isTerminalType(inputType)) {
 			return new JsonPrimitive(ClassUtils.getSimpleName(inputType));
@@ -292,7 +291,7 @@ public class IndexResource {
 			boolean isCollection = Collection.class.isAssignableFrom(inputType);
 			if (isCollection) {
 				try {
-					inputType = (Class) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+					inputType = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					inputType = Object.class;
 				}
@@ -323,34 +322,34 @@ public class IndexResource {
 		return voNode;
 	}
 
-	private static JsonElement createVOReturnTypeNode(Class returnType, Type genericReturnType) throws Exception {
+	private static JsonElement createVOReturnTypeNode(Class<?> returnType, Type genericReturnType) throws Exception {
 		if (isTerminalType(returnType)) {
 			return new JsonPrimitive(ClassUtils.getSimpleName(returnType));
 		} else {
 			boolean isCollection = Collection.class.isAssignableFrom(returnType);
 			boolean isMap = Map.class.isAssignableFrom(returnType);
-			Class mapKeyType = null;
+			Class<?> mapKeyType = null;
 			if (isCollection) {
 				try {
-					returnType = (Class) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
+					returnType = (Class<?>) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					returnType = Object.class;
 				}
 			} else if (isMap) {
 				try {
-					mapKeyType = (Class) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
+					mapKeyType = (Class<?>) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					mapKeyType = Object.class;
 				}
 				try {
-					returnType = (Class) ((ParameterizedType) genericReturnType).getActualTypeArguments()[1];
+					returnType = (Class<?>) ((ParameterizedType) genericReturnType).getActualTypeArguments()[1];
 				} catch (Exception e) {
 					returnType = Object.class;
 				}
 			}
 			if (NoShortcutSerializationWrapper.class.isAssignableFrom(returnType)) {
 				try {
-					returnType = (Class) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
+					returnType = (Class<?>) ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
 				} catch (Exception e) {
 					returnType = Object.class;
 				}
@@ -371,7 +370,7 @@ public class IndexResource {
 		return url.toString();
 	}
 
-	public static JsonObject getResourceIndexNode(Class resourceClass, HttpServletRequest request) throws Exception { // String basePath) throws Exception {
+	public static JsonObject getResourceIndexNode(Class<?> resourceClass, HttpServletRequest request) throws Exception { // String basePath) throws Exception {
 		String basePath = getBasePath(request);
 		AbstractResource resource = IntrospectionModeller.createResource(resourceClass);
 		JsonObject classNode = new JsonObject();
@@ -418,11 +417,11 @@ public class IndexResource {
 		return indexNode;
 	}
 
-	private static boolean isAnnotatedResourceClass(Class resourceClass) {
+	private static boolean isAnnotatedResourceClass(Class<?> resourceClass) {
 		if (resourceClass.isAnnotationPresent(Path.class)) {
 			return true;
 		}
-		Class[] interfaces = resourceClass.getInterfaces();
+		Class<?>[] interfaces = resourceClass.getInterfaces();
 		for (int i = 0; i < interfaces.length; i++) {
 			if (interfaces[i].isAnnotationPresent(Path.class)) {
 				return true;
@@ -431,7 +430,7 @@ public class IndexResource {
 		return false;
 	}
 
-	private static boolean isTerminalType(Class type) {
+	private static boolean isTerminalType(Class<?> type) {
 		return ClassUtils.isPrimitiveOrWrapper(type)
 				|| type.isEnum()
 				|| Date.class.isAssignableFrom(type)
@@ -443,8 +442,7 @@ public class IndexResource {
 		return (!basePath.endsWith("/") ? basePath + "/" : basePath) + (apiPath.startsWith("/") ? apiPath.substring(1) : apiPath);
 	}
 
-	private static JsonElement markMapCollection(JsonElement voNode, Class mapKeyType, boolean isMap, boolean isCollection) {
-		JsonElement result = voNode;
+	private static JsonElement markMapCollection(JsonElement voNode, Class<?> mapKeyType, boolean isMap, boolean isCollection) {
 		if (isMap) {
 			JsonObject voMapNode = new JsonObject();
 			voMapNode.add(ClassUtils.getSimpleName(mapKeyType), voNode);
@@ -474,11 +472,11 @@ public class IndexResource {
 			rootNode.addProperty(JS_ANNOUNCEMENT_FIELD, announcement.getMessage());
 		}
 		rootNode.add(JS_CLASSES_FIELD, classesNode);
-		ArrayList<Class> classes = new ArrayList<Class>(application.getClasses());
+		ArrayList<Class<?>> classes = new ArrayList<>(application.getClasses());
 		Collections.sort(classes, RESOURCE_CLASS_COMPARATOR);
-		Iterator<Class> classesIt = classes.iterator();
+		Iterator<Class<?>> classesIt = classes.iterator();
 		while (classesIt.hasNext()) {
-			Class resourceClass = classesIt.next();
+			Class<?> resourceClass = classesIt.next();
 			if (isAnnotatedResourceClass(resourceClass)) {
 				classesNode.add(getResourceIndexNode(resourceClass, request)); // basePath));
 			}
