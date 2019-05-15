@@ -131,7 +131,7 @@ public class UserResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

@@ -91,7 +91,7 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 
 	protected abstract Class<?> getServiceInterface();
 
-	protected Page<?> list(AuthenticationVO auth, Long id, String resource, UriInfo uriInfo) throws Throwable {
+	protected Page list(AuthenticationVO auth, Long id, String resource, UriInfo uriInfo) throws Throwable {
 		if (AssociationPath.methodExists(getServiceInterface(), resource, getGetListMethodNameTransformer())) {
 			MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters(true);
 			PSFUriPart psf = new PSFUriPart();
