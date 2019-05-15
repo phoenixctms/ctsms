@@ -59,7 +59,7 @@ public class VisitScheduleItemResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("interval")
 	public Collection<VisitScheduleItemOutVO> getVisitScheduleItemInterval(@QueryParam("trial_id") Long trialId, @QueryParam("from") String from,
-			@QueryParam("to") String to, @QueryParam("sort") Boolean sort) throws Exception { // AuthenticationException, AuthorisationException, ServiceException {
+			@QueryParam("to") String to, @QueryParam("sort") Boolean sort) throws Exception {
 		return WebUtil.getServiceLocator().getTrialService().getVisitScheduleItemInterval(auth, trialId, null, null, null,
 				(Date) (CommonUtil.isEmptyString(from) ? null : StringConverter.getConverter(Date.class).convert(from)),
 				(Date) (CommonUtil.isEmptyString(to) ? null : StringConverter.getConverter(Date.class).convert(to)), null, sort);

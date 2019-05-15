@@ -28,7 +28,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api(value="proband")
 @Path("/probandaddress")
-public class ProbandAddressResource {
+public final class ProbandAddressResource {
 
 	@Context
 	AuthenticationVO auth;

@@ -41,7 +41,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="shared")
 @Path("/file")
-public class FileResource {
+public final class FileResource {
 
 	@Context
 	AuthenticationVO auth;

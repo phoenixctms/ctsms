@@ -28,7 +28,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="inputfield")
 @Path("/inputfieldselectionsetvalue")
-public class SelectionSetValueResource {
+public final class SelectionSetValueResource {
 
 	@Context
 	AuthenticationVO auth;

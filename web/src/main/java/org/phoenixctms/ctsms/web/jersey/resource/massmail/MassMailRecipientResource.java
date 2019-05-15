@@ -36,7 +36,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="massmail")
 @Path("/massmailrecipient")
-public class MassMailRecipientResource {
+public final class MassMailRecipientResource {
 
 	@Context
 	AuthenticationVO auth;

@@ -48,7 +48,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="inventory")
 @Path("/inventory")
-public class InventoryResource extends ServiceResourceBase {
+public final class InventoryResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.INVENTORY_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.INVENTORY_JOURNAL;

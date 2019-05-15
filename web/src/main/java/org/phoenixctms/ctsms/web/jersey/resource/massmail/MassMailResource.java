@@ -44,7 +44,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="massmail")
 @Path("/massmail")
-public class MassMailResource extends ServiceResourceBase {
+public final class MassMailResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.MASS_MAIL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.MASS_MAIL_JOURNAL;

@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api(value="shared")
 @Path("/link")
-public class HyperlinkResource {
+public final class HyperlinkResource {
 
 	@Context
 	AuthenticationVO auth;

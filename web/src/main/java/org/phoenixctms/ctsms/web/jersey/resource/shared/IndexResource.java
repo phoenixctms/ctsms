@@ -79,7 +79,7 @@ import com.sun.jersey.api.model.Parameter;
 import com.sun.jersey.server.impl.modelapi.annotation.IntrospectionModeller;
 
 @Path("/")
-public class IndexResource {
+public final class IndexResource {
 
 	// https://dzone.com/articles/jersey-listing-all-resources
 	private final static String JS_TITLE_FIELD = "title";

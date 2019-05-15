@@ -50,7 +50,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="shared")
 @Path("/search")
-public class SearchResource {
+public final class SearchResource {
 
 	@Context
 	AuthenticationVO auth;

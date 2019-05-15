@@ -47,7 +47,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="shared")
 @Path("/tools")
-public class ToolsResource {
+public final class ToolsResource {
 
 	private final static Pattern COMPLETE_METHOD_NAME_REGEXP = Pattern.compile("^complete");
 	private static final MethodTransfilter COMPLETE_METHOD_NAME_TRANSFORMER = new MethodTransfilter() {
@@ -156,7 +156,6 @@ public class ToolsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
 		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request)); // basePath));
 	}
 }

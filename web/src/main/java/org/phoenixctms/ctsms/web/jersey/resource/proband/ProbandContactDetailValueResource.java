@@ -23,7 +23,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api(value="proband")
 @Path("/probandcontactdetailvalue")
-public class ProbandContactDetailValueResource {
+public final class ProbandContactDetailValueResource {
 
 	@Context
 	AuthenticationVO auth;

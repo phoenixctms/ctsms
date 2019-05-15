@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api(value="shared")
 @Path("/journal")
-public class JournalResource {
+public final class JournalResource {
 
 	@Context
 	AuthenticationVO auth;

@@ -29,7 +29,7 @@ import com.sun.jersey.api.NotFoundException;
 
 @Api(value="shared")
 @Path("/selectionset")
-public class SelectionSetResource {
+public final class SelectionSetResource {
 
 	@Context
 	AuthenticationVO auth;

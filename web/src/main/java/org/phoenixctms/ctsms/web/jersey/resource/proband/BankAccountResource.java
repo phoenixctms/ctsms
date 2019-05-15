@@ -23,7 +23,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @Api(value="proband")
 @Path("/bankaccount")
-public class BankAccountResource {
+public final class BankAccountResource {
 
 	@Context
 	AuthenticationVO auth;

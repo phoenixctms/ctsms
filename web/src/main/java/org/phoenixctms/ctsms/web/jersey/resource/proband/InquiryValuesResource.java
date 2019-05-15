@@ -27,7 +27,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="proband")
 @Path("/inquiryvalue")
-public class InquiryValuesResource {
+public final class InquiryValuesResource {
 
 	@Context
 	AuthenticationVO auth;

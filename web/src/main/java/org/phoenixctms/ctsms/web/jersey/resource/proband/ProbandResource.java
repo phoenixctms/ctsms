@@ -60,7 +60,7 @@ import io.swagger.annotations.Api;
 
 @Api(value="proband")
 @Path("/proband")
-public class ProbandResource extends ServiceResourceBase {
+public final class ProbandResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.PROBAND_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.PROBAND_JOURNAL;
