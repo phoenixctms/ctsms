@@ -315,7 +315,6 @@ public class SearchResource {
 		Collection result = WebUtil.getServiceLocator().getSearchService()
 				.searchUser(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_USER_INSTANCES, psf);
 		NoShortcutSerializationWrapper.transformVoCollection(result);
-		NoShortcutSerializationWrapper.transformVoCollection(result);
 		return new Page<NoShortcutSerializationWrapper<UserOutVO>>(result, psf);
 	}
 
