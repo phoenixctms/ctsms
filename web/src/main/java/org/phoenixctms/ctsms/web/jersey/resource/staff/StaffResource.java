@@ -62,7 +62,7 @@ public class StaffResource extends ServiceResourceBase {
 	private final static FileModule fileModule = FileModule.STAFF_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.STAFF_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.STAFF_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = StaffService.class;
+	private final static Class<?> SERVICE_INTERFACE = StaffService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "staffId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, StaffOutVO.class);
 	public final static StaffListIndex LIST_INDEX = new StaffListIndex(getListIndexNode(ResourceUtils.getMethodPath(StaffResource.class, "list")
@@ -191,7 +191,7 @@ public class StaffResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -235,7 +235,7 @@ public class StaffResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

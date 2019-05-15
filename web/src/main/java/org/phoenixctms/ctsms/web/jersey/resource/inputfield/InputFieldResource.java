@@ -51,10 +51,10 @@ import io.swagger.annotations.Api;
 
 @Api(value="inputfield")
 @Path("/inputfield")
-public class InputFieldResource extends ServiceResourceBase {
+public final class InputFieldResource extends ServiceResourceBase {
 
 	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
-	private final static Class SERVICE_INTERFACE = InputFieldService.class;
+	private final static Class<?> SERVICE_INTERFACE = InputFieldService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InputFieldOutVO.class);
 	public final static InputFieldListIndex LIST_INDEX = new InputFieldListIndex(getListIndexNode(
@@ -65,11 +65,25 @@ public class InputFieldResource extends ServiceResourceBase {
 	AuthenticationVO auth;
 
 	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public InputFieldOutVO addInputField(@FormDataParam("json") InputFieldInVO in,
+			@FormDataParam("data") FormDataBodyPart content,
+			@FormDataParam("data") FormDataContentDisposition contentDisposition,
+			@FormDataParam("data") final InputStream input) throws Exception {
+		in.setDatas(CommonUtil.inputStreamToByteArray(input));
+		in.setMimeType(content.getMediaType().toString());
+		in.setFileName(contentDisposition.getFileName());
+		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
+	}
+	
+	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
 	}
+
 
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -150,14 +164,14 @@ public class InputFieldResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 
@@ -166,6 +180,19 @@ public class InputFieldResource extends ServiceResourceBase {
 	@Path("list")
 	public InputFieldListIndex listIndex() throws Exception {
 		return LIST_INDEX;
+	}
+
+	@PUT
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public InputFieldOutVO updateInputField(@FormDataParam("json") InputFieldInVO in,
+			@FormDataParam("data") FormDataBodyPart content,
+			@FormDataParam("data") FormDataContentDisposition contentDisposition,
+			@FormDataParam("data") final InputStream input) throws Exception {
+		in.setDatas(CommonUtil.inputStreamToByteArray(input));
+		in.setMimeType(content.getMediaType().toString());
+		in.setFileName(contentDisposition.getFileName());
+		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
 	}
 
 	@PUT

@@ -3,9 +3,9 @@ package org.phoenixctms.ctsms.web.jersey.resource;
 public class NamedParameter {
 
 	private String name;
-	private Class type;
+	private Class<?> type;
 
-	public NamedParameter(String name, Class type) {
+	public NamedParameter(String name, Class<?> type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -29,7 +29,7 @@ public class NamedParameter {
 		return name;
 	}
 
-	public Class getType() {
+	public Class<?> getType() {
 		return type;
 	}
 }

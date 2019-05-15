@@ -51,7 +51,7 @@ public class TrialResource extends ServiceResourceBase {
 	private final static FileModule fileModule = FileModule.TRIAL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.TRIAL_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.TRIAL_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = TrialService.class;
+	private final static Class<?> SERVICE_INTERFACE = TrialService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "trialId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, TrialOutVO.class);
 	public final static TrialListIndex LIST_INDEX = new TrialListIndex(getListIndexNode(ResourceUtils.getMethodPath(TrialResource.class, "list")
@@ -167,7 +167,7 @@ public class TrialResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -198,7 +198,7 @@ public class TrialResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

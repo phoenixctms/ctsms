@@ -53,7 +53,7 @@ public class InventoryResource extends ServiceResourceBase {
 	private final static FileModule fileModule = FileModule.INVENTORY_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.INVENTORY_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.INVENTORY_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = InventoryService.class;
+	private final static Class<?> SERVICE_INTERFACE = InventoryService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "inventoryId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InventoryOutVO.class);
 	public final static InventoryListIndex LIST_INDEX = new InventoryListIndex(getListIndexNode(
@@ -210,14 +210,14 @@ public class InventoryResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

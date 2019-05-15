@@ -15,8 +15,8 @@ public abstract class StringConverter<T> {
 	private final static String QUERY_PARAM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private static final String INVALID_BOOLEAN_STRING = "cannot convert '{0}' to boolean value";
 	private static final String UNSUPPORTED_RESULT_TYPE = "converting to {0} not supported";
-	public final static ArrayList<StringConverter> BOOL_INT_FLOAT = new ArrayList<StringConverter>();
-	public final static ArrayList<StringConverter> BOOL_LONG = new ArrayList<StringConverter>();
+	public final static ArrayList<StringConverter<?>> BOOL_INT_FLOAT = new ArrayList<StringConverter<?>>();
+	public final static ArrayList<StringConverter<?>> BOOL_LONG = new ArrayList<StringConverter<?>>();
 	static {
 		BOOL_INT_FLOAT.add(getBooleanConverter());
 		BOOL_INT_FLOAT.add(getIntegerConverter());
@@ -25,8 +25,8 @@ public abstract class StringConverter<T> {
 		BOOL_LONG.add(getLongConverter());
 	}
 
-	public static Object convert(String s, ArrayList<StringConverter> converters) {
-		Iterator<StringConverter> it = converters.iterator();
+	public static Object convert(String s, ArrayList<StringConverter<?>> converters) {
+		Iterator<StringConverter<?>> it = converters.iterator();
 		while (it.hasNext()) {
 			try {
 				return it.next().convert(s);
@@ -49,7 +49,7 @@ public abstract class StringConverter<T> {
 		};
 	}
 
-	public static StringConverter getConverter(Type type) throws Exception {
+	public static StringConverter<?> getConverter(Type type) throws Exception {
 		if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
 			return getIntegerConverter();
 		} else if (Long.class.equals(type) || Long.TYPE.equals(type)) {

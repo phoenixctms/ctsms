@@ -28,27 +28,27 @@ public class ArgsUriPart implements UriPart {
 	private LinkedHashMap<String, Object> overrides;
 	private LinkedHashMap<String, Object> defaults;
 	private HashSet<String> excludePrimitiveConversion;
-	private Class declaringInterface;
-	private ArrayList<StringConverter> primitiveConversionPrecedence;
+	private Class<?> declaringInterface;
+	private ArrayList<StringConverter<?>> primitiveConversionPrecedence;
 	private MethodTransfilter methodTransfilter;
 
-	public ArgsUriPart(Class declaringInterface) {
+	public ArgsUriPart(Class<?> declaringInterface) {
 		this(declaringInterface, null, MethodTransfilter.DEFAULT_TRANSFILTER);
 	}
 
-	public ArgsUriPart(Class declaringInterface, MethodTransfilter methodTransfilter) {
+	public ArgsUriPart(Class<?> declaringInterface, MethodTransfilter methodTransfilter) {
 		this(declaringInterface, null, methodTransfilter);
 	}
 
-	public ArgsUriPart(Class declaringInterface, String resource) {
+	public ArgsUriPart(Class<?> declaringInterface, String resource) {
 		this(declaringInterface, resource, MethodTransfilter.DEFAULT_TRANSFILTER);
 	}
 
-	public ArgsUriPart(Class declaringInterface, String resource, MethodTransfilter methodTransfilter) {
+	public ArgsUriPart(Class<?> declaringInterface, String resource, MethodTransfilter methodTransfilter) {
 		excludePrimitiveConversion = new HashSet<String>();
 		overrides = new LinkedHashMap<String, Object>();
 		defaults = new LinkedHashMap<String, Object>();
-		primitiveConversionPrecedence = new ArrayList<StringConverter>();
+		primitiveConversionPrecedence = new ArrayList<StringConverter<?>>();
 		reset(declaringInterface, resource, methodTransfilter);
 	}
 
@@ -137,7 +137,7 @@ public class ArgsUriPart implements UriPart {
 			if (annotation != null) {
 				parameterNames = annotation.value();
 			}
-			Class[] parameterTypes = method.getParameterTypes();
+			Class<?>[] parameterTypes = method.getParameterTypes();
 			if (parameterNames != null && parameterTypes != null) {
 				for (int i = 0; i < parameterNames.length; i++) {
 					namedParameters.put(parameterNames[i], new NamedParameter(parameterNames[i], parameterTypes[i]));
@@ -169,7 +169,7 @@ public class ArgsUriPart implements UriPart {
 		return overrides;
 	}
 
-	public ArrayList<StringConverter> getPrimitiveConversionPrecedence() {
+	public ArrayList<StringConverter<?>> getPrimitiveConversionPrecedence() {
 		return primitiveConversionPrecedence;
 	}
 
@@ -183,7 +183,7 @@ public class ArgsUriPart implements UriPart {
 		return slurp && getNamedParameters(resource, false).size() == 0;
 	}
 
-	public void reset(Class declaringInterface, String resource, MethodTransfilter methodTransfilter) {
+	public void reset(Class<?> declaringInterface, String resource, MethodTransfilter methodTransfilter) {
 		excludePrimitiveConversion.clear();
 		overrides.clear();
 		defaults.clear();
@@ -194,7 +194,7 @@ public class ArgsUriPart implements UriPart {
 		slurp = true;
 	}
 
-	public void setDeclaringInterface(Class declaringInterface) {
+	public void setDeclaringInterface(Class<?> declaringInterface) {
 		this.declaringInterface = declaringInterface;
 	}
 

@@ -48,12 +48,12 @@ import io.swagger.annotations.Api;
 
 @Api(value="course")
 @Path("/course")
-public class CourseResource extends ServiceResourceBase {
+public final class CourseResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.COURSE_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.COURSE_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.COURSE_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = CourseService.class;
+	private final static Class<?> SERVICE_INTERFACE = CourseService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "courseId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, CourseOutVO.class);
 	public final static CourseListIndex LIST_INDEX = new CourseListIndex(getListIndexNode(
@@ -208,14 +208,14 @@ public class CourseResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

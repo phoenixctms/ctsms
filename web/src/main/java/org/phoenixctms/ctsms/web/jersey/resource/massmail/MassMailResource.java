@@ -48,7 +48,7 @@ public class MassMailResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.MASS_MAIL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.MASS_MAIL_JOURNAL;
-	private final static Class SERVICE_INTERFACE = MassMailService.class;
+	private final static Class<?> SERVICE_INTERFACE = MassMailService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "massMailId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, MassMailOutVO.class);
 	public final static MassMailListIndex LIST_INDEX = new MassMailListIndex(getListIndexNode(
@@ -163,14 +163,14 @@ public class MassMailResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/list/{resource}")
-	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
+	public Page<?> list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
 	}
 

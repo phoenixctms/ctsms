@@ -37,7 +37,7 @@ public class SelectionSetResource {
 
 		@Override
 		public boolean include(Method method) {
-			Class[] paramTypes = method.getParameterTypes();
+			Class<?>[] paramTypes = method.getParameterTypes();
 			return (paramTypes != null && paramTypes.length >= 1 && AuthenticationVO.class.equals(paramTypes[0]));
 		}
 
@@ -49,7 +49,7 @@ public class SelectionSetResource {
 			return methodName;
 		}
 	};
-	private final static Class SERVICE_INTERFACE = SelectionSetService.class;
+	private final static Class<?> SERVICE_INTERFACE = SelectionSetService.class;
 	public final static SelectionSetIndex INDEX = new SelectionSetIndex(getIndexNode(
 			ResourceUtils.getMethodPath(SelectionSetResource.class, "get").replaceFirst("/\\{resource\\}", ""), // "index"),
 			getArgsUriPart("", new AuthenticationVO())));
