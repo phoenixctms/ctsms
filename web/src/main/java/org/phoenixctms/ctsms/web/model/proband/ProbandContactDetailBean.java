@@ -16,8 +16,8 @@ import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -118,7 +118,7 @@ public class ProbandContactDetailBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandcontactdetail_list");
+		DataTable.clearFilters("probandcontactdetail_list");
 		out = null;
 		this.probandId = id;
 		initIn();

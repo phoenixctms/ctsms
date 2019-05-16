@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>table columns selection dialog</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:dialog widgetVar="#{tableColumnsDialog}" modal="true"
+			onHide="#{tableColumnsDialog}RemoteCommand()"
+			header="#{labels.table_columns_dialog_title}" showEffect="#{effect}"
+			hideEffect="#{effect}" styleClass="ctsms-tablecolumns-dialog">
+			<h:panelGrid columns="1" cellpadding="0"
+				styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+				<p:dataGrid var="tableColumn"
+					value="#{applicationScopeBean.mapToList(sessionScopeBean.columnManager.getVisibleMap(dataTableId))}"
+					paginator="false" columns="3"
+					id="#{tableColumnsDialog}_visible_inputs">
+					<p:column>
+
+						<h:panelGrid columns="3" cellpadding="2"
+							columnClasses="ctsms-input-column,ctsms-label-for-column">
+							<p:selectBooleanCheckbox id="#{tableColumnsDialog}_visible"
+								value="#{sessionScopeBean.columnManager.getVisibleMap(dataTableId)[tableColumn.key]}">
+							</p:selectBooleanCheckbox>
+							<h:outputLabel for="#{tableColumnsDialog}_visible"
+								value="#{applicationScopeBean.evalLabelEl(tableColumn.key)}" />
+						</h:panelGrid>
+					</p:column>
+				</p:dataGrid>
+				<p:messages id="#{tableColumnsDialog}_visible_messages" />
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:remoteCommand process="@this"
+							name="#{tableColumnsDialog}RemoteCommand"
+							update="#{tableColumnsDialog}_visible_inputs,#{tableColumnsDialog}_visible_messages" />
+						<p:commandButton process="@this"
+							value="#{labels.restore_defaults_button_label}"
+							actionListener="#{sessionScopeBean.columnManager.clear}"
+							icon="ui-icon ui-icon-arrowreturnthick-1-w" ajax="true" disabled="false"
+							update="#{dataTableId},#{tableColumnsDialog}_visible_inputs,#{tableColumnsDialog}_visible_messages">
+							<f:attribute name="datatable_id" value="#{dataTableId}" />
+						</p:commandButton>
+						<p:commandButton
+							process="@this,#{tableColumnsDialog}_visible_inputs"
+							id="update#{tableColumnsDialog}"
+							value="#{labels.save_apply_button_label}"
+							actionListener="#{sessionScopeBean.columnManager.update}"
+							oncomplete="if(_testFlag(args, AJAX_OPERATION_SUCCESS)){#{tableColumnsDialog}.hide();}"
+							icon="ui-icon ui-icon-check" ajax="true"
+							update="#{dataTableId},#{tableColumnsDialog}_visible_inputs,#{tableColumnsDialog}_visible_messages">
+							<f:attribute name="datatable_id" value="#{dataTableId}" />
+						</p:commandButton>
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+			</h:panelGrid>
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

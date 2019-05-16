@@ -119,8 +119,8 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.id}" />
 						</p:column>
-						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}"
-							rendered="#{trialEcrfStatusEntryBean.trial.type.person}">
+						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}">
+							<!-- rendered="#{trialEcrfStatusEntryBean.trial.type.person}" -->
 							<f:facet name="header">
 								<h:outputText
 									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
@@ -151,8 +151,9 @@
 						</p:column>
 						
 						<p:column filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
-							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
-							rendered="#{!trialEcrfStatusEntryBean.trial.type.person}">
+							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}">
+							<!-- rendered="#{!trialEcrfStatusEntryBean.trial.type.person}" -->
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.trialecrfstatus_proband_list_animal_name_column}" />

@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel.ShiftDurationSummaryType;
@@ -55,17 +55,17 @@ public class StaffAssociationBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("account_list");
-		LazyDataModelBase.clearFilters("ownershipinventory_list");
-		LazyDataModelBase.clearFilters("inventorybooking_list");
-		LazyDataModelBase.clearFilters("responsiblepersonmaintenanceitems_list");
-		LazyDataModelBase.clearFilters("companycontactmaintenanceitems_list");
-		LazyDataModelBase.clearFilters("originatorinventorystatus_list");
-		LazyDataModelBase.clearFilters("addresseeinventorystatus_list");
-		LazyDataModelBase.clearFilters("institutioncourses_list");
-		LazyDataModelBase.clearFilters("institutioncvpositions_list");
-		LazyDataModelBase.clearFilters("lectures_list");
-		LazyDataModelBase.clearFilters("trial_membership_list");
+		DataTable.clearFilters("account_list");
+		DataTable.clearFilters("ownershipinventory_list");
+		DataTable.clearFilters("inventorybooking_list");
+		DataTable.clearFilters("responsiblepersonmaintenanceitems_list");
+		DataTable.clearFilters("companycontactmaintenanceitems_list");
+		DataTable.clearFilters("originatorinventorystatus_list");
+		DataTable.clearFilters("addresseeinventorystatus_list");
+		DataTable.clearFilters("institutioncourses_list");
+		DataTable.clearFilters("institutioncvpositions_list");
+		DataTable.clearFilters("lectures_list");
+		DataTable.clearFilters("trial_membership_list");
 		this.staffId = id;
 		initIn();
 		initSets();
@@ -179,61 +179,61 @@ public class StaffAssociationBean extends ManagedBeanBase {
 
 	public void refreshAccount() {
 		accountModel.updateRowCount();
-		LazyDataModelBase.clearFilters("account_list");
+		DataTable.clearFilters("account_list");
 	}
 
 	public void refreshAddresseeInventoryStatus() {
 		addresseeInventoryStatusModel.updateRowCount();
-		LazyDataModelBase.clearFilters("addresseeinventorystatus_list");
+		DataTable.clearFilters("addresseeinventorystatus_list");
 	}
 
 	public void refreshCompanyContactMaintenance() {
 		companyContactMaintenanceModel.updateRowCount();
-		LazyDataModelBase.clearFilters("companycontactmaintenanceitems_list");
+		DataTable.clearFilters("companycontactmaintenanceitems_list");
 	}
 
 	public void refreshInstitutionCourse() {
 		institutionCourseModel.updateRowCount();
-		LazyDataModelBase.clearFilters("institutioncourses_list");
+		DataTable.clearFilters("institutioncourses_list");
 	}
 
 	public void refreshInstitutionCvPosition() {
 		institutionCvPositionModel.updateRowCount();
-		LazyDataModelBase.clearFilters("institutioncvpositions_list");
+		DataTable.clearFilters("institutioncvpositions_list");
 	}
 
 	public void refreshLecture() {
 		lectureModel.updateRowCount();
-		LazyDataModelBase.clearFilters("lectures_list");
+		DataTable.clearFilters("lectures_list");
 	}
 
 	public void refreshOnBehalfOfInventoryBooking() {
 		onBehalfOfInventoryBookingModel.updateRowCount();
-		LazyDataModelBase.clearFilters("inventorybooking_list");
+		DataTable.clearFilters("inventorybooking_list");
 	}
 
 	public void refreshOriginatorInventoryStatus() {
 		originatorInventoryStatusModel.updateRowCount();
-		LazyDataModelBase.clearFilters("originatorinventorystatus_list");
+		DataTable.clearFilters("originatorinventorystatus_list");
 	}
 
 	public void refreshownershipInventory() {
 		ownershipInventoryModel.updateRowCount();
-		LazyDataModelBase.clearFilters("ownershipinventory_list");
+		DataTable.clearFilters("ownershipinventory_list");
 	}
 
 	public void refreshPatient() {
 		patientModel.updateRowCount();
-		LazyDataModelBase.clearFilters("patients_list");
+		DataTable.clearFilters("patients_list");
 	}
 
 	public void refreshResponsiblePersonMaintenance() {
 		responsiblePersonMaintenanceModel.updateRowCount();
-		LazyDataModelBase.clearFilters("responsiblepersonmaintenanceitems_list");
+		DataTable.clearFilters("responsiblepersonmaintenanceitems_list");
 	}
 
 	public void refreshTrialMembership() {
 		trialMembershipModel.updateRowCount();
-		LazyDataModelBase.clearFilters("trial_membership_list");
+		DataTable.clearFilters("trial_membership_list");
 	}
 }

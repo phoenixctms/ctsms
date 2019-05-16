@@ -24,9 +24,9 @@ import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemInVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.GroupVisitMatrix;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
@@ -206,7 +206,7 @@ public class VisitScheduleBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("visitschedule_list");
+		DataTable.clearFilters("visitschedule_list");
 		out = null;
 		this.trialId = id;
 		matrix.change(id);

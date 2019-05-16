@@ -20,9 +20,6 @@
 					name="searchBean"
 					value="#{inventorySearchBean}" />
 				<ui:param
-					name="result_list"
-					value="inventory_result_list" />
-				<ui:param
 					name="resultListWidgetVar"
 					value="inventoryResultList" />
 			</ui:include>
@@ -46,7 +43,7 @@
 						onstart="inventoryResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="false"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,inventory_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{inventorySearchBean.resultListId}" />
 					<p:commandButton
 						rendered="#{!inventorySearchBean.created}"
 						process="@this,:search_form:tabView:criteria_input"
@@ -92,7 +89,7 @@
 						onstart="inventoryResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!inventorySearchBean.created}"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,inventory_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{inventorySearchBean.resultListId}" />
 					<ui:insert name="toolbarbuttons"></ui:insert>
 					<p:commandButton
 						process="@this,:search_form:tabView:criteria_input"
@@ -103,7 +100,7 @@
 						onstart="inventoryResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!inventorySearchBean.createable}"
-						update=":search_form:tabView:criteria_input,messages,inventory_result_list" />
+						update=":search_form:tabView:criteria_input,messages,#{inventorySearchBean.resultListId}" />
 				</p:toolbarGroup>
 				<p:separator />
 				<p:toolbarGroup align="right">
@@ -129,10 +126,20 @@
 				emptyMessage="#{labels.datatable_empty_message}"
 				var="inventory"
 				value="#{inventorySearchBean.inventoryResultModel}"
-				id="inventory_result_list"
+				id="#{inventorySearchBean.resultListId}"
 				rowStyleClass="#{inventory.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventorySearchBean.inventoryToColor(inventory.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
-					<h:outputText value="#{inventorySearchBean.queryResultTitle}" />
+					<h:panelGrid
+						columns="2"
+						cellpadding="0"
+						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:outputText value="#{inventorySearchBean.queryResultTitle}" />
+						<p:commandButton
+							type="button"
+							title="#{labels.open_table_columns_dialog_button_label}"
+							icon="ui-icon ui-icon-wrench"
+							onclick="searchTableColumnsDialog.show()" />
+					</h:panelGrid>
 				</f:facet>
 				<p:column
 					sortBy="#{inventory.vo.id}"
@@ -212,8 +219,8 @@
 				</p:column>
 				<p:column
 					sortBy="#{inventory.vo.pieces}"
-					filterBy="#{inventory.vo.pieces}"
-					rendered="#{!inventorySearchBean.picker}">
+					filterBy="#{inventory.vo.pieces}">
+					<f:attribute name="visibleDefault" value = "#{!inventorySearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText value="#{inventorylabels.search_inventory_result_list_pieces_column}" />
 					</f:facet>
@@ -320,6 +327,14 @@
 				onclick="criteriaAddConfirmation.hide()"
 				type="button" />
 		</p:confirmDialog>
+		<ui:include src="tableColumnsDialog.xhtml">
+			<ui:param
+				name="tableColumnsDialog"
+				value="searchTableColumnsDialog" />
+			<ui:param
+				name="dataTableId"
+				value=":search_form:#{inventorySearchBean.resultListId}" />
+		</ui:include>		
 	</ui:composition>
 </h:body>
 </html>

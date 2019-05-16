@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.web.model.shared.search;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1191,6 +1192,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 		}
 		updateInstantCriteria();
+	}
+
+	public String getResultListId() {
+		return MessageFormat.format("{0}{1}_result_list", getDBModule().getValue(), isPicker() ? "_picker" : "");
 	}
 
 	public void updateIntermediateSets() {

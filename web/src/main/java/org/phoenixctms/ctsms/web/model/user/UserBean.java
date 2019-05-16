@@ -110,6 +110,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
+	private long tableColumnCount;
 
 	public UserBean() {
 		super();
@@ -121,6 +122,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		ldapEntry1 = null;
 		ldapEntry2 = null;
 		timeZone = null;
+		tableColumnCount = 0l;
 	}
 
 	@Override
@@ -527,6 +529,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		if (this.decimalSeparators == null) {
 			this.decimalSeparators = WebUtil.getDecimalSeparators();
 		}
+		loadTableColumnCount();
 		if (WebUtil.isUserIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
@@ -609,6 +612,21 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			initSets();
 		}
 		return ERROR_OUTCOME;
+	}
+
+	private void loadTableColumnCount() {
+		tableColumnCount = 0l;
+		if (in.getId() != null) {
+			try {
+				tableColumnCount = WebUtil.getServiceLocator().getUserService().getDataTableColumnCount(WebUtil.getAuthentication(),
+						in.getId(), null, null);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
 	}
 
 	private void loadRemoteUserInfo() {
@@ -737,5 +755,32 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public final void clearTableColumns() {
+		actionPostProcess(clearTableColumnsAction());
+	}
+
+	public String clearTableColumnsAction() {
+		try {
+			WebUtil.getServiceLocator().getUserService().clearDataTableColumns(WebUtil.getAuthentication(), in.getId(), null, null);
+			loadTableColumnCount();
+			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
+			return UPDATE_OUTCOME;
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
+		} catch (AuthorisationException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+		return ERROR_OUTCOME;
+	}
+
+	public long getTableColumnCount() {
+		return tableColumnCount;
 	}
 }

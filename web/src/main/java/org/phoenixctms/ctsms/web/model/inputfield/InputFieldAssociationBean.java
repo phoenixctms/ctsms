@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 
 @ManagedBean
@@ -73,16 +73,16 @@ public class InputFieldAssociationBean extends ManagedBeanBase {
 
 	public void refreshEcrfFieldUsage() {
 		ecrfFieldUsageModel.updateRowCount();
-		LazyDataModelBase.clearFilters("ecrffield_list");
+		DataTable.clearFilters("ecrffield_list");
 	}
 
 	public void refreshInquiryUsage() {
 		inquiryUsageModel.updateRowCount();
-		LazyDataModelBase.clearFilters("inquiry_list");
+		DataTable.clearFilters("inquiry_list");
 	}
 
 	public void refreshProbandListEntryTagUsage() {
 		probandListEntryTagUsageModel.updateRowCount();
-		LazyDataModelBase.clearFilters("probandlistentrytag_list");
+		DataTable.clearFilters("probandlistentrytag_list");
 	}
 }

@@ -23,8 +23,8 @@ import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.InputFieldMultiPickerModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -221,8 +221,8 @@ public class EcrfFieldBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("ecrffield_ecrf_list");
-		LazyDataModelBase.clearFilters("ecrffield_list");
+		DataTable.clearFilters("ecrffield_ecrf_list");
+		DataTable.clearFilters("ecrffield_list");
 		out = null;
 		this.trialId = id;
 		this.ecrfId = null;
@@ -729,7 +729,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 
 	public void setSelectedEcrf(IDVO ecrf) {
 		if (ecrf != null) {
-			LazyDataModelBase.clearFilters("ecrffield_list");
+			DataTable.clearFilters("ecrffield_list");
 			this.ecrfId = ecrf.getId();
 			out = null;
 			this.initIn();

@@ -159,3 +159,6 @@ CREATE INDEX bank_account_iban_hash ON bank_account (iban_hash);
 CREATE INDEX bank_account_bank_code_number_hash ON bank_account (bank_code_number_hash);
 CREATE INDEX bank_account_account_number_hash ON bank_account (account_number_hash);
 CREATE INDEX bank_account_account_holder_name_hash ON bank_account (account_holder_name_hash);
+
+
+CREATE INDEX data_table_column_user_fk_table_name_column_name ON data_table_column (user_fk, table_name, column_name);

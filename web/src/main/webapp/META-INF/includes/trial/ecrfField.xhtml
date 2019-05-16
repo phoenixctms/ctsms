@@ -56,9 +56,22 @@
 						event="rowSelect"
 						update=":tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />
 					<f:facet name="header">
-						<h:outputText value="#{ecrfFieldBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+					
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{ecrfFieldBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="ecrfFieldEcrfTableColumnsDialog.show()" />
+						</h:panelGrid>					
+					
 					</f:facet>
 					<p:column sortBy="#{ecrf.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -120,9 +133,22 @@
 							event="rowSelect"
 							update=":tabView:ecrffield_form:ecrffield_input" />
 						<f:facet name="header">
-							<h:outputText value="#{ecrfFieldBean.ecrfFieldListHeader}" />
+						
+							<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{ecrfFieldBean.ecrfFieldListHeader}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									onclick="ecrfFieldEcrfFieldTableColumnsDialog.show()" />
+							</h:panelGrid>
+							
 						</f:facet>
 						<p:column sortBy="#{ecrfField.vo.id}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
@@ -146,13 +172,13 @@
 							</ui:include>
 						</p:column>
 						<p:column
-							sortBy="#{ecrfField.vo.title}"
-							filterBy="#{ecrfField.vo.title}">
+							sortBy="#{ecrfField.vo.titleL10nKey}"
+							filterBy="#{ecrfField.vo.titleL10nKey}">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_title_column}" />
 							</f:facet>
 							<h:outputText
-								value="#{ecrfField.vo.title}" />
+								value="#{ecrfField.vo.titleL10nKey}" />
 						</p:column>
 						<p:column
 							sortBy="#{ecrfField.vo.jsVariableName}"
@@ -206,6 +232,7 @@
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.auditTrail}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_audit_trail_column}" />
 							</f:facet>
@@ -216,6 +243,7 @@
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.reasonForChangeRequired}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_reason_for_change_required_column}" />
 							</f:facet>
@@ -227,6 +255,7 @@
 						</p:column>
 						<p:column
 							sortBy="#{ecrfField.vo.notify}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_notify_column}" />
 							</f:facet>
@@ -239,6 +268,7 @@
 						<p:column
 							sortBy="#{ecrfField.vo.externalId}"
 							filterBy="#{ecrfField.vo.externalId}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_external_id_column}" />
 							</f:facet>
@@ -247,12 +277,14 @@
 						<p:column
 							sortBy="#{ecrfField.vo.field.externalId}"
 							filterBy="#{ecrfField.vo.field.externalId}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_field_external_id_column}" />
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.field.externalId}" />
 						</p:column>	
 						<p:column>
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_number_of_values_column}" />
 							</f:facet>
@@ -1105,6 +1137,22 @@
 					onclick="ecrfFieldDeleteConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="ecrfFieldEcrfTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:ecrffield_form:ecrffield_ecrf_list" />
+			</ui:include>	
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="ecrfFieldEcrfFieldTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:ecrffield_form:ecrffield_list" />
+			</ui:include>						
 		</h:form>
 	</ui:composition>
 </h:body>

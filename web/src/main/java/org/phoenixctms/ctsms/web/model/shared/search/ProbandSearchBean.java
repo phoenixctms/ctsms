@@ -21,8 +21,8 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -277,7 +277,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 		probandResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		probandResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("proband_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 }

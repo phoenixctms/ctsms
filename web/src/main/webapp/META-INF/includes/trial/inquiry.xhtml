@@ -57,9 +57,22 @@
 							event="rowSelect"
 							update=":tabView:inquiry_form:inquiry_input" />
 						<f:facet name="header">
-							<h:outputText value="#{inquiryBean.inquiryModel.rowCount} #{triallabels.inquiry_inquiry_list_header}" />
+							
+							<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{inquiryBean.inquiryModel.rowCount} #{triallabels.inquiry_inquiry_list_header}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									onclick="inquiryTableColumnsDialog.show()" />
+							</h:panelGrid>							
+							
 						</f:facet>
 						<p:column sortBy="#{inquiry.vo.id}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
@@ -83,13 +96,13 @@
 							</ui:include>
 						</p:column>
 						<p:column
-							sortBy="#{inquiry.vo.title}"
-							filterBy="#{inquiry.vo.title}">
+							sortBy="#{inquiry.vo.titleL10nKey}"
+							filterBy="#{inquiry.vo.titleL10nKey}">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.inquiry_inquiry_list_title_column}" />
 							</f:facet>
 							<h:outputText
-								value="#{inquiry.vo.title}" />
+								value="#{inquiry.vo.titleL10nKey}" />
 						</p:column>						
 						<p:column
 							sortBy="#{inquiry.vo.jsVariableName}"
@@ -125,6 +138,7 @@
 							sortBy="#{inquiry.vo.active}"
 							filterBy="#{inquiry.vo.active}"
 							filterOptions="#{sessionScopeBean.filterBooleans}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.inquiry_inquiry_list_active_column}" />
 							</f:facet>
@@ -138,6 +152,7 @@
 							sortBy="#{inquiry.vo.activeSignup}"
 							filterBy="#{inquiry.vo.activeSignup}"
 							filterOptions="#{sessionScopeBean.filterBooleans}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.inquiry_inquiry_list_active_signup_column}" />
 							</f:facet>
@@ -168,6 +183,7 @@
 							</ui:include>
 						</p:column>
 						<p:column>
+						    <f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.inquiry_inquiry_list_excel_column}" />
 							</f:facet>
@@ -178,6 +194,7 @@
 							</ui:include>
 						</p:column>
 						<p:column>
+						    <f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.inquiry_inquiry_list_number_of_values_column}" />
 							</f:facet>
@@ -882,6 +899,14 @@
 					onclick="inquiryDeleteConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="inquiryTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:inquiry_form:inquiry_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

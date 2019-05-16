@@ -18,7 +18,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
@@ -145,7 +145,7 @@ public class ExpiringParticipationOverviewBean extends ManagedBeanBase implement
 		courseParticipationCountCache.clear();
 		expiringParticipationModel.setStaffId(identity != null ? identity.getId() : null);
 		expiringParticipationModel.updateRowCount();
-		LazyDataModelBase.clearFilters("expiringparticipation_list");
+		DataTable.clearFilters("expiringparticipation_list");
 	}
 
 	@Override

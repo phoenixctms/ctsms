@@ -51,12 +51,23 @@
 						event="rowSelect"
 						update=":tabView:massmailrecipient_form:mass_mail_recipient_input" />
 					<f:facet name="header">
-						<h:outputText value="#{massMailRecipientBean.massMailRecipientModel.rowCount} #{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_header}" />
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{massMailRecipientBean.massMailRecipientModel.rowCount} #{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="massMailRecipientTableColumnsDialog.show()" />
+						</h:panelGrid>			
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler rendered="#{massMailRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).decrypted}" />
 					</p:column>
 					<p:column sortBy="#{massMailRecipient.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -65,6 +76,7 @@
 					<p:column
 						sortBy="#{massMailRecipient.vo.proband.id}"
 						filterBy="#{massMailRecipient.vo.proband.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_proband_id_column}" />
 						</f:facet>
@@ -428,6 +440,14 @@
 					onclick="massMailRecipientBulkDeleteConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="massMailRecipientTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:massmailrecipient_form:mass_mail_recipient_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

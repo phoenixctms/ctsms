@@ -65,6 +65,9 @@
     alter table CV_POSITION 
         drop constraint CV_POSITION_SECTION_FKC;
 
+    alter table DATA_TABLE_COLUMN 
+        drop constraint DATA_TABLE_COLUMN_USER_FKC;
+
     alter table DIAGNOSIS 
         drop constraint DIAGNOSIS_MODIFIED_USER_FKC;
 
@@ -939,6 +942,8 @@
     drop table CV_POSITION cascade;
 
     drop table CV_SECTION cascade;
+
+    drop table DATA_TABLE_COLUMN cascade;
 
     drop table DEPARTMENT cascade;
 

@@ -19,8 +19,8 @@ import org.phoenixctms.ctsms.vo.ProbandAddressInVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -136,7 +136,7 @@ public class ProbandAddressBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandaddress_list");
+		DataTable.clearFilters("probandaddress_list");
 		out = null;
 		this.probandId = id;
 		initIn();

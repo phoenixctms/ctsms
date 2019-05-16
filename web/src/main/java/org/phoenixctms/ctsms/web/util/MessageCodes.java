@@ -112,6 +112,7 @@ public interface MessageCodes {
 	public final static String WRONG_CLONE_ADD_ECRF_TRIAL_ID = "wrong_clone_add_ecrf_trial_id";
 	public final static String UPDATE_OPERATION_SUCCESSFUL = "update_operation_successful";
 	public final static String DELETE_OPERATION_SUCCESSFUL = "delete_operation_successful";
+	public final static String NO_VISIBLE_COLUMNS_SELECTED = "no_visible_columns_selected";
 	public final static String ID_NOT_PICKED = "id_not_picked";
 	public final static String ID_ALREADY_PICKED = "id_already_picked";
 	public final static String IDS_PICKED_MAX_LIMIT = "ids_picked_max_limit";

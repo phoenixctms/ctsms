@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.InventoryBookingInVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.InventoryBookingBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
@@ -71,7 +71,7 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("inventorybooking_list");
+		DataTable.clearFilters("inventorybooking_list");
 		out = null;
 		this.probandId = id;
 		// addReimbursementBean.change();

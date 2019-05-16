@@ -32,8 +32,8 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -214,7 +214,7 @@ public class JournalBean extends ManagedBeanBase {
 	}
 
 	private String changeAction(String param, JournalModule module) {
-		LazyDataModelBase.clearFilters("journal_list");
+		DataTable.clearFilters("journal_list");
 		out = null;
 		this.entityId = WebUtil.stringToLong(param);
 		this.module = module;

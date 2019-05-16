@@ -23,8 +23,8 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -128,7 +128,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("moneytransfer_list");
+		DataTable.clearFilters("moneytransfer_list");
 		out = null;
 		this.probandId = id;
 		initIn();

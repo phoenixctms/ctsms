@@ -24,9 +24,9 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.adapt.ProbandListEntryTagValueOutVOStringAdapter;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOList;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -137,7 +137,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("stratificationlist_list");
+		DataTable.clearFilters("stratificationlist_list");
 		out = null;
 		this.trialId = id;
 		initIn();

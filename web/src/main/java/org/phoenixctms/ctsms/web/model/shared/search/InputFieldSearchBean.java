@@ -24,8 +24,8 @@ import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.InputFieldOutVOConfig;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -355,7 +355,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		inputFieldResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		inputFieldResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("input_field_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 }

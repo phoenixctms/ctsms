@@ -211,11 +211,16 @@
 								id="inventorybooking_list">
 								<f:facet name="header">
 									<h:panelGrid
-										columns="3"
+										columns="4"
 										cellpadding="0"
-										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText value="#{staffAssociationBean.onBehalfOfInventoryBookingModel.rowCount} #{stafflabels.staff_association_inventorybooking_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											type="button"
+											title="#{labels.open_table_columns_dialog_button_label}"
+											icon="ui-icon ui-icon-wrench"
+											onclick="onBehalfOfInventoryBookingTableColumnsDialog.show()" />										
 										<p:commandButton
 											process="@this"
 											actionListener="#{staffAssociationBean.refreshOnBehalfOfInventoryBooking}"
@@ -227,6 +232,7 @@
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{booking.vo.id}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
@@ -274,6 +280,7 @@
 										value="#{staffAssociationBean}" />
 								</ui:include>
 								<p:column filterBy="#{booking.vo.proband.personParticulars.lastNameHash}">
+								<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText
 											styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
@@ -306,6 +313,7 @@
 								
 					<p:column filterBy="#{booking.vo.proband.animalParticulars.animalName}"
 					    sortBy="#{booking.vo.proband.animalParticulars.animalName}">
+					    <f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{stafflabels.staff_association_inventorybooking_list_animal_name_column}" />
@@ -327,6 +335,7 @@
 								<p:column
 									sortBy="#{booking.vo.course.name}"
 									filterBy="#{booking.vo.course.name}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_course_name_column}" />
 									</f:facet>
@@ -345,6 +354,7 @@
 								<p:column
 									sortBy="#{booking.vo.trial.name}"
 									filterBy="#{booking.vo.trial.name}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_trial_name_column}" />
 									</f:facet>
@@ -987,11 +997,16 @@
 								id="trial_membership_list">
 								<f:facet name="header">
 									<h:panelGrid
-										columns="3"
+										columns="4"
 										cellpadding="0"
-										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText value="#{staffAssociationBean.trialMembershipModel.rowCount} #{stafflabels.staff_association_trial_membership_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="trialMembershipTableColumnsDialog.show()" />
 										<p:commandButton
 											process="@this"
 											actionListener="#{staffAssociationBean.refreshTrialMembership}"
@@ -1003,6 +1018,7 @@
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{teamMember.vo.id}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
@@ -1251,6 +1267,22 @@
 					
 				</p:tabView>
 			</h:panelGrid>
+		<ui:include src="../shared/tableColumnsDialog.xhtml">
+			<ui:param
+				name="tableColumnsDialog"
+				value="onBehalfOfInventoryBookingTableColumnsDialog" />
+			<ui:param
+				name="dataTableId"
+				value=":tabView:staffassociation_form:association_lists:inventorybooking_list" />
+		</ui:include>
+		<ui:include src="../shared/tableColumnsDialog.xhtml">
+			<ui:param
+				name="tableColumnsDialog"
+				value="trialMembershipTableColumnsDialog" />
+			<ui:param
+				name="dataTableId"
+				value=":tabView:staffassociation_form:association_lists:trial_membership_list" />
+		</ui:include>		
 		</h:form>
 	</ui:composition>
 </h:body>

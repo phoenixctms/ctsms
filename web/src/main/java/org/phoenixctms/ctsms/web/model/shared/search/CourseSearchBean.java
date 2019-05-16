@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipantListPDFVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -166,7 +166,7 @@ public class CourseSearchBean extends SearchBeanBase {
 		courseResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		courseResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("course_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 }

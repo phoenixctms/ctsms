@@ -17,8 +17,8 @@ import org.phoenixctms.ctsms.vo.CvPositionInVO;
 import org.phoenixctms.ctsms.vo.CvPositionOutVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -126,7 +126,7 @@ public class CvPositionBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("cvposition_list");
+		DataTable.clearFilters("cvposition_list");
 		out = null;
 		this.staffId = id;
 		initIn();

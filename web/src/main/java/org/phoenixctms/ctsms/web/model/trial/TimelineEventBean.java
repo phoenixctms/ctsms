@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.JournalModule;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -41,7 +41,7 @@ public class TimelineEventBean extends TimelineEventBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("timelineevent_list");
+		DataTable.clearFilters("timelineevent_list");
 		out = null;
 		this.trialId = id;
 		initIn();

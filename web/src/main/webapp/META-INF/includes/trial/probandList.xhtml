@@ -59,12 +59,25 @@
 							update=":tabView:probandlist_form:probandListTabView:probandlistentry_input,:tabView:probandlist_form:probandListTabView:probandliststatus_list,:tabView:probandlist_form:probandListTabView:probandliststatus_input,:tabView:probandlist_form:probandListTabView:tagvalue_input_grid"
 							oncomplete="handleUpdateProbandListTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 						<f:facet name="header">
+							
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
 							<h:outputText value="#{probandListEntryBean.probandListEntryModel.rowCount} #{triallabels.proband_list_proband_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="probandListTableColumnsDialog.show()" />
+						</h:panelGrid>								
+							
 						</f:facet>
 						<p:column style="width:16px;">
 							<p:rowToggler />
 						</p:column>
 						<p:column sortBy="#{probandListEntry.vo.id}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
@@ -83,14 +96,15 @@
 
 						<p:column sortBy="#{probandListEntry.vo.proband.id}"
 						    filterBy="#{probandListEntry.vo.proband.id}">
+						    <f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.proband_list_proband_list_proband_id_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.id}" />
 						</p:column>	
 
-						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}"
-							rendered="#{probandListEntryBean.trial.type.person}">
+						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}" >
+							<!-- rendered="#{probandListEntryBean.trial.type.person}" -->
 							<f:facet name="header">
 								<h:outputText
 									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
@@ -120,9 +134,12 @@
 							</ui:include>
 						</p:column>
 
-						<p:column filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
-							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
-							rendered="#{!probandListEntryBean.trial.type.person}">
+						<p:column
+							filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}" 
+							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}">
+							
+							<!-- rendered="#{!probandListEntryBean.trial.type.person}" -->
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.proband_list_proband_list_animal_name_column}" />
@@ -144,6 +161,7 @@
 							filterBy="#{probandListEntry.vo.proband.personParticulars.gender}"
 							filterOptions="#{sessionScopeBean.filterSexes}"
 							rendered="#{probandListEntryBean.trial.type.person}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.proband_list_proband_list_proband_gender_column}" />
 							</f:facet>
@@ -154,6 +172,7 @@
 							filterBy="#{probandListEntry.vo.proband.animalParticulars.gender}"
 							filterOptions="#{sessionScopeBean.filterSexes}"
 							rendered="#{!probandListEntryBean.trial.type.person}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.proband_list_proband_list_proband_gender_column}" />
 							</f:facet>
@@ -161,6 +180,7 @@
 						</p:column>
 						
 				<p:column sortBy="#{probandListEntry.vo.rating}" rendered="#{probandListEntryBean.showProbandListEntryRating}" style="width:100px;">
+					<f:attribute name="visibleDefault" value = "false" />
 					<f:facet name="header">
 						<h:outputText value="#{triallabels.proband_list_proband_list_rating_column}" />
 					</f:facet>
@@ -1059,7 +1079,15 @@
 					value="#{labels.no_button_label}"
 					onclick="probandListEntryBulkDeleteConfirmation.hide()"
 					type="button" />
-			</p:confirmDialog>			
+			</p:confirmDialog>		
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="probandListTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:probandlist_form:proband_list" />
+			</ui:include>				
 		</h:form>
 	</ui:composition>
 </h:body>

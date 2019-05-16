@@ -20,8 +20,8 @@ import org.phoenixctms.ctsms.vo.OpsSystVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProcedureInVO;
 import org.phoenixctms.ctsms.vo.ProcedureOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -119,7 +119,7 @@ public class ProcedureBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("procedure_list");
+		DataTable.clearFilters("procedure_list");
 		out = null;
 		this.probandId = id;
 		initIn();

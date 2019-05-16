@@ -20,8 +20,8 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusTypeVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -124,7 +124,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandstatus_list");
+		DataTable.clearFilters("probandstatus_list");
 		out = null;
 		this.probandId = id;
 		initIn();

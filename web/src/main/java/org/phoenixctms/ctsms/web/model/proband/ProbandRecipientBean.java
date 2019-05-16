@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.MassMailRecipientBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -51,7 +51,7 @@ public class ProbandRecipientBean extends MassMailRecipientBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandrecipient_list");
+		DataTable.clearFilters("probandrecipient_list");
 		out = null;
 		this.probandId = id;
 		initIn();

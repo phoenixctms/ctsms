@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -76,13 +76,15 @@ public class ReimbursementsBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandmoneytransfersummary_list");
+		DataTable.clearFilters("probandmoneytransfersummary_list");
 		probandMoneyTransferSummaryModel.clearSelectedColumns();
-		LazyDataModelBase.clearFilters("probandmoneytransfernoparticipationsummary_list");
+		DataTable.clearFilters("probandmoneytransfernoparticipationsummary_list");
 		probandMoneyTransferNoParticipationSummaryModel.clearSelectedColumns();
 		this.trialId = id;
 		initIn();
 		initSets();
+		//ColumnManagementBean.resetVisibleMap("probandmoneytransfersummary_list");
+		//ColumnManagementBean.resetVisibleMap("probandmoneytransfernoparticipationsummary_list");
 		return CHANGE_OUTCOME;
 	}
 
@@ -419,8 +421,8 @@ public class ReimbursementsBean extends ManagedBeanBase {
 
 	public void refreshProbandMoneyTransferSummaries() {
 		initSets();
-		LazyDataModelBase.clearFilters("probandmoneytransfersummary_list");
-		LazyDataModelBase.clearFilters("probandmoneytransfernoparticipationsummary_list");
+		DataTable.clearFilters("probandmoneytransfersummary_list");
+		DataTable.clearFilters("probandmoneytransfernoparticipationsummary_list");
 	}
 
 	public void setListEntriesCountOnly(boolean listEntriesCountOnly) {

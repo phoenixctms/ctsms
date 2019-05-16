@@ -21,8 +21,8 @@ import org.phoenixctms.ctsms.vo.InventoryStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusTypeVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -126,7 +126,7 @@ public class InventoryStatusBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("inventorystatus_list");
+		DataTable.clearFilters("inventorystatus_list");
 		out = null;
 		this.inventoryId = id;
 		initIn();

@@ -55,9 +55,22 @@
 						event="rowSelect"
 						update=":tabView:ecrf_form:ecrf_input,:tabView:ecrf_form:ecrf_clone" />
 					<f:facet name="header">
-						<h:outputText value="#{ecrfBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+						
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{ecrfBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="ecrfTableColumnsDialog.show()" />
+						</h:panelGrid>	
+						
 					</f:facet>
 					<p:column sortBy="#{ecrf.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -699,6 +712,14 @@
 					onclick="ecrfDeleteConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="ecrfTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:ecrf_form:ecrf_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

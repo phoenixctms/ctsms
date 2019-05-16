@@ -10,7 +10,7 @@ import javax.faces.bean.ViewScoped;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
@@ -52,7 +52,7 @@ public class TeamMemberPickerBean extends PickerBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("team_member_list");
+		DataTable.clearFilters("team_member_list");
 		this.trialId = id;
 		initIn();
 		initSets();

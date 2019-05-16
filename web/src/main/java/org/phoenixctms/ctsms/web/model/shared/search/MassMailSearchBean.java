@@ -14,7 +14,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -135,7 +135,7 @@ public class MassMailSearchBean extends SearchBeanBase {
 		massMailResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		massMailResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("mass_mail_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 }

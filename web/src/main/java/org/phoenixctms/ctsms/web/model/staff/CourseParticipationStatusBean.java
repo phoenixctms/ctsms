@@ -19,7 +19,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CourseParticipationStatusBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -70,7 +70,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("courseparticipationstatus_list");
+		DataTable.clearFilters("courseparticipationstatus_list");
 		out = null;
 		this.staffId = id;
 		initIn();
@@ -250,7 +250,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 
 	public void refresh() {
 		statusEntryModel.updateRowCount();
-		LazyDataModelBase.clearFilters("courseparticipationstatus_list");
+		DataTable.clearFilters("courseparticipationstatus_list");
 	}
 
 	@Override

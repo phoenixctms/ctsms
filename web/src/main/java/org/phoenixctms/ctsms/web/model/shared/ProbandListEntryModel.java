@@ -71,13 +71,15 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 			String category = inquiry.getCategory();
 			if (category != null && category.length() > 0) {
 				if (withFieldName) {
-					return MessageFormat.format(CATEGORY_INQUIRY_LABEL_WITH_FIELD_NAME, category, Long.toString(inquiry.getPosition()), inquiry.getField().getName());
+					return MessageFormat.format(CATEGORY_INQUIRY_LABEL_WITH_FIELD_NAME, category, Long.toString(inquiry.getPosition()),
+							CommonUtil.isEmptyString(inquiry.getTitle()) ? inquiry.getField().getName() : inquiry.getTitle());
 				} else {
 					return MessageFormat.format(CATEGORY_INQUIRY_LABEL, category, Long.toString(inquiry.getPosition()));
 				}
 			} else {
 				if (withFieldName) {
-					return MessageFormat.format(INQUIRY_LABEL_WITH_FIELD_NAME, Long.toString(inquiry.getPosition()), inquiry.getField().getName());
+					return MessageFormat.format(INQUIRY_LABEL_WITH_FIELD_NAME, Long.toString(inquiry.getPosition()),
+							CommonUtil.isEmptyString(inquiry.getTitle()) ? inquiry.getField().getName() : inquiry.getTitle());
 				} else {
 					return MessageFormat.format(INQUIRY_LABEL, Long.toString(inquiry.getPosition()));
 				}
@@ -89,7 +91,8 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 	private static String getProbandListEntryTagLabel(ProbandListEntryTagOutVO listEntryTag, boolean withFieldName) {
 		if (listEntryTag != null) {
 			if (withFieldName) {
-				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_LABEL_WITH_FIELD_NAME, Long.toString(listEntryTag.getPosition()), listEntryTag.getField().getName());
+				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_LABEL_WITH_FIELD_NAME, Long.toString(listEntryTag.getPosition()),
+						CommonUtil.isEmptyString(listEntryTag.getTitle()) ? listEntryTag.getField().getName() : listEntryTag.getTitle());
 			} else {
 				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_LABEL, Long.toString(listEntryTag.getPosition()));
 			}

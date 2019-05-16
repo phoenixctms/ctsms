@@ -29,7 +29,7 @@
 			onstart="#{resultListWidgetVar}.clearFilters()"
 			oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 			actionListener="#{searchBean.changeByRow()}"
-			update=":search_form:tabView:criteria_input,:search_form:criteria_toolbar,:search_form:messages,:search_form:#{result_list}" />
+			update=":search_form:tabView:criteria_input,:search_form:criteria_toolbar,:search_form:messages,:search_form:#{searchBean.resultListId}" />
 		<p:remoteCommand
 			process="@this"
 			name="dropCriterionRow"

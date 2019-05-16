@@ -15,8 +15,8 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.InputFieldOutVOConfig;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -129,7 +129,7 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("selectionsetvalue_list");
+		DataTable.clearFilters("selectionsetvalue_list");
 		out = null;
 		this.inputFieldId = id;
 		initIn();

@@ -20,7 +20,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
@@ -124,7 +124,7 @@ public class AutoDeletionProbandOverviewBean extends ManagedBeanBase implements 
 	private void initSets() {
 		today = new Date();
 		autoDeletionProbandModel.updateRowCount();
-		LazyDataModelBase.clearFilters("autodeletionproband_list");
+		DataTable.clearFilters("autodeletionproband_list");
 		if (filterPrivacyConsentStatusTypes == null || privacyConsentTransitionsMap == null) {
 			Collection<PrivacyConsentStatusTypeVO> statusTypeVOs = null;
 			try {

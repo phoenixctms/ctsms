@@ -40,6 +40,7 @@ import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.ColumnManagementBean;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -199,10 +200,12 @@ public class SessionScopeBean {
 	private boolean localPasswordRequired;
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
+	private ColumnManagementBean columnManager;
 
 	public SessionScopeBean() {
 		auth = new AuthenticationVO();
 		imageStore = new MaxSizeHashMap<Object, StreamedContent>(WebUtil.IMAGE_STORE_MAX_SIZE);
+		columnManager = new ColumnManagementBean();
 		// selectionSetServiceCache = new HashMap<Class, HashMap<Object, Object>>();
 		logon = null;
 		failedAttempts = 0;
@@ -1179,6 +1182,10 @@ public class SessionScopeBean {
 	public synchronized void logout() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		logout(WebUtil.getRefererBase64((HttpServletRequest) context.getExternalContext().getRequest()));
+	}
+
+	public ColumnManagementBean getColumnManager() {
+		return columnManager;
 	}
 
 	private synchronized void logout(String redirectUrlBase64) {

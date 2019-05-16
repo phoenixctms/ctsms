@@ -9,7 +9,7 @@ import javax.faces.bean.ViewScoped;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -85,7 +85,7 @@ public class AdminUpcomingCourseOverviewBean extends ManagedBeanBase {
 
 	private void initSets() {
 		adminUpcomingCourseModel.updateRowCount();
-		LazyDataModelBase.clearFilters("upcomingcourse_list");
+		DataTable.clearFilters("upcomingcourse_list");
 	}
 
 	@Override
