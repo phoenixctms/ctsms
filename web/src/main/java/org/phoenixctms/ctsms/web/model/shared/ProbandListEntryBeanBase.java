@@ -15,8 +15,8 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -124,12 +124,13 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters(getDataTableId());
+		DataTable.clearFilters(getDataTableId());
 		out = null;
 		probandListEntryModel.clearSelectedColumns();
 		changeSpecific(id);
 		initIn();
 		initSets(true, false, false);
+		//ColumnManagementBean.resetVisibleMap(getDataTableId());
 		return CHANGE_OUTCOME;
 	}
 

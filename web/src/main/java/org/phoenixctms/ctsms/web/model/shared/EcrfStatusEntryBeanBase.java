@@ -27,9 +27,9 @@ import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.conversion.EcrfSectionProgressItemValue;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.trial.EcrfLazyModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -183,8 +183,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	// }
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters(getProbandListEntryDataTableId());
-		LazyDataModelBase.clearFilters(getEcrfDataTableId());
+		DataTable.clearFilters(getProbandListEntryDataTableId());
+		DataTable.clearFilters(getEcrfDataTableId());
 		ecrf = null;
 		probandListEntry = null;
 		ecrfStatus = null;
@@ -199,6 +199,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		probandListEntryModel.updateRowCount();
 		// initIn();
 		initSets(false);
+		//ColumnManagementBean.resetVisibleMap(getProbandListEntryDataTableId());
 		return CHANGE_OUTCOME;
 	}
 	// @Override
@@ -1121,7 +1122,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public void setSelectedProbandListEntry(IDVO probandListEntry) {
-		LazyDataModelBase.clearFilters(getEcrfDataTableId());
+		DataTable.clearFilters(getEcrfDataTableId());
 		if (probandListEntry != null) {
 			this.probandListEntry = (ProbandListEntryOutVO) probandListEntry.getVo();
 		} else {

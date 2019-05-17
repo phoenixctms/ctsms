@@ -23,7 +23,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CourseParticipationStatusBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.StaffMultiPickerModel;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -148,7 +148,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("courseparticipationstatus_list");
+		DataTable.clearFilters("courseparticipationstatus_list");
 		out = null;
 		this.courseId = id;
 		staffMultiPicker.clear();

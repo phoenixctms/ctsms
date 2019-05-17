@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.proband.CollidingVisitScheduleItemEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
@@ -69,7 +69,7 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 		collidingInventoryBookingModelCache.clear();
 		collidingVisitScheduleItemModelCache.clear();
 		staffStatusModel.updateRowCount();
-		LazyDataModelBase.clearFilters("staffstatus_list");
+		DataTable.clearFilters("staffstatus_list");
 	}
 
 	@Override

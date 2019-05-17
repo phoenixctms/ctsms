@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
@@ -70,7 +70,7 @@ public class UpcomingCourseOverviewBean extends ManagedBeanBase {
 	private void initSets() {
 		upcomingCourseModel.setStaffId(identity != null ? identity.getId() : null);
 		upcomingCourseModel.updateRowCount();
-		LazyDataModelBase.clearFilters("upcomingcourse_list");
+		DataTable.clearFilters("upcomingcourse_list");
 	}
 
 	@Override

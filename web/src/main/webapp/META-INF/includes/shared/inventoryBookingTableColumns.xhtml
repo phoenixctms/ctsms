@@ -14,6 +14,7 @@
 			sortBy="#{booking.vo.calendar}"
 			filterBy="#{booking.vo.calendar}"
 			filterOptions="#{bookingBean.filterCalendars}">
+			<f:attribute name="visibleDefault" value = "false" />
 			<f:facet name="header">
 				<h:outputText value="#{inventorylabels.inventorybooking_list_calendar_column}" />
 			</f:facet>

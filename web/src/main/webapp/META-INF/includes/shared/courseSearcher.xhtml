@@ -20,9 +20,6 @@
 					name="searchBean"
 					value="#{courseSearchBean}" />
 				<ui:param
-					name="result_list"
-					value="course_result_list" />
-				<ui:param
 					name="resultListWidgetVar"
 					value="courseResultList" />
 			</ui:include>
@@ -46,7 +43,7 @@
 						onstart="courseResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="false"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,course_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{courseSearchBean.resultListId}" />
 					<p:commandButton
 						rendered="#{!courseSearchBean.created}"
 						process="@this,:search_form:tabView:criteria_input"
@@ -92,7 +89,7 @@
 						onstart="courseResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!courseSearchBean.created}"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,course_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{courseSearchBean.resultListId}" />
 					<ui:insert name="toolbarbuttons"></ui:insert>
 					<p:commandButton
 						process="@this,:search_form:tabView:criteria_input"
@@ -103,7 +100,7 @@
 						onstart="courseResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!courseSearchBean.createable}"
-						update=":search_form:tabView:criteria_input,messages,course_result_list" />
+						update=":search_form:tabView:criteria_input,messages,#{courseSearchBean.resultListId}" />
 				</p:toolbarGroup>
 				<p:separator />
 				<p:toolbarGroup align="right">
@@ -129,10 +126,20 @@
 				emptyMessage="#{labels.datatable_empty_message}"
 				var="course"
 				value="#{courseSearchBean.courseResultModel}"
-				id="course_result_list"
+				id="#{courseSearchBean.resultListId}"
 				rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{courseSearchBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
-					<h:outputText value="#{courseSearchBean.queryResultTitle}" />
+					<h:panelGrid
+						columns="2"
+						cellpadding="0"
+						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:outputText value="#{courseSearchBean.queryResultTitle}" />
+						<p:commandButton
+							type="button"
+							title="#{labels.open_table_columns_dialog_button_label}"
+							icon="ui-icon ui-icon-wrench"
+							onclick="searchTableColumnsDialog.show()" />
+					</h:panelGrid>
 				</f:facet>
 				<p:column
 					sortBy="#{course.vo.id}"
@@ -180,8 +187,8 @@
 				</p:column>
 				<p:column
 					sortBy="#{course.vo.trial}"
-					filterBy="#{course.vo.trial.name}"
-					rendered="#{!courseSearchBean.picker}">
+					filterBy="#{course.vo.trial.name}">
+					<f:attribute name="visibleDefault" value = "#{!courseSearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText value="#{courselabels.search_course_result_list_trial_column}" />
 					</f:facet>
@@ -228,13 +235,15 @@
 							value="#{course.vo.expires}" />
 					</ui:include>
 				</p:column>
-				<p:column rendered="#{!courseSearchBean.picker}">
+				<p:column >
+					<f:attribute name="visibleDefault" value = "#{!courseSearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText value="#{courselabels.search_course_result_list_number_of_course_participants_column}" />
 					</f:facet>
 					<h:outputText value="#{applicationScopeBean.getNumberOfCourseParticipantsString(course.vo)}" />
 				</p:column>
-				<p:column rendered="#{!courseSearchBean.picker}">
+				<p:column >
+					<f:attribute name="visibleDefault" value = "#{!courseSearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText value="#{courselabels.search_course_result_list_course_valid_column}" />
 					</f:facet>
@@ -327,6 +336,14 @@
 				onclick="criteriaAddConfirmation.hide()"
 				type="button" />
 		</p:confirmDialog>
+		<ui:include src="tableColumnsDialog.xhtml">
+			<ui:param
+				name="tableColumnsDialog"
+				value="searchTableColumnsDialog" />
+			<ui:param
+				name="dataTableId"
+				value=":search_form:#{courseSearchBean.resultListId}" />
+		</ui:include>		
 	</ui:composition>
 </h:body>
 </html>

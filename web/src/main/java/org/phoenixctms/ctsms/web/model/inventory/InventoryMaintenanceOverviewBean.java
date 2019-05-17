@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -79,7 +79,7 @@ public class InventoryMaintenanceOverviewBean extends ManagedBeanBase {
 	private void initSets() {
 		today = new Date();
 		maintenanceScheduleModel.updateRowCount();
-		LazyDataModelBase.clearFilters("inventorymaintenance_list");
+		DataTable.clearFilters("inventorymaintenance_list");
 	}
 
 	@Override

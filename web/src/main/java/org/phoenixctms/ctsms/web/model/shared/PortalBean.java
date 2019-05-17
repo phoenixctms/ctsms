@@ -16,9 +16,9 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.DynamicEntityMenu;
 import org.phoenixctms.ctsms.web.model.DynamicHomeMenu;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.RecentEntityMenuBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -367,7 +367,7 @@ public class PortalBean extends ManagedBeanBase {
 			moduleItemIt.next().updateTagModel();
 		}
 		notificationModel.updateRowCount();
-		LazyDataModelBase.clearFilters("notification_list");
+		DataTable.clearFilters("notification_list");
 		notificationCountOfDay = null;
 		try {
 			notificationCountOfDay = WebUtil.getServiceLocator().getUserService().getNotificationCountByDay(WebUtil.getAuthentication(),

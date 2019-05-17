@@ -18,7 +18,7 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.VisitScheduleItemLazyModel;
@@ -84,7 +84,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandvisitschedule_list");
+		DataTable.clearFilters("probandvisitschedule_list");
 		this.probandId = id;
 		initIn();
 		initSets();
@@ -247,7 +247,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	@Override
 	public String loadAction() {
 		initSets();
-		LazyDataModelBase.clearFilters("probandvisitschedule_list");
+		DataTable.clearFilters("probandvisitschedule_list");
 		return LOAD_OUTCOME;
 	}
 

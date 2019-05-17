@@ -45,12 +45,25 @@
 						event="rowSelect"
 						update=":tabView:courseinventorybooking_form:inventorybooking_input" />
 					<f:facet name="header">
-						<h:outputText value="#{courseInventoryBookingBean.bookingModel.rowCount} #{courselabels.course_inventory_booking_inventorybooking_list_header}" />
+						
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{courseInventoryBookingBean.bookingModel.rowCount} #{courselabels.course_inventory_booking_inventorybooking_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="courseInventoryBookingTableColumnsDialog.show()" />
+						</h:panelGrid>
+						
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{booking.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -80,6 +93,7 @@
 							value="#{courseInventoryBookingBean}" />
 					</ui:include>
 					<p:column sortBy="#{booking.vo.onBehalfOf}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{courselabels.course_inventory_booking_inventorybooking_list_onbehalfof_column}" />
 						</f:facet>
@@ -411,6 +425,14 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="courseInventoryBookingTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:courseinventorybooking_form:inventorybooking_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

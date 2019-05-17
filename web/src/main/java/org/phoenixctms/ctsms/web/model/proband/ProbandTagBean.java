@@ -18,8 +18,8 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -109,7 +109,7 @@ public class ProbandTagBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("probandtag_list");
+		DataTable.clearFilters("probandtag_list");
 		out = null;
 		this.probandId = id;
 		initIn();

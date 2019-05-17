@@ -18,8 +18,8 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueInVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -109,7 +109,7 @@ public class TrialTagBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("trialtag_list");
+		DataTable.clearFilters("trialtag_list");
 		out = null;
 		this.trialId = id;
 		initIn();

@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
 import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.MassMailRecipientBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.ProbandMultiPickerModel;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -104,7 +104,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("mass_mail_recipient_list");
+		DataTable.clearFilters("mass_mail_recipient_list");
 		out = null;
 		this.massMailId = id;
 		probandMultiPicker.clear();

@@ -74,6 +74,7 @@
 				value="(#{massMailRecipient.vo.read})" />
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.unsubscribedTimestamp}">
+			<f:attribute name="visibleDefault" value = "false" />
 			<f:facet name="header">
 				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_unsubsribed_column}" />
 			</f:facet>
@@ -86,12 +87,14 @@
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.modifiedUser.name}" rendered="#{showModified}">
+			<f:attribute name="visibleDefault" value = "false" />
 			<f:facet name="header">
 				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_modified_user_column}" />
 			</f:facet>
 			<h:outputText value="#{applicationScopeBean.getIdentityString(massMailRecipient.vo.modifiedUser)} " />
 		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.modifiedTimestamp}" rendered="#{showModified}">
+			<f:attribute name="visibleDefault" value = "false" />
 			<f:facet name="header">
 				<h:outputText value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_modified_timestamp_column}" />
 			</f:facet>

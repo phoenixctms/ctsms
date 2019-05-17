@@ -21,8 +21,8 @@ import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -250,7 +250,7 @@ public class StaffSearchBean extends SearchBeanBase {
 		staffResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		staffResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("staff_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 }

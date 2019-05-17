@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
@@ -80,7 +80,7 @@ public class ExpiringCourseOverviewBean extends ManagedBeanBase implements Varia
 	private void initSets() {
 		today = new Date();
 		expiringCourseModel.updateRowCount();
-		LazyDataModelBase.clearFilters("expiringcourse_list");
+		DataTable.clearFilters("expiringcourse_list");
 	}
 
 	@Override

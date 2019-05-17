@@ -50,9 +50,20 @@
 						event="rowSelect"
 						update=":tabView:moneytransfer_form:moneytransfer_input" />
 					<f:facet name="header">
-						<h:outputText value="#{moneyTransferBean.moneyTransferModel.rowCount} #{probandlabels.money_transfer_moneytransfer_list_header}" />
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{moneyTransferBean.moneyTransferModel.rowCount} #{probandlabels.money_transfer_moneytransfer_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="moneyTransferTableColumnsDialog.show()" />
+						</h:panelGrid>		
 					</f:facet>
 					<p:column sortBy="#{moneyTransfer.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -123,18 +134,21 @@
 						<h:outputText value="#{applicationScopeBean.clipStringTrailing(moneyTransfer.vo.bankAccount.name)}" />
 					</p:column>
 					<p:column sortBy="#{moneyTransfer.vo.reference}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_reference_column}" />
 						</f:facet>
 						<h:outputText value="#{moneyTransfer.vo.reference}" />
 					</p:column>
 					<p:column sortBy="#{moneyTransfer.vo.reasonForPayment}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_reason_for_payment_column}" />
 						</f:facet>
 						<h:outputText value="#{moneyTransfer.vo.reasonForPayment}" />
 					</p:column>
 					<p:column sortBy="#{moneyTransfer.vo.voucherCode}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_voucher_code_column}" />
 						</f:facet>
@@ -147,6 +161,7 @@
 						sortBy="#{moneyTransfer.vo.showComment}"
 						filterBy="#{moneyTransfer.vo.showComment}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{probandlabels.money_transfer_moneytransfer_list_show_comment_column}" />
 						</f:facet>
@@ -646,6 +661,14 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="moneyTransferTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:moneytransfer_form:moneytransfer_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

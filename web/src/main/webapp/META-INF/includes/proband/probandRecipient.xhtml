@@ -46,12 +46,24 @@
 						event="rowSelect"
 						update=":tabView:massmailrecipient_form:probandrecipient_input" />
 					<f:facet name="header">
-						<h:outputText value="#{probandRecipientBean.massMailRecipientModel.rowCount} #{probandlabels.mass_mail_recipient_probandrecipient_list_header}" />
+					
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{probandRecipientBean.massMailRecipientModel.rowCount} #{probandlabels.mass_mail_recipient_probandrecipient_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								onclick="probandRecipientTableColumnsDialog.show()" />
+						</h:panelGrid>			
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler rendered="#{probandRecipientBean.massMailRecipientModel.getEmailMessage(massMailRecipient.vo).decrypted}" />
 					</p:column>
 					<p:column sortBy="#{massMailRecipient.vo.id}">
+						<f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -107,6 +119,7 @@
 							sortBy="#{massMailRecipient.vo.massMail.probandListStatus}"
 							filterBy="#{massMailRecipient.vo.massMail.probandListStatus.id}"
 							filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
+							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
 								<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_proband_list_status_column}" />
 							</f:facet>
@@ -290,7 +303,14 @@
 					</p:panel>
 
 			</h:panelGrid>
-
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="probandRecipientTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:massmailrecipient_form:probandrecipient_list" />
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

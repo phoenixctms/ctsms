@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -53,7 +53,7 @@ public class InventoryStatusOverviewBean extends ManagedBeanBase {
 	private void initSets() {
 		collidingInventoryBookingModelCache.clear();
 		inventoryStatusModel.updateRowCount();
-		LazyDataModelBase.clearFilters("inventorystatus_list");
+		DataTable.clearFilters("inventorystatus_list");
 	}
 
 	public String inventoryStatusToColor(InventoryStatusEntryOutVO statusEntry) {

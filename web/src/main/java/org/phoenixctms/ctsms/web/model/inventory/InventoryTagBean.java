@@ -18,8 +18,8 @@ import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryTagVO;
 import org.phoenixctms.ctsms.vo.InventoryTagValueInVO;
 import org.phoenixctms.ctsms.vo.InventoryTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -109,7 +109,7 @@ public class InventoryTagBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("inventorytag_list");
+		DataTable.clearFilters("inventorytag_list");
 		out = null;
 		this.inventoryId = id;
 		initIn();

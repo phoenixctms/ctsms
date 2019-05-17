@@ -9,7 +9,7 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
@@ -45,7 +45,7 @@ public class RecipientOverviewBean extends ManagedBeanBase {
 
 	private void initSets() {
 		massMailRecipientModel.updateRowCount();
-		LazyDataModelBase.clearFilters("massmailrecipient_list");
+		DataTable.clearFilters("massmailrecipient_list");
 	}
 
 	@Override

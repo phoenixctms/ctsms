@@ -306,6 +306,15 @@
         primary key (ID)
     );
 
+    create table DATA_TABLE_COLUMN (
+        ID BIGINT not null,
+        TABLE_NAME CHARACTER VARYING(1024) not null,
+        COLUMN_NAME CHARACTER VARYING(1024) not null,
+        VISIBLE BOOLEAN not null,
+        USER_FK BIGINT not null,
+        primary key (ID)
+    );
+
     create table DEPARTMENT (
         ID BIGINT not null,
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
@@ -2187,6 +2196,11 @@
         add constraint CV_POSITION_SECTION_FKC 
         foreign key (SECTION_FK) 
         references CV_SECTION;
+
+    alter table DATA_TABLE_COLUMN 
+        add constraint DATA_TABLE_COLUMN_USER_FKC 
+        foreign key (USER_FK) 
+        references users;
 
     alter table DIAGNOSIS 
         add constraint DIAGNOSIS_MODIFIED_USER_FKC 

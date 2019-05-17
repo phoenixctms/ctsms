@@ -23,8 +23,8 @@ import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
@@ -178,7 +178,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("inventorymaintenance_list");
+		DataTable.clearFilters("inventorymaintenance_list");
 		out = null;
 		this.inventoryId = id;
 		initIn();

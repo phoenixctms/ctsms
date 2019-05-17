@@ -11,7 +11,6 @@
 <h:body>
 	<ui:composition>
 		<h:form id="usermain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-
 			<p:remoteCommand
 				process="@this"
 				name="changePassword"
@@ -32,9 +31,6 @@
 				name="changeUserJournalEntry"
 				actionListener="#{journalBean.changeUser(userBean.in.id)}"
 				update=":tabView:userjournal_form:journal_list,:tabView:userjournal_form:journal_input" />		
-		
-		
-		
 			<p:remoteCommand
 				process="@this"
 				name="changeUserByJournalEntry"
@@ -55,7 +51,7 @@
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
 							columns="6"
 							cellpadding="2"
@@ -339,6 +335,68 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
+							
+							
+														<h:outputLabel
+								for="locked"
+								value="#{userlabels.user_locked_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="locked"
+									value="#{userBean.in.locked}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="locked">
+									<h:outputText
+										value="#{userlabels.user_locked_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="locked" />
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="decrypt"
+								value="#{userlabels.user_decrypt_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="decrypt"
+									value="#{userBean.in.decrypt}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="decrypt">
+									<h:outputText
+										value="#{userlabels.user_decrypt_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="decrypt" />
+							</h:panelGrid>
+
+
+
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{userlabels.user_ui_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="3"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
+							
 							<h:outputLabel
 								for="locale"
 								value="#{userlabels.user_locale_label}" />
@@ -368,9 +426,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="locale" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
+
 							<h:outputLabel
 								for="timeZone"
 								value="#{userlabels.user_time_zone_label}" />
@@ -432,9 +488,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="timeZone" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
+
 							
 							
 							<h:outputLabel
@@ -468,9 +522,7 @@
 							</h:panelGroup>
 							<p:message for="dateformat" />
 							
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
+
 							
 							
 							<h:outputLabel
@@ -504,9 +556,7 @@
 							</h:panelGroup>
 							<p:message for="decimalseparator" />
 							
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
+
 							
 							<h:outputLabel
 								for="theme"
@@ -537,9 +587,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="theme" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
+
 							<h:outputLabel
 								for="showTooltips"
 								value="#{userlabels.user_show_tooltips_label}" />
@@ -558,50 +606,20 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="showTooltips" />
+
+							
+							
+														<h:outputLabel value="#{userlabels.user_table_column_count_label}" />
+							<h:outputText id="user_table_column_count_message" value="#{userBean.tableColumnCount}" />
 							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="locked"
-								value="#{userlabels.user_locked_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="locked"
-									value="#{userBean.in.locked}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="locked">
-									<h:outputText
-										value="#{userlabels.user_locked_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="locked" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="decrypt"
-								value="#{userlabels.user_decrypt_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="decrypt"
-									value="#{userBean.in.decrypt}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="decrypt">
-									<h:outputText
-										value="#{userlabels.user_decrypt_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="decrypt" />
-						</h:panelGrid>
-						<p:messages />
+							
+							</h:panelGrid>
+</h:panelGrid>
+</p:fieldset>
+							
+
+						
+						<p:messages id="user_messages" />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
 								<h:outputText
@@ -648,6 +666,16 @@
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.editable}"
 									update="user_input" />
+								<p:commandButton 
+									process="@this"
+									value="#{labels.restore_table_column_defaults_button_label}"
+									actionListener="#{userBean.clearTableColumns}"
+									icon="ui-icon ui-icon-arrowreturnthick-1-w"
+									ajax="true"
+									oncomplete="handleUserChanged(xhr, status, args)"
+									disabled="#{!userBean.editable or userBean.tableColumnCount == 0}"
+									update="user_table_column_count_message,user_messages">
+								</p:commandButton>
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"

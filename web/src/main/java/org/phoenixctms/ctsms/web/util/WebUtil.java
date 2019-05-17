@@ -554,6 +554,14 @@ public final class WebUtil {
 		return "";
 	}
 
+	public static UIComponent findComponentByClientId(String clientId) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null) {
+			return context.getViewRoot().findComponent(clientId);
+		}
+		return null;
+	}
+
 	public static UIComponent findComponentById(String id) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {

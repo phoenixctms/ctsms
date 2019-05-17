@@ -24,8 +24,8 @@ import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
 import org.phoenixctms.ctsms.vo.TeamMembersExcelVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.shared.StaffMultiPickerModel;
@@ -201,7 +201,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("team_member_list");
+		DataTable.clearFilters("team_member_list");
 		out = null;
 		this.trialId = id;
 		staffMultiPicker.clear();

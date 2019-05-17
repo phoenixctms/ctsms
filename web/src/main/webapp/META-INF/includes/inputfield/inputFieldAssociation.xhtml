@@ -46,12 +46,17 @@
 								id="probandlistentrytag_list">
 								<f:facet name="header">
 									<h:panelGrid
-										columns="3"
+										columns="4"
 										cellpadding="0"
-										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{inputFieldAssociationBean.probandListEntryTagUsageModel.rowCount} #{inputfieldlabels.input_field_association_probandlistentrytag_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											type="button"
+											title="#{labels.open_table_columns_dialog_button_label}"
+											icon="ui-icon ui-icon-wrench"
+											onclick="probandListEntryTagTableColumnsDialog.show()" />
 										<p:commandButton
 											process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshProbandListEntryTagUsage}"
@@ -63,6 +68,7 @@
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{probandListEntryTag.vo.id}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
@@ -105,9 +111,18 @@
 									</ui:include>
 								</p:column>
 								<p:column
+									sortBy="#{probandListEntryTag.vo.titleL10nKey}"
+									filterBy="#{probandListEntryTag.vo.titleL10nKey}">
+									<f:facet name="header">
+											<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_title_column}" />
+										</f:facet>
+									<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}" />
+								</p:column>								
+								<p:column
 									sortBy="#{probandListEntryTag.vo.optional}"
 									filterBy="#{probandListEntryTag.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_optional_column}" />
 									</f:facet>
@@ -121,6 +136,7 @@
 									sortBy="#{probandListEntryTag.vo.disabled}"
 									filterBy="#{probandListEntryTag.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_enabled_column}" />
 									</f:facet>
@@ -133,6 +149,7 @@
 								<p:column
 									sortBy="#{probandListEntryTag.vo.comment}"
 									filterBy="#{probandListEntryTag.vo.comment}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_comment_column}" />
 									</f:facet>
@@ -179,11 +196,16 @@
 								id="inquiry_list">
 								<f:facet name="header">
 									<h:panelGrid
-										columns="3"
+										columns="4"
 										cellpadding="0"
-										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText value="#{inputFieldAssociationBean.inquiryUsageModel.rowCount} #{inputfieldlabels.input_field_association_inquiry_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											type="button"
+											title="#{labels.open_table_columns_dialog_button_label}"
+											icon="ui-icon ui-icon-wrench"
+											onclick="inquiryTableColumnsDialog.show()" />
 										<p:commandButton
 											process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshInquiryUsage}"
@@ -195,6 +217,7 @@
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{inquiry.vo.id}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
@@ -236,6 +259,7 @@
 											value="true" />
 									</ui:include>
 								</p:column>
+														
 								<p:column
 									sortBy="#{inquiry.vo.category}"
 									filterBy="#{inquiry.vo.category}">
@@ -244,10 +268,21 @@
 									</f:facet>
 									<h:outputText value="#{inquiry.vo.category}" />
 								</p:column>
+
+								<p:column
+									sortBy="#{inquiry.vo.titleL10nKey}"
+									filterBy="#{inquiry.vo.titleL10nKey}">
+									<f:facet name="header">
+											<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_title_column}" />
+										</f:facet>
+									<h:outputText value="#{inquiry.vo.titleL10nKey}" />
+								</p:column>	
+
 								<p:column
 									sortBy="#{inquiry.vo.active}"
 									filterBy="#{inquiry.vo.active}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_active_column}" />
 									</f:facet>
@@ -256,11 +291,26 @@
 											name="value"
 											value="#{inquiry.vo.active}" />
 									</ui:include>
+								</p:column>	
+								<p:column
+									sortBy="#{inquiry.vo.activeSignup}"
+									filterBy="#{inquiry.vo.activeSignup}"
+									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
+									<f:facet name="header">
+										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_active_signup_column}" />
+									</f:facet>
+									<ui:include src="../shared/listBooleanIcon.xhtml">
+										<ui:param
+											name="value"
+											value="#{inquiry.vo.activeSignup}" />
+									</ui:include>
 								</p:column>								
 								<p:column
 									sortBy="#{inquiry.vo.optional}"
 									filterBy="#{inquiry.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_optional_column}" />
 									</f:facet>
@@ -274,6 +324,7 @@
 									sortBy="#{inquiry.vo.disabled}"
 									filterBy="#{inquiry.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_enabled_column}" />
 									</f:facet>
@@ -286,6 +337,7 @@
 								<p:column
 									sortBy="#{inquiry.vo.comment}"
 									filterBy="#{inquiry.vo.comment}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_comment_column}" />
 									</f:facet>
@@ -349,12 +401,17 @@
 								id="ecrffield_list">
 								<f:facet name="header">
 									<h:panelGrid
-										columns="3"
+										columns="4"
 										cellpadding="0"
-										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{inputFieldAssociationBean.ecrfFieldUsageModel.rowCount} #{inputfieldlabels.input_field_association_ecrffield_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
+										<p:commandButton
+											type="button"
+											title="#{labels.open_table_columns_dialog_button_label}"
+											icon="ui-icon ui-icon-wrench"
+											onclick="ecrfFieldTableColumnsDialog.show()" />
 										<p:commandButton
 											process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshEcrfFieldUsage}"
@@ -366,6 +423,7 @@
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{ecrfField.vo.id}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
@@ -407,6 +465,7 @@
 											value="true" />
 									</ui:include>
 								</p:column>
+																
 								<p:column
 									sortBy="#{ecrfField.vo.ecrf.name}"
 									filterBy="#{ecrfField.vo.ecrf.name}">
@@ -424,11 +483,21 @@
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.section}" />
 								</p:column>
+
+								<p:column
+									sortBy="#{ecrfField.vo.titleL10nKey}"
+									filterBy="#{ecrfField.vo.titleL10nKey}">
+									<f:facet name="header">
+										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_title_column}" />
+									</f:facet>
+									<h:outputText value="#{ecrfField.vo.titleL10nKey}" />
+								</p:column>
 								
 								<p:column
 									sortBy="#{ecrfField.vo.series}"
 									filterBy="#{ecrfField.vo.series}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_series_column}" />
 									</f:facet>
@@ -442,6 +511,7 @@
 									sortBy="#{ecrfField.vo.optional}"
 									filterBy="#{ecrfField.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_optional_column}" />
 									</f:facet>
@@ -455,6 +525,7 @@
 									sortBy="#{ecrfField.vo.disabled}"
 									filterBy="#{ecrfField.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_enabled_column}" />
 									</f:facet>
@@ -467,6 +538,7 @@
 								<p:column
 									sortBy="#{ecrfField.vo.comment}"
 									filterBy="#{ecrfField.vo.comment}">
+									<f:attribute name="visibleDefault" value = "false" />
 									<f:facet name="header">
 										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_comment_column}" />
 									</f:facet>
@@ -494,6 +566,30 @@
 					
 				</p:tabView>
 			</h:panelGrid>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="probandListEntryTagTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:inputfieldassociation_form:association_lists:probandlistentrytag_list" />
+			</ui:include>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="inquiryTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:inputfieldassociation_form:association_lists:inquiry_list" />
+			</ui:include>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="ecrfFieldTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:inputfieldassociation_form:association_lists:ecrffield_list" />
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

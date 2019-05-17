@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
 
 import org.primefaces.component.column.Column;
+import org.primefaces.component.columngroup.ColumnGroup;
+import org.primefaces.component.columns.Columns;
 import org.primefaces.component.datatable.DataTable;
+import org.primefaces.component.row.Row;
 
 /**
  * Extends the Primefaces DataTableRenderer to address issus with the
@@ -77,5 +81,136 @@ public class DataTableRenderer extends org.primefaces.component.datatable.DataTa
 		} else {
 			return null;
 		}
+	}
+
+	protected void encodeThead(FacesContext context, DataTable table) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		ColumnGroup group = table.getColumnGroup("header");
+		writer.startElement("thead", null);
+		encodeFacet(context, table, table.getHeader(), DataTable.HEADER_CLASS, "th");
+		if (table.isPaginator() && !table.getPaginatorPosition().equalsIgnoreCase("bottom")) {
+			encodePaginatorMarkup(context, table, "top", "th", org.primefaces.component.api.UIData.PAGINATOR_TOP_CONTAINER_CLASS);
+		}
+		if (group != null && group.isRendered()) {
+			for (UIComponent child : group.getChildren()) {
+				if (child.isRendered() && child instanceof Row) {
+					Row headerRow = (Row) child;
+					writer.startElement("tr", null);
+					for (UIComponent headerRowChild : headerRow.getChildren()) {
+						if (headerRowChild.isRendered()
+								&& headerRowChild instanceof Column
+								&& ColumnManagementBean.isVisible((Column) headerRowChild)) {
+							encodeColumnHeader(context, table, (Column) headerRowChild);
+						}
+					}
+					writer.endElement("tr");
+				}
+			}
+		} else {
+			writer.startElement("tr", null);
+			writer.writeAttribute("role", "row", null);
+			for (Column column : table.getColumns()) {
+				if (column.isRendered()
+						&& ColumnManagementBean.isVisible(column)) {
+					if (column instanceof Columns) {
+						encodeColumnsHeader(context, table, (Columns) column);
+					} else {
+						encodeColumnHeader(context, table, column);
+					}
+				}
+			}
+			writer.endElement("tr");
+		}
+		writer.endElement("thead");
+	}
+
+	protected boolean encodeRow(FacesContext context, org.phoenixctms.ctsms.web.component.datatable.DataTable table, String clientId, int rowIndex, String rowIndexVar)
+			throws IOException {
+		//Row index var
+		if (rowIndexVar != null) {
+			context.getExternalContext().getRequestMap().put(rowIndexVar, rowIndex);
+		}
+		boolean selectionEnabled = table.isSelectionEnabled();
+		Object rowKey = null;
+		if (selectionEnabled) {
+			//try rowKey attribute
+			rowKey = table.getRowKey();
+			//ask selectable datamodel
+			if (rowKey == null)
+				rowKey = table.getRowKeyFromModel(table.getRowData());
+		}
+		//Preselection
+		boolean selected = table.getSelectedRowKeys().contains(rowKey);
+		ResponseWriter writer = context.getResponseWriter();
+		String userRowStyleClass = table.getRowStyleClass();
+		String rowStyleClass = rowIndex % 2 == 0 ? DataTable.ROW_CLASS + " " + DataTable.EVEN_ROW_CLASS : DataTable.ROW_CLASS + " " + DataTable.ODD_ROW_CLASS;
+		if (selected) {
+			rowStyleClass = rowStyleClass + " ui-state-highlight";
+		}
+		if (userRowStyleClass != null) {
+			rowStyleClass = rowStyleClass + " " + userRowStyleClass;
+		}
+		writer.startElement("tr", null);
+		writer.writeAttribute("data-ri", rowIndex, null);
+		if (rowKey != null) {
+			writer.writeAttribute("data-rk", rowKey, null);
+		}
+		writer.writeAttribute("class", rowStyleClass, null);
+		writer.writeAttribute("role", "row", null);
+		if (selectionEnabled) {
+			writer.writeAttribute("aria-selected", String.valueOf(selected), null);
+		}
+		for (Column column : table.getColumns()) {
+			if (column.isRendered()
+					&& ColumnManagementBean.isVisible(column)) {
+				if (column instanceof Columns) {
+					encodeDynamicCell(context, table, (Columns) column);
+				} else {
+					encodeRegularCell(context, table, column, clientId, selected);
+				}
+			}
+		}
+		writer.endElement("tr");
+		return true;
+	}
+
+	protected void encodeTFoot(FacesContext context, DataTable table) throws IOException {
+		ResponseWriter writer = context.getResponseWriter();
+		ColumnGroup group = table.getColumnGroup("footer");
+		writer.startElement("tfoot", null);
+		if (group != null && group.isRendered()) {
+			for (UIComponent child : group.getChildren()) {
+				if (child.isRendered() && child instanceof Row) {
+					Row footerRow = (Row) child;
+					writer.startElement("tr", null);
+					for (UIComponent footerRowChild : footerRow.getChildren()) {
+						if (footerRowChild.isRendered()
+								&& footerRowChild instanceof Column
+								&& ColumnManagementBean.isVisible((Column) footerRowChild)) {
+							encodeColumnFooter(context, table, (Column) footerRowChild);
+						}
+					}
+					writer.endElement("tr");
+				}
+			}
+		} else if (table.hasFooterColumn()) {
+			writer.startElement("tr", null);
+			for (Column column : table.getColumns()) {
+				if (column.isRendered()
+						&& ColumnManagementBean.isVisible(column)) {
+					if (column instanceof Columns) {
+						encodeColumnsFooter(context, table, (Columns) column);
+					} else {
+						encodeColumnFooter(context, table, column);
+					}
+				}
+			}
+			writer.endElement("tr");
+		}
+		if (table.isPaginator() && !table.getPaginatorPosition().equalsIgnoreCase("top")) {
+			encodePaginatorMarkup(context, table, "bottom", "td", org.primefaces.component.api.UIData.PAGINATOR_BOTTOM_CONTAINER_CLASS);
+		}
+		encodeFacet(context, table, table.getFooter(), DataTable.FOOTER_CLASS, "td");
+		writer.endElement("tfoot");
 	}
 }

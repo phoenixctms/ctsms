@@ -7,9 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.BookingDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.BookingDurationSummaryModel.BookingDurationSummaryType;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel.ShiftDurationSummaryType;
@@ -39,8 +39,8 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("trialcourses_list");
-		LazyDataModelBase.clearFilters("trialmassmails_list");
+		DataTable.clearFilters("trialcourses_list");
+		DataTable.clearFilters("trialmassmails_list");
 		this.trialId = id;
 		initIn();
 		initSets();
@@ -131,11 +131,11 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	public void refreshTrialCourses() {
 		trialCourseModel.updateRowCount();
-		LazyDataModelBase.clearFilters("trialcourses_list");
+		DataTable.clearFilters("trialcourses_list");
 	}
 
 	public void refreshTrialMassMails() {
 		trialMassMailModel.updateRowCount();
-		LazyDataModelBase.clearFilters("trialmassmails_list");
+		DataTable.clearFilters("trialmassmails_list");
 	}
 }

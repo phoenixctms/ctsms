@@ -1,7 +1,7 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
@@ -50,7 +50,7 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("ecrffieldstatus_" + getQueue().getValue() + "_list");
+		DataTable.clearFilters("ecrffieldstatus_" + getQueue().getValue() + "_list");
 		out = null;
 		this.ecrfFieldId = id;
 		initIn();

@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
+import javax.el.ELContext;
+import javax.el.ValueExpression;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -64,6 +67,17 @@ import org.primefaces.context.RequestContext;
 public class ApplicationScopeBean {
 
 	private static final Map<Long, UserOutVO> activeUsers = new LinkedHashMap<Long, UserOutVO>();
+	private final static Pattern ALLOWED_LABEL_EXPRESSIONS_PATTERN_REGEXP = Pattern.compile("^[a-z0-9_]+\\.[a-z0-9_]+$");
+
+	public static String evalLabelEl(String labelEl) {
+		if (ALLOWED_LABEL_EXPRESSIONS_PATTERN_REGEXP.matcher(labelEl).find()) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			ELContext elContext = context.getELContext();
+			ValueExpression ve = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), "#{" + labelEl + "}", String.class);
+			return (String) ve.getValue(elContext);
+		}
+		return labelEl;
+	}
 
 	public static final void registerActiveUser(UserOutVO user) {
 		synchronized (ApplicationScopeBean.class) {

@@ -18,8 +18,8 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueInVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -108,7 +108,7 @@ public class StaffTagBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("stafftag_list");
+		DataTable.clearFilters("stafftag_list");
 		out = null;
 		this.staffId = id;
 		initIn();

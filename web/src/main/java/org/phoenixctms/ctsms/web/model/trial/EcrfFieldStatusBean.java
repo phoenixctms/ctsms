@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.EcrfFieldStatusEntryBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -82,7 +82,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("ecrffieldstatus_list");
+		DataTable.clearFilters("ecrffieldstatus_list");
 		out = null;
 		this.trialId = id;
 		queue = null;
@@ -97,6 +97,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		clearCaches();
 		initIn();
 		initSets();
+		//ColumnManagementBean.resetVisibleMap("ecrffieldstatus_list");
 		return CHANGE_OUTCOME;
 	}
 

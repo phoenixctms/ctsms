@@ -23,9 +23,9 @@ import org.phoenixctms.ctsms.vo.MedicationInVO;
 import org.phoenixctms.ctsms.vo.MedicationOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProcedureOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOList;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -154,7 +154,7 @@ public class MedicationBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("medication_list");
+		DataTable.clearFilters("medication_list");
 		out = null;
 		this.probandId = id;
 		initIn();

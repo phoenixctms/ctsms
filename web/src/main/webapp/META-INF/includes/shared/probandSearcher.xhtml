@@ -20,9 +20,6 @@
 					name="searchBean"
 					value="#{probandSearchBean}" />
 				<ui:param
-					name="result_list"
-					value="proband_result_list" />
-				<ui:param
 					name="resultListWidgetVar"
 					value="probandResultList" />
 			</ui:include>
@@ -46,7 +43,7 @@
 						onstart="probandResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="false"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,proband_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{probandSearchBean.resultListId}" />
 					<p:commandButton
 						rendered="#{!probandSearchBean.created}"
 						process="@this,:search_form:tabView:criteria_input"
@@ -92,7 +89,7 @@
 						onstart="probandResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!probandSearchBean.created}"
-						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,proband_result_list" />
+						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{probandSearchBean.resultListId}" />
 					<ui:insert name="toolbarbuttons"></ui:insert>
 					<p:commandButton
 						process="@this,:search_form:tabView:criteria_input"
@@ -103,7 +100,7 @@
 						onstart="probandResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!probandSearchBean.createable}"
-						update=":search_form:tabView:criteria_input,messages,proband_result_list" />
+						update=":search_form:tabView:criteria_input,messages,#{probandSearchBean.resultListId}" />
 				</p:toolbarGroup>
 				<p:separator />
 				<p:toolbarGroup align="right">
@@ -129,10 +126,20 @@
 				emptyMessage="#{labels.datatable_empty_message}"
 				var="proband"
 				value="#{probandSearchBean.probandResultModel}"
-				id="proband_result_list"
+				id="#{probandSearchBean.resultListId}"
 				rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandSearchBean.probandToColor(proband.vo)}"><!-- #{rowBgColorAlpha} -->
 				<f:facet name="header">
-					<h:outputText value="#{probandSearchBean.queryResultTitle}" />
+					<h:panelGrid
+						columns="2"
+						cellpadding="0"
+						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:outputText value="#{probandSearchBean.queryResultTitle}" />
+						<p:commandButton
+							type="button"
+							title="#{labels.open_table_columns_dialog_button_label}"
+							icon="ui-icon ui-icon-wrench"
+							onclick="searchTableColumnsDialog.show()" />
+					</h:panelGrid>
 				</f:facet>
 				<p:column style="width:16px;">
 					<p:rowToggler />
@@ -244,6 +251,7 @@
 					</ui:include>
 				</p:column>		
 				<p:column sortBy="#{proband.vo.rating}" rendered="#{applicationScopeBean.showProbandRating}" style="width:100px;">
+					<f:attribute name="visibleDefault" value = "false" />
 					<f:facet name="header">
 						<h:outputText value="#{probandlabels.search_proband_result_list_rating_column}" />
 					</f:facet>
@@ -296,8 +304,8 @@
 				<p:column
 					sortBy="#{proband.vo.privacyConsentStatus}"
 					filterBy="#{proband.vo.privacyConsentStatus.id}"
-					filterOptions="#{sessionScopeBean.filterPrivacyConsentStatusTypes}"
-					rendered="#{!probandSearchBean.picker}">
+					filterOptions="#{sessionScopeBean.filterPrivacyConsentStatusTypes}">
+					<f:attribute name="visibleDefault" value = "#{!probandSearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText value="#{probandlabels.search_proband_result_list_privacy_consent_status_column}" />
 					</f:facet>
@@ -465,6 +473,14 @@
 				onclick="criteriaAddConfirmation.hide()"
 				type="button" />
 		</p:confirmDialog>
+		<ui:include src="tableColumnsDialog.xhtml">
+			<ui:param
+				name="tableColumnsDialog"
+				value="searchTableColumnsDialog" />
+			<ui:param
+				name="dataTableId"
+				value=":search_form:#{probandSearchBean.resultListId}" />
+		</ui:include>		
 	</ui:composition>
 </h:body>
 </html>

@@ -11,7 +11,7 @@ import javax.faces.model.SelectItem;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnInVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.DutyRosterTurnBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -70,7 +70,7 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("dutyrosterturn_list");
+		DataTable.clearFilters("dutyrosterturn_list");
 		out = null;
 		this.staffId = id;
 		initIn();

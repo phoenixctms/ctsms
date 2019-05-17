@@ -42,9 +42,9 @@ public class ResourceHandlerWrapper extends PrimeResourceHandler {
 					throw new Exception("prevented EL " + dynamicContentEL);
 				}
 				System.out.println(dynamicContentEL);
-				ELContext eLContext = context.getELContext();
+				ELContext elContext = context.getELContext();
 				ValueExpression ve = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), dynamicContentEL, StreamedContent.class);
-				StreamedContent content = (StreamedContent) ve.getValue(eLContext);
+				StreamedContent content = (StreamedContent) ve.getValue(elContext);
 				HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
 				response.setContentType(content.getContentType());
 				byte[] buffer = new byte[2048];

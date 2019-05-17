@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -62,7 +62,7 @@ public class ProbandStatusOverviewBean extends ManagedBeanBase {
 		collidingInventoryBookingModelCache.clear();
 		collidingVisitScheduleItemModelCache.clear();
 		probandStatusModel.updateRowCount();
-		LazyDataModelBase.clearFilters("probandstatus_list");
+		DataTable.clearFilters("probandstatus_list");
 	}
 
 	@Override

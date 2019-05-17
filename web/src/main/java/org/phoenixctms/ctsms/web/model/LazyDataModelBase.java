@@ -10,22 +10,11 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SelectableDataModel;
 import org.primefaces.model.SortOrder;
 
 public abstract class LazyDataModelBase extends LazyDataModel<IDVO> implements SelectableDataModel<IDVO> {
-
-	public static void clearFilters(String id) {
-		DataTable dataTable = (DataTable) WebUtil.findComponentById(id);
-		if (dataTable != null) {
-			// http://www.tekbytes.in/tutorial/jsf/how-primefaces-server-side-clear-filter-solution-improve-the-application-performance
-			// http://stackoverflow.com/questions/18313011/reset-primefaces-datatable-state-filter-sorting-paging
-			dataTable.getFilters().clear();
-			dataTable.setFirst(0);
-		}
-	}
 
 	private String currentPageIdsString;
 

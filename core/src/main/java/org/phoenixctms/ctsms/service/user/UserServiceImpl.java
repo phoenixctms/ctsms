@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.UserPermissionProfileCollisionFinder;
+import org.phoenixctms.ctsms.domain.DataTableColumn;
+import org.phoenixctms.ctsms.domain.DataTableColumnDao;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
@@ -52,6 +54,7 @@ import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.DataTableColumnVO;
 import org.phoenixctms.ctsms.vo.NotificationVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
@@ -250,6 +253,14 @@ public class UserServiceImpl
 				userPermissionProfileDao.remove(permissionProfile);
 			}
 			user.getPermissionProfiles().clear();
+			DataTableColumnDao dataTableColumnDao = this.getDataTableColumnDao();
+			Iterator<DataTableColumn> tableColumnsIt = user.getTableColumns().iterator();
+			while (tableColumnsIt.hasNext()) {
+				DataTableColumn tableColumn = tableColumnsIt.next();
+				tableColumn.setUser(null);
+				dataTableColumnDao.remove(tableColumn);
+			}
+			user.getTableColumns().clear();
 			// ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
 			// } else {
 			// checkActivityCount(userId, journalEntryDao);
@@ -553,5 +564,62 @@ public class UserServiceImpl
 		} else {
 			ServiceUtil.cancelNotifications(user.getNotifications(), this.getNotificationDao(), org.phoenixctms.ctsms.enumeration.NotificationType.USER_ACCOUNT);
 		}
+	}
+
+	@Override
+	protected Collection<DataTableColumnVO> handleSetDataTableColumns(AuthenticationVO auth, Long userId, Set<DataTableColumnVO> columns) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		DataTableColumnDao dataTableColumnDao = this.getDataTableColumnDao();
+		Iterator<DataTableColumnVO> columnVOIt = columns.iterator();
+		ArrayList<DataTableColumnVO> result = new ArrayList<DataTableColumnVO>(columns.size());
+		HashSet<String> tableNames = new HashSet<String>();
+		while (columnVOIt.hasNext()) {
+			DataTableColumnVO columnVO = columnVOIt.next();
+			if (tableNames.add(columnVO.getTableName())) {
+				deleteDataTableColumns(user, columnVO.getTableName(), null);
+			}
+			DataTableColumn column = dataTableColumnDao.dataTableColumnVOToEntity(columnVO);
+			column.setUser(user);
+			user.addTableColumns(column);
+			dataTableColumnDao.create(column);
+			result.add(dataTableColumnDao.toDataTableColumnVO(column));
+		}
+		return result;
+	}
+
+	@Override
+	protected Collection<DataTableColumnVO> handleGetDataTableColumns(AuthenticationVO auth, Long userId, String tableName, String columnName) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		DataTableColumnDao dataTableColumnDao = this.getDataTableColumnDao();
+		Collection columns = dataTableColumnDao.findByUserTableColumn(userId, tableName, columnName);
+		dataTableColumnDao.toDataTableColumnVOCollection(columns);
+		return columns;
+	}
+
+	private ArrayList<DataTableColumnVO> deleteDataTableColumns(User user, String tableName, String columnName) throws Exception {
+		DataTableColumnDao dataTableColumnDao = this.getDataTableColumnDao();
+		Collection<DataTableColumn> columns = dataTableColumnDao.findByUserTableColumn(user.getId(), tableName, columnName);
+		ArrayList<DataTableColumnVO> result = new ArrayList<DataTableColumnVO>(columns.size());
+		Iterator<DataTableColumn> it = columns.iterator();
+		while (it.hasNext()) {
+			DataTableColumn dataTableColumn = it.next();
+			result.add(dataTableColumnDao.toDataTableColumnVO(dataTableColumn));
+			user.removeTableColumns(dataTableColumn);
+			dataTableColumn.setUser(null);
+			dataTableColumnDao.remove(dataTableColumn);
+		}
+		return result;
+	}
+
+	@Override
+	protected Collection<DataTableColumnVO> handleClearDataTableColumns(AuthenticationVO auth, Long userId, String tableName, String columnName) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		return deleteDataTableColumns(user, tableName, columnName);
+	}
+
+	@Override
+	protected long handleGetDataTableColumnCount(AuthenticationVO auth, Long userId, String tableName, String columnName) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		return this.getDataTableColumnDao().getCount(userId, tableName, columnName);
 	}
 }

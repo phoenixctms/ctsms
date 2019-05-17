@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -38,7 +38,7 @@ public class UserActivityBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		LazyDataModelBase.clearFilters("useractivity_list");
+		DataTable.clearFilters("useractivity_list");
 		this.userId = id;
 		initIn();
 		initSets();
@@ -236,6 +236,6 @@ public class UserActivityBean extends ManagedBeanBase {
 
 	public void refresh() {
 		userActivityModel.updateRowCount();
-		LazyDataModelBase.clearFilters("useractivity_list");
+		DataTable.clearFilters("useractivity_list");
 	}
 }

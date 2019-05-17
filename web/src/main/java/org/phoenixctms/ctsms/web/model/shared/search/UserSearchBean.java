@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -175,7 +175,7 @@ public class UserSearchBean extends SearchBeanBase {
 		userResultModel.setCriterionsIn(getNewCriterions());
 		updateInstantCriteria(true);
 		userResultModel.updateRowCount();
-		LazyDataModelBase.clearFilters("user_result_list");
+		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
 	}
 
