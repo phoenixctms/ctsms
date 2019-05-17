@@ -325,11 +325,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException e) {
-				throw e;
-			} catch (ServiceException e) {
-				throw e;
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -397,11 +393,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				try {
 					portionTagValues(WebUtil.getServiceLocator().getTrialService()
 							.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, loadAllJsValues, paginator.getPsf()));
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			copyProbandListEntryTagValuesOutToIn(tagValuesIn, tagValuesOut, keepTagValuesIn);
@@ -507,11 +501,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService().getProbandGroupList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return null;
@@ -577,9 +569,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

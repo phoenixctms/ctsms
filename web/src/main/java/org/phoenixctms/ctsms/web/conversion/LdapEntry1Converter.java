@@ -16,11 +16,9 @@ public class LdapEntry1Converter extends LdapEntryConverter {
 	protected Object getLdapEntry(String username) {
 		try {
 			return WebUtil.getServiceLocator().getToolsService().getLdapEntry1(WebUtil.getAuthentication(), username);
-		} catch (ServiceException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		}
 		return null;
 	}

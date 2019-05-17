@@ -25,11 +25,9 @@ public class CourseParticipationStatusEntryLazyModel extends LazyDataModelBase {
 		if (staffId != null || courseId != null) {
 			try {
 				return WebUtil.getServiceLocator().getCourseService().getCourseParticipationStatusEntryList(WebUtil.getAuthentication(), staffId, courseId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<CourseParticipationStatusEntryOutVO>();

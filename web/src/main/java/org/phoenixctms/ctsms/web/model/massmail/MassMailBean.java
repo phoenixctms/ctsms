@@ -185,19 +185,13 @@ public class MassMailBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage("inputMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -229,15 +223,11 @@ public class MassMailBean extends ManagedBeanBase {
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getMassMailService().getMassMail(WebUtil.getAuthentication(), id);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-			} catch (IllegalArgumentException e) {
-				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 		initIn();
@@ -277,15 +267,11 @@ public class MassMailBean extends ManagedBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -315,11 +301,9 @@ public class MassMailBean extends ManagedBeanBase {
 						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.MASS_MAIL_DOCUMENT,
 						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
 		}
@@ -378,11 +362,9 @@ public class MassMailBean extends ManagedBeanBase {
 						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.PROBAND_DOCUMENT,
 						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
 		}
@@ -398,11 +380,9 @@ public class MassMailBean extends ManagedBeanBase {
 			Collection<MassMailStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getMassMailStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (statusTypeVOs != null) {
 				if (statusTypeVOs.size() > 1 || (statusTypeVOs.size() == 1 && !statusTypeVOs.iterator().next().getId().equals(in.getStatusId()))) {
@@ -449,11 +429,9 @@ public class MassMailBean extends ManagedBeanBase {
 						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.TRIAL_DOCUMENT,
 						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
 		}
@@ -552,20 +530,16 @@ public class MassMailBean extends ManagedBeanBase {
 		if (out != null) {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getMassMailStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getInitialMassMailStatusTypes(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		if (statusTypeVOs != null) {
@@ -630,15 +604,11 @@ public class MassMailBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getMassMailService().getMassMail(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -697,19 +667,13 @@ public class MassMailBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage("inputMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -718,7 +682,7 @@ public class MassMailBean extends ManagedBeanBase {
 		previewSubject = null;
 		try {
 			previewSubject = WebUtil.getServiceLocator().getMassMailService().getSubject(WebUtil.getAuthentication(), in, previewProbandId); // , previewTrialId);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			if (addMessages) {
 				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
@@ -726,20 +690,12 @@ public class MassMailBean extends ManagedBeanBase {
 			if (addMessages) {
 				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			}
-		} catch (AuthorisationException e) {
-			if (addMessages) {
-				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-			}
-		} catch (IllegalArgumentException e) {
-			if (addMessages) {
-				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 		previewText = null;
 		try {
 			previewText = WebUtil.getServiceLocator().getMassMailService().getText(WebUtil.getAuthentication(), in, previewProbandId); // , previewTrialId);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			if (addMessages) {
 				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
@@ -747,14 +703,6 @@ public class MassMailBean extends ManagedBeanBase {
 			if (addMessages) {
 				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			}
-		} catch (AuthorisationException e) {
-			if (addMessages) {
-				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-			}
-		} catch (IllegalArgumentException e) {
-			if (addMessages) {
-				Messages.addMessageClientId("previewMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 	}

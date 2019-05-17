@@ -25,11 +25,9 @@ public class ProbandMoneyTransferNoParticipationSummaryLazyModel extends Proband
 			try {
 				return WebUtil.getServiceLocator().getTrialService()
 						.getProbandMoneyTransferNoParticipationSummaryList(WebUtil.getAuthentication(), trialId, null, null, paid, total, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<MoneyTransferSummaryVO>();
@@ -39,11 +37,9 @@ public class ProbandMoneyTransferNoParticipationSummaryLazyModel extends Proband
 	protected MoneyTransferSummaryVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getProbandMoneyTransferNoParticipationSummary(WebUtil.getAuthentication(), id, trialId, null, null, paid);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

@@ -69,11 +69,7 @@ public class InventorySearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}

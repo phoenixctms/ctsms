@@ -35,11 +35,9 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(WebUtil.getAuthentication(), listEntryId, ecrfFieldId, index, true, false, psf)
 						.getPageValues();
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ECRFFieldValueOutVO>();

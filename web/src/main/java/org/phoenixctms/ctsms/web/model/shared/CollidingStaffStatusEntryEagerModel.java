@@ -162,47 +162,37 @@ public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
 		if (dutyRosterTurnId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), dutyRosterTurnId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (courseInventoryBookingId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), courseInventoryBookingId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (courseParticipationStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getCourseService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), courseParticipationStatusEntryId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (visitScheduleItemId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getCollidingStaffStatusEntries(WebUtil.getAuthentication(), visitScheduleItemId, staffId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (staffId != null && start != null && stop != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingStaffStatusEntriesInterval(WebUtil.getAuthentication(), staffId, start, stop);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<StaffStatusEntryOutVO>();

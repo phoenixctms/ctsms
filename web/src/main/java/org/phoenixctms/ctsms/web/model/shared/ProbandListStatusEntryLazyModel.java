@@ -20,11 +20,9 @@ public class ProbandListStatusEntryLazyModel extends LazyDataModelBase {
 		if (probandListEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntryList(WebUtil.getAuthentication(), probandListEntryId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProbandListStatusEntryOutVO>();
@@ -38,11 +36,9 @@ public class ProbandListStatusEntryLazyModel extends LazyDataModelBase {
 	protected ProbandListStatusEntryOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntry(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

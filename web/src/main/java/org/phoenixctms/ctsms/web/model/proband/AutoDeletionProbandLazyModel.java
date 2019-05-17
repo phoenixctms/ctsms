@@ -46,11 +46,9 @@ public class AutoDeletionProbandLazyModel extends LazyDataModelBase {
 		try {
 			result = WebUtil.getServiceLocator().getProbandService()
 					.getAutoDeletionProbands(WebUtil.getAuthentication(), null, departmentId, probandCategoryId, reminderPeriod, reminderPeriodDays, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (result != null) {
 			Iterator<ProbandOutVO> probandIt = result.iterator();

@@ -70,11 +70,9 @@ public class MoneyTransferOverviewBean extends ManagedBeanBase {
 		if (paymentMethods == null) {
 			try {
 				paymentMethods = WebUtil.getServiceLocator().getSelectionSetService().getPaymentMethods(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		trialMoneyTransferSummaryModel.updateRowCount();

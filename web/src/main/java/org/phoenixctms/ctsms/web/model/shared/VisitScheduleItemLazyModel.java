@@ -21,11 +21,9 @@ public class VisitScheduleItemLazyModel extends LazyDataModelBase {
 		if (trialId != null || probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getVisitScheduleItemList(WebUtil.getAuthentication(), trialId, null, null, probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<VisitScheduleItemOutVO>();

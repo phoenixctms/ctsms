@@ -70,9 +70,7 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
@@ -133,11 +131,9 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 							.getInquiryPresetValues(WebUtil.getAuthentication(), trialId, null, true, true, loadAllJsValues, paginator.getPsf())
 							: WebUtil.getServiceLocator().getTrialService()
 									.getInquiryPresetValues(WebUtil.getAuthentication(), trialId, true, null, true, loadAllJsValues, paginator.getPsf()));
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			copyInquiryValuesOutToIn(inquiryValuesIn, inquiryValuesOut, keepInquiryValuesIn);

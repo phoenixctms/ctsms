@@ -58,11 +58,9 @@ public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase {
 						.getEcrfFieldValue(WebUtil.getAuthentication(), status.getListEntry().getId(), status.getEcrfField().getId(), status.getIndex(), true, false,
 								new PSFVO(INITIAL_PSF))
 						.getPageValues();
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ECRFFieldValueOutVO>();

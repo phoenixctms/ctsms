@@ -103,11 +103,7 @@ public class TrialSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -146,11 +142,9 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection teamMembers = null;
 				try {
 					teamMembers = WebUtil.getServiceLocator().getTrialService().getTeamMemberList(WebUtil.getAuthentication(), trial.getId(), null, null, null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (teamMembers == null) {
 					teamMembers = new ArrayList<TeamMemberOutVO>();
@@ -171,11 +165,9 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection timelineEvents = null;
 				try {
 					timelineEvents = WebUtil.getServiceLocator().getTrialService().getTimelineEventList(WebUtil.getAuthentication(), trial.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (timelineEvents == null) {
 					timelineEvents = new ArrayList<TimelineEventOutVO>();
@@ -205,11 +197,9 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection trialTagValues = null;
 				try {
 					trialTagValues = WebUtil.getServiceLocator().getTrialService().getTrialTagValueList(WebUtil.getAuthentication(), trial.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (trialTagValues == null) {
 					trialTagValues = new ArrayList<TrialTagValueOutVO>();

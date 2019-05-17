@@ -25,11 +25,9 @@ public class CriteriaLazyModel extends LazyDataModelBase {
 	protected Collection<CriteriaOutVO> getLazyResult(PSFVO psf) {
 		try {
 			return WebUtil.getServiceLocator().getSearchService().getCriteriaList(WebUtil.getAuthentication(), module, category, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<CriteriaOutVO>();
 	}
@@ -42,11 +40,9 @@ public class CriteriaLazyModel extends LazyDataModelBase {
 	protected CriteriaOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getSearchService().getCriteria(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

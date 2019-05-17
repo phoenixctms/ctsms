@@ -20,11 +20,9 @@ public class LectureLazyModel extends LazyDataModelBase {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getLectureList(WebUtil.getAuthentication(), staffId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<LecturerOutVO>();

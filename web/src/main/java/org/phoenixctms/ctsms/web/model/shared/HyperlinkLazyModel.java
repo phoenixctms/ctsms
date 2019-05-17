@@ -26,11 +26,9 @@ public class HyperlinkLazyModel extends LazyDataModelBase {
 		if (module != null && entityId != null) {
 			try {
 				return WebUtil.getServiceLocator().getHyperlinkService().getHyperlinks(WebUtil.getAuthentication(), module, entityId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<HyperlinkOutVO>();
@@ -44,11 +42,9 @@ public class HyperlinkLazyModel extends LazyDataModelBase {
 	protected HyperlinkOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getHyperlinkService().getHyperlink(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

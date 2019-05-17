@@ -40,17 +40,7 @@ public class UnsubscribeBean {
 		if (!WebUtil.isTrustedReferer(request)) {
 			try {
 				WebUtil.getServiceLocator().getToolsService().unsubscribeProbandEmail(beacon);
-			} catch (ServiceException e) {
-				ex = e;
-			} catch (AuthenticationException e) {
-				// response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				// return null;
-				ex = e;
-			} catch (AuthorisationException e) {
-				// response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				// return null;
-				ex = e;
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException|AuthenticationException e) {
 				ex = e;
 			}
 		} else {

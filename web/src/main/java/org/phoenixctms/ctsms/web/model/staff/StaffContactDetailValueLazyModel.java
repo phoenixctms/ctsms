@@ -20,11 +20,9 @@ public class StaffContactDetailValueLazyModel extends LazyDataModelBase {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getStaffContactDetailValueList(WebUtil.getAuthentication(), staffId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<StaffContactDetailValueOutVO>();
@@ -34,11 +32,9 @@ public class StaffContactDetailValueLazyModel extends LazyDataModelBase {
 	protected StaffContactDetailValueOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getStaffService().getStaffContactDetailValue(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

@@ -34,11 +34,9 @@ public class RecipientOverviewLazyModel extends MassMailRecipientLazyModelBase {
 		try {
 			return WebUtil.getServiceLocator().getMassMailService().getPendingRecipientList(
 					WebUtil.getAuthentication(), null, pending, scheduled, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<MassMailRecipientOutVO>();
 	}

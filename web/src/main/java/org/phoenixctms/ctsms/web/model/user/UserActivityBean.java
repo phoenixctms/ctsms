@@ -196,11 +196,9 @@ public class UserActivityBean extends ManagedBeanBase {
 			Collection<JournalCategoryVO> categoryVOs = null;
 			try {
 				categoryVOs = WebUtil.getServiceLocator().getSelectionSetService().getJournalCategories(WebUtil.getAuthentication(), null, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (categoryVOs != null) {
 				filterCategories = new ArrayList<SelectItem>(categoryVOs.size());

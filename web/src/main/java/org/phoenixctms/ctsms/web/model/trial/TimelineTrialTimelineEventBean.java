@@ -340,11 +340,9 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 						.getTrialService()
 						.getTimelineEventInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, filterStatusId, filterTypeId, showAll ? null : true, rangeStart,
 								rangeEnd);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (timelineEvents != null && timelineEvents.size() > 0) {
 				Iterator<TimelineEventOutVO> timelineEventsIt = timelineEvents.iterator();
@@ -361,11 +359,9 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 						.getTrialService()
 						.getVisitScheduleItemInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, filterStatusId, filterVisitTypeId, rangeStart, rangeEnd,
 								null, false);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (visitScheduleItems != null && visitScheduleItems.size() > 0) {
 				Iterator<VisitScheduleItemOutVO> visitScheduleItemsIt = visitScheduleItems.iterator();

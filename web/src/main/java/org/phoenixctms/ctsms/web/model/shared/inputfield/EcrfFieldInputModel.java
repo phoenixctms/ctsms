@@ -401,17 +401,11 @@ public class EcrfFieldInputModel extends InputModel {
 				return values.getJsValues();
 				// }
 				// return updateModels(values);
-			} catch (NoSuchElementException e) {
-				setErrorMessage(e.getMessage());
-			} catch (ServiceException e) {
+			} catch (NoSuchElementException|ServiceException|AuthorisationException|IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
 				setErrorMessage(e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				setErrorMessage(e.getMessage());
-			} catch (IllegalArgumentException e) {
-				setErrorMessage(e.getMessage());
 			}
 		}
 		return null;
@@ -679,17 +673,13 @@ public class EcrfFieldInputModel extends InputModel {
 				return values.getJsValues();
 				// }
 				// return updateModels(values);
-			} catch (NoSuchElementException e) {
+			} catch (NoSuchElementException|AuthorisationException|IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
 				setErrorMessageFromServiceException(e.getData(), e.getMessage());
 			} catch (AuthenticationException e) {
 				setErrorMessage(e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				setErrorMessage(e.getMessage());
-			} catch (IllegalArgumentException e) {
-				setErrorMessage(e.getMessage());
 			}
 		}
 		return null;

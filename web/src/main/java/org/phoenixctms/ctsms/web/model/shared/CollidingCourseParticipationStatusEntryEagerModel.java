@@ -53,11 +53,9 @@ public class CollidingCourseParticipationStatusEntryEagerModel extends EagerData
 		if (courseInventoryBookingId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getCollidingCourseParticipationStatusEntries(WebUtil.getAuthentication(), courseInventoryBookingId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<CourseParticipationStatusEntryOutVO>();

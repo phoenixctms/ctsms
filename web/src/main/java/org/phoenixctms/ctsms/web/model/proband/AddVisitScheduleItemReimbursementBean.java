@@ -96,11 +96,9 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 									visitScheduleItem.getGroup() != null ? visitScheduleItem.getGroup().getId() : null,
 									visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId));
 					// count = psf.getRowCount();
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			if (visitScheduleItemCount > 1) {

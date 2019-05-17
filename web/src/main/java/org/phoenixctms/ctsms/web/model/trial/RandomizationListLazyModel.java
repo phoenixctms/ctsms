@@ -20,11 +20,9 @@ public class RandomizationListLazyModel extends LazyDataModelBase {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getStratificationRandomizationListList(WebUtil.getAuthentication(), trialId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<StratificationRandomizationListOutVO>();
@@ -34,11 +32,9 @@ public class RandomizationListLazyModel extends LazyDataModelBase {
 	protected StratificationRandomizationListOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getStratificationRandomizationList(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

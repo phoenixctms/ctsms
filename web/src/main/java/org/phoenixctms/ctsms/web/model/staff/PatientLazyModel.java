@@ -20,11 +20,9 @@ public class PatientLazyModel extends LazyDataModelBase {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getPatientList(WebUtil.getAuthentication(), staffId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProbandOutVO>();

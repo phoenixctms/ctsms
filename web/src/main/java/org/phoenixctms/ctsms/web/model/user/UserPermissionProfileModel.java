@@ -130,11 +130,9 @@ public class UserPermissionProfileModel implements Map<String, String> {
 		Collection<PermissionProfileVO> permissionProfileVOs = null;
 		try {
 			permissionProfileVOs = WebUtil.getServiceLocator().getSelectionSetService().getPermissionProfiles(WebUtil.getAuthentication(), null);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (permissionProfileVOs != null) {
 			Iterator<PermissionProfileVO> permissionProfileVOsIt = permissionProfileVOs.iterator();

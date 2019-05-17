@@ -93,11 +93,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -108,11 +104,9 @@ public class ProbandSearchBean extends SearchBeanBase {
 				Collection probandAddresses = null;
 				try {
 					probandAddresses = WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), proband.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (probandAddresses == null) {
 					probandAddresses = new ArrayList<IDVO>();
@@ -134,11 +128,9 @@ public class ProbandSearchBean extends SearchBeanBase {
 				try {
 					probandContactDetailValues = WebUtil.getServiceLocator().getProbandService()
 							.getProbandContactDetailValueList(WebUtil.getAuthentication(), proband.getId(), false, null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (probandContactDetailValues == null) {
 					probandContactDetailValues = new ArrayList<ProbandContactDetailValueOutVO>();
@@ -163,11 +155,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -178,11 +166,9 @@ public class ProbandSearchBean extends SearchBeanBase {
 				Collection probandListStatus = null;
 				try {
 					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), null, proband.getId(), true, null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (probandListStatus == null) {
 					probandListStatus = new ArrayList<ProbandListStatusEntryOutVO>();
@@ -207,11 +193,9 @@ public class ProbandSearchBean extends SearchBeanBase {
 				Collection probandTagValues = null;
 				try {
 					probandTagValues = WebUtil.getServiceLocator().getProbandService().getProbandTagValueList(WebUtil.getAuthentication(), proband.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (probandTagValues == null) {
 					probandTagValues = new ArrayList<ProbandTagValueOutVO>();

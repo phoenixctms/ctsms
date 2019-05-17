@@ -105,29 +105,23 @@ public class CollidingDutyRosterTurnEagerModel extends EagerDataModelBase {
 		if (staffStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingDutyRosterTurns(WebUtil.getAuthentication(), staffStatusEntryId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (courseInventoryBookingId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getCollidingDutyRosterTurns(WebUtil.getAuthentication(), courseInventoryBookingId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (courseParticipationStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getCourseService().getCollidingDutyRosterTurns(WebUtil.getAuthentication(), courseParticipationStatusEntryId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<DutyRosterTurnOutVO>();

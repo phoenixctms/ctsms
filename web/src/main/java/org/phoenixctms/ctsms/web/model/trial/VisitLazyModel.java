@@ -20,11 +20,9 @@ public class VisitLazyModel extends LazyDataModelBase {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getVisitList(WebUtil.getAuthentication(), trialId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<VisitOutVO>();

@@ -20,11 +20,9 @@ public class TrialMembershipLazyModel extends LazyDataModelBase {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getTrialMembershipList(WebUtil.getAuthentication(), staffId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<TeamMemberOutVO>();

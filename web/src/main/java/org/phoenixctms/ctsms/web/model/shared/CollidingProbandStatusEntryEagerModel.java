@@ -98,29 +98,23 @@ public class CollidingProbandStatusEntryEagerModel extends EagerDataModelBase {
 		if (probandListEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getCollidingProbandStatusEntries(WebUtil.getAuthentication(), probandListEntryId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (visitScheduleItemId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getCollidingProbandStatusEntries(WebUtil.getAuthentication(), visitScheduleItemId, probandId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (probandInventoryBookingId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getCollidingProbandStatusEntries(WebUtil.getAuthentication(), probandInventoryBookingId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProbandStatusEntryOutVO>();

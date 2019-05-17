@@ -45,11 +45,9 @@ public class TimelineScheduleLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getTrialService()
 					.getTimelineSchedule(WebUtil.getAuthentication(), null, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<TimelineEventOutVO>();
 	}

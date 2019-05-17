@@ -93,20 +93,16 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase {
 		if (probandStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), probandStatusEntryId, allProbandGroups);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (staffStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), staffStatusEntryId, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<VisitScheduleItemOutVO>();

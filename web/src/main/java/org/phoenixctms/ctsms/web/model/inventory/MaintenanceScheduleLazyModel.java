@@ -49,11 +49,9 @@ public class MaintenanceScheduleLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getInventoryService()
 					.getMaintenanceSchedule(WebUtil.getAuthentication(), null, inventoryId, departmentId, inventoryCategoryId, responsiblePersonId, notify, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<MaintenanceScheduleItemOutVO>();
 	}

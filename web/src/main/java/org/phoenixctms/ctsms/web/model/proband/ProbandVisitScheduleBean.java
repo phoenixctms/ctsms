@@ -43,11 +43,9 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		if (probandId != null && visitScheduleItemId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntryAtVisitScheduleItem(WebUtil.getAuthentication(), probandId, visitScheduleItemId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return null;
@@ -150,11 +148,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -186,11 +180,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}

@@ -42,11 +42,9 @@ public class StaffStatusLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getStaffService()
 					.getStaffStatus(WebUtil.getAuthentication(), null, staffId, departmentId, staffCategoryId, staffActive, hideAvailability, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<StaffStatusEntryOutVO>();
 	}

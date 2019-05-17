@@ -42,11 +42,9 @@ public class ProbandStatusLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getProbandService()
 					.getProbandStatus(WebUtil.getAuthentication(), null, probandId, departmentId, probandCategoryId, probandActive, hideAvailability, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<ProbandStatusEntryOutVO>();
 	}
