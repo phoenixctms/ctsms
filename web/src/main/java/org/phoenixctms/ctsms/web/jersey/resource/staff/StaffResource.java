@@ -54,6 +54,7 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="staff")
 @Path("/staff")
@@ -242,6 +243,7 @@ public class StaffResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public StaffListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

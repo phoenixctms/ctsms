@@ -57,6 +57,7 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="proband")
 @Path("/proband")
@@ -243,6 +244,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public ProbandListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

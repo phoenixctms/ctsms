@@ -48,6 +48,7 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="inputfield")
 @Path("/inputfield")
@@ -178,6 +179,7 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public InputFieldListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

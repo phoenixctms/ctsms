@@ -45,6 +45,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="inventory")
 @Path("/inventory")
@@ -224,6 +225,7 @@ public final class InventoryResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public InventoryListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

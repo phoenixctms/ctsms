@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="massmail")
 @Path("/massmail")
@@ -177,6 +178,7 @@ public final class MassMailResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public MassMailListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

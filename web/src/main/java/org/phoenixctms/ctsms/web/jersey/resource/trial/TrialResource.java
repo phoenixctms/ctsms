@@ -43,6 +43,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(value="trial")
 @Path("/trial")
@@ -205,6 +206,7 @@ public class TrialResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public TrialListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

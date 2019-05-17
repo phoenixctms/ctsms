@@ -45,7 +45,7 @@ import com.sun.jersey.api.NotFoundException;
 
 import io.swagger.annotations.Api;
 
-@Api(value="shared")
+@Api(value="shared", hidden = true)
 @Path("/tools")
 public final class ToolsResource {
 
