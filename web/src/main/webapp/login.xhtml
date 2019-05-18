@@ -37,7 +37,7 @@
 			value="#{param[applicationScopeBean.parameterName('REFERER')]}" />
 		<ui:param
 			name="onLoadJsFunction"
-			value="openReferer(#{viewExpired and sessionScopeBean.loggedIn},'#{labels.retry_action_after_expiration}','#{labels.popup_close_after_expiration}')" />
+			value="openReferer(#{sessionScopeBean.loggedIn},'#{labels.retry_action_after_expiration}','#{labels.popup_close_after_expiration}')" />
 		<ui:param
 			name="showStatusBar"
 			value="true" />

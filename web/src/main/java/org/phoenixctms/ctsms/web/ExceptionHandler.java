@@ -74,7 +74,7 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 						//redirected = true;
 					}
 				}
-			} catch (IOException ioException) {
+			} catch (IOException | IllegalStateException e) {
 				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
 				//ioException.printStackTrace();
 			}
@@ -100,11 +100,12 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 						if (sessionScopeBean != null && WebUtil.getSessionScopeBean().isLoggedIn()) {
 							context.getExternalContext().invalidateSession(); // invalidate before.... see http://jforum.icesoft.org/JForum/posts/list/3111.page
 						}
+						context = FacesContext.getCurrentInstance();
 						context.getExternalContext().redirect(url.toString());
 						//redirected = true;
 					}
 				}
-			} catch (IOException ioException) {
+			} catch (IOException | IllegalStateException e) {
 				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
 				//ioException.printStackTrace();
 			}
