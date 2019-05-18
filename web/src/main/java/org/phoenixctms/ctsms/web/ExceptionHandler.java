@@ -39,73 +39,75 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 
 	@Override
 	public void handle() throws FacesException {
-		boolean redirected = false;
+		//boolean redirected = false;
 		Iterator<ExceptionQueuedEvent> it = getUnhandledExceptionQueuedEvents().iterator();
+		ExceptionQueuedEventContext viewExpiredExceptionEventContext = null;
+		ExceptionQueuedEventContext authenticationExceptionEventContext = null;
 		while (it.hasNext()) {
 			ExceptionQueuedEvent event = it.next();
 			ExceptionQueuedEventContext eventContext = (ExceptionQueuedEventContext) event.getSource();
 			Throwable e = eventContext.getException();
 			if (e instanceof ViewExpiredException) {
-				ViewExpiredException viewExpiredException = (ViewExpiredException) e;
-				try {
-					if (!redirected) {
-						if (!Urls.LOGIN.value().equals(viewExpiredException.getViewId())) {
-							FacesContext context = FacesContext.getCurrentInstance();
-							HttpServletRequest request = (HttpServletRequest) eventContext.getContext().getExternalContext().getRequest();
-							StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
-							url.append("?");
-							url.append(GetParamNames.EXPIRED);
-							url.append("=true");
-							WebUtil.appendRefererParameter(url, request, "&");
-							if (!context.getExternalContext().isResponseCommitted()) {
-								context.getExternalContext().redirect(url.toString());
-								redirected = true;
-							}
-						}
-					}
-				} catch (IOException ioException) {
-					// System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
-					// ioException.printStackTrace();
-				} finally {
-					it.remove();
-				}
+				viewExpiredExceptionEventContext = eventContext;
+				it.remove();
 			} else if (e instanceof AuthenticationException) {
-				AuthenticationException authenticationException = (AuthenticationException) e;
-				try {
-					if (!redirected) {
-						if (!Urls.LOGIN.value().equals(eventContext.getAttributes().get(WebUtil.EVENT_CONTEXT_VIEW_ID))) {
-							FacesContext context = FacesContext.getCurrentInstance();
-							HttpServletRequest request = (HttpServletRequest) eventContext.getContext().getExternalContext().getRequest();
-							StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
-							url.append("?");
-							url.append(GetParamNames.AUTHENTICATION_FAILED);
-							url.append("=true&");
-							url.append(GetParamNames.AUTHENTICATION_FAILED_MESSAGE);
-							url.append("=");
-							url.append(JsUtil.encodeBase64(Settings.getBoolean(SettingCodes.HIDE_DETAILED_AUTHENTICATION_ERROR, Bundle.SETTINGS,
-									DefaultSettings.HIDE_DETAILED_AUTHENTICATION_ERROR) ? Messages.getMessage(MessageCodes.OPAQUE_AUTHENTICATION_ERROR_MESSAGE)
-											: authenticationException.getMessage(),
-									true));
-							WebUtil.appendRefererParameter(url, request, "&");
-							if (!context.getExternalContext().isResponseCommitted()) {
-								SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
-								if (sessionScopeBean != null && WebUtil.getSessionScopeBean().isLoggedIn()) {
-									context.getExternalContext().invalidateSession(); // invalidate before.... see http://jforum.icesoft.org/JForum/posts/list/3111.page
-								}
-								context.getExternalContext().redirect(url.toString());
-								redirected = true;
-							}
-						}
+				authenticationExceptionEventContext = eventContext;
+				it.remove();
+				//Debugging:
+				//} else {
+				//System.out.println(e.getClass().toString() + ": " + e.getMessage());
+				//e.printStackTrace();
+			}
+		}
+		if (viewExpiredExceptionEventContext != null) {
+			ViewExpiredException viewExpiredException = (ViewExpiredException) viewExpiredExceptionEventContext.getException();
+			try {
+				if (!Urls.LOGIN.value().equals(viewExpiredException.getViewId())) {
+					FacesContext context = FacesContext.getCurrentInstance();
+					HttpServletRequest request = (HttpServletRequest) viewExpiredExceptionEventContext.getContext().getExternalContext().getRequest();
+					StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
+					url.append("?");
+					url.append(GetParamNames.EXPIRED);
+					url.append("=true");
+					WebUtil.appendRefererParameter(url, request, "&");
+					if (!context.getExternalContext().isResponseCommitted()) {
+						context.getExternalContext().redirect(url.toString());
+						//redirected = true;
 					}
-				} catch (IOException ioException) {
-					// System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
-					// ioException.printStackTrace();
-				} finally {
-					it.remove();
 				}
-			} else {
-				// System.out.println(e.getClass().toString() + ": " + e.getMessage());
-				// e.printStackTrace();
+			} catch (IOException ioException) {
+				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
+				//ioException.printStackTrace();
+			}
+		} else if (authenticationExceptionEventContext != null) {
+			AuthenticationException authenticationException = (AuthenticationException) authenticationExceptionEventContext.getException();
+			try {
+				if (!Urls.LOGIN.value().equals(authenticationExceptionEventContext.getAttributes().get(WebUtil.EVENT_CONTEXT_VIEW_ID))) {
+					FacesContext context = FacesContext.getCurrentInstance();
+					HttpServletRequest request = (HttpServletRequest) authenticationExceptionEventContext.getContext().getExternalContext().getRequest();
+					StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
+					url.append("?");
+					url.append(GetParamNames.AUTHENTICATION_FAILED);
+					url.append("=true&");
+					url.append(GetParamNames.AUTHENTICATION_FAILED_MESSAGE);
+					url.append("=");
+					url.append(JsUtil.encodeBase64(Settings.getBoolean(SettingCodes.HIDE_DETAILED_AUTHENTICATION_ERROR, Bundle.SETTINGS,
+							DefaultSettings.HIDE_DETAILED_AUTHENTICATION_ERROR) ? Messages.getMessage(MessageCodes.OPAQUE_AUTHENTICATION_ERROR_MESSAGE)
+									: authenticationException.getMessage(),
+							true));
+					WebUtil.appendRefererParameter(url, request, "&");
+					if (!context.getExternalContext().isResponseCommitted()) {
+						SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+						if (sessionScopeBean != null && WebUtil.getSessionScopeBean().isLoggedIn()) {
+							context.getExternalContext().invalidateSession(); // invalidate before.... see http://jforum.icesoft.org/JForum/posts/list/3111.page
+						}
+						context.getExternalContext().redirect(url.toString());
+						//redirected = true;
+					}
+				}
+			} catch (IOException ioException) {
+				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
+				//ioException.printStackTrace();
 			}
 		}
 		getWrapped().handle();
