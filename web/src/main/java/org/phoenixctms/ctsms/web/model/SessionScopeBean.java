@@ -232,7 +232,7 @@ public class SessionScopeBean {
 		}
 	}
 
-	private void clearauthenticationFailedMessage() {
+	private void clearAuthenticationFailedMessage() {
 		authenticationFailed = false;
 		localPasswordRequired = false;
 		authenticationFailedMessage = null;
@@ -245,7 +245,7 @@ public class SessionScopeBean {
 	public synchronized String getAuthenticationFailedMessage() {
 		// i know, hack again....
 		String authenticationFailedMessage = this.authenticationFailedMessage;
-		clearauthenticationFailedMessage();
+		clearAuthenticationFailedMessage();
 		return authenticationFailedMessage;
 	}
 
@@ -1141,7 +1141,7 @@ public class SessionScopeBean {
 			WebUtil.setSessionTimeout();
 			failedAttempts = 0;
 			auth.setLocalPassword(null);
-			clearauthenticationFailedMessage();
+			clearAuthenticationFailedMessage();
 			outcome = getLoginOutcome(true);
 		} catch (ServiceException e) {
 			failedAttempts++;
@@ -1273,7 +1273,7 @@ public class SessionScopeBean {
 		auth.setUsername(null);
 		auth.setPassword(null);
 		auth.setLocalPassword(null);
-		clearauthenticationFailedMessage();
+		clearAuthenticationFailedMessage();
 		return getLoginOutcome(false);
 	}
 
