@@ -109,31 +109,13 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			addEvent();
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			// in.setTrialId(trialIdBackup);
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			// in.setTrialId(trialIdBackup);
 			in.copy(backup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			// in.setTrialId(trialIdBackup);
-			in.copy(backup);
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			// in.setTrialId(trialIdBackup);
-			in.copy(backup);
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -166,15 +148,11 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -220,11 +198,9 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			calendars = WebUtil.getServiceLocator().getTrialService().getCalendars(WebUtil.getAuthentication(),
 					null, null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (calendars != null) {
 			try {
@@ -240,11 +216,9 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			titles = WebUtil.getServiceLocator().getTrialService().getDutyRosterTurnTitles(WebUtil.getAuthentication(),
 					null, null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (titles != null) {
 			try {
@@ -329,9 +303,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 								in.getVisitScheduleItemId(), false);
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (ServiceException e) {
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			}
 		}
 		if (visitScheduleItemVOs != null) {
@@ -382,15 +354,11 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().getDutyRosterTurn(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -438,19 +406,13 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			updateEvent();
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.setTrialId(trialIdBackup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.setTrialId(trialIdBackup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.setTrialId(trialIdBackup);
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.setTrialId(trialIdBackup);
-			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}

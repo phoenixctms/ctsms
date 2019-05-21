@@ -43,11 +43,9 @@ public class ExpiringCourseLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getCourseService()
 					.getExpiringCourses(WebUtil.getAuthentication(), null, departmentId, courseCategoryId, reminderPeriod, reminderPeriodDays, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<CourseOutVO>();
 	}

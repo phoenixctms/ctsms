@@ -81,11 +81,9 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId, false, new PSFVO(INITIAL_PSF)); // ,
 				// psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ECRFFieldValueOutVO>();

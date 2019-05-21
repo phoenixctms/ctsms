@@ -753,8 +753,7 @@ public final class CommonUtil {
 				String key = it.next();
 				try {
 					symbols.put(key, bundle.getString(key));
-				} catch (MissingResourceException e) {
-				} catch (ClassCastException e) {
+				} catch (MissingResourceException|ClassCastException e) {
 				}
 			}
 			return symbols;
@@ -1197,11 +1196,7 @@ public final class CommonUtil {
 		}
 		try {
 			return MessageFormat.format(bundle.getString(l10nKey), args);
-		} catch (MissingResourceException e) {
-			return MessageFormat.format(l10nKey, args);
-		} catch (ClassCastException e) {
-			return MessageFormat.format(l10nKey, args);
-		} catch (IllegalArgumentException e) {
+		} catch (MissingResourceException|ClassCastException|IllegalArgumentException e) {
 			return MessageFormat.format(l10nKey, args);
 		}
 	}
@@ -1494,9 +1489,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(l10nKey);
-		} catch (MissingResourceException e) {
-			return l10nKey;
-		} catch (ClassCastException e) {
+		} catch (MissingResourceException|ClassCastException e) {
 			return l10nKey;
 		}
 	}
@@ -1543,11 +1536,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Boolean.parseBoolean(bundle.getString(key));
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1558,11 +1547,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Double.parseDouble(bundle.getString(key));
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1573,11 +1558,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Float.parseFloat(bundle.getString(key));
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1588,11 +1569,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Integer.parseInt(bundle.getString(key));
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1603,11 +1580,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Long.parseLong(bundle.getString(key));
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1618,9 +1591,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(key);
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
+		} catch (MissingResourceException|ClassCastException e) {
 			return defaultValue;
 		}
 	}
@@ -1636,11 +1607,7 @@ public final class CommonUtil {
 			} else {
 				return Boolean.parseBoolean(tristate);
 			}
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1656,11 +1623,7 @@ public final class CommonUtil {
 			} else {
 				return Double.parseDouble(tristate);
 			}
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1676,11 +1639,7 @@ public final class CommonUtil {
 			} else {
 				return Float.parseFloat(tristate);
 			}
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1696,11 +1655,7 @@ public final class CommonUtil {
 			} else {
 				return Integer.parseInt(tristate);
 			}
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1716,11 +1671,7 @@ public final class CommonUtil {
 			} else {
 				return Long.parseLong(tristate);
 			}
-		} catch (MissingResourceException e) {
-			return defaultValue;
-		} catch (ClassCastException e) {
-			return defaultValue;
-		} catch (NumberFormatException e) {
+		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1732,9 +1683,7 @@ public final class CommonUtil {
 		String value;
 		try {
 			value = bundle.getString(key);
-		} catch (MissingResourceException e) {
-			return defaultValue == null ? new ArrayList<String>() : (ArrayList<String>) defaultValue.clone();
-		} catch (ClassCastException e) {
+		} catch (MissingResourceException|ClassCastException e) {
 			return defaultValue == null ? new ArrayList<String>() : (ArrayList<String>) defaultValue.clone();
 		}
 		ArrayList<String> result;

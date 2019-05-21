@@ -20,11 +20,9 @@ public class TrialTagValueLazyModel extends LazyDataModelBase {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getTrialTagValueList(WebUtil.getAuthentication(), trialId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<TrialTagValueOutVO>();
@@ -34,11 +32,9 @@ public class TrialTagValueLazyModel extends LazyDataModelBase {
 	protected TrialTagValueOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getTrialTagValue(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

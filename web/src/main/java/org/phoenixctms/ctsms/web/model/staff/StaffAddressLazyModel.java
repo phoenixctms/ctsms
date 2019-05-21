@@ -20,11 +20,9 @@ public class StaffAddressLazyModel extends LazyDataModelBase {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getStaffAddressList(WebUtil.getAuthentication(), staffId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<StaffAddressOutVO>();
@@ -34,11 +32,9 @@ public class StaffAddressLazyModel extends LazyDataModelBase {
 	protected StaffAddressOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getStaffService().getStaffAddress(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

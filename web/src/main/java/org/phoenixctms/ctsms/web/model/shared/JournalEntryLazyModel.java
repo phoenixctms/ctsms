@@ -26,11 +26,9 @@ public class JournalEntryLazyModel extends LazyDataModelBase {
 		if (module != null && entityId != null) {
 			try {
 				return WebUtil.getServiceLocator().getJournalService().getJournal(WebUtil.getAuthentication(), module, entityId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<JournalEntryOutVO>();

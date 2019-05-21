@@ -92,15 +92,11 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -127,11 +123,9 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getCourseParticipationStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId(), false, out.getCourse().getSelfRegistration());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (statusTypeVOs != null) {
 				if (statusTypeVOs.size() > 1 || (statusTypeVOs.size() == 1 && !statusTypeVOs.iterator().next().getId().equals(in.getStatusId()))) {
@@ -192,11 +186,9 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getCourseParticipationStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId(), false, out.getCourse().getSelfRegistration());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		if (statusTypeVOs != null) {
@@ -263,19 +255,13 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}

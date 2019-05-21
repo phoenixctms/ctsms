@@ -136,9 +136,7 @@ public class BundleControl extends Control {
 				} finally {
 					stream.close();
 				}
-			} catch (FileNotFoundException e) {
-				// e.printStackTrace();
-			} catch (SecurityException e) {
+			} catch (FileNotFoundException|SecurityException e) {
 				// e.printStackTrace();
 			}
 		}

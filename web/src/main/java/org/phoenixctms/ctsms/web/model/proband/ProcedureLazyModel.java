@@ -20,11 +20,9 @@ public class ProcedureLazyModel extends LazyDataModelBase {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getProcedureList(WebUtil.getAuthentication(), probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProcedureOutVO>();
@@ -38,11 +36,9 @@ public class ProcedureLazyModel extends LazyDataModelBase {
 	protected ProcedureOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getProbandService().getProcedure(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

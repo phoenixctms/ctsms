@@ -46,11 +46,9 @@ public class EcrfProgressSummaryLazyModel extends LazyDataModelBase {
 	protected Collection<TrialOutVO> getLazyResult(PSFVO psf) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getEcrfTrialList(WebUtil.getAuthentication(), departmentId, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<TrialOutVO>();
 	}

@@ -20,11 +20,9 @@ public class DiagnosisLazyModel extends LazyDataModelBase {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getDiagnosisList(WebUtil.getAuthentication(), probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<DiagnosisOutVO>();
@@ -38,11 +36,9 @@ public class DiagnosisLazyModel extends LazyDataModelBase {
 	protected DiagnosisOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getProbandService().getDiagnosis(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

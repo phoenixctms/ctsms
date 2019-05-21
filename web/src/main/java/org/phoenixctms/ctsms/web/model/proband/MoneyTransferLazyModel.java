@@ -20,11 +20,9 @@ public class MoneyTransferLazyModel extends LazyDataModelBase {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getMoneyTransferList(WebUtil.getAuthentication(), probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<MoneyTransferOutVO>();
@@ -38,11 +36,9 @@ public class MoneyTransferLazyModel extends LazyDataModelBase {
 	protected MoneyTransferOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getProbandService().getMoneyTransfer(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

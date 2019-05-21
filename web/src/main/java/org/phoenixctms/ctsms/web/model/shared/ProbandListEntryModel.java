@@ -283,11 +283,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 									proband.getId(),
 									columnInquiryInputFieldId);
 					// WebUtil.perfDebug("getInquiryInputFieldValues", t1);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				probandMap.put(columnInquiryInputFieldId, result);
 				return result;
@@ -322,11 +320,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 					// WebUtil.perfDebug("getInquiryValue", t1);
 					// return result;
 				} catch (NoSuchElementException e) {
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				inquiryMap.put(columnInquiryId, result);
 				return result;
@@ -348,11 +344,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 				} else {
 					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), trialId, null, probandId, total, psf);
 				}
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProbandListEntryOutVO>();
@@ -425,11 +419,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 				try {
 					result = WebUtil.getServiceLocator().getTrialService()
 							.getProbandListEntryTagInputFieldValues(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagInputFieldId);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				listEntryMap.put(columnProbandListEntryTagInputFieldId, result);
 				return result;
@@ -459,11 +451,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 					result = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValue(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagId)
 							.getPageValues().iterator().next();
 				} catch (NoSuchElementException e) {
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				listEntryMap.put(columnProbandListEntryTagId, result);
 				return result;
@@ -493,11 +483,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 		if (showProbandListEntryTagColumn && (trialId != null || probandId != null)) {
 			try {
 				probandListEntryTagVOs = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagList(WebUtil.getAuthentication(), trialId, probandId, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		if (probandListEntryTagVOs != null) {
@@ -530,11 +518,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 								.getInquiryList(WebUtil.getAuthentication(), trialId,
 										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null,
 										probandId);
-					} catch (ServiceException e) {
+					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						WebUtil.publishException(e);
-					} catch (AuthorisationException e) {
-					} catch (IllegalArgumentException e) {
 					}
 					// WebUtil.perfDebug("getInquiryList", t1);
 				} else if (trialId != null) {
@@ -544,11 +530,9 @@ public class ProbandListEntryModel extends LazyDataModelBase implements EagerDat
 								.getTrialService()
 								.getInquiryList(WebUtil.getAuthentication(), trialId,
 										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null);
-					} catch (ServiceException e) {
+					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						WebUtil.publishException(e);
-					} catch (AuthorisationException e) {
-					} catch (IllegalArgumentException e) {
 					}
 					// WebUtil.perfDebug("getInquiryList", t1);
 				}

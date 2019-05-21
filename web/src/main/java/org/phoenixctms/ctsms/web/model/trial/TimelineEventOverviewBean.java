@@ -41,15 +41,11 @@ public class TimelineEventOverviewBean extends ManagedBeanBase {
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			} catch (IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 	}

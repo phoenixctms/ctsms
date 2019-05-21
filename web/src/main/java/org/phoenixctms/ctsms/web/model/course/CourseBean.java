@@ -106,11 +106,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			VariablePeriodVO validityPeriodVO = null;
 			try {
 				validityPeriodVO = WebUtil.getServiceLocator().getToolsService().getLocalizedVariablePeriod(WebUtil.getAuthentication(), in.getValidityPeriod());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			result.setSelfRegistration(in.getSelfRegistration());
 			result.setCvCommentPreset(in.getCvCommentPreset());
@@ -218,19 +216,13 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -275,15 +267,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH));
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			} catch (IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 		initIn();
@@ -412,15 +400,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -433,11 +417,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException e) {
-				throw e;
-			} catch (ServiceException e) {
-				throw e;
-			} catch (IllegalArgumentException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -454,11 +434,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException e) {
-				throw e;
-			} catch (ServiceException e) {
-				throw e;
-			} catch (IllegalArgumentException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -757,15 +733,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH));
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -827,19 +799,13 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}

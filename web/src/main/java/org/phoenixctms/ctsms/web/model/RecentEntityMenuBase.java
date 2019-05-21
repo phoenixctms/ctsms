@@ -98,11 +98,9 @@ public abstract class RecentEntityMenuBase {
 					journalEntryVOs = WebUtil.getServiceLocator().getJournalService()
 							.getRecent(WebUtil.getAuthentication(), getJournalModule(), user.getId(), null, null, maxRecentEntities,
 									Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_RECENT, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_RECENT));
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			if (journalEntryVOs != null && journalEntryVOs.size() > 0) {

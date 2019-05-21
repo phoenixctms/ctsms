@@ -123,11 +123,9 @@ public class FileBean extends ManagedBeanBase {
 			Collection<String> folders = null;
 			try {
 				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (folders != null) {
 				Iterator<String> it = folders.iterator();
@@ -151,11 +149,9 @@ public class FileBean extends ManagedBeanBase {
 			Collection<FileOutVO> fileVOs = null;
 			try {
 				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (fileVOs != null) {
 				Iterator<FileOutVO> it = fileVOs.iterator();
@@ -214,20 +210,16 @@ public class FileBean extends ManagedBeanBase {
 		streamUploadEnabled = null;
 		try {
 			streamUploadEnabled = WebUtil.getServiceLocator().getToolsService().isStreamUploadEnabled();
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		uploadSizeLimit = null;
 		try {
 			uploadSizeLimit = WebUtil.getServiceLocator().getToolsService().getUploadSizeLimit();
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		this.fileRoot = createFileRootTreeNode();
 	}
@@ -260,27 +252,13 @@ public class FileBean extends ManagedBeanBase {
 			}
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			// in.setId(idBackup);
-			// in.setVersion(versionBackup);
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -362,11 +340,9 @@ public class FileBean extends ManagedBeanBase {
 					out = null;
 					return ERROR_OUTCOME;
 				}
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		initIn();
@@ -489,15 +465,11 @@ public class FileBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -524,15 +496,11 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			out = null;
 			return BULK_DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -551,11 +519,7 @@ public class FileBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException e) {
-				throw e;
-			} catch (ServiceException e) {
-				throw e;
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -591,14 +555,10 @@ public class FileBean extends ManagedBeanBase {
 			try {
 				FileStreamOutVO streamOut = WebUtil.getServiceLocator().getFileService().getFileStream(WebUtil.getAuthentication(), out.getId());
 				return new DefaultStreamedContent(streamOut.getStream(), streamOut.getContentType().getMimeType(), streamOut.getFileName());
-			} catch (ServiceException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 				throw e;
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-				throw e;
-			} catch (AuthorisationException e) {
-				throw e;
-			} catch (IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -1029,15 +989,11 @@ public class FileBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -1122,15 +1078,11 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -1155,15 +1107,11 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}

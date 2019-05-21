@@ -24,14 +24,13 @@ public class PublicFileServlet extends FileServletBase {
 		FileStreamOutVO stream = null;
 		try {
 			stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream(fileId);
-		} catch (ServiceException e) {
+		} catch (ServiceException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		} catch (AuthorisationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
-		} catch (IllegalArgumentException e) {
 		}
 		final MimeTypeVO contentTypeVO = (stream != null ? stream.getContentType() : null);
 		final Long fileSize = (stream != null ? stream.getSize() : null);

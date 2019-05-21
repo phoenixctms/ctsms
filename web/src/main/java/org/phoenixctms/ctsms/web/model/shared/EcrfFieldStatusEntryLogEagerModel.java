@@ -99,11 +99,9 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase {
 				return WebUtil.getServiceLocator().getTrialService()
 						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, null, listEntryId, ecrfId, true, false, new PSFVO(INITIAL_PSF)); // ,
 				// psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ECRFFieldStatusEntryOutVO>();

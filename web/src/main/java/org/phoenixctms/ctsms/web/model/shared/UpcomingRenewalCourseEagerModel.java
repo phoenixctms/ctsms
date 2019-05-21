@@ -51,11 +51,9 @@ public class UpcomingRenewalCourseEagerModel extends EagerDataModelBase {
 		if (courseId != null && staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getUpcomingRenewalCourses(WebUtil.getAuthentication(), null, courseId, staffId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<CourseOutVO>();

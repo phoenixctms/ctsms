@@ -70,11 +70,9 @@ public class SessionScopeBean {
 	private static AnnouncementVO getAnnouncement() {
 		try {
 			return WebUtil.getServiceLocator().getToolsService().getAnnouncement();
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}
@@ -83,11 +81,9 @@ public class SessionScopeBean {
 		Collection<LocaleVO> locales = null;
 		try {
 			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (locales == null) {
 			locales = new ArrayList<LocaleVO>();
@@ -137,11 +133,9 @@ public class SessionScopeBean {
 		Collection<TimeZoneVO> timeZones = null;
 		try {
 			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (timeZones == null) {
 			timeZones = new ArrayList<TimeZoneVO>();
@@ -220,15 +214,11 @@ public class SessionScopeBean {
 			auth.setPassword(newPassword);
 			initSets();
 			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getUser().getId()), true));
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 	}
 
@@ -675,11 +665,9 @@ public class SessionScopeBean {
 		if (policy == null) {
 			try {
 				policy = WebUtil.getServiceLocator().getToolsService().getPasswordPolicy(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (policy == null) {
 				policy = new PasswordPolicyVO();
@@ -1331,11 +1319,9 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateLocale(auth, locale);
 			success = true;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		} finally {
 			initSets();
 		}
@@ -1350,11 +1336,9 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateShowTooltips(auth, showTooltips);
 			success = true;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		} finally {
 			initSets();
 		}
@@ -1369,11 +1353,9 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateTheme(auth, theme);
 			success = true;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		} finally {
 			initSets();
 		}
@@ -1388,11 +1370,9 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateTimeZone(auth, timeZone);
 			success = true;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		} finally {
 			initSets();
 		}

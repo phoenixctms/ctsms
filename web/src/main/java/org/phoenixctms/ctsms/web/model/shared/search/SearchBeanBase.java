@@ -201,18 +201,13 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
 		} catch (ServiceException e) {
-			// criteriaIn.setId(criteriaInIdBackup);
-			// criteriaIn.setVersion(criteriaInVersionBackup);
 			criteriaIn.copy(backup);
 			Messages.addCriterionMessages(e.getData(), FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			criteriaIn.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			criteriaIn.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|IllegalArgumentException e) {
 			criteriaIn.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
@@ -251,11 +246,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Collection<String> categories = null;
 		try {
 			categories = WebUtil.getServiceLocator().getSearchService().getCriteriaCategories(WebUtil.getAuthentication(), this.getDBModule(), query, null);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (categories != null) {
 			try {
@@ -317,15 +310,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -749,11 +738,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Collection<String> categoryStrings = null;
 		try {
 			categoryStrings = WebUtil.getServiceLocator().getSearchService().getCriteriaCategories(WebUtil.getAuthentication(), this.getDBModule(), null, null);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (categoryStrings != null) {
 			categories = new ArrayList<SelectItem>(categoryStrings.size());
@@ -769,11 +756,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionTieVO> tieVOs = null;
 			try {
 				tieVOs = WebUtil.getServiceLocator().getSelectionSetService().getAllCriterionTies(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (tieVOs != null) {
 				ties = new ArrayList<SelectItem>(tieVOs.size());
@@ -793,11 +778,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionRestrictionVO> restrictionVOs = null;
 			try {
 				restrictionVOs = WebUtil.getServiceLocator().getSelectionSetService().getAllCriteriaRestrictions(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (restrictionVOs != null) {
 				restrictionVOsMap = new HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>(restrictionVOs.size());
@@ -817,11 +800,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionPropertyVO> propertyVOs = null;
 			try {
 				propertyVOs = WebUtil.getServiceLocator().getSelectionSetService().getCriterionProperties(WebUtil.getAuthentication(), this.getDBModule());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (propertyVOs != null) {
 				properties = new ArrayList<SelectItem>(propertyVOs.size());
@@ -991,15 +972,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -1144,9 +1121,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
@@ -1187,8 +1162,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				}
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|IllegalArgumentException e) {
 			}
 		}
 		updateInstantCriteria();
@@ -1217,9 +1191,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		updateInstantCriteria();

@@ -24,11 +24,9 @@ public class InventoryTagValueLazyModel extends LazyDataModelBase {
 		if (inventoryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getInventoryTagValueList(WebUtil.getAuthentication(), inventoryId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<InventoryTagValueOutVO>();
@@ -38,11 +36,9 @@ public class InventoryTagValueLazyModel extends LazyDataModelBase {
 	protected InventoryTagValueOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getInventoryService().getInventoryTagValue(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

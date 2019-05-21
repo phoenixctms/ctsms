@@ -25,11 +25,9 @@ public class EcrfFieldLazyModel extends LazyDataModelBase {
 		if (trialId != null || ecrfId != null) { // trialId is always required
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldList(WebUtil.getAuthentication(), trialId, ecrfId, false, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ECRFFieldOutVO>();

@@ -20,11 +20,9 @@ public class ProbandTagValueLazyModel extends LazyDataModelBase {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getProbandTagValueList(WebUtil.getAuthentication(), probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<ProbandTagValueOutVO>();
@@ -38,11 +36,9 @@ public class ProbandTagValueLazyModel extends LazyDataModelBase {
 	protected ProbandTagValueOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getProbandService().getProbandTagValue(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

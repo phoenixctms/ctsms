@@ -93,11 +93,9 @@ public class PortalModuleItem {
 					.getActivityTags(WebUtil.getAuthentication(), module, null, null, user == null ? null : user.getDepartment().getId(),
 							Settings.getIntNullable(SettingCodes.MAX_TAG_CLOUD_ITEMS, Bundle.SETTINGS, DefaultSettings.MAX_TAG_CLOUD_ITEMS),
 							Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_TAG_CLOUD, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_TAG_CLOUD));
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (activityTags != null) {
 			Iterator<ActivityTagVO> activityTagsIt = activityTags.iterator();

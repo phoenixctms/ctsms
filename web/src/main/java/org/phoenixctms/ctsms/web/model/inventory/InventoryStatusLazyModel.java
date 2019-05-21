@@ -51,11 +51,9 @@ public class InventoryStatusLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getInventoryService()
 					.getInventoryStatus(WebUtil.getAuthentication(), null, inventoryId, departmentId, inventoryCategoryId, inventoryActive, hideAvailability, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<InventoryStatusEntryOutVO>();
 	}

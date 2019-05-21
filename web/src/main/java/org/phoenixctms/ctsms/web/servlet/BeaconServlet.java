@@ -39,14 +39,7 @@ public class BeaconServlet extends FileServletBase {
 		if (!WebUtil.isTrustedReferer(request)) {
 			try {
 				WebUtil.getServiceLocator().getToolsService().markMassMailRead(beacon);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				// response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				// return null;
-			} catch (AuthorisationException e) {
-				// response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				// return null;
-			} catch (IllegalArgumentException e) {
+			} catch (AuthorisationException|ServiceException|IllegalArgumentException|AuthenticationException e) {
 			}
 		}
 		return new FileStream() {

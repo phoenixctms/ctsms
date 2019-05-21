@@ -98,11 +98,9 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection ecrfFields = null;
 				try {
 					ecrfFields = WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (ecrfFields == null) {
 					ecrfFields = new ArrayList<ECRFFieldOutVO>();
@@ -153,11 +151,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -175,11 +169,9 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection inquiries = null;
 				try {
 					inquiries = WebUtil.getServiceLocator().getInputFieldService().getInquiryList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (inquiries == null) {
 					inquiries = new ArrayList<InquiryOutVO>();
@@ -223,11 +215,9 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection probandListEntryTags = null;
 				try {
 					probandListEntryTags = WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (probandListEntryTags == null) {
 					probandListEntryTags = new ArrayList<ProbandListEntryTagOutVO>();

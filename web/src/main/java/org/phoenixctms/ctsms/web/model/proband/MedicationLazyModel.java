@@ -20,11 +20,9 @@ public class MedicationLazyModel extends LazyDataModelBase {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getMedicationList(WebUtil.getAuthentication(), probandId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<MedicationOutVO>();
@@ -38,11 +36,9 @@ public class MedicationLazyModel extends LazyDataModelBase {
 	protected MedicationOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getProbandService().getMedication(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

@@ -138,21 +138,17 @@ public class ShiftDurationSummaryModel extends EagerDataModelBase {
 				try {
 					shiftDurationSummary = WebUtil.getServiceLocator().getTrialService().getShiftDurationSummary(WebUtil.getAuthentication(), id, calendar, start, stop);
 					return shiftDurationSummary;
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			} else if ((ShiftDurationSummaryType.TRIAL.equals(type) && id != null) || ShiftDurationSummaryType.STAFF_OVERVIEW.equals(type)) {
 				try {
 					shiftDurationSummary = WebUtil.getServiceLocator().getStaffService().getShiftDurationSummary(WebUtil.getAuthentication(), id, calendar, start, stop);
 					return shiftDurationSummary;
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			shiftDurationSummary = new ShiftDurationSummaryVO();

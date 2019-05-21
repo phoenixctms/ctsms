@@ -102,21 +102,17 @@ public class BookingDurationSummaryModel extends EagerDataModelBase {
 				try {
 					bookingDurationSummary = WebUtil.getServiceLocator().getInventoryService().getBookingDurationSummary(WebUtil.getAuthentication(), id, calendar, start, stop);
 					return bookingDurationSummary;
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			} else if (BookingDurationSummaryType.TRIAL.equals(type) && id != null) {
 				try {
 					bookingDurationSummary = WebUtil.getServiceLocator().getTrialService().getBookingDurationSummary(WebUtil.getAuthentication(), id, calendar, start, stop);
 					return bookingDurationSummary;
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			bookingDurationSummary = new InventoryBookingDurationSummaryVO();

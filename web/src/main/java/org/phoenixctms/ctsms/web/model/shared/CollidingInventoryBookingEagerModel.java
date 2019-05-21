@@ -153,48 +153,38 @@ public class CollidingInventoryBookingEagerModel extends EagerDataModelBase {
 		if (inventoryStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInventoryService().getCollidingInventoryBookings(WebUtil.getAuthentication(), inventoryStatusEntryId);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (staffStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingCourseInventoryBookingsByStaffStatusEntry(WebUtil.getAuthentication(), staffStatusEntryId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (dutyRosterTurnId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingCourseInventoryBookingsByDutyRosterTurn(WebUtil.getAuthentication(), dutyRosterTurnId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (probandStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getCollidingProbandInventoryBookings(WebUtil.getAuthentication(), probandStatusEntryId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else if (courseParticipationStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService()
 						.getCollidingCourseInventoryBookingsByCourseParticipationStatusEntry(WebUtil.getAuthentication(), courseParticipationStatusEntryId, true);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<InventoryBookingOutVO>();

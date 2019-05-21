@@ -20,8 +20,7 @@ public class ResourceBundleConverter {
 				String key = keys.nextElement();
 				try {
 					properties.setProperty(key, bundle.getString(key));
-				} catch (MissingResourceException e) {
-				} catch (ClassCastException e) {
+				} catch (MissingResourceException|ClassCastException e) {
 				}
 			}
 		}

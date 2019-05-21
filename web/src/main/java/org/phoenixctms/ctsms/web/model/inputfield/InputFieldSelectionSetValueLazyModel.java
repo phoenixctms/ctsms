@@ -24,11 +24,9 @@ public class InputFieldSelectionSetValueLazyModel extends LazyDataModelBase {
 		if (inputFieldId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValueList(WebUtil.getAuthentication(), inputFieldId, null, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<InputFieldSelectionSetValueOutVO>();

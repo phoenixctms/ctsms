@@ -27,11 +27,9 @@ public class NotificationLazyModel extends LazyDataModelBase {
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_SENT, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_SENT),
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_DROPPED, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_DROPPED),
 					psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<NotificationVO>();
 	}
@@ -40,11 +38,9 @@ public class NotificationLazyModel extends LazyDataModelBase {
 	protected NotificationVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getUserService().getNotification(WebUtil.getAuthentication(), id);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return null;
 	}

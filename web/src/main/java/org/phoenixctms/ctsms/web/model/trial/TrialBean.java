@@ -179,19 +179,13 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			password = null;
 		}
@@ -271,15 +265,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getTrialService().getTrial(WebUtil.getAuthentication(), id);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			} catch (IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
 		}
 		initIn();
@@ -305,15 +295,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -394,11 +380,9 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			Collection<TrialStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getTrialStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (statusTypeVOs != null) {
 				if (statusTypeVOs.size() > 1 || (statusTypeVOs.size() == 1 && !statusTypeVOs.iterator().next().getId().equals(in.getStatusId()))) {
@@ -603,20 +587,16 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (out != null) {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getTrialStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		} else {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getInitialTrialStatusTypes(WebUtil.getAuthentication());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		if (statusTypeVOs != null) {
@@ -689,15 +669,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getTrial(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();
@@ -709,11 +685,9 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			return WebUtil.getServiceLocator().getSelectionSetService().getAllTrialStatusTypes(WebUtil.getAuthentication());
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<TrialStatusTypeVO>();
 		// if (statusTypeVOs != null) {
@@ -733,11 +707,9 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (in.getId() != null) {
 			try {
 				signature = WebUtil.getServiceLocator().getTrialService().getTrialSignature(WebUtil.getAuthentication(), in.getId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 	}
@@ -748,11 +720,9 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (in.getId() != null) {
 			try {
 				trialRandomizationList = WebUtil.getServiceLocator().getTrialService().getTrialRandomizationList(WebUtil.getAuthentication(), in.getId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (trialRandomizationList != null) {
 				in.setRandomizationList(trialRandomizationList.getRandomizationList());
@@ -839,15 +809,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			password = null;
 		}
@@ -857,15 +823,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	public void verifySignature() {
 		try {
 			signature = WebUtil.getServiceLocator().getTrialService().verifyTrialSignature(WebUtil.getAuthentication(), in.getId());
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 	}
 }

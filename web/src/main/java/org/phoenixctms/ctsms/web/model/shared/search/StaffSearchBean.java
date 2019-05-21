@@ -80,11 +80,7 @@ public class StaffSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -107,11 +103,7 @@ public class StaffSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException e) {
-			throw e;
-		} catch (ServiceException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -143,11 +135,9 @@ public class StaffSearchBean extends SearchBeanBase {
 				Collection staffAddresses = null;
 				try {
 					staffAddresses = WebUtil.getServiceLocator().getStaffService().getStaffAddressList(WebUtil.getAuthentication(), staff.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (staffAddresses == null) {
 					staffAddresses = new ArrayList<StaffAddressOutVO>();
@@ -169,11 +159,9 @@ public class StaffSearchBean extends SearchBeanBase {
 				try {
 					staffContactDetailValues = WebUtil.getServiceLocator().getStaffService()
 							.getStaffContactDetailValueList(WebUtil.getAuthentication(), staff.getId(), false, null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (staffContactDetailValues == null) {
 					staffContactDetailValues = new ArrayList<StaffContactDetailValueOutVO>();
@@ -198,11 +186,9 @@ public class StaffSearchBean extends SearchBeanBase {
 				Collection staffTagValues = null;
 				try {
 					staffTagValues = WebUtil.getServiceLocator().getStaffService().getStaffTagValueList(WebUtil.getAuthentication(), staff.getId(), null);
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 				if (staffTagValues == null) {
 					staffTagValues = new ArrayList<StaffTagValueOutVO>();

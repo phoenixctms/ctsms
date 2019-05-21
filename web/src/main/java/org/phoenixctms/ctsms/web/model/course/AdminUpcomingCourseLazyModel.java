@@ -28,11 +28,9 @@ public class AdminUpcomingCourseLazyModel extends LazyDataModelBase {
 	protected Collection<CourseOutVO> getLazyResult(PSFVO psf) {
 		try {
 			return WebUtil.getServiceLocator().getCourseService().getUpcomingCourses(WebUtil.getAuthentication(), null, departmentId, courseCategoryId, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<CourseOutVO>();
 	}

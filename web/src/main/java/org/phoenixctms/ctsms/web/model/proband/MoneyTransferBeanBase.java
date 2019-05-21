@@ -79,11 +79,9 @@ public abstract class MoneyTransferBeanBase extends ManagedBeanBase implements P
 		try {
 			costTypes = WebUtil.getServiceLocator().getProbandService().completeCostTypes(WebUtil.getAuthentication(),
 					null, in.getTrialId(), null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		if (costTypes != null) {
 			try {
@@ -114,11 +112,9 @@ public abstract class MoneyTransferBeanBase extends ManagedBeanBase implements P
 	public void getNewPaymentReference(ActionEvent event) {
 		try {
 			in.setReference(WebUtil.getServiceLocator().getProbandService().getNewPaymentReference(WebUtil.getAuthentication(), in));
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 	}
 
@@ -186,11 +182,9 @@ public abstract class MoneyTransferBeanBase extends ManagedBeanBase implements P
 			if (in.getProbandId() != null) {
 				try {
 					bankAccountVOs = WebUtil.getServiceLocator().getProbandService().getBankAccounts(WebUtil.getAuthentication(), in.getProbandId(), true, in.getBankAccountId());
-				} catch (ServiceException e) {
+				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
-				} catch (AuthorisationException e) {
-				} catch (IllegalArgumentException e) {
 				}
 			}
 			if (bankAccountVOs != null) {

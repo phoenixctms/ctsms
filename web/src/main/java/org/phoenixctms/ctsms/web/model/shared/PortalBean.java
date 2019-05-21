@@ -377,11 +377,9 @@ public class PortalBean extends ManagedBeanBase {
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_SHOW, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_SHOW),
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_SENT, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_SENT),
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_DROPPED, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_DROPPED));
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 	}
 

@@ -78,19 +78,13 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -119,15 +113,11 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -141,11 +131,9 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			try {
 				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(), false,
 						probandListEntry.getProband().getId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return 0l;
@@ -185,11 +173,9 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			Collection<ProbandListStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getProbandListStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 			if (statusTypeVOs != null) {
 				if (statusTypeVOs.size() > 1 || (statusTypeVOs.size() == 1 && !statusTypeVOs.iterator().next().getId().equals(in.getStatusId()))) {
@@ -239,11 +225,9 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 				if (out != null && lastStatus != null) {
 					isLastStatus = (out.getId() == lastStatus.getId());
 				}
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		Collection<ProbandListStatusTypeVO> statusTypeVOs = null;
@@ -259,11 +243,9 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 					statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 							.getInitialProbandListStatusTypes(WebUtil.getAuthentication(), false, probandListEntry.getProband().getPerson());
 				}
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		if (statusTypeVOs != null) {
@@ -319,15 +301,11 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} finally {
 			initIn();
 			initSets();

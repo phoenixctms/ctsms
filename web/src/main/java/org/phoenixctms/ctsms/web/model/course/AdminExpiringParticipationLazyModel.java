@@ -48,11 +48,9 @@ public class AdminExpiringParticipationLazyModel extends LazyDataModelBase {
 					.getCourseService()
 					.getExpiringParticipations(WebUtil.getAuthentication(), null, courseDepartmentId, courseCategoryId, staffDepartmentId, staffCategoryId, reminderPeriod,
 							reminderPeriodDays, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<CourseParticipationStatusEntryOutVO>();
 	}

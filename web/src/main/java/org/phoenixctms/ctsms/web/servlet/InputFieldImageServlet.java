@@ -25,14 +25,13 @@ public class InputFieldImageServlet extends FileServletBase {
 		InputFieldImageVO image = null;
 		try {
 			image = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(inputFieldId);
-		} catch (ServiceException e) {
+		} catch (ServiceException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		} catch (AuthorisationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
-		} catch (IllegalArgumentException e) {
 		}
 		final MimeTypeVO contentTypeVO = (image != null ? image.getContentType() : null);
 		final Long fileSize = (image != null ? image.getFileSize() : null);

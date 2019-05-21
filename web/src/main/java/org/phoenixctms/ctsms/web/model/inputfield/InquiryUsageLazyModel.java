@@ -24,11 +24,9 @@ public class InquiryUsageLazyModel extends LazyDataModelBase {
 		if (inputFieldId != null) {
 			try {
 				return WebUtil.getServiceLocator().getInputFieldService().getInquiryList(WebUtil.getAuthentication(), inputFieldId, psf);
-			} catch (ServiceException e) {
+			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 		return new ArrayList<InquiryOutVO>();

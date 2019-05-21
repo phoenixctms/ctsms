@@ -797,11 +797,7 @@ public class FileDaoImpl
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
 				target.setDecrypted(true);
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(e);
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (IllegalArgumentException|IOException e) {
 				throw new RuntimeException(e);
 			} catch (Exception e) {
 				target.setDatas(null);
@@ -1004,11 +1000,7 @@ public class FileDaoImpl
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
 				target.setDecrypted(true);
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(e);
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (IllegalArgumentException|IOException e) {
 				throw new RuntimeException(e);
 			} catch (Exception e) {
 				if (target.getStream() != null) {

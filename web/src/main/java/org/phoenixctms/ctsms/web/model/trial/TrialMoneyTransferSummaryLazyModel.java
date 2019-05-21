@@ -49,11 +49,9 @@ public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getTrialMoneyTransferSummaryList(WebUtil.getAuthentication(), departmentId, probandDepartmentId, costType, null,
 					paid, psf);
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<MoneyTransferSummaryVO>();
 	}
