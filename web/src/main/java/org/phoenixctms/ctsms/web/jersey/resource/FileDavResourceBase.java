@@ -77,13 +77,9 @@ public abstract class FileDavResourceBase {
 	private final static String TMP_FILE_LOGICAL_PATH = CommonUtil.fixLogicalPathFolderName("tmp");
 	private final static String DAV_URL_FILE = "%s/" + WebUtil.REST_API_PATH + "/%s/%s/files/dav/%s";
 
-	private static final URI buildOpaqueLockToken() throws URISyntaxException {
-		return new URI("opaquelocktoken", CommonUtil.generateUUID(), null);
-	}
-
 	private static final Prop buildProp(final FileOutVO f, final Providers providers) {
 		return new Prop(new GetETag(String.valueOf(f.getVersion())),
-				new DisplayName(f.getFileName()), // format("%s %s", c.getLastName(), c.getFirstName())),
+				new DisplayName(f.getFileName()),
 				new GetLastModified(f.getModifiedTimestamp()),
 				new GetContentLength(f.getSize()),
 				new GetContentType(f.getContentType().getMimeType()));
@@ -91,10 +87,6 @@ public abstract class FileDavResourceBase {
 
 	private static Response buildResponse(final FileOutVO file, final URI path, final Providers providers) {
 		return new Response(new HRef(path), null, null, null, new PropStat(buildProp(file, providers), new Status((StatusType) OK)));
-	}
-
-	private static final String buildUriHeader(final URI uri) {
-		return String.format("<%s>", uri);
 	}
 
 	private static String getDavFileName(FileOutVO f) {
@@ -150,7 +142,6 @@ public abstract class FileDavResourceBase {
 		ResponseBuilder response = javax.ws.rs.core.Response.ok(fs.getStream(), fs.getContentType().getMimeType());
 		response.header(HttpHeaders.CONTENT_LENGTH, out.getSize());
 		return response.build();
-		// return (Contact) this.em().createNamedQuery("FindContactByMatchCode").setParameter(1, matchCode).getSingleResult();
 	}
 
 	protected javax.ws.rs.core.Response davHead(Long id, String fileName) throws AuthenticationException, AuthorisationException, ServiceException {
@@ -159,7 +150,6 @@ public abstract class FileDavResourceBase {
 		response.header(HttpHeaders.CONTENT_LENGTH, out.getSize());
 		response.type(out.getContentType().getMimeType());
 		return response.build();
-		// return (Contact) this.em().createNamedQuery("FindContactByMatchCode").setParameter(1, matchCode).getSingleResult();
 	}
 
 	protected Prop davLock(LockInfo lockInfo, UriInfo uriInfo, String depth, TimeOut timeout) throws URISyntaxException, IOException {
@@ -172,7 +162,6 @@ public abstract class FileDavResourceBase {
 		return javax.ws.rs.core.Response.noContent().header(DAV, "1,2")
 				.header("MS-Author-Via", "DAV")
 				.header("Allow", "GET,HEAD,PROPFIND,OPTIONS,PUT,DELETE,LOCK,UNLOCK").build();
-		// .header("Allow", "GET,OPTIONS,PROPFIND,PROPPATCH,PUT,LOCK,UNLOCK").build(); DELETE,MOVE,COPY,PROPPATCH,
 	}
 
 	protected javax.ws.rs.core.Response davPropFind(Long id, String fileName, UriInfo uriInfo, Providers providers) throws AuthenticationException, AuthorisationException,
@@ -194,7 +183,6 @@ public abstract class FileDavResourceBase {
 		if (it != null) {
 			while (it.hasNext()) {
 				FileOutVO out = it.next();
-				// responses.add(buildResponse(f, uriInfo.getAbsolutePathBuilder().path(format("%s", c.getMatchCode())).build(), providers));
 				FilePathSplitter filePath = new FilePathSplitter(out.getFileName());
 				String extension = filePath.getExtension();
 				if (isTempFile(extension) || isEditableFile(extension)) {
@@ -209,7 +197,6 @@ public abstract class FileDavResourceBase {
 		final PropertyUpdate propertyUpdate = providers.getMessageBodyReader(PropertyUpdate.class, PropertyUpdate.class, new Annotation[0],
 				APPLICATION_XML_TYPE).readFrom(PropertyUpdate.class, PropertyUpdate.class, new Annotation[0], APPLICATION_XML_TYPE,
 						httpHeaders.getRequestHeaders(), body);
-		// System.out.println("PATCH PROPERTIES: " + propertyUpdate.list());
 		/* TODO Patch properties in database. */
 		final Collection<PropStat> propstats = new LinkedList<PropStat>();
 		for (final RemoveOrSet removeOrSet : propertyUpdate.list()) {
@@ -219,112 +206,6 @@ public abstract class FileDavResourceBase {
 				.entity(new MultiStatus(new Response(new HRef(uriInfo.getRequestUri()), null, null, null, propstats))).build();
 	}
 
-	// @DELETE
-	// @Path("{filename}.adr")
-	// public final void delete(@PathParam("filename") final String matchCode) {
-	// final EntityManager em = this.em();
-	// final EntityTransaction t = em.getTransaction();
-	// t.begin();
-	// em.createNamedQuery("DeleteContactByMatchCode").setParameter(1, matchCode).executeUpdate();
-	// t.commit();
-	// }
-	//
-	// @MOVE
-	// @Path("{filename}.adr")
-	// public final void move(@PathParam("filename") final String sourceMatchCode, @HeaderParam(DESTINATION) final URI destination,
-	// @HeaderParam(OVERWRITE) final String overwrite) {
-	// final EntityManager em = this.em();
-	// final EntityTransaction t = em.getTransaction();
-	// t.begin();
-	//
-	// final Contact source;
-	// try {
-	// source = (Contact) em.createNamedQuery("FindContactByMatchCode").setParameter(1, sourceMatchCode).getSingleResult();
-	// } catch (final NoResultException e) {
-	// t.rollback();
-	// throw new WebApplicationException(NOT_FOUND);
-	// }
-	//
-	// final String[] destinationPathSegments = destination.getPath().split("/");
-	// final String lastDestinationPathSegment = destinationPathSegments[destinationPathSegments.length - 1];
-	//
-	// if (!lastDestinationPathSegment.endsWith(".adr")) {
-	// t.rollback();
-	// throw new WebApplicationException(FORBIDDEN);
-	// }
-	//
-	// final String destinationMatchCode = lastDestinationPathSegment.split("\\.")[0];
-	//
-	// Contact target;
-	// try {
-	// target = (Contact) em.createNamedQuery("FindContactByMatchCode").setParameter(1, destinationMatchCode).getSingleResult();
-	// } catch (final NoResultException e) {
-	// target = null;
-	// }
-	//
-	// if (target != null) {
-	// if (overwrite.equals(OVERWRITE_FALSE)) {
-	// t.rollback();
-	// throw new WebApplicationException(PRECONDITION_FAILED);
-	// }
-	//
-	// em.remove(target);
-	// }
-	//
-	// em.remove(source);
-	//
-	// em.persist(new Contact(destinationMatchCode, source));
-	//
-	// t.commit();
-	// }
-	//
-	// @COPY
-	// @Path("{filename}.adr")
-	// public final void copy(@PathParam("filename") final String sourceMatchCode, @HeaderParam(DESTINATION) final URI destination,
-	// @HeaderParam(OVERWRITE) final String overwrite) {
-	//
-	// final EntityManager em = this.em();
-	// final EntityTransaction t = em.getTransaction();
-	// t.begin();
-	//
-	// final Contact source;
-	// try {
-	// source = (Contact) em.createNamedQuery("FindContactByMatchCode").setParameter(1, sourceMatchCode).getSingleResult();
-	// } catch (final NoResultException e) {
-	// t.rollback();
-	// throw new WebApplicationException(NOT_FOUND);
-	// }
-	//
-	// final String[] destinationPathSegments = destination.getPath().split("/");
-	// final String lastDestinationPathSegment = destinationPathSegments[destinationPathSegments.length - 1];
-	//
-	// if (!lastDestinationPathSegment.endsWith(".adr")) {
-	// t.rollback();
-	// throw new WebApplicationException(FORBIDDEN);
-	// }
-	//
-	// final String destinationMatchCode = lastDestinationPathSegment.split("\\.")[0];
-	//
-	// Contact target;
-	// try {
-	// target = (Contact) em.createNamedQuery("FindContactByMatchCode").setParameter(1, destinationMatchCode).getSingleResult();
-	// } catch (final NoResultException e) {
-	// target = null;
-	// }
-	//
-	// if (target != null) {
-	// if (overwrite.equals(OVERWRITE_FALSE)) {
-	// t.rollback();
-	// throw new WebApplicationException(PRECONDITION_FAILED);
-	// }
-	//
-	// em.remove(target);
-	// }
-	//
-	// em.persist(new Contact(destinationMatchCode, source));
-	//
-	// t.commit();
-	// }
 	protected javax.ws.rs.core.Response davPut(InputStream input, Long id, String fileName,
 			long contentLength, HttpHeaders httpHeaders)
 			throws AuthenticationException, AuthorisationException, ServiceException {
@@ -349,7 +230,6 @@ public abstract class FileDavResourceBase {
 		} else {
 			FileBean.initFileDefaultValues(in, id, getFileModule());
 			in.setTitle(fileName);
-			// in.setComment(value);
 			in.setLogicalPath(TMP_FILE_LOGICAL_PATH);
 			stream.setFileName(fileName);
 			WebUtil.getServiceLocator().getFileService().addFile(getAuth(), in, stream);
@@ -372,7 +252,6 @@ public abstract class FileDavResourceBase {
 		} catch (NumberFormatException e) {
 			fileId = null;
 		}
-		// String extension = filePath.getExtension();
 		if (fileId != null && !isTempFile(filePath.getExtension())) {
 			return WebUtil.getServiceLocator().getFileService().getFile(getAuth(), fileId);
 		} else {

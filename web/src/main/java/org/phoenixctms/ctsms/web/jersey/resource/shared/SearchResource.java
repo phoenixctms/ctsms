@@ -48,9 +48,9 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="shared")
 @Path("/search")
-public class SearchResource {
+public final class SearchResource {
 
 	@Context
 	AuthenticationVO auth;
@@ -315,7 +315,6 @@ public class SearchResource {
 		Collection result = WebUtil.getServiceLocator().getSearchService()
 				.searchUser(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()), ResourceUtils.LIST_GRAPH_MAX_USER_INSTANCES, psf);
 		NoShortcutSerializationWrapper.transformVoCollection(result);
-		NoShortcutSerializationWrapper.transformVoCollection(result);
 		return new Page<NoShortcutSerializationWrapper<UserOutVO>>(result, psf);
 	}
 
@@ -336,11 +335,4 @@ public class SearchResource {
 	public CriteriaOutVO updateCriteria(CriterionInVOWrapper criteria) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getSearchService().updateCriteria(auth, criteria, new LinkedHashSet<CriterionInVO>(criteria.getCriterions()));
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, null, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 }

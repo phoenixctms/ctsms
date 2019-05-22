@@ -48,14 +48,14 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="inputfield")
 @Path("/inputfield")
-public class InputFieldResource extends ServiceResourceBase {
+public final class InputFieldResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
 	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
-	private final static Class SERVICE_INTERFACE = InputFieldService.class;
+	private final static Class<?> SERVICE_INTERFACE = InputFieldService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InputFieldOutVO.class);
 	public final static InputFieldListIndex LIST_INDEX = new InputFieldListIndex(getListIndexNode(
@@ -64,13 +64,6 @@ public class InputFieldResource extends ServiceResourceBase {
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
-
-	@POST
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
-	}
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -84,6 +77,14 @@ public class InputFieldResource extends ServiceResourceBase {
 		in.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
 	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
+	}
+
 
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -95,27 +96,11 @@ public class InputFieldResource extends ServiceResourceBase {
 						reason);
 	}
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// @Path("{id}/selectionsetvalues")
-	// public Page<InputFieldSelectionSetValueOutVO> getSelectionSetValueList(@PathParam("id") Long id,@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<InputFieldSelectionSetValueOutVO>(WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValueList(auth, id, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 	@Override
 	protected AuthenticationVO getAuth() {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@Override
 	protected FileModule getFileModule() {
 		return null;
@@ -180,7 +165,7 @@ public class InputFieldResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -194,19 +179,9 @@ public class InputFieldResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public InputFieldListIndex listIndex() throws Exception {
 		return LIST_INDEX;
-	}
-
-	@PUT
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO updateInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		InputFieldImageVO out = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(in.getId());
-		in.setDatas(out.getDatas());
-		in.setMimeType(out.getContentType().getMimeType());
-		in.setFileName(out.getFileName());
-		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
 	}
 
 	@PUT
@@ -219,6 +194,17 @@ public class InputFieldResource extends ServiceResourceBase {
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
 		in.setMimeType(content.getMediaType().toString());
 		in.setFileName(contentDisposition.getFileName());
+		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
+	}
+
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public InputFieldOutVO updateInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
+		InputFieldImageVO out = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(in.getId());
+		in.setDatas(out.getDatas());
+		in.setMimeType(out.getContentType().getMimeType());
+		in.setFileName(out.getFileName());
 		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
 	}
 }

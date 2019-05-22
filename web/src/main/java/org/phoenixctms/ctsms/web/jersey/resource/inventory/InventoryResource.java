@@ -45,16 +45,16 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="inventory")
 @Path("/inventory")
-public class InventoryResource extends ServiceResourceBase {
+public final class InventoryResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INVENTORY_DB;
 	private final static FileModule fileModule = FileModule.INVENTORY_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.INVENTORY_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.INVENTORY_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = InventoryService.class;
+	private final static Class<?> SERVICE_INTERFACE = InventoryService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "inventoryId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InventoryOutVO.class);
 	public final static InventoryListIndex LIST_INDEX = new InventoryListIndex(getListIndexNode(
@@ -132,14 +132,6 @@ public class InventoryResource extends ServiceResourceBase {
 				.getChildren();
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -219,7 +211,7 @@ public class InventoryResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -233,6 +225,7 @@ public class InventoryResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public InventoryListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -30,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonWriter;
@@ -40,136 +38,97 @@ import com.google.gson.stream.JsonWriter;
 @Produces(MediaType.APPLICATION_JSON)
 public class GsonMessageBodyHandler implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
-	private enum GsonTypes {
-		SERIALIZER, SHORTCUT_SERIALIZER, DESERIALIZER,
-	}
-
 	private final static String API_JSON_SERIALIZE_VALUE_CHARSET = "UTF8";
 	private final static String API_JSON_DESERIALIZE_VALUE_CHARSET = "UTF8";
 	private final static String API_JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-	private Gson serializer;
-	private Gson shortcutSerializer;
-	private Gson deserializer;
+	private final Gson serializer = buildSerializer();
+	private final Gson shortcutSerializer = buildShortcutSerializer();
+	private final Gson deserializer = buildDeserializer();
 
-	private Gson buildGson(GsonTypes type) {
+	private Gson buildDeserializer() {
 		GsonBuilder builder = new GsonBuilder();
-		// serializer and deserializer common properties:
 		builder.setDateFormat(API_JSON_DATETIME_PATTERN);
-		if (GsonTypes.DESERIALIZER.equals(type)) { // || type == GsonTypes.FANCY_DESERIALIZER
-			// deserializer only
-			// https://gist.github.com/miere/3202425
-			builder.registerTypeAdapter(Collection.class, new JsonDeserializer<Collection<?>>() {
+		// https://gist.github.com/miere/3202425
+		builder.registerTypeAdapter(Collection.class, new JsonDeserializer<Collection<?>>() {
 
-				@Override
-				public Collection<?> deserialize(JsonElement json, Type typeOfT,
-						JsonDeserializationContext context) throws JsonParseException {
-					Type collectionType = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
-					return parseAsArrayList(json, collectionType, context);
-				}
-
-				@SuppressWarnings("unchecked")
-				public <T> ArrayList<T> parseAsArrayList(JsonElement collection, T type, JsonDeserializationContext context) {
-					ArrayList<T> result = new ArrayList<T>();
-					Iterator<JsonElement> it = collection.getAsJsonArray().iterator();
-					while (it.hasNext()) {
-						// JsonElement json2 = it.next();
-						// T object = (T) gson.fromJson(json2, (Class<?>)type);
-						result.add((T) context.deserialize(it.next(), (Class<?>) type));
-						// result.add(object);
-					}
-					return result;
-				}
-			});
-			return builder.create();
-		} else {
-			// serializers:
-			builder.serializeNulls();
-			builder.setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES);
-			if (GsonTypes.SHORTCUT_SERIALIZER.equals(type)) {
-				builder.registerTypeAdapter(NoShortcutSerializationWrapper.class, new JsonSerializer<NoShortcutSerializationWrapper>() {
-
-					@Override
-					public JsonElement serialize(NoShortcutSerializationWrapper src, Type typeOfSrc, JsonSerializationContext context) {
-						return getSerializer().toJsonTree(src.getVo()); // use regular serializer
-					}
-				});
-				JsUtil.registerGsonTypeAdapters(builder, JsUtil.GSON_SHORTCUT_SERIALISATIONS);
-				return builder.create();
-			} else if (GsonTypes.SERIALIZER.equals(type)) {
-				builder.registerTypeAdapter(NoShortcutSerializationWrapper.class, new JsonSerializer<NoShortcutSerializationWrapper>() {
-
-					@Override
-					public JsonElement serialize(NoShortcutSerializationWrapper src, Type typeOfSrc, JsonSerializationContext context) {
-						return context.serialize(src.getVo());
-					}
-				});
-				return builder.create();
+			@Override
+			public Collection<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+				Type collectionType = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
+				return parseAsArrayList(json, collectionType, context);
 			}
-		}
-		return null;
+
+			@SuppressWarnings("unchecked")
+			public <T> ArrayList<T> parseAsArrayList(JsonElement collection, T type, JsonDeserializationContext context) {
+				ArrayList<T> result = new ArrayList<T>();
+				Iterator<JsonElement> it = collection.getAsJsonArray().iterator();
+				while (it.hasNext()) {
+					result.add((T) context.deserialize(it.next(), (Class<?>) type));
+				}
+				return result;
+			}
+		});
+		return builder.create();
 	}
 
-	private Gson getDeserializer() {
-		if (deserializer == null) {
-			deserializer = buildGson(GsonTypes.DESERIALIZER);
-		}
-		return deserializer;
+	private Gson buildSerializer() {
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(API_JSON_DATETIME_PATTERN);
+		builder.serializeNulls();
+		builder.setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES);
+		builder.registerTypeAdapter(NoShortcutSerializationWrapper.class, new JsonSerializer<NoShortcutSerializationWrapper<?>>() {
+
+			@Override
+			public JsonElement serialize(NoShortcutSerializationWrapper<?> src, Type typeOfSrc, JsonSerializationContext context) {
+				return context.serialize(src.getVo());
+			}
+		});
+		return builder.create();
 	}
 
-	private Gson getSerializer() {
-		if (serializer == null) {
-			serializer = buildGson(GsonTypes.SERIALIZER);
-		}
-		return serializer;
-	}
+	private Gson buildShortcutSerializer() {
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(API_JSON_DATETIME_PATTERN);
+		builder.serializeNulls();
+		builder.setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES);
+		builder.registerTypeAdapter(NoShortcutSerializationWrapper.class, new JsonSerializer<NoShortcutSerializationWrapper<?>>() {
 
-	private Gson getShortcutSerializer() {
-		if (shortcutSerializer == null) {
-			shortcutSerializer = buildGson(GsonTypes.SHORTCUT_SERIALIZER);
-		}
-		return shortcutSerializer;
+			@Override
+			public JsonElement serialize(NoShortcutSerializationWrapper<?> src, Type typeOfSrc, JsonSerializationContext context) {
+				return serializer.toJsonTree(src.getVo()); // use regular serializer
+			}
+		});
+		JsUtil.registerGsonTypeAdapters(builder, JsUtil.GSON_SHORTCUT_SERIALISATIONS);
+		return builder.create();
 	}
 
 	@Override
-	public long getSize(Object t, Class<?> type, Type genericType,
-			Annotation[] annotations, MediaType mediaType) {
+	public long getSize(Object t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
 		return -1;
 	}
 
 	@Override
-	public boolean isReadable(Class<?> type, Type genericType,
-			Annotation[] annotations, MediaType mediaType) {
+	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
 		return true;
 	}
 
 	@Override
-	public boolean isWriteable(Class<?> type, Type genericType,
-			Annotation[] annotations, MediaType mediaType) {
+	public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
 		return true;
 	}
 
 	@Override
-	public Object readFrom(Class<Object> type, Type genericType,
-			Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-			throws IOException, WebApplicationException {
+	public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
+			InputStream entityStream) throws IOException {
 		InputStreamReader r = new InputStreamReader(entityStream, API_JSON_DESERIALIZE_VALUE_CHARSET);
-		// if (genericType != null) {
-		return getDeserializer().fromJson(r, genericType); // type);
-		// } else {
-		// return getDeserializer().fromJson(r, type); // type);
-		// }
+		return deserializer.fromJson(r, genericType);
 	}
 
 	@Override
-	public void writeTo(Object t, Class<?> type, Type genericType,
-			Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap<String, Object> httpHeaders,
-			OutputStream entityStream) throws IOException,
-			WebApplicationException {
+	public void writeTo(Object t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
+			OutputStream entityStream) throws IOException {
 		final Writer w = new OutputStreamWriter(entityStream, API_JSON_SERIALIZE_VALUE_CHARSET);
 		final JsonWriter jsw = new JsonWriter(w);
-		getShortcutSerializer().toJson(t, type, jsw);
+		shortcutSerializer.toJson(t, type, jsw);
 		jsw.close();
 	}
 }

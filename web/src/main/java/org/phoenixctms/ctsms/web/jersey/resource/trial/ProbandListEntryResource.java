@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="trial")
 @Path("/probandlistentry")
 public class ProbandListEntryResource {
 
@@ -96,11 +96,6 @@ public class ProbandListEntryResource {
 		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
 				.getProbandListEntryTagValues(auth, id, sort, loadAllJsValues, psf);
 		return new JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
-		// PSFUriPart psf;
-		// return new ProbandListEntryTagValuesOutVOPage(WebUtil.getServiceLocator().getTrialService()
-		// .getProbandListEntryTagValues(auth, id, false, false, psf = new PSFUriPart(uriInfo)),
-		// psf);
-		// return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValues(auth, id, false, false, new PSFUriPart(uriInfo));
 	}
 
 	@GET
@@ -127,11 +122,4 @@ public class ProbandListEntryResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().updateProbandListEntry(auth, in, null, randomize);
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// @Path("{id}/tagvalues/{tagid}")
-	// public ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(@PathParam("id") Long id,@PathParam("tagid") Long tagId)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValue(auth, id, tagId);
-	// }
 }

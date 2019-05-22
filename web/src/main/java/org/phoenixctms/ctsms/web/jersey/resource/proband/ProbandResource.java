@@ -57,15 +57,15 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="proband")
 @Path("/proband")
-public class ProbandResource extends ServiceResourceBase {
+public final class ProbandResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.PROBAND_DB;
 	private final static FileModule fileModule = FileModule.PROBAND_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.PROBAND_JOURNAL;
-	private final static Class SERVICE_INTERFACE = ProbandService.class;
+	private final static Class<?> SERVICE_INTERFACE = ProbandService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "probandId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, ProbandOutVO.class);
 	public final static ProbandListIndex LIST_INDEX = new ProbandListIndex(getListIndexNode(
@@ -123,14 +123,6 @@ public class ProbandResource extends ServiceResourceBase {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -178,19 +170,8 @@ public class ProbandResource extends ServiceResourceBase {
 		PSFUriPart psf = new PSFUriPart(uriInfo, "active", "active_signup", "sort", "load_all_js_values");
 		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active, activeSignup, id, sort, loadAllJsValues, psf);
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
-		// PSFUriPart psf;
-		// return new InquiryValuesOutVOPage(WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, null, id, false, false, psf = new PSFUriPart(uriInfo)),
-		// psf);
-		// return WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, null, id, false, false, new PSFUriPart(uriInfo));
 	}
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// @Path("{id}/inquiryvalues")
-	// public InquiryValuesOutVO getInquiryValues(@PathParam("id") Long id,@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, null, null, id, false, new PSFUriPart(uriInfo));
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/journal")
@@ -249,7 +230,7 @@ public class ProbandResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -263,6 +244,7 @@ public class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public ProbandListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
@@ -293,7 +275,6 @@ public class ProbandResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/pdf/head")
@@ -305,7 +286,6 @@ public class ProbandResource extends ServiceResourceBase {
 		return result;
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/{trialId}/pdf/head")
@@ -330,7 +310,6 @@ public class ProbandResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/signuppdf/head")
@@ -365,32 +344,6 @@ public class ProbandResource extends ServiceResourceBase {
 				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
 	}
 
-	// @PATCH
-	// @Consumes({ MediaType.APPLICATION_JSON })
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// public ProbandOutVO updateProband(ProbandInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getProbandService().updateProband(auth, in,
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
-	// }
-	// @PATCH
-	// @Consumes({ MediaType.APPLICATION_JSON })
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("{id}")
-	// public ProbandOutVO updateProband(PatchWrapper patch) throws AuthenticationException, AuthorisationException, ServiceException {
-	// ProbandInVO in = new ProbandInVO();
-	// Long out = WebUtil.getServiceLocator().getProbandService().getProband(auth, id,
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
-	// ProbandBean.copyProbandOutToIn(in, out);
-	// applypatch(in,patch);
-	// return WebUtil.getServiceLocator().getProbandService().updateProband(auth, in,
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_INSTANCES),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_PARENTS_DEPTH),
-	// Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
-	// }
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })

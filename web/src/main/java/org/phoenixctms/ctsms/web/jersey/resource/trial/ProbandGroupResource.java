@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/probandgroup")
 public class ProbandGroupResource {
 

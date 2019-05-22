@@ -27,9 +27,9 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.google.gson.JsonElement;
 import com.sun.jersey.api.NotFoundException;
 
-@Api
+@Api(value="shared")
 @Path("/selectionset")
-public class SelectionSetResource {
+public final class SelectionSetResource {
 
 	@Context
 	AuthenticationVO auth;
@@ -37,7 +37,7 @@ public class SelectionSetResource {
 
 		@Override
 		public boolean include(Method method) {
-			Class[] paramTypes = method.getParameterTypes();
+			Class<?>[] paramTypes = method.getParameterTypes();
 			return (paramTypes != null && paramTypes.length >= 1 && AuthenticationVO.class.equals(paramTypes[0]));
 		}
 
@@ -49,7 +49,7 @@ public class SelectionSetResource {
 			return methodName;
 		}
 	};
-	private final static Class SERVICE_INTERFACE = SelectionSetService.class;
+	private final static Class<?> SERVICE_INTERFACE = SelectionSetService.class;
 	public final static SelectionSetIndex INDEX = new SelectionSetIndex(getIndexNode(
 			ResourceUtils.getMethodPath(SelectionSetResource.class, "get").replaceFirst("/\\{resource\\}", ""), // "index"),
 			getArgsUriPart("", new AuthenticationVO())));
@@ -57,8 +57,6 @@ public class SelectionSetResource {
 	private static ArgsUriPart getArgsUriPart(String resource, AuthenticationVO auth) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, SELECTION_SET_SERVICE_METHOD_NAME_TRANSFORMER);
 		args.getOverrides().put("auth", auth);
-		// args.getPrimitiveConversionPrecedence().addAll(StringConverter.BOOL_LONG);
-		// args.setDeclaringInterface(SelectionSetService.class);
 		return args;
 	}
 
@@ -82,12 +80,6 @@ public class SelectionSetResource {
 						WebUtil.getServiceLocator().getSelectionSetService(),
 						SelectionSetService.class,
 						SELECTION_SET_SERVICE_METHOD_NAME_TRANSFORMER, true, args.getArgs(uriInfo));
-				// if (!(result instanceof Collection)) {
-				// ArrayList wrapper = new ArrayList(1);
-				// wrapper.add(result);
-				// result = wrapper;
-				// }
-				// return (Collection) result;
 			} catch (InvocationTargetException e) {
 				throw e.getCause();
 			} catch (Exception e) {

@@ -28,9 +28,9 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="shared")
 @Path("/journal")
-public class JournalResource {
+public final class JournalResource {
 
 	@Context
 	AuthenticationVO auth;
@@ -157,11 +157,4 @@ public class JournalResource {
 	public JournalEntryOutVO updateTrial(JournalEntryInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getJournalService().updateJournalEntry(auth, in);
 	}
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// public Page<JournalEntryOutVO> getJournal(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, null, null, psf = new PSFUriPart(uriInfo)),psf);
-	// }
 }

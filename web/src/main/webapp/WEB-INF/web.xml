@@ -1,410 +1,272 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+<web-app
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
-          
-    <description>Clinical Trial Site Management System</description>
-
-<filter>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <filter-class>org.phoenixctms.ctsms.web.CharacterEncodingFilter</filter-class>
-</filter>
-
-<!-- <filter>
-    <filter-name>EnsureSessionFilter</filter-name>
-    <filter-class>org.phoenixctms.ctsms.web.EnsureSessionFilter</filter-class>
-</filter> -->
-
-<!-- <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-</filter-mapping> -->
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/inventory/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/staff/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/course/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/trial/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/proband/*</url-pattern>
-  </filter-mapping>
-    <filter-mapping>
-  <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/shared/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/inputfield/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/user/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/portal.jsf</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/error.jsf</url-pattern>
-  </filter-mapping>
-        <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/unsubscribe.jsf</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CharacterEncodingFilter</filter-name>
-    <url-pattern>/login.jsf</url-pattern>
-  </filter-mapping>  
-
-
-  <filter>
-    <filter-name>AuthenticationFilter</filter-name>
-    <filter-class>org.phoenixctms.ctsms.web.AuthenticationFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/inventory/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/staff/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/course/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/trial/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/proband/*</url-pattern>
-  </filter-mapping>
-    <filter-mapping>
-  <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/shared/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/inputfield/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/user/*</url-pattern>
-  </filter-mapping>  
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/portal.jsf</url-pattern>
-  </filter-mapping>  
-  
-  
-    <filter>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-        <init-param>
-            <param-name>thresholdSize</param-name>
-            <param-value>2097152</param-value>
-        </init-param>  
-    </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
-
-
-
-   <servlet>
-      <servlet-name>Faces Servlet</servlet-name>
-      <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-      <load-on-startup>11</load-on-startup>
-   </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.jsf</url-pattern>
-    </servlet-mapping>
-    <!-- <servlet-mapping>
-      <url-pattern>/index.htm</url-pattern>
-      <servlet-name>Faces Servlet</servlet-name>
-    </servlet-mapping> -->
-
-    <welcome-file-list>
-    	<welcome-file>index.html</welcome-file>
-        <!-- <welcome-file>index.htm</welcome-file> -->
-    </welcome-file-list>
- 
-    <!-- <filter-mapping>
-        <filter-name>EnsureSessionFilter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping> --> 
- 
-<error-page>
-    <error-code>404</error-code>
-    <location>/error.jsf</location>
-</error-page>  
-<error-page>
-    <error-code>403</error-code>
-    <location>/error.jsf</location>
-</error-page>  
-<error-page>
-    <error-code>500</error-code>
-    <location>/error.jsf</location>
-</error-page>    
-
-          
-<servlet>
-    <servlet-name>inputFieldImageServlet</servlet-name>
-    <servlet-class>org.phoenixctms.ctsms.web.servlet.InputFieldImageServlet</servlet-class>
-    <load-on-startup>0</load-on-startup>
-</servlet>
-
-<servlet>
-    <servlet-name>publicFileServlet</servlet-name>
-    <servlet-class>org.phoenixctms.ctsms.web.servlet.PublicFileServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-</servlet>
-
-<servlet>
-    <servlet-name>beaconServlet</servlet-name>
-    <servlet-class>org.phoenixctms.ctsms.web.servlet.BeaconServlet</servlet-class>
-    <load-on-startup>2</load-on-startup>
-</servlet>
-<servlet>
-    <servlet-name>unsubscribeServlet</servlet-name>
-    <servlet-class>org.phoenixctms.ctsms.web.servlet.UnsubscribeServlet</servlet-class>
-    <load-on-startup>3</load-on-startup>
-</servlet>
-<!--  overlapping mappings  -->
-<!-- http://www.roguewave.com/portals/0/products/hydraexpress/docs/3.5.0/html/rwsfservletug/4-3.html -->
-<servlet-mapping>
-    <servlet-name>inputFieldImageServlet</servlet-name>
-    <url-pattern>/inputfieldimage</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-    <servlet-name>publicFileServlet</servlet-name>
-    <url-pattern>/file</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-    <servlet-name>beaconServlet</servlet-name>
-    <url-pattern>/beacon/*</url-pattern>
-</servlet-mapping>
-<servlet-mapping>
-    <servlet-name>unsubscribeServlet</servlet-name>
-    <url-pattern>/unsubscribe/*</url-pattern>
-</servlet-mapping>
-    
-
-    
-    <context-param>
-        <param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
-        <param-value>true</param-value>
-    </context-param>    
-
-
-
-   <context-param>
-      <param-name>javax.faces.PROJECT_STAGE</param-name>
-      <!-- <param-value>Development</param-value> -->
-      <param-value>Production</param-value>
-   </context-param>
-
-<context-param>
-      <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-      <param-value>true</param-value>
-   </context-param>
-   
-    
-   <context-param>
-      <param-name>javax.faces.RENDER_VIEWSTATE_ID</param-name>
-      <param-value>false</param-value>
-   </context-param>
-
-<!-- <context-param>
-    <param-name>javax.faces.FACELETS_RESOURCE_RESOLVER</param-name>
-    <param-value>org.phoenixctms.ctsms.web.FaceletsResourceResolver</param-value>
-</context-param> -->
-
-   
-
- 	<!-- <context-param>
-		<description>
-			Comma separated list of URIs of (additional) faces config
-			files. (e.g. /WEB-INF/my-config.xml) See JSF 1.0 PRD2,
-			10.3.2 Attention: You do not need to put
-			/WEB-INF/faces-config.xml in here.
-		</description>
-		<param-name>javax.faces.CONFIG_FILES</param-name>
-		 <param-value>/WEB-INF/inventory-config.xml</param-value>
-	</context-param> -->
-
-<!--      <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>home</param-value>
-    </context-param>  -->
-
- 
-
-    <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>#{sessionScopeBean.theme}</param-value>
-    </context-param>
-    
-<!--     <context-param>
-        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
-        <param-value>true</param-value>
-    </context-param> -->
-
-
-    
-<!-- <context-param>
-<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-<param-value></param-value>
-</context-param>
-<context-param>
-<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-<param-value></param-value>
-</context-param> -->
-
-    
-    <session-config>
-        <session-timeout>60</session-timeout>
-	    <cookie-config>
-	        <path>/</path>                       
-	        <http-only>true</http-only> 
-	        <secure>false</secure>
-	    </cookie-config>        
-        <tracking-mode>COOKIE</tracking-mode>
-    </session-config>
-    
-    
-    <!-- myfaces -->
-<!-- <context-param>
-    <param-name>org.apache.myfaces.EXPRESSION_FACTORY</param-name>
-    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
-</context-param> 
-
-    <context-param>
-        <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
-        <param-value>false</param-value>
-    </context-param>
-
--->
-
-<!-- mojarra -->
-        <context-param>
-        <!-- <description>Context param for JSTL 1.2 to work in Tomcat 6 sun RI
-        </description>  -->
-        <param-name>com.sun.faces.expressionFactory</param-name>
-          <param-value>com.sun.el.ExpressionFactoryImpl</param-value>  
-    </context-param>
-    
-      <context-param>
-        <!-- <description>Parameter required by Mojarra 2.0</description>  -->
-        <param-name>com.sun.faces.allowTextChildren</param-name>
-        <param-value>true</param-value>
-    </context-param> 
-
-    <context-param>
-        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
-        <param-value>50</param-value>
-    </context-param>
-    <context-param>
-        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
-        <param-value>50</param-value>
-    </context-param>  
-      
-      <context-param>   
-	    <param-name>com.sun.faces.serializeServerState</param-name>  
-	    <param-value>false</param-value>
+	version="3.1">
+	<description>Clinical Trial Site Management System</description>
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.phoenixctms.ctsms.web.CharacterEncodingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/inventory/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/staff/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/course/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/trial/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/proband/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/shared/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/inputfield/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/portal.jsf</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/error.jsf</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/unsubscribe.jsf</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/login.jsf</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>org.phoenixctms.ctsms.web.AuthenticationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/inventory/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/staff/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/course/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/trial/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/proband/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/shared/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/inputfield/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/portal.jsf</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+		<init-param>
+			<param-name>thresholdSize</param-name>
+			<param-value>2097152</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>11</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.jsf</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error.jsf</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.jsf</location>
+	</error-page>
+	<servlet>
+		<servlet-name>inputFieldImageServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.InputFieldImageServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>publicFileServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.PublicFileServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>beaconServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.BeaconServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>unsubscribeServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.UnsubscribeServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<!-- overlapping mappings -->
+	<!-- http://www.roguewave.com/portals/0/products/hydraexpress/docs/3.5.0/html/rwsfservletug/4-3.html -->
+	<servlet-mapping>
+		<servlet-name>inputFieldImageServlet</servlet-name>
+		<url-pattern>/inputfieldimage</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>publicFileServlet</servlet-name>
+		<url-pattern>/file</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>beaconServlet</servlet-name>
+		<url-pattern>/beacon/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>unsubscribeServlet</servlet-name>
+		<url-pattern>/unsubscribe/*</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+		<param-value>true</param-value>
 	</context-param>
-
-<!-- <context-param>
-<param-name>com.sun.faces.responseBufferSize</param-name>
-<param-value>1048576</param-value>
-</context-param>     --> 
-      <context-param>
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<!-- <param-value>Development</param-value> -->
+		<param-value>Production</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.RENDER_VIEWSTATE_ID</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>#{sessionScopeBean.theme}</param-value>
+	</context-param>
+	<session-config>
+		<session-timeout>60</session-timeout>
+		<cookie-config>
+			<path>/</path>
+			<http-only>true</http-only>
+			<secure>false</secure>
+		</cookie-config>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+	<context-param>
+		<!-- <description>Context param for JSTL 1.2 to work in Tomcat 6 sun RI 
+			</description> -->
+		<param-name>com.sun.faces.expressionFactory</param-name>
+		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+	</context-param>
+	<context-param>
+		<!-- <description>Parameter required by Mojarra 2.0</description> -->
+		<param-name>com.sun.faces.allowTextChildren</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.sun.faces.numberOfViewsInSession</param-name>
+		<param-value>50</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.sun.faces.numberOfLogicalViews</param-name>
+		<param-value>50</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.sun.faces.serializeServerState</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
 		<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
 		<param-value>1048576</param-value>
-	  </context-param>
-      
-<context-param>
-<param-name>com.sun.faces.defaultResourceMaxAge</param-name>
-<param-value>86400</param-value>
-</context-param>      
-      
-	<context-param>
-        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-        <param-value>server</param-value>
 	</context-param>
-    
-    <context-param>
-    	<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
-    	<param-value>true</param-value>
-    </context-param>
-    
-    
-    <listener>
+	<context-param>
+		<param-name>com.sun.faces.defaultResourceMaxAge</param-name>
+		<param-value>86400</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<listener>
 		<listener-class>org.phoenixctms.ctsms.web.LogoutListener</listener-class>
 	</listener>
-	
 	<context-param>
-       <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-       <param-value>/WEB-INF/ctsms-taglib.xml</param-value>
-    </context-param>
-    
-    
-    
-  <servlet>
-    <servlet-name>Jersey REST Service</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-             <init-param>
-            <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.phoenixctms.ctsms.web.jersey.Application</param-value>
-        </init-param> 
-    <init-param>
-        <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-        <param-value>org.phoenixctms.ctsms.web.jersey.provider.CORSFilter</param-value>
-    </init-param>    
-	<init-param>
-	  <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-	  <param-value>org.phoenixctms.ctsms.web.jersey.provider.TrustedHostFilter</param-value>
-	</init-param>    
-    <load-on-startup>20</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Jersey REST Service</servlet-name>
-    <url-pattern>/rest/*</url-pattern> <!-- see WebUtil.REST_API_PATH -->
-  </servlet-mapping>
-  
-  
-    <servlet>
-        <servlet-name>Jersey2Config</servlet-name>
-        <servlet-class>io.swagger.jaxrs.config.DefaultJaxrsConfig</servlet-class>
-        <!-- <init-param>
-            <param-name>api.version</param-name>
-            <param-value>1.0.0</param-value>
-        </init-param>
-        <init-param>
-            <param-name>swagger.api.basepath</param-name>
-            <param-value>http://localhost:8080/ctsms-web/rest</param-value>
-        </init-param> -->
-        <load-on-startup>21</load-on-startup>
-    </servlet>  
-     
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/ctsms-taglib.xml</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.phoenixctms.ctsms.web.jersey.Application</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+			<param-value>org.phoenixctms.ctsms.web.jersey.provider.CORSFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>org.phoenixctms.ctsms.web.jersey.provider.TrustedHostFilter</param-value>
+		</init-param>
+		<load-on-startup>20</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<url-pattern>/rest/*</url-pattern> <!-- see WebUtil.REST_API_PATH -->
+	</servlet-mapping>
 </web-app>
-

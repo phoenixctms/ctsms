@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;

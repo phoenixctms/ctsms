@@ -6,6 +6,5 @@ public class ResourceIndex extends IndexBase {
 
 	public ResourceIndex(JsonElement indexNode) {
 		super(indexNode);
-		// TODO Auto-generated constructor stub
 	}
 }

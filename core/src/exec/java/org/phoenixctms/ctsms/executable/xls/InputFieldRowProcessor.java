@@ -2,7 +2,7 @@ package org.phoenixctms.ctsms.executable.xls;
 
 import java.io.FileInputStream;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;

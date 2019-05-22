@@ -43,16 +43,16 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="trial")
 @Path("/trial")
 public class TrialResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.TRIAL_DB;
 	private final static FileModule fileModule = FileModule.TRIAL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.TRIAL_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.TRIAL_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = TrialService.class;
+	private final static Class<?> SERVICE_INTERFACE = TrialService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "trialId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, TrialOutVO.class);
 	public final static TrialListIndex LIST_INDEX = new TrialListIndex(getListIndexNode(ResourceUtils.getMethodPath(TrialResource.class, "list")
@@ -62,13 +62,6 @@ public class TrialResource extends ServiceResourceBase {
 	@Context
 	AuthenticationVO auth;
 
-	// @GET
-	// @Produces({MediaType.APPLICATION_JSON})
-	// @Path("{psf:.*}")
-	// public Page<TrialOutVO> getTrialList(@PathParam("psf") PSFUriPart psf,@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return new Page<TrialOutVO>(WebUtil.getServiceLocator().getTrialService().getTrialList(auth, null, null, PSFUriPart.updatePSF(psf,uriInfo)),psf);
-	// }
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -87,7 +80,6 @@ public class TrialResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -119,14 +111,6 @@ public class TrialResource extends ServiceResourceBase {
 		return WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldMaxSelectionSetValueCount(auth, id);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -184,7 +168,7 @@ public class TrialResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -203,14 +187,6 @@ public class TrialResource extends ServiceResourceBase {
 		return new Page<TrialOutVO>(WebUtil.getServiceLocator().getTrialService().getTrialList(auth, null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("signup/{id}")
-	// public Page<TrialOutVO> getTrialListSignup(@PathParam("id") Long id, @Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<TrialOutVO>(WebUtil.getServiceLocator().getTrialService().getSignupTrialList(auth, id, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("signup")
@@ -227,21 +203,11 @@ public class TrialResource extends ServiceResourceBase {
 		return list(auth, id, resource, uriInfo);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("test")
-	// public Map<String,CriteriaOutVO> test(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return new HashMap<String,CriteriaOutVO>();
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public TrialListIndex listIndex() throws Exception {
-		// new TrialListIndex(getListIndexNode(ResourceUtils.getMethodPath(TrialResource.class, "list")
-		// .replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-		// SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
-		// getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 		return LIST_INDEX;
 	}
 

@@ -17,20 +17,7 @@ public final class ResourceUtils {
 	public static final Integer LIST_GRAPH_MAX_PROBAND_INSTANCES = 1;
 	private static final MethodTransfilter RESOURCE_METHOD_TRANSFILTER = MethodTransfilter.DEFAULT_TRANSFILTER;
 
-	// public static String getMethodPath(Class resourceClass, String methodName) {
-	// StringBuilder sb = new StringBuilder(((Path) resourceClass.getAnnotation(Path.class)).value());
-	// sb.append("/");
-	// try {
-	// Path annotation = resourceClass.getMethod(methodName).getAnnotation(Path.class);
-	// if (annotation != null) {
-	// sb.append(annotation.value());
-	// }
-	// } catch (Exception e) {
-	// sb.append(methodName);
-	// }
-	// return sb.toString();
-	// }
-	public static String getMethodPath(Class resourceClass, String methodName) {
+	public static String getMethodPath(Class<?> resourceClass, String methodName) {
 		StringBuilder sb = new StringBuilder(((Path) resourceClass.getAnnotation(Path.class)).value());
 		sb.append("/");
 		try {

@@ -45,9 +45,9 @@ import com.sun.jersey.api.NotFoundException;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="shared", hidden = true)
 @Path("/tools")
-public class ToolsResource {
+public final class ToolsResource {
 
 	private final static Pattern COMPLETE_METHOD_NAME_REGEXP = Pattern.compile("^complete");
 	private static final MethodTransfilter COMPLETE_METHOD_NAME_TRANSFORMER = new MethodTransfilter() {
@@ -65,23 +65,19 @@ public class ToolsResource {
 			return methodName;
 		}
 	};
-	private final static Class SERVICE_INTERFACE = ToolsService.class;
+	private final static Class<?> SERVICE_INTERFACE = ToolsService.class;
 	public final static CompleteIndex COMPLETE_INDEX = new CompleteIndex(getCompleteIndexNode(
 			ResourceUtils.getMethodPath(ToolsResource.class, "complete").replaceFirst("/\\{resource\\}", ""), // "completeIndex"),
 			getArgsUriPart("")));
 
 	private static ArgsUriPart getArgsUriPart(String resource) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, COMPLETE_METHOD_NAME_TRANSFORMER);
-		// args.getExcludePrimitiveConversion()
-		// args.setDeclaringInterface(ToolsService.class);
 		return args;
 	}
 
 	private static ArgsUriPart getArgsUriPart(String resource, AuthenticationVO auth) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, COMPLETE_METHOD_NAME_TRANSFORMER);
 		args.getOverrides().put("auth", auth);
-		// args.getPrimitiveConversionPrecedence().addAll(StringConverter.BOOL_LONG);
-		// args.setDeclaringInterface(SelectionSetService.class);
 		return args;
 	}
 
@@ -113,7 +109,7 @@ public class ToolsResource {
 		if (AssociationPath.methodExists(ToolsService.class, resource, COMPLETE_METHOD_NAME_TRANSFORMER)) {
 			ArgsUriPart args = getArgsUriPart(resource, auth); // );
 			try {
-				return (Collection) AssociationPath.invoke(resource,
+				return (Collection<?>) AssociationPath.invoke(resource,
 						WebUtil.getServiceLocator().getToolsService(),
 						ToolsService.class,
 						COMPLETE_METHOD_NAME_TRANSFORMER, true, args.getArgs(uriInfo));
@@ -140,19 +136,6 @@ public class ToolsResource {
 		return WebUtil.getServiceLocator().getToolsService().getAnnouncement();
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("ldapentry1")
-	// public LdapEntryVO getLdapEntry1(@QueryParam("username") String username) throws AuthorisationException, ServiceException, AuthenticationException {
-	// return WebUtil.getServiceLocator().getToolsService().getLdapEntry1(auth, username);
-	// }
-	//
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("ldapentry2")
-	// public LdapEntryVO getLdapEntry2(@QueryParam("username") String username) throws AuthorisationException, ServiceException, AuthenticationException {
-	// return WebUtil.getServiceLocator().getToolsService().getLdapEntry2(auth, username);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("passwordpolicy")
@@ -163,8 +146,6 @@ public class ToolsResource {
 	@GET
 	@Path("file/{id}")
 	public Response getPublicFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
-		// FileStreamOutVO f = WebUtil.getServiceLocator().getFileService().getFileStream(auth, fileId);
-		// return Response.ok(f.getStream(), f.getContentType().getMimeType()).build();
 		FileStreamOutVO stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream(id);
 		ResponseBuilder response = javax.ws.rs.core.Response.ok(stream.getStream(), stream.getContentType().getMimeType());
 		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
@@ -175,13 +156,6 @@ public class ToolsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
 		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request)); // basePath));
 	}
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("logon")
-	// public PasswordOutVO logon() throws AuthorisationException, ServiceException, AuthenticationException {
-	// return WebUtil.getServiceLocator().getToolsService().logon(auth);
-	// }
 }

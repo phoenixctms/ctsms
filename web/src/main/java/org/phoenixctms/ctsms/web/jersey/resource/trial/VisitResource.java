@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.vo.VisitInVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api
+@Api(value="trial")
 @Path("/visit")
 public class VisitResource {
 

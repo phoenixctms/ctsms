@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="trial")
 @Path("/ecrf")
 public class EcrfResource {
 

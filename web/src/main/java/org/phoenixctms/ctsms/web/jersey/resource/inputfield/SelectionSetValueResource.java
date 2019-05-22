@@ -26,9 +26,9 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api
+@Api(value="inputfield")
 @Path("/inputfieldselectionsetvalue")
-public class SelectionSetValueResource {
+public final class SelectionSetValueResource {
 
 	@Context
 	AuthenticationVO auth;
@@ -50,13 +50,6 @@ public class SelectionSetValueResource {
 						Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false, reason);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("{id}/valuecount")
-	// public long getInputFieldValueCount(@PathParam("id") Long id)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return WebUtil.getServiceLocator().getInputFieldService().getInputFieldValueCount(auth, id);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
@@ -64,13 +57,6 @@ public class SelectionSetValueResource {
 		return WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValue(auth, id);
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// public Page<InputFieldSelectionSetValueOutVO> getSelectionSetValueList(@Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<InputFieldSelectionSetValueOutVO>(WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValueList(auth, null, psf = new PSFUriPart(uriInfo)),
-	// psf);
-	// }
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })

@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 
-public class PSFUriPart extends PSFVO implements UriPart {
+public class PSFUriPart extends PSFVO {
 
 	private final static int DEFAULT_PAGE_SIZE = 10;
 	private final static int DEFAULT_PAGE_NUMBER = 1;
@@ -73,13 +72,6 @@ public class PSFUriPart extends PSFVO implements UriPart {
 					Entry<String, List<String>> param = it.next();
 					if (!psf.slurpExcludes.contains(param.getKey())) {
 						filters.put(param.getKey(), ResourceUtils.popQueryParamValue(param.getKey(), filter));
-						// List<String> values = param.getValue();
-						// if (values != null && values.iterator().hasNext()) {
-						// String value = values.iterator().next();
-						// if (!CommonUtil.isEmptyString(value)) {
-						// filters.put(param.getKey(), value);
-						// }
-						// }
 					}
 				}
 			}
@@ -135,22 +127,6 @@ public class PSFUriPart extends PSFVO implements UriPart {
 		this(uriInfo.getQueryParameters(true), namedParameter);
 	}
 
-	@Override
-	public Set<NamedParameter> getStaticQueryParameterNames() {
-		return NAMED_QUERY_PARAMETERS;
-	}
-
-	@Override
-	public boolean isSlurpQueryParameter() throws Exception {
-		return slurp;
-	}
-
-	@Override
-	public void setSlurpQueryParameter(boolean slurp) {
-		this.slurp = slurp;
-	}
-
-	@Override
 	public Object shiftParameters(MultivaluedMap<String, String> queryParameters) throws Exception {
 		return updatePSF(this, queryParameters);
 	}

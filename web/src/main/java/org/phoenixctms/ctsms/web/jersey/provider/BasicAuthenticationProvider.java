@@ -11,7 +11,6 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.sun.jersey.api.core.HttpContext;
-import com.sun.jersey.api.core.HttpRequestContext;
 import com.sun.jersey.core.spi.component.ComponentContext;
 import com.sun.jersey.core.spi.component.ComponentScope;
 import com.sun.jersey.server.impl.inject.AbstractHttpContextInjectable;
@@ -41,7 +40,6 @@ public class BasicAuthenticationProvider
 
 	@Override
 	public AuthenticationVO getValue(HttpContext c) {
-		// if (c.getRequest().getAuthenticationScheme() == HttpRequestContext.BASIC_AUTH) {
 		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
 		String[] credentials = null;
 		if (authHeaderValue != null) {

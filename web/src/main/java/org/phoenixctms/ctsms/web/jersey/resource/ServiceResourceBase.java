@@ -22,27 +22,23 @@ import com.sun.jersey.api.NotFoundException;
 
 public abstract class ServiceResourceBase extends FileDavResourceBase {
 
-	// protected final static String LIST_INDEX_PATH_PREFIX_PART = "/{id}/list/";
 	private final static Pattern GET_LIST_METHOD_NAME_REGEXP = Pattern.compile("^get(.+)List$");
 
-	protected final static ArgsUriPart getArgsUriPart(Class serviceInterface, String resource, AuthenticationVO auth, String rootEntityIdMethodParamName,
+	protected final static ArgsUriPart getArgsUriPart(Class<?> serviceInterface, String resource, AuthenticationVO auth, String rootEntityIdMethodParamName,
 			MethodTransfilter getListMethodNameTransformer, Long id, PSFUriPart psf) {
 		ArgsUriPart args = new ArgsUriPart(serviceInterface, resource, getListMethodNameTransformer);
 		args.getOverrides().put("auth", auth);
 		args.getOverrides().put(rootEntityIdMethodParamName, id);
 		args.getOverrides().put("psf", psf);
-		// args.getPrimitiveConversionPrecedence().addAll(StringConverter.BOOL_LONG);
-		// args.setDeclaringInterface(SelectionSetService.class);
 		return args;
 	}
 
-	//private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER;
-	protected static MethodTransfilter getGetListMethodNameTransformer(final String rootEntityIdMethodParamName, final Class rootOutVo) {
+	protected static MethodTransfilter getGetListMethodNameTransformer(final String rootEntityIdMethodParamName, final Class<?> rootOutVo) {
 		return new MethodTransfilter() {
 
 			@Override
 			public boolean exclude(Method method) {
-				Class[] paramTypes = method.getParameterTypes();
+				Class<?>[] paramTypes = method.getParameterTypes();
 				if (paramTypes == null) {
 					return true;
 				}
@@ -54,15 +50,10 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 					return true;
 				}
 				if (Collection.class.isAssignableFrom(method.getReturnType())
-						&& rootOutVo.isAssignableFrom((Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0])) {
+						&& rootOutVo.isAssignableFrom((Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0])) {
 					return true;
 				}
 				return false;
-				//			Class returnType = method.getReturnType();
-				//			if (Collection.class.isAssignableFrom(method.getReturnType())) {
-				//				(Class) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
-				//			}
-				//			return (paramTypes == null || !PSFVO.class.equals(paramTypes[paramTypes.length - 1]));
 			};
 
 			@Override
@@ -83,7 +74,7 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 		};
 	}
 
-	protected static JsonElement getListIndexNode(String pathPrefix, Class serviceInterface, MethodTransfilter getListMethodNameTransformer, ArgsUriPart args) {
+	protected static JsonElement getListIndexNode(String pathPrefix, Class<?> serviceInterface, MethodTransfilter getListMethodNameTransformer, ArgsUriPart args) {
 		try {
 			return IndexResource.getResourceMethodIndexNode(pathPrefix, AssociationPath.listMethods(serviceInterface, getListMethodNameTransformer),
 					args, true);
@@ -98,7 +89,7 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 
 	protected abstract Object getService();
 
-	protected abstract Class getServiceInterface();
+	protected abstract Class<?> getServiceInterface();
 
 	protected Page list(AuthenticationVO auth, Long id, String resource, UriInfo uriInfo) throws Throwable {
 		if (AssociationPath.methodExists(getServiceInterface(), resource, getGetListMethodNameTransformer())) {

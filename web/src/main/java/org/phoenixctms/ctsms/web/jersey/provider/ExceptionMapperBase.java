@@ -46,15 +46,9 @@ abstract class ExceptionMapperBase {
 
 	protected ResponseBuilder buildJsonResponse(int status, Throwable t) {
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(new ExceptionJs(t));
-		// } catch(Throwable gson) {
-		// return Response.status(Status.INTERNAL_SERVER_ERROR).entity(WebUtil.toJson(t)).type(MediaType.APPLICATION_JSON);
-		// }
 	}
 
 	protected ResponseBuilder buildJsonResponse(Status status, Throwable t) {
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(new ExceptionJs(t));
-		// } catch(Throwable gson) {
-		// return Response.status(Status.INTERNAL_SERVER_ERROR).entity(WebUtil.toJson(t)).type(MediaType.APPLICATION_JSON);
-		// }
 	}
 }

@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.ECRF;
 import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFField;

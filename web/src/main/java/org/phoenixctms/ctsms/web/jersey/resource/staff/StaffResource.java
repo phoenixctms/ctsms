@@ -54,16 +54,16 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="staff")
 @Path("/staff")
 public class StaffResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.STAFF_DB;
 	private final static FileModule fileModule = FileModule.STAFF_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.STAFF_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.STAFF_HYPERLINK;
-	private final static Class SERVICE_INTERFACE = StaffService.class;
+	private final static Class<?> SERVICE_INTERFACE = StaffService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "staffId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, StaffOutVO.class);
 	public final static StaffListIndex LIST_INDEX = new StaffListIndex(getListIndexNode(ResourceUtils.getMethodPath(StaffResource.class, "list")
@@ -135,14 +135,6 @@ public class StaffResource extends ServiceResourceBase {
 				.getChildren();
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -200,7 +192,7 @@ public class StaffResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -223,7 +215,6 @@ public class StaffResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/image/head")
@@ -252,6 +243,7 @@ public class StaffResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public StaffListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
@@ -278,134 +270,4 @@ public class StaffResource extends ServiceResourceBase {
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 	}
-	// @OPTIONS
-	// public javax.ws.rs.core.Response davOptionsModuleRoot() {
-	// return super.davOptions();
-	// }
-	// @PROPFIND
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// public javax.ws.rs.core.Response davPropFindModuleRoot(@Context UriInfo uriInfo,@DefaultValue(DEPTH_INFINITY) @HeaderParam(DEPTH) String depth,
-	// @Context Providers providers) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPropFind(null,uriInfo, depth, providers);
-	// }
-	// @OPTIONS
-	// @Path("{id}")
-	// public javax.ws.rs.core.Response davOptionsEntityRoot() {
-	// return super.davOptions();
-	// }
-	// @PROPFIND
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}")
-	// public javax.ws.rs.core.Response davPropFindEntityRoot(@Context UriInfo uriInfo,@DefaultValue(DEPTH_INFINITY) @HeaderParam(DEPTH) String depth,
-	// @Context Providers providers) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPropFind(null,uriInfo, depth, providers);
-	// }
-	// @OPTIONS
-	// @Path("{id}/files")
-	// public javax.ws.rs.core.Response davOptionsFilesRoot() {
-	// return super.davOptions();
-	// }
-	// @PROPFIND
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files")
-	// public javax.ws.rs.core.Response davPropFindEntityFilesRoot(@Context UriInfo uriInfo,@DefaultValue(DEPTH_INFINITY) @HeaderParam(DEPTH) String depth,
-	// @Context Providers providers) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPropFind(null,uriInfo, depth, providers);
-	// }
-	//
-	//
-	//
-	// @OPTIONS
-	// @Path("{id}/files/dav")
-	// public javax.ws.rs.core.Response davOptions() {
-	// return super.davOptions();
-	// }
-	//
-	// @PROPFIND
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files/dav")
-	// public javax.ws.rs.core.Response davPropFind(@PathParam("id") Long id,@Context UriInfo uriInfo,@DefaultValue(DEPTH_INFINITY) @HeaderParam(DEPTH) String depth,
-	// @Context Providers providers) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPropFind(id,uriInfo, depth, providers);
-	// }
-	//
-	// @PROPFIND
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response davPropFind(@PathParam("id") Long id,@PathParam("fileName") String fileName, @Context UriInfo uriInfo,
-	// @Context Providers providers) throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPropFind(id,fileName, uriInfo, providers);
-	// }
-	//
-	// @PROPPATCH
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response davPropPatch(InputStream body, @Context UriInfo uriInfo, @Context Providers providers, @Context HttpHeaders httpHeaders) throws IOException
-	// {
-	// return super.davPropPatch(body,uriInfo,providers,httpHeaders);
-	// }
-	//
-	// @GET
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response get(@PathParam("id") Long id,@PathParam("fileName") String fileName) throws AuthenticationException, AuthorisationException,
-	// ServiceException {
-	// return super.davGet(id, fileName);
-	// }
-	//
-	// @HEAD
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response davHead(@PathParam("id") Long id,@PathParam("fileName") String fileName) throws AuthenticationException, AuthorisationException,
-	// ServiceException {
-	// return super.davHead(id,fileName);
-	// }
-	//
-	// @PUT
-	// @Path("{id}/files/dav/{fileName}")
-	// protected javax.ws.rs.core.Response davPut(InputStream input, @PathParam("id") Long id, @PathParam("fileName") String fileName,
-	// @HeaderParam(CONTENT_LENGTH) long contentLength, @Context HttpHeaders httpHeaders)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// return super.davPut(input, id, fileName, contentLength, httpHeaders);
-	// }
-	//
-	// @DELETE
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response davDelete(@PathParam("id") Long id,@PathParam("fileName") String fileName) throws AuthenticationException, AuthorisationException,
-	// ServiceException {
-	// return super.davDelete(id, fileName);
-	// }
-	//
-	// @LOCK
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files/dav/{fileName}")
-	// public Prop davLock(LockInfo lockInfo, @Context UriInfo uriInfo,
-	// @HeaderParam(DEPTH) @DefaultValue(DEPTH_INFINITY) String depth, @HeaderParam(TIMEOUT) TimeOut timeout) throws URISyntaxException, IOException {
-	// return super.davLock(lockInfo,uriInfo,depth,timeout);
-	// }
-	//
-	// //@Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// //@Produces({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @UNLOCK
-	// @Consumes({ MediaType.APPLICATION_XML , MediaType.TEXT_XML })
-	// @Path("{id}/files/dav/{fileName}")
-	// public javax.ws.rs.core.Response davUnlock() {
-	// return davUnlock();
-	// }
-	//
-	//
-	// @Override
-	// protected FileModule getFileModule() {
-	// return fileModule;
-	// }
-	//
-	//
-	// @Override
-	// protected AuthenticationVO getAuth() {
-	// return auth;
-	// }
 }

@@ -41,15 +41,15 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Api
+@Api(value="massmail")
 @Path("/massmail")
-public class MassMailResource extends ServiceResourceBase {
+public final class MassMailResource extends ServiceResourceBase {
 
-	// private final static DBModule dbModule = DBModule.INPUT_FIELD_DB;
 	private final static FileModule fileModule = FileModule.MASS_MAIL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.MASS_MAIL_JOURNAL;
-	private final static Class SERVICE_INTERFACE = MassMailService.class;
+	private final static Class<?> SERVICE_INTERFACE = MassMailService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "massMailId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, MassMailOutVO.class);
 	public final static MassMailListIndex LIST_INDEX = new MassMailListIndex(getListIndexNode(
@@ -101,14 +101,6 @@ public class MassMailResource extends ServiceResourceBase {
 		return auth;
 	}
 
-	// @GET
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// @Path("search")
-	// public Page<CriteriaOutVO> getCriteriaList(@Context UriInfo uriInfo)
-	// throws AuthenticationException, AuthorisationException, ServiceException {
-	// PSFUriPart psf;
-	// return new Page<CriteriaOutVO>(WebUtil.getServiceLocator().getSearchService().getCriteriaList(auth, dbModule, psf = new PSFUriPart(uriInfo)), psf);
-	// }
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
@@ -172,7 +164,7 @@ public class MassMailResource extends ServiceResourceBase {
 	}
 
 	@Override
-	protected Class getServiceInterface() {
+	protected Class<?> getServiceInterface() {
 		return SERVICE_INTERFACE;
 	}
 
@@ -186,6 +178,7 @@ public class MassMailResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
+	@ApiOperation(value="list",hidden = true)
 	public MassMailListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
