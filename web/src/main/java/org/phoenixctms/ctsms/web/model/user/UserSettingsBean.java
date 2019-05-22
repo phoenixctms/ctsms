@@ -97,19 +97,13 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
