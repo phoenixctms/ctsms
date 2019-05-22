@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.vocycle.DeferredVO;
 import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -297,5 +298,64 @@ public class UserDaoImpl
 		} else if (copyIfNull) {
 			target.setAuthMethod(null);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void toUserSettingsInVO(
+			User source,
+			UserSettingsInVO target) {
+		// TODO verify behavior of toUserSettingsInVO
+		super.toUserSettingsInVO(source, target);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public UserSettingsInVO toUserSettingsInVO(final User entity) {
+		// TODO verify behavior of toUserSettingsInVO
+		return super.toUserSettingsInVO(entity);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public User userSettingsInVOToEntity(UserSettingsInVO userSettingsInVO) {
+		// TODO verify behavior of userSettingsInVOToEntity
+		User entity = this.loadUserFromUserSettingsInVO(userSettingsInVO);
+		this.userSettingsInVOToEntity(userSettingsInVO, entity, true);
+		return entity;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void userSettingsInVOToEntity(
+			UserSettingsInVO source,
+			User target,
+			boolean copyIfNull) {
+		// TODO verify behavior of userSettingsInVOToEntity
+		super.userSettingsInVOToEntity(source, target, copyIfNull);
+	}
+
+	/**
+	 * Retrieves the entity object that is associated with the specified value object
+	 * from the object store. If no such entity object exists in the object store,
+	 * a new, blank entity is created
+	 */
+	private User loadUserFromUserSettingsInVO(UserSettingsInVO userSettingsInVO) {
+		// TODO implement loadUserFromUserSettingsInVO
+		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserSettingsInVO(UserSettingsInVO) not yet implemented.");
+		User user = null;
+		Long id = userSettingsInVO.getId();
+		if (id != null) {
+			user = this.load(id);
+		}
+		if (user == null) {
+			user = User.Factory.newInstance();
+		}
+		return user;
 	}
 }

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>money transfer basic input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+
+
+
+
+							
+							
+							
+							
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="costtype"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_cost_type_label}" />
+							<h:panelGroup>
+								<p:autoComplete
+									id="costtype"
+									value="#{reimbursementBean.in.costType}"
+									required="false"
+									label="#{probandlabels.money_transfer_cost_type}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthCostType}"
+									maxResults="#{autoCompleteMaxResultsCostType}"
+									queryDelay="#{autoCompleteQueryDelayCostType}"
+									dropdown="#{autoCompleteDropdownCostType}"
+									global="#{autoCompleteGlobalCostType}"
+									scrollHeight="#{autoCompleteScrollHeightCostType}"
+									completeMethod="#{reimbursementBean.completeCostType}">
+									<p:ajax
+										listener="#{reimbursementBean.handleCostTypeSelect}"
+										event="itemSelect"
+										process="@this" />
+									<p:ajax
+										event="blur"
+										process="@this" />
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="costtype">
+									<h:outputText
+										value="#{probandlabels.money_transfer_cost_type_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="costtype" />
+							
+							
+							
+							
+							
+
+							<h:outputLabel
+								for="moneyTransferMethod"
+								value="#{probandlabels.money_transfer_method_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="moneyTransferMethod"
+									value="#{reimbursementBean.method.paymentMethod}"
+									required="true"
+									label="#{probandlabels.money_transfer_method}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{reimbursementBean.method.paymentMethods}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax
+										listener="#{reimbursementBean.handleMethodChange}"
+										update="#{namingContainer}:moneytransfer_input" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferMethod">
+									<h:outputText
+										value="#{probandlabels.money_transfer_method_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="moneyTransferMethod" />
+							
+							
+
+							
+							
+							
+							<h:outputLabel
+								rendered="#{reimbursementBean.bankAccountVisible}"
+								for="moneyTransferBankAccount"
+								value="#{probandlabels.money_transfer_bank_account_label}" />
+							<h:panelGroup rendered="#{reimbursementBean.bankAccountVisible}">
+								<p:selectOneMenu
+									id="moneyTransferBankAccount"
+									value="#{reimbursementBean.in.bankAccountId}"
+									required="false"
+									label="#{probandlabels.money_transfer_bank_account}"
+									styleClass="ctsms-control">
+									<f:selectItem
+										itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{reimbursementBean.bankAccounts}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferBankAccount">
+									<h:outputText
+										value="#{probandlabels.money_transfer_bank_account_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{reimbursementBean.bankAccountVisible}"
+								for="moneyTransferBankAccount" />
+								
+								
+								
+							<h:outputLabel
+								rendered="#{reimbursementBean.referenceVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferReference"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_reference_label}" />
+							<h:panelGroup rendered="#{reimbursementBean.referenceVisible}">
+								<p:inputText
+									id="moneyTransferReference"
+									value="#{reimbursementBean.in.reference}"
+									required="false"
+									label="#{probandlabels.money_transfer_reference}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferReference">
+									<h:outputText
+										value="#{probandlabels.money_transfer_reference_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{reimbursementBean.referenceVisible}"
+								for="moneyTransferReference" />
+								
+								
+							<h:outputLabel
+								rendered="#{reimbursementBean.reasonForPaymentVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferReasonForPayment"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_reason_for_payment_label}" />
+							<h:panelGroup rendered="#{reimbursementBean.reasonForPaymentVisible}">
+								<p:inputText
+									id="moneyTransferReasonForPayment"
+									value="#{reimbursementBean.in.reasonForPayment}"
+									required="false"
+									label="#{probandlabels.money_transfer_reason_for_payment}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferReasonForPayment">
+									<h:outputText
+										value="#{probandlabels.money_transfer_reason_for_payment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{reimbursementBean.reasonForPaymentVisible}"
+								for="moneyTransferReasonForPayment" />
+								
+								
+							<h:outputLabel
+								rendered="#{reimbursementBean.voucherCodeVisible}"
+								styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								for="moneyTransferVoucherCode"
+								value="#{labels.noencryption_warning_short_label}#{probandlabels.money_transfer_voucher_code_label}" />
+							<h:panelGroup rendered="#{reimbursementBean.voucherCodeVisible}">
+								<p:inputText
+									id="moneyTransferVoucherCode"
+									value="#{reimbursementBean.in.voucherCode}"
+									required="false"
+									label="#{probandlabels.money_transfer_voucher_code}"
+									styleClass="ctsms-control">
+									<p:ajax />
+								</p:inputText>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="moneyTransferVoucherCode">
+									<h:outputText
+										value="#{probandlabels.money_transfer_voucher_code_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{reimbursementBean.voucherCodeVisible}"
+								for="moneyTransferVoucherCode" />
+
+								<h:outputLabel rendered="#{reimbursementBean.voucherCodeVisible}" />
+								<h:outputText rendered="#{reimbursementBean.voucherCodeVisible}" value="" />
+								<h:outputLabel rendered="#{reimbursementBean.voucherCodeVisible}" />
+
+								<h:outputLabel rendered="#{reimbursementBean.voucherCodeVisible}" />
+								<h:outputText rendered="#{reimbursementBean.voucherCodeVisible}" value="" />
+								<h:outputLabel rendered="#{reimbursementBean.voucherCodeVisible}" />
+
+	</ui:composition>
+</h:body>
+</html>

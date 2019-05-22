@@ -465,6 +465,7 @@ public interface MessageCodes {
 	public static final String EAST_TIME_ZONE_LABEL = "east_time_zone_label";
 	public static final String OFFSET_TIME_ZONE_LABEL = "offset_time_zone_label";
 	public static final String SET_NEW_PASSWORD_TITLE = "set_new_password_title";
+	public static final String CHANGE_SETTINGS_MENU_ITEM_LABEL = "change_settings_menu_item_label";
 	// public static final String USER_LOCKED_LABEL = "user_locked_label";
 	// public static final String NO_PASSWORD_SET_YET = "no_password_set_yet";
 	public static final String LOCAL_USER_CAN_LOGIN = "local_user_can_login";

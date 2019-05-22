@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>change settings</title>
+</h:head>
+<h:body>
+	<ui:composition template="/META-INF/templates/userHomeTemplate.xhtml">
+		<ui:param name="title" value="#{userlabels.change_settings_title}" />
+		<ui:define name="content">
+			<h:form id="changesettings_form">
+				<h:panelGrid columns="1" cellpadding="0"
+					styleClass="ctsms-content-panelgrid">
+					<p:panel id="changesettings_input"
+						rendered="#{sessionScopeBean.loggedIn}">
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.user_settings_field_set}" />
+						</f:facet>
+						<h:panelGrid columns="1" cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+
+							<h:panelGrid columns="3" cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
+								<ui:include
+									src="/META-INF/includes/shared/userSettingsBaseInput.xhtml">
+									<ui:param name="settingsBean" value="#{userSettingsBean}" />
+								</ui:include>
+
+							</h:panelGrid>
+
+							<p:messages id="messages" />
+							<p:toolbar>
+								<p:toolbarGroup align="right">
+									<p:commandButton process="@this"
+										value="#{labels.reset_button_label}"
+										actionListener="#{userSettingsBean.reset}"
+										icon="ui-icon ui-icon-close" ajax="true"
+										disabled="#{!userSettingsBean.editable}"
+										update="changesettings_input" />
+
+									<p:commandButton process="@this"
+										value="#{labels.restore_table_column_defaults_button_label} #{userlabels.and_logout_label}"
+										actionListener="#{userSettingsBean.clearTableColumns}"
+										icon="ui-icon ui-icon-arrowreturnthick-1-w" ajax="true"
+										disabled="#{!userSettingsBean.editable or userSettingsBean.tableColumnCount == 0}"
+										update="user_table_column_count_message,messages">
+									</p:commandButton>
+
+
+
+									<p:commandButton process="@this,changesettings_input"
+										id="update" value="#{labels.update_button_label} #{userlabels.and_logout_label}"
+										actionListener="#{userSettingsBean.update}"
+										icon="ui-icon ui-icon-disk" ajax="true"
+										disabled="#{!userSettingsBean.editable}"
+										update="changesettings_input" />
+
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include
+										src="/META-INF/includes/shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:panel>
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

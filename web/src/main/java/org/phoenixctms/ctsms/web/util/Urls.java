@@ -46,6 +46,7 @@ public enum Urls {
 	INPUT_FIELD_SEARCH("/inputfield/inputFieldSearch.jsf"),
 	MASS_MAIL_SEARCH("/massmail/massMailSearch.jsf"),
 	CHANGE_PASSWORD("/user/changePassword.jsf"),
+	CHANGE_SETTINGS("/user/changeSettings.jsf"),
 	ADMIN_UPCOMING_COURSE_OVERVIEW("/course/adminUpcomingCourseOverview.jsf"),
 	EXPIRING_COURSE_OVERVIEW("/course/expiringCourseOverview.jsf"),
 	ADMIN_EXPIRING_PARTICIPATION_OVERVIEW("/course/adminExpiringParticipationOverview.jsf"),
