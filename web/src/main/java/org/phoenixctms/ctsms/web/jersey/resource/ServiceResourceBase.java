@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -20,8 +21,9 @@ import org.phoenixctms.ctsms.web.jersey.resource.shared.IndexResource;
 import com.google.gson.JsonElement;
 import com.sun.jersey.api.NotFoundException;
 
-public abstract class ServiceResourceBase extends FileDavResourceBase {
+public abstract class ServiceResourceBase {
 
+	
 	private final static Pattern GET_LIST_METHOD_NAME_REGEXP = Pattern.compile("^get(.+)List$");
 
 	protected final static ArgsUriPart getArgsUriPart(Class<?> serviceInterface, String resource, AuthenticationVO auth, String rootEntityIdMethodParamName,
@@ -32,6 +34,8 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 		args.getOverrides().put("psf", psf);
 		return args;
 	}
+	protected abstract AuthenticationVO getAuth();
+	protected abstract FileModule getFileModule();
 
 	protected static MethodTransfilter getGetListMethodNameTransformer(final String rootEntityIdMethodParamName, final Class<?> rootOutVo) {
 		return new MethodTransfilter() {
@@ -54,7 +58,7 @@ public abstract class ServiceResourceBase extends FileDavResourceBase {
 					return true;
 				}
 				return false;
-			};
+			}
 
 			@Override
 			public boolean include(Method method) {
