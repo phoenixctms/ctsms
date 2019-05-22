@@ -91,11 +91,9 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 			try {
 				tableColumnCount = WebUtil.getServiceLocator().getUserService().getDataTableColumnCount(WebUtil.getAuthentication(),
 						getUserId(), null, null);
-			} catch (ServiceException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
 			}
 		}
 	}
@@ -132,15 +130,11 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 			loadTableColumnCount();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
 	}
@@ -152,11 +146,9 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 	public List<TimeZoneVO> completeTimeZone(String query) {
 		try {
 			return (List<TimeZoneVO>) WebUtil.getServiceLocator().getToolsService().completeTimeZone(WebUtil.getAuthentication(), query, null);
-		} catch (ServiceException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
 		}
 		return new ArrayList<TimeZoneVO>();
 	}
