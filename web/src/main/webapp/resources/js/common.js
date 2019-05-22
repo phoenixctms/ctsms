@@ -1116,6 +1116,13 @@ function openChangePassword() {
 	_openHome(CHANGE_PASSWORD_URL, USER_HOME_WINDOW_NAME);
 
 }
+
+function openChangeSettings() {
+
+	_openHome(CHANGE_SETTINGS_URL, USER_HOME_WINDOW_NAME);
+
+}
+
 function openUpcomigCourseOverview() {
 
 	_openHome(UPCOMING_COURSE_OVERVIEW_URL, STAFF_HOME_WINDOW_NAME);

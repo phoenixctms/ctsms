@@ -170,6 +170,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
@@ -1077,6 +1078,25 @@ public final class ServiceUtil {
 		if (userIn.getIdentityId() != null) {
 			CheckIDUtil.checkStaffId(userIn.getIdentityId(), staffDao);
 		}
+		checkLocale(userIn.getLocale());
+		checkTimeZone(userIn.getTimeZone());
+		if (userIn.getDecimalSeparator() != null) { // && userIn.getDecimalSeparator().length() > 0) {
+			if (!CoreUtil.getDecimalSeparatos().contains(userIn.getDecimalSeparator())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DECIMAL_SEPARATOR, userIn.getDecimalSeparator());
+			}
+		}
+		if (userIn.getDateFormat() != null) { // && userIn.getDateFormat().length() > 0) {
+			HashSet<String> dateFormats = new HashSet<String>(CoreUtil.getDateFormats());
+			if (originalUser != null && originalUser.getDateFormat() != null && originalUser.getDateFormat().length() > 0) {
+				dateFormats.add(originalUser.getDateFormat());
+			}
+			if (!dateFormats.contains(userIn.getDateFormat())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DATE_FORMAT_PATTERN, userIn.getDateFormat());
+			}
+		}
+	}
+
+	public static void checkUserSettingsInput(UserSettingsInVO userIn, User originalUser) throws Exception {
 		checkLocale(userIn.getLocale());
 		checkTimeZone(userIn.getTimeZone());
 		if (userIn.getDecimalSeparator() != null) { // && userIn.getDecimalSeparator().length() > 0) {

@@ -504,4 +504,6 @@ public interface SettingCodes {
 	public static final String STAFF_ADDRESS_STRICT = "staff_address_strict";
 	public static final String SHOW_LOCALE_MENU = "show_locale_menu";
 	public static final String SHOW_TIMEZONE_MENU = "show_timezone_menu";
+	public static final String SHOW_THEME_MENU = "show_theme_menu";
+	public static final String SHOW_TOOLTIPS_MENU = "show_tooltips_menu";
 }
