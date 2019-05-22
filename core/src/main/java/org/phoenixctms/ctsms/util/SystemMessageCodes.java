@@ -295,6 +295,9 @@ public interface SystemMessageCodes {
 	public final static String SELECTION_SET_VALUE_MARKED_FOR_DELETION = "selection_set_value_marked_for_deletion";
 	public final static String USER_CREATED = "user_created";
 	public final static String USER_UPDATED = "user_updated";
+	public final static String USER_SETTINGS_UPDATED = "user_settings_updated";
+	public final static String USER_DATA_TABLE_COLUMNS_UPDATED = "user_data_table_columns_updated";
+	public final static String USER_DATA_TABLE_COLUMNS_CLEARED = "user_data_table_columns_cleared";
 	public final static String USER_DELETED = "user_deleted";
 	public final static String USER_MARKED_FOR_DELETION = "user_marked_for_deletion";
 	public final static String USER_DELETED_IDENTITY_REMOVED = "user_deleted_identity_removed";

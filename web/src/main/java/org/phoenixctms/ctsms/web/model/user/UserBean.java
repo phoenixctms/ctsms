@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -26,13 +25,12 @@ import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.LdapEntryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelector;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelectorListener;
-import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -43,12 +41,10 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
-public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelectorListener {
+public class UserBean extends UserSettingsBeanBase implements AuthenticationTypeSelectorListener {
 
 	private static final int AUTH_METHOD_PROPERTY_ID = 1;
 	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
@@ -101,16 +97,10 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 	private LdapEntryVO ldapEntry1;
 	private LdapEntryVO ldapEntry2;
 	private ArrayList<SelectItem> departments;
-	private ArrayList<SelectItem> locales;
-	private TimeZoneVO timeZone;
-	private ArrayList<SelectItem> themes;
-	private ArrayList<SelectItem> dateFormats;
-	private ArrayList<SelectItem> decimalSeparators;
 	private AuthenticationTypeSelector authMethod;
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
-	private long tableColumnCount;
 
 	public UserBean() {
 		super();
@@ -121,8 +111,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		remoteUserOk = null;
 		ldapEntry1 = null;
 		ldapEntry2 = null;
-		timeZone = null;
-		tableColumnCount = 0l;
 	}
 
 	@Override
@@ -224,18 +212,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return new ArrayList<LdapEntryVO>();
 	}
 
-	public List<TimeZoneVO> completeTimeZone(String query) {
-		try {
-			return (List<TimeZoneVO>) WebUtil.getServiceLocator().getToolsService().completeTimeZone(WebUtil.getAuthentication(), query, null);
-		} catch (ServiceException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-		} catch (IllegalArgumentException e) {
-		}
-		return new ArrayList<TimeZoneVO>();
-	}
-
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -282,14 +258,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return authMethod;
 	}
 
-	public ArrayList<SelectItem> getDateFormats() {
-		return dateFormats;
-	}
-
-	public ArrayList<SelectItem> getDecimalSeparators() {
-		return decimalSeparators;
-	}
-
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
 	}
@@ -312,10 +280,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public LdapEntryVO getLdapEntry2() {
 		return ldapEntry2;
-	}
-
-	public ArrayList<SelectItem> getLocales() {
-		return locales;
 	}
 
 	@Override
@@ -341,14 +305,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 
 	public String getTabTitle(String tab) {
 		return tabTitleMap.get(tab);
-	}
-
-	public ArrayList<SelectItem> getThemes() {
-		return themes;
-	}
-
-	public TimeZoneVO getTimeZone() {
-		return timeZone;
 	}
 
 	@Override
@@ -414,17 +370,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		loadRemoteUserInfo();
 	}
 
-	//	public void handleTimeZoneSelect() {
-	//		if (timeZone != null) {
-	//			in.setTimeZone(timeZone.getTimeZoneID());
-	//		}
-	//	}
-	public void handleTimeZoneSelect(SelectEvent event) {
-	}
-
-	public void handleTimeZoneUnselect(UnselectEvent event) {
-	}
-
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.USER_ID);
@@ -446,7 +391,7 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		}
 	}
 
-	private void initSets() {
+	protected void initSpecificSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
 		PSFVO psf = new PSFVO();
@@ -488,48 +433,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		ldapEntry2 = null;
 		loadRemoteUserInfo();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
-		// Locale userLocale = null;
-		if (this.locales == null) {
-			// if (userLocale == null) {
-			// userLocale = WebUtil.getLocale();
-			// }
-			this.locales = WebUtil.getLocales();
-			// Collection<Locale> locales = WebUtil.getSupportedLocales();
-			// this.locales = new ArrayList<SelectItem>(locales.size());
-			// Iterator<Locale> it = locales.iterator();
-			// while (it.hasNext()) {
-			// Locale locale = it.next();
-			// this.locales.add(new SelectItem(CommonUtil.localeToString(locale), CommonUtil.localeToDisplayString(locale, userLocale)));
-			// }
-		}
-		//timeZone = null;
-		loadTimeZone();
-		// if (this.timeZones == null) {
-		// // if (userLocale == null) {
-		// // userLocale = WebUtil.getLocale();
-		// // }
-		// this.timeZones = WebUtil.getTimeZones();
-		// // this.timeZones = new ArrayList<SelectItem>(timeZones.size());
-		// // Iterator<TimeZone> it = timeZones.iterator();
-		// // while (it.hasNext()) {
-		// // TimeZone timeZone = it.next();
-		// // this.timeZones.add(new SelectItem(CommonUtil.timeZoneToString(timeZone), CommonUtil.timeZoneToDisplayString(timeZone, userLocale)));
-		// // }
-		// }
-		if (this.themes == null) {
-			Map<String, String> themeMap = Settings.getThemes();
-			this.themes = new ArrayList<SelectItem>(themeMap.size());
-			Iterator<String> it = themeMap.keySet().iterator();
-			while (it.hasNext()) {
-				String themeName = it.next();
-				this.themes.add(new SelectItem(themeName, themeMap.get(themeName)));
-			}
-		}
-		this.dateFormats = WebUtil.getDateFormats(this.in.getDateFormat());
-		if (this.decimalSeparators == null) {
-			this.decimalSeparators = WebUtil.getDecimalSeparators();
-		}
-		loadTableColumnCount();
 		if (WebUtil.isUserIdLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
@@ -614,21 +517,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return ERROR_OUTCOME;
 	}
 
-	private void loadTableColumnCount() {
-		tableColumnCount = 0l;
-		if (in.getId() != null) {
-			try {
-				tableColumnCount = WebUtil.getServiceLocator().getUserService().getDataTableColumnCount(WebUtil.getAuthentication(),
-						in.getId(), null, null);
-			} catch (ServiceException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			} catch (AuthorisationException e) {
-			} catch (IllegalArgumentException e) {
-			}
-		}
-	}
-
 	private void loadRemoteUserInfo() {
 		remoteUserMessage = null;
 		remoteUserOk = null;
@@ -666,30 +554,12 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		}
 	}
 
-	private void loadTimeZone() {
-		this.timeZone = WebUtil.getTimeZone(in.getTimeZone());
-	}
-
 	@Override
 	public String resetAction() {
 		out = null;
 		initIn();
 		initSets();
 		return RESET_OUTCOME;
-	}
-
-	private void sanitizeInVals() {
-		if (timeZone != null) {
-			in.setTimeZone(timeZone.getTimeZoneID());
-		} else {
-			in.setTimeZone(null);
-		}
-		if (CommonUtil.NO_SELECTION_VALUE.equals(in.getDateFormat())) {
-			in.setDateFormat(null);
-		}
-		if (CommonUtil.NO_SELECTION_VALUE.equals(in.getDecimalSeparator())) {
-			in.setDecimalSeparator(null);
-		}
 	}
 
 	@Override
@@ -726,10 +596,6 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		this.remoteUserOk = remoteUserOk;
 	}
 
-	public void setTimeZone(TimeZoneVO timeZone) {
-		this.timeZone = timeZone;
-	}
-
 	@Override
 	public String updateAction() {
 		UserInVO backup = new UserInVO(in);
@@ -757,30 +623,80 @@ public class UserBean extends ManagedBeanBase implements AuthenticationTypeSelec
 		return ERROR_OUTCOME;
 	}
 
-	public final void clearTableColumns() {
-		actionPostProcess(clearTableColumnsAction());
+	@Override
+	public Long getUserId() {
+		return in != null ? in.getId() : null;
 	}
 
-	public String clearTableColumnsAction() {
-		try {
-			WebUtil.getServiceLocator().getUserService().clearDataTableColumns(WebUtil.getAuthentication(), in.getId(), null, null);
-			loadTableColumnCount();
-			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			return UPDATE_OUTCOME;
-		} catch (ServiceException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			WebUtil.publishException(e);
-		} catch (AuthorisationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+	@Override
+	protected String getUserTimeZone() {
+		return in != null ? in.getTimeZone() : null;
+	}
+
+	@Override
+	public String getLocale() {
+		return in != null ? in.getLocale() : null;
+	}
+
+	@Override
+	public String getDateFormat() {
+		return in != null ? in.getDateFormat() : null;
+	}
+
+	@Override
+	public String getDecimalSeparator() {
+		return in != null ? in.getDecimalSeparator() : null;
+	}
+
+	@Override
+	public String getTheme() {
+		return in != null ? in.getTheme() : null;
+	}
+
+	@Override
+	public boolean isShowTooltips() {
+		return in != null ? in.getShowTooltips() : false;
+	}
+
+	@Override
+	protected void setUserTimeZone(String timeZoneID) {
+		if (in != null) {
+			in.setTimeZone(timeZoneID);
 		}
-		return ERROR_OUTCOME;
 	}
 
-	public long getTableColumnCount() {
-		return tableColumnCount;
+	@Override
+	public void setLocale(String locale) {
+		if (in != null) {
+			in.setLocale(locale);
+		}
+	}
+
+	@Override
+	public void setDateFormat(String dateFormat) {
+		if (in != null) {
+			in.setDateFormat(dateFormat);
+		}
+	}
+
+	@Override
+	public void setDecimalSeparator(String decimalSeparator) {
+		if (in != null) {
+			in.setDecimalSeparator(decimalSeparator);
+		}
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (in != null) {
+			in.setTheme(theme);
+		}
+	}
+
+	@Override
+	public void setShowTooltips(boolean showTooltips) {
+		if (in != null) {
+			in.setShowTooltips(showTooltips);
+		}
 	}
 }

@@ -384,7 +384,7 @@
 							toggleable="true"
 							collapsed="false">
 							<f:facet name="legend">
-								<h:outputText value="#{userlabels.user_ui_field_set}" />
+								<h:outputText value="#{userlabels.user_settings_field_set}" />
 							</f:facet>
 							<h:panelGrid
 								columns="1"
@@ -396,229 +396,17 @@
 									cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 
-							
-							<h:outputLabel
-								for="locale"
-								value="#{userlabels.user_locale_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="locale"
-									value="#{userBean.in.locale}"
-									required="true"
-									label="#{userlabels.user_locale}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.locales}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="locale">
-									<h:outputText
-										value="#{userlabels.user_locale_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="locale" />
-
-							<h:outputLabel
-								for="timeZone"
-								value="#{userlabels.user_time_zone_label}" />
-							<h:panelGroup>
-
-<p:autoComplete
-									id="timeZone"
-									required="false"
-									value="#{userBean.timeZone}"
-									label="#{userlabels.user_time_zone}"
-									styleClass="ctsms-control"
-									minQueryLength="#{autoCompleteMinQueryLengthTimeZone}"
-									maxResults="#{autoCompleteMaxResultsTimeZone}"
-									queryDelay="#{autoCompleteQueryDelayTimeZone}"
-									dropdown="#{autoCompleteDropdownTimeZone}"
-									global="#{autoCompleteGlobalTimeZone}"
-									scrollHeight="#{autoCompleteScrollHeightTimeZone}"
-									completeMethod="#{userBean.completeTimeZone}"
-									forceSelection="true"
-									var="timezone"
-									itemValue="#{timezone}"
-									itemLabel="#{timezone.name}"
-									converter="ctsms.TimeZone">
-
-									<p:ajax
-									    process="@this"
-										event="itemSelect"
-										listener="#{userBean.handleTimeZoneSelect}" />
-									<p:ajax
-									    process="@this"
-										event="itemUnselect"
-										listener="#{userBean.handleTimeZoneUnselect}" />
-								</p:autoComplete>
-								
-								
-							
-								<!-- <p:selectOneMenu
-									id="timeZone"
-									value="#{userBean.in.timeZone}"
-									required="true"
-									label="#{userlabels.user_time_zone}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.timeZones}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu> -->
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="timeZone">
-									<h:outputText
-										value="#{userlabels.user_time_zone_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="timeZone" />
+								<ui:include src="../shared/userSettingsBaseInput.xhtml" >
+									<ui:param
+										name="settingsBean"
+										value="#{userBean}" />
+								</ui:include>
 
 							
-							
-							<h:outputLabel
-								for="dateformat"
-								value="#{userlabels.user_dateformat_label}" />
-							<h:panelGroup>
-							
-							<p:selectOneMenu
-									id="dateformat"
-									value="#{userBean.in.dateFormat}"
-									required="false"
-									label="#{userlabels.user_dateformat}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.dateFormats}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu> 							
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="dateformat">
-									<h:outputText
-										value="#{userlabels.user_dateformat_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="dateformat" />
-							
-
-							
-							
-							<h:outputLabel
-								for="decimalseparator"
-								value="#{userlabels.user_decimalseparator_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="decimalseparator"
-									value="#{userBean.in.decimalSeparator}"
-									required="false"
-									label="#{userlabels.user_decimalseparator}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.decimalSeparators}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu> 								
-
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="decimalseparator">
-									<h:outputText
-										value="#{userlabels.user_decimalseparator_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="decimalseparator" />
-							
-
-							
-							<h:outputLabel
-								for="theme"
-								value="#{userlabels.user_theme_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="theme"
-									value="#{userBean.in.theme}"
-									required="false"
-									label="#{userlabels.user_theme}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.themes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="theme">
-									<h:outputText
-										value="#{userlabels.user_theme_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="theme" />
-
-							<h:outputLabel
-								for="showTooltips"
-								value="#{userlabels.user_show_tooltips_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="showTooltips"
-									value="#{userBean.in.showTooltips}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="showTooltips">
-									<h:outputText
-										value="#{userlabels.user_show_tooltips_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="showTooltips" />
-
-							
-							
-														<h:outputLabel value="#{userlabels.user_table_column_count_label}" />
-							<h:outputText id="user_table_column_count_message" value="#{userBean.tableColumnCount}" />
-							<h:outputLabel />
-							
+								</h:panelGrid>
 							</h:panelGrid>
-</h:panelGrid>
-</p:fieldset>
-							
-
-						
+						</p:fieldset>
+					
 						<p:messages id="user_messages" />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
