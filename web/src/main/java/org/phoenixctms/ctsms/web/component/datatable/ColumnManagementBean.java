@@ -66,7 +66,7 @@ public class ColumnManagementBean {
 			if (tableColumnVOs == null) {
 				try {
 					tableColumnVOs = WebUtil.getServiceLocator().getUserService().getDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), dataTableClientId,
-							null);
+							null).getColumns();
 				} catch (ServiceException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
@@ -182,7 +182,7 @@ public class ColumnManagementBean {
 		if (visibleCount > 0) {
 			try {
 				updateVisibleMap(dataTableClientId,
-						WebUtil.getServiceLocator().getUserService().setDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), in));
+						WebUtil.getServiceLocator().getUserService().setDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), in).getColumns());
 				if (!FILTER_INVISIBLE) {
 					((DataTable) WebUtil.findComponentByClientId(dataTableClientId)).clearFilters();
 				}

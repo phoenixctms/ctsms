@@ -624,8 +624,10 @@ public final class DefaultSettings {
 	public static final boolean PROBAND_ADDRESS_STRICT = false;
 	public static final boolean STAFF_ADDRESS_STRICT = false;
 	// public static final String EMPTY_TRAVEL_TICKET_TYPE = "Ticket";
-	public static final boolean SHOW_LOCALE_MENU = true;
+	public static final boolean SHOW_LOCALE_MENU = false;
 	public static final boolean SHOW_TIMEZONE_MENU = false;
+	public static final boolean SHOW_THEME_MENU = false;
+	public static final boolean SHOW_TOOLTIPS_MENU = false;
 
 	private DefaultSettings() {
 	}

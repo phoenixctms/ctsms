@@ -1067,38 +1067,49 @@ public class SessionScopeBean {
 					i++;
 				}
 			}
-			String userTheme = getTheme();
-			Submenu themesMenu = new Submenu();
-			themesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-theme");
-			themesMenu.setId("themesMenu");
-			userMenu.getChildren().add(themesMenu);
-			i = 0;
-			Map<String, String> themeMap = Settings.getThemes();
-			Iterator<String> themesIt = themeMap.keySet().iterator();
-			while (themesIt.hasNext()) {
-				String themeName = themesIt.next();
-				String themeDisplayName = themeMap.get(themeName);
-				MenuItem themeMenuItem = new MenuItem();
-				themeMenuItem.setValue(CommonUtil.clipString(themeDisplayName, menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
-				themeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTheme('" + themeName + "')}"));
-				themeMenuItem.setOncomplete("handleReload(xhr, status, args)");
-				themeMenuItem.setId("themeMenuItem_" + Integer.toString(i));
-				if (themeName.equals(userTheme)) {
-					themeMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
-					themesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_THEME_LABEL, themeDisplayName));
+			if (Settings.getBoolean(SettingCodes.SHOW_THEME_MENU, Bundle.SETTINGS, DefaultSettings.SHOW_THEME_MENU)) {
+				String userTheme = getTheme();
+				Submenu themesMenu = new Submenu();
+				themesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-theme");
+				themesMenu.setId("themesMenu");
+				userMenu.getChildren().add(themesMenu);
+				i = 0;
+				Map<String, String> themeMap = Settings.getThemes();
+				Iterator<String> themesIt = themeMap.keySet().iterator();
+				while (themesIt.hasNext()) {
+					String themeName = themesIt.next();
+					String themeDisplayName = themeMap.get(themeName);
+					MenuItem themeMenuItem = new MenuItem();
+					themeMenuItem.setValue(CommonUtil.clipString(themeDisplayName, menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
+					themeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTheme('" + themeName + "')}"));
+					themeMenuItem.setOncomplete("handleReload(xhr, status, args)");
+					themeMenuItem.setId("themeMenuItem_" + Integer.toString(i));
+					if (themeName.equals(userTheme)) {
+						themeMenuItem.setIcon(MENUITEM_CHECKED_STYLECLASS);
+						themesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_THEME_LABEL, themeDisplayName));
+					}
+					themesMenu.getChildren().add(themeMenuItem);
+					i++;
 				}
-				themesMenu.getChildren().add(themeMenuItem);
-				i++;
 			}
-			boolean showTooltips = isShowTooltips();
-			MenuItem tooltipMenuItem = new MenuItem();
-			tooltipMenuItem.setValue(CommonUtil.clipString(showTooltips ? Messages.getString(MessageCodes.HIDE_TOOLTIPS) : Messages.getString(MessageCodes.SHOW_TOOLTIPS),
-					menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
-			tooltipMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateShowTooltips(" + Boolean.toString(!showTooltips) + ")}"));
-			tooltipMenuItem.setOncomplete("handleReload(xhr, status, args)");
-			tooltipMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-tooltip");
-			tooltipMenuItem.setId("tooltipMenuItem");
-			userMenu.getChildren().add(tooltipMenuItem);
+			if (Settings.getBoolean(SettingCodes.SHOW_TOOLTIPS_MENU, Bundle.SETTINGS, DefaultSettings.SHOW_TOOLTIPS_MENU)) {
+				boolean showTooltips = isShowTooltips();
+				MenuItem tooltipMenuItem = new MenuItem();
+				tooltipMenuItem.setValue(CommonUtil.clipString(showTooltips ? Messages.getString(MessageCodes.HIDE_TOOLTIPS) : Messages.getString(MessageCodes.SHOW_TOOLTIPS),
+						menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
+				tooltipMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateShowTooltips(" + Boolean.toString(!showTooltips) + ")}"));
+				tooltipMenuItem.setOncomplete("handleReload(xhr, status, args)");
+				tooltipMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-tooltip");
+				tooltipMenuItem.setId("tooltipMenuItem");
+				userMenu.getChildren().add(tooltipMenuItem);
+			}
+			MenuItem changeSettingsMenuItem = new MenuItem();
+			changeSettingsMenuItem.setValue(Messages.getString(MessageCodes.CHANGE_SETTINGS_MENU_ITEM_LABEL));
+			changeSettingsMenuItem.setOnclick("openChangeSettings()");
+			changeSettingsMenuItem.setUrl("#");
+			changeSettingsMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-settings");
+			changeSettingsMenuItem.setId("changeSettingsMenuItem");
+			userMenu.getChildren().add(changeSettingsMenuItem);
 			if (isLocalAuthMethod()) {
 				MenuItem changePasswordMenuItem = new MenuItem();
 				changePasswordMenuItem.setValue(Messages.getString(MessageCodes.CHANGE_PASSWORD_MENU_ITEM_LABEL));
