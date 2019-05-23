@@ -524,7 +524,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";
 	public final static String ECRF_CHARGE_NEGATIVE = "ecrf_charge_negative";
 	public final static String ECRF_NAME_NOT_UNIQUE = "ecrf_name_not_unique";
-	public final static String USER_DEPARTMENT_CHANGED = "user_department_changed";
+	//public final static String USER_DEPARTMENT_CHANGED = "user_department_changed";
 	public final static String CANNOT_DELETE_ACTIVE_USER = "cannot_delete_active_user";
 	public final static String USER_EXISTING_JOURNAL_ENTRIES = "user_existing_journal_entries";
 	public final static String OLD_PASSWORD_WRONG = "old_password_wrong";
