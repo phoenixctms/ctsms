@@ -255,6 +255,7 @@ public class ToolsServiceImpl
 		Iterator<User> usersIt = department.getUsers().iterator();
 		while (usersIt.hasNext()) {
 			User user = usersIt.next();
+			userDao.lock(user, LockMode.PESSIMISTIC_WRITE);
 			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, keyPairDao, passwordDao);
 			logSystemMessage(user, userDao.toUserOutVO(user), now, null, SystemMessageCodes.DEPARTMENT_PASSWORD_CHANGED, null, null, journalEntryDao);
 		}

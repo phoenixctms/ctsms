@@ -178,7 +178,7 @@ public class UserServiceImpl
 	@Override
 	protected PasswordOutVO handleAdminSetPassword(AuthenticationVO auth, Long userId,
 			PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
-		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
 		}
@@ -398,6 +398,7 @@ public class UserServiceImpl
 	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword) throws Exception {
 		Password lastPassword = CoreUtil.getLastPassword();
 		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		if (!AuthenticationType.LOCAL.equals(user.getAuthMethod())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.AUTHENTICATION_TYPE_NOT_LOCAL);
 		}
@@ -420,6 +421,7 @@ public class UserServiceImpl
 			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		ArrayList<UserPermissionProfileOutVO> result;
 		ServiceException firstException = null;
 		HashMap<String, String> errorMessagesMap = new HashMap<String, String>();
