@@ -24,14 +24,15 @@ import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.jersey.index.UserListIndex;
 import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.resource.ServiceResourceBase;
+import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
+import org.phoenixctms.ctsms.web.jersey.wrapper.UpdateUserWrapper;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -41,7 +42,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="user")
+@Api(value = "user")
 @Path("/user")
 public class UserResource extends ServiceResourceBase {
 
@@ -59,8 +60,9 @@ public class UserResource extends ServiceResourceBase {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public NoShortcutSerializationWrapper<UserOutVO> addUser(UserInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().addUser(auth, in, MAX_GRAPH_USER_INSTANCES));
+	public NoShortcutSerializationWrapper<UserOutVO> addUser(AddUserWrapper in) throws AuthenticationException, AuthorisationException, ServiceException {
+		return new NoShortcutSerializationWrapper<UserOutVO>(
+				WebUtil.getServiceLocator().getUserService().addUser(auth, in.getUser(), in.getPlainDepartmentPassword(), MAX_GRAPH_USER_INSTANCES));
 	}
 
 	@DELETE
@@ -139,7 +141,7 @@ public class UserResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public UserListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
@@ -147,7 +149,8 @@ public class UserResource extends ServiceResourceBase {
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public NoShortcutSerializationWrapper<UserOutVO> updateUser(UserInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().updateUser(auth, in, MAX_GRAPH_USER_INSTANCES));
+	public NoShortcutSerializationWrapper<UserOutVO> updateUser(UpdateUserWrapper in) throws AuthenticationException, AuthorisationException, ServiceException {
+		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().updateUser(auth, in.getUser(), in.getPlainNewDepartmentPassword(),
+				in.getPlainOldDepartmentPassword(), MAX_GRAPH_USER_INSTANCES));
 	}
 }

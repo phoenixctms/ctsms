@@ -36,7 +36,7 @@ import org.phoenixctms.ctsms.web.jersey.index.IndexBase;
 import org.phoenixctms.ctsms.web.jersey.index.ResourceIndex;
 import org.phoenixctms.ctsms.web.jersey.resource.ArgsUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
-import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserWrapper;
+import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserPasswordWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -45,7 +45,7 @@ import com.sun.jersey.api.NotFoundException;
 
 import io.swagger.annotations.Api;
 
-@Api(value="shared", hidden = true)
+@Api(value = "shared", hidden = true)
 @Path("/tools")
 public final class ToolsResource {
 
@@ -97,7 +97,7 @@ public final class ToolsResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("user")
-	public NoShortcutSerializationWrapper<UserOutVO> addUser(AddUserWrapper in) throws Exception {
+	public NoShortcutSerializationWrapper<UserOutVO> addUser(AddUserPasswordWrapper in) throws Exception {
 		return new NoShortcutSerializationWrapper<UserOutVO>(
 				WebUtil.getServiceLocator().getToolsService().addUser(in.getUser(), in.getPassword(), in.getPlainDepartmentPassword()));
 	}
