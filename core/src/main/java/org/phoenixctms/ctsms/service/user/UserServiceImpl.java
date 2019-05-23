@@ -151,18 +151,18 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, String plainDeparmentPassword, Integer maxInstances) throws Exception {
+	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, String plainDepartmentPassword, Integer maxInstances) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
-		if (plainDeparmentPassword == null) {
-			plainDeparmentPassword = getPlainDepartmentPassword();
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
 		}
-		ServiceUtil.checkUserInput(newUser, null, plainDeparmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
 		CoreUtil.modifyVersion(user, now, modified);
-		ServiceUtil.createKeyPair(user, plainDeparmentPassword, this.getKeyPairDao());
+		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
 		notifyUserAccount(user, null, now);
 		UserOutVO result = userDao.toUserOutVO(user, maxInstances);
@@ -177,21 +177,24 @@ public class UserServiceImpl
 
 	@Override
 	protected PasswordOutVO handleAdminSetPassword(AuthenticationVO auth, Long userId,
-			PasswordInVO newPassword) throws Exception {
+			PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
-		if (!CryptoUtil.checkDepartmentPassword(user.getDepartment(), getPlainDepartmentPassword())) {
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		if (!CryptoUtil.checkDepartmentPassword(user.getDepartment(), plainDepartmentPassword)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
 		}
 		PasswordDao passwordDao = this.getPasswordDao();
 		Password lastPassword = passwordDao.findLastPassword(user.getId());
 		if (!PasswordPolicy.USER.isAdminIgnorePolicy()) {
 			PasswordPolicy.USER.checkStrength(newPassword.getPassword());
-			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, getPlainDepartmentPassword());
+			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, plainDepartmentPassword);
 		}
 		ServiceUtil.checkLogonLimitations(newPassword);
 		return ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
 				newPassword.getPassword(),
-				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
+				plainDepartmentPassword, passwordDao, this.getJournalEntryDao());
 	}
 
 	@Override
