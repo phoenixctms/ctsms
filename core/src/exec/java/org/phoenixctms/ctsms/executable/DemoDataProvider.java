@@ -663,7 +663,7 @@ public class DemoDataProvider {
 			modifiedUser.setDecrypt(user.isDecrypt());
 			modifiedUser.setAuthMethod(user.getAuthMethod());
 			modifiedUser.setVersion(user.getVersion());
-			userVO = userService.updateUser(getRandomAuth(user.getDepartment().getId()), modifiedUser, null);
+			userVO = userService.updateUser(getRandomAuth(user.getDepartment().getId()), modifiedUser, null, null, null);
 			jobOutput.println("user " + userVO.getName() + " assigned to " + staff.getName());
 		}
 		return userVO;
