@@ -49,7 +49,6 @@ import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InventoryStatusEntry;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
-import org.phoenixctms.ctsms.domain.KeyPair;
 import org.phoenixctms.ctsms.domain.KeyPairDao;
 import org.phoenixctms.ctsms.domain.MaintenanceScheduleItem;
 import org.phoenixctms.ctsms.domain.MassMailRecipient;
@@ -256,15 +255,7 @@ public class ToolsServiceImpl
 		Iterator<User> usersIt = department.getUsers().iterator();
 		while (usersIt.hasNext()) {
 			User user = usersIt.next();
-			KeyPair keyPair = user.getKeyPair();
-			CryptoUtil.encryptPrivateKey(keyPair, CryptoUtil.decryptPrivateKey(keyPair, plainOldDepartmentPassword), plainNewDepartmentPassword);
-			keyPairDao.update(keyPair);
-			Iterator<Password> passwordsIt = user.getPasswords().iterator();
-			while (passwordsIt.hasNext()) {
-				Password password = passwordsIt.next();
-				CryptoUtil.encryptPasswords(password, CryptoUtil.decryptPassword(password, plainOldDepartmentPassword), plainNewDepartmentPassword);
-				passwordDao.update(password);
-			}
+			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, keyPairDao, passwordDao);
 			logSystemMessage(user, userDao.toUserOutVO(user), now, null, SystemMessageCodes.DEPARTMENT_PASSWORD_CHANGED, null, null, journalEntryDao);
 		}
 	}

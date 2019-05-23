@@ -528,16 +528,29 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, Integer maxInstances) throws Exception {
+	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, String plainNewDepartmentPassword, String plainOldDepartmentPassword, Integer maxInstances)
+			throws Exception {
 		UserDao userDao = this.getUserDao();
 		User originalUser = CheckIDUtil.checkUserId(modifiedUser.getId(), userDao, LockMode.PESSIMISTIC_WRITE);
-		ServiceUtil.checkUserInput(modifiedUser, originalUser, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
-		if (!modifiedUser.getDepartmentId().equals(originalUser.getDepartment().getId())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.USER_DEPARTMENT_CHANGED);
+		if (plainNewDepartmentPassword != null) {
+			plainNewDepartmentPassword = getPlainDepartmentPassword();
+		}
+		if (plainOldDepartmentPassword != null) {
+			plainOldDepartmentPassword = getPlainDepartmentPassword();
+		}
+		ServiceUtil.checkUserInput(modifiedUser, originalUser, plainNewDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		boolean departmentChanged = !originalUser.getDepartment().getId().equals(modifiedUser.getDepartmentId());
+		if (departmentChanged) {
+			if (!CryptoUtil.checkDepartmentPassword(originalUser.getDepartment(), plainOldDepartmentPassword)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.OLD_DEPARTMENT_PASSWORD_WRONG);
+			}
 		}
 		UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances);
 		userDao.evict(originalUser);
 		User user = userDao.userInVOToEntity(modifiedUser);
+		if (departmentChanged) {
+			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, this.getKeyPairDao(), this.getPasswordDao());
+		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalUser, user, now, modified);

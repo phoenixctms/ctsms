@@ -1309,6 +1309,19 @@ public final class ServiceUtil {
 		keyPairDao.create(keyPair);
 	}
 
+	public static void updateUserDepartmentPassword(User user, String plainNewDepartmentPassword, String plainOldDepartmentPassword, KeyPairDao keyPairDao, PasswordDao passwordDao)
+			throws Exception {
+		KeyPair keyPair = user.getKeyPair();
+		CryptoUtil.encryptPrivateKey(keyPair, CryptoUtil.decryptPrivateKey(keyPair, plainOldDepartmentPassword), plainNewDepartmentPassword);
+		keyPairDao.update(keyPair);
+		Iterator<Password> passwordsIt = user.getPasswords().iterator();
+		while (passwordsIt.hasNext()) {
+			Password password = passwordsIt.next();
+			CryptoUtil.encryptPasswords(password, CryptoUtil.decryptPassword(password, plainOldDepartmentPassword), plainNewDepartmentPassword);
+			passwordDao.update(password);
+		}
+	}
+
 	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, // TrialOutVO trial
 			TrialTagValueDao trialTagValueDao, ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
 			InventoryBookingDao inventoryBookingDao,
