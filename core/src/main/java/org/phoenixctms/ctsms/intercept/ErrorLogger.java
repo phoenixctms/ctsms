@@ -52,14 +52,24 @@ public class ErrorLogger implements ThrowsAdvice {
 			} else if (ToolsService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				passwords.add((String) args[2]);
 				args[2] = OmittedFields.OBFUSCATED_STRING;
+			} else if (UserService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
+				passwords.add((String) args[2]);
+				args[2] = OmittedFields.OBFUSCATED_STRING;
+			} else if (UserService.class.getName().equals(serviceName) && "updateUser".equals(methodName)) {
+				passwords.add((String) args[2]);
+				args[2] = OmittedFields.OBFUSCATED_STRING;
+				passwords.add((String) args[3]);
+				args[3] = OmittedFields.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "setPassword".equals(methodName)) {
 				passwords.add((String) args[1]);
 				args[1] = OmittedFields.OBFUSCATED_STRING;
 				passwords.add((String) args[2]);
 				args[2] = OmittedFields.OBFUSCATED_STRING;
-			} else if (UserService.class.getName().equals(serviceName) && "setAdminPassword".equals(methodName)) {
+			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
 				passwords.add((String) args[2]);
 				args[2] = OmittedFields.OBFUSCATED_STRING;
+				passwords.add((String) args[3]);
+				args[3] = OmittedFields.OBFUSCATED_STRING;
 			}
 		} else {
 			passwords = new ArrayList<String>();
@@ -93,13 +103,23 @@ public class ErrorLogger implements ThrowsAdvice {
 			} else if (ToolsService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				args[2] = passwords.get(passwordIndex);
 				passwordIndex++;
+			} else if (UserService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
+				args[2] = passwords.get(passwordIndex);
+				passwordIndex++;
+			} else if (UserService.class.getName().equals(serviceName) && "updateUser".equals(methodName)) {
+				args[2] = passwords.get(passwordIndex);
+				passwordIndex++;
+				args[3] = passwords.get(passwordIndex);
+				passwordIndex++;
 			} else if (UserService.class.getName().equals(serviceName) && "setPassword".equals(methodName)) {
 				args[1] = passwords.get(passwordIndex);
 				passwordIndex++;
 				args[2] = passwords.get(passwordIndex);
 				passwordIndex++;
-			} else if (UserService.class.getName().equals(serviceName) && "setAdminPassword".equals(methodName)) {
+			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
 				args[2] = passwords.get(passwordIndex);
+				passwordIndex++;
+				args[3] = passwords.get(passwordIndex);
 				passwordIndex++;
 			}
 		}
