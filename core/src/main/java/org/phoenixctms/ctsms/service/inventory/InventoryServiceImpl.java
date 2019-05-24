@@ -426,7 +426,7 @@ public class InventoryServiceImpl
 				Staff addressee = statusEntry.getAddressee();
 				if (addressee != null) {
 					logSystemMessage(addressee, result, now, user, SystemMessageCodes.INVENTORY_DELETED_STATUS_ENTRY_DELETED, statusEntryVO, null, journalEntryDao);
-					originator.removeLendings(statusEntry);
+					addressee.removeLendings(statusEntry);
 					statusEntry.setAddressee(null);
 				}
 				statusEntry.setInventory(null);
