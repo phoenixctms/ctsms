@@ -293,7 +293,7 @@ public class TrialDaoImpl
 			target.setDepartmentId(department.getId());
 		}
 		if (status != null) {
-			target.setStatusId(department.getId());
+			target.setStatusId(status.getId());
 		}
 		if (type != null) {
 			target.setTypeId(type.getId());
