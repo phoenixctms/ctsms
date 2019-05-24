@@ -120,7 +120,7 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 		}
 		if (trialId == null) {
 			inquiryValuesIn.clear();
-			if (inquiryValuesOut != null || jsInquiryValuesOut != null) {
+			if (inquiryValuesOut != null && jsInquiryValuesOut != null) {
 				inquiryValuesOut.clear();
 				jsInquiryValuesOut.clear();
 			}

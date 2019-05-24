@@ -693,7 +693,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 		if (probandListEntry == null || ecrf == null) {
 			ecrfFieldValuesIn.clear();
-			if (ecrfFieldValuesOut != null || jsEcrfFieldValuesOut != null) {
+			if (ecrfFieldValuesOut != null && jsEcrfFieldValuesOut != null) {
 				ecrfFieldValuesOut.clear();
 				jsEcrfFieldValuesOut.clear();
 			}

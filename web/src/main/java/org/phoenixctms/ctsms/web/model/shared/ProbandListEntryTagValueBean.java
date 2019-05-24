@@ -384,7 +384,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 		if (probandListEntryId == null) {
 			tagValuesIn.clear();
-			if (tagValuesOut != null || jsTagValuesOut != null) {
+			if (tagValuesOut != null && jsTagValuesOut != null) {
 				tagValuesOut.clear();
 				jsTagValuesOut.clear();
 			}
