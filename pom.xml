@@ -434,6 +434,11 @@
 					<artifactId>maven-dependency-plugin</artifactId>
 					<version>3.1.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.6.0.1398</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -517,7 +522,8 @@
 		<module>web</module>
 	</modules>
 	<properties>
-		<!-- <andromda.version>3.4.14978-JR</andromda.version> -->
+		<!-- SonarQube apparently has a problem with .xml files -->
+		<sonar.exclusions> **/*.xml</sonar.exclusions>
 		<andromda.version>3.4</andromda.version>
 		<java.version>1.8</java.version>
 		<downloadSources>true</downloadSources>
