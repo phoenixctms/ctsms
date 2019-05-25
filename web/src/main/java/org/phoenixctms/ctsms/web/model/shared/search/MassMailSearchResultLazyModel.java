@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class MassMailSearchResultLazyModel extends SearchResultLazyModel {
+public class MassMailSearchResultLazyModel extends SearchResultLazyModel<MassMailOutVO> {
 
 	private HashMap<Long, MassMailProgressVO> massMailProgressCache;
 

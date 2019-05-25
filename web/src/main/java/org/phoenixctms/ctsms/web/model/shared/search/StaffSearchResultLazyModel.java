@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class StaffSearchResultLazyModel extends SearchResultLazyModel {
+public class StaffSearchResultLazyModel extends SearchResultLazyModel<StaffOutVO> {
 
 	private static final Integer GRAPH_MAX_STAFF_INSTANCES = 2;
 
