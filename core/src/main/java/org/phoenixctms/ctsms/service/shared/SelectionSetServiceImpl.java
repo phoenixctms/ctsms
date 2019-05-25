@@ -48,6 +48,7 @@ import org.phoenixctms.ctsms.domain.CriterionRestrictionDao;
 import org.phoenixctms.ctsms.domain.CriterionTieDao;
 import org.phoenixctms.ctsms.domain.CvSection;
 import org.phoenixctms.ctsms.domain.CvSectionDao;
+import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldStatusType;
@@ -1737,5 +1738,12 @@ public class SelectionSetServiceImpl
 		Collection zips = zipDao.findZips(countryNameInfix, zipCodePrefix, cityNameInfix, limit);
 		zipDao.toZipVOCollection(zips);
 		return zips;
+	}
+
+	@Override
+	protected DepartmentVO handleGetDepartment(AuthenticationVO auth, Long departmentId) throws Exception {
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		Department department = CheckIDUtil.checkDepartmentId(departmentId, departmentDao);
+		return departmentDao.toDepartmentVO(department);
 	}
 }
