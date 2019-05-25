@@ -717,11 +717,11 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	public String getNewDepartmentPasswordLabel() {
-		return Messages.getMessage(MessageCodes.NEW_DEPARTMENT_PASSWORD_LABEL,
+		return Messages.getMessage(MessageCodes.USER_NEW_DEPARTMENT_PASSWORD_LABEL,
 				(in != null && in.getDepartmentId() != null) ? WebUtil.getDepartment(in.getDepartmentId()).getName() : null);
 	}
 
 	public String getOldDepartmentPasswordLabel() {
-		return Messages.getMessage(MessageCodes.OLD_DEPARTMENT_PASSWORD_LABEL, out != null ? out.getDepartment().getName() : null);
+		return Messages.getMessage(MessageCodes.USER_OLD_DEPARTMENT_PASSWORD_LABEL, out != null ? out.getDepartment().getName() : null);
 	}
 }

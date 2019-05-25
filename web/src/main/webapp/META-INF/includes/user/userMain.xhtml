@@ -15,7 +15,7 @@
 				process="@this"
 				name="changePassword"
 				actionListener="#{passwordBean.change(userBean.in.id)}"
-				update=":tabView:password_form:password_input" />
+				update=":tabView:password_form:password_input,:tabView:password_form:passwordadd_departmentpassword" />
 			<p:remoteCommand
 				process="@this"
 				name="changeUserActivity"
@@ -470,7 +470,7 @@
 									rendered="#{userBean.newDepartmentPasswordRequired}"
 									process="@this"
 									value="#{labels.add_button_label}"
-									onclick="userAddDepartmentPassword.show()"
+									onclick="userAddDepartmentPasswordDialog.show()"
 									disabled="#{!userBean.createable}"
 									icon="ui-icon ui-icon-plusthick"
 									type="button" />
@@ -490,12 +490,11 @@
 									disabled="#{!userBean.editable}"
 									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 									
-									
 								<p:commandButton
 									rendered="#{userBean.newDepartmentPasswordRequired or userBean.oldDepartmentPasswordRequired}"
 									process="@this"
 									value="#{labels.update_button_label}"
-									onclick="userUpdateDepartmentPassword.show()"
+									onclick="userUpdateDepartmentPasswordDialog.show()"
 									disabled="#{!userBean.editable}"
 									icon="ui-icon ui-icon-disk"
 									type="button" />
@@ -621,7 +620,7 @@
 					appendToBody="false"
 					severity="info"
 					id="useradd_departmentpassword"
-					widgetVar="userAddDepartmentPassword">
+					widgetVar="userAddDepartmentPasswordDialog">
 					<f:facet name="message">
 						<h:outputText
 							value="#{userBean.created ? userlabels.user_add_confirmation_dialog_message : ''}#{userBean.created ? labels.br : ''}#{userlabels.user_department_password_prompt_dialog_message}"
@@ -637,12 +636,12 @@
 								cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 								<h:outputLabel
-									for="departmentPasswordAdd"
+									for="newDepartmentPasswordAdd"
 									value="#{userBean.newDepartmentPasswordLabel}" />
 								<h:panelGroup>
 									<p:password
-										id="departmentPasswordAdd"
-										widgetVar="addDepartmentPassword"
+										id="newDepartmentPasswordAdd"
+										widgetVar="userAddNewDepartmentPassword"
 										required="false"
 										feedback="false"
 										redisplay="false"
@@ -650,13 +649,13 @@
 										styleClass="ctsms-password" />
 									<p:tooltip
 										rendered="#{enableTooltips}"
-										for="departmentPasswordAdd">
+										for="newDepartmentPasswordAdd">
 										<h:outputText
 											value="#{userlabels.user_new_department_password_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="departmentPasswordAdd" />
+								<p:message for="newDepartmentPasswordAdd" />
 							</h:panelGrid>
 						</h:panelGrid>
 					</f:facet>
@@ -665,13 +664,13 @@
 						id="addPassword"
 						value="#{userBean.created ? labels.yes_button_label : labels.ok_button_label}"
 						actionListener="#{userBean.add}"
-						onstart="setHiddenField('tabView:usermain_form:newDepartmentPassword',addDepartmentPassword.getValue());userAddDepartmentPassword.hide();"
+						onstart="setHiddenField('tabView:usermain_form:newDepartmentPassword',userAddNewDepartmentPassword.getValue());userAddDepartmentPasswordDialog.hide();"
 						ajax="true"
 						oncomplete="handleUserChanged(xhr, status, args)"
 						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
 					<p:commandButton
 						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
-						onclick="userAddDepartmentPassword.hide();addDepartmentPassword.setValue('');"
+						onclick="userAddDepartmentPasswordDialog.hide();userAddNewDepartmentPassword.setValue('');"
 						type="button" />
 				</p:confirmDialog>		
 				
@@ -681,7 +680,7 @@
 					appendToBody="false"
 					severity="info"
 					id="userupdate_departmentpassword"
-					widgetVar="userUpdateDepartmentPassword">
+					widgetVar="userUpdateDepartmentPasswordDialog">
 					<f:facet name="message">
 						<h:outputText
 							value="#{userlabels.user_department_password_prompt_dialog_message}"
@@ -703,7 +702,7 @@
 								<h:panelGroup rendered="#{userBean.newDepartmentPasswordRequired}">
 									<p:password
 										id="newDepartmentPasswordUpdate"
-										widgetVar="updateNewDepartmentPassword"
+										widgetVar="userUpdateNewDepartmentPassword"
 										required="false"
 										feedback="false"
 										redisplay="false"
@@ -725,7 +724,7 @@
 								<h:panelGroup rendered="#{userBean.oldDepartmentPasswordRequired}">
 									<p:password
 										id="oldDepartmentPasswordUpdate"
-										widgetVar="updateOldDepartmentPassword"
+										widgetVar="userUpdateOldDepartmentPassword"
 										required="false"
 										feedback="false"
 										redisplay="false"
@@ -748,13 +747,13 @@
 						id="updatePassword"
 						value="#{labels.ok_button_label}"
 						actionListener="#{userBean.update}"
-						onstart="if('updateNewDepartmentPassword' in window){setHiddenField('tabView:usermain_form:newDepartmentPassword',updateNewDepartmentPassword.getValue());}if('updateOldDepartmentPassword' in window){setHiddenField('tabView:usermain_form:oldDepartmentPassword',updateOldDepartmentPassword.getValue());}userUpdateDepartmentPassword.hide();"
+						onstart="if('userUpdateNewDepartmentPassword' in window){setHiddenField('tabView:usermain_form:newDepartmentPassword',userUpdateNewDepartmentPassword.getValue());}if('userUpdateOldDepartmentPassword' in window){setHiddenField('tabView:usermain_form:oldDepartmentPassword',userUpdateOldDepartmentPassword.getValue());}userUpdateDepartmentPasswordDialog.hide();"
 						ajax="true"
 						oncomplete="handleUserChanged(xhr, status, args)"
 						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
 					<p:commandButton
 						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
-						onclick="userUpdateDepartmentPassword.hide();if('updateNewDepartmentPassword' in window){updateNewDepartmentPassword.setValue('');}if('updateOldDepartmentPassword' in window){updateOldDepartmentPassword.setValue('');}"
+						onclick="userUpdateDepartmentPasswordDialog.hide();if('userUpdateNewDepartmentPassword' in window){userUpdateNewDepartmentPassword.setValue('');}if('userUpdateOldDepartmentPassword' in window){userUpdateOldDepartmentPassword.setValue('');}"
 						type="button" />
 				</p:confirmDialog>
 								
