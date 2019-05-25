@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 
-import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -74,7 +72,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				copyCriterionOutToIn(criterionIn, it.next());
 				criterionsIn.add(criterionIn);
 			}
-			Collections.sort(criterionsIn, new VOPositionComparator(false));
+			criterionsIn.sort(CommonUtil.voPositionComparator);
 			normalizeCriterionPositions(criterionsIn);
 		}
 	}
@@ -207,7 +205,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			criteriaIn.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			criteriaIn.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
@@ -246,7 +244,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Collection<String> categories = null;
 		try {
 			categories = WebUtil.getServiceLocator().getSearchService().getCriteriaCategories(WebUtil.getAuthentication(), this.getDBModule(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -310,7 +308,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -738,7 +736,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Collection<String> categoryStrings = null;
 		try {
 			categoryStrings = WebUtil.getServiceLocator().getSearchService().getCriteriaCategories(WebUtil.getAuthentication(), this.getDBModule(), null, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -756,7 +754,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionTieVO> tieVOs = null;
 			try {
 				tieVOs = WebUtil.getServiceLocator().getSelectionSetService().getAllCriterionTies(WebUtil.getAuthentication());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -778,7 +776,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionRestrictionVO> restrictionVOs = null;
 			try {
 				restrictionVOs = WebUtil.getServiceLocator().getSelectionSetService().getAllCriteriaRestrictions(WebUtil.getAuthentication());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -800,7 +798,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Collection<CriterionPropertyVO> propertyVOs = null;
 			try {
 				propertyVOs = WebUtil.getServiceLocator().getSelectionSetService().getCriterionProperties(WebUtil.getAuthentication(), this.getDBModule());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -972,7 +970,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -1121,7 +1119,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
@@ -1162,7 +1160,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				}
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException|IllegalArgumentException e) {
+			} catch (AuthorisationException | IllegalArgumentException e) {
 			}
 		}
 		updateInstantCriteria();
@@ -1191,7 +1189,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		updateInstantCriteria();

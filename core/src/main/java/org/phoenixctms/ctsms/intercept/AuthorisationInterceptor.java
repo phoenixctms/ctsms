@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.EntityPositionComparator;
-import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.domain.BankAccountDao;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseDao;
@@ -539,10 +537,10 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			// number of criterions doesn't match
 			throw ServiceUtil.initAuthorisationExceptionWithPosition(AuthorisationExceptionCodes.CRITERIA_MODIFIED_DIFFERENT_NUMBER_OF_CRITERIONS, logError, null);
 		}
-		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<CriterionInstantVO>(criterons);
-		Collections.sort(sortedCriterions, new VOPositionComparator(false));
-		ArrayList<Criterion> sortedOriginalCriterions = new ArrayList<Criterion>(storedCriterons);
-		Collections.sort(sortedOriginalCriterions, new EntityPositionComparator(false));
+		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<>(criterons);
+		sortedCriterions.sort(CommonUtil.voPositionComparator);
+		ArrayList<Criterion> sortedOriginalCriterions = new ArrayList<>(storedCriterons);
+		sortedOriginalCriterions.sort(CommonUtil.entityPositionComparator);
 		for (int i = 0; i < sortedCriterions.size(); i++) {
 			CriterionInstantVO criterion = sortedCriterions.get(i);
 			if (criterion == null) {

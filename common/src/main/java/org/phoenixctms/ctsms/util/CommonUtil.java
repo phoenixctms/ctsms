@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -183,10 +184,6 @@ public final class CommonUtil {
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.EXCEPT);
 	}
 	public final static BundleControl BUNDLE_CONTROL = new BundleControl();
-	private final static String VO_ID_GETTER_METHOD_NAME = "getId";
-	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
-	private static final String VO_POSITION_GETTER_METHOD_NAME = "getPosition";
-	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = "getPosition";
 	public final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^get"); // Pattern.compile("^((get)|(is))");
 	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
 	public final static boolean ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON = false;
@@ -242,6 +239,56 @@ public final class CommonUtil {
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 
+	private static final String VO_ID_GETTER_METHOD_NAME = "getId";
+	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
+	private static final String VO_POSITION_GETTER_METHOD_NAME = "getPosition";
+	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = "getPosition";
+
+	public static Comparator<Object> entityPositionComparator = 
+			createComparatorOnLongMethod(ENTITY_POSITION_GETTER_METHOD_NAME);
+	public static Comparator<Object> voPositionComparator = 
+			createComparatorOnLongMethod(VO_POSITION_GETTER_METHOD_NAME);
+
+	private static Comparator<Object> createComparatorOnLongMethod(String method) {
+		return new Comparator<Object>() {
+			
+			@Override
+			public int compare(Object a, Object b) {
+				Long x = CommonUtil.getSafeLong(a, method);
+				Long y = CommonUtil.getSafeLong(b, method);
+				if (x == null && y == null) {
+					return 0;
+				}
+				if (x != null && y == null) {
+					return 1;
+				}
+				if (x == null && y != null) {
+					return -1;
+				}
+				return x.compareTo(y);
+			}
+		};
+	}
+	public static Long getSafeLong(Object obj, String methodName) {
+		if (obj == null) {
+			return null;
+		}
+		try {
+			return (Long) obj.getClass().getMethod(methodName).invoke(obj);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public static Long getVOId(Object vo) {
+		return getSafeLong(vo, VO_ID_GETTER_METHOD_NAME);
+	}
+
+	public static Long getEntityId(Object entity) throws Exception {
+		return getSafeLong(entity, ENTITY_ID_GETTER_METHOD_NAME);
+	}
+
+	
 	private static void appendProbandAlias(StringBuilder sb, ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
 		if (alias != null && alias.trim().length() > 0) {
@@ -753,7 +800,7 @@ public final class CommonUtil {
 				String key = it.next();
 				try {
 					symbols.put(key, bundle.getString(key));
-				} catch (MissingResourceException|ClassCastException e) {
+				} catch (MissingResourceException | ClassCastException e) {
 				}
 			}
 			return symbols;
@@ -982,14 +1029,6 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static Long getEntityId(Object entity) throws Exception {
-		return (Long) entity.getClass().getMethod(ENTITY_ID_GETTER_METHOD_NAME).invoke(entity);
-	}
-
-	public static Long getEntityPosition(Object entity) throws Exception {
-		return (Long) entity.getClass().getMethod(ENTITY_POSITION_GETTER_METHOD_NAME).invoke(entity);
-	}
-
 	public final static String getGenderSpecificSalutation(ProbandOutVO proband, String maleSalutation, String femaleSalutation) {
 		if (proband != null && proband.getGender() != null) {
 			return getGenderSpecificSalutation(proband.getGender().getSex(), maleSalutation, femaleSalutation);
@@ -1197,7 +1236,7 @@ public final class CommonUtil {
 		}
 		try {
 			return MessageFormat.format(bundle.getString(l10nKey), args);
-		} catch (MissingResourceException|ClassCastException|IllegalArgumentException e) {
+		} catch (MissingResourceException | ClassCastException | IllegalArgumentException e) {
 			return MessageFormat.format(l10nKey, args);
 		}
 	}
@@ -1490,7 +1529,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(l10nKey);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return l10nKey;
 		}
 	}
@@ -1537,7 +1576,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Boolean.parseBoolean(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1548,7 +1587,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Double.parseDouble(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1559,7 +1598,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Float.parseFloat(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1570,7 +1609,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Integer.parseInt(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1581,7 +1620,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Long.parseLong(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1592,7 +1631,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(key);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return defaultValue;
 		}
 	}
@@ -1608,7 +1647,7 @@ public final class CommonUtil {
 			} else {
 				return Boolean.parseBoolean(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1624,7 +1663,7 @@ public final class CommonUtil {
 			} else {
 				return Double.parseDouble(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1640,7 +1679,7 @@ public final class CommonUtil {
 			} else {
 				return Float.parseFloat(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1656,7 +1695,7 @@ public final class CommonUtil {
 			} else {
 				return Integer.parseInt(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1672,7 +1711,7 @@ public final class CommonUtil {
 			} else {
 				return Long.parseLong(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1684,7 +1723,7 @@ public final class CommonUtil {
 		String value;
 		try {
 			value = bundle.getString(key);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return defaultValue == null ? new ArrayList<String>() : (ArrayList<String>) defaultValue.clone();
 		}
 		ArrayList<String> result;
@@ -1700,26 +1739,6 @@ public final class CommonUtil {
 			result = new ArrayList<String>();
 		}
 		return result;
-	}
-
-	public static Long getVOId(Object vo) {
-		if (vo != null) {
-			try {
-				return (Long) vo.getClass().getMethod(VO_ID_GETTER_METHOD_NAME).invoke(vo);
-			} catch (Exception e) {
-			}
-		}
-		return null;
-	}
-
-	public static Long getVOPosition(Object vo) {
-		if (vo != null) {
-			try {
-				return (Long) vo.getClass().getMethod(VO_POSITION_GETTER_METHOD_NAME).invoke(vo);
-			} catch (Exception e) {
-			}
-		}
-		return null;
 	}
 
 	public static Integer getYearOfBirth(Date dateOfBirth) {

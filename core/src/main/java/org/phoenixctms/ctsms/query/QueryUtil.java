@@ -25,7 +25,6 @@ import org.hibernate.hql.ast.ASTQueryTranslatorFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.phoenixctms.ctsms.compare.JoinComparator;
-import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.domain.CourseImpl;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
 import org.phoenixctms.ctsms.domain.CriterionPropertyDao;
@@ -1108,7 +1107,7 @@ public final class QueryUtil {
 			Collection<CriterionInstantVO> criterions = criteriaInstantVO.getCriterions();
 			if (criterions != null && criterions.size() > 0) {
 				sortedCriterions = new ArrayList<CriterionInstantVO>(criterions);
-				Collections.sort(sortedCriterions, new VOPositionComparator(false));
+				sortedCriterions.sort(CommonUtil.voPositionComparator);
 			}
 		}
 		StringBuilder sqlSetStatement = new StringBuilder();
