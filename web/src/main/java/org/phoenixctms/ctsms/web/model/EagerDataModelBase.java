@@ -8,7 +8,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.model.SelectableDataModel;
 
-public abstract class EagerDataModelBase implements EagerDataModel, SelectableDataModel<IDVO> {
+public abstract class EagerDataModelBase<T> implements EagerDataModel, SelectableDataModel<IDVO> {
 
 	private String currentPageIdsString;
 	private List<IDVO> allRows;
@@ -34,15 +34,12 @@ public abstract class EagerDataModelBase implements EagerDataModel, SelectableDa
 		return (currentPageIdsString != null ? currentPageIdsString : "");
 	}
 
-	protected abstract Collection<?> getEagerResult(PSFVO psf);
+	protected abstract Collection<T> getEagerResult(PSFVO psf);
 
 	public boolean getHasRows() {
 		return getAllRowCount() > 0;
 	}
 
-	// public PSFVO getInitialPsf() {
-	// return null;
-	// }
 	protected Long getPageId(IDVO idvo) {
 		return idvo.getId();
 	}
@@ -57,7 +54,7 @@ public abstract class EagerDataModelBase implements EagerDataModel, SelectableDa
 		}
 	}
 
-	protected abstract <T> T getRowElement(Long id);
+	protected abstract T getRowElement(Long id);
 
 	@Override
 	public String getRowKey(IDVO element) {
@@ -65,7 +62,7 @@ public abstract class EagerDataModelBase implements EagerDataModel, SelectableDa
 	}
 
 	protected List<IDVO> load(PSFVO psf) {
-		Collection<?> eagerResult = getEagerResult(psf);
+		Collection<T> eagerResult = getEagerResult(psf);
 		IDVO.transformVoCollection(eagerResult);
 		PSFVO rowPsf;
 		if (psf != null) {
@@ -101,7 +98,7 @@ public abstract class EagerDataModelBase implements EagerDataModel, SelectableDa
 
 	@Override
 	public List<IDVO> loadAll() {
-		return load(null); // getInitialPsf());
+		return load(null); 
 	}
 
 	@Override

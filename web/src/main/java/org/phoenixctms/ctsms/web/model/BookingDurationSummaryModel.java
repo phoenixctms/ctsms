@@ -19,7 +19,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class BookingDurationSummaryModel extends EagerDataModelBase {
+public class BookingDurationSummaryModel extends EagerDataModelBase<InventoryBookingDurationSummaryDetailVO> {
 
 	public enum BookingDurationSummaryType {
 		INVENTORY_OVERVIEW, INVENTORY, TRIAL, UNDEFINED;
