@@ -2153,11 +2153,11 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static ArrayList<Enum> getEnumList(String value, Class enumeration) {
-		ArrayList<Enum> result;
+	public static <T extends Enum<T>> ArrayList<Enum<T>> getEnumList(String value, Class<T> enumeration) {
+		ArrayList<Enum<T>> result;
 		if (value != null && value.length() > 0) {
 			String[] list = EL_ENUM_LIST_REGEXP.split(value, -1);
-			result = new ArrayList<Enum>(list.length);
+			result = new ArrayList<Enum<T>>(list.length);
 			for (int i = 0; i < list.length; i++) {
 				String name = list[i].trim();
 				if (name.length() > 0) {
@@ -2165,7 +2165,7 @@ public final class WebUtil {
 				}
 			}
 		} else {
-			result = new ArrayList<Enum>();
+			result = new ArrayList<Enum<T>>();
 		}
 		return result;
 	}
