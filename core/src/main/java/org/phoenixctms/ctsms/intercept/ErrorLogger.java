@@ -66,8 +66,8 @@ public class ErrorLogger implements ThrowsAdvice {
 				passwords.add((String) args[2]);
 				args[2] = OmittedFields.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
-				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				//passwords.add((String) args[2]);
+				//args[2] = OmittedFields.OBFUSCATED_STRING;
 				passwords.add((String) args[3]);
 				args[3] = OmittedFields.OBFUSCATED_STRING;
 			}
@@ -117,8 +117,8 @@ public class ErrorLogger implements ThrowsAdvice {
 				args[2] = passwords.get(passwordIndex);
 				passwordIndex++;
 			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
-				args[2] = passwords.get(passwordIndex);
-				passwordIndex++;
+				//args[2] = passwords.get(passwordIndex);
+				//passwordIndex++;
 				args[3] = passwords.get(passwordIndex);
 				passwordIndex++;
 			}
