@@ -995,7 +995,7 @@ public class SessionScopeBean {
 					MenuItem localeMenuItem = new MenuItem();
 					localeMenuItem.setValue(CommonUtil.clipString(locale.getName(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
 							EllipsisPlacement.TRAILING));
-					localeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" + locale.getLanguage() + "')}"));
+					localeMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateLocale('" + locale.getLanguage() + "')}"));
 					localeMenuItem.setOncomplete("handleReload(xhr, status, args)");
 					localeMenuItem.setId("localeMenuItem_" + Integer.toString(i));
 					if (CommonUtil.localeFromString(locale.getLanguage()).equals(userLocale)) {
@@ -1040,7 +1040,7 @@ public class SessionScopeBean {
 						MenuItem timeZoneMenuItem = new MenuItem();
 						timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
 								CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
-						timeZoneMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
+						timeZoneMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
 								+ "')}"));
 						timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
 						timeZoneMenuItem.setId("timeZoneMenuItem_" + Integer.toString(i) + "_" + Integer.toString(j));
@@ -1081,7 +1081,7 @@ public class SessionScopeBean {
 					String themeDisplayName = themeMap.get(themeName);
 					MenuItem themeMenuItem = new MenuItem();
 					themeMenuItem.setValue(CommonUtil.clipString(themeDisplayName, menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
-					themeMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTheme('" + themeName + "')}"));
+					themeMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTheme('" + themeName + "')}"));
 					themeMenuItem.setOncomplete("handleReload(xhr, status, args)");
 					themeMenuItem.setId("themeMenuItem_" + Integer.toString(i));
 					if (themeName.equals(userTheme)) {
@@ -1097,7 +1097,7 @@ public class SessionScopeBean {
 				MenuItem tooltipMenuItem = new MenuItem();
 				tooltipMenuItem.setValue(CommonUtil.clipString(showTooltips ? Messages.getString(MessageCodes.HIDE_TOOLTIPS) : Messages.getString(MessageCodes.SHOW_TOOLTIPS),
 						menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
-				tooltipMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateShowTooltips(" + Boolean.toString(!showTooltips) + ")}"));
+				tooltipMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateShowTooltips(" + Boolean.toString(!showTooltips) + ")}"));
 				tooltipMenuItem.setOncomplete("handleReload(xhr, status, args)");
 				tooltipMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-tooltip");
 				tooltipMenuItem.setId("tooltipMenuItem");
@@ -1122,7 +1122,7 @@ public class SessionScopeBean {
 			MenuItem logoutMenuItem = new MenuItem();
 			logoutMenuItem.setValue(CommonUtil.clipString(Messages.getMessage(MessageCodes.LOGOUT_LABEL, logon.getUser().getName()), menuItemLabelClipMaxLength,
 					CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.MID));
-			logoutMenuItem.setActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.logout()}")); // empty brackets required here...
+			logoutMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.logout()}")); // empty brackets required here...
 			// logoutMenuItem.setOncomplete("handleLogout(xhr, status, args)");
 			logoutMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-exit");
 			logoutMenuItem.setId("logoutMenuItem");

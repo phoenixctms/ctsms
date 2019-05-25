@@ -20,10 +20,10 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.el.MethodBinding;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
+import javax.faces.event.MethodExpressionActionListener;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -435,10 +435,11 @@ public final class WebUtil {
 			return getNoCoursePickedMessage();
 		}
 	}
-
-	public static MethodBinding createActionListenerMethodBinding(String actionListenerString) {
-		return FacesContext.getCurrentInstance().getApplication()
-				.createMethodBinding(actionListenerString, new Class[] { ActionEvent.class });
+	
+	public static MethodExpressionActionListener createActionListenerMethodBinding(String actionListenerExpression) {
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    return new MethodExpressionActionListener(context.getApplication().getExpressionFactory()
+	        .createMethodExpression(context.getELContext(), actionListenerExpression, null, new Class[] {ActionEvent.class}));
 	}
 
 	public static Converter createConverter(String converterId) {
