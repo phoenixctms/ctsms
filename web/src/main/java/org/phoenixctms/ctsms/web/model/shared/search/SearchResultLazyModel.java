@@ -10,7 +10,7 @@ import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 
-public abstract class SearchResultLazyModel extends LazyDataModelBase {
+public abstract class SearchResultLazyModel<T> extends LazyDataModelBase<T> {
 
 	protected CriteriaInVO criteriaIn;
 	protected HashSet<CriterionInVO> criterionsIn;
@@ -24,14 +24,14 @@ public abstract class SearchResultLazyModel extends LazyDataModelBase {
 	}
 
 	@Override
-	protected final Collection getLazyResult(PSFVO psf) {
+	protected final Collection<T> getLazyResult(PSFVO psf) {
 		if (psf != null) {
 			psf.setUpdateRowCount(false);
 		}
 		return getLazyResultWCount(psf);
 	}
 
-	protected abstract Collection getLazyResultWCount(PSFVO psf);
+	protected abstract Collection<T> getLazyResultWCount(PSFVO psf);
 
 	public void setCriteriaIn(CriteriaInVO criteria) {
 		if (criteria != null) {

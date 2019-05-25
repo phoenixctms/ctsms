@@ -10,7 +10,7 @@ import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandMoneyTransferNoParticipationSummaryLazyModel extends ProbandMoneyTransferSummaryLazyModelBase {
+public class ProbandMoneyTransferNoParticipationSummaryLazyModel extends ProbandMoneyTransferSummaryLazyModelBase<MoneyTransferSummaryVO> {
 
 	private boolean total;
 

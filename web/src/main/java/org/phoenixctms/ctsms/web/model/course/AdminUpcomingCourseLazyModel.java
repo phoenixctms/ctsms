@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class AdminUpcomingCourseLazyModel extends LazyDataModelBase {
+public class AdminUpcomingCourseLazyModel extends LazyDataModelBase<CourseOutVO> {
 
 	private Long departmentId;
 	private Long courseCategoryId;

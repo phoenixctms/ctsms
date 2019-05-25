@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class StaffContactDetailValueLazyModel extends LazyDataModelBase {
+public class StaffContactDetailValueLazyModel extends LazyDataModelBase<StaffContactDetailValueOutVO> {
 
 	private Long staffId;
 

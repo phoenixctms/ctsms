@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
-public abstract class ProbandMoneyTransferSummaryLazyModelBase extends LazyDataModelBase {
+public abstract class ProbandMoneyTransferSummaryLazyModelBase<T> extends LazyDataModelBase<T> {
 
 	protected Long trialId;
 	private Collection<String> costTypesTruncated;

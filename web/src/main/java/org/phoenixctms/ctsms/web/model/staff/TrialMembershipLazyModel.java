@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TrialMembershipLazyModel extends LazyDataModelBase {
+public class TrialMembershipLazyModel extends LazyDataModelBase<TeamMemberOutVO> {
 
 	private Long staffId;
 

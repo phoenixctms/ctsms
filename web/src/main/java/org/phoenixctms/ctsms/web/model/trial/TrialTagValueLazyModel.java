@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TrialTagValueLazyModel extends LazyDataModelBase {
+public class TrialTagValueLazyModel extends LazyDataModelBase<TrialTagValueOutVO> {
 
 	private Long trialId;
 

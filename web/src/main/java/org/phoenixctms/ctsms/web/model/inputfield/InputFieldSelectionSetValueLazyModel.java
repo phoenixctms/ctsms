@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class InputFieldSelectionSetValueLazyModel extends LazyDataModelBase {
+public class InputFieldSelectionSetValueLazyModel extends LazyDataModelBase<InputFieldSelectionSetValueOutVO> {
 
 	private Long inputFieldId;
 

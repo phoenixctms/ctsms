@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandListEntryTagLazyModel extends LazyDataModelBase {
+public class ProbandListEntryTagLazyModel extends LazyDataModelBase<ProbandListEntryTagOutVO> {
 
 	private Long trialId;
 

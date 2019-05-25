@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfProgressSummaryLazyModel extends LazyDataModelBase {
+public class EcrfProgressSummaryLazyModel extends LazyDataModelBase<TrialOutVO> {
 
 	private Long departmentId;
 	// private String costType;

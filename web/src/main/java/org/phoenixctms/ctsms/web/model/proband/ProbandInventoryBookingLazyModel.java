@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandInventoryBookingLazyModel extends LazyDataModelBase {
+public class ProbandInventoryBookingLazyModel extends LazyDataModelBase<InventoryBookingOutVO> {
 
 	private Long probandId;
 

@@ -38,7 +38,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandListEntryModel extends LazyDataModelBase implements EagerDataModel {
+public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOutVO> implements EagerDataModel {
 
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL_WITH_FIELD_NAME = "{0}. {1}";
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL = "{0}.";

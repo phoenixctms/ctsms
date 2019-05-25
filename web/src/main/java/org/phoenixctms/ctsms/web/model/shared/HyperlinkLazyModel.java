@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class HyperlinkLazyModel extends LazyDataModelBase {
+public class HyperlinkLazyModel extends LazyDataModelBase<HyperlinkOutVO> {
 
 	private Long entityId;
 	private HyperlinkModule module;

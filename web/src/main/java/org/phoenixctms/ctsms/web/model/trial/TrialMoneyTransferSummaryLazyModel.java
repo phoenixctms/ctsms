@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase {
+public class TrialMoneyTransferSummaryLazyModel extends LazyDataModelBase<MoneyTransferSummaryVO> {
 
 	private Long departmentId;
 	private Long probandDepartmentId;

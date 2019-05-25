@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class InventoryStatusLazyModel extends LazyDataModelBase {
+public class InventoryStatusLazyModel extends LazyDataModelBase<InventoryStatusEntryOutVO> {
 
 	private Long inventoryId;
 	private Long departmentId;

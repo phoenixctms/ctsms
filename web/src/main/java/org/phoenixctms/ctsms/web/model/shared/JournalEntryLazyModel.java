@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class JournalEntryLazyModel extends LazyDataModelBase {
+public class JournalEntryLazyModel extends LazyDataModelBase<JournalEntryOutVO> {
 
 	private Long entityId;
 	private JournalModule module;

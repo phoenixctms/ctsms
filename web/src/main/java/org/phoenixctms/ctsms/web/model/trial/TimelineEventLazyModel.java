@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TimelineEventLazyModel extends LazyDataModelBase {
+public class TimelineEventLazyModel extends LazyDataModelBase<TimelineEventOutVO> {
 
 	private Long trialId;
 

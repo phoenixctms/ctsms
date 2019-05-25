@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TimelineScheduleLazyModel extends LazyDataModelBase {
+public class TimelineScheduleLazyModel extends LazyDataModelBase<TimelineEventOutVO> {
 
 	private Long trialId;
 	private Long departmentId;
