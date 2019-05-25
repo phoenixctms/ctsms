@@ -136,18 +136,7 @@
 			<artifactId>mimepull</artifactId>
 			<version>1.9.3</version>
 		</dependency>
-		<dependency>
-			<groupId>net.java.dev.webdav</groupId>
-			<artifactId>webdav-jaxrs</artifactId>
-			<version>1.2.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.ws.rs</groupId>
-					<artifactId>jsr311-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jersey-jaxrs</artifactId>

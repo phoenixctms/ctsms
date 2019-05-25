@@ -2,18 +2,12 @@ package org.phoenixctms.ctsms.web.jersey;
 
 import io.swagger.jaxrs.config.BeanConfig;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBException;
 
-import net.java.dev.webdav.jaxrs.xml.WebDavContextResolver;
-
-import org.phoenixctms.ctsms.web.jersey.resource.Win32LastAccessTime;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -49,15 +43,5 @@ public class Application extends PackagesResourceConfig {
 		resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
 		resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
 		return resources;
-	}
-
-	@Override
-	public Set<Object> getSingletons() {
-		try {
-			return new HashSet<Object>(Arrays.asList(new WebDavContextResolver(Win32LastAccessTime.class)));
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 }
