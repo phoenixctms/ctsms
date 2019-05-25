@@ -115,16 +115,16 @@ public class MaintenanceScheduleItemDaoImpl
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MaintenanceScheduleItem.class, maintenanceItemCriteria);
 		if (inventoryId != null) {
-			maintenanceItemCriteria.add(Restrictions.eq("inventory.id", inventoryId.longValue()));
+			maintenanceItemCriteria.add(Restrictions.eq("inventory.id", inventoryId));
 		}
 		if (departmentId != null) {
-			criteriaMap.createCriteria("inventory").add(Restrictions.eq("department.id", departmentId.longValue()));
+			criteriaMap.createCriteria("inventory").add(Restrictions.eq("department.id", departmentId));
 		}
 		if (inventoryCategoryId != null) {
-			criteriaMap.createCriteria("inventory").add(Restrictions.eq("category.id", departmentId.longValue()));
+			criteriaMap.createCriteria("inventory").add(Restrictions.eq("category.id", inventoryCategoryId));
 		}
 		if (responsiblePersonId != null) {
-			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId.longValue()));
+			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId));
 		}
 		maintenanceItemCriteria.add(Restrictions.eq("active", true)); // performance only...
 		if (psf != null) {

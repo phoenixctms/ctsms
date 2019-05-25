@@ -1074,9 +1074,10 @@ public final class CommonUtil {
 		} catch (Exception e) {
 		} finally {
 			try {
-				socket.close();
+				if (socket != null) {
+					socket.close();
+				}
 			} catch (Exception e) {
-				// e.printStackTrace();
 			}
 		}
 		if (ip == null) {

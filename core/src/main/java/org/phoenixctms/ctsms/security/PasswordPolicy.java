@@ -253,7 +253,7 @@ public class PasswordPolicy {
 	public void checkHistoryDistance(String plainNewPassword, Password lastPassword, String plainDepartmentPassword) throws Exception {
 		Password previousPassword = lastPassword;
 		int passwordHistoryLength = 0;
-		while (previousPassword != null && passwordHistoryLength < distancePasswordHistory || distancePasswordHistory < 0) {
+		while (previousPassword != null && (passwordHistoryLength < distancePasswordHistory || distancePasswordHistory < 0)) {
 			checkDistance(plainNewPassword, CryptoUtil.decryptPassword(previousPassword, plainDepartmentPassword));
 			previousPassword = previousPassword.getPreviousPassword();
 			passwordHistoryLength++;
