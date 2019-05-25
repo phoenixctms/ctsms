@@ -136,7 +136,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		TrialECRFProgressSummaryVO trialProgressSummary = getCachedEcrfProgressSummary(trialVO);
 		ECRFFieldStatusQueueCountVO result = null;
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfStatusEntryCount() > 0l) {
-			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
+			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = trialProgressSummary.getEcrfFieldStatusQueueCounts().iterator();
 			while (it.hasNext()) {
