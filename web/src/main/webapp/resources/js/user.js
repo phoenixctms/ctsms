@@ -8,7 +8,16 @@ function handleUserTabChange(index) {
 		switch (oldUserTabIndex) {
 		case 0:
 			break;
-
+		case 1:
+			refreshUser();
+			break;
+		case 2:
+			refreshUser();
+			break;
+		case 3:
+			refreshUser();
+			break;
+			
 		case 4:
 			changeUserByJournalEntry();
 			break;

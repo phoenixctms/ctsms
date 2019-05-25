@@ -37,6 +37,12 @@
 				actionListener="#{userBean.change(journalBean.in.userId)}"
 				oncomplete="handleUserChanged(xhr, status, args)"
 				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+			<p:remoteCommand
+				process="@this"
+				name="refreshUser"
+				actionListener="#{userBean.load}"
+				oncomplete="handleUserChanged(xhr, status, args)"
+				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />				
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -748,7 +754,7 @@
 						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
 					<p:commandButton
 						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
-						onclick="userUpdateDepartmentPassword.hide();if('updateNewDepartmentPassword' in window){updateNewDepartmentPassword.setValue('');}if('updateOldDepartmentPassword' in window){oldNewDepartmentPassword.setValue('');}"
+						onclick="userUpdateDepartmentPassword.hide();if('updateNewDepartmentPassword' in window){updateNewDepartmentPassword.setValue('');}if('updateOldDepartmentPassword' in window){updateOldDepartmentPassword.setValue('');}"
 						type="button" />
 				</p:confirmDialog>
 								
