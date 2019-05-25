@@ -226,8 +226,10 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		}
 		if (probandId == null || trialId == null) {
 			inquiryValuesIn.clear();
-			if (inquiryValuesOut != null && jsInquiryValuesOut != null) {
+			if (inquiryValuesOut != null) {
 				inquiryValuesOut.clear();
+			}
+			if (jsInquiryValuesOut != null) {
 				jsInquiryValuesOut.clear();
 			}
 		} else {
