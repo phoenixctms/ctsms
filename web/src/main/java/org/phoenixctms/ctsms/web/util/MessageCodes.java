@@ -861,4 +861,6 @@ public interface MessageCodes {
 	public static final String GENERATE_TAG_RANDOMIZATION_LIST_TITLE = "generate_tag_randomization_list_title";
 	public static final String STRATIFICATION_RANDOMISATION_LIST_NOT_USED = "stratification_randomisation_list_not_used";
 	public static final String STRATIFICATION_RANDOMISATION_LIST_USED = "stratification_randomisation_list_used";
+	public static final String NEW_DEPARTMENT_PASSWORD_LABEL = "new_department_password_label";
+	public static final String OLD_DEPARTMENT_PASSWORD_LABEL = "old_department_password_label";
 }
