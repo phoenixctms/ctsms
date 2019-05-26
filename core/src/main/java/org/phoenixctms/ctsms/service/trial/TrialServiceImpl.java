@@ -59,13 +59,13 @@ import org.phoenixctms.ctsms.adapt.VisitScheduleItemCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTitleCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTokenCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfStatusActionComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
-import org.phoenixctms.ctsms.compare.TeamMemberOutVOComparator;
 import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.domain.*;
@@ -5133,7 +5133,7 @@ public class TrialServiceImpl
 			VOs.add(memberVO);
 			distinctFieldRows.put(member.getId(), fieldRow);
 		}
-		Collections.sort(VOs, new TeamMemberOutVOComparator());
+		VOs.sort(ComparatorFactory.createTeamMemberOutVO());
 		writer.setVOs(VOs);
 		writer.setDistinctColumnNames(distinctColumnNames);
 		writer.setDistinctFieldRows(distinctFieldRows);

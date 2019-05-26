@@ -14,6 +14,9 @@ import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
+import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
 
 public final class ComparatorFactory {
 
@@ -85,6 +88,31 @@ public final class ComparatorFactory {
 	
 	public static Comparator<AssociationPath> createAssociationPath() {
 		return nullsLast(comparing(AssociationPath::getJoinOrder, nullsLast(naturalOrder())));
+	}
+	
+	public static Comparator<TeamMemberOutVO> createTeamMemberOutVO() {
+		
+		Comparator<TeamMemberRoleVO> roleComp = nullsLast(comparing(TeamMemberRoleVO::getName, alphaNum));
+		Comparator<StaffOutVO> staffNameComp = nullsLast(new Comparator<StaffOutVO>() {
+
+			@Override
+			public int compare(StaffOutVO a, StaffOutVO b) {
+				if (a.isPerson() && b.isPerson()) {
+					return alphaNum.compare(a.getLastName(), b.getLastName());
+				}
+				if (a.isPerson() && !b.isPerson()) {
+					return -1;
+				}
+				if (!a.isPerson() && b.isPerson()) {
+					return 1;
+				}
+				return alphaNum.compare(a.getOrganisationName(), b.getOrganisationName());
+			}
+			
+		});
+		return nullsLast(comparing(TeamMemberOutVO::getRole, roleComp)
+				.thenComparing(TeamMemberOutVO::getStaff,staffNameComp)
+				.thenComparing(TeamMemberOutVO::getId));
 	}
 
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
