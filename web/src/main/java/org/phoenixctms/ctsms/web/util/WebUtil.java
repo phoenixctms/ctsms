@@ -185,7 +185,7 @@ public final class WebUtil {
 	public static Date addIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
 		try {
 			return getServiceLocator().getToolsService().addIntervals(date, period, explicitDays, n);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -221,7 +221,7 @@ public final class WebUtil {
 		try {
 			JsonElement je = JSON_PARSER.parse(json);
 			return JSON_BEAUTIFIER.toJson(je);
-		} catch (JsonSyntaxException|NullPointerException e) {
+		} catch (JsonSyntaxException | NullPointerException e) {
 		}
 		return json;
 	}
@@ -251,7 +251,7 @@ public final class WebUtil {
 		Collection<String> bankCodeNumbers = null;
 		try {
 			bankCodeNumbers = getServiceLocator().getToolsService().completeBankCodeNumber(getAuthentication(), query, bicPrefix, bankNameInfix, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -268,7 +268,7 @@ public final class WebUtil {
 		Collection<String> bankNames = null;
 		try {
 			bankNames = getServiceLocator().getToolsService().completeBankName(getAuthentication(), query, bankCodeNumberPrefix, bicPrefix, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -285,7 +285,7 @@ public final class WebUtil {
 		Collection<String> bics = null;
 		try {
 			bics = getServiceLocator().getToolsService().completeBic(getAuthentication(), query, bankCodeNumberPrefix, bankNameInfix, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -302,7 +302,7 @@ public final class WebUtil {
 		Collection<String> cityNames = null;
 		try {
 			cityNames = getServiceLocator().getToolsService().completeCityName(getAuthentication(), query, countryName, zipCode, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -319,7 +319,7 @@ public final class WebUtil {
 		Collection<String> countryNames = null;
 		try {
 			countryNames = getServiceLocator().getToolsService().completeCountryName(getAuthentication(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -336,7 +336,7 @@ public final class WebUtil {
 		Collection<String> folders = null;
 		try {
 			folders = getServiceLocator().getFileService().getFileFolders(getAuthentication(), module, entityId, query, true, null, null, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -353,7 +353,7 @@ public final class WebUtil {
 		Collection<String> streetNames = null;
 		try {
 			streetNames = getServiceLocator().getToolsService().completeStreetName(getAuthentication(), query, countryName, zipCode, cityName, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -370,7 +370,7 @@ public final class WebUtil {
 		Collection<String> titles = null;
 		try {
 			titles = getServiceLocator().getToolsService().completeTitle(getAuthentication(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -391,7 +391,7 @@ public final class WebUtil {
 			} else {
 				zipCodes = getServiceLocator().getToolsService().completeZipCode(getAuthentication(), query, countryName, cityName, null);
 			}
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -408,7 +408,7 @@ public final class WebUtil {
 		try {
 			JsonElement je = JSON_PARSER.parse(json);
 			return JSON_COMPRESSOR.toJson(je);
-		} catch (JsonSyntaxException|NullPointerException e) {
+		} catch (JsonSyntaxException | NullPointerException e) {
 		}
 		return json;
 	}
@@ -420,7 +420,7 @@ public final class WebUtil {
 		try {
 			CourseOutVO course = getServiceLocator().getCourseService().getCourse(getAuthentication(), id, null, null, null);
 			return courseOutVOToString(course);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -568,7 +568,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getAddressType(getAuthentication(), addressTypeId);
 				// putSelectionSetServiceCache(id, type);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -583,7 +583,7 @@ public final class WebUtil {
 		Collection<ContactDetailTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAllContactDetailTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -606,7 +606,7 @@ public final class WebUtil {
 		Collection<CourseCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getAllCourseCategories(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -629,7 +629,7 @@ public final class WebUtil {
 		Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllCourseParticipationStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -652,7 +652,7 @@ public final class WebUtil {
 		Collection<CvSectionVO> sectionVOs = null;
 		try {
 			sectionVOs = getServiceLocator().getSelectionSetService().getAllCvSections(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -675,7 +675,7 @@ public final class WebUtil {
 		Collection<DepartmentVO> departmentVOs = null;
 		try {
 			departmentVOs = getServiceLocator().getSelectionSetService().getAllDepartments(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -698,7 +698,7 @@ public final class WebUtil {
 		Collection<ECRFFieldStatusTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAllEcrfFieldStatusTypes(getAuthentication(), null, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -721,7 +721,7 @@ public final class WebUtil {
 		Collection<InventoryCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getAllInventoryCategories(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -744,7 +744,7 @@ public final class WebUtil {
 		Collection<InventoryStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllInventoryStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -767,7 +767,7 @@ public final class WebUtil {
 		Collection<LecturerCompetenceVO> competenceVOs = null;
 		try {
 			competenceVOs = getServiceLocator().getSelectionSetService().getAllLecturerCompetences(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -790,7 +790,7 @@ public final class WebUtil {
 		Collection<MaintenanceTypeVO> maintenanceTypeVOs = null;
 		try {
 			maintenanceTypeVOs = getServiceLocator().getSelectionSetService().getAllMaintenanceTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -813,7 +813,7 @@ public final class WebUtil {
 		Collection<MassMailStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllMassMailStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -836,7 +836,7 @@ public final class WebUtil {
 		Collection<MassMailTypeVO> massMailTypeVOs = null;
 		try {
 			massMailTypeVOs = getServiceLocator().getSelectionSetService().getAllMassMailTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -859,7 +859,7 @@ public final class WebUtil {
 		Collection<NotificationTypeVO> notificationTypeVOs = null;
 		try {
 			notificationTypeVOs = getServiceLocator().getSelectionSetService().getAllNotificationTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -881,7 +881,7 @@ public final class WebUtil {
 		if (module != null) {
 			try {
 				allowTypes = getServiceLocator().getToolsService().getAllowedFileExtensionsPattern(module, image);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -899,7 +899,7 @@ public final class WebUtil {
 		Collection<PrivacyConsentStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllPrivacyConsentStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -922,7 +922,7 @@ public final class WebUtil {
 		Collection<ProbandCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getAllProbandCategories(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -945,7 +945,7 @@ public final class WebUtil {
 		Collection<ProbandListStatusTypeVO> probandListStatusTypeVOs = null;
 		try {
 			probandListStatusTypeVOs = getServiceLocator().getSelectionSetService().getAllProbandListStatusTypes(getAuthentication(), person);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -968,7 +968,7 @@ public final class WebUtil {
 		Collection<ProbandStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllProbandStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -991,7 +991,7 @@ public final class WebUtil {
 		Collection<SponsoringTypeVO> sponsoringTypeVOs = null;
 		try {
 			sponsoringTypeVOs = getServiceLocator().getSelectionSetService().getAllSponsoringTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1014,7 +1014,7 @@ public final class WebUtil {
 		Collection<StaffCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getAllStaffCategories(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1037,7 +1037,7 @@ public final class WebUtil {
 		Collection<StaffStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllStaffStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1060,7 +1060,7 @@ public final class WebUtil {
 		Collection<SurveyStatusTypeVO> surveyStatusTypeVOs = null;
 		try {
 			surveyStatusTypeVOs = getServiceLocator().getSelectionSetService().getAllSurveyStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1083,7 +1083,7 @@ public final class WebUtil {
 		Collection<TeamMemberRoleVO> roleVOs = null;
 		try {
 			roleVOs = getServiceLocator().getSelectionSetService().getAllTeamMemberRoles(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1106,7 +1106,7 @@ public final class WebUtil {
 		Collection<TimelineEventTypeVO> eventTypeVOs = null;
 		try {
 			eventTypeVOs = getServiceLocator().getSelectionSetService().getAllTimelineEventTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1129,7 +1129,7 @@ public final class WebUtil {
 		Collection<TrialStatusTypeVO> statusTypeVOs = null;
 		try {
 			statusTypeVOs = getServiceLocator().getSelectionSetService().getAllTrialStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1152,7 +1152,7 @@ public final class WebUtil {
 		Collection<TrialTypeVO> trialTypeVOs = null;
 		try {
 			trialTypeVOs = getServiceLocator().getSelectionSetService().getAllTrialTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1175,7 +1175,7 @@ public final class WebUtil {
 		Collection<VisitTypeVO> visitTypeVOs = null;
 		try {
 			visitTypeVOs = getServiceLocator().getSelectionSetService().getAllVisitTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1197,7 +1197,7 @@ public final class WebUtil {
 		if (alphaIdId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getAlphaId(getAuthentication(), alphaIdId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1233,7 +1233,7 @@ public final class WebUtil {
 		if (aspId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getAsp(getAuthentication(), aspId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1245,7 +1245,7 @@ public final class WebUtil {
 		if (aspAtcCodeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getAspAtcCode(getAuthentication(), aspAtcCodeId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1257,7 +1257,7 @@ public final class WebUtil {
 		if (aspSubstanceId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getAspSubstance(getAuthentication(), aspSubstanceId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1278,7 +1278,7 @@ public final class WebUtil {
 		Collection<AuthenticationTypeVO> methodVOs = null;
 		try {
 			methodVOs = getServiceLocator().getSelectionSetService().getAuthenticationTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1301,7 +1301,7 @@ public final class WebUtil {
 		Collection<HyperlinkCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getHyperlinkCategories(getAuthentication(), module, categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1324,7 +1324,7 @@ public final class WebUtil {
 		Collection<JournalCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getJournalCategories(getAuthentication(), module, categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1347,7 +1347,7 @@ public final class WebUtil {
 		Collection<AddressTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAvailableProbandAddressTypes(getAuthentication(), null, null, probandId, typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1370,7 +1370,7 @@ public final class WebUtil {
 		Collection<ContactDetailTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAvailableProbandContactDetailTypes(getAuthentication(), null, null, probandId, typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1392,7 +1392,7 @@ public final class WebUtil {
 		Collection<AddressTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAvailableStaffAddressTypes(getAuthentication(), staffId, typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1415,7 +1415,7 @@ public final class WebUtil {
 		Collection<ContactDetailTypeVO> typeVOs = null;
 		try {
 			typeVOs = getServiceLocator().getSelectionSetService().getAvailableStaffContactDetailTypes(getAuthentication(), staffId, typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1436,7 +1436,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getBankAccountCount(WebUtil.getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -1459,7 +1459,7 @@ public final class WebUtil {
 		Collection<BooleanVO> booleanVOs = null;
 		try {
 			booleanVOs = getServiceLocator().getSelectionSetService().getBooleans(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1483,7 +1483,7 @@ public final class WebUtil {
 	public static CalendarWeekVO getCalendarWeek(Date date) {
 		try {
 			return getServiceLocator().getToolsService().getCalendarWeek(date);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1507,7 +1507,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getContactDetailType(getAuthentication(), detailTypeId);
 				// putSelectionSetServiceCache(id, type);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1521,7 +1521,7 @@ public final class WebUtil {
 		if (courseId != null) {
 			try {
 				return getServiceLocator().getCourseService().getCourse(getAuthentication(), courseId, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1536,7 +1536,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getCourseCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1565,7 +1565,7 @@ public final class WebUtil {
 		if (courseId != null) {
 			try {
 				return getServiceLocator().getCourseService().getCourseInventoryBookingCount(getAuthentication(), courseId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1576,7 +1576,7 @@ public final class WebUtil {
 	public static Collection<CourseParticipationStatusEntryOutVO> getCourseParticipationStatusEntries(Long staffId, Long courseId) {
 		try {
 			return getServiceLocator().getCourseService().getCourseParticipationStatusEntryList(getAuthentication(), staffId, courseId, null, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1587,7 +1587,7 @@ public final class WebUtil {
 		if (courseParticipationStatusEntryId != null) {
 			try {
 				return getServiceLocator().getCourseService().getCourseParticipationStatusEntry(getAuthentication(), courseParticipationStatusEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1606,7 +1606,7 @@ public final class WebUtil {
 	public static Long getCourseParticipationStatusEntryCount(Long staffId, Long courseId) {
 		try {
 			return getServiceLocator().getCourseService().getCourseParticipationStatusEntryCount(getAuthentication(), staffId, courseId, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1617,7 +1617,7 @@ public final class WebUtil {
 		if (criteriaId != null) {
 			try {
 				return getServiceLocator().getSearchService().getCriteria(getAuthentication(), criteriaId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1628,7 +1628,7 @@ public final class WebUtil {
 	public static String getCurrencySymbol() {
 		try {
 			return getServiceLocator().getToolsService().getCurrencySymbol();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1640,7 +1640,7 @@ public final class WebUtil {
 			try {
 				CvPDFVO cv = getServiceLocator().getStaffService().renderCvPDF(getAuthentication(), staffId);
 				return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				throw e;
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -1654,7 +1654,7 @@ public final class WebUtil {
 		if (cvPositionId != null) {
 			try {
 				return getServiceLocator().getStaffService().getCvPosition(getAuthentication(), cvPositionId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1666,7 +1666,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getCvPositionCount(getAuthentication(), staffId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1681,7 +1681,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getCvSection(getAuthentication(), sectionId);
 				// putSelectionSetServiceCache(id, cvSection);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1696,7 +1696,7 @@ public final class WebUtil {
 		Collection<CvSectionVO> sectionVOs = null;
 		try {
 			sectionVOs = getServiceLocator().getSelectionSetService().getCvSections(getAuthentication(), sectionId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1729,7 +1729,7 @@ public final class WebUtil {
 			if (existing != null && existing.length() > 0) {
 				dateFormats.add(existing);
 			}
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1751,7 +1751,7 @@ public final class WebUtil {
 		Collection<DBModuleVO> dbModuleVOs = null;
 		try {
 			dbModuleVOs = getServiceLocator().getSelectionSetService().getDBModules(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1772,7 +1772,7 @@ public final class WebUtil {
 		if (module != null) {
 			try {
 				return getServiceLocator().getToolsService().getLocalizedDBModule(getAuthentication(), module);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1793,7 +1793,7 @@ public final class WebUtil {
 		Collection<String> deciamlSeparators = null;
 		try {
 			deciamlSeparators = getServiceLocator().getSelectionSetService().getDecimalSeparators(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1813,7 +1813,7 @@ public final class WebUtil {
 	public static Locale getDefaultLocale() {
 		try {
 			return CommonUtil.localeFromString(getServiceLocator().getToolsService().getDefaultLocale());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1823,7 +1823,7 @@ public final class WebUtil {
 	public static TimeZone getDefaultTimeZone() {
 		try {
 			return CommonUtil.timeZoneFromString(getServiceLocator().getToolsService().getDefaultTimeZone());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -1836,7 +1836,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				diagnosisVOs = getServiceLocator().getProbandService().getDiagnosisList(getAuthentication(), probandId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1859,7 +1859,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getDiagnosisCount(WebUtil.getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -1871,7 +1871,7 @@ public final class WebUtil {
 		if (dutyRosterTurnId != null) {
 			try {
 				return getServiceLocator().getStaffService().getDutyRosterTurn(getAuthentication(), dutyRosterTurnId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1886,7 +1886,7 @@ public final class WebUtil {
 			calendarStrings = getServiceLocator().getTrialService().getCalendars(getAuthentication(), trialDepartmentId, staffId, trialId, null, null);
 		} catch (AuthenticationException e) {
 			publishException(e);
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 		}
 		if (calendarStrings != null) {
 			filterCalendars = new ArrayList<SelectItem>(calendarStrings.size());
@@ -1909,7 +1909,7 @@ public final class WebUtil {
 			titleStrings = getServiceLocator().getTrialService().getDutyRosterTurnTitles(getAuthentication(), trialDepartmentId, staffId, trialId, null, null);
 		} catch (AuthenticationException e) {
 			publishException(e);
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 		}
 		if (titleStrings != null) {
 			filterTitles = new ArrayList<SelectItem>(titleStrings.size());
@@ -1929,7 +1929,7 @@ public final class WebUtil {
 		if (ecrfId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrf(getAuthentication(), ecrfId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1945,7 +1945,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getTrialService().getEcrfCount(getAuthentication(), trialId, null, null, null);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1957,7 +1957,7 @@ public final class WebUtil {
 		if (ecrfFieldId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfField(getAuthentication(), ecrfFieldId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1969,7 +1969,7 @@ public final class WebUtil {
 		if (trialId != null || ecrfId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfFieldCount(getAuthentication(), trialId, ecrfId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1981,7 +1981,7 @@ public final class WebUtil {
 		if (id != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfFieldStatusEntry(getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -1993,7 +1993,7 @@ public final class WebUtil {
 		if (trialId != null || probandListEntryId != null || ecrfId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfFieldStatusEntryCount(getAuthentication(), queue, trialId, probandListEntryId, ecrfId, last);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2020,7 +2020,7 @@ public final class WebUtil {
 		if (id != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfFieldValueById(getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2032,7 +2032,7 @@ public final class WebUtil {
 		if (ecrfField != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getEcrfFieldValueCount(getAuthentication(), ecrfField.getId(), excludeAuditTrail);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2044,7 +2044,7 @@ public final class WebUtil {
 		if (ecrfId != null && listEntryId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfProgress(getAuthentication(), listEntryId, ecrfId, sectionDetail);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2056,7 +2056,7 @@ public final class WebUtil {
 		if (listEntryId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfProgressSummary(getAuthentication(), listEntryId, ecrfDetail, sectionDetail);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2084,7 +2084,7 @@ public final class WebUtil {
 		if (ecrfId != null && listEntryId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfStatusEntry(getAuthentication(), ecrfId, listEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2099,7 +2099,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getEcrfStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2113,7 +2113,7 @@ public final class WebUtil {
 		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			return getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -2133,7 +2133,7 @@ public final class WebUtil {
 	public static String getEmailDomainName() {
 		try {
 			return getServiceLocator().getToolsService().getEmailDomainName();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2144,7 +2144,7 @@ public final class WebUtil {
 		if (massMailRecipientId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getEmailMessage(getAuthentication(), massMailRecipientId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2174,7 +2174,7 @@ public final class WebUtil {
 		Collection<EventImportanceVO> importanceVOs = null;
 		try {
 			importanceVOs = getServiceLocator().getSelectionSetService().getEventImportances(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2225,7 +2225,7 @@ public final class WebUtil {
 	public static String getHttpBaseUrl() {
 		try {
 			return getServiceLocator().getToolsService().getHttpBaseUrl();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2235,7 +2235,7 @@ public final class WebUtil {
 	public static String getHttpDomainName() {
 		try {
 			return getServiceLocator().getToolsService().getHttpDomainName();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2245,7 +2245,7 @@ public final class WebUtil {
 	public static String getHttpHost() {
 		try {
 			return getServiceLocator().getToolsService().getHttpHost();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2255,7 +2255,7 @@ public final class WebUtil {
 	public static String getHttpScheme() {
 		try {
 			return getServiceLocator().getToolsService().getHttpScheme();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2269,7 +2269,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getHyperlinkCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2287,7 +2287,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getHyperlinkService().getHyperlinkCount(getAuthentication(), module, id, null);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2323,7 +2323,7 @@ public final class WebUtil {
 		if (inputFieldId != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getInputField(getAuthentication(), inputFieldId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2342,7 +2342,7 @@ public final class WebUtil {
 		if (selectionSetValueId != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getSelectionSetValue(getAuthentication(), selectionSetValueId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2355,7 +2355,7 @@ public final class WebUtil {
 		Collection<InputFieldTypeVO> fieldTypeVOs = null;
 		try {
 			fieldTypeVOs = getServiceLocator().getSelectionSetService().getInputFieldTypes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2377,7 +2377,7 @@ public final class WebUtil {
 		if (inquiryId != null) {
 			try {
 				return getServiceLocator().getTrialService().getInquiry(getAuthentication(), inquiryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2391,7 +2391,7 @@ public final class WebUtil {
 				return getServiceLocator().getProbandService().getInquiryCount(getAuthentication(), trialId, active, signupActive);
 			} catch (AuthenticationException e) {
 				publishException(e);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			}
 		}
 		return null;
@@ -2401,7 +2401,7 @@ public final class WebUtil {
 		if (id != null) {
 			try {
 				return getServiceLocator().getProbandService().getInquiryValueById(getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2413,7 +2413,7 @@ public final class WebUtil {
 		if (inquiry != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getInquiryValueCount(getAuthentication(), inquiry.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2424,7 +2424,7 @@ public final class WebUtil {
 	public static String getInstanceName() {
 		try {
 			return getServiceLocator().getToolsService().getInstanceName();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2435,7 +2435,7 @@ public final class WebUtil {
 		if (inventoryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventory(getAuthentication(), inventoryId, maxInstances, maxParentDepth, maxChildrenDepth);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2447,7 +2447,7 @@ public final class WebUtil {
 		if (inventoryBookingId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventoryBooking(getAuthentication(), inventoryBookingId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2459,7 +2459,7 @@ public final class WebUtil {
 		if (inventoryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventoryBookingCount(getAuthentication(), inventoryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2475,7 +2475,7 @@ public final class WebUtil {
 					null);
 		} catch (AuthenticationException e) {
 			publishException(e);
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 		}
 		if (calendarStrings != null) {
 			filterCalendars = new ArrayList<SelectItem>(calendarStrings.size());
@@ -2498,7 +2498,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getInventoryCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2512,7 +2512,7 @@ public final class WebUtil {
 		if (inventoryStatusEntryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventoryStatusEntry(getAuthentication(), inventoryStatusEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2524,7 +2524,7 @@ public final class WebUtil {
 		if (inventoryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventoryStatusEntryCount(getAuthentication(), inventoryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2539,7 +2539,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getInventoryStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2553,7 +2553,7 @@ public final class WebUtil {
 		if (inventoryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getInventoryTagValueCount(getAuthentication(), inventoryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2568,7 +2568,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getJournalCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2586,7 +2586,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getJournalService().getJournalCount(getAuthentication(), module, id);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2598,7 +2598,7 @@ public final class WebUtil {
 		if (journalEntryId != null) {
 			try {
 				return getServiceLocator().getJournalService().getJournalEntry(getAuthentication(), journalEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2610,7 +2610,7 @@ public final class WebUtil {
 		if (module != null) {
 			try {
 				return getServiceLocator().getToolsService().getLocalizedJournalModule(getAuthentication(), module);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2623,7 +2623,7 @@ public final class WebUtil {
 		Collection<JournalModuleVO> journalModuleVOs = null;
 		try {
 			journalModuleVOs = getServiceLocator().getSelectionSetService().getJournalModules(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2644,7 +2644,7 @@ public final class WebUtil {
 		if (lecturerId != null) {
 			try {
 				return getServiceLocator().getCourseService().getLecturer(getAuthentication(), lecturerId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2656,7 +2656,7 @@ public final class WebUtil {
 		if (courseId != null || competenceId != null) {
 			try {
 				return getServiceLocator().getCourseService().getLecturerCount(getAuthentication(), courseId, competenceId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2677,7 +2677,7 @@ public final class WebUtil {
 		ArrayList<SelectItem> locales;
 		try {
 			localeVOs = getServiceLocator().getSelectionSetService().getLocales(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2702,7 +2702,7 @@ public final class WebUtil {
 		if (maintenanceScheduleItemId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getMaintenanceScheduleItem(getAuthentication(), maintenanceScheduleItemId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2714,7 +2714,7 @@ public final class WebUtil {
 		if (inventoryId != null) {
 			try {
 				return getServiceLocator().getInventoryService().getMaintenanceScheduleItemCount(getAuthentication(), inventoryId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2726,7 +2726,7 @@ public final class WebUtil {
 		if (maintenanceTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getMaintenanceType(getAuthentication(), maintenanceTypeId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2763,7 +2763,7 @@ public final class WebUtil {
 		if (massMailId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getMassMail(getAuthentication(), massMailId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2775,7 +2775,7 @@ public final class WebUtil {
 		if (massMailId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getMassMailProgress(getAuthentication(), massMailId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2803,7 +2803,7 @@ public final class WebUtil {
 		if (massMailRecipientId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getMassMailRecipient(getAuthentication(), massMailRecipientId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2815,7 +2815,7 @@ public final class WebUtil {
 		if (massMailId != null || probandId != null) {
 			try {
 				return getServiceLocator().getMassMailService().getMassMailRecipientCount(getAuthentication(), massMailId, probandId, pending);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2828,7 +2828,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getMassMailStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2840,7 +2840,7 @@ public final class WebUtil {
 		if (probandId != null || diagnosisId != null || procedureId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getMedicationCount(WebUtil.getAuthentication(), probandId, diagnosisId, procedureId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -2907,7 +2907,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getProbandService().getMoneyTransferCount(getAuthentication(), probandId, bankAccountId);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -2922,7 +2922,7 @@ public final class WebUtil {
 			costTypesStrings = getServiceLocator().getProbandService().getCostTypes(getAuthentication(), trialDepartmentId, trialId, probandDepartmentId, probandId, null);
 		} catch (AuthenticationException e) {
 			publishException(e);
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 		}
 		if (costTypesStrings != null) {
 			filterCostTypes = new ArrayList<SelectItem>(costTypesStrings.size());
@@ -2944,7 +2944,7 @@ public final class WebUtil {
 		PasswordInVO newPassword = null;
 		try {
 			newPassword = getServiceLocator().getToolsService().getNewPassword(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -2990,7 +2990,7 @@ public final class WebUtil {
 		if (opsCodeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getOpsCode(getAuthentication(), opsCodeId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3016,7 +3016,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				trialVOs = getServiceLocator().getProbandService().getParticipationTrials(getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3039,7 +3039,7 @@ public final class WebUtil {
 		Collection<PaymentMethodVO> paymentMethodVOs = null;
 		try {
 			paymentMethodVOs = getServiceLocator().getSelectionSetService().getPaymentMethods(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -3061,7 +3061,7 @@ public final class WebUtil {
 		Collection<PaymentMethodVO> paymentMethodVOs = null;
 		try {
 			paymentMethodVOs = getServiceLocator().getSelectionSetService().getPaymentMethods(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -3083,7 +3083,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProband(getAuthentication(), probandId, maxInstances, maxParentsDepth, maxChildrenDepth);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3095,7 +3095,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandAddressCount(getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3110,7 +3110,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getProbandCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3124,7 +3124,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandContactDetailValueCount(getAuthentication(), probandId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3136,7 +3136,7 @@ public final class WebUtil {
 		if (probandGroupId != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandGroup(getAuthentication(), probandGroupId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3148,7 +3148,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandGroupCount(WebUtil.getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -3162,7 +3162,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				probandGroupVOs = getServiceLocator().getTrialService().getProbandGroupList(getAuthentication(), trialId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3184,7 +3184,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandInventoryBookingCount(getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3216,7 +3216,7 @@ public final class WebUtil {
 		if (probandListEntryId != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandListEntry(getAuthentication(), probandListEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3228,7 +3228,7 @@ public final class WebUtil {
 		if (trialId != null || probandId != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandListEntryCount(getAuthentication(), trialId, null, probandId, total);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3240,7 +3240,7 @@ public final class WebUtil {
 		if (probandListEntryTagId != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandListEntryTag(getAuthentication(), probandListEntryTagId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3254,7 +3254,7 @@ public final class WebUtil {
 				return getServiceLocator().getTrialService().getProbandListEntryTagCount(getAuthentication(), trialId);
 			} catch (AuthenticationException e) {
 				publishException(e);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			}
 		}
 		return null;
@@ -3264,7 +3264,7 @@ public final class WebUtil {
 		if (id != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandListEntryTagValueById(getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3276,7 +3276,7 @@ public final class WebUtil {
 		if (probandListEntryTag != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getProbandListEntryTagValueCount(getAuthentication(), probandListEntryTag.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3288,7 +3288,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandMoneyTransferNoParticipationSummary(getAuthentication(), probandId, trialId, null, method, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3300,7 +3300,7 @@ public final class WebUtil {
 		if (listEntry != null) {
 			try {
 				return getServiceLocator().getTrialService().getProbandMoneyTransferSummary(getAuthentication(), listEntry.getId(), null, method, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3312,7 +3312,7 @@ public final class WebUtil {
 		if (probandStatusEntryId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandStatusEntry(getAuthentication(), probandStatusEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3324,7 +3324,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandStatusEntryCount(getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3339,7 +3339,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getProbandStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3353,7 +3353,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return getServiceLocator().getProbandService().getProbandTagValueCount(getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3365,7 +3365,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getProcedureCount(WebUtil.getAuthentication(), probandId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -3379,7 +3379,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				procedureVOs = getServiceLocator().getProbandService().getProcedureList(getAuthentication(), probandId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3403,7 +3403,7 @@ public final class WebUtil {
 		Collection<RandomizationModeVO> modeVOs = null;
 		try {
 			modeVOs = getServiceLocator().getSelectionSetService().getRandomizationModes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -3446,7 +3446,7 @@ public final class WebUtil {
 		if (probandId != null) {
 			try {
 				trialVOs = getServiceLocator().getProbandService().getReimbursementTrials(getAuthentication(), probandId, costType, method, paid);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3490,7 +3490,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getInputFieldService().getSelectionSetValueCount(getAuthentication(), inputFieldId, null);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3549,7 +3549,7 @@ public final class WebUtil {
 		Collection<SexVO> sexVOs = null;
 		try {
 			sexVOs = getServiceLocator().getSelectionSetService().getSexes(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -3571,7 +3571,19 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaff(getAuthentication(), staffId, maxInstances, maxParentDepth, maxChildrenDepth);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public static DepartmentVO getDepartment(Long departmentId) {
+		if (departmentId != null) {
+			try {
+				return getServiceLocator().getSelectionSetService().getDepartment(getAuthentication(), departmentId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3583,7 +3595,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaffAddressCount(getAuthentication(), staffId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3598,7 +3610,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getStaffCategory(getAuthentication(), categoryId);
 				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3612,7 +3624,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaffContactDetailValueCount(getAuthentication(), staffId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3624,7 +3636,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getDutyRosterCount(getAuthentication(), staffId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3636,7 +3648,7 @@ public final class WebUtil {
 		if (staffStatusEntryId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaffStatusEntry(getAuthentication(), staffStatusEntryId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3648,7 +3660,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaffStatusEntryCount(getAuthentication(), staffId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3663,7 +3675,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getStaffStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3677,7 +3689,7 @@ public final class WebUtil {
 		if (staffId != null) {
 			try {
 				return getServiceLocator().getStaffService().getStaffTagValueCount(getAuthentication(), staffId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3691,7 +3703,7 @@ public final class WebUtil {
 				return getServiceLocator().getTrialService().getStratificationRandomizationListCount(getAuthentication(), trialId);
 			} catch (AuthenticationException e) {
 				publishException(e);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			}
 		}
 		return null;
@@ -3724,7 +3736,7 @@ public final class WebUtil {
 		if (teamMemberId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTeamMember(getAuthentication(), teamMemberId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3736,7 +3748,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTeamMemberCount(getAuthentication(), trialId, null, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3748,7 +3760,7 @@ public final class WebUtil {
 		if (timelineEventId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTimelineEvent(getAuthentication(), timelineEventId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3760,7 +3772,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTimelineEventCount(getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3775,7 +3787,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getTimelineEventType(getAuthentication(), eventTypeId);
 				// putSelectionSetServiceCache(id, eventType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3797,7 +3809,7 @@ public final class WebUtil {
 		if (timeZoneID != null) {
 			try {
 				return WebUtil.getServiceLocator().getSelectionSetService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -3847,7 +3859,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, null, null);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3859,7 +3871,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTrial(getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3871,7 +3883,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getDutyRosterCount(getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3883,7 +3895,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTrialEcrfProgressSummary(getAuthentication(), trialId, probandDepartmentId, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3895,7 +3907,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTrialInventoryBookingCount(getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3907,7 +3919,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTrialMoneyTransferSummary(getAuthentication(), trialId, costType, method, paid);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3930,7 +3942,7 @@ public final class WebUtil {
 			try {
 				// trialVOs = getServiceLocator().getTrialService().getTrialList(getAuthentication(), trialId, probandVO.getDepartment().getId(), null);
 				trialVOs = getServiceLocator().getProbandService().getInquiryTrials(getAuthentication(), probandId, active, activeSignup);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -3947,7 +3959,7 @@ public final class WebUtil {
 				try {
 					inquiryValueCount = getServiceLocator().getProbandService().getInquiryValueCount(getAuthentication(), trialVO.getId(), active, activeSignup, probandId);
 					totalInquiryValueCount += inquiryValueCount;
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					publishException(e);
 				}
@@ -3956,7 +3968,7 @@ public final class WebUtil {
 					try {
 						inquiryCount = getServiceLocator().getProbandService().getInquiryCount(getAuthentication(), trialVO.getId(), active, activeSignup);
 						totalInquiryCount += inquiryCount;
-					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						publishException(e);
 					}
@@ -3988,7 +4000,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getTrialStatusType(getAuthentication(), statusTypeId);
 				// putSelectionSetServiceCache(id, statusType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4012,7 +4024,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getTrialTagValueCount(getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4032,7 +4044,7 @@ public final class WebUtil {
 		if (userId != null) {
 			try {
 				return getServiceLocator().getUserService().getUser(getAuthentication(), userId, maxInstances);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4058,7 +4070,7 @@ public final class WebUtil {
 			password = getServiceLocator().getUserService().getPassword(getAuthentication(), user.getId());
 			userPermissionProfilesOut = getServiceLocator().getUserService()
 					.getPermissionProfiles(getAuthentication(), user.getId(), null, true);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			return false;
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -4144,7 +4156,7 @@ public final class WebUtil {
 		Collection<VariablePeriodVO> periodVOs = null;
 		try {
 			periodVOs = getServiceLocator().getSelectionSetService().getVariablePeriods(getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4179,7 +4191,7 @@ public final class WebUtil {
 		Collection<CourseCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getCourseCategories(getAuthentication(), categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4202,7 +4214,7 @@ public final class WebUtil {
 		Collection<DepartmentVO> departmentVOs = null;
 		try {
 			departmentVOs = getServiceLocator().getSelectionSetService().getDepartments(getAuthentication(), departmentId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4225,7 +4237,7 @@ public final class WebUtil {
 		Collection<InventoryCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getInventoryCategories(getAuthentication(), categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4248,7 +4260,7 @@ public final class WebUtil {
 		Collection<MassMailTypeVO> massMailTypeVOs = null;
 		try {
 			massMailTypeVOs = getServiceLocator().getSelectionSetService().getMassMailTypes(getAuthentication(), typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4271,7 +4283,7 @@ public final class WebUtil {
 		Collection<ProbandCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getProbandCategories(getAuthentication(), person, animal, categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4294,7 +4306,7 @@ public final class WebUtil {
 		Collection<SponsoringTypeVO> sponsoringTypeVOs = null;
 		try {
 			sponsoringTypeVOs = getServiceLocator().getSelectionSetService().getSponsoringTypes(getAuthentication(), typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4317,7 +4329,7 @@ public final class WebUtil {
 		Collection<StaffCategoryVO> categoryVOs = null;
 		try {
 			categoryVOs = getServiceLocator().getSelectionSetService().getStaffCategories(getAuthentication(), person, organisation, categoryId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4340,7 +4352,7 @@ public final class WebUtil {
 		Collection<SurveyStatusTypeVO> surveyStatusTypeVOs = null;
 		try {
 			surveyStatusTypeVOs = getServiceLocator().getSelectionSetService().getSurveyStatusTypes(getAuthentication(), typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4363,7 +4375,7 @@ public final class WebUtil {
 		Collection<TrialTypeVO> trialTypeVOs = null;
 		try {
 			trialTypeVOs = getServiceLocator().getSelectionSetService().getTrialTypes(getAuthentication(), typeId);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4385,7 +4397,7 @@ public final class WebUtil {
 		if (visitId != null) {
 			try {
 				return getServiceLocator().getTrialService().getVisit(getAuthentication(), visitId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4397,7 +4409,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getVisitCount(WebUtil.getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -4411,7 +4423,7 @@ public final class WebUtil {
 		if (trialId != null) {
 			try {
 				visitVOs = getServiceLocator().getTrialService().getVisitList(getAuthentication(), trialId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4433,7 +4445,7 @@ public final class WebUtil {
 		if (visitScheduleItemId != null) {
 			try {
 				return getServiceLocator().getTrialService().getVisitScheduleItem(getAuthentication(), visitScheduleItemId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4449,7 +4461,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId);
 				// count = psf.getRowCount();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4464,7 +4476,7 @@ public final class WebUtil {
 			try {
 				return getServiceLocator().getSelectionSetService().getVisitType(getAuthentication(), visitTypeId);
 				// putSelectionSetServiceCache(id, visitType);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
@@ -4485,7 +4497,7 @@ public final class WebUtil {
 		try {
 			InputFieldOutVO inputField = getServiceLocator().getInputFieldService().getInputField(getAuthentication(), id);
 			return inputFieldOutVOToString(inputField);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4511,7 +4523,7 @@ public final class WebUtil {
 		try {
 			InventoryOutVO inventory = getServiceLocator().getInventoryService().getInventory(getAuthentication(), id, null, null, null);
 			return inventoryOutVOToString(inventory);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4661,7 +4673,7 @@ public final class WebUtil {
 	public static boolean isTrustedHost() {
 		try {
 			return getServiceLocator().getToolsService().isTrustedHost(getRemoteHost());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4671,7 +4683,7 @@ public final class WebUtil {
 	public static boolean isTrustedHost(HttpServletRequest request) {
 		try {
 			return getServiceLocator().getToolsService().isTrustedHost(getRemoteHost(request));
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4749,7 +4761,7 @@ public final class WebUtil {
 		try {
 			MassMailOutVO massMail = getServiceLocator().getMassMailService().getMassMail(getAuthentication(), id);
 			return massMailOutVOToString(massMail);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4787,7 +4799,7 @@ public final class WebUtil {
 		try {
 			ProbandOutVO proband = getServiceLocator().getProbandService().getProband(getAuthentication(), id, null, null, null);
 			return probandOutVOToString(proband);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4876,7 +4888,7 @@ public final class WebUtil {
 		try {
 			StaffOutVO staff = getServiceLocator().getStaffService().getStaff(getAuthentication(), id, null, null, null);
 			return staffOutVOToString(staff);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4912,7 +4924,7 @@ public final class WebUtil {
 	public static Date subIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
 		try {
 			return getServiceLocator().getToolsService().subIntervals(date, period, explicitDays, n);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -4984,7 +4996,7 @@ public final class WebUtil {
 		try {
 			TrialOutVO trial = getServiceLocator().getTrialService().getTrial(getAuthentication(), id);
 			return trialOutVOToString(trial);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
@@ -5007,7 +5019,7 @@ public final class WebUtil {
 		try {
 			UserOutVO user = getServiceLocator().getUserService().getUser(getAuthentication(), id, null);
 			return userOutVOToString(user);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}

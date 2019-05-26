@@ -68,7 +68,9 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	private PasswordInVO in;
 	private PasswordOutVO out;
 	private Long userId;
+	private UserOutVO user;
 	private VariablePeriodSelector validity;
+	private String departmentPassword;
 
 	public PasswordBean() {
 		super();
@@ -79,16 +81,18 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	public String addAction() {
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in);
+			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in, departmentPassword);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
+		} finally {
+			departmentPassword = null;
 		}
 		return ERROR_OUTCOME;
 	}
@@ -117,7 +121,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		out = null;
 		try {
 			out = WebUtil.getServiceLocator().getUserService().getPassword(WebUtil.getAuthentication(), id);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -209,7 +213,9 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	}
 
 	private void initSets() {
+		departmentPassword = null;
 		now = new Date();
+		user = WebUtil.getUser(userId, null);
 		if (Messages.getMessageList().isEmpty()) {
 			// if (out == null && userId != null) {
 			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PASSWORD_SET_YET);
@@ -221,7 +227,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			if (WebUtil.isUserIdLoggedIn(userId)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 			}
-			UserOutVO user = WebUtil.getUser(userId, null);
+			//UserOutVO user = WebUtil.getUser(userId, null);
 			ArrayList<String> messageCodes = new ArrayList<String>();
 			if (WebUtil.getUserAuthMessages(user, now, messageCodes)) {
 				Iterator<String> it = messageCodes.iterator();
@@ -288,7 +294,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		try {
 			out = WebUtil.getServiceLocator().getUserService().getPassword(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -328,5 +334,25 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		if (!in.getExpires()) {
 			in.setProlongable(false);
 		}
+		if (!isDepartmentPasswordRequired()) {
+			departmentPassword = null;
+		}
+	}
+
+	public boolean isDepartmentPasswordRequired() {
+		return !WebUtil.getUser().getDepartment().getId().equals(user != null ? user.getDepartment().getId() : null);
+	}
+
+	public String getDepartmentPasswordLabel() {
+		return Messages.getMessage(MessageCodes.PASSWORD_DEPARTMENT_PASSWORD_LABEL,
+				user != null ? user.getDepartment().getName() : null);
+	}
+
+	public String getDepartmentPassword() {
+		return departmentPassword;
+	}
+
+	public void setDepartmentPassword(String departmentPassword) {
+		this.departmentPassword = departmentPassword;
 	}
 }

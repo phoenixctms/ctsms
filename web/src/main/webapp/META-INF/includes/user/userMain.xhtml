@@ -15,7 +15,7 @@
 				process="@this"
 				name="changePassword"
 				actionListener="#{passwordBean.change(userBean.in.id)}"
-				update=":tabView:password_form:password_input" />
+				update=":tabView:password_form:password_input,:tabView:password_form:passwordadd_departmentpassword" />
 			<p:remoteCommand
 				process="@this"
 				name="changeUserActivity"
@@ -36,7 +36,13 @@
 				name="changeUserByJournalEntry"
 				actionListener="#{userBean.change(journalBean.in.userId)}"
 				oncomplete="handleUserChanged(xhr, status, args)"
-				update="user_input" />
+				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+			<p:remoteCommand
+				process="@this"
+				name="refreshUser"
+				actionListener="#{userBean.load}"
+				oncomplete="handleUserChanged(xhr, status, args)"
+				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />				
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -51,7 +57,7 @@
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-input-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
 							columns="6"
 							cellpadding="2"
@@ -273,7 +279,7 @@
 										var="selectItem"
 										itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
-									<p:ajax />
+									<p:ajax process="@this" update="toolbar,useradd_departmentpassword,userupdate_departmentpassword"/>
 								</p:selectOneMenu>
 								<p:tooltip
 									rendered="#{enableTooltips}"
@@ -337,7 +343,7 @@
 							<h:outputLabel />
 							
 							
-														<h:outputLabel
+							<h:outputLabel
 								for="locked"
 								value="#{userlabels.user_locked_label}" />
 							<h:panelGroup>
@@ -406,9 +412,20 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
+
+					<h:inputHidden
+						id="newDepartmentPassword"
+						required="false"
+						value="#{userBean.newDepartmentPassword}">
+					</h:inputHidden>
+					<h:inputHidden
+						id="oldDepartmentPassword"
+						required="false"
+						value="#{userBean.oldDepartmentPassword}">
+					</h:inputHidden>					
 					
 						<p:messages id="user_messages" />
-						<p:toolbar>
+						<p:toolbar id="toolbar">
 							<p:toolbarGroup align="left">
 								<h:outputText
 									styleClass="ctsms-toolbar-text"
@@ -424,9 +441,9 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="false"
-									update="user_input" />
+									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 								<p:commandButton
-									rendered="#{!userBean.created}"
+									rendered="#{!userBean.created and !userBean.newDepartmentPasswordRequired}"
 									process="@this,user_input"
 									id="add"
 									value="#{labels.add_button_label}"
@@ -435,16 +452,34 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.createable}"
-									update="user_input" />
+									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 								<p:commandButton
-									rendered="#{userBean.created}"
+									rendered="#{userBean.created and !userBean.newDepartmentPasswordRequired}"
 									process="@this"
 									value="#{labels.add_button_label}"
 									onclick="userAddConfirmation.show()"
 									disabled="#{!userBean.createable}"
 									icon="ui-icon ui-icon-plusthick"
 									type="button" />
+									
+									
+									
+									
+									
 								<p:commandButton
+									rendered="#{userBean.newDepartmentPasswordRequired}"
+									process="@this"
+									value="#{labels.add_button_label}"
+									onclick="userAddDepartmentPasswordDialog.show()"
+									disabled="#{!userBean.createable}"
+									icon="ui-icon ui-icon-plusthick"
+									type="button" />
+									
+									
+									
+									
+								<p:commandButton
+									rendered="#{!userBean.newDepartmentPasswordRequired and !userBean.oldDepartmentPasswordRequired}"
 									process="@this,user_input"
 									id="update"
 									value="#{labels.update_button_label}"
@@ -453,7 +488,17 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.editable}"
-									update="user_input" />
+									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+									
+								<p:commandButton
+									rendered="#{userBean.newDepartmentPasswordRequired or userBean.oldDepartmentPasswordRequired}"
+									process="@this"
+									value="#{labels.update_button_label}"
+									onclick="userUpdateDepartmentPasswordDialog.show()"
+									disabled="#{!userBean.editable}"
+									icon="ui-icon ui-icon-disk"
+									type="button" />
+									
 								<p:commandButton 
 									process="@this"
 									value="#{labels.restore_table_column_defaults_button_label}"
@@ -462,8 +507,8 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.editable or userBean.tableColumnCount == 0}"
-									update="user_table_column_count_message,user_messages">
-								</p:commandButton>
+									update="user_table_column_count_message,user_messages" />
+
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
@@ -479,7 +524,7 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.created}"
-									update="user_input" />
+									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
@@ -540,7 +585,7 @@
 					onclick="userDeleteConfirmation.hide()"
 					ajax="true"
 					oncomplete="handleUserChanged(xhr, status, args)"
-					update="user_input" />
+					update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 				<p:commandButton
 					value="#{labels.no_button_label}"
 					onclick="userDeleteConfirmation.hide()"
@@ -563,12 +608,157 @@
 					onclick="userAddConfirmation.hide()"
 					ajax="true"
 					oncomplete="handleUserChanged(xhr, status, args)"
-					update="user_input" />
+					update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 				<p:commandButton
 					value="#{labels.no_button_label}"
 					onclick="userAddConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
+			
+			
+				<p:confirmDialog
+					appendToBody="false"
+					severity="info"
+					id="useradd_departmentpassword"
+					widgetVar="userAddDepartmentPasswordDialog">
+					<f:facet name="message">
+						<h:outputText
+							value="#{userBean.created ? userlabels.user_add_confirmation_dialog_message : ''}#{userBean.created ? labels.br : ''}#{userlabels.user_department_password_prompt_dialog_message}"
+							escape="false" />
+						
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row">
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+									for="newDepartmentPasswordAdd"
+									value="#{userBean.newDepartmentPasswordLabel}" />
+								<h:panelGroup>
+									<p:password
+										id="newDepartmentPasswordAdd"
+										widgetVar="userAddNewDepartmentPassword"
+										required="false"
+										feedback="false"
+										redisplay="false"
+										label="#{userlabels.user_new_department_password}"
+										styleClass="ctsms-password" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="newDepartmentPasswordAdd">
+										<h:outputText
+											value="#{userlabels.user_new_department_password_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="newDepartmentPasswordAdd" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</f:facet>
+					<p:commandButton
+						process="@this,user_input"
+						id="addPassword"
+						value="#{userBean.created ? labels.yes_button_label : labels.ok_button_label}"
+						actionListener="#{userBean.add}"
+						onstart="setHiddenField('tabView:usermain_form:newDepartmentPassword',userAddNewDepartmentPassword.getValue());userAddDepartmentPasswordDialog.hide();"
+						ajax="true"
+						oncomplete="handleUserChanged(xhr, status, args)"
+						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
+					<p:commandButton
+						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
+						onclick="userAddDepartmentPasswordDialog.hide();userAddNewDepartmentPassword.setValue('');"
+						type="button" />
+				</p:confirmDialog>		
+				
+				
+				
+				<p:confirmDialog
+					appendToBody="false"
+					severity="info"
+					id="userupdate_departmentpassword"
+					widgetVar="userUpdateDepartmentPasswordDialog">
+					<f:facet name="message">
+						<h:outputText
+							value="#{userlabels.user_department_password_prompt_dialog_message}"
+							escape="false" />
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-input-row">
+						
+							<h:panelGrid
+								columns="3"
+								cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel
+								    rendered="#{userBean.newDepartmentPasswordRequired}"
+									for="newDepartmentPasswordUpdate"
+									value="#{userBean.newDepartmentPasswordLabel}" />
+								<h:panelGroup rendered="#{userBean.newDepartmentPasswordRequired}">
+									<p:password
+										id="newDepartmentPasswordUpdate"
+										widgetVar="userUpdateNewDepartmentPassword"
+										required="false"
+										feedback="false"
+										redisplay="false"
+										label="#{userlabels.user_new_department_password}"
+										styleClass="ctsms-password" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="newDepartmentPasswordUpdate">
+										<h:outputText
+											value="#{userlabels.user_new_department_password_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message rendered="#{userBean.newDepartmentPasswordRequired}" for="newDepartmentPasswordUpdate" />
+								<h:outputLabel
+									rendered="#{userBean.oldDepartmentPasswordRequired}"
+									for="oldDepartmentPasswordUpdate"
+									value="#{userBean.oldDepartmentPasswordLabel}" />
+								<h:panelGroup rendered="#{userBean.oldDepartmentPasswordRequired}">
+									<p:password
+										id="oldDepartmentPasswordUpdate"
+										widgetVar="userUpdateOldDepartmentPassword"
+										required="false"
+										feedback="false"
+										redisplay="false"
+										label="#{userlabels.user_old_department_password}"
+										styleClass="ctsms-password" />
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="oldDepartmentPasswordUpdate">
+										<h:outputText
+											value="#{userlabels.user_old_department_password_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message rendered="#{userBean.oldDepartmentPasswordRequired}" for="oldDepartmentPasswordUpdate" />								
+							</h:panelGrid>
+						</h:panelGrid>
+					</f:facet>
+					<p:commandButton
+						process="@this,user_input"
+						id="updatePassword"
+						value="#{labels.ok_button_label}"
+						actionListener="#{userBean.update}"
+						onstart="if('userUpdateNewDepartmentPassword' in window){setHiddenField('tabView:usermain_form:newDepartmentPassword',userUpdateNewDepartmentPassword.getValue());}if('userUpdateOldDepartmentPassword' in window){setHiddenField('tabView:usermain_form:oldDepartmentPassword',userUpdateOldDepartmentPassword.getValue());}userUpdateDepartmentPasswordDialog.hide();"
+						ajax="true"
+						oncomplete="handleUserChanged(xhr, status, args)"
+						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
+					<p:commandButton
+						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
+						onclick="userUpdateDepartmentPasswordDialog.hide();if('userUpdateNewDepartmentPassword' in window){userUpdateNewDepartmentPassword.setValue('');}if('userUpdateOldDepartmentPassword' in window){userUpdateOldDepartmentPassword.setValue('');}"
+						type="button" />
+				</p:confirmDialog>
+								
+			
+			
 		</h:form>
 	</ui:composition>
 </h:body>

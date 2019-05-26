@@ -151,15 +151,18 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, Integer maxInstances) throws Exception {
+	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, String plainDepartmentPassword, Integer maxInstances) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
-		ServiceUtil.checkUserInput(newUser, null, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
 		CoreUtil.modifyVersion(user, now, modified);
-		ServiceUtil.createKeyPair(user, getPlainDepartmentPassword(), this.getKeyPairDao());
+		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
 		notifyUserAccount(user, null, now);
 		UserOutVO result = userDao.toUserOutVO(user, maxInstances);
@@ -174,21 +177,24 @@ public class UserServiceImpl
 
 	@Override
 	protected PasswordOutVO handleAdminSetPassword(AuthenticationVO auth, Long userId,
-			PasswordInVO newPassword) throws Exception {
-		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
-		if (!CryptoUtil.checkDepartmentPassword(user.getDepartment(), getPlainDepartmentPassword())) {
+			PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		if (!CryptoUtil.checkDepartmentPassword(user.getDepartment(), plainDepartmentPassword)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
 		}
 		PasswordDao passwordDao = this.getPasswordDao();
 		Password lastPassword = passwordDao.findLastPassword(user.getId());
 		if (!PasswordPolicy.USER.isAdminIgnorePolicy()) {
 			PasswordPolicy.USER.checkStrength(newPassword.getPassword());
-			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, getPlainDepartmentPassword());
+			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, plainDepartmentPassword);
 		}
 		ServiceUtil.checkLogonLimitations(newPassword);
 		return ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
 				newPassword.getPassword(),
-				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
+				plainDepartmentPassword, passwordDao, this.getJournalEntryDao());
 	}
 
 	@Override
@@ -392,6 +398,7 @@ public class UserServiceImpl
 	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword) throws Exception {
 		Password lastPassword = CoreUtil.getLastPassword();
 		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		if (!AuthenticationType.LOCAL.equals(user.getAuthMethod())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.AUTHENTICATION_TYPE_NOT_LOCAL);
 		}
@@ -414,6 +421,7 @@ public class UserServiceImpl
 			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		ArrayList<UserPermissionProfileOutVO> result;
 		ServiceException firstException = null;
 		HashMap<String, String> errorMessagesMap = new HashMap<String, String>();
@@ -528,16 +536,29 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, Integer maxInstances) throws Exception {
+	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, String plainNewDepartmentPassword, String plainOldDepartmentPassword, Integer maxInstances)
+			throws Exception {
 		UserDao userDao = this.getUserDao();
 		User originalUser = CheckIDUtil.checkUserId(modifiedUser.getId(), userDao, LockMode.PESSIMISTIC_WRITE);
-		ServiceUtil.checkUserInput(modifiedUser, originalUser, getPlainDepartmentPassword(), this.getDepartmentDao(), this.getStaffDao());
-		if (!modifiedUser.getDepartmentId().equals(originalUser.getDepartment().getId())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.USER_DEPARTMENT_CHANGED);
+		if (plainNewDepartmentPassword == null) {
+			plainNewDepartmentPassword = getPlainDepartmentPassword();
+		}
+		if (plainOldDepartmentPassword == null) {
+			plainOldDepartmentPassword = getPlainDepartmentPassword();
+		}
+		ServiceUtil.checkUserInput(modifiedUser, originalUser, plainNewDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		boolean departmentChanged = !originalUser.getDepartment().getId().equals(modifiedUser.getDepartmentId());
+		if (departmentChanged) {
+			if (!CryptoUtil.checkDepartmentPassword(originalUser.getDepartment(), plainOldDepartmentPassword)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.OLD_DEPARTMENT_PASSWORD_WRONG);
+			}
 		}
 		UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances);
 		userDao.evict(originalUser);
 		User user = userDao.userInVOToEntity(modifiedUser);
+		if (departmentChanged) {
+			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, this.getKeyPairDao(), this.getPasswordDao());
+		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalUser, user, now, modified);

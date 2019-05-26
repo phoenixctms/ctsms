@@ -885,6 +885,7 @@ public class ProbandServiceImpl
 			throws Exception {
 		checkProbandInput(newProband);
 		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		if (!user.getDepartment().getId().equals(newProband.getDepartmentId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
 		}
@@ -2677,9 +2678,10 @@ public class ProbandServiceImpl
 	protected ProbandOutVO handleUpdateProband(AuthenticationVO auth, ProbandInVO modifiedProband, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth)
 			throws Exception {
 		ProbandDao probandDao = this.getProbandDao();
+		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
 		Proband originalProband = CheckIDUtil.checkProbandId(modifiedProband.getId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		ProbandOutVO original = probandDao.toProbandOutVO(originalProband, maxInstances, maxParentsDepth, maxChildrenDepth);
-		User user = CoreUtil.getUser();
 		if (modifiedProband.getBlinded()) {
 			if (!user.getDepartment().getId().equals(modifiedProband.getDepartmentId())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);

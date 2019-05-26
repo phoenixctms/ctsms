@@ -1078,39 +1078,28 @@ public final class ServiceUtil {
 		if (userIn.getIdentityId() != null) {
 			CheckIDUtil.checkStaffId(userIn.getIdentityId(), staffDao);
 		}
-		checkLocale(userIn.getLocale());
-		checkTimeZone(userIn.getTimeZone());
-		if (userIn.getDecimalSeparator() != null) { // && userIn.getDecimalSeparator().length() > 0) {
-			if (!CoreUtil.getDecimalSeparatos().contains(userIn.getDecimalSeparator())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DECIMAL_SEPARATOR, userIn.getDecimalSeparator());
-			}
-		}
-		if (userIn.getDateFormat() != null) { // && userIn.getDateFormat().length() > 0) {
-			HashSet<String> dateFormats = new HashSet<String>(CoreUtil.getDateFormats());
-			if (originalUser != null && originalUser.getDateFormat() != null && originalUser.getDateFormat().length() > 0) {
-				dateFormats.add(originalUser.getDateFormat());
-			}
-			if (!dateFormats.contains(userIn.getDateFormat())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DATE_FORMAT_PATTERN, userIn.getDateFormat());
-			}
-		}
+		checkUserSettingsInput(userIn.getLocale(), userIn.getTimeZone(), userIn.getDecimalSeparator(), userIn.getDateFormat(), originalUser);
 	}
 
 	public static void checkUserSettingsInput(UserSettingsInVO userIn, User originalUser) throws Exception {
-		checkLocale(userIn.getLocale());
-		checkTimeZone(userIn.getTimeZone());
-		if (userIn.getDecimalSeparator() != null) { // && userIn.getDecimalSeparator().length() > 0) {
-			if (!CoreUtil.getDecimalSeparatos().contains(userIn.getDecimalSeparator())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DECIMAL_SEPARATOR, userIn.getDecimalSeparator());
+		checkUserSettingsInput(userIn.getLocale(), userIn.getTimeZone(), userIn.getDecimalSeparator(), userIn.getDateFormat(), originalUser);
+	}
+
+	private static void checkUserSettingsInput(String locale, String timeZone, String decimalSeparator, String dateFormat, User originalUser) throws Exception {
+		checkLocale(locale);
+		checkTimeZone(timeZone);
+		if (decimalSeparator != null) { // && userIn.getDecimalSeparator().length() > 0) {
+			if (!CoreUtil.getDecimalSeparatos().contains(decimalSeparator)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DECIMAL_SEPARATOR, decimalSeparator);
 			}
 		}
-		if (userIn.getDateFormat() != null) { // && userIn.getDateFormat().length() > 0) {
+		if (dateFormat != null) { // && userIn.getDateFormat().length() > 0) {
 			HashSet<String> dateFormats = new HashSet<String>(CoreUtil.getDateFormats());
 			if (originalUser != null && originalUser.getDateFormat() != null && originalUser.getDateFormat().length() > 0) {
 				dateFormats.add(originalUser.getDateFormat());
 			}
-			if (!dateFormats.contains(userIn.getDateFormat())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DATE_FORMAT_PATTERN, userIn.getDateFormat());
+			if (!dateFormats.contains(dateFormat)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_DATE_FORMAT_PATTERN, dateFormat);
 			}
 		}
 	}
@@ -1318,6 +1307,19 @@ public final class ServiceUtil {
 		user.setKeyPair(keyPair);
 		keyPair.setUser(user);
 		keyPairDao.create(keyPair);
+	}
+
+	public static void updateUserDepartmentPassword(User user, String plainNewDepartmentPassword, String plainOldDepartmentPassword, KeyPairDao keyPairDao, PasswordDao passwordDao)
+			throws Exception {
+		KeyPair keyPair = user.getKeyPair();
+		CryptoUtil.encryptPrivateKey(keyPair, CryptoUtil.decryptPrivateKey(keyPair, plainOldDepartmentPassword), plainNewDepartmentPassword);
+		keyPairDao.update(keyPair);
+		Iterator<Password> passwordsIt = user.getPasswords().iterator();
+		while (passwordsIt.hasNext()) {
+			Password password = passwordsIt.next();
+			CryptoUtil.encryptPasswords(password, CryptoUtil.decryptPassword(password, plainOldDepartmentPassword), plainNewDepartmentPassword);
+			passwordDao.update(password);
+		}
 	}
 
 	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, // TrialOutVO trial

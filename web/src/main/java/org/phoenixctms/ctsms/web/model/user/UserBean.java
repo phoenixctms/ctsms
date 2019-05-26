@@ -101,6 +101,8 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private HashMap<String, Long> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
+	private String newDepartmentPassword;
+	private String oldDepartmentPassword;
 
 	public UserBean() {
 		super();
@@ -122,18 +124,21 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().addUser(WebUtil.getAuthentication(), in, MAX_GRAPH_USER_INSTANCES);
+			out = WebUtil.getServiceLocator().getUserService().addUser(WebUtil.getAuthentication(), in, newDepartmentPassword, MAX_GRAPH_USER_INSTANCES);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
+		} finally {
+			newDepartmentPassword = null;
+			oldDepartmentPassword = null;
 		}
 		return ERROR_OUTCOME;
 	}
@@ -166,7 +171,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id, MAX_GRAPH_USER_INSTANCES);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -181,7 +186,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	public List<LdapEntryVO> completeLdapEntry1(String query) {
 		try {
 			return (List<LdapEntryVO>) WebUtil.getServiceLocator().getToolsService().completeLdapEntry1(WebUtil.getAuthentication(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -191,7 +196,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	public List<LdapEntryVO> completeLdapEntry2(String query) {
 		try {
 			return (List<LdapEntryVO>) WebUtil.getServiceLocator().getToolsService().completeLdapEntry2(WebUtil.getAuthentication(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -217,7 +222,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -374,6 +379,8 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	protected void initSpecificSets() {
+		newDepartmentPassword = null;
+		oldDepartmentPassword = null;
 		tabCountMap.clear();
 		tabTitleMap.clear();
 		PSFVO psf = new PSFVO();
@@ -382,7 +389,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (out != null) {
 			try {
 				count = WebUtil.getServiceLocator().getUserService().getPassword(WebUtil.getAuthentication(), in.getId()) != null ? 1l : 0l;
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -395,7 +402,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 				Collection<UserPermissionProfileOutVO> userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService()
 						.getPermissionProfiles(WebUtil.getAuthentication(), in.getId(), null, null);
 				count = userPermissionProfilesOut == null ? null : new Long(userPermissionProfilesOut.size());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -479,7 +486,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		try {
 			out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id, MAX_GRAPH_USER_INSTANCES);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -517,7 +524,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 					} catch (AuthenticationException e) {
 						remoteUserMessage = e.getMessage();
 						WebUtil.publishException(e);
-					} catch (AuthorisationException|IllegalArgumentException e) {
+					} catch (AuthorisationException | IllegalArgumentException e) {
 						remoteUserMessage = e.getMessage();
 					}
 					break;
@@ -573,18 +580,21 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		UserInVO backup = new UserInVO(in);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, MAX_GRAPH_USER_INSTANCES);
+			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, newDepartmentPassword, oldDepartmentPassword, MAX_GRAPH_USER_INSTANCES);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
+		} finally {
+			newDepartmentPassword = null;
+			oldDepartmentPassword = null;
 		}
 		return ERROR_OUTCOME;
 	}
@@ -664,5 +674,54 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (in != null) {
 			in.setShowTooltips(showTooltips);
 		}
+	}
+
+	public String getNewDepartmentPassword() {
+		return newDepartmentPassword;
+	}
+
+	public void setNewDepartmentPassword(String newDepartmentPassword) {
+		this.newDepartmentPassword = newDepartmentPassword;
+	}
+
+	public String getOldDepartmentPassword() {
+		return oldDepartmentPassword;
+	}
+
+	public void setOldDepartmentPassword(String oldDepartmentPassword) {
+		this.oldDepartmentPassword = oldDepartmentPassword;
+	}
+
+	public boolean isOldDepartmentPasswordRequired() {
+		return out != null
+				? !out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null) && !out.getDepartment().getId().equals(WebUtil.getUser().getDepartment().getId())
+				: false;
+	}
+
+	public boolean isNewDepartmentPasswordRequired() {
+		return in != null ? !WebUtil.getUser().getDepartment().getId().equals(in.getDepartmentId()) : false;
+	}
+
+	protected void sanitizeInVals() {
+		super.sanitizeInVals();
+		if (!isNewDepartmentPasswordRequired()) {
+			newDepartmentPassword = null;
+		}
+		if (!isOldDepartmentPasswordRequired()) {
+			if (out != null && out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null)) {
+				oldDepartmentPassword = newDepartmentPassword;
+			} else {
+				oldDepartmentPassword = null;
+			}
+		}
+	}
+
+	public String getNewDepartmentPasswordLabel() {
+		return Messages.getMessage(MessageCodes.USER_NEW_DEPARTMENT_PASSWORD_LABEL,
+				(in != null && in.getDepartmentId() != null) ? WebUtil.getDepartment(in.getDepartmentId()).getName() : null);
+	}
+
+	public String getOldDepartmentPasswordLabel() {
+		return Messages.getMessage(MessageCodes.USER_OLD_DEPARTMENT_PASSWORD_LABEL, out != null ? out.getDepartment().getName() : null);
 	}
 }
