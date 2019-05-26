@@ -65,7 +65,6 @@ import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
-import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -2481,7 +2480,7 @@ public class TrialServiceImpl
 		TrialStatusType newState = trial.getStatus();
 		if (oldStatus == null || !oldStatus.equals(newState)) {
 			ArrayList<TrialStatusAction> sortedActions = new ArrayList<TrialStatusAction>(newState.getActions());
-			Collections.sort(sortedActions, new TrialStatusActionComparator());
+			Collections.sort(sortedActions, ComparatorFactory.createTrialStatusAction());
 			Iterator<TrialStatusAction> sortedActionsIt = sortedActions.iterator();
 			while (sortedActionsIt.hasNext()) {
 				TrialStatusAction trialStatusAction = sortedActionsIt.next();

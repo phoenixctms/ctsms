@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Staff;
+import org.phoenixctms.ctsms.domain.TrialStatusAction;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
@@ -146,6 +147,10 @@ public final class ComparatorFactory {
 		return nullsLast(comparing(ECRFStatusAction::getAction, nullsLast((a,b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
 	}
 	
+	public static Comparator<TrialStatusAction> createTrialStatusAction() {
+		return nullsLast(comparing(TrialStatusAction::getAction, nullsLast((a,b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
+	}
+	 
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
 		return nullsLast(comparing(keyExtractor, nullsLast(naturalOrder())));
 	}
