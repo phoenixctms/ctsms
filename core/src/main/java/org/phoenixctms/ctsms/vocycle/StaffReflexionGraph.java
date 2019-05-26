@@ -1,11 +1,12 @@
 package org.phoenixctms.ctsms.vocycle;
 
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
-import org.phoenixctms.ctsms.compare.StaffComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
@@ -126,14 +127,14 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 	protected Collection<Staff> getEntityChildren(Staff source) {
 		Collection<Staff> children = source.getChildren();
 		if (children.size() > 1) {
-			TreeSet<Staff> result = new TreeSet<Staff>(new StaffComparator());
+			TreeSet<Staff> result = new TreeSet<Staff>(ComparatorFactory.createStaffComparator());
 			result.addAll(children);
 			return result;
 		} else {
 			return children;
 		}
 	}
-
+	
 	@Override
 	protected Long getEntityId(Staff source) {
 		return source.getId();
