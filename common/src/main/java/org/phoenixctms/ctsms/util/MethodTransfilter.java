@@ -4,16 +4,11 @@ import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.MethodComparator;
-
 public class MethodTransfilter {
 
 	public static final MethodTransfilter DEFAULT_TRANSFILTER = new MethodTransfilter();
-	//publ final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^get"); // Pattern.compile("^((get)|(is))");
-	//protected final static Pattern VO_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((isSet)|(getClass)|(getDeclaringClass))");
-	//protected final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
-	//protected final static Pattern ENTITY_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((getClass)|(getDeclaringClass))");
-	protected final static Comparator<Method> METHOD_COMPARATOR = new MethodComparator(false);
+	protected final static Comparator<Method> METHOD_COMPARATOR = Comparator.nullsLast(Comparator.comparing(Method::getName)
+			.thenComparingInt(m -> m.getParameterTypes().length));
 
 	public final static MethodTransfilter getEntityMethodTransfilter(final boolean lowerCaseFieldNames) {
 		return new MethodTransfilter() {
@@ -77,6 +72,7 @@ public class MethodTransfilter {
 
 	public Comparator<Method> getMethodComparator() {
 		return METHOD_COMPARATOR;
+		
 	}
 
 	public boolean include(Method method) {
