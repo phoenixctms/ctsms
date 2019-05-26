@@ -13,6 +13,8 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
@@ -28,7 +30,8 @@ public final class ComparatorFactory {
 		return nullsLast(comparing(Course::getName).thenComparingLong(Course::getId));
 	}
 
-	private static AlphaNumComparator alphaNum = new AlphaNumComparator();
+	public static final Comparator<String> ALPHANUM_COMPARATOR = new AlphaNumComparator();
+	public static final Comparator<String> ALPHANUM_TRIM_COMPARATOR = nullsLast(comparing(String::trim,ALPHANUM_COMPARATOR));
 
 	public static Comparator<BankAccountOutVO> createBankAccount() {
 		Comparator<ProbandOutVO> probandComp = createProbandOutVO();
@@ -38,7 +41,7 @@ public final class ComparatorFactory {
 	public static Comparator<ProbandOutVO> createProbandOutVO() {
 		return nullsLast(new Comparator<ProbandOutVO>() {
 
-			Comparator<ProbandOutVO> personComparator = comparing(ProbandOutVO::getLastName, alphaNum).thenComparing(ProbandOutVO::getFirstName, alphaNum);
+			Comparator<ProbandOutVO> personComparator = comparing(ProbandOutVO::getLastName, ALPHANUM_COMPARATOR).thenComparing(ProbandOutVO::getFirstName, ALPHANUM_COMPARATOR);
 			Comparator<ProbandOutVO> animalComparator = comparing(ProbandOutVO::getAnimalName);
 
 			@Override
@@ -60,8 +63,8 @@ public final class ComparatorFactory {
 	public static Comparator<Staff> createStaffComparator() {
 		Comparator<Staff> staffComp = new Comparator<Staff>() {
 
-			Comparator<PersonContactParticulars> pcp = nullsLast(comparing(PersonContactParticulars::getLastName, alphaNum));
-			Comparator<OrganisationContactParticulars> ocp = nullsLast(comparing(OrganisationContactParticulars::getOrganisationName, alphaNum));
+			Comparator<PersonContactParticulars> pcp = nullsLast(comparing(PersonContactParticulars::getLastName, ALPHANUM_COMPARATOR));
+			Comparator<OrganisationContactParticulars> ocp = nullsLast(comparing(OrganisationContactParticulars::getOrganisationName, ALPHANUM_COMPARATOR));
 
 			@Override
 			public int compare(Staff a, Staff b) {
@@ -92,13 +95,13 @@ public final class ComparatorFactory {
 	
 	public static Comparator<TeamMemberOutVO> createTeamMemberOutVO() {
 		
-		Comparator<TeamMemberRoleVO> roleComp = nullsLast(comparing(TeamMemberRoleVO::getName, alphaNum));
+		Comparator<TeamMemberRoleVO> roleComp = nullsLast(comparing(TeamMemberRoleVO::getName, ALPHANUM_COMPARATOR));
 		Comparator<StaffOutVO> staffNameComp = nullsLast(new Comparator<StaffOutVO>() {
 
 			@Override
 			public int compare(StaffOutVO a, StaffOutVO b) {
 				if (a.isPerson() && b.isPerson()) {
-					return alphaNum.compare(a.getLastName(), b.getLastName());
+					return ALPHANUM_COMPARATOR.compare(a.getLastName(), b.getLastName());
 				}
 				if (a.isPerson() && !b.isPerson()) {
 					return -1;
@@ -106,7 +109,7 @@ public final class ComparatorFactory {
 				if (!a.isPerson() && b.isPerson()) {
 					return 1;
 				}
-				return alphaNum.compare(a.getOrganisationName(), b.getOrganisationName());
+				return ALPHANUM_COMPARATOR.compare(a.getOrganisationName(), b.getOrganisationName());
 			}
 			
 		});
@@ -114,7 +117,7 @@ public final class ComparatorFactory {
 				.thenComparing(TeamMemberOutVO::getStaff,staffNameComp)
 				.thenComparing(TeamMemberOutVO::getId));
 	}
-
+	
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
 		return nullsLast(comparing(keyExtractor, nullsLast(naturalOrder())));
 	}

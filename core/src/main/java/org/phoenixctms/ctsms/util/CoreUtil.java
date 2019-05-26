@@ -41,7 +41,7 @@ import javax.script.ScriptEngineManager;
 
 import org.phoenixctms.ctsms.PrincipalStore;
 import org.phoenixctms.ctsms.UserContext;
-import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
@@ -380,8 +380,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		AlphanumStringComparator stringComparator = new AlphanumStringComparator(true);
-		Collections.sort(referenceFields, stringComparator);
+		referenceFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -389,7 +388,8 @@ public final class CoreUtil {
 			}
 			result.append(referenceFieldsIt.next());
 		}
-		Collections.sort(deferredCollectionMapFields, stringComparator);
+		
+		deferredCollectionMapFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -453,8 +453,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		AlphanumStringComparator stringComparator = new AlphanumStringComparator(true);
-		Collections.sort(referenceFields, stringComparator);
+		Collections.sort(referenceFields, ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -462,7 +461,7 @@ public final class CoreUtil {
 			}
 			result.append(referenceFieldsIt.next());
 		}
-		Collections.sort(deferredCollectionMapFields, stringComparator);
+		Collections.sort(deferredCollectionMapFields, ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {

@@ -15,7 +15,6 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Course;
@@ -305,9 +304,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 		signature.update(CoreUtil.serialize(entityToSerializable(User.class, signee)));
 		signature.update(CoreUtil.serialize(entityToSerializable(Staff.class, signee.getIdentity())));
 		signature.update(CoreUtil.serialize(timestamp));
-		AlphanumStringComparator stringComparator = new AlphanumStringComparator(true);
-		TreeMap<String, Serializable> referenceFieldMap = new TreeMap<String, Serializable>(stringComparator);
-		TreeMap<String, Serializable> deferredCollectionMapFieldMap = new TreeMap<String, Serializable>(stringComparator);
+		TreeMap<String, Serializable> referenceFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		TreeMap<String, Serializable> deferredCollectionMapFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
 		Iterator<EntitySignature> entitySignatureIt = entitySignatures.iterator();
 		while (entitySignatureIt.hasNext()) {
 			EntitySignature entitySignature = entitySignatureIt.next();

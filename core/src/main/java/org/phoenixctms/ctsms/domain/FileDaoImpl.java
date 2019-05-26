@@ -7,11 +7,9 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -19,7 +17,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -635,7 +633,7 @@ public class FileDaoImpl
 				}
 			}
 		}
-		Collections.sort(result, new AlphanumStringComparator(false));
+		result.sort(ComparatorFactory.ALPHANUM_COMPARATOR);
 		return result;
 	}
 
