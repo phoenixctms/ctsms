@@ -8,7 +8,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,7 +18,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.FieldComparator;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.OpsSystBlockVO;
 import org.phoenixctms.ctsms.vo.OpsSystCategoryVO;
@@ -196,7 +195,7 @@ public class OpsSystDaoImpl
 		while (it.hasNext()) {
 			result.add(opsSystBlockDao.toOpsSystBlockVO(it.next()));
 		}
-		Collections.sort(result, new FieldComparator(false, "getLevel"));
+		result.sort(Comparator.nullsLast(Comparator.comparing(OpsSystBlockVO::getLevel)));
 		return result;
 	}
 
@@ -208,7 +207,7 @@ public class OpsSystDaoImpl
 		while (it.hasNext()) {
 			result.add(opsSystCategoryDao.toOpsSystCategoryVO(it.next()));
 		}
-		Collections.sort(result, new FieldComparator(false, "getLevel"));
+		result.sort(Comparator.nullsLast(Comparator.comparing(OpsSystCategoryVO::getLevel)));
 		return result;
 	}
 
