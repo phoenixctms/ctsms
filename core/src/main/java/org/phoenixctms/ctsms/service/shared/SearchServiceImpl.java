@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.AddressTypeDao;
 import org.phoenixctms.ctsms.domain.ContactDetailTypeDao;
 import org.phoenixctms.ctsms.domain.Course;
@@ -159,6 +161,9 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class SearchServiceImpl
 		extends SearchServiceBase {
+	
+	private static final Comparator<CriterionInstantVO> CRITERION_INSTANT_VO_COMPARATOR = 
+			ComparatorFactory.createSafeLong(CriterionInstantVO::getPosition);
 
 	private static CriterionProperty checkCriterionPropertyId(Long propertyId, CriterionInstantVO criterion, CriterionPropertyDao criterionPropertyDao, boolean logError)
 			throws ServiceException {
@@ -1145,12 +1150,12 @@ public class SearchServiceImpl
 		logSystemMessage(criteria, result, now, user, SystemMessageCodes.CRITERIA_UPDATED, obfuscateCriterions(result), obfuscateCriterions(original), this.getJournalEntryDao());
 		return result;
 	}
-
+	
 	private IntermediateSetSummaryVO intermediateSetHelper(DBModule module, CriteriaInstantVO criteria, boolean prettyPrint,
 			boolean obfuscateCriterions, PSFVO psf) throws Exception {
 		QueryUtil.parseSearchQuery(criteria, module, this.getCriterionTieDao()); // populate selectindexes
 		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<CriterionInstantVO>(criteria.getCriterions());
-		sortedCriterions.sort(CommonUtil.voPositionComparator);
+		sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
 		ArrayList<IntermediateSetDetailVO> setCriterias = null;
 		try {
 			setCriterias = criterionIntermediateSetParser.parseCriterions(sortedCriterions, prettyPrint, obfuscateCriterions);
@@ -1436,7 +1441,7 @@ public class SearchServiceImpl
 
 	private String parseCriterions(CriteriaInstantVO instantCriteria, boolean prettyPrint, boolean obfuscateCriterions, boolean logError) throws ServiceException {
 		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<CriterionInstantVO>(instantCriteria.getCriterions());
-		sortedCriterions.sort(CommonUtil.voPositionComparator);
+		sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
 		try {
 			return criterionSyntaxParser.parseCriterions(sortedCriterions, prettyPrint, obfuscateCriterions);
 			// return (new CriterionSyntaxParser(this.getCriterionTieDao(), prettyPrint ? this.getCriterionPropertyDao() : null,

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -241,35 +240,8 @@ public final class CommonUtil {
 
 	private static final String VO_ID_GETTER_METHOD_NAME = "getId";
 	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
-	private static final String VO_POSITION_GETTER_METHOD_NAME = "getPosition";
-	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = "getPosition";
 
-	public static Comparator<Object> entityPositionComparator = 
-			createComparatorOnLongMethod(ENTITY_POSITION_GETTER_METHOD_NAME);
-	public static Comparator<Object> voPositionComparator = 
-			createComparatorOnLongMethod(VO_POSITION_GETTER_METHOD_NAME);
-
-	private static Comparator<Object> createComparatorOnLongMethod(String method) {
-		return new Comparator<Object>() {
-			
-			@Override
-			public int compare(Object a, Object b) {
-				Long x = CommonUtil.getSafeLong(a, method);
-				Long y = CommonUtil.getSafeLong(b, method);
-				if (x == null && y == null) {
-					return 0;
-				}
-				if (x != null && y == null) {
-					return 1;
-				}
-				if (x == null && y != null) {
-					return -1;
-				}
-				return x.compareTo(y);
-			}
-		};
-	}
-	public static Long getSafeLong(Object obj, String methodName) {
+	private static Long getSafeLong(Object obj, String methodName) {
 		if (obj == null) {
 			return null;
 		}

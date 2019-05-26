@@ -3,13 +3,14 @@ package org.phoenixctms.ctsms.intercept;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.BankAccountDao;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseDao;
@@ -119,6 +120,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
+	private static final Comparator<CriterionInstantVO> CRITERION_INSTANT_VO_COMPARATOR = ComparatorFactory.createSafeLong(CriterionInstantVO::getPosition);
+	private static final Comparator<Criterion> CRITERION_COMPARATOR = ComparatorFactory.createSafeLong(Criterion::getId);
+			
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -538,9 +542,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			throw ServiceUtil.initAuthorisationExceptionWithPosition(AuthorisationExceptionCodes.CRITERIA_MODIFIED_DIFFERENT_NUMBER_OF_CRITERIONS, logError, null);
 		}
 		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<>(criterons);
-		sortedCriterions.sort(CommonUtil.voPositionComparator);
+		sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
 		ArrayList<Criterion> sortedOriginalCriterions = new ArrayList<>(storedCriterons);
-		sortedOriginalCriterions.sort(CommonUtil.entityPositionComparator);
+		sortedOriginalCriterions.sort(CRITERION_COMPARATOR);
 		for (int i = 0; i < sortedCriterions.size(); i++) {
 			CriterionInstantVO criterion = sortedCriterions.get(i);
 			if (criterion == null) {

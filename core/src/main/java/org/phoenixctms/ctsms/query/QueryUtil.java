@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import org.hibernate.hql.QueryTranslatorFactory;
 import org.hibernate.hql.ast.ASTQueryTranslatorFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.JoinComparator;
 import org.phoenixctms.ctsms.domain.CourseImpl;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
@@ -72,6 +74,9 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 
 public final class QueryUtil {
 
+	private static final Comparator<CriterionInstantVO> CRITERION_INSTANT_VO_COMPARATOR = 
+			ComparatorFactory.createSafeLong(CriterionInstantVO::getPosition);
+	
 	static final class StaticCriterionTerm {
 
 		private String property;
@@ -1093,7 +1098,7 @@ public final class QueryUtil {
 		sqlSelectStatement.append(hqlToSql(hqlStatement.toString(), sessionFactory));
 		return sanitizeColumnProjectionList(sqlSelectStatement.toString());
 	}
-
+	
 	private static StringBuilder createSQLSetStatement(CriteriaInstantVO criteriaInstantVO,
 			DBModule module, PSFVO psf, SessionFactory sessionFactory, ArrayList<QueryParameterValue> queryValues,
 			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionTie> tieMap,
@@ -1107,7 +1112,7 @@ public final class QueryUtil {
 			Collection<CriterionInstantVO> criterions = criteriaInstantVO.getCriterions();
 			if (criterions != null && criterions.size() > 0) {
 				sortedCriterions = new ArrayList<CriterionInstantVO>(criterions);
-				sortedCriterions.sort(CommonUtil.voPositionComparator);
+				sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
 			}
 		}
 		StringBuilder sqlSetStatement = new StringBuilder();

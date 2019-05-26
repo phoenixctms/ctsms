@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -53,6 +55,9 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
 public abstract class SearchBeanBase extends PickerBeanBase {
+	
+	private static final Comparator<CriterionInVO> CRITERION_IN_VO_COMPARATOR = 
+			ComparatorFactory.createSafeLong(CriterionInVO::getPosition);
 
 	private static void copyCriteriaOutToIn(CriteriaInVO criteriaIn, ArrayList<CriterionInVO> criterionsIn, CriteriaOutVO out) {
 		if (criteriaIn != null && criterionsIn != null && out != null) {
@@ -72,7 +77,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				copyCriterionOutToIn(criterionIn, it.next());
 				criterionsIn.add(criterionIn);
 			}
-			criterionsIn.sort(CommonUtil.voPositionComparator);
+			criterionsIn.sort(CRITERION_IN_VO_COMPARATOR);
 			normalizeCriterionPositions(criterionsIn);
 		}
 	}
