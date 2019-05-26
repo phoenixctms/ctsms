@@ -5,6 +5,7 @@ import static java.util.Comparator.nullsLast;
 
 import java.util.Comparator;
 
+import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -12,6 +13,10 @@ import org.phoenixctms.ctsms.domain.Staff;
 public final class ComparatorFactory {
 	private ComparatorFactory() {
 		// private constructor
+	}
+	
+	public static Comparator<Course> createCourseComparator(){
+		return nullsLast(comparing(Course::getName).thenComparingLong(Course::getId));
 	}
 	
 	public static  Comparator<Staff> createStaffComparator(){
