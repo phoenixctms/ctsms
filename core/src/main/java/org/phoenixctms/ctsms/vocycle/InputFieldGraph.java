@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.phoenixctms.ctsms.compare.InputFieldSelectionSetValueOutVOComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDaoImpl;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
@@ -107,7 +107,7 @@ public class InputFieldGraph extends GraphCycleNHelper<InputField, InputFieldOut
 	protected void toVORemainingFields(InputField source,
 			InputFieldOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		inputFieldDaoImpl.toInputFieldOutVOBase(source, target);
-		Collections.sort((ArrayList<InputFieldSelectionSetValueOutVO>) target.getSelectionSetValues(), new InputFieldSelectionSetValueOutVOComparator());
+		Collections.sort((ArrayList<InputFieldSelectionSetValueOutVO>) target.getSelectionSetValues(), ComparatorFactory.createInputFieldSelectionSetValueOutVO());
 		User modifiedUser = source.getModifiedUser();
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));

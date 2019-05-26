@@ -19,6 +19,8 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
@@ -149,6 +151,15 @@ public final class ComparatorFactory {
 	
 	public static Comparator<TrialStatusAction> createTrialStatusAction() {
 		return nullsLast(comparing(TrialStatusAction::getAction, nullsLast((a,b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
+	}
+	
+	public static Comparator<InputFieldSelectionSetValueOutVO> createInputFieldSelectionSetValueOutVO() {
+		Comparator<InputFieldOutVO> fieldNameComp = comparing(InputFieldOutVO::getName, nullsLast(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldSelectionSetValueOutVO> fieldComp = comparing(InputFieldSelectionSetValueOutVO::getField, nullsLast(fieldNameComp));
+		Comparator<InputFieldSelectionSetValueOutVO> valueComp = comparing(InputFieldSelectionSetValueOutVO::getValue, nullsLast(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldSelectionSetValueOutVO> nameComp = comparing(InputFieldSelectionSetValueOutVO::getName, nullsLast(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldSelectionSetValueOutVO> idComp = comparingLong(InputFieldSelectionSetValueOutVO::getId);
+		return nullsLast(fieldComp.thenComparing(valueComp).thenComparing(nameComp).thenComparing(idComp));
 	}
 	 
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
