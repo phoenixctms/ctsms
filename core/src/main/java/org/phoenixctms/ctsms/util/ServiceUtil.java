@@ -23,7 +23,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import static java.util.Comparator.*;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.LockMode;
@@ -34,12 +33,11 @@ import org.phoenixctms.ctsms.adapt.InquiryValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
-import org.phoenixctms.ctsms.compare.AlphaNumComparator;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
-import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
@@ -3226,11 +3224,7 @@ public final class ServiceUtil {
 	}
 
 	private static TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO> initBankAccountMap() {
-		
-		Comparator<ProbandOutVO> probandComp = nullsLast(comparing(ProbandOutVO::getLastName, AlphaNumComparator::compare)); 
-		Comparator<BankAccountOutVO> bankAccountComp = nullsLast(comparing(BankAccountOutVO::getProband, probandComp));
-		
-		return new TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO>(bankAccountComp);
+		return new TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO>(ComparatorFactory.createBankAccount());
 	}
 
 	private static TreeMap<String, MoneyTransferByCostTypeSummaryDetailVO> initCostTypeMap(Collection<String> costTypes, boolean comments) {
@@ -5581,7 +5575,7 @@ public final class ServiceUtil {
 			costTypes = moneyTransferDao.getCostTypesNoTrial(proband.getId(), method);
 			moneyTransfersIt = moneyTransferDao.findByProbandNoTrialMethodCostTypePaid(proband.getId(), method, null, paid).iterator();
 		}
-		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(new ProbandOutVOComparator());
+		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(ComparatorFactory.createProbandOutVO());
 		HashMap<Long, MoneyTransferSummaryVO> summaryMap = new HashMap<Long, MoneyTransferSummaryVO>();
 		HashMap<Long, ProbandAddressOutVO> addressVOMap = new HashMap<Long, ProbandAddressOutVO>();
 		if (moneyTransfersIt != null) {

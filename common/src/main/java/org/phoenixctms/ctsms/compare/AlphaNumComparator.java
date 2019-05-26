@@ -3,9 +3,9 @@ package org.phoenixctms.ctsms.compare;
 import java.util.Comparator;
 
 
-public class AlphaNumComparator {
+public class AlphaNumComparator implements Comparator<String>{
 
-	public static int compare(String s1, String s2) {
+	public static int comp(String s1, String s2) {
 		int thisMarker = 0;
 		int thatMarker = 0;
 		int s1Length = s1.length();
@@ -70,6 +70,11 @@ public class AlphaNumComparator {
 
 	private final static boolean isDigit(char ch) {
 		return ch >= 48 && ch <= 57;
+	}
+
+	@Override
+	public int compare(String o1, String o2) {
+		return comp(o1, o2);
 	}
 
 }
