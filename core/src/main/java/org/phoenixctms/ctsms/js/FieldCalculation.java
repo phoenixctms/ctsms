@@ -34,6 +34,7 @@ import org.springframework.core.io.ClassPathResource;
 import jdk.nashorn.api.scripting.JSObject;
 
 //import sun.org.mozilla.javascript.internal.Scriptable;
+@SuppressWarnings("restriction")
 public class FieldCalculation {
 
 	private final static String ENV_JS_FILE_NAME = "env.js";
