@@ -37,7 +37,6 @@ import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
-import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -2590,16 +2589,16 @@ public final class ServiceUtil {
 		}
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(false));
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVO());
 				break;
 			case PROBAND_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(true));
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
 				break;
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(true));
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
 				break;
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(true));
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
 				break;
 			default:
 		}

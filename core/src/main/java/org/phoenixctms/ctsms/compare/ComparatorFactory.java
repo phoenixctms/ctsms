@@ -1,6 +1,9 @@
 package org.phoenixctms.ctsms.compare;
 
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingLong;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -13,12 +16,14 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
+import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 public final class ComparatorFactory {
 
@@ -116,6 +121,20 @@ public final class ComparatorFactory {
 		return nullsLast(comparing(TeamMemberOutVO::getRole, roleComp)
 				.thenComparing(TeamMemberOutVO::getStaff,staffNameComp)
 				.thenComparing(TeamMemberOutVO::getId));
+	}
+	
+	public static Comparator<VisitScheduleItemOutVO> createVisitScheduleItemOutVO() {
+		Comparator<VisitScheduleItemOutVO> trialComp = nullsLast(comparing(VisitScheduleItemOutVO::getTrial, nullsLast(comparing(TrialOutVO::getName, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> probandComp = nullsLast(comparing(VisitScheduleItemOutVO::getGroup, nullsLast(comparing(ProbandGroupOutVO::getToken, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> visitComp = nullsLast(comparing(VisitScheduleItemOutVO::getVisit, nullsLast(comparing(VisitOutVO::getToken, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> tokenComp = nullsLast(comparing(VisitScheduleItemOutVO::getToken, ALPHANUM_COMPARATOR));
+		return nullsLast(trialComp.thenComparing(probandComp).thenComparing(visitComp).thenComparing(tokenComp).thenComparing(createVisitScheduleItemOutVOTemporalOnly()));
+	}
+	
+	public static Comparator<VisitScheduleItemOutVO> createVisitScheduleItemOutVOTemporalOnly(){
+		Comparator<VisitScheduleItemOutVO> dateComp = nullsLast(comparing(VisitScheduleItemOutVO::getStart, nullsLast(naturalOrder())));
+		Comparator<VisitScheduleItemOutVO> idComp = comparingLong(VisitScheduleItemOutVO::getId);
+		return nullsLast(dateComp.thenComparing(idComp));
 	}
 	
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
