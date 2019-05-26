@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 import org.phoenixctms.ctsms.domain.Course;
+import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -135,6 +136,10 @@ public final class ComparatorFactory {
 		Comparator<VisitScheduleItemOutVO> dateComp = nullsLast(comparing(VisitScheduleItemOutVO::getStart, nullsLast(naturalOrder())));
 		Comparator<VisitScheduleItemOutVO> idComp = comparingLong(VisitScheduleItemOutVO::getId);
 		return nullsLast(dateComp.thenComparing(idComp));
+	}
+	
+	public static Comparator<Inventory> createInventory() {
+		return nullsLast(comparing(Inventory::getName, ALPHANUM_COMPARATOR));
 	}
 	
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {

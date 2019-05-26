@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
-import org.phoenixctms.ctsms.compare.InventoryComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Inventory;
@@ -77,7 +77,7 @@ public class InventoryReflexionGraph extends ReflexionCycleHelper<Inventory, Inv
 	protected Collection<Inventory> getEntityChildren(Inventory source) {
 		Collection<Inventory> children = source.getChildren();
 		if (children.size() > 1) {
-			TreeSet<Inventory> result = new TreeSet<Inventory>(new InventoryComparator());
+			TreeSet<Inventory> result = new TreeSet<Inventory>(ComparatorFactory.createInventory());
 			result.addAll(children);
 			return result;
 		} else {
