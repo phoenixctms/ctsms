@@ -62,7 +62,6 @@ import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
-import org.phoenixctms.ctsms.compare.EcrfStatusActionComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
@@ -2389,7 +2388,7 @@ public class TrialServiceImpl
 		ECRFStatusType newState = statusEntry.getStatus();
 		// if (oldStatus == null || !oldStatus.equals(newState)) {
 		ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
-		Collections.sort(sortedActions, new EcrfStatusActionComparator());
+		Collections.sort(sortedActions, ComparatorFactory.createECRFStatusAction());
 		Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();

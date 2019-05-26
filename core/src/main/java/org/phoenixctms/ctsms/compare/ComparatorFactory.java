@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 import org.phoenixctms.ctsms.domain.Course;
+import org.phoenixctms.ctsms.domain.ECRFStatusAction;
 import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
@@ -140,6 +141,9 @@ public final class ComparatorFactory {
 	
 	public static Comparator<Inventory> createInventory() {
 		return nullsLast(comparing(Inventory::getName, ALPHANUM_COMPARATOR));
+	}
+	public static Comparator<ECRFStatusAction> createECRFStatusAction() {
+		return nullsLast(comparing(ECRFStatusAction::getAction, nullsLast((a,b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
 	}
 	
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
