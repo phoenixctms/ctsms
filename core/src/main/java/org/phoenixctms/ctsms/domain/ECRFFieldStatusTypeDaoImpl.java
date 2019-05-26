@@ -8,11 +8,12 @@ package org.phoenixctms.ctsms.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -24,7 +25,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 public class ECRFFieldStatusTypeDaoImpl
 		extends ECRFFieldStatusTypeDaoBase {
 
-	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<ECRFFieldStatusType>(false);
+	private final static Comparator<ECRFFieldStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(ECRFFieldStatusType::getId);
 
 	private void applySystemCriterions(org.hibernate.Criteria ecrfFieldStatusTypeCriteria, Boolean system) {
 		if (system != null) {
@@ -128,7 +129,7 @@ public class ECRFFieldStatusTypeDaoImpl
 				}
 			}
 		}
-		Collections.sort(result, ID_COMPARATOR);
+		result.sort(ID_COMPARATOR);
 		return result;
 	}
 

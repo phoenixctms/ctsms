@@ -8,7 +8,7 @@ package org.phoenixctms.ctsms.domain;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,7 +19,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -46,8 +46,8 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ECRFFieldValueDaoImpl
 		extends ECRFFieldValueDaoBase {
 
-	private final static VOIDComparator SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueOutVO>(false);
-	private final static VOIDComparator SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueJsonVO>(false);
+	private final static Comparator<InputFieldSelectionSetValueOutVO> SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueOutVO::getId);
+	private final static Comparator<InputFieldSelectionSetValueJsonVO> SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueJsonVO::getId);
 
 	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
 			org.hibernate.Criteria probandListEntryCriteria, Long probandListEntryId, Long ecrfFieldId) {
@@ -921,7 +921,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
 		}
-		Collections.sort(result, SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
+		result.sort(SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
 		return result;
 	}
 
@@ -946,7 +946,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
 		}
-		Collections.sort(result, SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
+		result.sort(SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
 		return result;
 	}
 

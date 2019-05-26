@@ -8,12 +8,12 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
 public class PrivacyConsentStatusTypeDaoImpl
 		extends PrivacyConsentStatusTypeDaoBase {
 
-	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<PrivacyConsentStatusType>(false);
+	private final static Comparator<PrivacyConsentStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(PrivacyConsentStatusType::getId);
 
 	private org.hibernate.Criteria createPrivacyConsentStatusTypeCriteria() {
 		org.hibernate.Criteria privacyConsentStatusTypeCriteria = this.getSession().createCriteria(PrivacyConsentStatusType.class);
@@ -59,7 +59,7 @@ public class PrivacyConsentStatusTypeDaoImpl
 				result.add(this.load(it.next().getId()));
 			}
 		}
-		Collections.sort(result, ID_COMPARATOR);
+		result.sort(ID_COMPARATOR);
 		return result;
 	}
 

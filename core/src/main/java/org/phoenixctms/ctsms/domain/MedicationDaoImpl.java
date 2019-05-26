@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -19,7 +20,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -44,7 +45,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class MedicationDaoImpl
 		extends MedicationDaoBase {
 
-	private final static VOIDComparator SUBSTANCE_ID_COMPARATOR = new VOIDComparator<AspSubstanceVO>(false);
+	private final static Comparator<AspSubstanceVO> SUBSTANCE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspSubstanceVO::getId);
 	private static final String MEDICATION_ASP_NAME = "{0}";
 	private static final String MEDICATION_SUBSTANCES_NAME = "{0}";
 
@@ -432,7 +433,7 @@ public class MedicationDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		Collections.sort(result, SUBSTANCE_ID_COMPARATOR);
+		result.sort(SUBSTANCE_ID_COMPARATOR);
 		return result;
 	}
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.util.Accessor;
 import org.phoenixctms.ctsms.util.GraphEnumerator;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
@@ -16,7 +16,7 @@ import jxl.write.WritableSheet;
 public class VOColumn extends GraphEnumerator {
 
 	private final static MethodTransfilter EXCEL_VO_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(ExcelUtil.COLUMN_NAME_LOWER_CASE_FIELD_NAMES);
-	private final static Comparator EXCEL_VO_COLLECTION_VALUES_COMPARATOR = new VOIDComparator(false);
+	private final static Comparator<Object> EXCEL_VO_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createReflectionId();
 
 	public static void appendColumns(ArrayList<VOColumn> columns, Class vo, HashMap<Integer, WritableCellFormat> rowCellFormats, int depth,
 			boolean omitFields,

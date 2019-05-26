@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +21,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -646,7 +647,7 @@ public class JournalEntryDaoImpl
 			}
 		}
 		ArrayList<JournalEntry> result = new ArrayList<JournalEntry>(distinctJournalEntryMap.values());
-		Collections.sort(result, new EntityIDComparator<JournalEntry>(true));
+		result.sort(ComparatorFactory.createSafeLong(JournalEntry::getId));
 		return result;
 	}
 

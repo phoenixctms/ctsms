@@ -7,7 +7,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,7 +17,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -38,8 +38,8 @@ public class AspDaoImpl
 	private final static boolean MATCH_SUBSTANCE_NAME = true;
 	private final static boolean MATCH_ATC_CODE_CODE = true;
 	private final static boolean MATCH_REGISTRATION_NUMBER = true;
-	private final static VOIDComparator SUBSTANCE_ID_COMPARATOR = new VOIDComparator<AspSubstanceVO>(false);
-	private final static VOIDComparator ATC_CODE_ID_COMPARATOR = new VOIDComparator<AspAtcCodeVO>(false);
+	private final static Comparator<AspSubstanceVO> SUBSTANCE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspSubstanceVO::getId);
+	private final static Comparator<AspAtcCodeVO> ATC_CODE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspAtcCodeVO::getId);
 
 	private static void applyAspNameCriterions(org.hibernate.Criteria aspCriteria, String nameInfix) {
 		String revision = Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION);
@@ -230,7 +230,7 @@ public class AspDaoImpl
 		while (it.hasNext()) {
 			result.add(aspAtcCodeDao.toAspAtcCodeVO(it.next()));
 		}
-		Collections.sort(result, ATC_CODE_ID_COMPARATOR);
+		result.sort(ATC_CODE_ID_COMPARATOR);
 		return result;
 	}
 
@@ -242,7 +242,7 @@ public class AspDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		Collections.sort(result, SUBSTANCE_ID_COMPARATOR);
+		result.sort(SUBSTANCE_ID_COMPARATOR);
 		return result;
 	}
 

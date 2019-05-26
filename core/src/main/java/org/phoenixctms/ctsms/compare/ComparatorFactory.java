@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.compare;
 import static java.util.Comparator.*;
 
 import java.util.Comparator;
+import java.util.function.Function;
 
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
@@ -80,4 +81,23 @@ public final class ComparatorFactory {
 		Comparator<CvSectionVO> positionComp = nullsLast(comparingLong(CvSectionVO::getPosition));
 		return nullsLast(comparing(CvPositionPDFVO::getSection, positionComp).thenComparing(dateComp));
 	}
+
+	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
+		return nullsLast(comparing(keyExtractor, nullsLast(naturalOrder())));
+	}
+	
+	public static <T> Comparator<T> createReflectionId(){
+		return nullsLast(comparing(obj -> getSafeLong(obj, "getId"), nullsLast(naturalOrder())));
+	}
+	public static Long getSafeLong(Object obj, String methodName) {
+		if (obj == null) {
+			return null;
+		}
+		try {
+			return (Long) obj.getClass().getMethod(methodName).invoke(obj);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 }

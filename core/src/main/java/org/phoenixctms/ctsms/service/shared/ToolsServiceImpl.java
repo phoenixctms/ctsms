@@ -28,7 +28,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.AlphaIdDao;
 import org.phoenixctms.ctsms.domain.Announcement;
 import org.phoenixctms.ctsms.domain.AnnouncementDao;
@@ -1065,7 +1065,7 @@ public class ToolsServiceImpl
 				}
 			} else if (maintenanceScheduleItem.isRecurring()) {
 				if (ReminderEntityAdapter.getInstance(maintenanceScheduleItem).getReminderStart(today, false, null, null)
-						.compareTo(Collections.max(notifications, new EntityIDComparator<Notification>(false)).getDate()) > 0) {
+						.compareTo(Collections.max(notifications, ComparatorFactory.createSafeLong(Notification::getId)).getDate()) > 0) {
 					if (notificationDao.addNotification(maintenanceScheduleItem, today, null) != null) {
 						count++;
 					}

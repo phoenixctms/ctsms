@@ -2,17 +2,17 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.exception.ServiceException;
 
 public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AVO> {
 
-	private EntityIDComparator<A> idComparator;
+	private Comparator<A> idComparator = ComparatorFactory.createReflectionId();
 
 	protected abstract A aquireWriteLock(Long id) throws ServiceException;
 
@@ -28,7 +28,7 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 			Collection<A> children = getEntityChildren(entity);
 			if (children != null && children.size() > 0) {
 				ArrayList<A> childrenSorted = new ArrayList<A>(children);
-				Collections.sort(childrenSorted, getIdComparator());
+				childrenSorted.sort(idComparator);
 				Iterator<A> it = childrenSorted.iterator();
 				while (it.hasNext()) {
 					child = it.next();
@@ -78,7 +78,7 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 			Collection<A> parents = getEntityParents(entity);
 			if (parents != null && parents.size() > 0) {
 				ArrayList<A> parentsSorted = new ArrayList<A>(parents);
-				Collections.sort(parentsSorted, getIdComparator());
+				parentsSorted.sort(idComparator);
 				Iterator<A> it = parentsSorted.iterator();
 				while (it.hasNext()) {
 					parent = it.next();
@@ -98,13 +98,6 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 	protected abstract Long getEntityId(A source);
 
 	protected abstract Collection<A> getEntityParents(A source);
-
-	private EntityIDComparator<A> getIdComparator() {
-		if (idComparator == null) {
-			idComparator = new EntityIDComparator<A>(false);
-		}
-		return idComparator;
-	}
 
 	protected abstract ReflexionDepth getInitialReflexionDepth();
 

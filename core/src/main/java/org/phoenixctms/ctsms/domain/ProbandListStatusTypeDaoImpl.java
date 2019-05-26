@@ -8,13 +8,12 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.ProbandListStatusLogLevelVO;
@@ -26,8 +25,8 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 public class ProbandListStatusTypeDaoImpl
 		extends ProbandListStatusTypeDaoBase {
 
-	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<ProbandListStatusType>(false);
-	private final static VOIDComparator LOG_LEVEL_ID_COMPARATOR = new VOIDComparator<ProbandListStatusLogLevelVO>(false);
+	private final static Comparator<ProbandListStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(ProbandListStatusType::getId);
+	private final static Comparator<ProbandListStatusLogLevelVO> LOG_LEVEL_ID_COMPARATOR = ComparatorFactory.createSafeLong(ProbandListStatusLogLevelVO::getId);
 
 	private org.hibernate.Criteria createProbandListStatusTypeCriteria() {
 		org.hibernate.Criteria probandListStatusTypeCriteria = this.getSession().createCriteria(ProbandListStatusType.class);
@@ -78,7 +77,7 @@ public class ProbandListStatusTypeDaoImpl
 				result.add(this.load(it.next().getId()));
 			}
 		}
-		Collections.sort(result, ID_COMPARATOR);
+		result.sort(ID_COMPARATOR);
 		return result;
 	}
 
@@ -135,7 +134,7 @@ public class ProbandListStatusTypeDaoImpl
 		while (it.hasNext()) {
 			result.add(probandListStatusLogLevelDao.toProbandListStatusLogLevelVO(it.next()));
 		}
-		Collections.sort(result, LOG_LEVEL_ID_COMPARATOR);
+		result.sort(LOG_LEVEL_ID_COMPARATOR);
 		return result;
 	}
 

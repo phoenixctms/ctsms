@@ -1,13 +1,14 @@
 package org.phoenixctms.ctsms.util.randomization;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
@@ -38,7 +39,7 @@ public class TagAdaptiveRandomization extends Randomization {
 	// p2b: 0 + 1 / 4 + 3 = 1 / 7 p2b: 1 + 1 / 4 + 3 = 2 / 7
 	// p2c: 2 + 1 / 4 + 3 = 3 / 7 p2c: 2 + 1 / 4 + 3 = 3 / 7
 	// ->...
-	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<InputFieldSelectionSetValue>(false);
+	private final static Comparator<InputFieldSelectionSetValue> ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValue::getId);
 
 	// https://www.phoenixctms.org/features/modules/trials/ecrf/
 	// p = (1 + $probandGroups[1].size) /

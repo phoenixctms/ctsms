@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -61,7 +62,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class NotificationDaoImpl
 		extends NotificationDaoBase {
 
-	private final static VOIDComparator RECIPIENT_VO_ID_COMPARATOR = new VOIDComparator<NotificationRecipientVO>(false);
+	private final static Comparator<NotificationRecipientVO> RECIPIENT_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(NotificationRecipientVO::getId);
 	private final static String TEMPLATE_ENCODING = "UTF-8";
 	// private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
 	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
@@ -1237,7 +1238,7 @@ public class NotificationDaoImpl
 		while (it.hasNext()) {
 			result.add(notificationRecipientDao.toNotificationRecipientVO(it.next()));
 		}
-		Collections.sort(result, RECIPIENT_VO_ID_COMPARATOR);
+		result.sort(RECIPIENT_VO_ID_COMPARATOR);
 		return result;
 	}
 

@@ -8,12 +8,12 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -26,7 +26,8 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 public class CriterionPropertyDaoImpl
 		extends CriterionPropertyDaoBase {
 
-	private final static VOIDComparator CRITERION_RESTRICTION_ID_COMPARATOR = new VOIDComparator<CriterionRestrictionVO>(false);
+	private final static Comparator<CriterionRestrictionVO> CRITERION_RESTRICTION_ID_COMPARATOR = 
+			ComparatorFactory.createSafeLong(CriterionRestrictionVO::getId);
 
 	private org.hibernate.Criteria createPropertyCriteria() {
 		org.hibernate.Criteria propertyCriteria = this.getSession().createCriteria(CriterionProperty.class);
@@ -129,7 +130,7 @@ public class CriterionPropertyDaoImpl
 		while (it.hasNext()) {
 			result.add(criterionRestrictionDao.toCriterionRestrictionVO(it.next()));
 		}
-		Collections.sort(result, CRITERION_RESTRICTION_ID_COMPARATOR);
+		result.sort(CRITERION_RESTRICTION_ID_COMPARATOR);
 		return result;
 	}
 }

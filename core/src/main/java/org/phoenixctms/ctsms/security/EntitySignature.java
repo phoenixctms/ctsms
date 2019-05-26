@@ -16,7 +16,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.Department;
@@ -55,7 +55,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 	private final static boolean PROPERTY_LOWER_CASE_FIELD_NAMES = false;
 	private final static MethodTransfilter PROPERTY_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(PROPERTY_LOWER_CASE_FIELD_NAMES);
 	private final static ToStringStyle COMMENT_VALUE_TO_STRING_STYLE = ToStringStyle.SHORT_PREFIX_STYLE;
-	private final static Comparator PROPERTY_COLLECTION_VALUES_COMPARATOR = new EntityIDComparator(false);
+	
+	private final static Comparator<Object> PROPERTY_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createReflectionId();
 
 	protected static void addFieldToMap(HashMap<Class, HashSet<String>> fieldMap, Class entity, String fieldName) {
 		if (fieldMap.containsKey(entity)) {
