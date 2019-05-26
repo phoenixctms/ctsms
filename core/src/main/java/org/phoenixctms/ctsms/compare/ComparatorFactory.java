@@ -1,7 +1,6 @@
 package org.phoenixctms.ctsms.compare;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.nullsLast;
+import static java.util.Comparator.*;
 
 import java.util.Comparator;
 
@@ -10,6 +9,8 @@ import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
+import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
+import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 
 public final class ComparatorFactory {
@@ -25,15 +26,16 @@ public final class ComparatorFactory {
 	private static AlphaNumComparator alphaNum = new AlphaNumComparator();
 
 	public static Comparator<BankAccountOutVO> createBankAccount() {
-		Comparator<ProbandOutVO> probandComp = createProbandOutVO(); 
+		Comparator<ProbandOutVO> probandComp = createProbandOutVO();
 		return nullsLast(comparing(BankAccountOutVO::getProband, probandComp));
-		
 	}
+
 	public static Comparator<ProbandOutVO> createProbandOutVO() {
 		return nullsLast(new Comparator<ProbandOutVO>() {
 
 			Comparator<ProbandOutVO> personComparator = comparing(ProbandOutVO::getLastName, alphaNum).thenComparing(ProbandOutVO::getFirstName, alphaNum);
 			Comparator<ProbandOutVO> animalComparator = comparing(ProbandOutVO::getAnimalName);
+
 			@Override
 			public int compare(ProbandOutVO a, ProbandOutVO b) {
 				if (a.isPerson() && b.isPerson()) {
@@ -71,5 +73,11 @@ public final class ComparatorFactory {
 			}
 		};
 		return staffComp;
+	}
+
+	public static Comparator<CvPositionPDFVO> createCvPositionPDFVO() {
+		Comparator<CvPositionPDFVO> dateComp = nullsLast(comparing(CvPositionPDFVO::getStart, nullsLast(naturalOrder())));
+		Comparator<CvSectionVO> positionComp = nullsLast(comparingLong(CvSectionVO::getPosition));
+		return nullsLast(comparing(CvPositionPDFVO::getSection, positionComp).thenComparing(dateComp));
 	}
 }

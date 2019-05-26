@@ -35,7 +35,6 @@ import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEq
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
@@ -3426,7 +3425,7 @@ public final class ServiceUtil {
 		ArrayList<CvPositionPDFVO> result = new ArrayList<CvPositionPDFVO>(cvPositions.size() + courseParticipations.size());
 		result.addAll(cvPositions);
 		result.addAll(courseParticipations);
-		Collections.sort(result, new CvPositionPDFVOComparator());
+		Collections.sort(result, ComparatorFactory.createCvPositionPDFVO());
 		return result;
 	}
 
