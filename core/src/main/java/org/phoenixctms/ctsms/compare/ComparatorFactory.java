@@ -9,6 +9,7 @@ import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
 import org.phoenixctms.ctsms.domain.Staff;
+import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
@@ -81,6 +82,10 @@ public final class ComparatorFactory {
 		Comparator<CvSectionVO> positionComp = nullsLast(comparingLong(CvSectionVO::getPosition));
 		return nullsLast(comparing(CvPositionPDFVO::getSection, positionComp).thenComparing(dateComp));
 	}
+	
+	public static Comparator<AssociationPath> createAssociationPath() {
+		return nullsLast(comparing(AssociationPath::getJoinOrder, nullsLast(naturalOrder())));
+	}
 
 	public static <T,U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
 		return nullsLast(comparing(keyExtractor, nullsLast(naturalOrder())));
@@ -89,6 +94,7 @@ public final class ComparatorFactory {
 	public static <T> Comparator<T> createReflectionId(){
 		return nullsLast(comparing(obj -> getSafeLong(obj, "getId"), nullsLast(naturalOrder())));
 	}
+	
 	public static Long getSafeLong(Object obj, String methodName) {
 		if (obj == null) {
 			return null;
@@ -99,5 +105,6 @@ public final class ComparatorFactory {
 			return null;
 		}
 	}
+	
 	
 }

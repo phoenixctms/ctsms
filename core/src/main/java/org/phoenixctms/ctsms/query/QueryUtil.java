@@ -26,7 +26,6 @@ import org.hibernate.hql.ast.ASTQueryTranslatorFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.JoinComparator;
 import org.phoenixctms.ctsms.domain.CourseImpl;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
 import org.phoenixctms.ctsms.domain.CriterionPropertyDao;
@@ -233,7 +232,7 @@ public final class QueryUtil {
 
 	private static void appendJoins(StringBuilder statement, HashMap<String, AssociationPath> explicitJoinsMap) {
 		ArrayList<AssociationPath> joins = new ArrayList<AssociationPath>(explicitJoinsMap.values());
-		Collections.sort(joins, new JoinComparator());
+		Collections.sort(joins, ComparatorFactory.createAssociationPath());
 		Iterator<AssociationPath> it = joins.iterator();
 		while (it.hasNext()) {
 			AssociationPath join = it.next();
