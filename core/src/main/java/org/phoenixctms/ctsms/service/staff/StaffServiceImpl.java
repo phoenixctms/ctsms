@@ -25,8 +25,7 @@ import org.phoenixctms.ctsms.adapt.StaffAddressTypeTagAdapter;
 import org.phoenixctms.ctsms.adapt.StaffContactDetailTypeTagAdapter;
 import org.phoenixctms.ctsms.adapt.StaffStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.StaffTagAdapter;
-import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalComparator;
-import org.phoenixctms.ctsms.compare.StaffStatusEntryIntervalComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseDao;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
@@ -1455,8 +1454,9 @@ public class StaffServiceImpl
 				CommonUtil.dateToTimestamp(to));
 		dutyRosterTurnDao.toDutyRosterTurnOutVOCollection(dutyRosterTurns);
 		if (sort) {
-			dutyRosterTurns = new ArrayList(dutyRosterTurns);
-			Collections.sort((ArrayList) dutyRosterTurns, new DutyRosterTurnIntervalComparator(false));
+			ArrayList<DutyRosterTurnOutVO> sorted = new ArrayList<DutyRosterTurnOutVO>(dutyRosterTurns);
+			sorted.sort(ComparatorFactory.DUTY_ROASTER_TURN_OUT_VO_INTERVAL_COMP);
+			return sorted;
 		}
 		return dutyRosterTurns;
 	}
@@ -1748,8 +1748,8 @@ public class StaffServiceImpl
 				CommonUtil.dateToTimestamp(to), null, null, hideAvailability); // false,true);
 		statusEntryDao.toStaffStatusEntryOutVOCollection(staffStatusEntries);
 		if (sort) {
-			staffStatusEntries = new ArrayList(staffStatusEntries);
-			Collections.sort((ArrayList) staffStatusEntries, new StaffStatusEntryIntervalComparator(false));
+			staffStatusEntries = new ArrayList<StaffStatusEntryOutVO>(staffStatusEntries);
+			Collections.sort((ArrayList<StaffStatusEntryOutVO>) staffStatusEntries, ComparatorFactory.STAFF_STATUS_ENTRY_OUT_VO_INTERVAL_COMP);
 		}
 		return staffStatusEntries;
 	}

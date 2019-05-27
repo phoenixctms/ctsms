@@ -7,11 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.StaffStatusEntryIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalScheduleComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -190,8 +186,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				WebUtil.publishException(e);
 			}
 			if (dutyRoster != null) {
-				dutyRoster = new ArrayList(dutyRoster);
-				Collections.sort((ArrayList) dutyRoster, new DutyRosterTurnIntervalScheduleComparator(false));
+				dutyRoster = new ArrayList<DutyRosterTurnOutVO>(dutyRoster);
+				Collections.sort((ArrayList<DutyRosterTurnOutVO>) dutyRoster, ComparatorFactory.DUTY_ROSTER_TURN_OUT_VO_SCHEDULE_INTERVAL_COMP);
 				// xCollections.reverse((ArrayList) dutyRoster);
 				boolean showCollisions = (showCollisionsThresholdDays == null ? true
 						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
@@ -219,8 +215,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				WebUtil.publishException(e);
 			}
 			if (statusEntries != null) {
-				statusEntries = new ArrayList(statusEntries);
-				Collections.sort((ArrayList) statusEntries, new StaffStatusEntryIntervalScheduleComparator(false));
+				statusEntries = new ArrayList<StaffStatusEntryOutVO>(statusEntries);
+				Collections.sort((ArrayList<StaffStatusEntryOutVO>) statusEntries, ComparatorFactory.STAFF_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP);
 				Iterator<StaffStatusEntryOutVO> it = statusEntries.iterator();
 				while (it.hasNext()) {
 					addEvent(new StaffStatusEvent(it.next()));
@@ -243,8 +239,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				WebUtil.publishException(e);
 			}
 			if (bookings != null) {
-				bookings = new ArrayList(bookings);
-				Collections.sort((ArrayList) bookings, new InventoryBookingIntervalScheduleComparator(false));
+				bookings = new ArrayList<InventoryBookingOutVO>(bookings);
+				Collections.sort((ArrayList<InventoryBookingOutVO>) bookings, ComparatorFactory.INVENTORY_BOOKING_OUT_VO_SCHEDULE_INTERVAL_COMP);
 				Iterator<InventoryBookingOutVO> it = bookings.iterator();
 				while (it.hasNext()) {
 					addEvent(new CourseInventoryBookingEvent(it.next()));
@@ -261,8 +257,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				WebUtil.publishException(e);
 			}
 			if (visitScheduleItems != null) {
-				visitScheduleItems = new ArrayList(visitScheduleItems);
-				Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalScheduleComparator(false));
+				visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems);
+				Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, ComparatorFactory.VISIT_SCHEDULE_ITEM_OUT_VO_SCHEDULE_INTERVAL_COMP);
 				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
 				while (it.hasNext()) {
 					addEvent(new VisitScheduleItemEvent(it.next()));
@@ -310,8 +306,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				WebUtil.publishException(e);
 			}
 			if (statusEntries != null) {
-				statusEntries = new ArrayList(statusEntries);
-				Collections.sort((ArrayList) statusEntries, new ProbandStatusEntryIntervalScheduleComparator(false));
+				statusEntries = new ArrayList<ProbandStatusEntryOutVO>(statusEntries);
+				Collections.sort((ArrayList<ProbandStatusEntryOutVO>) statusEntries, ComparatorFactory.PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP);
 				Iterator<ProbandStatusEntryOutVO> it = statusEntries.iterator();
 				while (it.hasNext()) {
 					addEvent(new ProbandStatusEvent(it.next()));

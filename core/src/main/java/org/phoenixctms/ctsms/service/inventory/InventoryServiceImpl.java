@@ -21,8 +21,7 @@ import org.phoenixctms.ctsms.adapt.InventoryBookingCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InventoryStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InventoryTagAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
-import org.phoenixctms.ctsms.compare.InventoryBookingIntervalComparator;
-import org.phoenixctms.ctsms.compare.InventoryStatusEntryIntervalComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntryDao;
@@ -1039,7 +1038,7 @@ public class InventoryServiceImpl
 		inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
 		if (sort) {
 			inventoryBookings = new ArrayList(inventoryBookings);
-			Collections.sort((ArrayList) inventoryBookings, new InventoryBookingIntervalComparator(false));
+			Collections.sort((ArrayList) inventoryBookings, ComparatorFactory.INVENTORY_BOOKING_OUT_VO_INTERVAL_COMP);
 		}
 		return inventoryBookings;
 	}
@@ -1128,8 +1127,8 @@ public class InventoryServiceImpl
 				CommonUtil.dateToTimestamp(to), statusTypeId, null, null, hideAvailability); // false,true);
 		statusEntryDao.toInventoryStatusEntryOutVOCollection(inventoryStatusEntries);
 		if (sort) {
-			inventoryStatusEntries = new ArrayList(inventoryStatusEntries);
-			Collections.sort((ArrayList) inventoryStatusEntries, new InventoryStatusEntryIntervalComparator(false));
+			inventoryStatusEntries = new ArrayList<InventoryStatusEntryOutVO>(inventoryStatusEntries);
+			Collections.sort((ArrayList<InventoryStatusEntryOutVO>) inventoryStatusEntries, ComparatorFactory.INVENTORY_STATUS_ENTRY_OUT_VO_INTERVAL_COMP);
 		}
 		return inventoryStatusEntries;
 	}

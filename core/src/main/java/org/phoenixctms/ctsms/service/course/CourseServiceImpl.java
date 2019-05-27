@@ -22,7 +22,7 @@ import java.util.Set;
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.LecturerCompetenceTagAdapter;
-import org.phoenixctms.ctsms.compare.InventoryBookingIntervalComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseCategory;
 import org.phoenixctms.ctsms.domain.CourseDao;
@@ -645,7 +645,7 @@ public class CourseServiceImpl
 		inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
 		if (sort) {
 			inventoryBookings = new ArrayList(inventoryBookings);
-			Collections.sort((ArrayList) inventoryBookings, new InventoryBookingIntervalComparator(false));
+			Collections.sort((ArrayList<InventoryBookingOutVO>) inventoryBookings, ComparatorFactory.INVENTORY_BOOKING_OUT_VO_INTERVAL_COMP);
 		}
 		return inventoryBookings;
 	}

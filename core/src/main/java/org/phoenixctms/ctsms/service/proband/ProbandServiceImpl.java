@@ -30,8 +30,8 @@ import org.phoenixctms.ctsms.adapt.ProbandContactDetailTypeTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProcedureCollisionFinder;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
-import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalComparator;
 import org.phoenixctms.ctsms.domain.AlphaId;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Asp;
@@ -1974,8 +1974,8 @@ public class ProbandServiceImpl
 				CommonUtil.dateToTimestamp(to), null, null, hideAvailability); // false,true,hideAvailability);
 		statusEntryDao.toProbandStatusEntryOutVOCollection(probandStatusEntries);
 		if (sort) {
-			probandStatusEntries = new ArrayList(probandStatusEntries);
-			Collections.sort((ArrayList) probandStatusEntries, new ProbandStatusEntryIntervalComparator(false));
+			probandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>(probandStatusEntries);
+			Collections.sort((ArrayList<ProbandStatusEntryOutVO>) probandStatusEntries, ComparatorFactory.PROBAND_STATUS_ENTRY_OUT_VO_INTERVAL_COMP);
 		}
 		return probandStatusEntries;
 	}

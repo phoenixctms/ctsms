@@ -7,15 +7,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import org.phoenixctms.ctsms.compare.DateIntervalComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
 
 public class DateInterval {
-
-	private final static DateIntervalComparator COMPARATOR = new DateIntervalComparator(false);
 
 	public static long getIntervalOverlapSecs(Date intervalAStart, Date intervalAStop, Date intervalBStart, Date intervalBStop) throws Exception {
 		if (intervalAStart != null && intervalAStop != null) { // closed interval
@@ -136,7 +134,7 @@ public class DateInterval {
 		if (intervals != null && intervals.size() > 0) {
 			if (intervals.size() > 1) {
 				ArrayList<DateInterval> sortedIntervals = new ArrayList<DateInterval>(intervals);
-				Collections.sort(sortedIntervals, COMPARATOR);
+				Collections.sort(sortedIntervals, ComparatorFactory.DATE_INTERVAL_INTERVAL_COMP);
 				result.add(sortedIntervals.get(0));
 				for (int i = 1; i < sortedIntervals.size(); i++) {
 					result.addAll(mergeIntervals(result.remove(result.size() - 1), sortedIntervals.get(i)));

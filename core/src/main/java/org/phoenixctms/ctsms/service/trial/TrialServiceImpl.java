@@ -60,12 +60,10 @@ import org.phoenixctms.ctsms.adapt.VisitTitleCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTokenCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
-import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
@@ -5352,7 +5350,7 @@ public class TrialServiceImpl
 		dutyRosterTurnDao.toDutyRosterTurnOutVOCollection(dutyRosterTurns);
 		if (sort) {
 			dutyRosterTurns = new ArrayList(dutyRosterTurns);
-			Collections.sort((ArrayList) dutyRosterTurns, new DutyRosterTurnIntervalComparator(false));
+			Collections.sort((ArrayList) dutyRosterTurns, ComparatorFactory.DUTY_ROASTER_TURN_OUT_VO_INTERVAL_COMP);
 		}
 		return dutyRosterTurns;
 	}
@@ -6977,8 +6975,8 @@ public class TrialServiceImpl
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		if (sort) {
-			visitScheduleItems = new ArrayList(visitScheduleItems);
-			Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+			visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems);
+			Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, ComparatorFactory.VISIT_SCHEDULE_ITEM_OUT_VO_INTERVAL_COMP);
 		}
 		return visitScheduleItems;
 	}
