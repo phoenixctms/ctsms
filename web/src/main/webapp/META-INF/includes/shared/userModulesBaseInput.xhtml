@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>user modules input</title>
+</h:head>
+<h:body>
+	<ui:composition>
+
+		<h:outputLabel for="enableInventoryModule"
+			value="#{userlabels.user_enable_inventory_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableInventoryModule"
+				value="#{in.enableInventoryModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableInventoryModule">
+				<h:outputText value="#{userlabels.user_enable_inventory_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableInventoryModule" />
+
+		<h:outputLabel for="enableStaffModule"
+			value="#{userlabels.user_enable_staff_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableStaffModule"
+				value="#{in.enableStaffModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableStaffModule">
+				<h:outputText value="#{userlabels.user_enable_staff_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableStaffModule" />
+
+		<h:outputLabel for="enableCourseModule"
+			value="#{userlabels.user_enable_course_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableCourseModule"
+				value="#{in.enableCourseModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableCourseModule">
+				<h:outputText value="#{userlabels.user_enable_course_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableCourseModule" />
+		
+		<h:outputLabel for="enableTrialModule"
+			value="#{userlabels.user_enable_trial_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableTrialModule"
+				value="#{in.enableTrialModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableTrialModule">
+				<h:outputText value="#{userlabels.user_enable_trial_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableTrialModule" />
+		
+		
+		<h:outputLabel for="enableInputFieldModule"
+			value="#{userlabels.user_enable_input_field_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableInputFieldModule"
+				value="#{in.enableInputFieldModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableInputFieldModule">
+				<h:outputText value="#{userlabels.user_enable_input_field_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableInputFieldModule" />
+		
+		
+		<h:outputLabel for="enableProbandModule"
+			value="#{userlabels.user_enable_proband_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableProbandModule"
+				value="#{in.enableProbandModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableProbandModule">
+				<h:outputText value="#{userlabels.user_enable_proband_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableProbandModule" />
+		
+		<h:outputLabel for="enableMassMailModule"
+			value="#{userlabels.user_enable_mass_mail_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableMassMailModule"
+				value="#{in.enableMassMailModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableMassMailModule">
+				<h:outputText value="#{userlabels.user_enable_mass_mail_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableMassMailModule" />
+		
+		
+		<h:outputLabel for="enableUserModule"
+			value="#{userlabels.user_enable_user_module_label}" />
+		<h:panelGroup>
+			<p:selectBooleanCheckbox id="enableUserModule"
+				value="#{in.enableUserModule}">
+				<p:ajax />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="enableUserModule">
+				<h:outputText value="#{userlabels.user_enable_user_module_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="enableUserModule" />
+
+	</ui:composition>
+</h:body>
+</html>

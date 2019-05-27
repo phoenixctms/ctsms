@@ -61,6 +61,14 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setShowTooltips(out.getShowTooltips());
 			in.setLocked(out.getLocked());
 			in.setDecrypt(out.getDecrypt());
+			in.setEnableInventoryModule(out.getEnableInventoryModule());
+			in.setEnableStaffModule(out.getEnableStaffModule());
+			in.setEnableCourseModule(out.getEnableCourseModule());
+			in.setEnableTrialModule(out.getEnableTrialModule());
+			in.setEnableInputFieldModule(out.getEnableInputFieldModule());
+			in.setEnableProbandModule(out.getEnableProbandModule());
+			in.setEnableMassMailModule(out.getEnableMassMailModule());
+			in.setEnableUserModule(out.getEnableUserModule());
 			in.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
 			in.setName(out.getName());
 			in.setTimeZone(out.getTimeZone());
@@ -80,6 +88,16 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
 			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
 			in.setDecrypt(Settings.getBoolean(SettingCodes.USER_DECRYPT_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_PRESET));
+			in.setEnableInventoryModule(
+					Settings.getBoolean(SettingCodes.USER_ENABLE_INVENTORY_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_INVENTORY_MODULE_PRESET));
+			in.setEnableStaffModule(Settings.getBoolean(SettingCodes.USER_ENABLE_STAFF_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_STAFF_MODULE_PRESET));
+			in.setEnableCourseModule(Settings.getBoolean(SettingCodes.USER_ENABLE_COURSE_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_COURSE_MODULE_PRESET));
+			in.setEnableTrialModule(Settings.getBoolean(SettingCodes.USER_ENABLE_TRIAL_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_TRIAL_MODULE_PRESET));
+			in.setEnableInputFieldModule(
+					Settings.getBoolean(SettingCodes.USER_ENABLE_INPUT_FIELD_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_INPUT_FIELD_MODULE_PRESET));
+			in.setEnableProbandModule(Settings.getBoolean(SettingCodes.USER_ENABLE_PROBAND_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_PROBAND_MODULE_PRESET));
+			in.setEnableMassMailModule(Settings.getBoolean(SettingCodes.USER_ENABLE_MASS_MAIL_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_MASS_MAIL_MODULE_PRESET));
+			in.setEnableUserModule(Settings.getBoolean(SettingCodes.USER_ENABLE_USER_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_USER_MODULE_PRESET));
 			in.setAuthMethod(Settings.getAuthenticationType(SettingCodes.USER_AUTH_METHOD_PRESET, Bundle.SETTINGS, DefaultSettings.USER_AUTH_METHOD_PRESET));
 			in.setName(Messages.getString(MessageCodes.USER_NAME_PRESET));
 			in.setTimeZone(Settings.getString(SettingCodes.USER_TIME_ZONE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TIME_ZONE_PRESET));

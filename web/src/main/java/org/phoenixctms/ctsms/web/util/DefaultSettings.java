@@ -628,6 +628,14 @@ public final class DefaultSettings {
 	public static final boolean SHOW_TIMEZONE_MENU = false;
 	public static final boolean SHOW_THEME_MENU = false;
 	public static final boolean SHOW_TOOLTIPS_MENU = false;
+	public static final boolean USER_ENABLE_INVENTORY_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_STAFF_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_COURSE_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_TRIAL_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_INPUT_FIELD_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_PROBAND_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_MASS_MAIL_MODULE_PRESET = true;
+	public static final boolean USER_ENABLE_USER_MODULE_PRESET = true;
 
 	private DefaultSettings() {
 	}

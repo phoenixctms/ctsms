@@ -57,7 +57,7 @@
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-input-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
 							columns="6"
 							cellpadding="2"
@@ -384,7 +384,33 @@
 							<p:message for="decrypt" />
 							</h:panelGrid>
 
+						<p:fieldset
+							toggleable="true"
+							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{userlabels.user_modules_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="1"
+								cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid
+									columns="3"
+									cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 
+									<ui:include src="../shared/userModulesBaseInput.xhtml" >
+										<ui:param
+											name="in"
+											value="#{userBean.in}" />
+									</ui:include>
+								
+
+							
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
 
 						<p:fieldset
 							toggleable="true"
@@ -402,11 +428,11 @@
 									cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 
-								<ui:include src="../shared/userSettingsBaseInput.xhtml" >
-									<ui:param
-										name="settingsBean"
-										value="#{userBean}" />
-								</ui:include>
+									<ui:include src="../shared/userSettingsBaseInput.xhtml" >
+										<ui:param
+											name="settingsBean"
+											value="#{userBean}" />
+									</ui:include>
 
 							
 								</h:panelGrid>

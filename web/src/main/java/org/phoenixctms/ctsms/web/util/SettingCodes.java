@@ -182,6 +182,14 @@ public interface SettingCodes {
 	// public final static String PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET = "proband_recruitment_for_other_trials_allowed_preset";
 	public final static String USER_LOCKED_PRESET = "user_locked_preset";
 	public final static String USER_DECRYPT_PRESET = "user_decrypt_preset";
+	public final static String USER_ENABLE_INVENTORY_MODULE_PRESET = "user_enable_inventory_module_preset";
+	public final static String USER_ENABLE_STAFF_MODULE_PRESET = "user_enable_staff_module_preset";
+	public final static String USER_ENABLE_COURSE_MODULE_PRESET = "user_enable_course_module_preset";
+	public final static String USER_ENABLE_TRIAL_MODULE_PRESET = "user_enable_trial_module_preset";
+	public final static String USER_ENABLE_INPUT_FIELD_MODULE_PRESET = "user_enable_input_field_module_preset";
+	public final static String USER_ENABLE_PROBAND_MODULE_PRESET = "user_enable_proband_module_preset";
+	public final static String USER_ENABLE_MASS_MAIL_MODULE_PRESET = "user_enable_mass_mail_module_preset";
+	public final static String USER_ENABLE_USER_MODULE_PRESET = "user_enable_user_module_preset";
 	public final static String USER_LOCALE_PRESET = "user_locale_preset";
 	public final static String USER_TIME_ZONE_PRESET = "user_time_zone_preset";
 	public final static String USER_THEME_PRESET = "user_theme_preset";
