@@ -1,12 +1,14 @@
 package org.phoenixctms.ctsms.compare;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.comparingLong;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.phoenixctms.ctsms.domain.Course;
@@ -311,6 +313,10 @@ public final class ComparatorFactory {
 
 	public static Comparator<ProbandListEntryTagValueOutVO> createProbandListEntryTagValueOutVO() {
 		return nullsLast(comparing(ProbandListEntryTagValueOutVO::getTag, nullsLast(comparing(ProbandListEntryTagOutVO::getPosition, nullsLast(naturalOrder())))));
+	}
+	
+	public static Comparator<Map.Entry<String, String>> createKeyValueLength() {
+		return nullsLast(comparing(x->x.getValue(), nullsLast(comparingInt(String::length))));
 	}
 
 	public static <T, U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {

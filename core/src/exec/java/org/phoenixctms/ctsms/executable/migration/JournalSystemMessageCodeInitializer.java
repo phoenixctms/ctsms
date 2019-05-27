@@ -4,6 +4,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.KeyValueLengthComparator;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
@@ -34,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializer {
 
-	private final static KeyValueLengthComparator TITLE_FORMAT_COMPARATOR = new KeyValueLengthComparator(true);
+	private static final Comparator<Map.Entry<String,String>> TITLE_FORMAT_COMPARATOR = ComparatorFactory.createKeyValueLength().reversed();
 	private final static ArrayList<Entry<String, Pattern>> LEGACY_TITLE_REGEXP = new ArrayList<Map.Entry<String, Pattern>>();
 	static {
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, "Wartungseintrag erstellt - {0}");
