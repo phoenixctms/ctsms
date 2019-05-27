@@ -62,7 +62,6 @@ import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
-import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -7412,7 +7411,7 @@ public class TrialServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			Collections.sort(tagValues, new ProbandListEntryTagValueOutVOComparator());
+			tagValues.sort(ComparatorFactory.createProbandListEntryTagValueOutVO());
 			result.setPageValues(tagValues);
 			if (jsTagValues != null) {
 				result.setJsValues(jsTagValues);

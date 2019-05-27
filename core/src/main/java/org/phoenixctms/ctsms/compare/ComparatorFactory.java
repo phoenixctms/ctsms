@@ -30,6 +30,8 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
@@ -305,6 +307,10 @@ public final class ComparatorFactory {
 				}
 			}
 		};
+	}
+
+	public static Comparator<ProbandListEntryTagValueOutVO> createProbandListEntryTagValueOutVO() {
+		return nullsLast(comparing(ProbandListEntryTagValueOutVO::getTag, nullsLast(comparing(ProbandListEntryTagOutVO::getPosition, nullsLast(naturalOrder())))));
 	}
 
 	public static <T, U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
