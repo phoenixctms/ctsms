@@ -184,6 +184,14 @@ public class DepartmentManager {
 		newUser.setLocked(false);
 		newUser.setShowTooltips(true);
 		newUser.setDecrypt(true);
+		newUser.setEnableInventoryModule(true);
+		newUser.setEnableStaffModule(true);
+		newUser.setEnableCourseModule(true);
+		newUser.setEnableTrialModule(true);
+		newUser.setEnableInputFieldModule(true);
+		newUser.setEnableProbandModule(true);
+		newUser.setEnableMassMailModule(true);
+		newUser.setEnableUserModule(true);
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
 		newUser.setDepartmentId(departmentId);
 		newUser.setName(name);
