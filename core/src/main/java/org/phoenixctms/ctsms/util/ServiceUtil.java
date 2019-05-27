@@ -35,7 +35,6 @@ import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
@@ -2909,7 +2908,6 @@ public final class ServiceUtil {
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
 		// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		// ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-		EcrfFieldValueStatusEntryOutVOComparator ecrfFieldValueStatusEntryOutVOComparator = new EcrfFieldValueStatusEntryOutVOComparator(true);
 		ArrayList indexFieldLog = new ArrayList();
 		Collection log;
 		if (!blank && auditTrail) { // x) {
@@ -2938,7 +2936,7 @@ public final class ServiceUtil {
 				}
 			}
 		}
-		Collections.sort(indexFieldLog, ecrfFieldValueStatusEntryOutVOComparator);
+		Collections.sort(indexFieldLog, ComparatorFactory.ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP.reversed());
 		return indexFieldLog;
 	}
 

@@ -23,6 +23,8 @@ import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
@@ -192,6 +194,18 @@ public final class ComparatorFactory {
 			StaffStatusEntryOutVO::getStop);
 	public static final Comparator<ProbandStatusEntryOutVO> PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP = createScheduleInterval(ProbandStatusEntryOutVO::getStart,
 			ProbandStatusEntryOutVO::getStop);
+	public static final Comparator<?> ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP = nullsLast(comparing(x -> x.getClass().getName()).thenComparing(x -> {
+		if (x instanceof ECRFFieldValueOutVO) {
+			return ((ECRFFieldValueOutVO) x).getModifiedTimestamp();
+		} else if (x instanceof ECRFFieldStatusEntryOutVO) {
+			return ((ECRFFieldStatusEntryOutVO) x).getModifiedTimestamp();
+		} else if (x instanceof ECRFFieldValueOutVO) {
+			return ((ECRFFieldValueOutVO) x).getModifiedTimestamp();
+		} else if (x instanceof ECRFFieldStatusEntryOutVO) {
+			return ((ECRFFieldStatusEntryOutVO) x).getModifiedTimestamp();
+		}
+		return null;
+	}, nullsLast(naturalOrder())));
 
 	private static <T> Comparator<T> createScheduleInterval(Function<T, ? extends Date> startAccessor, Function<T, ? extends Date> stopAccessor) {
 		return new Comparator<T>() {
