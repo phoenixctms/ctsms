@@ -28,3 +28,34 @@ alter table INPUT_FIELD alter USER_TIME_ZONE set not null;
 alter table PROBAND_LIST_STATUS_ENTRY alter ENCRYPTED_REASON drop not null;
 alter table PROBAND_LIST_STATUS_ENTRY alter REASON_IV drop not null;
 
+alter table USERS add column ENABLE_INVENTORY_MODULE BOOLEAN;
+update USERS set ENABLE_INVENTORY_MODULE = 't';
+alter table USERS alter ENABLE_INVENTORY_MODULE set not null;
+
+alter table USERS add column ENABLE_STAFF_MODULE BOOLEAN;
+update USERS set ENABLE_STAFF_MODULE = 't';
+alter table USERS alter ENABLE_STAFF_MODULE set not null;
+
+alter table USERS add column ENABLE_COURSE_MODULE BOOLEAN;
+update USERS set ENABLE_COURSE_MODULE = 't';
+alter table USERS alter ENABLE_COURSE_MODULE set not null;
+
+alter table USERS add column ENABLE_TRIAL_MODULE BOOLEAN;
+update USERS set ENABLE_TRIAL_MODULE = 't';
+alter table USERS alter ENABLE_TRIAL_MODULE set not null;
+
+alter table USERS add column ENABLE_INPUT_FIELD_MODULE BOOLEAN;
+update USERS set ENABLE_INPUT_FIELD_MODULE = 't';
+alter table USERS alter ENABLE_INPUT_FIELD_MODULE set not null;
+
+alter table USERS add column ENABLE_PROBAND_MODULE BOOLEAN;
+update USERS set ENABLE_PROBAND_MODULE = 't';
+alter table USERS alter ENABLE_PROBAND_MODULE set not null;
+
+alter table USERS add column ENABLE_MASS_MAIL_MODULE BOOLEAN;
+update USERS set ENABLE_MASS_MAIL_MODULE = 't';
+alter table USERS alter ENABLE_MASS_MAIL_MODULE set not null;
+
+alter table USERS add column ENABLE_USER_MODULE BOOLEAN;
+update USERS set ENABLE_USER_MODULE = 't';
+alter table USERS alter ENABLE_USER_MODULE set not null;
