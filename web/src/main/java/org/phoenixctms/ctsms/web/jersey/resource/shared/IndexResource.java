@@ -28,14 +28,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.FilePDFVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.web.jersey.compare.ResourceClassComparator;
-import org.phoenixctms.ctsms.web.jersey.compare.ResourceMethodComparator;
-import org.phoenixctms.ctsms.web.jersey.compare.SubResourceMethodComparator;
 import org.phoenixctms.ctsms.web.jersey.index.CompleteIndex;
 import org.phoenixctms.ctsms.web.jersey.index.CourseListIndex;
 import org.phoenixctms.ctsms.web.jersey.index.IndexBase;
@@ -106,9 +104,11 @@ public final class IndexResource {
 	private final static String JS_PAGE_PSF_FIELD = "psf";
 	private final static String JS_PAGE_ROWS_FIELD = "rows";
 	private final static String JS_PAGE_JS_ROWS_FIELD = "js_rows";
-	private final static Comparator<Class<?>> RESOURCE_CLASS_COMPARATOR = new ResourceClassComparator();
-	private final static Comparator<AbstractResourceMethod> RESOURCE_METHOD_COMPARATOR = new ResourceMethodComparator();
-	private final static Comparator<AbstractSubResourceMethod> SUB_RESOURCE_METHOD_COMPARATOR = new SubResourceMethodComparator();
+	private final static Comparator<Class<?>> RESOURCE_CLASS_COMPARATOR = Comparator.comparing(Class::getName, ComparatorFactory.ALPHANUM_COMPARATOR);
+	private final static Comparator<AbstractResourceMethod> RESOURCE_METHOD_COMPARATOR = Comparator.comparing(AbstractResourceMethod::getHttpMethod,
+			ComparatorFactory.ALPHANUM_COMPARATOR);
+	private final static Comparator<AbstractSubResourceMethod> SUB_RESOURCE_METHOD_COMPARATOR = Comparator.comparing(AbstractSubResourceMethod::getHttpMethod,
+			ComparatorFactory.ALPHANUM_COMPARATOR);
 	private final static MethodTransfilter VO_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(false);
 
 	private static void addResource(JsonObject resourcesNode, String uriPrefix, AbstractResourceMethod method, String path) throws Exception {
@@ -208,8 +208,7 @@ public final class IndexResource {
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else {
 				returnTypeNode = createVOReturnTypeNode(returnType, method.getGenericReturnType());
-				if (FilePDFVO.class.equals(returnType)
-				) {
+				if (FilePDFVO.class.equals(returnType)) {
 					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
 				}
 				if (queryParams.size() > 0) {
