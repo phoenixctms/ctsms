@@ -241,7 +241,7 @@ public final class CommonUtil {
 	private static final String VO_ID_GETTER_METHOD_NAME = "getId";
 	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
 
-	private static Long getSafeLong(Object obj, String methodName) {
+	public static Long getSafeLong(Object obj, String methodName) {
 		if (obj == null) {
 			return null;
 		}

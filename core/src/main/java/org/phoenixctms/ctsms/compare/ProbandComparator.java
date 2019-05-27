@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.compare;
 
 import java.util.Comparator;
+import java.util.function.Function;
 
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Proband;
@@ -8,26 +9,26 @@ import org.phoenixctms.ctsms.domain.ProbandContactParticulars;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 
-public class ProbandComparator extends AlphanumComparatorBase implements Comparator<Proband> {
+public class ProbandComparator implements Comparator<Proband> {
 
-	private static String getFirstName(ProbandContactParticulars particulars) {
+	private static String getDecrypted(ProbandContactParticulars particulars,
+			Function<ProbandContactParticulars, byte[]> ivFun,
+			Function<ProbandContactParticulars, byte[]> valueFun) {
 		if (particulars != null && CoreUtil.isPassDecryption()) {
 			try {
-				return (String) CryptoUtil.decryptValue(particulars.getFirstNameIv(), particulars.getEncryptedFirstName());
+				return (String) CryptoUtil.decryptValue(ivFun.apply(particulars), valueFun.apply(particulars));
 			} catch (Exception e) {
 			}
 		}
 		return null;
 	}
 
+	private static String getFirstName(ProbandContactParticulars particulars) {
+		return getDecrypted(particulars, ProbandContactParticulars::getFirstNameIv, ProbandContactParticulars::getEncryptedFirstName);
+	}
+
 	private static String getLastName(ProbandContactParticulars particulars) {
-		if (particulars != null && CoreUtil.isPassDecryption()) {
-			try {
-				return (String) CryptoUtil.decryptValue(particulars.getLastNameIv(), particulars.getEncryptedLastName());
-			} catch (Exception e) {
-			}
-		}
-		return null;
+		return getDecrypted(particulars, ProbandContactParticulars::getLastNameIv, ProbandContactParticulars::getEncryptedLastName);
 	}
 
 	@Override
@@ -38,11 +39,11 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				ProbandContactParticulars bpp = b.getPersonParticulars();
 				if (app != null && bpp != null) {
 					if (!a.isBlinded() && !b.isBlinded()) {
-						int lastnameComparison = comp(getLastName(app), getLastName(bpp));
+						int lastnameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(getLastName(app), getLastName(bpp));
 						if (lastnameComparison != 0) {
 							return lastnameComparison;
 						} else {
-							int firstNameComparison = comp(getFirstName(app), getFirstName(bpp));
+							int firstNameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(getFirstName(app), getFirstName(bpp));
 							if (firstNameComparison != 0) {
 								return firstNameComparison;
 							} else {
@@ -54,7 +55,7 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 					} else if (a.isBlinded() && !b.isBlinded()) {
 						return 1;
 					} else {
-						int aliasComparison = comp(app.getAlias(), bpp.getAlias());
+						int aliasComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(app.getAlias(), bpp.getAlias());
 						if (aliasComparison != 0) {
 							return aliasComparison;
 						} else {
@@ -73,7 +74,7 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 				AnimalContactParticulars bap = b.getAnimalParticulars();
 				if (aap != null && bap != null) {
 					if (!a.isBlinded() && !b.isBlinded()) {
-						int animalNameComparison = comp(aap.getAnimalName(), bap.getAnimalName());
+						int animalNameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(aap.getAnimalName(), bap.getAnimalName());
 						if (animalNameComparison != 0) {
 							return animalNameComparison;
 						} else {
@@ -84,7 +85,7 @@ public class ProbandComparator extends AlphanumComparatorBase implements Compara
 					} else if (a.isBlinded() && !b.isBlinded()) {
 						return 1;
 					} else {
-						int aliasComparison = comp(aap.getAlias(), bap.getAlias());
+						int aliasComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(aap.getAlias(), bap.getAlias());
 						if (aliasComparison != 0) {
 							return aliasComparison;
 						} else {

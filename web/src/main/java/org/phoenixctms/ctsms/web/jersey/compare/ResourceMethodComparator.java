@@ -2,7 +2,7 @@ package org.phoenixctms.ctsms.web.jersey.compare;
 
 import java.util.Comparator;
 
-import org.phoenixctms.ctsms.compare.AlphanumComparatorBase;
+import org.phoenixctms.ctsms.compare.ComparatorFactory;
 
 import com.sun.jersey.api.model.AbstractResourceMethod;
 
@@ -10,6 +10,6 @@ public class ResourceMethodComparator implements Comparator<AbstractResourceMeth
 
 	@Override
 	public int compare(AbstractResourceMethod a, AbstractResourceMethod b) {
-		return AlphanumComparatorBase.cmp(a.getHttpMethod(), b.getHttpMethod());
+		return ComparatorFactory.ALPHANUM_COMPARATOR.compare(a.getHttpMethod(), b.getHttpMethod());
 	}
 }

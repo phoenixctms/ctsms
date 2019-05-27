@@ -13,9 +13,11 @@ import org.phoenixctms.ctsms.domain.ECRFStatusAction;
 import org.phoenixctms.ctsms.domain.Inventory;
 import org.phoenixctms.ctsms.domain.OrganisationContactParticulars;
 import org.phoenixctms.ctsms.domain.PersonContactParticulars;
+import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.TrialStatusAction;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
@@ -167,19 +169,7 @@ public final class ComparatorFactory {
 	}
 	
 	public static <T> Comparator<T> createReflectionId(){
-		return nullsLast(comparing(obj -> getSafeLong(obj, "getId"), nullsLast(naturalOrder())));
+		return nullsLast(comparing(obj -> CommonUtil.getSafeLong(obj, "getId"), nullsLast(naturalOrder())));
 	}
-	
-	public static Long getSafeLong(Object obj, String methodName) {
-		if (obj == null) {
-			return null;
-		}
-		try {
-			return (Long) obj.getClass().getMethod(methodName).invoke(obj);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
 	
 }

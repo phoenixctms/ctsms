@@ -42,6 +42,9 @@ import java.util.Comparator;
 public class AlphaNumComparator implements Comparator<String>{
 
 	public static int comp(String s1, String s2) {
+		if (s1 == null || s2 == null) {
+			return 0;
+		}
 		int thisMarker = 0;
 		int thatMarker = 0;
 		int s1Length = s1.length();
