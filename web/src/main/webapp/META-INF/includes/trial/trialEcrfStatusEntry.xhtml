@@ -94,7 +94,17 @@
 							update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"
 							oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 						<f:facet name="header">
-							<h:outputText value="#{trialEcrfStatusEntryBean.probandListEntryModel.rowCount} #{triallabels.trialecrfstatus_proband_list_header}" />
+							<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{trialEcrfStatusEntryBean.probandListEntryModel.rowCount} #{triallabels.trialecrfstatus_proband_list_header}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									onclick="trialEcrfStatusProbandListTableColumnsDialog.show()" />
+							</h:panelGrid>								
 						</f:facet>
 						<p:column sortBy="#{probandListEntry.vo.position}">
 							<f:facet name="header">
@@ -169,7 +179,19 @@
 									name="rendered"
 									value="true" />
 							</ui:include>
-						</p:column>						
+						</p:column>			
+						
+						<p:column
+							sortBy="#{probandListEntry.vo.proband.department}"
+							filterBy="#{probandListEntry.vo.proband.department.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:attribute name="visibleDefault" value = "false" />
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_department_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.department.name}" />
+						</p:column>		
+															
 						<p:column
 							filterBy="#{probandListEntry.vo.proband.personParticulars.gender}"
 							filterOptions="#{sessionScopeBean.filterSexes}"
@@ -179,6 +201,8 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
 						</p:column>
+						
+										
 						
 						<p:column
 							filterBy="#{probandListEntry.vo.proband.animalParticulars.gender}"
@@ -1286,6 +1310,14 @@
 						onclick="signAllEcrfsPassword.hide();ecrfsAllPassword.setValue('');"
 						type="button" />
 				</p:confirmDialog>				
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="trialEcrfStatusProbandListTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list" />
+			</ui:include>					
 		</h:form>
 	</ui:composition>
 </h:body>
