@@ -156,6 +156,17 @@
 									value="true" />
 							</ui:include>							
 						</p:column>
+						
+						<p:column
+							sortBy="#{probandListEntry.vo.proband.department}"
+							filterBy="#{probandListEntry.vo.proband.department.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:attribute name="visibleDefault" value = "false" />
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_proband_department_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.department.name}" />
+						</p:column>	
 
 						<p:column
 							filterBy="#{probandListEntry.vo.proband.personParticulars.gender}"
