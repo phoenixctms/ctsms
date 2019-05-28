@@ -4,7 +4,9 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.comparingLong;
 import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 import static java.util.Comparator.nullsLast;
+import static java.util.Comparator.reverseOrder;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -51,19 +53,19 @@ public final class ComparatorFactory {
 	}
 
 	public static Comparator<Course> createCourseComparator() {
-		return nullsLast(comparing(Course::getName).thenComparingLong(Course::getId));
+		return nullsFirst(comparing(Course::getName).thenComparingLong(Course::getId));
 	}
 
 	public static final Comparator<String> ALPHANUM_COMPARATOR = new AlphaNumComparator();
-	public static final Comparator<String> ALPHANUM_TRIM_COMPARATOR = nullsLast(comparing(String::trim, ALPHANUM_COMPARATOR));
+	public static final Comparator<String> ALPHANUM_TRIM_COMPARATOR = nullsFirst(comparing(String::trim, ALPHANUM_COMPARATOR));
 
 	public static Comparator<BankAccountOutVO> createBankAccount() {
 		Comparator<ProbandOutVO> probandComp = createProbandOutVO();
-		return nullsLast(comparing(BankAccountOutVO::getProband, probandComp));
+		return nullsFirst(comparing(BankAccountOutVO::getProband, probandComp));
 	}
 
 	public static Comparator<ProbandOutVO> createProbandOutVO() {
-		return nullsLast(new Comparator<ProbandOutVO>() {
+		return nullsFirst(new Comparator<ProbandOutVO>() {
 
 			Comparator<ProbandOutVO> personComparator = comparing(ProbandOutVO::getLastName, ALPHANUM_COMPARATOR).thenComparing(ProbandOutVO::getFirstName, ALPHANUM_COMPARATOR);
 			Comparator<ProbandOutVO> animalComparator = comparing(ProbandOutVO::getAnimalName);
@@ -87,8 +89,8 @@ public final class ComparatorFactory {
 	public static Comparator<Staff> createStaffComparator() {
 		Comparator<Staff> staffComp = new Comparator<Staff>() {
 
-			Comparator<PersonContactParticulars> pcp = nullsLast(comparing(PersonContactParticulars::getLastName, ALPHANUM_COMPARATOR));
-			Comparator<OrganisationContactParticulars> ocp = nullsLast(comparing(OrganisationContactParticulars::getOrganisationName, ALPHANUM_COMPARATOR));
+			Comparator<PersonContactParticulars> pcp = nullsFirst(comparing(PersonContactParticulars::getLastName, ALPHANUM_COMPARATOR));
+			Comparator<OrganisationContactParticulars> ocp = nullsFirst(comparing(OrganisationContactParticulars::getOrganisationName, ALPHANUM_COMPARATOR));
 
 			@Override
 			public int compare(Staff a, Staff b) {
@@ -108,18 +110,18 @@ public final class ComparatorFactory {
 	}
 
 	public static Comparator<CvPositionPDFVO> createCvPositionPDFVO() {
-		Comparator<CvPositionPDFVO> dateComp = nullsLast(comparing(CvPositionPDFVO::getStart, nullsLast(naturalOrder())));
-		Comparator<CvSectionVO> positionComp = nullsLast(comparingLong(CvSectionVO::getPosition));
-		return nullsLast(comparing(CvPositionPDFVO::getSection, positionComp).thenComparing(dateComp));
+		Comparator<CvPositionPDFVO> dateComp = nullsFirst(comparing(CvPositionPDFVO::getStart, nullsFirst(naturalOrder())));
+		Comparator<CvSectionVO> positionComp = nullsFirst(comparingLong(CvSectionVO::getPosition));
+		return nullsFirst(comparing(CvPositionPDFVO::getSection, positionComp).thenComparing(dateComp));
 	}
 
 	public static Comparator<AssociationPath> createAssociationPath() {
-		return nullsLast(comparing(AssociationPath::getJoinOrder, nullsLast(naturalOrder())));
+		return nullsFirst(comparing(AssociationPath::getJoinOrder, nullsFirst(naturalOrder())));
 	}
 
 	public static Comparator<TeamMemberOutVO> createTeamMemberOutVO() {
-		Comparator<TeamMemberRoleVO> roleComp = nullsLast(comparing(TeamMemberRoleVO::getName, ALPHANUM_COMPARATOR));
-		Comparator<StaffOutVO> staffNameComp = nullsLast(new Comparator<StaffOutVO>() {
+		Comparator<TeamMemberRoleVO> roleComp = nullsFirst(comparing(TeamMemberRoleVO::getName, ALPHANUM_COMPARATOR));
+		Comparator<StaffOutVO> staffNameComp = nullsFirst(new Comparator<StaffOutVO>() {
 
 			@Override
 			public int compare(StaffOutVO a, StaffOutVO b) {
@@ -135,45 +137,45 @@ public final class ComparatorFactory {
 				return ALPHANUM_COMPARATOR.compare(a.getOrganisationName(), b.getOrganisationName());
 			}
 		});
-		return nullsLast(comparing(TeamMemberOutVO::getRole, roleComp)
+		return nullsFirst(comparing(TeamMemberOutVO::getRole, roleComp)
 				.thenComparing(TeamMemberOutVO::getStaff, staffNameComp)
 				.thenComparing(TeamMemberOutVO::getId));
 	}
 
 	public static Comparator<VisitScheduleItemOutVO> createVisitScheduleItemOutVO() {
-		Comparator<VisitScheduleItemOutVO> trialComp = nullsLast(comparing(VisitScheduleItemOutVO::getTrial, nullsLast(comparing(TrialOutVO::getName, ALPHANUM_COMPARATOR))));
-		Comparator<VisitScheduleItemOutVO> probandComp = nullsLast(
-				comparing(VisitScheduleItemOutVO::getGroup, nullsLast(comparing(ProbandGroupOutVO::getToken, ALPHANUM_COMPARATOR))));
-		Comparator<VisitScheduleItemOutVO> visitComp = nullsLast(comparing(VisitScheduleItemOutVO::getVisit, nullsLast(comparing(VisitOutVO::getToken, ALPHANUM_COMPARATOR))));
-		Comparator<VisitScheduleItemOutVO> tokenComp = nullsLast(comparing(VisitScheduleItemOutVO::getToken, ALPHANUM_COMPARATOR));
-		return nullsLast(trialComp.thenComparing(probandComp).thenComparing(visitComp).thenComparing(tokenComp).thenComparing(createVisitScheduleItemOutVOTemporalOnly()));
+		Comparator<VisitScheduleItemOutVO> trialComp = nullsFirst(comparing(VisitScheduleItemOutVO::getTrial, nullsFirst(comparing(TrialOutVO::getName, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> probandComp = nullsFirst(
+				comparing(VisitScheduleItemOutVO::getGroup, nullsFirst(comparing(ProbandGroupOutVO::getToken, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> visitComp = nullsFirst(comparing(VisitScheduleItemOutVO::getVisit, nullsFirst(comparing(VisitOutVO::getToken, ALPHANUM_COMPARATOR))));
+		Comparator<VisitScheduleItemOutVO> tokenComp = nullsFirst(comparing(VisitScheduleItemOutVO::getToken, ALPHANUM_COMPARATOR));
+		return nullsFirst(trialComp.thenComparing(probandComp).thenComparing(visitComp).thenComparing(tokenComp).thenComparing(createVisitScheduleItemOutVOTemporalOnly()));
 	}
 
 	public static Comparator<VisitScheduleItemOutVO> createVisitScheduleItemOutVOTemporalOnly() {
-		Comparator<VisitScheduleItemOutVO> dateComp = nullsLast(comparing(VisitScheduleItemOutVO::getStart, nullsLast(naturalOrder())));
+		Comparator<VisitScheduleItemOutVO> dateComp = nullsFirst(comparing(VisitScheduleItemOutVO::getStart, nullsFirst(naturalOrder())));
 		Comparator<VisitScheduleItemOutVO> idComp = comparingLong(VisitScheduleItemOutVO::getId);
-		return nullsLast(dateComp.thenComparing(idComp));
+		return nullsFirst(dateComp.thenComparing(idComp));
 	}
 
 	public static Comparator<Inventory> createInventory() {
-		return nullsLast(comparing(Inventory::getName, ALPHANUM_COMPARATOR));
+		return nullsFirst(comparing(Inventory::getName, ALPHANUM_COMPARATOR));
 	}
 
 	public static Comparator<ECRFStatusAction> createECRFStatusAction() {
-		return nullsLast(comparing(ECRFStatusAction::getAction, nullsLast((a, b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
+		return nullsFirst(comparing(ECRFStatusAction::getAction, nullsFirst((a, b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
 	}
 
 	public static Comparator<TrialStatusAction> createTrialStatusAction() {
-		return nullsLast(comparing(TrialStatusAction::getAction, nullsLast((a, b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
+		return nullsFirst(comparing(TrialStatusAction::getAction, nullsFirst((a, b) -> ALPHANUM_COMPARATOR.compare(a.getValue(), b.getValue()))));
 	}
 
 	public static Comparator<InputFieldSelectionSetValueOutVO> createInputFieldSelectionSetValueOutVO() {
-		Comparator<InputFieldOutVO> fieldNameComp = comparing(InputFieldOutVO::getName, nullsLast(ALPHANUM_COMPARATOR));
-		Comparator<InputFieldSelectionSetValueOutVO> fieldComp = comparing(InputFieldSelectionSetValueOutVO::getField, nullsLast(fieldNameComp));
-		Comparator<InputFieldSelectionSetValueOutVO> valueComp = comparing(InputFieldSelectionSetValueOutVO::getValue, nullsLast(ALPHANUM_COMPARATOR));
-		Comparator<InputFieldSelectionSetValueOutVO> nameComp = comparing(InputFieldSelectionSetValueOutVO::getName, nullsLast(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldOutVO> fieldNameComp = comparing(InputFieldOutVO::getName, nullsFirst(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldSelectionSetValueOutVO> fieldComp = comparing(InputFieldSelectionSetValueOutVO::getField, nullsFirst(fieldNameComp));
+		Comparator<InputFieldSelectionSetValueOutVO> valueComp = comparing(InputFieldSelectionSetValueOutVO::getValue, nullsFirst(ALPHANUM_COMPARATOR));
+		Comparator<InputFieldSelectionSetValueOutVO> nameComp = comparing(InputFieldSelectionSetValueOutVO::getName, nullsFirst(ALPHANUM_COMPARATOR));
 		Comparator<InputFieldSelectionSetValueOutVO> idComp = comparingLong(InputFieldSelectionSetValueOutVO::getId);
-		return nullsLast(fieldComp.thenComparing(valueComp).thenComparing(nameComp).thenComparing(idComp));
+		return nullsFirst(fieldComp.thenComparing(valueComp).thenComparing(nameComp).thenComparing(idComp));
 	}
 
 	public static final Comparator<StaffStatusEntryOutVO> STAFF_STATUS_ENTRY_OUT_VO_INTERVAL_COMP = createInterval(StaffStatusEntryOutVO::getStart, StaffStatusEntryOutVO::getStop);
@@ -198,7 +200,7 @@ public final class ComparatorFactory {
 			StaffStatusEntryOutVO::getStop);
 	public static final Comparator<ProbandStatusEntryOutVO> PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP = createScheduleInterval(ProbandStatusEntryOutVO::getStart,
 			ProbandStatusEntryOutVO::getStop);
-	public static final Comparator ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP = nullsLast(comparing(x -> {
+	public static final Comparator ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP = nullsFirst(comparing(x -> {
 		if (x instanceof ECRFFieldValueOutVO) {
 			return ((ECRFFieldValueOutVO) x).getModifiedTimestamp();
 		} else if (x instanceof ECRFFieldStatusEntryOutVO) {
@@ -206,121 +208,30 @@ public final class ComparatorFactory {
 		} else {
 			return null;
 		}
-	}, nullsLast(naturalOrder())));
+	}, nullsFirst(naturalOrder())));
 
 	private static <T> Comparator<T> createScheduleInterval(Function<T, ? extends Date> startAccessor, Function<T, ? extends Date> stopAccessor) {
-		return new Comparator<T>() {
-
-			Comparator<T> intervalComp = createInterval(startAccessor, stopAccessor);
-
-			@Override
-			public int compare(T a, T b) {
-				if (a != null && b != null) {
-					Date intervalAStart = startAccessor.apply(a);
-					Date intervalAStop = stopAccessor.apply(a);
-					Date intervalBStart = startAccessor.apply(b);
-					Date intervalBStop = stopAccessor.apply(b);
-					if (intervalAStart != null && intervalAStop != null) {
-						if (intervalBStart != null && intervalBStop != null) {
-							long intervalADuration = CommonUtil.dateDeltaSecs(intervalAStart, intervalAStop);
-							long intervalBDuration = CommonUtil.dateDeltaSecs(intervalBStart, intervalBStop);
-							if (intervalADuration == intervalBDuration) {
-								return intervalComp.compare(a, b);
-							} else {
-								return (new Long(intervalBDuration)).compareTo(intervalADuration);
-							}
-						} else {
-							return 1;
-						}
-					} else {
-						if (intervalBStart != null && intervalBStop != null) {
-							return -1;
-						} else {
-							return intervalComp.compare(a, b);
-						}
-					}
-				} else {
-					return intervalComp.compare(a, b);
-				}
-			}
-		};
+		Comparator<T> durationComparison = nullsFirst(comparing(x -> x == null ? null : CommonUtil.dateDeltaSecs(startAccessor.apply(x), stopAccessor.apply(x)), nullsLast(reverseOrder())));
+		return durationComparison.thenComparing(createInterval(startAccessor, stopAccessor));
 	}
 
 	private static <T> Comparator<T> createInterval(Function<T, ? extends Date> startAccessor, Function<T, ? extends Date> stopAccessor) {
-		return new Comparator<T>() {
-
-			@Override
-			public int compare(T a, T b) {
-				if (a != null && b != null) {
-					Date intervalAStart = startAccessor.apply(a);
-					Date intervalAStop = stopAccessor.apply(a);
-					Date intervalBStart = startAccessor.apply(b);
-					Date intervalBStop = stopAccessor.apply(b);
-					if (intervalAStart != null && intervalAStop != null) { // closed interval
-						if (intervalBStart != null && intervalBStop != null) { // closed duration
-							return intervalAStart.compareTo(intervalBStart);
-						} else if (intervalBStart == null && intervalBStop != null) {
-							return -1;
-						} else if (intervalBStart != null && intervalBStop == null) {
-							return intervalAStart.compareTo(intervalBStart);
-						} else {
-							return -1;
-						}
-					} else if (intervalAStart == null && intervalAStop != null) {
-						if (intervalBStart != null && intervalBStop != null) {
-							return 1;
-						} else if (intervalBStart == null && intervalBStop != null) {
-							return 0;
-						} else if (intervalBStart != null && intervalBStop == null) {
-							return 1;
-						} else {
-							return 0;
-						}
-					} else if (intervalAStart != null && intervalAStop == null) {
-						if (intervalBStart != null && intervalBStop != null) {
-							return intervalAStart.compareTo(intervalBStart);
-						} else if (intervalBStart == null && intervalBStop != null) {
-							return -1;
-						} else if (intervalBStart != null && intervalBStop == null) {
-							return intervalAStart.compareTo(intervalBStart);
-						} else {
-							return -1;
-						}
-					} else {
-						if (intervalBStart != null && intervalBStop != null) {
-							return 1;
-						} else if (intervalBStart == null && intervalBStop != null) {
-							return 0;
-						} else if (intervalBStart != null && intervalBStop == null) {
-							return 1;
-						} else {
-							return 0;
-						}
-					}
-				} else if (a == null && b != null) {
-					return -1;
-				} else if (a != null && b == null) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-		};
+		return nullsFirst(comparing(startAccessor,nullsLast(naturalOrder())).thenComparing(stopAccessor,nullsLast(naturalOrder())));
 	}
 
 	public static Comparator<ProbandListEntryTagValueOutVO> createProbandListEntryTagValueOutVO() {
-		return nullsLast(comparing(ProbandListEntryTagValueOutVO::getTag, nullsLast(comparing(ProbandListEntryTagOutVO::getPosition, nullsLast(naturalOrder())))));
+		return nullsFirst(comparing(ProbandListEntryTagValueOutVO::getTag, nullsFirst(comparing(ProbandListEntryTagOutVO::getPosition, nullsFirst(naturalOrder())))));
 	}
 	
 	public static Comparator<Map.Entry<String, String>> createKeyValueLength() {
-		return nullsLast(comparing(x->x.getValue(), nullsLast(comparingInt(String::length))));
+		return nullsFirst(comparing(x->x.getValue(), nullsFirst(comparingInt(String::length))));
 	}
 
 	public static <T, U extends Comparable<? super U>> Comparator<T> createSafeLong(Function<? super T, ? extends U> keyExtractor) {
-		return nullsLast(comparing(keyExtractor, nullsLast(naturalOrder())));
+		return nullsFirst(comparing(keyExtractor, nullsFirst(naturalOrder())));
 	}
 
 	public static <T> Comparator<T> createReflectionId() {
-		return nullsLast(comparing(obj -> CommonUtil.getSafeLong(obj, "getId"), nullsLast(naturalOrder())));
+		return nullsFirst(comparing(obj -> CommonUtil.getSafeLong(obj, "getId"), nullsFirst(naturalOrder())));
 	}
 }
