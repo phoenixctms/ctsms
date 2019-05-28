@@ -47,9 +47,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ProbandListEntryTagValueDaoImpl
 		extends ProbandListEntryTagValueDaoBase {
 
-	private final static Comparator<InputFieldSelectionSetValueOutVO> SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueOutVO::getId);
-	private final static Comparator<InputFieldSelectionSetValueJsonVO> SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueJsonVO::getId);
-
 	private static void applySortOrders(org.hibernate.Criteria listEntryTagCriteria) {
 		if (listEntryTagCriteria != null) {
 			listEntryTagCriteria.addOrder(Order.asc("trial"));
@@ -445,7 +442,7 @@ public class ProbandListEntryTagValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
 		}
-		result.sort(SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
 		return result;
 	}
 
@@ -470,7 +467,7 @@ public class ProbandListEntryTagValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
 		}
-		result.sort(SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
 		return result;
 	}
 

@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 public class CourseParticipationStatusTypeDaoImpl
 		extends CourseParticipationStatusTypeDaoBase {
 
-	private final static Comparator<CourseParticipationStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(CourseParticipationStatusType::getId);
+	private final static Comparator<CourseParticipationStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(CourseParticipationStatusType::getId);
 
 	/**
 	 * @inheritDoc

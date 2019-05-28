@@ -27,7 +27,7 @@ public class CriterionPropertyDaoImpl
 		extends CriterionPropertyDaoBase {
 
 	private final static Comparator<CriterionRestrictionVO> CRITERION_RESTRICTION_ID_COMPARATOR = 
-			ComparatorFactory.createSafeLong(CriterionRestrictionVO::getId);
+			ComparatorFactory.createNullSafe(CriterionRestrictionVO::getId);
 
 	private org.hibernate.Criteria createPropertyCriteria() {
 		org.hibernate.Criteria propertyCriteria = this.getSession().createCriteria(CriterionProperty.class);

@@ -25,8 +25,8 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 public class TrialStatusTypeDaoImpl
 		extends TrialStatusTypeDaoBase {
 
-	private final static Comparator<TrialStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(TrialStatusType::getId);
-	private final static Comparator<TrialStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createSafeLong(TrialStatusActionVO::getId);
+	private final static Comparator<TrialStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(TrialStatusType::getId);
+	private final static Comparator<TrialStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createNullSafe(TrialStatusActionVO::getId);
 
 	private org.hibernate.Criteria createTrialStatusTypeCriteria() {
 		org.hibernate.Criteria trialStatusTypeCriteria = this.getSession().createCriteria(TrialStatusType.class);

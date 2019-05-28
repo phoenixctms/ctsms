@@ -21,8 +21,8 @@ import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 public class ECRFStatusTypeDaoImpl
 		extends ECRFStatusTypeDaoBase {
 
-	private final static Comparator<ECRFStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(ECRFStatusType::getId);
-	private final static Comparator<ECRFStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createSafeLong(ECRFStatusActionVO::getId);
+	private final static Comparator<ECRFStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFStatusType::getId);
+	private final static Comparator<ECRFStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFStatusActionVO::getId);
 
 	private org.hibernate.Criteria createEcrfStatusTypeCriteria() {
 		org.hibernate.Criteria ecrfStatusTypeCriteria = this.getSession().createCriteria(ECRFStatusType.class);

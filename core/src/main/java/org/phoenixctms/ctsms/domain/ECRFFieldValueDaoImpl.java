@@ -46,9 +46,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ECRFFieldValueDaoImpl
 		extends ECRFFieldValueDaoBase {
 
-	private final static Comparator<InputFieldSelectionSetValueOutVO> SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueOutVO::getId);
-	private final static Comparator<InputFieldSelectionSetValueJsonVO> SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(InputFieldSelectionSetValueJsonVO::getId);
-
 	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
 			org.hibernate.Criteria probandListEntryCriteria, Long probandListEntryId, Long ecrfFieldId) {
 		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, ecrfFieldCriteria, probandListEntryCriteria, probandListEntryId, ecrfFieldId);
@@ -921,7 +918,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
 		}
-		result.sort(SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
 		return result;
 	}
 
@@ -946,7 +943,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
 		}
-		result.sort(SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
 		return result;
 	}
 

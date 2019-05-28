@@ -61,7 +61,6 @@ import org.phoenixctms.ctsms.adapt.VisitTokenCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
-import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -2384,7 +2383,7 @@ public class TrialServiceImpl
 		ECRFStatusType newState = statusEntry.getStatus();
 		// if (oldStatus == null || !oldStatus.equals(newState)) {
 		ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
-		Collections.sort(sortedActions, ComparatorFactory.createECRFStatusAction());
+		Collections.sort(sortedActions, ComparatorFactory.ECRF_STATUS_ACTION_COMP);
 		Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
@@ -3230,7 +3229,7 @@ public class TrialServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			Collections.sort(inquiryValues, new InquiryValueOutVOComparator());
+			Collections.sort(inquiryValues, ComparatorFactory.INQUIRY_VALUE_OUT_VO_COMP);
 			result.setPageValues(inquiryValues);
 			if (jsInquiryValues != null) {
 				result.setJsValues(jsInquiryValues);

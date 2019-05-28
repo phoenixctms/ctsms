@@ -120,9 +120,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
-	private static final Comparator<CriterionInstantVO> CRITERION_INSTANT_VO_COMPARATOR = ComparatorFactory.createSafeLong(CriterionInstantVO::getPosition);
-	private static final Comparator<Criterion> CRITERION_COMPARATOR = ComparatorFactory.createSafeLong(Criterion::getId);
-			
+	private static final Comparator<Criterion> CRITERION_COMPARATOR = ComparatorFactory.createNullSafe(Criterion::getId);
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -542,7 +540,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			throw ServiceUtil.initAuthorisationExceptionWithPosition(AuthorisationExceptionCodes.CRITERIA_MODIFIED_DIFFERENT_NUMBER_OF_CRITERIONS, logError, null);
 		}
 		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<>(criterons);
-		sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
+		sortedCriterions.sort(ComparatorFactory.CRITERION_INSTANT_VO_COMPARATOR);
 		ArrayList<Criterion> sortedOriginalCriterions = new ArrayList<>(storedCriterons);
 		sortedOriginalCriterions.sort(CRITERION_COMPARATOR);
 		for (int i = 0; i < sortedCriterions.size(); i++) {

@@ -57,7 +57,7 @@ import org.primefaces.context.RequestContext;
 public abstract class SearchBeanBase extends PickerBeanBase {
 	
 	private static final Comparator<CriterionInVO> CRITERION_IN_VO_COMPARATOR = 
-			ComparatorFactory.createSafeLong(CriterionInVO::getPosition);
+			ComparatorFactory.createNullSafe(CriterionInVO::getPosition);
 
 	private static void copyCriteriaOutToIn(CriteriaInVO criteriaIn, ArrayList<CriterionInVO> criterionsIn, CriteriaOutVO out) {
 		if (criteriaIn != null && criterionsIn != null && out != null) {

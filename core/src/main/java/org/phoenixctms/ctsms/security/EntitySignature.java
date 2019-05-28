@@ -55,7 +55,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 	private final static MethodTransfilter PROPERTY_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(PROPERTY_LOWER_CASE_FIELD_NAMES);
 	private final static ToStringStyle COMMENT_VALUE_TO_STRING_STYLE = ToStringStyle.SHORT_PREFIX_STYLE;
 	
-	private final static Comparator<Object> PROPERTY_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createReflectionId();
+	private final static Comparator<Object> PROPERTY_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createGetIdReflective();
 
 	protected static void addFieldToMap(HashMap<Class, HashSet<String>> fieldMap, Class entity, String fieldName) {
 		if (fieldMap.containsKey(entity)) {
@@ -304,8 +304,8 @@ public abstract class EntitySignature extends GraphEnumerator {
 		signature.update(CoreUtil.serialize(entityToSerializable(User.class, signee)));
 		signature.update(CoreUtil.serialize(entityToSerializable(Staff.class, signee.getIdentity())));
 		signature.update(CoreUtil.serialize(timestamp));
-		TreeMap<String, Serializable> referenceFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
-		TreeMap<String, Serializable> deferredCollectionMapFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		TreeMap<String, Serializable> referenceFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMP);
+		TreeMap<String, Serializable> deferredCollectionMapFieldMap = new TreeMap<String, Serializable>(ComparatorFactory.ALPHANUM_TRIM_COMP);
 		Iterator<EntitySignature> entitySignatureIt = entitySignatures.iterator();
 		while (entitySignatureIt.hasNext()) {
 			EntitySignature entitySignature = entitySignatureIt.next();

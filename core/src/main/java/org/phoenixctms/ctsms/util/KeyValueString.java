@@ -96,7 +96,7 @@ import org.phoenixctms.ctsms.vo.VisitTypeVO;
 
 public class KeyValueString extends GraphEnumerator {
 
-	private final static Comparator<Object> VO_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createReflectionId();
+	private final static Comparator<Object> VO_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createGetIdReflective();
 
 	public static ArrayList<KeyValueString> getKeyValuePairs(Class vo, int depth,
 			boolean omitFields,

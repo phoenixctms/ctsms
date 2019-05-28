@@ -380,7 +380,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		referenceFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		referenceFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMP);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -389,7 +389,7 @@ public final class CoreUtil {
 			result.append(referenceFieldsIt.next());
 		}
 		
-		deferredCollectionMapFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		deferredCollectionMapFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMP);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -453,7 +453,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		Collections.sort(referenceFields, ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		Collections.sort(referenceFields, ComparatorFactory.ALPHANUM_TRIM_COMP);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -461,7 +461,7 @@ public final class CoreUtil {
 			}
 			result.append(referenceFieldsIt.next());
 		}
-		Collections.sort(deferredCollectionMapFields, ComparatorFactory.ALPHANUM_TRIM_COMPARATOR);
+		Collections.sort(deferredCollectionMapFields, ComparatorFactory.ALPHANUM_TRIM_COMP);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {

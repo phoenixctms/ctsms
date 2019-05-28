@@ -38,8 +38,7 @@ public class AspDaoImpl
 	private final static boolean MATCH_SUBSTANCE_NAME = true;
 	private final static boolean MATCH_ATC_CODE_CODE = true;
 	private final static boolean MATCH_REGISTRATION_NUMBER = true;
-	private final static Comparator<AspSubstanceVO> SUBSTANCE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspSubstanceVO::getId);
-	private final static Comparator<AspAtcCodeVO> ATC_CODE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspAtcCodeVO::getId);
+	private final static Comparator<AspAtcCodeVO> ID_COMPARATOR = ComparatorFactory.createNullSafe(AspAtcCodeVO::getId);
 
 	private static void applyAspNameCriterions(org.hibernate.Criteria aspCriteria, String nameInfix) {
 		String revision = Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION);
@@ -230,7 +229,7 @@ public class AspDaoImpl
 		while (it.hasNext()) {
 			result.add(aspAtcCodeDao.toAspAtcCodeVO(it.next()));
 		}
-		result.sort(ATC_CODE_ID_COMPARATOR);
+		result.sort(ID_COMPARATOR);
 		return result;
 	}
 
@@ -242,7 +241,7 @@ public class AspDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		result.sort(SUBSTANCE_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SUBSTANCE_ID_COMPARATOR);
 		return result;
 	}
 

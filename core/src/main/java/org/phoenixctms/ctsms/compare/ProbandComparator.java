@@ -39,11 +39,11 @@ public class ProbandComparator implements Comparator<Proband> {
 				ProbandContactParticulars bpp = b.getPersonParticulars();
 				if (app != null && bpp != null) {
 					if (!a.isBlinded() && !b.isBlinded()) {
-						int lastnameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(getLastName(app), getLastName(bpp));
+						int lastnameComparison = ComparatorFactory.ALPHANUM_COMP.compare(getLastName(app), getLastName(bpp));
 						if (lastnameComparison != 0) {
 							return lastnameComparison;
 						} else {
-							int firstNameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(getFirstName(app), getFirstName(bpp));
+							int firstNameComparison = ComparatorFactory.ALPHANUM_COMP.compare(getFirstName(app), getFirstName(bpp));
 							if (firstNameComparison != 0) {
 								return firstNameComparison;
 							} else {
@@ -55,7 +55,7 @@ public class ProbandComparator implements Comparator<Proband> {
 					} else if (a.isBlinded() && !b.isBlinded()) {
 						return 1;
 					} else {
-						int aliasComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(app.getAlias(), bpp.getAlias());
+						int aliasComparison = ComparatorFactory.ALPHANUM_COMP.compare(app.getAlias(), bpp.getAlias());
 						if (aliasComparison != 0) {
 							return aliasComparison;
 						} else {
@@ -74,7 +74,7 @@ public class ProbandComparator implements Comparator<Proband> {
 				AnimalContactParticulars bap = b.getAnimalParticulars();
 				if (aap != null && bap != null) {
 					if (!a.isBlinded() && !b.isBlinded()) {
-						int animalNameComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(aap.getAnimalName(), bap.getAnimalName());
+						int animalNameComparison = ComparatorFactory.ALPHANUM_COMP.compare(aap.getAnimalName(), bap.getAnimalName());
 						if (animalNameComparison != 0) {
 							return animalNameComparison;
 						} else {
@@ -85,7 +85,7 @@ public class ProbandComparator implements Comparator<Proband> {
 					} else if (a.isBlinded() && !b.isBlinded()) {
 						return 1;
 					} else {
-						int aliasComparison = ComparatorFactory.ALPHANUM_COMPARATOR.compare(aap.getAlias(), bap.getAlias());
+						int aliasComparison = ComparatorFactory.ALPHANUM_COMP.compare(aap.getAlias(), bap.getAlias());
 						if (aliasComparison != 0) {
 							return aliasComparison;
 						} else {

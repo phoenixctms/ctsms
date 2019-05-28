@@ -55,7 +55,7 @@ public class GroupAdaptiveRandomization extends Randomization {
 	// p2b: 0 + 1 / 4 + 3 = 1 / 7 p2b: 1 + 1 / 4 + 3 = 2 / 7
 	// p2c: 2 + 1 / 4 + 3 = 3 / 7 p2c: 2 + 1 / 4 + 3 = 3 / 7
 	// ->...
-	private final static Comparator<ProbandGroup> ID_COMPARATOR = ComparatorFactory.createSafeLong(ProbandGroup::getId);
+	private final static Comparator<ProbandGroup> ID_COMPARATOR = ComparatorFactory.createNullSafe(ProbandGroup::getId);
 
 	private final static long getOtherGroupsSize(long groupId, Set<Entry<Long, Long>> groupSizes) {
 		Iterator<Entry<Long, Long>> it = groupSizes.iterator();

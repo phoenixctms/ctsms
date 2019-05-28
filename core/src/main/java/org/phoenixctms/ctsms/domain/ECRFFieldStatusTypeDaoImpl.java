@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 public class ECRFFieldStatusTypeDaoImpl
 		extends ECRFFieldStatusTypeDaoBase {
 
-	private final static Comparator<ECRFFieldStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(ECRFFieldStatusType::getId);
+	private final static Comparator<ECRFFieldStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFFieldStatusType::getId);
 
 	private void applySystemCriterions(org.hibernate.Criteria ecrfFieldStatusTypeCriteria, Boolean system) {
 		if (system != null) {

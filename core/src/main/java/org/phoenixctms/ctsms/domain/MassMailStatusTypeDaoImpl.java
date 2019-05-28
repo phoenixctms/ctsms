@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 public class MassMailStatusTypeDaoImpl
 		extends MassMailStatusTypeDaoBase {
 
-	private final static Comparator<MassMailStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(MassMailStatusType::getId);
+	private final static Comparator<MassMailStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(MassMailStatusType::getId);
 
 	private org.hibernate.Criteria createMassMailStatusTypeCriteria() {
 		org.hibernate.Criteria massMailStatusTypeCriteria = this.getSession().createCriteria(MassMailStatusType.class);

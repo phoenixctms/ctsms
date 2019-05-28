@@ -62,7 +62,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class NotificationDaoImpl
 		extends NotificationDaoBase {
 
-	private final static Comparator<NotificationRecipientVO> RECIPIENT_VO_ID_COMPARATOR = ComparatorFactory.createSafeLong(NotificationRecipientVO::getId);
+	private final static Comparator<NotificationRecipientVO> RECIPIENT_VO_ID_COMPARATOR = ComparatorFactory.createNullSafe(NotificationRecipientVO::getId);
 	private final static String TEMPLATE_ENCODING = "UTF-8";
 	// private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
 	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {

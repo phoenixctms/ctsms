@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 
 public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AVO> {
 
-	private Comparator<A> idComparator = ComparatorFactory.createReflectionId();
+	private final Comparator<A> idComparator = ComparatorFactory.createGetIdReflective();
 
 	protected abstract A aquireWriteLock(Long id) throws ServiceException;
 

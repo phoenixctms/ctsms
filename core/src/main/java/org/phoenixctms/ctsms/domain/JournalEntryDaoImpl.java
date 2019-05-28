@@ -58,6 +58,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class JournalEntryDaoImpl
 		extends JournalEntryDaoBase {
 
+	private static final Comparator<JournalEntry> ID_COMPARATOR = ComparatorFactory.createNullSafe(JournalEntry::getId);
 	private final static int RECENT_JOURNAL_ENTRY_PAGE_SIZE_BASE = 10;
 
 	private static void applyRecentJournalEntryTimestampCriterion(org.hibernate.Criteria journalCriteria, Date now) {
@@ -647,7 +648,7 @@ public class JournalEntryDaoImpl
 			}
 		}
 		ArrayList<JournalEntry> result = new ArrayList<JournalEntry>(distinctJournalEntryMap.values());
-		result.sort(ComparatorFactory.createSafeLong(JournalEntry::getId));
+		result.sort(ID_COMPARATOR);
 		return result;
 	}
 

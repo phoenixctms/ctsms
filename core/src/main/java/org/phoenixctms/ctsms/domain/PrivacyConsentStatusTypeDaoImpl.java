@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
 public class PrivacyConsentStatusTypeDaoImpl
 		extends PrivacyConsentStatusTypeDaoBase {
 
-	private final static Comparator<PrivacyConsentStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(PrivacyConsentStatusType::getId);
+	private final static Comparator<PrivacyConsentStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(PrivacyConsentStatusType::getId);
 
 	private org.hibernate.Criteria createPrivacyConsentStatusTypeCriteria() {
 		org.hibernate.Criteria privacyConsentStatusTypeCriteria = this.getSession().createCriteria(PrivacyConsentStatusType.class);

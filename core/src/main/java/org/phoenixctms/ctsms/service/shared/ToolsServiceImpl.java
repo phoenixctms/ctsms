@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -141,6 +142,8 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
  */
 public class ToolsServiceImpl
 		extends ToolsServiceBase {
+
+	private static final Comparator<Notification> ID_COMPARATOR = ComparatorFactory.createNullSafe(Notification::getId);
 
 	private static HashSet<Long> createSendDepartmentStaffCategorySet(NotificationType notificationType) {
 		Collection<StaffCategory> sendDepartmentStaffCategories = notificationType.getSendDepartmentStaffCategories();
@@ -1065,7 +1068,7 @@ public class ToolsServiceImpl
 				}
 			} else if (maintenanceScheduleItem.isRecurring()) {
 				if (ReminderEntityAdapter.getInstance(maintenanceScheduleItem).getReminderStart(today, false, null, null)
-						.compareTo(Collections.max(notifications, ComparatorFactory.createSafeLong(Notification::getId)).getDate()) > 0) {
+						.compareTo(Collections.max(notifications, ID_COMPARATOR).getDate()) > 0) {
 					if (notificationDao.addNotification(maintenanceScheduleItem, today, null) != null) {
 						count++;
 					}

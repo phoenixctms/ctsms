@@ -91,7 +91,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	protected Collection<Course> getEntityChildren(Course source) {
 		Collection<Course> renewals = source.getRenewals();
 		if (renewals.size() > 1) {
-			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.createCourseComparator());
+			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.COURSE_COMP);
 			result.addAll(renewals);
 			return result;
 		} else {
@@ -116,7 +116,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	protected Collection<Course> getEntityParents(Course source) {
 		Collection<Course> precedingCourses = source.getPrecedingCourses();
 		if (precedingCourses.size() > 1) {
-			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.createCourseComparator());
+			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.COURSE_COMP);
 			result.addAll(precedingCourses);
 			return result;
 		} else {

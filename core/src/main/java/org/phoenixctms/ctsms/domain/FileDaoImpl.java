@@ -633,7 +633,7 @@ public class FileDaoImpl
 				}
 			}
 		}
-		result.sort(ComparatorFactory.ALPHANUM_COMPARATOR);
+		result.sort(ComparatorFactory.ALPHANUM_COMP);
 		return result;
 	}
 

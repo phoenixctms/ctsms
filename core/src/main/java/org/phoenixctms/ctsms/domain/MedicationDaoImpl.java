@@ -45,7 +45,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class MedicationDaoImpl
 		extends MedicationDaoBase {
 
-	private final static Comparator<AspSubstanceVO> SUBSTANCE_ID_COMPARATOR = ComparatorFactory.createSafeLong(AspSubstanceVO::getId);
 	private static final String MEDICATION_ASP_NAME = "{0}";
 	private static final String MEDICATION_SUBSTANCES_NAME = "{0}";
 
@@ -433,7 +432,7 @@ public class MedicationDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		result.sort(SUBSTANCE_ID_COMPARATOR);
+		result.sort(ComparatorFactory.SUBSTANCE_ID_COMPARATOR);
 		return result;
 	}
 

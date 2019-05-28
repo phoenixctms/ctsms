@@ -73,9 +73,6 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 
 public final class QueryUtil {
 
-	private static final Comparator<CriterionInstantVO> CRITERION_INSTANT_VO_COMPARATOR = 
-			ComparatorFactory.createSafeLong(CriterionInstantVO::getPosition);
-	
 	static final class StaticCriterionTerm {
 
 		private String property;
@@ -232,7 +229,7 @@ public final class QueryUtil {
 
 	private static void appendJoins(StringBuilder statement, HashMap<String, AssociationPath> explicitJoinsMap) {
 		ArrayList<AssociationPath> joins = new ArrayList<AssociationPath>(explicitJoinsMap.values());
-		Collections.sort(joins, ComparatorFactory.createAssociationPath());
+		Collections.sort(joins, ComparatorFactory.ASSOCIATION_PATH_COMP);
 		Iterator<AssociationPath> it = joins.iterator();
 		while (it.hasNext()) {
 			AssociationPath join = it.next();
@@ -1111,7 +1108,7 @@ public final class QueryUtil {
 			Collection<CriterionInstantVO> criterions = criteriaInstantVO.getCriterions();
 			if (criterions != null && criterions.size() > 0) {
 				sortedCriterions = new ArrayList<CriterionInstantVO>(criterions);
-				sortedCriterions.sort(CRITERION_INSTANT_VO_COMPARATOR);
+				sortedCriterions.sort(ComparatorFactory.CRITERION_INSTANT_VO_COMPARATOR);
 			}
 		}
 		StringBuilder sqlSetStatement = new StringBuilder();

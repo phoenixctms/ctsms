@@ -77,7 +77,7 @@ public class InventoryReflexionGraph extends ReflexionCycleHelper<Inventory, Inv
 	protected Collection<Inventory> getEntityChildren(Inventory source) {
 		Collection<Inventory> children = source.getChildren();
 		if (children.size() > 1) {
-			TreeSet<Inventory> result = new TreeSet<Inventory>(ComparatorFactory.createInventory());
+			TreeSet<Inventory> result = new TreeSet<Inventory>(ComparatorFactory.INVENTORY_COMP);
 			result.addAll(children);
 			return result;
 		} else {

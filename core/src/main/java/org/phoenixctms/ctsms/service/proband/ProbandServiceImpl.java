@@ -31,7 +31,6 @@ import org.phoenixctms.ctsms.adapt.ProbandStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProcedureCollisionFinder;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.domain.AlphaId;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Asp;
@@ -2427,7 +2426,7 @@ public class ProbandServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			Collections.sort(inquiryValues, new InquiryValueOutVOComparator());
+			Collections.sort(inquiryValues, ComparatorFactory.INQUIRY_VALUE_OUT_VO_COMP);
 			result.setPageValues(inquiryValues);
 			if (jsInquiryValues != null) {
 				result.setJsValues(jsInquiryValues);

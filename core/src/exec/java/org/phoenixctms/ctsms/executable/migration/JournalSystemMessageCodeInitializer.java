@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializer {
 
-	private static final Comparator<Map.Entry<String,String>> TITLE_FORMAT_COMPARATOR = ComparatorFactory.createKeyValueLength().reversed();
 	private final static ArrayList<Entry<String, Pattern>> LEGACY_TITLE_REGEXP = new ArrayList<Map.Entry<String, Pattern>>();
 	static {
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, "Wartungseintrag erstellt - {0}");
@@ -93,7 +92,7 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 			}
 			ArrayList<Entry<String, String>> titleFormatList = new ArrayList<Entry<String, String>>(titleFormatMap.entrySet());
 			titleFormatMap.clear();
-			Collections.sort(titleFormatList, TITLE_FORMAT_COMPARATOR);
+			Collections.sort(titleFormatList, ComparatorFactory.KEY_VALUE_LENGTH_COMP);
 			Iterator<Entry<String, String>> titleFormatIt = titleFormatList.iterator();
 			while (titleFormatIt.hasNext()) {
 				Entry<String, String> codeTitleFormat = titleFormatIt.next();

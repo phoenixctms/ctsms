@@ -25,8 +25,8 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 public class ProbandListStatusTypeDaoImpl
 		extends ProbandListStatusTypeDaoBase {
 
-	private final static Comparator<ProbandListStatusType> ID_COMPARATOR = ComparatorFactory.createSafeLong(ProbandListStatusType::getId);
-	private final static Comparator<ProbandListStatusLogLevelVO> LOG_LEVEL_ID_COMPARATOR = ComparatorFactory.createSafeLong(ProbandListStatusLogLevelVO::getId);
+	private final static Comparator<ProbandListStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ProbandListStatusType::getId);
+	private final static Comparator<ProbandListStatusLogLevelVO> LOG_LEVEL_ID_COMPARATOR = ComparatorFactory.createNullSafe(ProbandListStatusLogLevelVO::getId);
 
 	private org.hibernate.Criteria createProbandListStatusTypeCriteria() {
 		org.hibernate.Criteria probandListStatusTypeCriteria = this.getSession().createCriteria(ProbandListStatusType.class);

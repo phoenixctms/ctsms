@@ -35,7 +35,6 @@ import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -173,7 +172,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 public final class ServiceUtil {
 
 	private final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE = "{0}: {1}";
-	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = ComparatorFactory.ALPHANUM_TRIM_COMPARATOR;
+	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = ComparatorFactory.ALPHANUM_TRIM_COMP;
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS = "ecrfField0";
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS = "ecrfFieldValue0";
 	public final static String INQUIRY_VALUE_DAO_INQUIRY_ALIAS = "inquiry0";
@@ -2407,7 +2406,7 @@ public final class ServiceUtil {
 				distinctFieldRows.put(vo.getId(), fieldRow);
 			}
 			VOs = new ArrayList<MoneyTransferOutVO>(VOs);
-			Collections.sort((List<MoneyTransferOutVO>) VOs, new MoneyTransferOutVOComparator());
+			Collections.sort((List<MoneyTransferOutVO>) VOs, ComparatorFactory.MONEY_TRANSFER_OUT_COMP);
 		}
 		writer.setVOs(VOs);
 		writer.setDistinctColumnNames(distinctColumnNames);
