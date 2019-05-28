@@ -161,7 +161,20 @@
 											value="#{!probandListEntry.vo.proband.decrypted}" />
 									</ui:include>
 								</p:column>
-								<p:column sortBy="#{probandListEntry.vo.proband.gender.name}">
+								
+								<p:column
+									sortBy="#{probandListEntry.vo.proband.department.name}"
+									filterBy="#{probandListEntry.vo.trial.department.id}"
+									filterOptions="#{sessionScopeBean.filterDepartments}">
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_department_column}" />
+									</f:facet>
+									<h:outputText value="#{probandListEntry.vo.proband.department.name}" />
+								</p:column>	
+								
+								<p:column sortBy="#{probandListEntry.vo.proband.gender.name}"
+									filterBy="#{probandListEntry.vo.proband.gender.sex}"
+									filterOptions="#{sessionScopeBean.filterSexes}">
 									<f:facet name="header">
 										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_gender_column}" />
 									</f:facet>
