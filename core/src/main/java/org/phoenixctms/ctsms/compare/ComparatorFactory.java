@@ -198,17 +198,14 @@ public final class ComparatorFactory {
 			StaffStatusEntryOutVO::getStop);
 	public static final Comparator<ProbandStatusEntryOutVO> PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP = createScheduleInterval(ProbandStatusEntryOutVO::getStart,
 			ProbandStatusEntryOutVO::getStop);
-	public static final Comparator ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP = nullsLast(comparing(x -> x.getClass().getName()).thenComparing(x -> {
+	public static final Comparator ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP = nullsLast(comparing(x -> {
 		if (x instanceof ECRFFieldValueOutVO) {
 			return ((ECRFFieldValueOutVO) x).getModifiedTimestamp();
 		} else if (x instanceof ECRFFieldStatusEntryOutVO) {
 			return ((ECRFFieldStatusEntryOutVO) x).getModifiedTimestamp();
-		} else if (x instanceof ECRFFieldValueOutVO) {
-			return ((ECRFFieldValueOutVO) x).getModifiedTimestamp();
-		} else if (x instanceof ECRFFieldStatusEntryOutVO) {
-			return ((ECRFFieldStatusEntryOutVO) x).getModifiedTimestamp();
+		} else {
+			return null;
 		}
-		return null;
 	}, nullsLast(naturalOrder())));
 
 	private static <T> Comparator<T> createScheduleInterval(Function<T, ? extends Date> startAccessor, Function<T, ? extends Date> stopAccessor) {
