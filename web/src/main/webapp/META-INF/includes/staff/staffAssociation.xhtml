@@ -220,6 +220,7 @@
 											type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
+											styleClass="ctsms-list-header-button"
 											onclick="onBehalfOfInventoryBookingTableColumnsDialog.show()" />										
 										<p:commandButton
 											process="@this"
@@ -1003,10 +1004,11 @@
 										<h:outputText value="#{staffAssociationBean.trialMembershipModel.rowCount} #{stafflabels.staff_association_trial_membership_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
 										<p:commandButton
-								type="button"
-								title="#{labels.open_table_columns_dialog_button_label}"
-								icon="ui-icon ui-icon-wrench"
-								onclick="trialMembershipTableColumnsDialog.show()" />
+											type="button"
+											title="#{labels.open_table_columns_dialog_button_label}"
+											icon="ui-icon ui-icon-wrench"
+											styleClass="ctsms-list-header-button"
+											onclick="trialMembershipTableColumnsDialog.show()" />
 										<p:commandButton
 											process="@this"
 											actionListener="#{staffAssociationBean.refreshTrialMembership}"

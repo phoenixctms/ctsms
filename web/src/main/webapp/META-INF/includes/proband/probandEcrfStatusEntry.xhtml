@@ -86,7 +86,18 @@
 							update=":tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:ecrf_header,:tabView:probandecrfstatusentry_form:ecrffield_input_grid"
 							oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 						<f:facet name="header">
-							<h:outputText value="#{probandEcrfStatusEntryBean.probandListEntryModel.rowCount} #{probandlabels.probandecrfstatus_proband_list_header}" />
+							<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{probandEcrfStatusEntryBean.probandListEntryModel.rowCount} #{probandlabels.probandecrfstatus_proband_list_header}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									styleClass="ctsms-list-header-button"
+									onclick="probandEcrfStatusProbandListTableColumnsDialog.show()" />
+							</h:panelGrid>	
 						</f:facet>
 						
 									<p:column sortBy="#{probandListEntry.vo.id}">
@@ -112,6 +123,16 @@
 								value="true" />
 						</ui:include>
 					</p:column>
+					<p:column
+						sortBy="#{probandListEntry.vo.trial.department}"
+						filterBy="#{probandListEntry.vo.trial.department.id}"
+						filterOptions="#{sessionScopeBean.filterDepartments}">
+						<f:attribute name="visibleDefault" value = "false" />
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.probandecrfstatus_proband_list_trial_department_column}" />
+						</f:facet>
+						<h:outputText value="#{probandListEntry.vo.trial.department.name}" />
+					</p:column>	
 						<p:column sortBy="#{probandListEntry.vo.position}">
 							<f:facet name="header">
 								<h:outputText value="#{probandlabels.probandecrfstatus_proband_list_position_column}" />
@@ -1134,6 +1155,14 @@
 						onclick="signAllEcrfsPassword.hide();ecrfsAllPassword.setValue('');"
 						type="button" />
 				</p:confirmDialog>	
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="probandEcrfStatusProbandListTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list" />
+			</ui:include>					
 		</h:form>
 	</ui:composition>
 </h:body>

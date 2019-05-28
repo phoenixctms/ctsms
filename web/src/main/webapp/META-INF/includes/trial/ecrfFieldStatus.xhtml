@@ -56,6 +56,7 @@
 								type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
 								onclick="ecrfFieldStatusTableColumnsDialog.show()" />							
 							<p:commandButton
 								process="@this"
@@ -139,6 +140,16 @@
 								value="true" />
 						</ui:include>
 					</p:column>
+						<p:column
+							sortBy="#{fieldStatusEntry.vo.listEntry.proband.department}"
+							filterBy="#{fieldStatusEntry.vo.listEntry.proband.department.id}"
+							filterOptions="#{sessionScopeBean.filterDepartments}">
+							<f:attribute name="visibleDefault" value = "false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_proband_department_column}" />
+							</f:facet>
+							<h:outputText value="#{fieldStatusEntry.vo.listEntry.proband.department.name}" />
+						</p:column>					
 					<p:column
 						style="width:200px;"
 						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.name}"
