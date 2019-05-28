@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class CollidingInventoryStatusEntryEagerModel extends EagerDataModelBase {
+public class CollidingInventoryStatusEntryEagerModel extends EagerDataModelBase<InventoryStatusEntryOutVO> {
 
 	public static CollidingInventoryStatusEntryEagerModel getCachedCollidingInventoryStatusEntryModel(InventoryBookingOutVO booking, boolean load,
 			HashMap<Long, CollidingInventoryStatusEntryEagerModel> collidingInventoryStatusEntryModelCache) {

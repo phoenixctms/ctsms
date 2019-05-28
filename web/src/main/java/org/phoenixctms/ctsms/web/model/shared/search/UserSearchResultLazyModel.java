@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class UserSearchResultLazyModel extends SearchResultLazyModel {
+public class UserSearchResultLazyModel extends SearchResultLazyModel<UserOutVO> {
 
 	private static final Integer GRAPH_MAX_USER_INSTANCES = 1;
 

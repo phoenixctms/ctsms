@@ -7,7 +7,7 @@ import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public abstract class MassMailRecipientLazyModelBase extends LazyDataModelBase {
+public abstract class MassMailRecipientLazyModelBase extends LazyDataModelBase<MassMailRecipientOutVO> {
 
 	protected HashMap<Long, EmailMessageVO> emailMessageCache;
 

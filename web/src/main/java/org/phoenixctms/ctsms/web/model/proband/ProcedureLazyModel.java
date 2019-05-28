@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.ProcedureOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProcedureLazyModel extends LazyDataModelBase {
+public class ProcedureLazyModel extends LazyDataModelBase<ProcedureOutVO> {
 
 	private Long probandId;
 

@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandStatusLazyModel extends LazyDataModelBase {
+public class ProbandStatusLazyModel extends LazyDataModelBase<ProbandStatusEntryOutVO> {
 
 	private Long probandId;
 	private Long departmentId;

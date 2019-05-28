@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class UserActivityLazyModel extends LazyDataModelBase {
+public class UserActivityLazyModel extends LazyDataModelBase<JournalEntryOutVO> {
 
 	private Long modifiedUserId;
 	private JournalModule module;

@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class UpcomingRenewalCourseEagerModel extends EagerDataModelBase {
+public class UpcomingRenewalCourseEagerModel extends EagerDataModelBase<CourseOutVO> {
 
 	public static UpcomingRenewalCourseEagerModel getCachedUpcomingRenewalCourseModel(CourseParticipationStatusEntryOutVO statusEntry,
 			HashMap<Long, UpcomingRenewalCourseEagerModel> upcomingRenewalCourseModelCache) {

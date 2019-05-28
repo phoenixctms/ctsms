@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandContactDetailValueLazyModel extends LazyDataModelBase {
+public class ProbandContactDetailValueLazyModel extends LazyDataModelBase<ProbandContactDetailValueOutVO> {
 
 	private Long probandId;
 

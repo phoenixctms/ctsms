@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class CollidingDutyRosterTurnEagerModel extends EagerDataModelBase {
+public class CollidingDutyRosterTurnEagerModel extends EagerDataModelBase<DutyRosterTurnOutVO> {
 
 	public static CollidingDutyRosterTurnEagerModel getCachedCollidingDutyRosterTurnModel(CourseParticipationStatusEntryOutVO courseParticipation, boolean load,
 			HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache) {

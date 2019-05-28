@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandSearchResultLazyModel extends SearchResultLazyModel {
+public class ProbandSearchResultLazyModel extends SearchResultLazyModel<ProbandOutVO> {
 
 	private static final Integer GRAPH_MAX_PROBAND_INSTANCES = 1;
 

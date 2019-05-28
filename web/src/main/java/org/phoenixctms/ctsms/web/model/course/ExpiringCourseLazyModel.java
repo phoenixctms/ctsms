@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ExpiringCourseLazyModel extends LazyDataModelBase {
+public class ExpiringCourseLazyModel extends LazyDataModelBase<CourseOutVO> {
 
 	private Long departmentId;
 	private Long courseCategoryId;

@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.js;
 import jdk.nashorn.api.scripting.JSObject;
 //import sun.org.mozilla.javascript.internal.Scriptable;
 
+@SuppressWarnings("restriction")
 public class ValidationError {
 
 	private final static String ECRF_FIELD_ID = "ecrfFieldId";

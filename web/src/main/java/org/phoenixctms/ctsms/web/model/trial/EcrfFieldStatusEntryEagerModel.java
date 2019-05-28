@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase {
+public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFFieldStatusEntryOutVO> {
 
 	private final static PSFVO INITIAL_PSF = new PSFVO();
 	static {

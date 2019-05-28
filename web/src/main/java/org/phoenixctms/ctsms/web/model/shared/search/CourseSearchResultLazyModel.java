@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class CourseSearchResultLazyModel extends SearchResultLazyModel {
+public class CourseSearchResultLazyModel extends SearchResultLazyModel<CourseOutVO> {
 
 	private static final Integer GRAPH_MAX_COURSE_INSTANCES = 1;
 

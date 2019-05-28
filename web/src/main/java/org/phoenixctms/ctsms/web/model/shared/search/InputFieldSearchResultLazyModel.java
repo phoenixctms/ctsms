@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class InputFieldSearchResultLazyModel extends SearchResultLazyModel {
+public class InputFieldSearchResultLazyModel extends SearchResultLazyModel<InputFieldOutVO> {
 
 	@Override
 	protected Collection<InputFieldOutVO> getLazyResultWCount(PSFVO psf) {

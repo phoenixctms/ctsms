@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class InventorySearchResultLazyModel extends SearchResultLazyModel {
+public class InventorySearchResultLazyModel extends SearchResultLazyModel<InventoryOutVO> {
 
 	private static final Integer GRAPH_MAX_INVENTORY_INSTANCES = 2;
 

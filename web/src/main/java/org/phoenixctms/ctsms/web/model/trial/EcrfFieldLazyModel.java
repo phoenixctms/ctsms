@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfFieldLazyModel extends LazyDataModelBase {
+public class EcrfFieldLazyModel extends LazyDataModelBase<ECRFFieldOutVO> {
 
 	private Long trialId;
 	private Long ecrfId;

@@ -7,11 +7,12 @@ import java.util.Set;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 
 //http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
-public class JSObjectMap extends AbstractJSObject implements Map {
+@SuppressWarnings("restriction")
+public class JSObjectMap extends AbstractJSObject implements Map<String,Object> {
 
-	public final Map map;
+	public final Map<String,Object> map;
 
-	public JSObjectMap(Map map) {
+	public JSObjectMap(Map<String,Object> map) {
 		this.map = map;
 	}
 
@@ -37,7 +38,7 @@ public class JSObjectMap extends AbstractJSObject implements Map {
 	}
 
 	@Override
-	public Set entrySet() {
+	public Set<Entry<String,Object>> entrySet() {
 		return map.entrySet();
 	}
 
@@ -132,7 +133,7 @@ public class JSObjectMap extends AbstractJSObject implements Map {
 	}
 
 	@Override
-	public Object put(Object key, Object value) {
+	public Object put(String key, Object value) {
 		super.setMember((String) key, value);
 		return map.put(key, value);
 	}

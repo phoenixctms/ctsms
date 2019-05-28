@@ -16,7 +16,7 @@ public abstract class FacesBundle extends ResourceBundle {
 	protected abstract String getBundleName();
 
 	@Override
-	public Enumeration getKeys() {
+	public Enumeration<String> getKeys() {
 		return parent.getKeys();
 	}
 

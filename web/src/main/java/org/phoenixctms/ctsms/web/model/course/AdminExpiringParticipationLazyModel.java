@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class AdminExpiringParticipationLazyModel extends LazyDataModelBase {
+public class AdminExpiringParticipationLazyModel extends LazyDataModelBase<CourseParticipationStatusEntryOutVO> {
 
 	private Long reminderPeriodDays;
 	private VariablePeriod reminderPeriod;

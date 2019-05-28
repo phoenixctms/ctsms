@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class VisitScheduleItemLazyModel extends LazyDataModelBase {
+public class VisitScheduleItemLazyModel extends LazyDataModelBase<VisitScheduleItemOutVO> {
 
 	private Long trialId;
 	private Long probandId;

@@ -12,7 +12,7 @@ import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TeamMemberLazyModel extends LazyDataModelBase {
+public class TeamMemberLazyModel extends LazyDataModelBase<TeamMemberOutVO> {
 
 	private Long trialId;
 

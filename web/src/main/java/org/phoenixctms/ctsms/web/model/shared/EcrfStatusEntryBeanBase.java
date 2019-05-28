@@ -502,7 +502,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
 		ECRFFieldStatusQueueCountVO result = null;
 		if (ecrfProgress != null && ecrfProgress.getStatus() != null) {
-			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
+			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = ecrfProgress.getEcrfFieldStatusQueueCounts().iterator();
 			while (it.hasNext()) {
@@ -727,7 +727,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public ECRFFieldStatusQueueCountVO getSectionFieldStatusCount(ECRFSectionProgressVO sectionProgress, String queues) {
 		ECRFFieldStatusQueueCountVO result = null;
 		if (sectionProgress != null) {
-			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
+			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = sectionProgress.getEcrfFieldStatusQueueCounts().iterator();
 			while (it.hasNext()) {
@@ -798,7 +798,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
 		ECRFFieldStatusQueueCountVO result = null;
 		if (progressSummary != null && progressSummary.getEcrfStatusEntryCount() > 0l) {
-			ArrayList<Enum> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
+			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = progressSummary.getEcrfFieldStatusQueueCounts().iterator();
 			while (it.hasNext()) {

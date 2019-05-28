@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase {
+public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase<ECRFFieldValueOutVO> {
 
 	// private Long listEntryId;
 	// private Long ecrfFieldId;

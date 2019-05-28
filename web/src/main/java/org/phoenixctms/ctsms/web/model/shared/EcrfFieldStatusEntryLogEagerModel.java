@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase {
+public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFieldStatusEntryOutVO> {
 
 	private final static PSFVO INITIAL_PSF = new PSFVO();
 	static {

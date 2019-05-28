@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class EcrfFieldStatusEntryLogLazyModel extends LazyDataModelBase {
+public class EcrfFieldStatusEntryLogLazyModel extends LazyDataModelBase<ECRFFieldStatusEntryOutVO> {
 
 	private Long trialId;
 	private ECRFFieldStatusQueue queue;

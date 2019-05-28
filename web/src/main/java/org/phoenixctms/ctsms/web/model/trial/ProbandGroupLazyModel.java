@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandGroupLazyModel extends LazyDataModelBase {
+public class ProbandGroupLazyModel extends LazyDataModelBase<ProbandGroupOutVO> {
 
 	private Long trialId;
 

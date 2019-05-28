@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandTagValueLazyModel extends LazyDataModelBase {
+public class ProbandTagValueLazyModel extends LazyDataModelBase<ProbandTagValueOutVO> {
 
 	private Long probandId;
 

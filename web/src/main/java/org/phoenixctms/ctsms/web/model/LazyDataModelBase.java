@@ -14,7 +14,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SelectableDataModel;
 import org.primefaces.model.SortOrder;
 
-public abstract class LazyDataModelBase extends LazyDataModel<IDVO> implements SelectableDataModel<IDVO> {
+public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implements SelectableDataModel<IDVO> {
 
 	private String currentPageIdsString;
 
@@ -22,7 +22,7 @@ public abstract class LazyDataModelBase extends LazyDataModel<IDVO> implements S
 		return (currentPageIdsString != null ? currentPageIdsString : "");
 	}
 
-	protected abstract Collection<?> getLazyResult(PSFVO psf);
+	protected abstract Collection<T> getLazyResult(PSFVO psf);
 
 	protected Long getPageId(IDVO idvo) {
 		return idvo.getId();
@@ -48,7 +48,7 @@ public abstract class LazyDataModelBase extends LazyDataModel<IDVO> implements S
 		}
 	}
 
-	protected abstract <T> T getRowElement(Long id);
+	protected abstract T getRowElement(Long id);
 
 	@Override
 	public String getRowKey(IDVO element) {

@@ -18,7 +18,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase {
+public class CollidingStaffStatusEntryEagerModel extends EagerDataModelBase<StaffStatusEntryOutVO> {
 
 	public static CollidingStaffStatusEntryEagerModel getCachedCollidingStaffStatusEntryModel(CourseParticipationStatusEntryOutVO courseParticipation, boolean load,
 			HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache) {

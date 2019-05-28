@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class RandomizationListLazyModel extends LazyDataModelBase {
+public class RandomizationListLazyModel extends LazyDataModelBase<StratificationRandomizationListOutVO> {
 
 	private Long trialId;
 

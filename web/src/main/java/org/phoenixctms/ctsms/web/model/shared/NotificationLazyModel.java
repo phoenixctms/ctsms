@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class NotificationLazyModel extends LazyDataModelBase {
+public class NotificationLazyModel extends LazyDataModelBase<NotificationVO> {
 
 	@Override
 	protected Collection<NotificationVO> getLazyResult(PSFVO psf) {

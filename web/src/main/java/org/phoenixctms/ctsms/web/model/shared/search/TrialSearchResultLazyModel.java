@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TrialSearchResultLazyModel extends SearchResultLazyModel {
+public class TrialSearchResultLazyModel extends SearchResultLazyModel<TrialOutVO> {
 
 	@Override
 	protected Collection<TrialOutVO> getLazyResultWCount(PSFVO psf) {

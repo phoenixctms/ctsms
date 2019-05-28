@@ -17,7 +17,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase {
+public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<VisitScheduleItemOutVO> {
 
 	public static CollidingVisitScheduleItemEagerModel getCachedCollidingVisitScheduleItemModel(ProbandStatusEntryOutVO statusEntry, boolean allProbandGroups,
 			HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache) {

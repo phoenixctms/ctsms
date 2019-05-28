@@ -22,7 +22,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ShiftDurationSummaryModel extends EagerDataModelBase {
+public class ShiftDurationSummaryModel extends EagerDataModelBase<ShiftDurationSummaryDetailVO> {
 
 	public enum ShiftDurationSummaryType {
 		STAFF, TRIAL, STAFF_OVERVIEW, TRIAL_OVERVIEW, UNDEFINED;

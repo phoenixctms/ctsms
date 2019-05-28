@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class TrialMassMailLazyModel extends LazyDataModelBase {
+public class TrialMassMailLazyModel extends LazyDataModelBase<MassMailOutVO> {
 
 	private HashMap<Long, MassMailProgressVO> massMailProgressCache;
 	private Long trialId;
