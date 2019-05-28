@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 public class ECRFFieldStatusTypeDaoImpl
 		extends ECRFFieldStatusTypeDaoBase {
 
-	private final static Comparator<ECRFFieldStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFFieldStatusType::getId);
+	private final static Comparator<ECRFFieldStatusType> ID_COMPARATOR = Comparators.createNullSafe(ECRFFieldStatusType::getId);
 
 	private void applySystemCriterions(org.hibernate.Criteria ecrfFieldStatusTypeCriteria, Boolean system) {
 		if (system != null) {

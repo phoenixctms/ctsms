@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.CriterionRestriction;
 import org.phoenixctms.ctsms.enumeration.CriterionTie;
@@ -96,7 +96,7 @@ import org.phoenixctms.ctsms.vo.VisitTypeVO;
 
 public class KeyValueString extends GraphEnumerator {
 
-	private final static Comparator<Object> VO_COLLECTION_VALUES_COMPARATOR = ComparatorFactory.createGetIdReflective();
+	private final static Comparator<Object> VO_COLLECTION_VALUES_COMPARATOR = Comparators.createGetIdReflective();
 
 	public static ArrayList<KeyValueString> getKeyValuePairs(Class vo, int depth,
 			boolean omitFields,
@@ -135,7 +135,7 @@ public class KeyValueString extends GraphEnumerator {
 
 	protected String getVOFieldValue(Object vo, String field, boolean omitFields) {
 		if (omitFields && OmittedFields.isOmitted(vo.getClass(), field, false)) { // no case-insensitivity since used in outVOValueToString only
-			Long id = CommonUtil.getVOId(vo);
+			Long id = CommonUtil.reflectiveGetIdCall(vo);
 			if (id != null) {
 				return id.toString();
 			}

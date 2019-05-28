@@ -18,7 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -57,7 +57,7 @@ import org.primefaces.context.RequestContext;
 public abstract class SearchBeanBase extends PickerBeanBase {
 	
 	private static final Comparator<CriterionInVO> CRITERION_IN_VO_COMPARATOR = 
-			ComparatorFactory.createNullSafe(CriterionInVO::getPosition);
+			Comparators.createNullSafe(CriterionInVO::getPosition);
 
 	private static void copyCriteriaOutToIn(CriteriaInVO criteriaIn, ArrayList<CriterionInVO> criterionsIn, CriteriaOutVO out) {
 		if (criteriaIn != null && criterionsIn != null && out != null) {

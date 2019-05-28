@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.exception.ServiceException;
 
 public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AVO> {
 
-	private final Comparator<A> idComparator = ComparatorFactory.createGetIdReflective();
+	private final Comparator<A> idComparator = Comparators.createGetIdReflective();
 
 	protected abstract A aquireWriteLock(Long id) throws ServiceException;
 

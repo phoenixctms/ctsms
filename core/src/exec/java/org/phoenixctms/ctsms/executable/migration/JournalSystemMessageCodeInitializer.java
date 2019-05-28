@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
@@ -92,7 +92,7 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 			}
 			ArrayList<Entry<String, String>> titleFormatList = new ArrayList<Entry<String, String>>(titleFormatMap.entrySet());
 			titleFormatMap.clear();
-			Collections.sort(titleFormatList, ComparatorFactory.KEY_VALUE_LENGTH_COMP);
+			Collections.sort(titleFormatList, Comparators.KEY_VALUE_LENGTH);
 			Iterator<Entry<String, String>> titleFormatIt = titleFormatList.iterator();
 			while (titleFormatIt.hasNext()) {
 				Entry<String, String> codeTitleFormat = titleFormatIt.next();

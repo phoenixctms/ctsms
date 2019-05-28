@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
@@ -104,11 +104,11 @@ public final class IndexResource {
 	private final static String JS_PAGE_PSF_FIELD = "psf";
 	private final static String JS_PAGE_ROWS_FIELD = "rows";
 	private final static String JS_PAGE_JS_ROWS_FIELD = "js_rows";
-	private final static Comparator<Class<?>> RESOURCE_CLASS_COMPARATOR = Comparator.comparing(Class::getName, ComparatorFactory.ALPHANUM_COMP);
+	private final static Comparator<Class<?>> RESOURCE_CLASS_COMPARATOR = Comparator.comparing(Class::getName, Comparators.ALPHANUM);
 	private final static Comparator<AbstractResourceMethod> RESOURCE_METHOD_COMPARATOR = Comparator.comparing(AbstractResourceMethod::getHttpMethod,
-			ComparatorFactory.ALPHANUM_COMP);
+			Comparators.ALPHANUM);
 	private final static Comparator<AbstractSubResourceMethod> SUB_RESOURCE_METHOD_COMPARATOR = Comparator.comparing(AbstractSubResourceMethod::getHttpMethod,
-			ComparatorFactory.ALPHANUM_COMP);
+			Comparators.ALPHANUM);
 	private final static MethodTransfilter VO_METHOD_TRANSFILTER = MethodTransfilter.getVoMethodTransfilter(false);
 
 	private static void addResource(JsonObject resourcesNode, String uriPrefix, AbstractResourceMethod method, String path) throws Exception {

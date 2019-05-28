@@ -29,7 +29,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.AlphaIdDao;
 import org.phoenixctms.ctsms.domain.Announcement;
 import org.phoenixctms.ctsms.domain.AnnouncementDao;
@@ -143,7 +143,7 @@ import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 public class ToolsServiceImpl
 		extends ToolsServiceBase {
 
-	private static final Comparator<Notification> ID_COMPARATOR = ComparatorFactory.createNullSafe(Notification::getId);
+	private static final Comparator<Notification> ID_COMPARATOR = Comparators.createNullSafe(Notification::getId);
 
 	private static HashSet<Long> createSendDepartmentStaffCategorySet(NotificationType notificationType) {
 		Collection<StaffCategory> sendDepartmentStaffCategories = notificationType.getSendDepartmentStaffCategories();

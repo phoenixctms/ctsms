@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 public class MassMailStatusTypeDaoImpl
 		extends MassMailStatusTypeDaoBase {
 
-	private final static Comparator<MassMailStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(MassMailStatusType::getId);
+	private final static Comparator<MassMailStatusType> ID_COMPARATOR = Comparators.createNullSafe(MassMailStatusType::getId);
 
 	private org.hibernate.Criteria createMassMailStatusTypeCriteria() {
 		org.hibernate.Criteria massMailStatusTypeCriteria = this.getSession().createCriteria(MassMailStatusType.class);

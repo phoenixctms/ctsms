@@ -29,6 +29,8 @@ import org.phoenixctms.ctsms.vo.IcdSystVO;
 public class IcdSystDaoImpl
 		extends IcdSystDaoBase {
 
+	private static final Comparator<IcdSystCategoryVO> ICD_SYST_CATEGORY_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(IcdSystCategoryVO::getLevel));
+	private static final Comparator<IcdSystBlockVO> ICD_SYST_BLOCK_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(IcdSystBlockVO::getLevel));
 	private final static Pattern ICD_CODE_PATTERN_REGEXP = Pattern.compile("^([A-Z])(\\d{2,2})((\\.\\d)(\\d)?)?(\\*|\\+|!)?$");
 
 	private org.hibernate.Criteria createIcdSystCriteria() {
@@ -191,7 +193,7 @@ public class IcdSystDaoImpl
 		while (it.hasNext()) {
 			result.add(icdSystBlockDao.toIcdSystBlockVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(IcdSystBlockVO::getLevel)));
+		result.sort(ICD_SYST_BLOCK_VO_COMPARATOR);
 		return result;
 	}
 
@@ -203,7 +205,7 @@ public class IcdSystDaoImpl
 		while (it.hasNext()) {
 			result.add(icdSystCategoryDao.toIcdSystCategoryVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(IcdSystCategoryVO::getLevel)));
+		result.sort(ICD_SYST_CATEGORY_VO_COMPARATOR);
 		return result;
 	}
 

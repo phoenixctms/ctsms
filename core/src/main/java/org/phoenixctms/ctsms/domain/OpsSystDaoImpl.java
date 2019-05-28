@@ -29,6 +29,8 @@ import org.phoenixctms.ctsms.vo.OpsSystVO;
 public class OpsSystDaoImpl
 		extends OpsSystDaoBase {
 
+	private static final Comparator<OpsSystCategoryVO> OPS_SYST_CATEGORY_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(OpsSystCategoryVO::getLevel));
+	private static final Comparator<OpsSystBlockVO> OPS_SYST_BLOCK_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(OpsSystBlockVO::getLevel));
 	// Notation: erste drei Stellen numerisch, 4. Stelle alphanumerisch, 5./6. Stelle numerisch oder: x - sonstige Prozeduren, y - nicht naeher bezeichnet
 	private final static Pattern OPS_CODE_PATTERN_REGEXP = Pattern.compile("^(\\d-)(\\d{2,2}[\\da-z])((\\.[\\da-z])([\\da-z])?)?(#)?$");
 
@@ -195,7 +197,7 @@ public class OpsSystDaoImpl
 		while (it.hasNext()) {
 			result.add(opsSystBlockDao.toOpsSystBlockVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(OpsSystBlockVO::getLevel)));
+		result.sort(OPS_SYST_BLOCK_VO_COMPARATOR);
 		return result;
 	}
 
@@ -207,7 +209,7 @@ public class OpsSystDaoImpl
 		while (it.hasNext()) {
 			result.add(opsSystCategoryDao.toOpsSystCategoryVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(OpsSystCategoryVO::getLevel)));
+		result.sort(OPS_SYST_CATEGORY_VO_COMPARATOR);
 		return result;
 	}
 

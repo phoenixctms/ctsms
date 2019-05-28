@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
-import org.phoenixctms.ctsms.compare.ProbandComparator;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
@@ -135,7 +135,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	protected Collection<Proband> getEntityChildren(Proband source) {
 		Collection<Proband> children = source.getChildren();
 		if (children.size() > 1) {
-			TreeSet<Proband> result = new TreeSet<Proband>(new ProbandComparator());
+			TreeSet<Proband> result = new TreeSet<Proband>(Comparators.PROBAND);
 			result.addAll(children);
 			return result;
 		} else {
@@ -152,7 +152,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	protected Collection<Proband> getEntityParents(Proband source) {
 		Collection<Proband> parents = source.getParents();
 		if (parents.size() > 1) {
-			TreeSet<Proband> result = new TreeSet<Proband>(new ProbandComparator());
+			TreeSet<Proband> result = new TreeSet<Proband>(Comparators.PROBAND);
 			result.addAll(parents);
 			return result;
 		} else {

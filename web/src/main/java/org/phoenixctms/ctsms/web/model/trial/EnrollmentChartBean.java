@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -199,7 +199,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 			probandListStatus = new ArrayList<ProbandListStatusEntryOutVO>();
 		} else {
 			probandListStatus = new ArrayList<ProbandListStatusEntryOutVO>(probandListStatus);
-			Collections.sort((ArrayList<ProbandListStatusEntryOutVO>) probandListStatus, new ProbandListStatusEntryOutVOComparator());
+			Collections.sort((ArrayList<ProbandListStatusEntryOutVO>) probandListStatus, Comparators.PROBAND_LIST_STATUS_ENTRY_OUT_VO);
 		}
 		HashMap<Long, TreeMap<Date, Number>> seriesMap = new HashMap<Long, TreeMap<Date, Number>>();
 		HashMap<Long, TreeMap<Long, ProbandListStatusEntryOutVO>> probandMap = new HashMap<Long, TreeMap<Long, ProbandListStatusEntryOutVO>>();

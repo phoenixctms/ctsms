@@ -195,7 +195,7 @@ public class SpreadSheetWriter {
 					}
 				}
 				if (distinctFieldRows != null && distinctFieldRows.size() > 0) {
-					Long id = CommonUtil.getVOId(vo);
+					Long id = CommonUtil.reflectiveGetIdCall(vo);
 					if (id != null && distinctFieldRows.containsKey(id)) {
 						if (rowColors) {
 							rowFormat.setBgColor(workbookWriter.voToColor(vo));

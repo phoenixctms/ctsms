@@ -112,10 +112,10 @@ public class ServiceMethodExecutor {
 				Map<String, Object> inOut = (Map<String, Object>) passThrough;
 				if (((Long) inOut.get("i")) < ((Long) inOut.get("totalCount"))) {
 					try {
-						deleteMethod.invoke(sme, auth, CommonUtil.getEntityId(entity));
+						deleteMethod.invoke(sme, auth, CommonUtil.reflectiveGetIdCall(entity));
 						inOut.put("removed", ((Long) inOut.get("removed")) + 1l);
 					} catch (Exception e) {
-						sme.jobOutput.println("error when removing " + entityLabel + " ID " + CommonUtil.getEntityId(entity) + ": " + CoreUtil.getStackTrace(e));
+						sme.jobOutput.println("error when removing " + entityLabel + " ID " + CommonUtil.reflectiveGetIdCall(entity) + ": " + CoreUtil.getStackTrace(e));
 					}
 				} else {
 					throw new RuntimeException("some " + entityLabel + " entities could not be deleted");

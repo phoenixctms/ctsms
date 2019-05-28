@@ -34,7 +34,7 @@ import org.phoenixctms.ctsms.adapt.InquiryValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -172,7 +172,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 public final class ServiceUtil {
 
 	private final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE = "{0}: {1}";
-	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = ComparatorFactory.ALPHANUM_TRIM_COMP;
+	public final static Comparator<String> MONEY_TRANSFER_COST_TYPE_COMPARATOR = Comparators.ALPHANUM_TRIM;
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS = "ecrfField0";
 	public final static String ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS = "ecrfFieldValue0";
 	public final static String INQUIRY_VALUE_DAO_INQUIRY_ALIAS = "inquiry0";
@@ -2406,7 +2406,7 @@ public final class ServiceUtil {
 				distinctFieldRows.put(vo.getId(), fieldRow);
 			}
 			VOs = new ArrayList<MoneyTransferOutVO>(VOs);
-			Collections.sort((List<MoneyTransferOutVO>) VOs, ComparatorFactory.MONEY_TRANSFER_OUT_COMP);
+			Collections.sort((List<MoneyTransferOutVO>) VOs, Comparators.MONEY_TRANSFER_OUT_VO);
 		}
 		writer.setVOs(VOs);
 		writer.setDistinctColumnNames(distinctColumnNames);
@@ -2587,16 +2587,12 @@ public final class ServiceUtil {
 		}
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVO());
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, Comparators.VISIT_SCHEDULE_ITEM_OUT_VO_COMPLEX);
 				break;
 			case PROBAND_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
-				break;
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
-				break;
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				Collections.sort((List<VisitScheduleItemOutVO>) VOs, ComparatorFactory.createVisitScheduleItemOutVOTemporalOnly());
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, Comparators.VISIT_SCHEDULE_ITEM_OUT_VO_TEMPORAL);
 				break;
 			default:
 		}
@@ -2935,7 +2931,7 @@ public final class ServiceUtil {
 				}
 			}
 		}
-		Collections.sort(indexFieldLog, ComparatorFactory.ECRF_FIELD_VALUE_STATUS_ENTRY_OUT_VO_COMP.reversed());
+		Collections.sort(indexFieldLog, Comparators.ECRF_FIELD_VALUE_STATUS_ENTRY.reversed());
 		return indexFieldLog;
 	}
 
@@ -3219,7 +3215,7 @@ public final class ServiceUtil {
 	}
 
 	private static TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO> initBankAccountMap() {
-		return new TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO>(ComparatorFactory.createBankAccount());
+		return new TreeMap<BankAccountOutVO, MoneyTransferByBankAccountSummaryDetailVO>(Comparators.BANK_ACCOUNT_OUT_VO);
 	}
 
 	private static TreeMap<String, MoneyTransferByCostTypeSummaryDetailVO> initCostTypeMap(Collection<String> costTypes, boolean comments) {
@@ -3421,7 +3417,7 @@ public final class ServiceUtil {
 		ArrayList<CvPositionPDFVO> result = new ArrayList<CvPositionPDFVO>(cvPositions.size() + courseParticipations.size());
 		result.addAll(cvPositions);
 		result.addAll(courseParticipations);
-		Collections.sort(result, ComparatorFactory.createCvPositionPDFVO());
+		Collections.sort(result, Comparators.CV_POSITION_PDF_VO);
 		return result;
 	}
 
@@ -5570,7 +5566,7 @@ public final class ServiceUtil {
 			costTypes = moneyTransferDao.getCostTypesNoTrial(proband.getId(), method);
 			moneyTransfersIt = moneyTransferDao.findByProbandNoTrialMethodCostTypePaid(proband.getId(), method, null, paid).iterator();
 		}
-		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(ComparatorFactory.createProbandOutVO());
+		TreeSet<ProbandOutVO> probandVOs = new TreeSet<ProbandOutVO>(Comparators.PROBAND_OUT_VO);
 		HashMap<Long, MoneyTransferSummaryVO> summaryMap = new HashMap<Long, MoneyTransferSummaryVO>();
 		HashMap<Long, ProbandAddressOutVO> addressVOMap = new HashMap<Long, ProbandAddressOutVO>();
 		if (moneyTransfersIt != null) {

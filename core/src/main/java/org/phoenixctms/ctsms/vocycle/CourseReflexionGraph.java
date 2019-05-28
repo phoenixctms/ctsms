@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseCategory;
 import org.phoenixctms.ctsms.domain.CourseCategoryDao;
@@ -91,7 +91,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	protected Collection<Course> getEntityChildren(Course source) {
 		Collection<Course> renewals = source.getRenewals();
 		if (renewals.size() > 1) {
-			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.COURSE_COMP);
+			TreeSet<Course> result = new TreeSet<Course>(Comparators.COURSE);
 			result.addAll(renewals);
 			return result;
 		} else {
@@ -116,7 +116,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	protected Collection<Course> getEntityParents(Course source) {
 		Collection<Course> precedingCourses = source.getPrecedingCourses();
 		if (precedingCourses.size() > 1) {
-			TreeSet<Course> result = new TreeSet<Course>(ComparatorFactory.COURSE_COMP);
+			TreeSet<Course> result = new TreeSet<Course>(Comparators.COURSE);
 			result.addAll(precedingCourses);
 			return result;
 		} else {

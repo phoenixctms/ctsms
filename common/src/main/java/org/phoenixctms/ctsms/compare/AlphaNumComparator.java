@@ -43,6 +43,13 @@ public class AlphaNumComparator implements Comparator<String>{
 
 	public static int comp(String s1, String s2) {
 		if (s1 == null || s2 == null) {
+			// nulls first
+			if (s1 == null) {
+				return -1;
+			}
+			if (s2 == null) {
+				return 1;
+			} 
 			return 0;
 		}
 		int thisMarker = 0;

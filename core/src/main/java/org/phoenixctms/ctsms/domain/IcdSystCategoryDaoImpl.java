@@ -30,6 +30,8 @@ import org.phoenixctms.ctsms.vo.IcdSystModifierVO;
 public class IcdSystCategoryDaoImpl
 		extends IcdSystCategoryDaoBase {
 
+	private static final Comparator<IcdSystModifierVO> ICD_SYST_MODIFIER_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(IcdSystModifierVO::getLevel));
+
 	@Override
 	protected Collection<String> handleFindCategoryPreferredRubricLabels(
 			String preferredRubricLabelInfix, Integer limit) throws Exception {
@@ -120,7 +122,7 @@ public class IcdSystCategoryDaoImpl
 		while (it.hasNext()) {
 			result.add(icdSystModifierDao.toIcdSystModifierVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(IcdSystModifierVO::getLevel)));
+		result.sort(ICD_SYST_MODIFIER_VO_COMPARATOR);
 		return result;
 	}
 }

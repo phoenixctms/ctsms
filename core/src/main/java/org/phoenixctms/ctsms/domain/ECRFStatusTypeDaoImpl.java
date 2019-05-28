@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.ECRFStatusActionVO;
@@ -21,8 +21,8 @@ import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 public class ECRFStatusTypeDaoImpl
 		extends ECRFStatusTypeDaoBase {
 
-	private final static Comparator<ECRFStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFStatusType::getId);
-	private final static Comparator<ECRFStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createNullSafe(ECRFStatusActionVO::getId);
+	private final static Comparator<ECRFStatusType> ID_COMPARATOR = Comparators.createNullSafe(ECRFStatusType::getId);
+	private final static Comparator<ECRFStatusActionVO> ACTION_ID_COMPARATOR = Comparators.createNullSafe(ECRFStatusActionVO::getId);
 
 	private org.hibernate.Criteria createEcrfStatusTypeCriteria() {
 		org.hibernate.Criteria ecrfStatusTypeCriteria = this.getSession().createCriteria(ECRFStatusType.class);

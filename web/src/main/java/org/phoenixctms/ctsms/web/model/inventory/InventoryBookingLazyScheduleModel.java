@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -208,7 +208,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			}
 			if (bookings != null) {
 				bookings = new ArrayList<InventoryBookingOutVO>(bookings);
-				Collections.sort((ArrayList<InventoryBookingOutVO>) bookings, ComparatorFactory.INVENTORY_BOOKING_OUT_VO_SCHEDULE_INTERVAL_COMP);
+				Collections.sort((ArrayList<InventoryBookingOutVO>) bookings, Comparators.INVENTORY_BOOKING_OUT_VO_SCHEDULE_INTERVAL);
 				boolean showCollisions = (showCollisionsThresholdDays == null ? true
 						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
 								showCollisionsThresholdDays, 1)) <= 0);
@@ -248,7 +248,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			}
 			if (statusEntries != null) {
 				statusEntries = new ArrayList<InventoryStatusEntryOutVO>(statusEntries);
-				Collections.sort((ArrayList<InventoryStatusEntryOutVO>) statusEntries, ComparatorFactory.INVENTORY_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP);
+				Collections.sort((ArrayList<InventoryStatusEntryOutVO>) statusEntries, Comparators.INVENTORY_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL);
 				Iterator<InventoryStatusEntryOutVO> it = statusEntries.iterator();
 				while (it.hasNext()) {
 					addEvent(new InventoryStatusEvent(it.next()));
@@ -266,7 +266,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			}
 			if (statusEntries != null) {
 				statusEntries = new ArrayList<ProbandStatusEntryOutVO>(statusEntries);
-				Collections.sort((ArrayList<ProbandStatusEntryOutVO>) statusEntries, ComparatorFactory.PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL_COMP);
+				Collections.sort((ArrayList<ProbandStatusEntryOutVO>) statusEntries, Comparators.PROBAND_STATUS_ENTRY_OUT_VO_SCHEDULE_INTERVAL);
 				Iterator<ProbandStatusEntryOutVO> it = statusEntries.iterator();
 				while (it.hasNext()) {
 					addEvent(new ProbandStatusEvent(it.next()));
@@ -284,7 +284,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			}
 			if (visitScheduleItems != null) {
 				visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems);
-				Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, ComparatorFactory.VISIT_SCHEDULE_ITEM_OUT_VO_SCHEDULE_INTERVAL_COMP);
+				Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, Comparators.VISIT_SCHEDULE_ITEM_OUT_VO_SCHEDULE_INTERVAL);
 				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
 				while (it.hasNext()) {
 					addEvent(new VisitScheduleItemEvent(it.next()));

@@ -20,7 +20,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -432,7 +432,7 @@ public class MedicationDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		result.sort(ComparatorFactory.SUBSTANCE_ID_COMPARATOR);
+		result.sort(Comparators.ASP_SUBSTANCE_VO_ID);
 		return result;
 	}
 

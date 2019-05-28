@@ -59,9 +59,7 @@ import org.phoenixctms.ctsms.adapt.VisitScheduleItemCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTitleCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTokenCollisionFinder;
 import org.phoenixctms.ctsms.adapt.VisitTypeTagAdapter;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
-import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
-import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
@@ -2383,7 +2381,7 @@ public class TrialServiceImpl
 		ECRFStatusType newState = statusEntry.getStatus();
 		// if (oldStatus == null || !oldStatus.equals(newState)) {
 		ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
-		Collections.sort(sortedActions, ComparatorFactory.ECRF_STATUS_ACTION_COMP);
+		Collections.sort(sortedActions, Comparators.ECRF_STATUS_ACTION);
 		Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		ECRF ecrf = statusEntry.getEcrf();
@@ -2476,7 +2474,7 @@ public class TrialServiceImpl
 		TrialStatusType newState = trial.getStatus();
 		if (oldStatus == null || !oldStatus.equals(newState)) {
 			ArrayList<TrialStatusAction> sortedActions = new ArrayList<TrialStatusAction>(newState.getActions());
-			Collections.sort(sortedActions, ComparatorFactory.createTrialStatusAction());
+			Collections.sort(sortedActions, Comparators.TRIAL_STATUS_ACTION);
 			Iterator<TrialStatusAction> sortedActionsIt = sortedActions.iterator();
 			while (sortedActionsIt.hasNext()) {
 				TrialStatusAction trialStatusAction = sortedActionsIt.next();
@@ -3229,7 +3227,7 @@ public class TrialServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			Collections.sort(inquiryValues, ComparatorFactory.INQUIRY_VALUE_OUT_VO_COMP);
+			Collections.sort(inquiryValues, Comparators.INQUIRY_VALUE_OUT_VO);
 			result.setPageValues(inquiryValues);
 			if (jsInquiryValues != null) {
 				result.setJsValues(jsInquiryValues);
@@ -4544,7 +4542,6 @@ public class TrialServiceImpl
 				null, true) : new ArrayList();
 		probandTagDao.toProbandTagVOCollection(probandTags);
 		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
-		ProbandListStatusEntryOutVOComparator probandListStatusEntryOutVOComparator = new ProbandListStatusEntryOutVOComparator();
 		ArrayList<String> distinctColumnNames;
 		if (passDecryption) {
 			distinctColumnNames = new ArrayList<String>(2 * listEntryTags.size() + 2 * inquiries.size()
@@ -4850,7 +4847,7 @@ public class TrialServiceImpl
 				Collection statusEntries = probandListEntry.getStatusEntries();
 				probandListStatusEntryDao.toProbandListStatusEntryOutVOCollection(statusEntries);
 				ArrayList<ProbandListStatusEntryOutVO> statusEntryVOs = new ArrayList<ProbandListStatusEntryOutVO>(statusEntries);
-				Collections.sort(statusEntryVOs, probandListStatusEntryOutVOComparator);
+				Collections.sort(statusEntryVOs, Comparators.PROBAND_LIST_STATUS_ENTRY_OUT_VO);
 				StringBuilder statusLog = new StringBuilder();
 				Integer iCAge = null;
 				Date iCDate = null;
@@ -5127,7 +5124,7 @@ public class TrialServiceImpl
 			VOs.add(memberVO);
 			distinctFieldRows.put(member.getId(), fieldRow);
 		}
-		VOs.sort(ComparatorFactory.createTeamMemberOutVO());
+		VOs.sort(Comparators.TEAM_MEMBER_OUT_VO);
 		writer.setVOs(VOs);
 		writer.setDistinctColumnNames(distinctColumnNames);
 		writer.setDistinctFieldRows(distinctFieldRows);
@@ -5348,7 +5345,7 @@ public class TrialServiceImpl
 		dutyRosterTurnDao.toDutyRosterTurnOutVOCollection(dutyRosterTurns);
 		if (sort) {
 			dutyRosterTurns = new ArrayList(dutyRosterTurns);
-			Collections.sort((ArrayList) dutyRosterTurns, ComparatorFactory.DUTY_ROASTER_TURN_OUT_VO_INTERVAL_COMP);
+			Collections.sort((ArrayList) dutyRosterTurns, Comparators.DUTY_ROSTER_TURN_OUT_VO_INTERVAL);
 		}
 		return dutyRosterTurns;
 	}
@@ -6974,7 +6971,7 @@ public class TrialServiceImpl
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		if (sort) {
 			visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems);
-			Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, ComparatorFactory.VISIT_SCHEDULE_ITEM_OUT_VO_INTERVAL_COMP);
+			Collections.sort((ArrayList<VisitScheduleItemOutVO>) visitScheduleItems, Comparators.VISIT_SCHEDULE_ITEM_OUT_VO_INTERVAL);
 		}
 		return visitScheduleItems;
 	}
@@ -7410,7 +7407,7 @@ public class TrialServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			tagValues.sort(ComparatorFactory.createProbandListEntryTagValueOutVO());
+			tagValues.sort(Comparators.PROBAND_LIST_ENTRY_TAG_VALUE_OUT_VO);
 			result.setPageValues(tagValues);
 			if (jsTagValues != null) {
 				result.setJsValues(jsTagValues);
@@ -8270,7 +8267,7 @@ public class TrialServiceImpl
 			}
 		}
 		if (ecrfFieldValues != null) {
-			Collections.sort(ecrfFieldValues, new EcrfFieldValueOutVOComparator());
+			Collections.sort(ecrfFieldValues, Comparators.ECRF_FIELD_VALUE_OUT_VO);
 			result.setPageValues(ecrfFieldValues);
 		}
 		if (jsEcrfFieldValues != null) {

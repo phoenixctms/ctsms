@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -27,7 +27,7 @@ public class CriterionPropertyDaoImpl
 		extends CriterionPropertyDaoBase {
 
 	private final static Comparator<CriterionRestrictionVO> CRITERION_RESTRICTION_ID_COMPARATOR = 
-			ComparatorFactory.createNullSafe(CriterionRestrictionVO::getId);
+			Comparators.createNullSafe(CriterionRestrictionVO::getId);
 
 	private org.hibernate.Criteria createPropertyCriteria() {
 		org.hibernate.Criteria propertyCriteria = this.getSession().createCriteria(CriterionProperty.class);

@@ -3,11 +3,12 @@ package org.phoenixctms.ctsms.util.date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -134,7 +135,7 @@ public class DateInterval {
 		if (intervals != null && intervals.size() > 0) {
 			if (intervals.size() > 1) {
 				ArrayList<DateInterval> sortedIntervals = new ArrayList<DateInterval>(intervals);
-				Collections.sort(sortedIntervals, ComparatorFactory.DATE_INTERVAL_INTERVAL_COMP);
+				Collections.sort(sortedIntervals, Comparators.DATE_INTERVAL_INTERVAL);
 				result.add(sortedIntervals.get(0));
 				for (int i = 1; i < sortedIntervals.size(); i++) {
 					result.addAll(mergeIntervals(result.remove(result.size() - 1), sortedIntervals.get(i)));

@@ -10,7 +10,6 @@ package org.phoenixctms.ctsms.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -20,7 +19,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -35,8 +34,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class StratificationRandomizationListDaoImpl
 		extends StratificationRandomizationListDaoBase {
-
-	private final static Comparator<InputFieldSelectionSetValueOutVO> SELECTION_SET_VALUE_COMPARATOR = ComparatorFactory.createInputFieldSelectionSetValueOutVO();
 
 	public static ArrayList<Long> toInputFieldSelectionSetValueIdCollection(Collection<InputFieldSelectionSetValue> selectionSetValues) { // lazyload persistentset prevention
 		// ArrayList<Long> result;
@@ -281,7 +278,7 @@ public class StratificationRandomizationListDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
 		}
-		Collections.sort(result, SELECTION_SET_VALUE_COMPARATOR);
+		Collections.sort(result, Comparators.INPUT_FIELD_SELECTION_SET_VALUE_OUT_VO);
 		return result;
 	}
 

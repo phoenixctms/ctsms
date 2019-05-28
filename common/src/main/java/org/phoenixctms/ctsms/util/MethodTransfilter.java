@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class MethodTransfilter {
 
 	public static final MethodTransfilter DEFAULT_TRANSFILTER = new MethodTransfilter();
-	protected final static Comparator<Method> METHOD_COMPARATOR = Comparator.nullsLast(Comparator.comparing(Method::getName)
+	protected final static Comparator<Method> METHOD_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(Method::getName)
 			.thenComparingInt(m -> m.getParameterTypes().length));
 
 	public final static MethodTransfilter getEntityMethodTransfilter(final boolean lowerCaseFieldNames) {

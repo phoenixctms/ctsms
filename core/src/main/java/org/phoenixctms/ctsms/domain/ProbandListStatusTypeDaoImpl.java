@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.ProbandListStatusLogLevelVO;
@@ -25,8 +25,8 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 public class ProbandListStatusTypeDaoImpl
 		extends ProbandListStatusTypeDaoBase {
 
-	private final static Comparator<ProbandListStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(ProbandListStatusType::getId);
-	private final static Comparator<ProbandListStatusLogLevelVO> LOG_LEVEL_ID_COMPARATOR = ComparatorFactory.createNullSafe(ProbandListStatusLogLevelVO::getId);
+	private final static Comparator<ProbandListStatusType> ID_COMPARATOR = Comparators.createNullSafe(ProbandListStatusType::getId);
+	private final static Comparator<ProbandListStatusLogLevelVO> LOG_LEVEL_ID_COMPARATOR = Comparators.createNullSafe(ProbandListStatusLogLevelVO::getId);
 
 	private org.hibernate.Criteria createProbandListStatusTypeCriteria() {
 		org.hibernate.Criteria probandListStatusTypeCriteria = this.getSession().createCriteria(ProbandListStatusType.class);

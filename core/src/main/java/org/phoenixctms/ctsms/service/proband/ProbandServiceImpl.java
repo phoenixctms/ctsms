@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.adapt.ProbandContactDetailTypeTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProcedureCollisionFinder;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.AlphaId;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Asp;
@@ -1974,7 +1974,7 @@ public class ProbandServiceImpl
 		statusEntryDao.toProbandStatusEntryOutVOCollection(probandStatusEntries);
 		if (sort) {
 			probandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>(probandStatusEntries);
-			Collections.sort((ArrayList<ProbandStatusEntryOutVO>) probandStatusEntries, ComparatorFactory.PROBAND_STATUS_ENTRY_OUT_VO_INTERVAL_COMP);
+			Collections.sort((ArrayList<ProbandStatusEntryOutVO>) probandStatusEntries, Comparators.PROBAND_STATUS_ENTRY_OUT_VO_INTERVAL);
 		}
 		return probandStatusEntries;
 	}
@@ -2426,7 +2426,7 @@ public class ProbandServiceImpl
 				firstException.setData(errorMessagesMap);
 				throw firstException;
 			}
-			Collections.sort(inquiryValues, ComparatorFactory.INQUIRY_VALUE_OUT_VO_COMP);
+			Collections.sort(inquiryValues, Comparators.INQUIRY_VALUE_OUT_VO);
 			result.setPageValues(inquiryValues);
 			if (jsInquiryValues != null) {
 				result.setJsValues(jsInquiryValues);

@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
 public class PrivacyConsentStatusTypeDaoImpl
 		extends PrivacyConsentStatusTypeDaoBase {
 
-	private final static Comparator<PrivacyConsentStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(PrivacyConsentStatusType::getId);
+	private final static Comparator<PrivacyConsentStatusType> ID_COMPARATOR = Comparators.createNullSafe(PrivacyConsentStatusType::getId);
 
 	private org.hibernate.Criteria createPrivacyConsentStatusTypeCriteria() {
 		org.hibernate.Criteria privacyConsentStatusTypeCriteria = this.getSession().createCriteria(PrivacyConsentStatusType.class);

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.BankAccountDao;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseDao;
@@ -120,7 +120,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
-	private static final Comparator<Criterion> CRITERION_COMPARATOR = ComparatorFactory.createNullSafe(Criterion::getId);
+	private static final Comparator<Criterion> CRITERION_ID_COMPARATOR = Comparators.createNullSafe(Criterion::getId);
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -540,9 +540,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			throw ServiceUtil.initAuthorisationExceptionWithPosition(AuthorisationExceptionCodes.CRITERIA_MODIFIED_DIFFERENT_NUMBER_OF_CRITERIONS, logError, null);
 		}
 		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<>(criterons);
-		sortedCriterions.sort(ComparatorFactory.CRITERION_INSTANT_VO_COMPARATOR);
+		sortedCriterions.sort(Comparators.CRITERION_INSTANT_VO_POSITION);
 		ArrayList<Criterion> sortedOriginalCriterions = new ArrayList<>(storedCriterons);
-		sortedOriginalCriterions.sort(CRITERION_COMPARATOR);
+		sortedOriginalCriterions.sort(CRITERION_ID_COMPARATOR);
 		for (int i = 0; i < sortedCriterions.size(); i++) {
 			CriterionInstantVO criterion = sortedCriterions.get(i);
 			if (criterion == null) {

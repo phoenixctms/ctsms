@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.adapt.InventoryBookingCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InventoryStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InventoryTagAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntryDao;
@@ -1038,7 +1038,7 @@ public class InventoryServiceImpl
 		inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
 		if (sort) {
 			inventoryBookings = new ArrayList(inventoryBookings);
-			Collections.sort((ArrayList) inventoryBookings, ComparatorFactory.INVENTORY_BOOKING_OUT_VO_INTERVAL_COMP);
+			Collections.sort((ArrayList) inventoryBookings, Comparators.INVENTORY_BOOKING_OUT_VO_INTERVAL);
 		}
 		return inventoryBookings;
 	}
@@ -1128,7 +1128,7 @@ public class InventoryServiceImpl
 		statusEntryDao.toInventoryStatusEntryOutVOCollection(inventoryStatusEntries);
 		if (sort) {
 			inventoryStatusEntries = new ArrayList<InventoryStatusEntryOutVO>(inventoryStatusEntries);
-			Collections.sort((ArrayList<InventoryStatusEntryOutVO>) inventoryStatusEntries, ComparatorFactory.INVENTORY_STATUS_ENTRY_OUT_VO_INTERVAL_COMP);
+			Collections.sort((ArrayList<InventoryStatusEntryOutVO>) inventoryStatusEntries, Comparators.INVENTORY_STATUS_ENTRY_OUT_VO_INTERVAL);
 		}
 		return inventoryStatusEntries;
 	}

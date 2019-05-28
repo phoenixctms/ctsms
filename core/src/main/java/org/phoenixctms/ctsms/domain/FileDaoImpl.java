@@ -17,7 +17,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -633,7 +633,7 @@ public class FileDaoImpl
 				}
 			}
 		}
-		result.sort(ComparatorFactory.ALPHANUM_COMP);
+		result.sort(Comparators.ALPHANUM);
 		return result;
 	}
 

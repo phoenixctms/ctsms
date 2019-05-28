@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
@@ -24,7 +24,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 public class CourseParticipationStatusTypeDaoImpl
 		extends CourseParticipationStatusTypeDaoBase {
 
-	private final static Comparator<CourseParticipationStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(CourseParticipationStatusType::getId);
+	private final static Comparator<CourseParticipationStatusType> ID_COMPARATOR = Comparators.createNullSafe(CourseParticipationStatusType::getId);
 
 	/**
 	 * @inheritDoc

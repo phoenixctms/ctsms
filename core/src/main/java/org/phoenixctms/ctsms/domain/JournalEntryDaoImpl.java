@@ -21,7 +21,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -58,7 +58,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class JournalEntryDaoImpl
 		extends JournalEntryDaoBase {
 
-	private static final Comparator<JournalEntry> ID_COMPARATOR = ComparatorFactory.createNullSafe(JournalEntry::getId);
+	private static final Comparator<JournalEntry> ID_COMPARATOR = Comparators.createNullSafe(JournalEntry::getId);
 	private final static int RECENT_JOURNAL_ENTRY_PAGE_SIZE_BASE = 10;
 
 	private static void applyRecentJournalEntryTimestampCriterion(org.hibernate.Criteria journalCriteria, Date now) {

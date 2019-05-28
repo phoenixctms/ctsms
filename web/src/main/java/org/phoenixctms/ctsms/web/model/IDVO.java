@@ -97,7 +97,7 @@ public class IDVO implements Comparable<IDVO> {
 	}
 
 	public Long getId() {
-		return CommonUtil.getVOId(vo);
+		return CommonUtil.reflectiveGetIdCall(vo);
 	}
 
 	public PSFVO getPsf() {

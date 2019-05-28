@@ -238,10 +238,7 @@ public final class CommonUtil {
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 
-	private static final String VO_ID_GETTER_METHOD_NAME = "getId";
-	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
-
-	public static Long getSafeLong(Object obj, String methodName) {
+	private static Long getSafeLong(Object obj, String methodName) {
 		if (obj == null) {
 			return null;
 		}
@@ -252,15 +249,10 @@ public final class CommonUtil {
 		}
 	}
 	
-	public static Long getVOId(Object vo) {
-		return getSafeLong(vo, VO_ID_GETTER_METHOD_NAME);
+	public static Long reflectiveGetIdCall(Object vo) {
+		return getSafeLong(vo, "getId");
 	}
 
-	public static Long getEntityId(Object entity) throws Exception {
-		return getSafeLong(entity, ENTITY_ID_GETTER_METHOD_NAME);
-	}
-
-	
 	private static void appendProbandAlias(StringBuilder sb, ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
 		if (alias != null && alias.trim().length() > 0) {

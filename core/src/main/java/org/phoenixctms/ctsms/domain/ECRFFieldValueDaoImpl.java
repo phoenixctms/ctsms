@@ -19,7 +19,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -918,7 +918,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
 		}
-		result.sort(ComparatorFactory.SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR);
+		result.sort(Comparators.INPUT_FIELD_SELECTION_SET_VALUE_JSON_VO_ID);
 		return result;
 	}
 
@@ -943,7 +943,7 @@ public class ECRFFieldValueDaoImpl
 		while (it.hasNext()) {
 			result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
 		}
-		result.sort(ComparatorFactory.SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
+		result.sort(Comparators.INPUT_FIELD_SELECTION_SET_VALUE_OUT_VO_ID);
 		return result;
 	}
 

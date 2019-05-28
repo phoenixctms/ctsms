@@ -82,7 +82,7 @@ public class ChunkedRemoveAll<DAO> extends ChunkedDaoOperationAdapter<DAO, Objec
 	@Override
 	protected boolean process(Object entity, Object passThrough) throws Exception {
 		Map<String, Object> inOut = (Map<String, Object>) passThrough;
-		if (removeDone(remove.invoke(dao, CommonUtil.getEntityId(entity)))) {
+		if (removeDone(remove.invoke(dao, CommonUtil.reflectiveGetIdCall(entity)))) {
 			inOut.put("count", ((Long) inOut.get("count")) + 1l);
 			return true;
 		}

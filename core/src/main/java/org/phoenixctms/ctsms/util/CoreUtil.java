@@ -41,7 +41,7 @@ import javax.script.ScriptEngineManager;
 
 import org.phoenixctms.ctsms.PrincipalStore;
 import org.phoenixctms.ctsms.UserContext;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
@@ -380,7 +380,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		referenceFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMP);
+		referenceFields.sort(Comparators.ALPHANUM_TRIM);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -389,7 +389,7 @@ public final class CoreUtil {
 			result.append(referenceFieldsIt.next());
 		}
 		
-		deferredCollectionMapFields.sort(ComparatorFactory.ALPHANUM_TRIM_COMP);
+		deferredCollectionMapFields.sort(Comparators.ALPHANUM_TRIM);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -453,7 +453,7 @@ public final class CoreUtil {
 				}
 			}
 		}
-		Collections.sort(referenceFields, ComparatorFactory.ALPHANUM_TRIM_COMP);
+		Collections.sort(referenceFields, Comparators.ALPHANUM_TRIM);
 		Iterator<String> referenceFieldsIt = referenceFields.iterator();
 		while (referenceFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -461,7 +461,7 @@ public final class CoreUtil {
 			}
 			result.append(referenceFieldsIt.next());
 		}
-		Collections.sort(deferredCollectionMapFields, ComparatorFactory.ALPHANUM_TRIM_COMP);
+		Collections.sort(deferredCollectionMapFields, Comparators.ALPHANUM_TRIM);
 		Iterator<String> deferredCollectionMapFieldsIt = deferredCollectionMapFields.iterator();
 		while (deferredCollectionMapFieldsIt.hasNext()) {
 			if (result.length() > 0) {
@@ -999,7 +999,7 @@ public final class CoreUtil {
 
 	public static <E> void modifyVersion(E original, E modified, Timestamp now, User modifiedUser) throws Exception {
 		if (original == null) {
-			Long id = CommonUtil.getEntityId(modified);
+			Long id = CommonUtil.reflectiveGetIdCall(modified);
 			if (id != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_ID_NOT_NULL, id.toString());
 			}

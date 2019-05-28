@@ -25,7 +25,7 @@ import org.hibernate.hql.QueryTranslatorFactory;
 import org.hibernate.hql.ast.ASTQueryTranslatorFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.domain.CourseImpl;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
 import org.phoenixctms.ctsms.domain.CriterionPropertyDao;
@@ -229,7 +229,7 @@ public final class QueryUtil {
 
 	private static void appendJoins(StringBuilder statement, HashMap<String, AssociationPath> explicitJoinsMap) {
 		ArrayList<AssociationPath> joins = new ArrayList<AssociationPath>(explicitJoinsMap.values());
-		Collections.sort(joins, ComparatorFactory.ASSOCIATION_PATH_COMP);
+		Collections.sort(joins, Comparators.ASSOCIATION_PATH);
 		Iterator<AssociationPath> it = joins.iterator();
 		while (it.hasNext()) {
 			AssociationPath join = it.next();
@@ -1108,7 +1108,7 @@ public final class QueryUtil {
 			Collection<CriterionInstantVO> criterions = criteriaInstantVO.getCriterions();
 			if (criterions != null && criterions.size() > 0) {
 				sortedCriterions = new ArrayList<CriterionInstantVO>(criterions);
-				sortedCriterions.sort(ComparatorFactory.CRITERION_INSTANT_VO_COMPARATOR);
+				sortedCriterions.sort(Comparators.CRITERION_INSTANT_VO_POSITION);
 			}
 		}
 		StringBuilder sqlSetStatement = new StringBuilder();

@@ -42,7 +42,7 @@ public class ComparatorFactoryTest {
 	@Test
 	public void testDecide() {
 		
-		Comparator<AandB> deciderComparator = ComparatorFactory.decide(AandB::isA,comparing(AandB::getNum,naturalOrder()),comparing(AandB::getStr,naturalOrder()));
+		Comparator<AandB> deciderComparator = Comparators.decide(AandB::isA,comparing(AandB::getNum,naturalOrder()),comparing(AandB::getStr,naturalOrder()));
 		
 		List<AandB> as = Arrays.asList(new AandB(true, 3, null), new AandB(true, 1, null), new AandB(true, 2, null));
 		as.sort(deciderComparator);

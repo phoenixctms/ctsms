@@ -17,7 +17,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -38,7 +38,7 @@ public class AspDaoImpl
 	private final static boolean MATCH_SUBSTANCE_NAME = true;
 	private final static boolean MATCH_ATC_CODE_CODE = true;
 	private final static boolean MATCH_REGISTRATION_NUMBER = true;
-	private final static Comparator<AspAtcCodeVO> ID_COMPARATOR = ComparatorFactory.createNullSafe(AspAtcCodeVO::getId);
+	private final static Comparator<AspAtcCodeVO> ID_COMPARATOR = Comparators.createNullSafe(AspAtcCodeVO::getId);
 
 	private static void applyAspNameCriterions(org.hibernate.Criteria aspCriteria, String nameInfix) {
 		String revision = Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION);
@@ -241,7 +241,7 @@ public class AspDaoImpl
 		while (it.hasNext()) {
 			result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
 		}
-		result.sort(ComparatorFactory.SUBSTANCE_ID_COMPARATOR);
+		result.sort(Comparators.ASP_SUBSTANCE_VO_ID);
 		return result;
 	}
 

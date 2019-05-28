@@ -30,6 +30,8 @@ import org.phoenixctms.ctsms.vo.OpsSystModifierVO;
 public class OpsSystCategoryDaoImpl
 		extends OpsSystCategoryDaoBase {
 
+	private static final Comparator<OpsSystModifierVO> OPS_SYST_MODIFIER_VO_COMPARATOR = Comparator.nullsFirst(Comparator.comparing(OpsSystModifierVO::getLevel));
+
 	@Override
 	protected Collection<String> handleFindCategoryPreferredRubricLabels(
 			String preferredRubricLabelInfix, Integer limit) throws Exception {
@@ -120,7 +122,7 @@ public class OpsSystCategoryDaoImpl
 		while (it.hasNext()) {
 			result.add(opsSystModifierDao.toOpsSystModifierVO(it.next()));
 		}
-		result.sort(Comparator.nullsLast(Comparator.comparing(OpsSystModifierVO::getLevel)));
+		result.sort(OPS_SYST_MODIFIER_VO_COMPARATOR);
 		return result;
 	}
 }

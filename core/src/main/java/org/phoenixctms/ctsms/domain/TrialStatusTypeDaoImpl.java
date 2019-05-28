@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.compare.ComparatorFactory;
+import org.phoenixctms.ctsms.compare.Comparators;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
@@ -25,8 +25,8 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 public class TrialStatusTypeDaoImpl
 		extends TrialStatusTypeDaoBase {
 
-	private final static Comparator<TrialStatusType> ID_COMPARATOR = ComparatorFactory.createNullSafe(TrialStatusType::getId);
-	private final static Comparator<TrialStatusActionVO> ACTION_ID_COMPARATOR = ComparatorFactory.createNullSafe(TrialStatusActionVO::getId);
+	private final static Comparator<TrialStatusType> ID_COMPARATOR = Comparators.createNullSafe(TrialStatusType::getId);
+	private final static Comparator<TrialStatusActionVO> ACTION_ID_COMPARATOR = Comparators.createNullSafe(TrialStatusActionVO::getId);
 
 	private org.hibernate.Criteria createTrialStatusTypeCriteria() {
 		org.hibernate.Criteria trialStatusTypeCriteria = this.getSession().createCriteria(TrialStatusType.class);
