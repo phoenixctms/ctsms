@@ -238,6 +238,14 @@ public class ServiceMethodExecutor {
 		jobOutput.println("proband ID " + Long.toString(proband.getId()) + " removed");
 	}
 
+	public void updateProbandDepartment(AuthenticationVO auth, Long id, String newDepartmentL10nKey, String plainNewDepartmentPassword, String plainOldDepartmentPassword)
+			throws Exception {
+		ProbandOutVO proband = probandService.updateProbandDepartment(auth, id,
+				ExecUtil.departmentL10nKeyToId(newDepartmentL10nKey, departmentDao, jobOutput),
+				plainNewDepartmentPassword, plainOldDepartmentPassword);
+		jobOutput.println("proband ID " + Long.toString(proband.getId()) + " department changed to '" + newDepartmentL10nKey + "'");
+	}
+
 	public long deleteProbands(String departmentL10nKey, Integer limit) throws Exception {
 		jobOutput.println("department l10n key: " + departmentL10nKey);
 		PSFVO psf = new PSFVO();

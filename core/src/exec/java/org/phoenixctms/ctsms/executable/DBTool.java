@@ -320,6 +320,14 @@ public class DBTool {
 					dbTool.getDepartmentManager().createUser(getDepartmentL10nKeyOptionValue(line, true), getDepartmentPassword(line),
 							line.getOptionValue(DBToolOptions.USERNAME_OPT), line.getOptionValue(DBToolOptions.PASSWORD_OPT),
 							line.getOptionValue(DBToolOptions.USER_LANG_OPT), line.getOptionValue(DBToolOptions.PERMISSION_PROFILES_OPT));
+				} else if (line.hasOption(DBToolOptions.UPDATE_PROBAND_DEPARTMENT_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.UPDATE_PROBAND_DEPARTMENT_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					dbTool.getServiceMethodExecutor().updateProbandDepartment(
+							getAuthenticationOptionValue(line),
+							getIdOptionValue(line, true), getDepartmentL10nKeyOptionValue(line, true),
+							line.getOptionValue(DBToolOptions.NEW_DEPARTMENT_PASSWORD_OPT),
+							line.getOptionValue(DBToolOptions.OLD_DEPARTMENT_PASSWORD_OPT));
 				} else if (line.hasOption(DBToolOptions.LOAD_DEMO_DATA_OPT)) {
 					// dbTool.getServiceMethodExecutor().test(getAuthenticationOptionValue(line));
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.LOAD_DEMO_DATA_OPT);
