@@ -5100,20 +5100,6 @@ public final class ServiceUtil {
 				removeInquiryValue(inquiryValue, now, user, LOG_INQUIRY_VALUE_TRIAL, false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
 			}
 			proband.getInquiryValues().clear();
-			Iterator<JournalEntry> journalEntriesIt = proband.getJournalEntries().iterator();
-			while (journalEntriesIt.hasNext()) {
-				JournalEntry journalEntry = journalEntriesIt.next();
-				journalEntry.setProband(null);
-				journalEntryDao.remove(journalEntry);
-			}
-			proband.getJournalEntries().clear();
-			Iterator<File> filesIt = proband.getFiles().iterator();
-			while (filesIt.hasNext()) {
-				File file = filesIt.next();
-				file.setProband(null);
-				fileDao.remove(file);
-			}
-			proband.getFiles().clear();
 			boolean keepSentMassMailRecipients = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS, Bundle.SETTINGS,
 					DefaultSettings.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS);
 			Iterator<MassMailRecipient> massMailReceiptsIt = proband.getMassMailReceipts().iterator();
@@ -5143,6 +5129,20 @@ public final class ServiceUtil {
 				}
 			}
 			proband.getMassMailReceipts().clear();
+			Iterator<JournalEntry> journalEntriesIt = proband.getJournalEntries().iterator();
+			while (journalEntriesIt.hasNext()) {
+				JournalEntry journalEntry = journalEntriesIt.next();
+				journalEntry.setProband(null);
+				journalEntryDao.remove(journalEntry);
+			}
+			proband.getJournalEntries().clear();
+			Iterator<File> filesIt = proband.getFiles().iterator();
+			while (filesIt.hasNext()) {
+				File file = filesIt.next();
+				file.setProband(null);
+				fileDao.remove(file);
+			}
+			proband.getFiles().clear();
 			removeNotifications(proband.getNotifications(), notificationDao, notificationRecipientDao);
 		}
 		Iterator<Proband> childrenIt = proband.getChildren().iterator();

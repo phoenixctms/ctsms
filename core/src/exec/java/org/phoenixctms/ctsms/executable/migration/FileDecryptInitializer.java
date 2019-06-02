@@ -37,10 +37,10 @@ public class FileDecryptInitializer extends EncryptedFieldInitializer {
 			}
 			externalFileStream.flush();
 		} catch (Exception e) {
-			try {
-				externalFileStream.close();
-			} catch (Exception e1) {
-			}
+			//			try {
+			//				externalFileStream.close();
+			//			} catch (Exception e1) {
+			//			}
 			throw e;
 		} finally {
 			try {
