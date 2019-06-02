@@ -31,6 +31,7 @@ package $entity.packageName;
 #set ($entityCollectionType = "java.util.Collection")
 #end
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 /**
  * @see $entity.fullyQualifiedEntityName
  */
@@ -429,6 +430,8 @@ public interface $entity.daoName
      * @param $argumentName
      */
     public void update($entity.fullyQualifiedEntityName $argumentName);
+    
+    public void reEncrypt($entity.fullyQualifiedEntityName $argumentName, javax.crypto.SecretKey oldDepartmentKey, javax.crypto.SecretKey newDepartmentKey) throws Exception;
 
 #if ($hibernateUtils.xmlPersistenceActive)
     /**
