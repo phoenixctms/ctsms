@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.crypto.SecretKey;
+
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.DiagnosisCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryValueCollisionFinder;
@@ -43,6 +45,8 @@ import org.phoenixctms.ctsms.domain.BankAccountDao;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.Diagnosis;
 import org.phoenixctms.ctsms.domain.DiagnosisDao;
+import org.phoenixctms.ctsms.domain.File;
+import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldValue;
@@ -53,6 +57,8 @@ import org.phoenixctms.ctsms.domain.InquiryValueDao;
 import org.phoenixctms.ctsms.domain.InventoryBookingDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
+import org.phoenixctms.ctsms.domain.MassMailRecipient;
+import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.Medication;
 import org.phoenixctms.ctsms.domain.MedicationDao;
 import org.phoenixctms.ctsms.domain.MimeType;
@@ -98,6 +104,7 @@ import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -2903,6 +2910,152 @@ public class ProbandServiceImpl
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	protected ProbandOutVO handleUpdateProbandDepartment(AuthenticationVO auth, Long probandId, Long newDepartmentId, String plainNewDepartmentPassword,
+			String plainOldDepartmentPassword) throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
+		Department newDepartment = CheckIDUtil.checkDepartmentId(newDepartmentId, this.getDepartmentDao());
+		if (plainNewDepartmentPassword == null) {
+			plainNewDepartmentPassword = CoreUtil.getUserContext().getPlainDepartmentPassword();
+		}
+		if (plainOldDepartmentPassword == null) {
+			plainOldDepartmentPassword = CoreUtil.getUserContext().getPlainDepartmentPassword();
+		}
+		Department oldDepartment = proband.getDepartment();
+		if (!oldDepartment.equals(newDepartment)) {
+			if (!CryptoUtil.checkDepartmentPassword(newDepartment, plainNewDepartmentPassword)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
+			}
+			if (!CryptoUtil.checkDepartmentPassword(oldDepartment, plainOldDepartmentPassword)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.OLD_DEPARTMENT_PASSWORD_WRONG);
+			}
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			User user = CoreUtil.getUser();
+			SecretKey newDepartmentKey = ReEncrypter.getDepartmenKey(newDepartment, plainNewDepartmentPassword);
+			SecretKey oldDepartmentKey = ReEncrypter.getDepartmenKey(oldDepartment, plainOldDepartmentPassword);
+			ProbandOutVO original = probandDao.toProbandOutVO(proband);
+			probandDao.reEncrypt(proband, oldDepartmentKey, newDepartmentKey);
+			proband.setDepartment(newDepartment);
+			CoreUtil.modifyVersion(proband, proband.getVersion(), now, user);
+			probandDao.update(proband);
+			ProbandOutVO result = probandDao.toProbandOutVO(proband);
+			ProbandTagValueDao probandTagValueDao = this.getProbandTagValueDao();
+			Iterator<ProbandTagValue> tagValuesIt = proband.getTagValues().iterator();
+			while (tagValuesIt.hasNext()) {
+				ProbandTagValue tagValue = tagValuesIt.next();
+				probandTagValueDao.reEncrypt(tagValue, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(tagValue, tagValue.getVersion(), now, user);
+				probandTagValueDao.update(tagValue);
+			}
+			ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
+			Iterator<ProbandContactDetailValue> contactDetailValuesIt = proband.getContactDetailValues().iterator();
+			while (contactDetailValuesIt.hasNext()) {
+				ProbandContactDetailValue contactDetailValue = contactDetailValuesIt.next();
+				probandContactDetailValueDao.reEncrypt(contactDetailValue, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(contactDetailValue, contactDetailValue.getVersion(), now, user);
+				probandContactDetailValueDao.update(contactDetailValue);
+			}
+			ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
+			Iterator<ProbandAddress> addressesIt = proband.getAddresses().iterator();
+			while (addressesIt.hasNext()) {
+				ProbandAddress address = addressesIt.next();
+				probandAddressDao.reEncrypt(address, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(address, address.getVersion(), now, user);
+				probandAddressDao.update(address);
+			}
+			ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
+			Iterator<ProbandStatusEntry> statusEntriesIt = proband.getStatusEntries().iterator();
+			while (statusEntriesIt.hasNext()) {
+				ProbandStatusEntry statusEntry = statusEntriesIt.next();
+				probandStatusEntryDao.reEncrypt(statusEntry, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(statusEntry, statusEntry.getVersion(), now, user);
+				probandStatusEntryDao.update(statusEntry);
+			}
+			MedicationDao medicationDao = this.getMedicationDao();
+			Iterator<Medication> medicationsIt = proband.getMedications().iterator();
+			while (medicationsIt.hasNext()) {
+				Medication medication = medicationsIt.next();
+				medicationDao.reEncrypt(medication, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(medication, medication.getVersion(), now, user);
+				medicationDao.update(medication);
+			}
+			DiagnosisDao diagnosisDao = this.getDiagnosisDao();
+			Iterator<Diagnosis> diagnosesIt = proband.getDiagnoses().iterator();
+			while (diagnosesIt.hasNext()) {
+				Diagnosis diagnosis = diagnosesIt.next();
+				diagnosisDao.reEncrypt(diagnosis, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(diagnosis, diagnosis.getVersion(), now, user);
+				diagnosisDao.update(diagnosis);
+			}
+			ProcedureDao procedureDao = this.getProcedureDao();
+			Iterator<Procedure> proceduresIt = proband.getProcedures().iterator();
+			while (proceduresIt.hasNext()) {
+				Procedure procedure = proceduresIt.next();
+				procedureDao.reEncrypt(procedure, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(procedure, procedure.getVersion(), now, user);
+				procedureDao.update(procedure);
+			}
+			MoneyTransferDao moneyTransferDao = this.getMoneyTransferDao();
+			Iterator<MoneyTransfer> moneyTransfersIt = proband.getMoneyTransfers().iterator();
+			while (moneyTransfersIt.hasNext()) {
+				MoneyTransfer moneyTransfer = moneyTransfersIt.next();
+				moneyTransferDao.reEncrypt(moneyTransfer, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(moneyTransfer, moneyTransfer.getVersion(), now, user);
+				moneyTransferDao.update(moneyTransfer);
+			}
+			BankAccountDao bankAccountDao = this.getBankAccountDao();
+			Iterator<BankAccount> bankAccountIt = proband.getBankAccounts().iterator();
+			while (bankAccountIt.hasNext()) {
+				BankAccount bankAccount = bankAccountIt.next();
+				bankAccountDao.reEncrypt(bankAccount, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(bankAccount, bankAccount.getVersion(), now, user);
+				bankAccountDao.update(bankAccount);
+			}
+			//no re-encryption for proband list status entries, as those are encryted by the creating user
+			//			Iterator<ProbandListEntry> trialParticipationsIt = proband.getTrialParticipations().iterator();
+			//			while (trialParticipationsIt.hasNext()) {
+			//				Iterator<ProbandListStatusEntry> probandListStatusEntriesIt = trialParticipationsIt.next().getStatusEntries().iterator();
+			//				while (probandListStatusEntriesIt.hasNext()) {
+			//					ProbandListStatusEntry probandListStatusEntry = probandListStatusEntriesIt.next();
+			//					probandListStatusEntryDao.reEncrypt(probandListStatusEntry, oldDepartmentKey, newDepartmentKey);
+			//					CoreUtil.modifyVersion(probandListStatusEntry,probandListStatusEntry.getVersion(), now, user);
+			//					probandListStatusEntryDao.update(probandListStatusEntry);
+			//				}
+			//			}
+			//if (CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) {
+			MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+			Iterator<MassMailRecipient> massMailReceiptsIt = proband.getMassMailReceipts().iterator();
+			while (massMailReceiptsIt.hasNext()) {
+				MassMailRecipient recipient = massMailReceiptsIt.next();
+				massMailRecipientDao.reEncrypt(recipient, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
+				massMailRecipientDao.update(recipient);
+			}
+			//no re-encryption for journal entries, as those are encryted by the creating user
+			//JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+			//Iterator<JournalEntry> journalEntriesIt = proband.getJournalEntries().iterator();
+			//while (journalEntriesIt.hasNext()) {
+			//	JournalEntry journalEntry = journalEntriesIt.next();
+			//	journalEntryDao.reEncrypt(journalEntry, oldDepartmentKey, newDepartmentKey);
+			//	CoreUtil.modifyVersion(journalEntry, journalEntry.getVersion(), now, user);
+			//	journalEntryDao.update(journalEntry);
+			//}
+			FileDao fileDao = this.getFileDao();
+			Iterator<File> filesIt = proband.getFiles().iterator();
+			while (filesIt.hasNext()) {
+				File file = filesIt.next();
+				fileDao.reEncrypt(file, oldDepartmentKey, newDepartmentKey);
+				CoreUtil.modifyVersion(file, file.getVersion(), now, user);
+				fileDao.update(file);
+			}
+			ServiceUtil.logSystemMessage(proband, result, now, user, SystemMessageCodes.PROBAND_DEPARTMENT_UPDATED, result, original, this.getJournalEntryDao());
+			return result;
+		} else {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_CHANGED);
 		}
 	}
 }
