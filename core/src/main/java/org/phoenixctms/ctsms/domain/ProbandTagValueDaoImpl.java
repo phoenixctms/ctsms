@@ -6,6 +6,7 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -14,6 +15,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
@@ -27,6 +30,42 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class ProbandTagValueDaoImpl
 		extends ProbandTagValueDaoBase {
+
+	private final static Collection<ReEncrypter<ProbandTagValue>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandTagValue>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandTagValue>() {
+
+			@Override
+			protected byte[] getIv(ProbandTagValue item) {
+				return item.getValueIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandTagValue item) {
+				return item.getEncryptedValue();
+			}
+
+			@Override
+			protected void setIv(ProbandTagValue item, byte[] iv) {
+				item.setValueIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandTagValue item, byte[] cipherText) {
+				item.setEncryptedValue(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandTagValue item, byte[] hash) {
+				item.setValueHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<ProbandTagValue>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private org.hibernate.Criteria createTagValueCriteria() {
 		org.hibernate.Criteria tagValueCriteria = this.getSession().createCriteria(ProbandTagValue.class);

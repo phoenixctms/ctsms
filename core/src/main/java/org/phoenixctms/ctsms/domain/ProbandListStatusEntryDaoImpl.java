@@ -7,6 +7,7 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -17,6 +18,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -31,6 +34,47 @@ import org.phoenixctms.ctsms.vocycle.ProbandListStatusEntryGraph;
  */
 public class ProbandListStatusEntryDaoImpl
 		extends ProbandListStatusEntryDaoBase {
+
+	private final static Collection<ReEncrypter<ProbandListStatusEntry>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandListStatusEntry>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandListStatusEntry>() {
+
+			@Override
+			protected byte[] getIv(ProbandListStatusEntry item) {
+				return item.getReasonIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandListStatusEntry item) {
+				return item.getEncryptedReason();
+			}
+
+			@Override
+			protected void setIv(ProbandListStatusEntry item, byte[] iv) {
+				item.setReasonIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandListStatusEntry item, byte[] cipherText) {
+				item.setEncryptedReason(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandListStatusEntry item, byte[] hash) {
+				item.setReasonHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(ProbandListStatusEntry item) {
+				return !CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON;
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<ProbandListStatusEntry>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private org.hibernate.Criteria createStatusEntryCriteria(String alias) {
 		org.hibernate.Criteria statusEntryCriteria;

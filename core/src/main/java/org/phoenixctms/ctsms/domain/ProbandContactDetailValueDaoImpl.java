@@ -6,6 +6,7 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -14,6 +15,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -27,6 +30,69 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class ProbandContactDetailValueDaoImpl
 		extends ProbandContactDetailValueDaoBase {
+
+	private final static Collection<ReEncrypter<ProbandContactDetailValue>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandContactDetailValue>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandContactDetailValue>() {
+
+			@Override
+			protected byte[] getIv(ProbandContactDetailValue item) {
+				return item.getValueIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandContactDetailValue item) {
+				return item.getEncryptedValue();
+			}
+
+			@Override
+			protected void setIv(ProbandContactDetailValue item, byte[] iv) {
+				item.setValueIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandContactDetailValue item, byte[] cipherText) {
+				item.setEncryptedValue(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandContactDetailValue item, byte[] hash) {
+				item.setValueHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandContactDetailValue>() {
+
+			@Override
+			protected byte[] getIv(ProbandContactDetailValue item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandContactDetailValue item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(ProbandContactDetailValue item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandContactDetailValue item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandContactDetailValue item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<ProbandContactDetailValue>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private org.hibernate.Criteria createContactDetailValueCriteria() {
 		org.hibernate.Criteria contactDetailValueCriteria = this.getSession().createCriteria(ProbandContactDetailValue.class);

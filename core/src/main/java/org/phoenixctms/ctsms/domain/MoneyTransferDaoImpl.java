@@ -6,6 +6,7 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -44,6 +47,42 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class MoneyTransferDaoImpl
 		extends MoneyTransferDaoBase {
+
+	private final static Collection<ReEncrypter<MoneyTransfer>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<MoneyTransfer>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<MoneyTransfer>() {
+
+			@Override
+			protected byte[] getIv(MoneyTransfer item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(MoneyTransfer item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(MoneyTransfer item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(MoneyTransfer item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(MoneyTransfer item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<MoneyTransfer>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private static void applyCostTypeCriterions(org.hibernate.Criteria moneyTransferCriteria,
 			Long probandId, Long trialId) {

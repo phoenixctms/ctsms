@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -16,6 +17,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -40,6 +43,42 @@ public class ProcedureDaoImpl
 			}
 		}
 		return null;
+	}
+
+	private final static Collection<ReEncrypter<Procedure>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<Procedure>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Procedure>() {
+
+			@Override
+			protected byte[] getIv(Procedure item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Procedure item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(Procedure item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Procedure item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(Procedure item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<Procedure>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private org.hibernate.Criteria createProcedureCriteria() {

@@ -7,7 +7,6 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +25,10 @@ import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.VerifyMD5InputStream;
+import org.phoenixctms.ctsms.security.reencrypt.DataReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.FileReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -107,6 +110,175 @@ public class FileDaoImpl
 				criteria.add(Restrictions.eq("logicalPath", logicalPath));
 			}
 		}
+	}
+
+	private final static Collection<ReEncrypter<File>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<File>>();
+	static {
+		RE_ENCRYPTERS.add(new FileReEncrypter<File>() {
+
+			@Override
+			protected String getMd5(File item) {
+				return item.getMd5();
+			}
+
+			@Override
+			protected String getExternalFileName(File item) {
+				return item.getExternalFileName();
+			}
+
+			@Override
+			protected void setExternalFileName(File item, String externalFileName) {
+				item.setExternalFileName(externalFileName);
+			}
+
+			@Override
+			protected byte[] getIv(File item) {
+				return item.getDataIv();
+			}
+
+			@Override
+			protected void setIv(File item, byte[] iv) {
+				item.setDataIv(iv);
+			}
+
+			@Override
+			protected boolean isSkip(File item) {
+				return !(item.isExternalFile() && CommonUtil.getUseFileEncryption(item.getModule()));
+			}
+
+			@Override
+			protected FileModule getModule(File item) {
+				return item.getModule();
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<File>() {
+
+			@Override
+			protected byte[] getIv(File item) {
+				return item.getDataIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(File item) {
+				return item.getData();
+			}
+
+			@Override
+			protected void setIv(File item, byte[] iv) {
+				item.setDataIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(File item, byte[] cipherText) {
+				item.setData(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(File item) {
+				return !(!item.isExternalFile() && CommonUtil.getUseFileEncryption(item.getModule()));
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<File>() {
+
+			@Override
+			protected byte[] getIv(File item) {
+				return item.getFileNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(File item) {
+				return item.getEncryptedFileName();
+			}
+
+			@Override
+			protected void setIv(File item, byte[] iv) {
+				item.setFileNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(File item, byte[] cipherText) {
+				item.setEncryptedFileName(cipherText);
+			}
+
+			@Override
+			protected void setHash(File item, byte[] hash) {
+				item.setFileNameHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(File item) {
+				return !CommonUtil.getUseFileEncryption(item.getModule());
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<File>() {
+
+			@Override
+			protected byte[] getIv(File item) {
+				return item.getTitleIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(File item) {
+				return item.getEncryptedTitle();
+			}
+
+			@Override
+			protected void setIv(File item, byte[] iv) {
+				item.setTitleIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(File item, byte[] cipherText) {
+				item.setEncryptedTitle(cipherText);
+			}
+
+			@Override
+			protected void setHash(File item, byte[] hash) {
+				item.setTitleHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(File item) {
+				return !CommonUtil.getUseFileEncryption(item.getModule());
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<File>() {
+
+			@Override
+			protected byte[] getIv(File item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(File item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(File item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(File item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(File item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(File item) {
+				return !CommonUtil.getUseFileEncryption(item.getModule());
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<File>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private org.hibernate.Criteria createFileCriteria() {
@@ -797,7 +969,7 @@ public class FileDaoImpl
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
 				target.setDecrypted(true);
-			} catch (IllegalArgumentException|IOException e) {
+			} catch (IllegalArgumentException | IOException e) {
 				throw new RuntimeException(e);
 			} catch (Exception e) {
 				target.setDatas(null);
@@ -1000,7 +1172,7 @@ public class FileDaoImpl
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
 				target.setDecrypted(true);
-			} catch (IllegalArgumentException|IOException e) {
+			} catch (IllegalArgumentException | IOException e) {
 				throw new RuntimeException(e);
 			} catch (Exception e) {
 				if (target.getStream() != null) {

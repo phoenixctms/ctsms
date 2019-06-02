@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -16,6 +17,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.AlphaIdVO;
 import org.phoenixctms.ctsms.vo.DiagnosisInVO;
@@ -40,6 +43,42 @@ public class DiagnosisDaoImpl
 			}
 		}
 		return null;
+	}
+
+	private final static Collection<ReEncrypter<Diagnosis>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<Diagnosis>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Diagnosis>() {
+
+			@Override
+			protected byte[] getIv(Diagnosis item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Diagnosis item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(Diagnosis item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Diagnosis item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(Diagnosis item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<Diagnosis>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private org.hibernate.Criteria createDiagnosisCriteria() {

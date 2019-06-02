@@ -28,6 +28,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -111,6 +113,81 @@ public class JournalEntryDaoImpl
 			}
 		}
 		return true;
+	}
+
+	private final static Collection<ReEncrypter<JournalEntry>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<JournalEntry>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<JournalEntry>() {
+
+			@Override
+			public byte[] getIv(JournalEntry item) {
+				return item.getTitleIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(JournalEntry item) {
+				return item.getEncryptedTitle();
+			}
+
+			@Override
+			protected void setIv(JournalEntry item, byte[] iv) {
+				item.setTitleIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(JournalEntry item, byte[] cipherText) {
+				item.setEncryptedTitle(cipherText);
+			}
+
+			@Override
+			protected void setHash(JournalEntry item, byte[] hash) {
+				item.setTitleHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(JournalEntry item) {
+				JournalCategory category = item.getCategory();
+				return !CommonUtil.getUseJournalEncryption(item.getSystemMessageModule(), category == null ? null : category.getModule());
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<JournalEntry>() {
+
+			@Override
+			protected byte[] getIv(JournalEntry item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(JournalEntry item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(JournalEntry item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(JournalEntry item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(JournalEntry item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(JournalEntry item) {
+				JournalCategory category = item.getCategory();
+				return !CommonUtil.getUseJournalEncryption(item.getSystemMessageModule(), category == null ? null : category.getModule());
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<JournalEntry>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private void applyJournalCriterion(org.hibernate.Criteria journalCriteria, JournalModule module, Long id) throws Exception {

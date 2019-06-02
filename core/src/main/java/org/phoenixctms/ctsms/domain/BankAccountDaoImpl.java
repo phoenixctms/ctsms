@@ -7,6 +7,7 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -15,6 +16,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
@@ -54,6 +57,177 @@ public class BankAccountDaoImpl
 			}
 		}
 		return null;
+	}
+
+	private final static Collection<ReEncrypter<BankAccount>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<BankAccount>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getAccountHolderNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedAccountHolderName();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setAccountHolderNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedAccountHolderName(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setAccountHolderNameHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getAccountNumberIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedAccountNumber();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setAccountNumberIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedAccountNumber(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setAccountNumberHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getBankCodeNumberIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedBankCodeNumber();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setBankCodeNumberIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedBankCodeNumber(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setBankCodeNumberHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getBankNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedBankName();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setBankNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedBankName(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setBankNameHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getBicIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedBic();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setBicIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedBic(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setBicHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<BankAccount>() {
+
+			@Override
+			protected byte[] getIv(BankAccount item) {
+				return item.getIbanIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(BankAccount item) {
+				return item.getEncryptedIban();
+			}
+
+			@Override
+			protected void setIv(BankAccount item, byte[] iv) {
+				item.setIbanIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(BankAccount item, byte[] cipherText) {
+				item.setEncryptedIban(cipherText);
+			}
+
+			@Override
+			protected void setHash(BankAccount item, byte[] hash) {
+				item.setIbanHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<BankAccount>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	/**
