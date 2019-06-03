@@ -1224,7 +1224,7 @@ public class ToolsServiceImpl
 					if (toCount > 0) {
 						sent = true;
 						if (delayMillis > 0) {
-							Thread.currentThread();
+							//Thread.currentThread();
 							Thread.sleep(delayMillis);
 						}
 					} else {
@@ -1233,7 +1233,7 @@ public class ToolsServiceImpl
 				} catch (Throwable t) {
 					recipient.setErrorMessage(t.getMessage());
 					if (delayMillis > 0) {
-						Thread.currentThread();
+						//Thread.currentThread();
 						Thread.sleep(delayMillis);
 					}
 				}

@@ -223,6 +223,7 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_TAG_POSITIONS_ROTATED_UP = "proband_list_entry_tag_positions_rotated_up";
 	public final static String PROBAND_CREATED = "proband_created";
 	public final static String PROBAND_UPDATED = "proband_updated";
+	public final static String PROBAND_DEPARTMENT_UPDATED = "proband_department_updated";
 	public final static String PROBAND_DELETED = "proband_deleted";
 	public final static String PROBAND_DELETED_PARENT_REMOVED = "proband_deleted_parent_removed";
 	public final static String PROBAND_DELETED_PATIENT_REMOVED = "proband_deleted_patient_removed";

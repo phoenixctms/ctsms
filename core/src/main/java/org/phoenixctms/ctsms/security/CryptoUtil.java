@@ -58,11 +58,11 @@ public final class CryptoUtil {
 	public static final int SEED = 100; // (new Random()).nextInt(100);
 
 	public static boolean checkDepartmentPassword(Department department, String plainDepartmentPassword) throws Exception {
-		return Arrays.equals(CryptoUtil.hashPassword(department.getDepartmentPasswordSalt(), plainDepartmentPassword), department.getDepartmentPasswordHash());
+		return Arrays.equals(hashPassword(department.getDepartmentPasswordSalt(), plainDepartmentPassword), department.getDepartmentPasswordHash());
 	}
 
 	public static boolean checkPassword(Password lastPassword, String plainPassword) throws Exception {
-		return Arrays.equals(CryptoUtil.hashPassword(lastPassword.getPasswordHashSalt(), plainPassword), lastPassword.getPasswordHash());
+		return Arrays.equals(hashPassword(lastPassword.getPasswordHashSalt(), plainPassword), lastPassword.getPasswordHash());
 	}
 
 	public static InputStream createDecryptionStream(byte[] iv, byte[] salt, String password, InputStream inputStream) throws Exception {
@@ -71,6 +71,10 @@ public final class CryptoUtil {
 
 	public static InputStream createDecryptionStream(byte[] iv, InputStream inputStream) throws Exception {
 		return new CipherInputStream(inputStream, getDecryptionCipher(iv));
+	}
+
+	public static InputStream createDecryptionStream(byte[] iv, SecretKey departmentKey, InputStream inputStream) throws Exception {
+		return new CipherInputStream(inputStream, getDecryptionCipher(iv, departmentKey));
 	}
 
 	public static CipherOutputStream createEncryptionStream(byte[] iv, byte[] salt, String password, OutputStream outputStream) throws Exception {
@@ -87,6 +91,10 @@ public final class CryptoUtil {
 
 	public static CipherStream createEncryptionStream(OutputStream outputStream) throws Exception {
 		return new CipherStream(outputStream, getEncryptionCipher());
+	}
+
+	public static CipherStream createEncryptionStream(SecretKey departmentKey, OutputStream outputStream) throws Exception {
+		return new CipherStream(outputStream, getEncryptionCipher(departmentKey));
 	}
 
 	public static KeyPair createKeyPair() throws NoSuchAlgorithmException {
@@ -130,6 +138,10 @@ public final class CryptoUtil {
 		return decrypt(getDecryptionCipher(iv, salt, password), cipherText);
 	}
 
+	public static byte[] decrypt(byte[] iv, SecretKey departmentKey, byte[] cipherText) throws Exception {
+		return decrypt(getDecryptionCipher(iv, departmentKey), cipherText);
+	}
+
 	private static byte[] decrypt(Cipher cipher, byte[] cipherText) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
 		// http://stackoverflow.com/questions/6181524/getting-nearly-double-the-length-when-reading-byte-from-postgres-with-jpa
 		int ctLength = cipherText.length;
@@ -158,7 +170,13 @@ public final class CryptoUtil {
 	public static Object decryptValue(byte[] iv, byte[] encryptedValue) throws Exception {
 		return CoreUtil.deserialize(decrypt(iv, encryptedValue));
 	}
+	//	private static Object decryptValue(byte[] iv, byte[] encryptedValue, Department department, String plainDepartmentPassword) throws Exception {
+	//		return decryptValue(iv,encryptedValue,getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
+	//	}
 
+	//	static Object decryptValue(byte[] iv, byte[] encryptedValue, SecretKey departmentKey) throws Exception {
+	//		return CoreUtil.deserialize(decrypt(getDecryptionCipher(iv,departmentKey), encryptedValue));
+	//	}
 	public static Object decryptValue(byte[] iv, byte[] salt, String password, byte[] encryptedValue) throws Exception {
 		return CoreUtil.deserialize(decrypt(iv, salt, password, encryptedValue));
 	}
@@ -181,6 +199,15 @@ public final class CryptoUtil {
 		return new CipherText(cipher.getIV(), encrypt(cipher, plainText));
 	}
 
+	public static CipherText encrypt(SecretKey departmentKey, byte[] plainText) throws Exception {
+		Cipher cipher = getEncryptionCipher(departmentKey);
+		return new CipherText(cipher.getIV(), encrypt(cipher, plainText));
+	}
+
+	//	static CipherText encrypt(byte[] iv,byte[] plainText, SecretKey departmentKey) throws Exception {
+	//		Cipher cipher = getEncryptionCipher(iv,departmentKey);
+	//		return new CipherText(cipher.getIV(), encrypt(cipher, plainText));
+	//	}
 	private static byte[] encrypt(Cipher cipher, byte[] plainText) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
 		byte[] cipherText = new byte[cipher.getOutputSize(plainText.length)];
 		int ctLength = cipher.update(plainText, 0, plainText.length, cipherText, 0);
@@ -221,9 +248,9 @@ public final class CryptoUtil {
 	public static void encryptPasswords(Password password, String plainPassword, String plainDepartmentPassword) throws Exception {
 		byte[] salt;
 		CipherText cipherText;
-		salt = CryptoUtil.createSalt();
+		salt = createSalt();
 		password.setPasswordHashSalt(salt);
-		password.setPasswordHash(CryptoUtil.hashPassword(salt, plainPassword));
+		password.setPasswordHash(hashPassword(salt, plainPassword));
 		salt = createSalt();
 		cipherText = encryptValue(salt, plainPassword, plainDepartmentPassword);
 		password.setDepartmentPasswordIv(cipherText.getIv());
@@ -261,7 +288,24 @@ public final class CryptoUtil {
 		Cipher cipher = getEncryptionCipher();
 		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
 	}
+	//	static CipherText encryptValue(Serializable value, SecretKey departmentKey) throws Exception {
+	//		Cipher cipher = getEncryptionCipher(departmentKey);
+	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
+	//	}
+	//	static CipherText encryptValue((byte[] iv,Serializable value, SecretKey departmentKey) throws Exception {
+	//		Cipher cipher = getEncryptionCipher(iv,departmentKey);
+	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
+	//	}
 
+	//	public static CipherText encryptValue(Serializable value, Department department, String plainDepartmentPassword) throws Exception {
+	//		Cipher cipher = getEncryptionCipher(getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
+	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
+	//	}
+	//	
+	//	public static CipherText encryptValue(byte[] iv,Serializable value, Department department, String plainDepartmentPassword) throws Exception {
+	//		Cipher cipher = getEncryptionCipher(iv,getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
+	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
+	//	}
 	private static Cipher getDecryptionCipher(byte[] iv) throws Exception {
 		return getDecryptionCipher(iv, getDepartmentKey());
 	}
@@ -359,6 +403,13 @@ public final class CryptoUtil {
 		return hashForSearch(CoreUtil.serialize(value));
 	}
 
+	public static byte[] hashForSearch(SecretKey departmentKey, byte[] plainText) throws Exception {
+		return encryptHashForSearch(departmentKey, getMD5DigestForSearch(plainText));
+	}
+
+	//	public static byte[] hashForSearch(Serializable value, Department department, String plainDepartmentPassword) throws Exception {
+	//		return encryptHashForSearch(getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)), getMD5DigestForSearch(CoreUtil.serialize(value)));
+	//	}
 	private static byte[] hashPassword(byte[] salt, String password) throws Exception {
 		return createPBEKey(salt, password).getEncoded();
 	}

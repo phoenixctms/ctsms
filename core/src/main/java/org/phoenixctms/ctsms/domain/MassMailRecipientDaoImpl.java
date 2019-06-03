@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -32,6 +33,8 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.DataReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -82,6 +85,42 @@ public class MassMailRecipientDaoImpl
 
 	private static EmailAddressVO internetAddressToEmailAddressVO(InternetAddress address) {
 		return new EmailAddressVO(address.getAddress(), address.getPersonal());
+	}
+
+	private final static Collection<ReEncrypter<MassMailRecipient>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<MassMailRecipient>>();
+	static {
+		RE_ENCRYPTERS.add(new DataReEncrypter<MassMailRecipient>() {
+
+			@Override
+			protected byte[] getIv(MassMailRecipient item) {
+				return item.getMimeMessageDataIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(MassMailRecipient item) {
+				return item.getEncryptedMimeMessageData();
+			}
+
+			@Override
+			protected void setIv(MassMailRecipient item, byte[] iv) {
+				item.setEncryptedMimeMessageData(iv);
+			}
+
+			@Override
+			protected void setEncrypted(MassMailRecipient item, byte[] cipherText) {
+				item.setEncryptedMimeMessageData(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(MassMailRecipient item) {
+				return item.getMimeMessageSize() == 0l;
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<MassMailRecipient>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private MassMailEmailSender massMailEmailSender;

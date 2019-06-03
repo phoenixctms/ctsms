@@ -43,6 +43,7 @@ package $entity.packageName;
 #end
 
 import org.phoenixctms.ctsms.VOCacheContext;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.hibernate.criterion.Order;
 import org.hibernate.LockMode;
 import org.springframework.orm.hibernate3.SessionHolder;
@@ -641,6 +642,14 @@ $xmlIndent        return transformEntity(transform, ($entity.fullyQualifiedName)
         if (cache != null) {
             cache.voMapEvict(${entity.fullyQualifiedEntityName}.class, ${argumentName}.getId());
         }
+    }
+    
+    protected java.util.Collection<ReEncrypter<$entity.fullyQualifiedEntityName>> getReEncrypters() {
+        return new java.util.ArrayList<ReEncrypter<$entity.fullyQualifiedEntityName>>();
+    }
+    
+    public void reEncrypt($entity.fullyQualifiedEntityName $argumentName, javax.crypto.SecretKey oldDepartmentKey, javax.crypto.SecretKey newDepartmentKey) throws Exception {
+        ReEncrypter.reEncrypt($argumentName, getReEncrypters(), oldDepartmentKey, newDepartmentKey);
     }
 
 #if ($hibernateUtils.xmlPersistenceActive)

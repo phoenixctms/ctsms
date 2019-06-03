@@ -7,6 +7,7 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.Criteria;
@@ -17,6 +18,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryInVO;
@@ -29,6 +32,42 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class ProbandStatusEntryDaoImpl
 		extends ProbandStatusEntryDaoBase {
+
+	private final static Collection<ReEncrypter<ProbandStatusEntry>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandStatusEntry>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandStatusEntry>() {
+
+			@Override
+			protected byte[] getIv(ProbandStatusEntry item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandStatusEntry item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(ProbandStatusEntry item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandStatusEntry item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandStatusEntry item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<ProbandStatusEntry>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private org.hibernate.Criteria createStatusEntryCriteria() {
 		org.hibernate.Criteria probandStatusEntryCriteria = this.getSession().createCriteria(ProbandStatusEntry.class);

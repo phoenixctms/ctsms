@@ -6,6 +6,7 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.hibernate.criterion.Projections;
@@ -14,6 +15,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
@@ -31,6 +34,231 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class ProbandAddressDaoImpl
 		extends ProbandAddressDaoBase {
+
+	private final static Collection<ReEncrypter<ProbandAddress>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandAddress>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getCountryNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedCountryName();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setCountryNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedCountryName(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setCountryNameHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getZipCodeIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedZipCode();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setZipCodeIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedZipCode(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setZipCodeHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getCityNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedCityName();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setCityNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedCityName(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setCityNameHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getStreetNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedStreetName();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setStreetNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedStreetName(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setStreetNameHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getHouseNumberIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedHouseNumber();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setHouseNumberIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedHouseNumber(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setHouseNumberHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getEntranceIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedEntrance();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setEntranceIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedEntrance(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setEntranceHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getDoorNumberIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedDoorNumber();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setDoorNumberIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedDoorNumber(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setDoorNumberHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
+				return item.getCareOfIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedCareOf();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setCareOfIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedCareOf(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setCareOfHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<ProbandAddress>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	private static String getAddressString(ProbandAddressOutVO address) {
 		StringBuilder sb = new StringBuilder();

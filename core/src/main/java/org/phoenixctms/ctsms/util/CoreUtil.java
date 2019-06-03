@@ -280,7 +280,7 @@ public final class CoreUtil {
 	}
 
 	public static String createExternalFileName(String prefix, String fileName) {
-		FilePathSplitter filePath = new FilePathSplitter(fileName);
+		FilePathSplitter filePath = new FilePathSplitter(fileName); //for extension only
 		StringBuilder result = new StringBuilder();
 		if (prefix != null && prefix.length() > 0) {
 			result.append(prefix);

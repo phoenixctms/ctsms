@@ -25,6 +25,8 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -59,6 +61,42 @@ public class MedicationDaoImpl
 			}
 		}
 		return null;
+	}
+
+	private final static Collection<ReEncrypter<Medication>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<Medication>>();
+	static {
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Medication>() {
+
+			@Override
+			protected byte[] getIv(Medication item) {
+				return item.getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Medication item) {
+				return item.getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(Medication item, byte[] iv) {
+				item.setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Medication item, byte[] cipherText) {
+				item.setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(Medication item, byte[] hash) {
+				item.setCommentHash(hash);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<Medication>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	public static ArrayList<Long> toAspSubstanceIdCollection(Collection<AspSubstance> substances) { // lazyload persistentset prevention

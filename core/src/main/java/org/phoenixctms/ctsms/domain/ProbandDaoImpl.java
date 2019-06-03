@@ -35,6 +35,9 @@ import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.DataReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -59,6 +62,396 @@ import org.phoenixctms.ctsms.vocycle.ProbandReflexionGraph;
  */
 public class ProbandDaoImpl
 		extends ProbandDaoBase {
+
+	private final static Collection<ReEncrypter<Proband>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<Proband>>();
+	static {
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPrefixedTitle1Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPrefixedTitle1();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPrefixedTitle1Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPrefixedTitle1(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPrefixedTitle2Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPrefixedTitle2();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPrefixedTitle2Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPrefixedTitle2(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPrefixedTitle3Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPrefixedTitle3();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPrefixedTitle3Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPrefixedTitle3(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getFirstNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedFirstName();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setFirstNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedFirstName(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setFirstNameHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getLastNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedLastName();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setLastNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedLastName(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setLastNameHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPostpositionedTitle1Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPostpositionedTitle1();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPostpositionedTitle1Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPostpositionedTitle1(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPostpositionedTitle2Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPostpositionedTitle2();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPostpositionedTitle2Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPostpositionedTitle2(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getPostpositionedTitle3Iv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedPostpositionedTitle3();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setPostpositionedTitle3Iv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedPostpositionedTitle3(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getDateOfBirthIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedDateOfBirth();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setDateOfBirthIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedDateOfBirth(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setDateOfBirthHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getCitizenshipIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedCitizenship();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setCitizenshipIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedCitizenship(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setCitizenshipHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getCommentIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedComment();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setCommentIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedComment(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setCommentHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new DataReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getDataIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedData();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setDataIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedData(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null && getEncrypted(item) != null);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Proband>() {
+
+			@Override
+			protected byte[] getIv(Proband item) {
+				return item.getPersonParticulars().getFileNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Proband item) {
+				return item.getPersonParticulars().getEncryptedFileName();
+			}
+
+			@Override
+			protected void setIv(Proband item, byte[] iv) {
+				item.getPersonParticulars().setFileNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Proband item, byte[] cipherText) {
+				item.getPersonParticulars().setEncryptedFileName(cipherText);
+			}
+
+			@Override
+			protected void setHash(Proband item, byte[] hash) {
+				item.getPersonParticulars().setFileNameHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Proband item) {
+				return !(item.isPerson() && item.getPersonParticulars() != null && getEncrypted(item) != null);
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<Proband>> getReEncrypters() {
+		return RE_ENCRYPTERS;
+	}
 
 	@Override
 	protected long handleGetCountByAlias(boolean person, String aliasPattern) throws Exception {

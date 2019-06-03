@@ -87,6 +87,7 @@ public final class DBToolOptions {
 	public static final String CHANGE_DEPARTMENT_PASSWORD_USER_OPT = "cdpu";
 	public static final String CREATE_DEPARTMENT_OPT = "cd";
 	public static final String CREATE_USER_OPT = "cu";
+	public static final String UPDATE_PROBAND_DEPARTMENT_OPT = "upd";
 	public static final String LOAD_DEMO_DATA_OPT = "ldd";
 	//public static final String CREATE_DEMO_INPUT_FIELDS_OPT1 = "cdif";
 	public static final String IMPORT_INVENTORY_DOCUMENT_FILES_OPT = "iidf";
@@ -223,6 +224,7 @@ public final class DBToolOptions {
 				allLockIds));
 		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_OPT, "create_department", "create new department", 0, allLockIds));
 		tasks.addOption(registerTaskOption(CREATE_USER_OPT, "create_user", "create new user", 0, allLockIds));
+		tasks.addOption(registerTaskOption(UPDATE_PROBAND_DEPARTMENT_OPT, "update_proband_depatment", "migrate a proband to another department", 0, allLockIds));
 		tasks.addOption(registerTaskOption(LOAD_DEMO_DATA_OPT, "load_demo_data", "load db with demo data records", 0, allLockIds));
 		//tasks.addOption(registerTaskOption(CREATE_DEMO_INPUT_FIELDS_OPT, "create_demo_input_fields", "create demo input fields", 0));
 		tasks.addOption(registerTaskOption(IMPORT_INVENTORY_DOCUMENT_FILES_OPT, "import_inventory_document_files", "import documents and files for an inventory entity", 1,
