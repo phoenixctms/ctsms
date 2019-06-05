@@ -88,6 +88,15 @@
 							</f:facet>
 						<h:outputText value="#{fieldStatusEntry.vo.listEntry.proband.id}" />
 					</p:column>
+					<p:column
+						sortBy="#{fieldStatusEntry.vo.listEntry.position}"
+						filterBy="#{fieldStatusEntry.vo.listEntry.position}">
+						<f:attribute name="visibleDefault" value = "false" />
+						 <f:facet name="header">
+								<h:outputText value="#{labels.ecrffieldstatus_position_column}" />
+							</f:facet>
+						<h:outputText value="#{fieldStatusEntry.vo.listEntry.position}" />
+					</p:column>
 					<p:column 
 						filterBy="#{fieldStatusEntry.vo.listEntry.proband.personParticulars.lastNameHash}">
 						<!-- rendered="#{ecrfFieldStatusBean.trial.type.person}" -->

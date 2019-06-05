@@ -107,7 +107,7 @@
 									onclick="trialEcrfStatusProbandListTableColumnsDialog.show()" />
 							</h:panelGrid>								
 						</f:facet>
-						<p:column sortBy="#{probandListEntry.vo.position}">
+						<p:column sortBy="#{probandListEntry.vo.position}" filterBy="#{probandListEntry.vo.position}">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_position_column}" />
 							</f:facet>
