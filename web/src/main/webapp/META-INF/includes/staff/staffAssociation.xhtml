@@ -84,6 +84,14 @@
 									</f:facet>
 									<h:outputText value="#{user.vo.department.name}" />
 								</p:column>
+								<p:column
+									filterBy="#{user.vo.authMethod}"
+									filterOptions="#{sessionScopeBean.filterAuthenticationTypes}">
+									<f:facet name="header">
+										<h:outputText value="#{stafflabels.staff_association_account_list_auth_method_column}" />
+									</f:facet>
+									<h:outputText value="#{user.vo.authMethod.name}" />
+								</p:column>							
 								<p:column style="width:32px;">
 									<p:commandButton
 										type="button"
