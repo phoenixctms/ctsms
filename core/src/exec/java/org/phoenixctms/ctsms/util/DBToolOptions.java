@@ -62,10 +62,11 @@ public final class DBToolOptions {
 	public static final String IMPORT_MIME_COURSE_OPT = "imc";
 	public static final String IMPORT_MIME_TRIAL_OPT = "imt";
 	public static final String IMPORT_MIME_PROBAND_OPT = "imp";
+	public static final String IMPORT_MIME_MASS_MAIL_OPT = "immm";
 	public static final String IMPORT_MIME_INPUT_FIELD_IMAGE_OPT = "imifi";
 	public static final String IMPORT_MIME_STAFF_IMAGE_OPT = "imsi";
 	public static final String IMPORT_MIME_PROBAND_IMAGE_OPT = "impi";
-	public static final String IMPORT_MIME_MASS_MAIL_OPT = "immm";
+	public static final String IMPORT_MIME_JOB_DATA_OPT = "imjd";
 	public static final String IMPORT_ZIP_OPT = "iz";
 	public static final String IMPORT_STREET_OPT = "is";
 	public static final String IMPORT_TITLE_OPT = "it";
@@ -208,13 +209,15 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(IMPORT_MIME_COURSE_OPT, "import_mime_course", "import course file mime types from csv/text file", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_TRIAL_OPT, "import_mime_trial", "import trial file mime types from csv/text file", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_OPT, "import_mime_proband", "import proband file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_MASS_MAIL_OPT, "import_mime_mass_mail", "import mass mail file mime types from csv/text file", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_INPUT_FIELD_IMAGE_OPT, "import_mime_input_field_image", "import input field image file mime types from csv/text file", 1,
 				allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_IMAGE_OPT, "import_mime_staff_image", "import input staff image file mime types from csv/text file", 1,
 				allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_IMAGE_OPT, "import_mime_input_field_image", "import proband image file mime types from csv/text file", 1,
 				allLockIds));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_MASS_MAIL_OPT, "import_mime_mass_mail", "import mass mail file mime types from csv/text file", 1, allLockIds));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_JOB_DATA_OPT, "import_mime_job_data_image", "import job data file mime types from csv/text file", 1,
+				allLockIds));
 		tasks.addOption(registerTaskOption(HELP_OPT, "help", "print help", 0));
 		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT, "change_department_password_interactive", "change department password (interactive)", 0));
 		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_INTERACTIVE_OPT, "create_department_interactive", "create new department (interactive)", 0));
