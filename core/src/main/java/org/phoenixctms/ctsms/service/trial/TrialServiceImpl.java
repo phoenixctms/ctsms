@@ -12,6 +12,8 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.Format;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -221,6 +223,8 @@ public class TrialServiceImpl
 
 	private final static String SHUFFLE_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static java.util.regex.Pattern JS_VARIABLE_NAME_REGEXP = Pattern.compile("^[A-Za-z0-9_]+$");
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX = 6;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX = 7;
 	private final static int PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX = 8;
 	private final static int PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX = 9;
 
@@ -1914,7 +1918,9 @@ public class TrialServiceImpl
 		if (!CommonUtil.isEmptyString(trialIn.getProbandAliasFormat())) {
 			try {
 				Format[] argFormats = (new MessageFormat(trialIn.getProbandAliasFormat())).getFormatsByArgumentIndex();
-				if (argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + 1
+				if (argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX + 1
+						&& argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1
+						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX + 1) {
 					throw new IllegalArgumentException(); // "{" + PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + "} or {" + PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX + "}
 															// required");
@@ -1938,36 +1944,69 @@ public class TrialServiceImpl
 
 	private String getNewProbandAlias(Trial trial, User user) throws Exception {
 		try {
-			MessageFormat format = new MessageFormat(CommonUtil.escapeSqlLikeWildcards(trial.getProbandAliasFormat()));
-			format.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
-			format.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
-			long count = this.getProbandDao().getCountByAlias(trial.getType().isPerson(),
-					format.format(
-							new Object[] {
-									CommonUtil.escapeSqlLikeWildcards(user.getDepartment().getNameL10nKey()), // {0}
-									null, // {1}
-									null, // {2}
-									null, // {3}
-									null, // {4}
-									null, // {5}
-									null, // {6}
-									null, // {7}
-									CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {8}
-									CommonUtil.SQL_LIKE_PERCENT_WILDCARD // {9}
-							},
-							new StringBuffer(),
-							null).toString());
-			return MessageFormat.format(trial.getProbandAliasFormat(),
+			MessageFormat likeFormat = new MessageFormat(CommonUtil.escapeSqlLikeWildcards(trial.getProbandAliasFormat()));
+			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, null);
+			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, null);
+			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
+			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
+			String likePattern = likeFormat.format(
+					new Object[] {
+							CommonUtil.escapeSqlLikeWildcards(user.getDepartment().getNameL10nKey()), // {0}
+							null, // {1}
+							null, // {2}
+							null, // {3}
+							null, // {4}
+							null, // {5}
+							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {6}
+							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {7}
+							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {8}
+							CommonUtil.SQL_LIKE_PERCENT_WILDCARD // {9}
+					},
+					new StringBuffer(),
+					null).toString();
+			long count0based = this.getProbandDao().getCountByAlias(trial.getType().isPerson(),likePattern);
+			long count1based = count0based + 1l;
+			long maxAlias0based = 0l;
+			long maxAlias1based = 1l;
+			Proband maxAliasProband = this.getProbandDao().findByMaxAlias(trial.getType().isPerson(),likePattern);
+			if (maxAliasProband != null) {
+				String alias;
+				if (maxAliasProband.isPerson()) {
+					alias = maxAliasProband.getPersonParticulars().getAlias();
+				} else {
+					alias = maxAliasProband.getAnimalParticulars().getAlias();
+				}
+				MessageFormat format = new MessageFormat(trial.getProbandAliasFormat());
+					Object[] args = format.parse(alias,new ParsePosition(0));
+					try {
+						maxAlias0based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX];
+						maxAlias0based += 1l;						
+					} catch (Exception e) {
+						
+					}
+					try {
+						maxAlias1based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX];
+						maxAlias1based += 1l;						
+					} catch (Exception e) {
+						
+					}
+				
+			}
+			String alias = MessageFormat.format(trial.getProbandAliasFormat(),
 					user.getDepartment().getNameL10nKey(), // {0}
 					null, // {1}
 					null, // {2}
 					null, // {3}
 					null, // {4}
 					null, // {5}
-					null, // {6}
-					null, // {7}
-					count, // {8}
-					count + 1l); // {9}
+					maxAlias0based, // {6}
+					maxAlias1based, // {7}
+					count0based, // {8}
+					count1based); // {9}
+			if (this.getProbandDao().getCountByAlias(trial.getType().isPerson(),CommonUtil.escapeSqlLikeWildcards(alias)) > 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS,alias);
+			}
+			return alias;
 		} catch (IllegalArgumentException e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN);
 		}
