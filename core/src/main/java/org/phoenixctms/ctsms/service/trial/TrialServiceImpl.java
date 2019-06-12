@@ -4110,6 +4110,22 @@ public class TrialServiceImpl
 				signatureDao.remove(signature);
 			}
 			trial.getSignatures().clear();
+			JobDao jobDao = this.getJobDao();
+			Iterator<Job> jobsIt = trial.getJobs().iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				job.setTrial(null);
+				jobDao.remove(job);
+			}
+			trial.getJobs().clear();
+			JobTypeDao jobTypeDao = this.getJobTypeDao();
+			Iterator<JobType> jobTypesIt = trial.getJobTypes().iterator();
+			while (jobTypesIt.hasNext()) {
+				JobType jobType = jobTypesIt.next();
+				jobType.setTrial(null);
+				jobTypeDao.remove(jobType);
+			}
+			trial.getJobTypes().clear();
 			Iterator<JournalEntry> journalEntriesIt = trial.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();
