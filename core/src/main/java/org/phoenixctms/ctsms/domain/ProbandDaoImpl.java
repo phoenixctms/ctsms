@@ -21,6 +21,7 @@ import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -464,6 +465,21 @@ public class ProbandDaoImpl
 		}
 		particularsCriteria.add(Restrictions.like("alias", aliasPattern, MatchMode.EXACT));
 		return (Long) probandCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+	
+	@Override
+	protected Proband handleFindByMaxAlias(boolean person, String aliasPattern) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		org.hibernate.Criteria particularsCriteria;
+		if (person) {
+			particularsCriteria = probandCriteria.createCriteria("personParticulars","particulars");
+		} else {
+			particularsCriteria = probandCriteria.createCriteria("animalParticulars","particulars");
+		}
+		particularsCriteria.add(Restrictions.like("alias", aliasPattern, MatchMode.EXACT));
+		probandCriteria.addOrder(Order.desc("particulars.alias"));
+		probandCriteria.setMaxResults(1);
+		return (Proband) probandCriteria.uniqueResult();
 	}
 
 	private org.hibernate.Criteria createProbandCriteria(String alias) {
