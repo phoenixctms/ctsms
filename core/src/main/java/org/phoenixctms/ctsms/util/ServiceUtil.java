@@ -91,6 +91,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
+import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 import org.phoenixctms.ctsms.vo.CriterionOutVO;
@@ -3476,6 +3477,12 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
+	public static JournalEntry logSystemMessage(Criteria criteria, CriteriaOutVO criteriaVO, Timestamp now, User modified, String systemMessageCode, Object result,
+			Object original, JournalEntryDao journalEntryDao) throws Exception {
+		return journalEntryDao.addSystemMessage(criteria, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+	}
+
 	public static JournalEntry logSystemMessage(Proband proband, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
@@ -4961,6 +4968,7 @@ public final class ServiceUtil {
 			SignatureDao signatureDao,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
 			MassMailRecipientDao massMailRecipientDao,
+			JobDao jobDao,
 			FileDao fileDao) throws Exception {
 		if (deleteCascade) {
 			boolean checkTrialLocked = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_CHECK_TRIAL_LOCKED, Bundle.SETTINGS,
@@ -5129,6 +5137,13 @@ public final class ServiceUtil {
 				}
 			}
 			proband.getMassMailReceipts().clear();
+			Iterator<Job> jobsIt = proband.getJobs().iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				job.setProband(null);
+				jobDao.remove(job);
+			}
+			proband.getJobs().clear();
 			Iterator<JournalEntry> journalEntriesIt = proband.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();

@@ -231,6 +231,7 @@ public final class DefaultSettings {
 	public static final Long EMAIL_PROCESS_MASS_MAILS_MAX = 3l;
 	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
+	public static final Integer JOB_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");

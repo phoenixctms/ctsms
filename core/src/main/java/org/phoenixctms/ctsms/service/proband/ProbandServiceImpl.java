@@ -1237,6 +1237,7 @@ public class ProbandServiceImpl
 					this.getSignatureDao(),
 					this.getECRFStatusEntryDao(),
 					this.getMassMailRecipientDao(),
+					this.getJobDao(),
 					this.getFileDao());
 		}
 		return result;

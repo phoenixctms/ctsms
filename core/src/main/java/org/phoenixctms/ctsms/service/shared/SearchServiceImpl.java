@@ -44,6 +44,8 @@ import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.InventoryTagDao;
 import org.phoenixctms.ctsms.domain.InventoryTagValue;
 import org.phoenixctms.ctsms.domain.InventoryTagValueDao;
+import org.phoenixctms.ctsms.domain.Job;
+import org.phoenixctms.ctsms.domain.JobDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.MassMailDao;
@@ -759,6 +761,14 @@ public class SearchServiceImpl
 				criterionDao.remove(criterion);
 			}
 			criteria.getCriterions().clear();
+			JobDao jobDao = this.getJobDao();
+			Iterator<Job> jobsIt = criteria.getJobs().iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				job.setCriteria(null);
+				jobDao.remove(job);
+			}
+			criteria.getJobs().clear();
 			Iterator<JournalEntry> jounralEntriesIt = criteria.getJournalEntries().iterator();
 			while (jounralEntriesIt.hasNext()) {
 				JournalEntry journalEntry = jounralEntriesIt.next();

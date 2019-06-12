@@ -277,11 +277,11 @@ public class DBTool {
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_PROBAND_IMAGE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.PROBAND_IMAGE, false) > 0l;
-				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_JOB_DATA_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_JOB_DATA_OPT);
+				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
-					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_JOB_DATA_OPT),
-							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.JOB_DATA, false) > 0l;
+					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT),
+							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.JOB_FILE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT);
 					dbTool.getJobOutput().printPrelude(job);

@@ -192,4 +192,5 @@ public interface DefaultMessages {
 	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "invalid proband/no email addresses";
 	public static final String UNSUPPORTED_RANDOMIZATION_MODE = "unsupported randomization method {0}";
 	public static final String UNSUPPORTED_RANDOMIZATION_TYPE = "unsupported randomization type {0}";
+	public static final String UNSUPPORTED_JOB_MODULE = "unsupported job module {0}";
 }

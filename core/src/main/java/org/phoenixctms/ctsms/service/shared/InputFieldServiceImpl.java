@@ -44,6 +44,8 @@ import org.phoenixctms.ctsms.domain.Inquiry;
 import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InquiryValue;
 import org.phoenixctms.ctsms.domain.InquiryValueDao;
+import org.phoenixctms.ctsms.domain.Job;
+import org.phoenixctms.ctsms.domain.JobDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.MimeType;
@@ -1171,6 +1173,14 @@ public class InputFieldServiceImpl
 				inputFieldSelectionSetValueDao.remove(selectionSetValue);
 			}
 			inputField.getSelectionSetValues().clear();
+			JobDao jobDao = this.getJobDao();
+			Iterator<Job> jobsIt = inputField.getJobs().iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				job.setInputField(null);
+				jobDao.remove(job);
+			}
+			inputField.getJobs().clear();
 			Iterator<JournalEntry> journalEntriesIt = inputField.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();

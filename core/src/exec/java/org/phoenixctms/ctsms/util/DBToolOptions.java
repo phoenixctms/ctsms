@@ -66,7 +66,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_MIME_INPUT_FIELD_IMAGE_OPT = "imifi";
 	public static final String IMPORT_MIME_STAFF_IMAGE_OPT = "imsi";
 	public static final String IMPORT_MIME_PROBAND_IMAGE_OPT = "impi";
-	public static final String IMPORT_MIME_JOB_DATA_OPT = "imjd";
+	public static final String IMPORT_MIME_JOB_FILE_OPT = "imjf";
 	public static final String IMPORT_ZIP_OPT = "iz";
 	public static final String IMPORT_STREET_OPT = "is";
 	public static final String IMPORT_TITLE_OPT = "it";
@@ -216,7 +216,7 @@ public final class DBToolOptions {
 				allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_IMAGE_OPT, "import_mime_input_field_image", "import proband image file mime types from csv/text file", 1,
 				allLockIds));
-		tasks.addOption(registerTaskOption(IMPORT_MIME_JOB_DATA_OPT, "import_mime_job_data_image", "import job data file mime types from csv/text file", 1,
+		tasks.addOption(registerTaskOption(IMPORT_MIME_JOB_FILE_OPT, "import_mime_job_file", "import job data file mime types from csv/text file", 1,
 				allLockIds));
 		tasks.addOption(registerTaskOption(HELP_OPT, "help", "print help", 0));
 		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT, "change_department_password_interactive", "change department password (interactive)", 0));

@@ -350,4 +350,5 @@ public interface SystemMessageCodes {
 	public static final String MASS_MAIL_RECIPIENTS_DELETED = "mass_mail_recipients_deleted";
 	public static final String MASS_MAIL_LOCKED = "mass_mail_locked";
 	public static final String MASS_MAIL_RECIPIENT_RESET = "mass_mail_recipient_reset";
+	public static final String JOB_CREATED = "job_created";
 }
