@@ -727,6 +727,7 @@ public interface ServiceExceptionCodes {
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_REQUIRED = "trial_blocking_period_explicit_days_required";
 	public static final String TRIAL_BLOCKING_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE = "trial_blocking_period_explicit_days_less_than_one";
 	public static final String TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN = "trial_malformed_proband_alias_pattern";
+	public static final String TRIAL_PROBAND_ALIAS_ALREADY_EXISTS = "trial_proband_alias_already_exists";
 	public static final String TRIAL_SIGNUP_DESCRIPTION_EMPTY = "trial_signup_description_empty";
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_DISABLED = "trial_signup_proband_list_disabled";
 	public static final String TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED = "trial_signup_randomization_not_defined";
