@@ -16,9 +16,9 @@ public class InquiryValueOutVOComparator implements Comparator<InquiryValueOutVO
 			if (inquiryA != null && inquiryB != null) {
 				TrialOutVO trialA = inquiryA.getTrial();
 				TrialOutVO trialB = inquiryB.getTrial();
-				if (trialA.getId() > trialA.getId()) {
+				if (trialA.getId() > trialB.getId()) {
 					return 1;
-				} else if (trialB.getId() < trialB.getId()) {
+				} else if (trialA.getId() < trialB.getId()) {
 					return -1;
 				} else {
 					String categoryA = inquiryA.getCategory();

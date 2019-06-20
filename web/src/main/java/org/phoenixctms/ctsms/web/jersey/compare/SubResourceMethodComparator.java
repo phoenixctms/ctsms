@@ -10,7 +10,7 @@ public class SubResourceMethodComparator implements Comparator<AbstractSubResour
 
 	@Override
 	public int compare(AbstractSubResourceMethod a, AbstractSubResourceMethod b) {
-		int pathComparison = AlphanumComparatorBase.cmp(a.getPath(), b.getPath());
+		int pathComparison = AlphanumComparatorBase.cmp(a.getPath().toString(), b.getPath().toString());
 		if (pathComparison != 0) {
 			return pathComparison;
 		} else {
