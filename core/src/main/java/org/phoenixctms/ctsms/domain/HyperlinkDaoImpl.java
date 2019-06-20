@@ -29,27 +29,37 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class HyperlinkDaoImpl
 		extends HyperlinkDaoBase {
 
+	private static void applyIdCriterion(org.hibernate.Criteria criteria, HyperlinkModule module, Long id) {
+		if (id != null) {
+			switch (module) {
+				case INVENTORY_HYPERLINK:
+					criteria.add(Restrictions.eq("inventory.id", id.longValue()));
+					break;
+				case STAFF_HYPERLINK:
+					criteria.add(Restrictions.eq("staff.id", id.longValue()));
+					break;
+				case COURSE_HYPERLINK:
+					criteria.add(Restrictions.eq("course.id", id.longValue()));
+					break;
+				case TRIAL_HYPERLINK:
+					criteria.add(Restrictions.eq("trial.id", id.longValue()));
+					break;
+				default:
+			}
+		}
+	}
+
 	private static void applyModuleIdCriterions(org.hibernate.Criteria criteria, HyperlinkModule module, Long id) {
 		if (module != null) {
 			criteria.createCriteria("category").add(Restrictions.eq("module", module));
-			//criteriaMap.createCriteria("category").add(Restrictions.eq("module", module));
-			if (id != null) {
-				switch (module) {
-					case INVENTORY_HYPERLINK:
-						criteria.add(Restrictions.eq("inventory.id", id.longValue()));
-						break;
-					case STAFF_HYPERLINK:
-						criteria.add(Restrictions.eq("staff.id", id.longValue()));
-						break;
-					case COURSE_HYPERLINK:
-						criteria.add(Restrictions.eq("course.id", id.longValue()));
-						break;
-					case TRIAL_HYPERLINK:
-						criteria.add(Restrictions.eq("trial.id", id.longValue()));
-						break;
-					default:
-				}
-			}
+			applyIdCriterion(criteria, module, id);
+		}
+	}
+
+	private static void applyModuleIdCriterions(SubCriteriaMap criteriaMap, HyperlinkModule module, Long id) {
+		if (module != null) {
+			criteriaMap.createCriteria("category").add(Restrictions.eq("module", module));
+			applyIdCriterion(criteriaMap.getCriteria(), module, id);
 		}
 	}
 
@@ -66,7 +76,7 @@ public class HyperlinkDaoImpl
 		if (active != null) {
 			hyperlinkCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
-		applyModuleIdCriterions(hyperlinkCriteria, module, id);
+		applyModuleIdCriterions(criteriaMap, module, id);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return hyperlinkCriteria.list();
 	}
