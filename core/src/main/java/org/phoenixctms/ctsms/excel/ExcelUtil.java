@@ -15,10 +15,10 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
@@ -45,8 +45,8 @@ public final class ExcelUtil {
 	public final static String EXCEL_LINE_BREAK = "\n";
 	public final static String EXCEL_HEADER_FOOTER_LINE_BREAK = "\n";
 	public final static String EXCEL_DATE_PATTERN = "dd.MM.yyyy"; // "yyyy-MM-dd";
-	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy hh:mm"; // HH:mm:ss"; // "yyyy-MM-dd HH:mm:ss";
-	public final static String EXCEL_TIME_PATTERN = "hh:mm"; // "HH:mm";
+	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm"; // HH:mm:ss"; // "yyyy-MM-dd HH:mm:ss";
+	public final static String EXCEL_TIME_PATTERN = "HH:mm"; // "HH:mm";
 	public final static String EXCEL_DECIMAL_SEPARATOR = null; // ".";
 	public final static String COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR = AssociationPath.ASSOCIATION_PATH_SEPARATOR;// ".";
 	public final static boolean COLUMN_NAME_LOWER_CASE_FIELD_NAMES = false;
@@ -441,18 +441,18 @@ public final class ExcelUtil {
 					}
 					return new jxl.write.Label(c, r, ((EventImportance) value).name());
 				}
-			} else if (returnType.equals(ExportStatus.class)) {
+			} else if (returnType.equals(JobStatus.class)) {
 				if (f.isOverrideFormat()) {
 					WritableCellFormat cellFormat = getRowCellFormat(NumberFormats.TEXT, f, cellFormats);
 					if (value == null) {
 						return new jxl.write.Blank(c, r, cellFormat);
 					}
-					return new jxl.write.Label(c, r, ((ExportStatus) value).name(), cellFormat);
+					return new jxl.write.Label(c, r, ((JobStatus) value).name(), cellFormat);
 				} else {
 					if (value == null) {
 						return new jxl.write.Blank(c, r);
 					}
-					return new jxl.write.Label(c, r, ((ExportStatus) value).name());
+					return new jxl.write.Label(c, r, ((JobStatus) value).name());
 				}
 			}
 		}
