@@ -1,5 +1,8 @@
 package org.phoenixctms.ctsms.executable;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -69,6 +72,7 @@ import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.JournalExcelVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
@@ -79,7 +83,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ServiceMethodExecutor {
+public class ServiceMethods {
 
 	private static CriteriaOutVO checkCriteriaDbModule(CriteriaOutVO criteriaOut, DBModule module) {
 		if (!module.equals(criteriaOut.getModule())) {
@@ -89,9 +93,9 @@ public class ServiceMethodExecutor {
 		return criteriaOut;
 	}
 
-	private static <DAO, ENTITY> long performDeferredDelete(final AuthenticationVO auth, boolean remove, DAO dao, final ServiceMethodExecutor sme, String deleteMethodName,
+	private static <DAO, ENTITY> long performDeferredDelete(final AuthenticationVO auth, boolean remove, DAO dao, final ServiceMethods sm, String deleteMethodName,
 			final String entityLabel) throws Exception {
-		final Method deleteMethod = sme.getClass().getMethod(deleteMethodName, AuthenticationVO.class, Long.class);
+		final Method deleteMethod = sm.getClass().getMethod(deleteMethodName, AuthenticationVO.class, Long.class);
 		ChunkedDaoOperationAdapter<DAO, ENTITY> processor = new ChunkedDaoOperationAdapter<DAO, ENTITY>(dao,
 				new Search(new SearchParameter[] {
 						new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR) })) {
@@ -112,10 +116,10 @@ public class ServiceMethodExecutor {
 				Map<String, Object> inOut = (Map<String, Object>) passThrough;
 				if (((Long) inOut.get("i")) < ((Long) inOut.get("totalCount"))) {
 					try {
-						deleteMethod.invoke(sme, auth, CommonUtil.getEntityId(entity));
+						deleteMethod.invoke(sm, auth, CommonUtil.getEntityId(entity));
 						inOut.put("removed", ((Long) inOut.get("removed")) + 1l);
 					} catch (Exception e) {
-						sme.jobOutput.println("error when removing " + entityLabel + " ID " + CommonUtil.getEntityId(entity) + ": " + CoreUtil.getStackTrace(e));
+						sm.jobOutput.println("error when removing " + entityLabel + " ID " + CommonUtil.getEntityId(entity) + ": " + CoreUtil.getStackTrace(e));
 					}
 				} else {
 					throw new RuntimeException("some " + entityLabel + " entities could not be deleted");
@@ -125,14 +129,14 @@ public class ServiceMethodExecutor {
 			}
 		};
 		long totalCount = processor.getTotalCount();
-		sme.jobOutput.println(totalCount + " " + entityLabel + " entities marked for deletion");
+		sm.jobOutput.println(totalCount + " " + entityLabel + " entities marked for deletion");
 		if (remove) {
 			Map<String, Object> passThrough = new HashMap<String, Object>();
 			passThrough.put("totalCount", totalCount);
 			passThrough.put("removed", 0l);
 			passThrough.put("i", 0l);
 			processor.processEach(passThrough);
-			sme.jobOutput.println((passThrough.get("removed")) + " " + entityLabel + " entities removed");
+			sm.jobOutput.println((passThrough.get("removed")) + " " + entityLabel + " entities removed");
 			return ((Long) passThrough.get("removed"));
 		}
 		return totalCount;
@@ -190,7 +194,7 @@ public class ServiceMethodExecutor {
 	private JournalService journalService;
 	private JobOutput jobOutput;
 
-	public ServiceMethodExecutor() {
+	public ServiceMethods() {
 	}
 
 	public void deleteCourse(AuthenticationVO auth, Long id) throws Exception {
@@ -295,7 +299,7 @@ public class ServiceMethodExecutor {
 				count += (Long) result.getEcrfFieldStatusRowCountMap().get(queue);
 			}
 			jobOutput.println(sb.toString());
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return count;
 		} else {
 			return 0l;
@@ -306,7 +310,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.COURSE_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("course ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -317,7 +321,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.CRITERIA_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("criteria ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -373,7 +377,7 @@ public class ServiceMethodExecutor {
 		}
 		if (result != null) {
 			printCriteriaResult(criteria, result.getCriteria(), result.getRowCount(), type);
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -384,18 +388,32 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportEcrfJournal(auth, id);
 		if (result != null) {
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
 		}
 	}
 
+	private void writeDocument(String fileName, byte[] documentData, MimeTypeVO contentType, String documentFileName) throws IOException {
+		if (!CommonUtil.isEmptyString(fileName)) {
+			File file = new java.io.File(fileName);
+			jobOutput.println("writing to file '" + file.getCanonicalPath() + "'");
+			FileOutputStream stream = new FileOutputStream(file);
+			try {
+				stream.write(documentData);
+			} finally {
+				stream.close();
+			}
+		}
+		jobOutput.addEmailAttachment(documentData, contentType, documentFileName);
+	}
+
 	public long exportInputFieldJournal(AuthenticationVO auth, Long id, String fileName) throws Exception {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INPUT_FIELD_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("input field ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -406,7 +424,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.INVENTORY_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("inventory ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -417,7 +435,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.MASS_MAIL_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("mass mail ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -440,7 +458,7 @@ public class ServiceMethodExecutor {
 			} else {
 				jobOutput.println(result.getRowCount() + " inventory bookings");
 			}
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -451,7 +469,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.PROBAND_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("proband ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -464,7 +482,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			jobOutput.println(result.getTrial().getName() + " " + (result.getLogLevel() != null ? result.getLogLevel().name() : "[full subject list]") + ": "
 					+ result.getRowCount() + " probands");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -475,7 +493,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.STAFF_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("staff ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -486,7 +504,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.TRIAL_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -497,7 +515,7 @@ public class ServiceMethodExecutor {
 		JournalExcelVO result = journalService.exportJournal(auth, JournalModule.USER_JOURNAL, id);
 		if (result != null) {
 			jobOutput.println("user ID " + Long.toString(id) + ": " + result.getRowCount() + " journal records");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();
 		} else {
 			return 0l;
@@ -586,7 +604,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getCourses().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "course");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;
@@ -601,7 +619,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getStafves().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "staff");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;
@@ -613,7 +631,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long ecrfCount = result.getStatusEntries().size();
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + ecrfCount + " eCRF(s)");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return ecrfCount;
 		} else {
 			return 0l;
@@ -628,7 +646,7 @@ public class ServiceMethodExecutor {
 		if (result != null) {
 			long rowCount = result.getProbands().size();
 			printCriteriaResult(criteria, result.getCriteria(), rowCount, "proband");
-			jobOutput.addLinkOrEmailAttachment(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return rowCount;
 		} else {
 			return 0l;
