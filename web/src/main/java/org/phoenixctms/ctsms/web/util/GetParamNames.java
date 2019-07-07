@@ -64,6 +64,7 @@ public enum GetParamNames {
 	PROBAND_ADDRESS_ID("probandaddressid"),
 	BANK_ACCOUNT_ID("bankaccountid"),
 	MONEY_TRANSFER_ID("moneytransferid"),
+	JOB_ID("jobid"),
 	VERSION("version"),
 	EXPIRED("expired"),
 	AUTHENTICATION_FAILED("authenticationfailed"),

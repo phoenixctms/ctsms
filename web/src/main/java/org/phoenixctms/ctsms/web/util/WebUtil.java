@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -435,11 +436,11 @@ public final class WebUtil {
 			return getNoCoursePickedMessage();
 		}
 	}
-	
+
 	public static MethodExpressionActionListener createActionListenerMethodBinding(String actionListenerExpression) {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    return new MethodExpressionActionListener(context.getApplication().getExpressionFactory()
-	        .createMethodExpression(context.getELContext(), actionListenerExpression, null, new Class[] {ActionEvent.class}));
+		FacesContext context = FacesContext.getCurrentInstance();
+		return new MethodExpressionActionListener(context.getApplication().getExpressionFactory()
+				.createMethodExpression(context.getELContext(), actionListenerExpression, null, new Class[] { ActionEvent.class }));
 	}
 
 	public static Converter createConverter(String converterId) {
@@ -1300,11 +1301,13 @@ public final class WebUtil {
 	public static ArrayList<SelectItem> getAvailableHyperlinkCategories(HyperlinkModule module, Long categoryId) {
 		ArrayList<SelectItem> categories;
 		Collection<HyperlinkCategoryVO> categoryVOs = null;
-		try {
-			categoryVOs = getServiceLocator().getSelectionSetService().getHyperlinkCategories(getAuthentication(), module, categoryId);
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			publishException(e);
+		if (module != null) {
+			try {
+				categoryVOs = getServiceLocator().getSelectionSetService().getHyperlinkCategories(getAuthentication(), module, categoryId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
 		}
 		if (categoryVOs != null) {
 			categories = new ArrayList<SelectItem>(categoryVOs.size());
@@ -1320,14 +1323,41 @@ public final class WebUtil {
 		return categories;
 	}
 
+	public static ArrayList<SelectItem> getAvailableJobTypes(JobModule module, Long typeId, Long trialId) {
+		ArrayList<SelectItem> types;
+		Collection<JobTypeVO> typeVOs = null;
+		if (module != null) {
+			try {
+				typeVOs = getServiceLocator().getSelectionSetService().getJobTypes(getAuthentication(), module, typeId, trialId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		if (typeVOs != null) {
+			types = new ArrayList<SelectItem>(typeVOs.size());
+			Iterator<JobTypeVO> it = typeVOs.iterator();
+			while (it.hasNext()) {
+				JobTypeVO typeVO = it.next();
+				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
+				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
+			}
+		} else {
+			types = new ArrayList<SelectItem>();
+		}
+		return types;
+	}
+
 	public static ArrayList<SelectItem> getAvailableJournalCategories(JournalModule module, Long categoryId) {
 		ArrayList<SelectItem> categories;
 		Collection<JournalCategoryVO> categoryVOs = null;
-		try {
-			categoryVOs = getServiceLocator().getSelectionSetService().getJournalCategories(getAuthentication(), module, categoryId);
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			publishException(e);
+		if (module != null) {
+			try {
+				categoryVOs = getServiceLocator().getSelectionSetService().getJournalCategories(getAuthentication(), module, categoryId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
 		}
 		if (categoryVOs != null) {
 			categories = new ArrayList<SelectItem>(categoryVOs.size());
@@ -2263,23 +2293,22 @@ public final class WebUtil {
 		return "";
 	}
 
-	public static HyperlinkCategoryVO getHyperlinkCategory(Long categoryId) {
-		// HyperlinkCategoryVO category = null; // (HyperlinkCategoryVO) getSelectionSetServiceCache(HyperlinkCategoryVO.class, id);
-		// if (category == null) {
-		if (categoryId != null) {
-			try {
-				return getServiceLocator().getSelectionSetService().getHyperlinkCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
-			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			} catch (AuthenticationException e) {
-				publishException(e);
-			}
-		}
-		return null;
-		// }
-		// return category;
-	}
-
+	//	public static HyperlinkCategoryVO getHyperlinkCategory(Long categoryId) {
+	//		// HyperlinkCategoryVO category = null; // (HyperlinkCategoryVO) getSelectionSetServiceCache(HyperlinkCategoryVO.class, id);
+	//		// if (category == null) {
+	//		if (categoryId != null) {
+	//			try {
+	//				return getServiceLocator().getSelectionSetService().getHyperlinkCategory(getAuthentication(), categoryId);
+	//				// putSelectionSetServiceCache(id, category);
+	//			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+	//			} catch (AuthenticationException e) {
+	//				publishException(e);
+	//			}
+	//		}
+	//		return null;
+	//		// }
+	//		// return category;
+	//	}
 	public static Long getHyperlinkCount(HyperlinkModule module, Long id) {
 		// PSFVO psf = new PSFVO();
 		// psf.setPageSize(0);
@@ -2287,6 +2316,22 @@ public final class WebUtil {
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getHyperlinkService().getHyperlinkCount(getAuthentication(), module, id, null);
+				// count = psf.getRowCount();
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public static Long getJobCount(JobModule module, Long id) {
+		// PSFVO psf = new PSFVO();
+		// psf.setPageSize(0);
+		// Long count = null;
+		if (module != null && id != null) {
+			try {
+				return getServiceLocator().getJobService().getJobCount(getAuthentication(), module, id);
 				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -3428,6 +3473,29 @@ public final class WebUtil {
 			modes = new ArrayList<SelectItem>();
 		}
 		return modes;
+	}
+
+	public static ArrayList<SelectItem> getJobStates() {
+		ArrayList<SelectItem> states;
+		Collection<JobStatusVO> stateVOs = null;
+		try {
+			stateVOs = getServiceLocator().getSelectionSetService().getJobStates(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (stateVOs != null) {
+			states = new ArrayList<SelectItem>(stateVOs.size());
+			Iterator<JobStatusVO> it = stateVOs.iterator();
+			while (it.hasNext()) {
+				JobStatusVO statusVO = it.next();
+				states.add(new SelectItem(statusVO.getJobStatus().name(), statusVO.getName()));
+				// putSelectionSetServiceCache(sexVO.getSex(), sexVO);
+			}
+		} else {
+			states = new ArrayList<SelectItem>();
+		}
+		return states;
 	}
 
 	public static String getRefererBase64(HttpServletRequest request) {

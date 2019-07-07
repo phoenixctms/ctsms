@@ -16,8 +16,13 @@
 						name="changeIntermediateSets"
 						actionListener="#{searchBean.updateIntermediateSets}"
 						oncomplete="handleUpdateIntermediateSets(xhr, status, args)"
-						update=":search_form:tabView:criteria_input,:search_form:tabView:intermediate_sets_panel,:search_form:messages" />	
-						<p:remoteCommand
+						update=":search_form:tabView:criteria_input,:search_form:tabView:intermediate_sets_panel,:search_form:messages" />
+					<p:remoteCommand
+						process="@this"
+						name="changeCriteriaJob"
+						actionListener="#{jobBean.changeCriteria(searchBean.criteriaIn.id, searchBean.jobModule)}"
+						update=":search_form:tabView:job_list,:search_form:tabView:job_input" />
+					<p:remoteCommand
 						process="@this"
 						name="changeCriteriaJournalEntry"
 						actionListener="#{journalBean.changeCriteria(searchBean.criteriaIn.id)}"
@@ -303,7 +308,28 @@
 							<!-- <div id="intermediateSetsChartTooltip" class="ctsms-intermediatesets-tooltip"></div> -->
 						</h:panelGrid>
 					</p:panel>
-				</p:tab>				
+				</p:tab>
+				
+				<p:tab
+					id="searchJobs"
+					rendered="#{!searchBean.picker}"
+					disabled="#{!searchBean.created}"
+					titleStyleClass="#{searchBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_CRITERIA_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+					title="#{searchBean.getTabTitle(applicationScopeBean.jsValue('AJAX_CRITERIA_JOB_COUNT'))}">
+
+					<ui:include src="job.xhtml">
+						<ui:param
+							name="markUnEncrypted"
+							value="#{searchBean.markUnEncrypted}" />
+						<ui:param
+							name="namingContainer"
+							value=":search_form:tabView" />
+						<ui:param
+							name="jsUpdateTabTitles"
+							value="handleUpdateCriteriaTabTitles" />
+					</ui:include>
+				</p:tab>
+								
 				<p:tab
 					id="searchJournal"
 					rendered="#{!searchBean.picker}"

@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -103,7 +104,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			SexVO genderVO = null;
 			try {
 				genderVO = WebUtil.getServiceLocator().getToolsService().getLocalizedSex(WebUtil.getAuthentication(), in.getGender());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -166,7 +167,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 						.getSelectionSetService()
 						.getProbandCategoryPreset(WebUtil.getAuthentication(), false,
 								Settings.getBoolean(SettingCodes.PROBAND_PERSON_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_PERSON_PRESET));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -249,7 +250,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -311,6 +312,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 					inquiryValuesTotalCounts);
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_FILE_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_FILE_COUNT,
 					MessageCodes.PROBAND_FILES_TAB_TITLE, MessageCodes.PROBAND_FILES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_PROBAND_FILE_COUNT.toString()));
+			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOB_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOB_COUNT,
+					MessageCodes.PROBAND_JOBS_TAB_TITLE, MessageCodes.PROBAND_JOBS_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_PROBAND_JOB_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
 					MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
 					tabCountMap.get(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString()));
@@ -326,7 +329,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -405,7 +408,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -647,7 +650,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			try {
 				ProbandImageOutVO probandImage = WebUtil.getServiceLocator().getProbandService().getProbandImage(WebUtil.getAuthentication(), in.getId());
 				count = probandImage.getHasImage() ? 1l : 0l;
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -716,6 +719,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_FILES_TAB_TITLE, MessageCodes.PROBAND_FILES_TAB_TITLE_WITH_COUNT, count));
+		count = (out == null ? null : WebUtil.getJobCount(JobModule.PROBAND_JOB, in.getId()));
+		tabCountMap.put(JSValues.AJAX_PROBAND_JOB_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_PROBAND_JOB_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.PROBAND_JOBS_TAB_TITLE, MessageCodes.PROBAND_JOBS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(),
@@ -814,7 +821,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -1012,7 +1019,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

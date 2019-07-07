@@ -31,7 +31,13 @@
 				name="changeInputFieldJournalEntry"
 				actionListener="#{journalBean.changeInputField(inputFieldBean.in.id)}"
 				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-				update=":tabView:inputfieldjournal_form:journal_list,:tabView:inputfieldjournal_form:journal_input" />		
+				update=":tabView:inputfieldjournal_form:journal_list,:tabView:inputfieldjournal_form:journal_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldJob"
+				actionListener="#{jobBean.changeInputField(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldjob_form:job_list,:tabView:inputfieldjob_form:job_input" />
 			<p:remoteCommand
 				process="@this"
 				name="changeSelectionSetValue"
@@ -46,6 +52,12 @@
 				actionListener="#{inputFieldBean.change(selectionSetValueBean.in.fieldId)}"
 				oncomplete="handleInputFieldChanged(xhr, status, args)"
 				update="input_field_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldByJob"
+				actionListener="#{inputFieldBean.change(jobBean.in.inputFieldId)}"
+				oncomplete="handleInputFieldChanged(xhr, status, args)"
+				update="input_field_input" />				
 			<p:remoteCommand
 				process="@this"
 				name="changeInputFieldByJournalEntry"

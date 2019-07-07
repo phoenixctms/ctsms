@@ -146,6 +146,12 @@
 				update=":tabView:trialfile_form" />
 			<p:remoteCommand
 				process="@this"
+				name="changeTrialJob"
+				actionListener="#{jobBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialjob_form:job_list,:tabView:trialjob_form:job_input" />				
+			<p:remoteCommand
+				process="@this"
 				name="changeTrialJournalEntry"
 				actionListener="#{journalBean.changeTrial(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
@@ -238,6 +244,12 @@
 				process="@this"
 				name="changeTrialByHyperlink"
 				actionListener="#{trialBean.change(hyperlinkBean.in.trialId)}"
+				oncomplete="handleTrialChanged(xhr, status, args)"
+				update="trial_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeTrialByJob"
+				actionListener="#{trialBean.change(jobBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
 			<p:remoteCommand

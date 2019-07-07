@@ -182,6 +182,13 @@
 						<ui:include src="/META-INF/includes/trial/trialHyperlink.xhtml" />
 					</p:tab>
 					<p:tab
+						id="trialjobs"
+						disabled="#{!trialBean.created}"
+						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_JOB_COUNT'))}">
+						<ui:include src="/META-INF/includes/trial/trialJob.xhtml" />
+					</p:tab>
+					<p:tab
 						id="trialfiles"
 						disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

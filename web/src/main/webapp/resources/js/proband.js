@@ -63,9 +63,12 @@ function handleProbandTabChange(index) {
 
 
 		case 17:
-			changeProbandByFile();
+			changeProbandByJob();
 			break;
 		case 18:
+			changeProbandByFile();
+			break;
+		case 19:
 			changeProbandByJournalEntry();
 			break;
 
@@ -126,12 +129,14 @@ function handleProbandTabChange(index) {
 		changeMoneyTransfer();
 		break;
 
-
 	case 17:
+		changeProbandJob();
+		break;
+	case 18:
 		changeProbandFile();
 		break;
 
-	case 18:
+	case 19:
 		changeProbandJournalEntry();
 		break;
 
@@ -241,13 +246,17 @@ function handleUpdateProbandTabTitles(xhr, status, args) {
 	}
 
 
+	if (_testPropertyExists(args, AJAX_PROBAND_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_JOB_COUNT)) {
+		probandTabView.setTabTitle(17, decodeBase64(args[AJAX_PROBAND_JOB_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(17, args[AJAX_PROBAND_JOB_COUNT] == 0);
+	}
 	if (_testPropertyExists(args, AJAX_PROBAND_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_FILE_COUNT)) {
-		probandTabView.setTabTitle(17, decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(17, args[AJAX_PROBAND_FILE_COUNT] == 0);
+		probandTabView.setTabTitle(18, decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(18, args[AJAX_PROBAND_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_JOURNAL_ENTRY_COUNT)) {
-		probandTabView.setTabTitle(18, decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(18, args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
+		probandTabView.setTabTitle(19, decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(19, args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

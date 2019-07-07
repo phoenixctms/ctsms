@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.TrialStatusAction;
@@ -179,7 +180,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -252,6 +253,8 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 					tabCountMap.get(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_HYPERLINK_COUNT,
 					MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE, MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString()));
+			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOB_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOB_COUNT,
+					MessageCodes.TRIAL_JOBS_TAB_TITLE, MessageCodes.TRIAL_JOBS_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_TRIAL_JOB_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_FILE_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_FILE_COUNT,
 					MessageCodes.TRIAL_FILES_TAB_TITLE, MessageCodes.TRIAL_FILES_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_TRIAL_FILE_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
@@ -265,7 +268,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getTrialService().getTrial(WebUtil.getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -295,7 +298,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -380,7 +383,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			Collection<TrialStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getTrialStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -571,6 +574,10 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		tabCountMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE, MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
+		count = (out == null ? null : WebUtil.getJobCount(JobModule.TRIAL_JOB, in.getId()));
+		tabCountMap.put(JSValues.AJAX_TRIAL_JOB_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_TRIAL_JOB_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.TRIAL_JOBS_TAB_TITLE, MessageCodes.TRIAL_JOBS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.TRIAL_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(),
@@ -587,14 +594,14 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (out != null) {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getTrialStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 		} else {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getInitialTrialStatusTypes(WebUtil.getAuthentication());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -669,7 +676,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getTrial(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -685,7 +692,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			return WebUtil.getServiceLocator().getSelectionSetService().getAllTrialStatusTypes(WebUtil.getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -707,7 +714,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (in.getId() != null) {
 			try {
 				signature = WebUtil.getServiceLocator().getTrialService().getTrialSignature(WebUtil.getAuthentication(), in.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -720,7 +727,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (in.getId() != null) {
 			try {
 				trialRandomizationList = WebUtil.getServiceLocator().getTrialService().getTrialRandomizationList(WebUtil.getAuthentication(), in.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -809,7 +816,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -823,7 +830,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	public void verifySignature() {
 		try {
 			signature = WebUtil.getServiceLocator().getTrialService().verifyTrialSignature(WebUtil.getAuthentication(), in.getId());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

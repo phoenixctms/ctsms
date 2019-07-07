@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>job</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGrid columns="1" cellpadding="0"
+			styleClass="ctsms-content-panelgrid">
+			<p:dataTable styleClass="ctsms-datatable" lazy="true"
+				rows="#{dataTablesRowsDefault}"
+				paginator="#{dataTablesPaginatorDefault}"
+				paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+				paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+				pageLinks="#{dataTablesPageLinksDefault}"
+				paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}"
+				scrollable="#{dataTablesScrollableDefault}"
+				scrollHeight="#{dataTablesScrollHeightDefault}"
+				resizableColumns="#{dataTablesResizableColumnsDefault}"
+				sortBy="#{job.vo.id}" sortOrder="descending"
+				emptyMessage="#{labels.datatable_permission_empty_message}"
+				var="job" value="#{jobBean.jobModel}" id="job_list"
+				selectionMode="single" selection="#{jobBean.selectedJob}">
+				<!-- rowStyleClass="#{applicationScopeBean.jobToColor(journalEntry.vo)}#{rowBgColorAlpha}"> -->
+				<p:ajax event="rowSelect" update="#{namingContainer}:job_input" />
+				<f:facet name="header">
+					<h:outputText
+						value="#{jobBean.jobModel.rowCount} #{labels.job_job_list_header}" />
+				</f:facet>
+				<p:column sortBy="#{job.vo.id}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.id_column}" />
+					</f:facet>
+					<h:outputText value="#{job.vo.id}" />
+				</p:column>
+				<p:column sortBy="#{job.vo.type}" filterBy="#{job.vo.type.id}"
+					filterOptions="#{jobBean.filterTypes}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_type_column}" />
+					</f:facet>
+					<h:outputText value="#{job.vo.type.name}" />
+				</p:column>
+				<p:column sortBy="#{job.vo.status}" filterBy="#{job.vo.status}"
+					filterOptions="#{sessionScopeBean.filterJobStates}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_status_column}" />
+					</f:facet>
+					<h:outputText value="#{job.vo.status.name}" />
+				</p:column>
+				 <p:column
+					sortBy="#{job.vo.type.daily}"
+					filterBy="#{job.vo.type.daily}"
+					filterOptions="#{sessionScopeBean.filterBooleans}"
+					rendered="#{!jobBean.criteriaJob}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_daily_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{job.vo.type.daily}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{job.vo.type.weekly}"
+					filterBy="#{job.vo.type.weekly}"
+					filterOptions="#{sessionScopeBean.filterBooleans}"
+					rendered="#{!jobBean.criteriaJob}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_weekly_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{job.vo.type.weekly}" />
+					</ui:include>
+				</p:column>
+				<p:column
+					sortBy="#{job.vo.type.monthly}"
+					filterBy="#{job.vo.type.monthly}"
+					filterOptions="#{sessionScopeBean.filterBooleans}"
+					rendered="#{!jobBean.criteriaJob}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_monthly_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{job.vo.type.monthly}" />
+					</ui:include>
+				</p:column>
+				
+				<p:column
+					sortBy="#{job.vo.emailRecipients}"
+					filterBy="#{job.vo.emailRecipients}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_email_recipients_column}" />
+					</f:facet>
+					<h:outputText value="#{applicationScopeBean.clipStringTrailing(job.vo.emailRecipients)}" />
+				</p:column>
+				
+				<!-- <p:column
+					sortBy="#{job.vo.modifiedTimestamp}"
+					filterBy="#{job.vo.modifiedTimestamp}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_modified_timestamp_column}" />
+					</f:facet>
+				<p:commandLink immediate="true" id="filedownload"
+							rendered="#{job.vo.hasFile" ajax="false"
+							styleClass="#{jobBean.hasFile ? 'ctsms-field-icon ctsms-mimetype-unknown ' : ''}#{jobBean.jobFile.contentType.nodeStyleClass}"
+							title="#{labels.file_download_tooltip} #{jobBean.fileDownloadLinkLabel}">
+							<h:outputText value="#{jobBean.fileDownloadLinkLabel}" />
+							<p:fileDownload value="#{jobBean.fileStreamedContent}" />
+						</p:commandLink>
+				</p:column>  -->
+				
+				<p:column
+					sortBy="#{job.vo.modifiedTimestamp}"
+					filterBy="#{job.vo.modifiedTimestamp}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_modified_timestamp_column}" />
+					</f:facet>
+					<h:outputText value="#{job.vo.modifiedTimestamp}">
+						<f:converter converterId="ctsms.DateTime" />
+						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					sortBy="#{job.vo.modifiedUser.name}"
+					filterBy="#{job.vo.modifiedUser.name}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_user_column}" />
+					</f:facet>
+					<h:outputText value="#{job.vo.modifiedUser.name} " />
+				</p:column> 
+			</p:dataTable>
+			<p:panel id="job_input">
+				<f:facet name="header">
+					<h:outputText value="#{jobBean.title}" />
+				</f:facet>
+				<h:panelGrid columns="1" cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-fileupload-row,ctsms-input-tied-row,
+						ctsms-message-row,ctsms-toolbar-row">
+
+					<p:selectOneRadio id="jobType" value="#{jobBean.in.typeId}"
+						label="#{labels.job_type}" layout="custom" required="true"
+						disabled="#{!jobBean.createable}">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItems value="#{jobBean.types}" var="selectItem"
+							itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
+						<p:ajax process="@this,jobTypes" update="job_input"
+							listener="#{jobBean.handleTypeChange}" />
+						<!-- update="upload,jobToolbar" -->
+					</p:selectOneRadio>
+
+					<p:dataGrid id="jobTypes" var="type" value="#{jobBean.types}"
+						paginator="false" columns="3" rowIndexVar="rowIndexVar"
+						emptyMessage="#{labels.no_job_types_message}">
+						<p:column>
+							<h:panelGrid columns="2" cellpadding="2"
+								columnClasses="ctsms-input-column,ctsms-label-for-column">
+								<p:radioButton for="#{namingContainer}:jobType"
+									itemIndex="#{rowIndexVar}" />
+								<h:outputLabel value="#{type.label}" />
+							</h:panelGrid>
+						</p:column>
+					</p:dataGrid>
+
+					<!-- <h:panelGroup id="description">
+						<ui:include src="multiLineOutputText.xhtml">
+							<ui:param name="multiLineText"
+								value="#{jobBean.type.description}" />
+							<ui:param name="rendered" value="true" />
+							<ui:param name="multiLineTextClass" value="ctsms-multilinetext-bold" />
+							<ui:param name="escapeHtml" value="true" />
+						</ui:include>
+					</h:panelGroup> -->
+
+
+
+					<h:panelGrid columns="2" cellpadding="2"
+						columnClasses="ctsms-label-for-text-column,ctsms-text-column">
+
+						<h:outputLabel value="#{labels.job_description_label}" />
+						<!-- <h:outputText value="#{jobBean.type.description}" /> -->
+						<ui:include src="multiLineOutputText.xhtml">
+							<ui:param name="multiLineText"
+								value="#{jobBean.type.description}" />
+							<ui:param name="rendered" value="true" />
+							<ui:param name="multiLineTextClass" value="" />
+							<ui:param name="escapeHtml" value="false" />
+						</ui:include>
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel for="emailrecipients"
+							rendered="#{jobBean.emailRecipients}"
+							value="#{labels.job_email_recipients_label}" />
+						<h:panelGroup rendered="#{jobBean.emailRecipients}">
+							<p:inputText id="emailrecipients"
+								value="#{jobBean.in.emailRecipients}" required="false"
+								label="#{labels.job_email_recipients}"
+								styleClass="ctsms-control-max">
+							</p:inputText>
+							<p:tooltip rendered="#{enableTooltips}" for="emailrecipients">
+								<h:outputText value="#{labels.job_email_recipients_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="emailrecipients"
+							rendered="#{jobBean.emailRecipients}" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-text-column">
+
+						<h:outputLabel value="#{labels.job_status_label}" />
+						<h:outputText styleClass="#{jobBean.out.status.jobStatus == 'FAILED' ? 'ctsms-text-red' : jobBean.out.status.jobStatus == 'OK' ? 'ctsms-text-green' : 'ctsms-text-bold'}"
+							value="#{jobBean.out.status.name}" />
+
+
+						<h:outputLabel rendered="#{jobBean.hasFile or jobBean.inputFile}"
+							value="#{labels.job_file_label}" />
+
+						<p:commandLink immediate="true" id="filedownload"
+							rendered="#{jobBean.hasFile or jobBean.inputFile}" ajax="false"
+							disabled="#{!jobBean.hasFile}"
+							styleClass="#{jobBean.hasFile ? 'ctsms-field-icon ctsms-mimetype-unknown ' : ''}#{jobBean.jobFile.contentType.nodeStyleClass}"
+							title="#{labels.file_download_tooltip} #{jobBean.fileDownloadLinkLabel}">
+							<h:outputText value="#{jobBean.fileDownloadLinkLabel}" />
+							<p:fileDownload value="#{jobBean.fileStreamedContent}" />
+						</p:commandLink>
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid">
+						<p:fileUpload
+							rendered="#{jobBean.inputFile and jobBean.createable}"
+							id="jobFileUpload"
+							fileUploadListener="#{jobBean.handleFileUpload}" mode="advanced"
+							update="clearfilebutton,filedownload,messages" multiple="false"
+							auto="true" label="#{labels.choose_file_button_label}"
+							styleClass="#{jobBean.type.encryptFile ? 'ctsms-upload-control-encryption' : (markUnEncrypted ? 'ctsms-upload-control-noencryption' : 'ctsms-upload-control')}"
+							sizeLimit="#{jobdBean.getUploadSizeLimit()}"
+							allowTypes="#{jobBean.allowTypes}" />
+						<!-- <h:outputLabel rendered="#{!jobBean.inputFile or !jobBean.createable}" /> -->
+					</h:panelGrid>
+
+					<p:fieldset rendered="#{jobBean.created and not empty jobBean.out.jobOutput}" toggleable="true"
+						collapsed="#{jobBean.out.status.jobStatus != 'FAILED'}">
+						<f:facet name="legend">
+							<h:outputText
+								value="#{labels.job_output_field_set}" />
+						</f:facet>
+						<ui:include src="multiLineOutputText.xhtml">
+							<ui:param name="multiLineText" value="#{jobBean.out.jobOutput}" />
+							<ui:param name="rendered" value="true" />
+							<ui:param name="multiLineTextClass" value="ctsms-monospaced" />
+							<ui:param name="escapeHtml" value="true" />
+						</ui:include>
+					</p:fieldset>
+
+					<h:outputLabel rendered="#{!jobBean.created or empty jobBean.out.jobOutput}" />
+
+
+
+					<p:messages id="messages" />
+					<p:toolbar>
+						<p:toolbarGroup align="left">
+							<h:outputText styleClass="ctsms-toolbar-text"
+								value="#{jobBean.created ? jobBean.modifiedAnnotation : ''}" />
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup align="right">
+
+							<p:commandButton process="@this" id="clearfilebutton"
+								value="#{labels.clear_job_file_label}"
+								actionListener="#{jobBean.clearFile}"
+								icon="ui-icon ui-icon-close" ajax="true"
+								disabled="#{!jobBean.hasFile}" rendered="#{jobBean.inputFile}"
+								update="job_input" />
+
+							<!-- <p:commandButton process="@this"
+								value="#{labels.reset_button_label}"
+								actionListener="#{jobBean.reset}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-close" ajax="true" disabled="false"
+								update="job_list,job_input" /> -->
+							<p:commandButton process="@this,job_input" id="addJob"
+								value="#{labels.start_button_label}"
+								actionListener="#{jobBean.add}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-play" ajax="true"
+								disabled="#{!jobBean.createable}" update="job_list,job_input" />
+							<!-- <p:commandButton
+								process="@this,job_input"
+								id="updateJob"
+								value="#{labels.update_button_label}"
+								actionListener="#{journalBean.update}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-disk"
+								ajax="true"
+								disabled="#{!journalBean.editable}"
+								update="journal_list,journal_input" />  -->
+							<p:commandButton process="@this"
+								value="#{labels.delete_button_label}"
+								actionListener="#{jobBean.delete}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon ui-icon-trash" ajax="true"
+								disabled="#{!jobBean.removable}" update="job_list,job_input" />
+							<p:commandButton process="@this"
+								value="#{labels.load_button_label}"
+								actionListener="#{jobBean.load}"
+								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
+								icon="ui-icon-refresh" ajax="true"
+								disabled="#{!jobBean.created}" update="job_list,job_input" />
+							<!-- <p:commandButton
+							    disabled="#{!journalBean.enableExports}"
+								immediate="true"
+								ajax="false"
+								value="#{labels.journal_export_journal_button_label}"
+								icon="ui-icon ui-icon-xls">
+								<p:fileDownload value="#{journalBean.excelStreamedContent}" />
+							</p:commandButton>  -->
+						</p:toolbarGroup>
+						<p:separator />
+						<p:toolbarGroup rendered="#{!jobBean.criteriaJob}" align="right">
+							<ui:include src="toolbarAjaxStatus.xhtml" />
+						</p:toolbarGroup>
+					</p:toolbar>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGrid>
+	</ui:composition>
+</h:body>
+</html>
