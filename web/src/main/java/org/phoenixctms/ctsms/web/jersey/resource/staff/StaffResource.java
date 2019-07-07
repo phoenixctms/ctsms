@@ -251,10 +251,12 @@ public class StaffResource extends ServiceResourceBase {
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public StaffImageOutVO setStaffImage(@FormDataParam("json") StaffImageInVO in,
+	public StaffImageOutVO setStaffImage(@FormDataParam("json") FormDataBodyPart json,
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws Exception {
+		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		StaffImageInVO in = json.getValueAs(StaffImageInVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
 		in.setMimeType(content.getMediaType().toString());
 		in.setFileName(contentDisposition.getFileName());

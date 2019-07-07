@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -34,6 +35,7 @@ import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
+import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandImageInVO;
 import org.phoenixctms.ctsms.vo.ProbandImageOutVO;
@@ -59,12 +61,13 @@ import com.sun.jersey.multipart.FormDataParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="proband")
+@Api(value = "proband")
 @Path("/proband")
 public final class ProbandResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.PROBAND_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.PROBAND_JOURNAL;
+	private final static JobModule jobModule = JobModule.PROBAND_JOB;
 	private final static Class<?> SERVICE_INTERFACE = ProbandService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "probandId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, ProbandOutVO.class);
@@ -144,6 +147,15 @@ public final class ProbandResource extends ServiceResourceBase {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, fileModule, id, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/jobs")
+	public Page<JobOutVO> getJobs(@PathParam("id") Long id, @Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<JobOutVO>(WebUtil.getServiceLocator().getJobService().getJobs(auth, jobModule, id, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@Override
@@ -244,7 +256,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public ProbandListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
@@ -324,10 +336,12 @@ public final class ProbandResource extends ServiceResourceBase {
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ProbandImageOutVO setProbandImage(@FormDataParam("json") ProbandImageInVO in,
+	public ProbandImageOutVO setProbandImage(@FormDataParam("json") FormDataBodyPart json,
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws Exception {
+		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		ProbandImageInVO in = json.getValueAs(ProbandImageInVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
 		in.setMimeType(content.getMediaType().toString());
 		in.setFileName(contentDisposition.getFileName());

@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -28,6 +29,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.FilePDFVO;
 import org.phoenixctms.ctsms.vo.HyperlinkOutVO;
+import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -45,13 +47,14 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="trial")
+@Api(value = "trial")
 @Path("/trial")
 public class TrialResource extends ServiceResourceBase {
 
 	private final static FileModule fileModule = FileModule.TRIAL_DOCUMENT;
 	private final static JournalModule journalModule = JournalModule.TRIAL_JOURNAL;
 	private final static HyperlinkModule hyperlinkModule = HyperlinkModule.TRIAL_HYPERLINK;
+	private final static JobModule jobModule = JobModule.TRIAL_JOB;
 	private final static Class<?> SERVICE_INTERFACE = TrialService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "trialId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, TrialOutVO.class);
@@ -150,6 +153,15 @@ public class TrialResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/jobs")
+	public Page<JobOutVO> getJobs(@PathParam("id") Long id, @Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<JobOutVO>(WebUtil.getServiceLocator().getJobService().getJobs(auth, jobModule, id, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/journal")
 	public Page<JournalEntryOutVO> getJournal(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
@@ -206,7 +218,7 @@ public class TrialResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public TrialListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
