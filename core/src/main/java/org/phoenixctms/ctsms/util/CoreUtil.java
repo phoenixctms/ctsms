@@ -42,6 +42,7 @@ import javax.script.ScriptEngineManager;
 import org.phoenixctms.ctsms.PrincipalStore;
 import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
+import org.phoenixctms.ctsms.domain.Job;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
@@ -1078,6 +1079,66 @@ public final class CoreUtil {
 		entity.getClass().getMethod(ENTITY_VERSION_SETTER_METHOD_NAME, long.class).invoke(entity, newVersion);
 		entity.getClass().getMethod(ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME, Timestamp.class).invoke(entity, now);
 		entity.getClass().getMethod(ENTITY_MODIFIED_USER_SETTER_METHOD_NAME, User.class).invoke(entity, modifiedUser);
+	}
+
+	public static Process launchJob(AuthenticationVO auth, Job job, boolean blocking) throws IllegalArgumentException {
+		Long id;
+		switch (job.getType().getModule()) {
+			case TRIAL_JOB:
+				id = job.getTrial().getId();
+				break;
+			case PROBAND_JOB:
+				id = job.getProband().getId();
+				break;
+			case INPUT_FIELD_JOB:
+				id = job.getInputField().getId();
+				break;
+			case INVENTORY_CRITERIA_JOB:
+			case STAFF_CRITERIA_JOB:
+			case COURSE_CRITERIA_JOB:
+			case TRIAL_CRITERIA_JOB:
+			case INPUT_FIELD_CRITERIA_JOB:
+			case PROBAND_CRITERIA_JOB:
+			case USER_CRITERIA_JOB:
+			case MASS_MAIL_CRITERIA_JOB:
+				id = job.getCriteria().getId();
+				break;
+			default:
+				// not supported for now...
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
+						new Object[] { job.getType().getModule().toString() }));
+		}
+		//'{0} --xyz="{}" --id={} --user="{}" --password="{}" --job={}'
+		try {
+			//return (new ProcessBuilder("\"" + Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL) + "\" --ie")).start();
+			String command = MessageFormat.format(job.getType().getCommandFormat(),
+					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
+					Long.toString(id),
+					auth.getUsername(),
+					auth.getPassword(),
+					Long.toString(job.getId()),
+					job.getEmailRecipients(),
+					null,
+					null,
+					null,
+					null,
+					Settings.getString(SettingCodes.PROCESS_PL, Bundle.SETTINGS, DefaultSettings.PROCESS_PL));
+			//ProcessBuilder processBuilder = new ProcessBuilder(command);
+			//processBuilder.environment().clear();
+			//processBuilder.
+			//return processBuilder.start();
+			Process process = Runtime.getRuntime().exec(command);
+			//, new String[] {
+			//		BundleControl.PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE + "=" + System.getenv(BundleControl.PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE)
+			//});
+			if (blocking) {
+				process.waitFor();
+			}
+			return process;
+		} catch (Exception e) {
+			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
+					new Object[] { e.getMessage() }));
+		}
 	}
 
 	private CoreUtil() {
