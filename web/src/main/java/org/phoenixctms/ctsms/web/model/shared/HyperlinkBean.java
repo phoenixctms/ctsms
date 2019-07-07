@@ -106,7 +106,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -176,7 +176,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	public void changeCourse(String param) {
-		changeCourseAction(param);
+		actionPostProcess(changeCourseAction(param));
 	}
 
 	public String changeCourseAction(String param) {
@@ -184,7 +184,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	public void changeInventory(String param) {
-		changeInventoryAction(param);
+		actionPostProcess(changeInventoryAction(param));
 	}
 
 	public String changeInventoryAction(String param) {
@@ -192,7 +192,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	public void changeStaff(String param) {
-		changeStaffAction(param);
+		actionPostProcess(changeStaffAction(param));
 	}
 
 	public String changeStaffAction(String param) {
@@ -200,7 +200,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	public void changeTrial(String param) {
-		changeTrialAction(param);
+		actionPostProcess(changeTrialAction(param));
 	}
 
 	public String changeTrialAction(String param) {
@@ -221,7 +221,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -444,7 +444,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getHyperlinkService().getHyperlink(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -457,7 +457,16 @@ public class HyperlinkBean extends ManagedBeanBase {
 	}
 
 	private void loadSelectedCategory() {
-		category = WebUtil.getHyperlinkCategory(in.getCategoryId());
+		category = null;
+		if (in.getCategoryId() != null) {
+			try {
+				category = WebUtil.getServiceLocator().getSelectionSetService().getHyperlinkCategory(WebUtil.getAuthentication(), in.getCategoryId());
+				// putSelectionSetServiceCache(id, category);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
 	}
 
 	@Override
@@ -484,7 +493,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

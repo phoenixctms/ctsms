@@ -123,7 +123,7 @@ public class FileBean extends ManagedBeanBase {
 			Collection<String> folders = null;
 			try {
 				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -149,7 +149,7 @@ public class FileBean extends ManagedBeanBase {
 			Collection<FileOutVO> fileVOs = null;
 			try {
 				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -210,14 +210,14 @@ public class FileBean extends ManagedBeanBase {
 		streamUploadEnabled = null;
 		try {
 			streamUploadEnabled = WebUtil.getServiceLocator().getToolsService().isStreamUploadEnabled();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
 		uploadSizeLimit = null;
 		try {
 			uploadSizeLimit = WebUtil.getServiceLocator().getToolsService().getUploadSizeLimit();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -252,7 +252,7 @@ public class FileBean extends ManagedBeanBase {
 			}
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -340,7 +340,7 @@ public class FileBean extends ManagedBeanBase {
 					out = null;
 					return ERROR_OUTCOME;
 				}
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -365,7 +365,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeCourse(String param) {
-		changeCourseAction(param);
+		actionPostProcess(changeCourseAction(param));
 	}
 
 	public String changeCourseAction(String param) {
@@ -373,7 +373,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeInventory(String param) {
-		changeInventoryAction(param);
+		actionPostProcess(changeInventoryAction(param));
 	}
 
 	public String changeInventoryAction(String param) {
@@ -381,7 +381,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeMassMail(String param) {
-		changeMassMailAction(param);
+		actionPostProcess(changeMassMailAction(param));
 	}
 
 	public String changeMassMailAction(String param) {
@@ -389,7 +389,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeProband(String param) {
-		changeProbandAction(param);
+		actionPostProcess(changeProbandAction(param));
 	}
 
 	public String changeProbandAction(String param) {
@@ -397,7 +397,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeStaff(String param) {
-		changeStaffAction(param);
+		actionPostProcess(changeStaffAction(param));
 	}
 
 	public String changeStaffAction(String param) {
@@ -405,7 +405,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public void changeTrial(String param) {
-		changeTrialAction(param);
+		actionPostProcess(changeTrialAction(param));
 	}
 
 	public String changeTrialAction(String param) {
@@ -465,7 +465,7 @@ public class FileBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -496,7 +496,7 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			out = null;
 			return BULK_DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -519,7 +519,7 @@ public class FileBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -555,7 +555,7 @@ public class FileBean extends ManagedBeanBase {
 			try {
 				FileStreamOutVO streamOut = WebUtil.getServiceLocator().getFileService().getFileStream(WebUtil.getAuthentication(), out.getId());
 				return new DefaultStreamedContent(streamOut.getStream(), streamOut.getContentType().getMimeType(), streamOut.getFileName());
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -989,7 +989,7 @@ public class FileBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -1078,7 +1078,7 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -1107,7 +1107,7 @@ public class FileBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
