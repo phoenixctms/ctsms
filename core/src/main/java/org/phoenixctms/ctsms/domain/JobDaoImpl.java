@@ -7,20 +7,32 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.security.CipherText;
+import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.security.reencrypt.DataReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.FieldReEncrypter;
+import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
+import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.JobAddVO;
 import org.phoenixctms.ctsms.vo.JobFileVO;
-import org.phoenixctms.ctsms.vo.JobInVO;
 import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.JobTypeVO;
+import org.phoenixctms.ctsms.vo.JobUpdateVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
@@ -33,35 +45,113 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class JobDaoImpl
 		extends JobDaoBase {
 
+	private static void applyIdCriterions(org.hibernate.Criteria criteria, JobModule module, Long id) {
+		if (id != null) {
+			switch (module) {
+				case TRIAL_JOB:
+					criteria.add(Restrictions.eq("trial.id", id.longValue()));
+					break;
+				case PROBAND_JOB:
+					criteria.add(Restrictions.eq("proband.id", id.longValue()));
+					break;
+				case INPUT_FIELD_JOB:
+					criteria.add(Restrictions.eq("inputField.id", id.longValue()));
+					break;
+				case INVENTORY_CRITERIA_JOB:
+				case STAFF_CRITERIA_JOB:
+				case COURSE_CRITERIA_JOB:
+				case TRIAL_CRITERIA_JOB:
+				case INPUT_FIELD_CRITERIA_JOB:
+				case PROBAND_CRITERIA_JOB:
+				case MASS_MAIL_CRITERIA_JOB:
+				case USER_CRITERIA_JOB:
+					criteria.add(Restrictions.eq("criteria.id", id.longValue()));
+					break;
+				default:
+			}
+		}
+	}
+
 	private static void applyModuleIdCriterions(org.hibernate.Criteria criteria, JobModule module, Long id) {
 		if (module != null) {
 			criteria.createCriteria("type").add(Restrictions.eq("module", module));
-			//criteriaMap.createCriteria("category").add(Restrictions.eq("module", module));
-			if (id != null) {
-				switch (module) {
-					case TRIAL_JOB:
-						criteria.add(Restrictions.eq("trial.id", id.longValue()));
-						break;
-					case PROBAND_JOB:
-						criteria.add(Restrictions.eq("proband.id", id.longValue()));
-						break;
-					case INPUT_FIELD_JOB:
-						criteria.add(Restrictions.eq("inputField.id", id.longValue()));
-						break;
-					case INVENTORY_CRITERIA_JOB:
-					case STAFF_CRITERIA_JOB:
-					case COURSE_CRITERIA_JOB:
-					case TRIAL_CRITERIA_JOB:
-					case INPUT_FIELD_CRITERIA_JOB:
-					case PROBAND_CRITERIA_JOB:
-					case MASS_MAIL_JOB:
-					case USER_CRITERIA_JOB:
-						criteria.add(Restrictions.eq("inputField.id", id.longValue()));
-						break;
-					default:
-				}
-			}
+			applyIdCriterions(criteria, module, id);
 		}
+	}
+
+	private static void applyModuleIdCriterions(SubCriteriaMap criteriaMap, JobModule module, Long id) {
+		if (module != null) {
+			criteriaMap.createCriteria("type").add(Restrictions.eq("module", module));
+			applyIdCriterions(criteriaMap.getCriteria(), module, id);
+		}
+	}
+
+	private final static Collection<ReEncrypter<Job>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<Job>>();
+	static {
+		RE_ENCRYPTERS.add(new DataReEncrypter<Job>() {
+
+			@Override
+			protected byte[] getIv(Job item) {
+				return item.getDataIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Job item) {
+				return item.getData();
+			}
+
+			@Override
+			protected void setIv(Job item, byte[] iv) {
+				item.setDataIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Job item, byte[] cipherText) {
+				item.setData(cipherText);
+			}
+
+			@Override
+			protected boolean isSkip(Job item) {
+				return !item.isEncryptedFile();
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<Job>() {
+
+			@Override
+			protected byte[] getIv(Job item) {
+				return item.getFileNameIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(Job item) {
+				return item.getEncryptedFileName();
+			}
+
+			@Override
+			protected void setIv(Job item, byte[] iv) {
+				item.setFileNameIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(Job item, byte[] cipherText) {
+				item.setEncryptedFileName(cipherText);
+			}
+
+			@Override
+			protected void setHash(Job item, byte[] hash) {
+				item.setFileNameHash(hash);
+			}
+
+			@Override
+			protected boolean isSkip(Job item) {
+				return !item.isEncryptedFile();
+			}
+		});
+	}
+
+	@Override
+	protected Collection<ReEncrypter<Job>> getReEncrypters() {
+		return RE_ENCRYPTERS;
 	}
 
 	private org.hibernate.Criteria createJobCriteria() {
@@ -71,24 +161,18 @@ public class JobDaoImpl
 
 	@Override
 	protected Collection<Job> handleFindJobs(
-			JobModule module, Long id, Boolean active, PSFVO psf) throws Exception {
+			JobModule module, Long id, PSFVO psf) throws Exception {
 		org.hibernate.Criteria jobCriteria = createJobCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Job.class, jobCriteria);
-		if (active != null) {
-			jobCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
-		applyModuleIdCriterions(jobCriteria, module, id);
+		applyModuleIdCriterions(criteriaMap, module, id);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return jobCriteria.list();
 	}
 
 	@Override
 	protected long handleGetCount(
-			JobModule module, Long id, Boolean active) throws Exception {
+			JobModule module, Long id) throws Exception {
 		org.hibernate.Criteria jobCriteria = createJobCriteria();
-		if (active != null) {
-			jobCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
 		applyModuleIdCriterions(jobCriteria, module, id);
 		return (Long) jobCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -111,7 +195,23 @@ public class JobDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		target.setDatas(source.getData());
+		if (source.isEncryptedFile()) {
+			try {
+				if (!CoreUtil.isPassDecryption()) {
+					throw new Exception();
+				}
+				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
+				target.setDatas((byte[]) CryptoUtil.decryptValue(source.getDataIv(), source.getData()));
+				target.setDecrypted(true);
+			} catch (Exception e) {
+				target.setFileName(null);
+				target.setDatas(null);
+				target.setDecrypted(false);
+			}
+		} else {
+			target.setDatas(source.getData());
+			target.setDecrypted(true);
+		}
 	}
 
 	/**
@@ -156,28 +256,70 @@ public class JobDaoImpl
 		super.jobFileVOToEntity(source, target, copyIfNull);
 		MimeTypeVO contentTypeVO = source.getContentType();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		if (contentTypeVO != null) {
-			target.setContentType(this.getMimeTypeDao().mimeTypeVOToEntity(contentTypeVO));
-		} else if (copyIfNull) {
-			target.setContentType(null);
-		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
 		}
-		if (copyIfNull || source.getDatas() != null) {
-			target.setData(source.getDatas());
+		JobType type = target.getType();
+		if (type != null && (type.isInputFile() || type.isOutputFile())) {
+			if (contentTypeVO != null) {
+				target.setContentType(this.getMimeTypeDao().mimeTypeVOToEntity(contentTypeVO));
+			} else if (copyIfNull) {
+				target.setContentType(null);
+			}
+			if (target.isEncryptedFile()) {
+				try {
+					if (copyIfNull || source.getFileName() != null) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getFileName());
+						target.setFileNameIv(cipherText.getIv());
+						target.setEncryptedFileName(cipherText.getCipherText());
+					}
+					if (source.getDatas() != null && source.getDatas().length > 0) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getDatas());
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize((long) source.getDatas().length);
+					} else if (copyIfNull) {
+						CipherText cipherText = CryptoUtil.encryptValue(null);
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize(0l);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					target.setFileName(null);
+				}
+			} else {
+				target.setDataIv(null);
+				if (copyIfNull || source.getDatas() != null) {
+					target.setData(source.getDatas());
+					target.setFileSize(source.getDatas() != null ? (long) source.getDatas().length : 0l);
+				}
+				target.setFileNameIv(null);
+				target.setEncryptedFileName(null);
+				target.setFileNameHash(null);
+			}
+			//		} else {
+			//			target.setFileName(null);
+			//			target.setFileNameIv(null);
+			//			target.setEncryptedFileName(null);
+			//			target.setFileNameHash(null);
+			//			target.setContentType(null);
+			//			target.setData(null);
+			//			target.setDataIv(null);
+			//			target.setFileSize(null);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void toJobInVO(
+	public void toJobAddVO(
 			Job source,
-			JobInVO target) {
-		super.toJobInVO(source, target);
+			JobAddVO target) {
+		super.toJobAddVO(source, target);
 		MimeType contentType = source.getContentType();
 		JobType type = source.getType();
 		Trial trial = source.getTrial();
@@ -199,17 +341,30 @@ public class JobDaoImpl
 		if (inputField != null) {
 			target.setInputFieldId(inputField.getId());
 		}
-		target.setDatas(source.getData());
-		if (contentType != null) {
-			target.setMimeType(contentType.getMimeType());
+		if (type != null && type.isInputFile()) {
+			if (contentType != null) {
+				target.setMimeType(contentType.getMimeType());
+			}
+			if (source.isEncryptedFile()) {
+				try {
+					target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
+					target.setDatas((byte[]) CryptoUtil.decryptValue(source.getDataIv(), source.getData()));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				target.setDatas(source.getData());
+			}
+			//		} else {
+			//			target.setFileName(null);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public JobInVO toJobInVO(final Job entity) {
-		return super.toJobInVO(entity);
+	public JobAddVO toJobAddVO(final Job entity) {
+		return super.toJobAddVO(entity);
 	}
 
 	/**
@@ -217,26 +372,18 @@ public class JobDaoImpl
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
-	private Job loadJobFromJobInVO(JobInVO jobInVO) {
-		// TODO implement loadJobFromJobInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobInVO(JobInVO) not yet implemented.");
-		Job job = null;
-		Long id = jobInVO.getId();
-		if (id != null) {
-			job = this.load(id);
-		}
-		if (job == null) {
-			job = Job.Factory.newInstance();
-		}
-		return job;
+	private Job loadJobFromJobAddVO(JobAddVO jobAddVO) {
+		// TODO implement loadJobFromJobAddVO
+		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobAddVO(JobAddVO) not yet implemented.");
+		return Job.Factory.newInstance();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Job jobInVOToEntity(JobInVO jobInVO) {
-		Job entity = this.loadJobFromJobInVO(jobInVO);
-		this.jobInVOToEntity(jobInVO, entity, true);
+	public Job jobAddVOToEntity(JobAddVO jobAddVO) {
+		Job entity = this.loadJobFromJobAddVO(jobAddVO);
+		this.jobAddVOToEntity(jobAddVO, entity, true);
 		return entity;
 	}
 
@@ -244,11 +391,11 @@ public class JobDaoImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void jobInVOToEntity(
-			JobInVO source,
+	public void jobAddVOToEntity(
+			JobAddVO source,
 			Job target,
 			boolean copyIfNull) {
-		super.jobInVOToEntity(source, target, copyIfNull);
+		super.jobAddVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
 		Long trialId = source.getTrialId();
 		Long probandId = source.getProbandId();
@@ -303,14 +450,59 @@ public class JobDaoImpl
 				criteria.removeJobs(target);
 			}
 		}
-		if (source.getDatas() != null && source.getDatas().length > 0) {
-			target.setData(source.getDatas());
-			target.setFileSize((long) source.getDatas().length);
-			target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.JOB_FILE).iterator().next());
-		} else if (copyIfNull) {
-			target.setData(null);
-			target.setFileSize(0l);
+		JobType type = target.getType();
+		if (type != null && type.isInputFile()) {
+			if (type.isEncryptFile()) {
+				target.setEncryptedFile(true);
+				try {
+					if (copyIfNull || source.getFileName() != null) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getFileName());
+						target.setFileNameIv(cipherText.getIv());
+						target.setEncryptedFileName(cipherText.getCipherText());
+					}
+					if (source.getDatas() != null && source.getDatas().length > 0) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getDatas());
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize((long) source.getDatas().length);
+						target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.JOB_FILE).iterator().next());
+					} else if (copyIfNull) {
+						CipherText cipherText = CryptoUtil.encryptValue(null);
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize(0l);
+						target.setContentType(null);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					target.setFileName(null);
+				}
+			} else {
+				target.setEncryptedFile(false);
+				target.setDataIv(null);
+				if (source.getDatas() != null && source.getDatas().length > 0) {
+					target.setData(source.getDatas());
+					target.setFileSize((long) source.getDatas().length);
+					target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.JOB_FILE).iterator().next());
+				} else if (copyIfNull) {
+					target.setData(null);
+					target.setFileSize(0l);
+					target.setContentType(null);
+				}
+				target.setFileNameIv(null);
+				target.setEncryptedFileName(null);
+				target.setFileNameHash(null);
+			}
+		} else {
+			target.setFileName(null);
+			target.setFileNameIv(null);
+			target.setEncryptedFileName(null);
+			target.setFileNameHash(null);
 			target.setContentType(null);
+			target.setData(null);
+			target.setDataIv(null);
+			target.setFileSize(null);
 		}
 	}
 
@@ -352,6 +544,7 @@ public class JobDaoImpl
 			target.setInputField(this.getInputFieldDao().toInputFieldOutVO(inputField));
 		}
 		target.setHasFile(source.getFileSize() != null && source.getFileSize() > 0l);
+		target.setStatus(L10nUtil.createJobStatusVO(Locales.USER, source.getStatus()));
 	}
 
 	/**
@@ -454,5 +647,156 @@ public class JobDaoImpl
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Job jobUpdateVOToEntity(JobUpdateVO jobUpdateVO) {
+		Job entity = this.loadJobFromJobUpdateVO(jobUpdateVO);
+		this.jobUpdateVOToEntity(jobUpdateVO, entity, true);
+		return entity;
+	}
+
+	public void jobUpdateVOToEntity(
+			JobUpdateVO source,
+			Job target,
+			boolean copyIfNull) {
+		super.jobUpdateVOToEntity(source, target, copyIfNull);
+		JobType type = target.getType();
+		if (type != null && type.isOutputFile()) {
+			if (type.isEncryptFile()) {
+				target.setEncryptedFile(true);
+				try {
+					if (copyIfNull || source.getFileName() != null) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getFileName());
+						target.setFileNameIv(cipherText.getIv());
+						target.setEncryptedFileName(cipherText.getCipherText());
+					}
+					if (source.getDatas() != null && source.getDatas().length > 0) {
+						CipherText cipherText = CryptoUtil.encryptValue(source.getDatas());
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize((long) source.getDatas().length);
+						target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.JOB_FILE).iterator().next());
+					} else if (copyIfNull) {
+						CipherText cipherText = CryptoUtil.encryptValue(null);
+						target.setDataIv(cipherText.getIv());
+						target.setData(cipherText.getCipherText());
+						target.setFileSize(0l);
+						target.setContentType(null);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					target.setFileName(null);
+				}
+			} else {
+				target.setEncryptedFile(false);
+				target.setDataIv(null);
+				if (source.getDatas() != null && source.getDatas().length > 0) {
+					target.setData(source.getDatas());
+					target.setFileSize((long) source.getDatas().length);
+					target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.JOB_FILE).iterator().next());
+				} else if (copyIfNull) {
+					target.setData(null);
+					target.setFileSize(0l);
+					target.setContentType(null);
+				}
+				target.setFileNameIv(null);
+				target.setEncryptedFileName(null);
+				target.setFileNameHash(null);
+			}
+			//		} else {
+			//			target.setFileName(null);
+			//			target.setFileNameIv(null);
+			//			target.setEncryptedFileName(null);
+			//			target.setFileNameHash(null);
+			//			target.setContentType(null);
+			//			target.setData(null);
+			//			target.setDataIv(null);
+			//			target.setFileSize(null);
+		}
+	}
+
+	/**
+		 * Retrieves the entity object that is associated with the specified value object
+		 * from the object store. If no such entity object exists in the object store,
+		 * a new, blank entity is created
+		 */
+	private Job loadJobFromJobUpdateVO(JobUpdateVO jobUpdateVO) {
+		// TODO implement loadJobFromJobUpdateVO
+		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobUpdateVO(JobUpdateVO) not yet implemented.");
+		Job job = this.get(jobUpdateVO.getId());
+		if (job == null) {
+			job = Job.Factory.newInstance();
+		}
+		return job;
+	}
+
+	public JobUpdateVO toJobUpdateVO(final Job entity) {
+		return super.toJobUpdateVO(entity);
+	}
+
+	public void toJobUpdateVO(
+			Job source,
+			JobUpdateVO target) {
+		super.toJobUpdateVO(source, target);
+		MimeType contentType = source.getContentType();
+		JobType type = source.getType();
+		if (type != null && type.isOutputFile()) {
+			if (contentType != null) {
+				target.setMimeType(contentType.getMimeType());
+			}
+			if (source.isEncryptedFile()) {
+				try {
+					target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
+					target.setDatas((byte[]) CryptoUtil.decryptValue(source.getDataIv(), source.getData()));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				target.setDatas(source.getData());
+			}
+			//		} else {
+			//			target.setFileName(null);
+		}
+	}
+
+	@Override
+	protected Collection<Job> handleFindPending(Long departmentId, Boolean daily, Boolean weekly, Boolean monthly) throws Exception {
+		org.hibernate.Criteria jobCriteria = createJobCriteria();
+		if (departmentId != null) {
+			jobCriteria.createCriteria("modifiedUser").add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
+		if (daily != null || weekly != null || monthly != null) {
+			org.hibernate.Criteria typeCriteria = jobCriteria.createCriteria("type");
+			if (daily != null) {
+				typeCriteria.add(Restrictions.eq("daily", daily.booleanValue()));
+			}
+			if (weekly != null) {
+				typeCriteria.add(Restrictions.eq("weekly", weekly.booleanValue()));
+			}
+			if (monthly != null) {
+				typeCriteria.add(Restrictions.eq("monthly", monthly.booleanValue()));
+			}
+		}
+		Restrictions.in("status", new Object[] {
+				JobStatus.CREATED,
+				JobStatus.FAILED,
+				JobStatus.OK
+		});
+		jobCriteria.addOrder(Order.asc("id"));
+		return jobCriteria.list();
+	}
+
+	@Override
+	protected Collection<Job> handleFindByType(JobModule module, Long id, Long typeId) throws Exception {
+		org.hibernate.Criteria jobCriteria = createJobCriteria();
+		applyModuleIdCriterions(jobCriteria, module, id);
+		if (typeId != null) {
+			jobCriteria.add(Restrictions.eq("type.id", typeId.longValue()));
+		}
+		return jobCriteria.list();
 	}
 }

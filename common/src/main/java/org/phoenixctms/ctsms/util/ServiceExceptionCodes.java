@@ -781,6 +781,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT = "mass_mail_no_proband_letter_attachment";
 	public static final String MASS_MAIL_NO_REIMBURSEMENTS_PDF_ATTACHMENT = "mass_mail_no_reimbursements_pdf_attachment";
 	public static final String INVALID_JOB_TYPE_ID = "invalid_job_type_id";
+	public static final String INVALID_JOB_ID = "invalid_job_id";
 	public static final String JOB_TRIAL_ONLY_ALLOWED = "job_trial_only_allowed";
 	public static final String JOB_PROBAND_ONLY_ALLOWED = "job_proband_only_allowed";
 	public static final String JOB_INPUT_FIELD_ONLY_ALLOWED = "job_input_field_only_allowed";
@@ -788,7 +789,13 @@ public interface ServiceExceptionCodes {
 	public static final String JOB_WRONG_CRITERIA_MODULE = "job_wrong_criteria_module";
 	public static final String JOB_FILE_SIZE_LIMIT_EXCEEDED = "job_file_size_limit_exceeded";
 	public static final String JOB_FILE_REQUIRED = "job_file_required";
+	public static final String JOB_FILE_MIME_TYPE_NOT_NULL = "job_file_mime_type_not_null";
+	public static final String JOB_FILE_NAME_NOT_NULL = "job_file_name_not_null";
+	public static final String JOB_FILE_NAME_REQUIRED = "job_file_name_required";
 	public static final String JOB_FILE_NOT_NULL = "job_file_not_null";
 	public static final String JOB_FILE_MIME_TYPE_REQUIRED = "job_file_mime_type_required";
 	public static final String JOB_FILE_MIME_TYPE_UNKNOWN = "job_file_mime_type_unknown";
+	public static final String JOB_EMAIL_RECIPIENTS_NOT_NULL = "job_email_recipients_not_null";
+	public static final String JOB_INVALID_EMAIL_RECIPIENTS = "job_invalid_email_recipients";
+	public static final String JOB_ALREADY_EXISTS = "job_already_exists";
 }

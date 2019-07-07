@@ -6,8 +6,8 @@ public interface SettingCodes {
 	public static final String INLAND = "inland";
 	public final static String USE_EXTERNAL_FILE_DATA_DIR = "use_external_file_data_dir";
 	public final static String EXTERNAL_FILE_DATA_DIR = "external_file_data_dir";
-	public final static String HTTP_DOCUMENT_ROOT = "http_document_root";
-	public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "http_document_root_replacement";
+	//public final static String HTTP_DOCUMENT_ROOT = "http_document_root";
+	//public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "http_document_root_replacement";
 	public final static String EMAIL_DOMAIN_NAME = "email_domain_name";
 	public final static String HTTP_DOMAIN_NAME = "http_domain_name";
 	public final static String HTTP_BASE_URL = "http_base_url";
@@ -290,4 +290,6 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = "mass_mail_mime_message_max_age_seconds";
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "resolve_mail_address_domain_name";
 	public static final String JOB_FILE_SIZE_LIMIT = "job_file_size_limit";
+	public static final String DB_TOOL = "db_tool";
+	public static final String PROCESS_PL = "process_pl";
 }

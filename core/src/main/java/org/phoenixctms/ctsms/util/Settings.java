@@ -344,11 +344,10 @@ public final class Settings {
 		return checkDirectory(CommonUtil.getValue(key, getBundle(bundle), defaultValue));
 	}
 
-	public static String getDocumentRootReplacement() {
-		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT_REPLACEMENT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT_REPLACEMENT),
-				getHttpBaseUrl());
-	}
-
+	//	public static String getDocumentRootReplacement() {
+	//		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT_REPLACEMENT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT_REPLACEMENT),
+	//				getHttpBaseUrl());
+	//	}
 	public static ECRFFieldStatusQueue getEcrfFieldStatusQueue(String key, Bundle bundle, ECRFFieldStatusQueue defaultValue) {
 		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
 		if (value != null && value.length() > 0) {

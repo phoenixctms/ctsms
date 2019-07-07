@@ -120,12 +120,13 @@ public interface DefaultMessages {
 	public static final String EVENT_IMPORTANCE_NAME = "<event importance>";
 	public static final String SEX_NAME = "<sex>";
 	public static final String RANDOMIZATION_MODE_NAME = "<randomization mode>";
-	public static final String EXPORT_STATUS_NAME = "<export status>";
+	public static final String JOB_STATUS_NAME = "<job status>";
 	public static final String ECRF_VALIDATION_STATUS_NAME = "<eCRF validation status>";
 	public static final String PAYMENT_METHOD_NAME = "<payment method>";
 	public static final String DB_MODULE_NAME = "<db module>";
 	public static final String JOURNAL_MODULE_NAME = "<journal module>";
 	public static final String FILE_MODULE_NAME = "<file module>";
+	public static final String JOB_MODULE_NAME = "<job module>";
 	public static final String HYPERLINK_MODULE_NAME = "<hyperlink module>";
 	public final static String CRITERION_TIE_NAME = "<conjuction>";
 	public final static String CRITERION_RESTRICTION_NAME = "<operator>";
@@ -193,4 +194,7 @@ public interface DefaultMessages {
 	public static final String UNSUPPORTED_RANDOMIZATION_MODE = "unsupported randomization method {0}";
 	public static final String UNSUPPORTED_RANDOMIZATION_TYPE = "unsupported randomization type {0}";
 	public static final String UNSUPPORTED_JOB_MODULE = "unsupported job module {0}";
+	public static final String JOB_TYPE_NAME = "<job type>";
+	public static final String JOB_TYPE_DESCRIPTION = "<job description>";
+	public static final String START_JOB_ERROR = "could not start job: {0}";
 }

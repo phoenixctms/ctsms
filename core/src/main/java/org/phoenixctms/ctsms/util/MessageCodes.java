@@ -119,4 +119,5 @@ public interface MessageCodes {
 	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "mail_mail_input_field_value_checkbox_unchecked";
 	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "mass_mail_cacnelled_no_recipients";
 	public static final String UNSUPPORTED_JOB_MODULE = "unsupported_job_module";
+	public static final String START_JOB_ERROR = "start_job_error";
 }

@@ -33,7 +33,9 @@ public class JobTypeDaoImpl
 			typeCriteria.add(Restrictions.eq("module", module));
 		}
 		if (trialId != null) {
-			typeCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+			typeCriteria.add(Restrictions.or(Restrictions.isNull("trial.id"), Restrictions.eq("trial.id", trialId.longValue())));
+			//} else {
+			//	typeCriteria.add(Restrictions.isNull("trial.id"));
 		}
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
 		return typeCriteria.list();

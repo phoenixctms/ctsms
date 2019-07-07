@@ -65,6 +65,8 @@ import org.phoenixctms.ctsms.domain.InventoryStatusType;
 import org.phoenixctms.ctsms.domain.InventoryStatusTypeDao;
 import org.phoenixctms.ctsms.domain.InventoryTag;
 import org.phoenixctms.ctsms.domain.InventoryTagDao;
+import org.phoenixctms.ctsms.domain.JobType;
+import org.phoenixctms.ctsms.domain.JobTypeDao;
 import org.phoenixctms.ctsms.domain.JournalCategory;
 import org.phoenixctms.ctsms.domain.JournalCategoryDao;
 import org.phoenixctms.ctsms.domain.LecturerCompetence;
@@ -118,9 +120,10 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobModule;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
@@ -160,13 +163,14 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFValidationStatusVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
-import org.phoenixctms.ctsms.vo.ExportStatusVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.InventoryCategoryVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusTypeVO;
 import org.phoenixctms.ctsms.vo.InventoryTagVO;
+import org.phoenixctms.ctsms.vo.JobStatusVO;
+import org.phoenixctms.ctsms.vo.JobTypeVO;
 import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
@@ -227,6 +231,19 @@ public class SelectionSetServiceImpl
 		Collection categories = hyperlinkCategoryDao.findByModuleVisibleId(module, true, categoryId);
 		hyperlinkCategoryDao.toHyperlinkCategoryVOCollection(categories);
 		return categories;
+	}
+
+	private Collection<JobTypeVO> getJobTypesHelper(JobModule module, Long typeId, Long trialId) throws Exception {
+		JobTypeDao jobTypeDao = this.getJobTypeDao();
+		if (typeId != null) {
+			CheckIDUtil.checkJobTypeId(typeId, jobTypeDao);
+		}
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		Collection jobs = jobTypeDao.findByModuleTrialVisibleId(module, trialId, true, typeId);
+		jobTypeDao.toJobTypeVOCollection(jobs);
+		return jobs;
 	}
 
 	private Collection<JournalCategoryVO> getJournalCategoriesHelper(JournalModule module, Long categoryId) throws Exception {
@@ -982,16 +999,16 @@ public class SelectionSetServiceImpl
 	}
 
 	@Override
-	protected Collection<ExportStatusVO> handleGetExportStates(AuthenticationVO auth) throws Exception {
-		Collection<ExportStatusVO> result; // = new ArrayList<ExportStatusVO>();
-		ExportStatus[] exportStates = ExportStatus.values();
-		if (exportStates != null) {
-			result = new ArrayList<ExportStatusVO>(exportStates.length);
-			for (int i = 0; i < exportStates.length; i++) {
-				result.add(L10nUtil.createExportStatusVO(Locales.USER, exportStates[i]));
+	protected Collection<JobStatusVO> handleGetJobStates(AuthenticationVO auth) throws Exception {
+		Collection<JobStatusVO> result; // = new ArrayList<ExportStatusVO>();
+		JobStatus[] jobStates = JobStatus.values();
+		if (jobStates != null) {
+			result = new ArrayList<JobStatusVO>(jobStates.length);
+			for (int i = 0; i < jobStates.length; i++) {
+				result.add(L10nUtil.createJobStatusVO(Locales.USER, jobStates[i]));
 			}
 		} else {
-			result = new ArrayList<ExportStatusVO>();
+			result = new ArrayList<JobStatusVO>();
 		}
 		return result;
 	}
@@ -1745,5 +1762,32 @@ public class SelectionSetServiceImpl
 		DepartmentDao departmentDao = this.getDepartmentDao();
 		Department department = CheckIDUtil.checkDepartmentId(departmentId, departmentDao);
 		return departmentDao.toDepartmentVO(department);
+	}
+
+	@Override
+	protected Collection<JobTypeVO> handleGetTrialJobTypes(AuthenticationVO auth, Long trialId) throws Exception {
+		return getJobTypesHelper(JobModule.TRIAL_JOB, null, trialId);
+	}
+
+	@Override
+	protected Collection<JobTypeVO> handleGetJobTypes(AuthenticationVO auth, JobModule module, Long typeId, Long trialId) throws Exception {
+		return getJobTypesHelper(module, typeId, trialId);
+	}
+
+	@Override
+	protected JobTypeVO handleGetJobType(AuthenticationVO auth, Long typeId) throws Exception {
+		JobTypeDao jobTypeDao = this.getJobTypeDao();
+		JobType job = CheckIDUtil.checkJobTypeId(typeId, jobTypeDao);
+		return jobTypeDao.toJobTypeVO(job);
+	}
+
+	@Override
+	protected Collection<JobTypeVO> handleGetProbandJobTypes(AuthenticationVO auth) throws Exception {
+		return getJobTypesHelper(JobModule.PROBAND_JOB, null, null);
+	}
+
+	@Override
+	protected Collection<JobTypeVO> handleGetInputFieldJobTypes(AuthenticationVO auth) throws Exception {
+		return getJobTypesHelper(JobModule.INPUT_FIELD_JOB, null, null);
 	}
 }

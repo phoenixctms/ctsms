@@ -13,6 +13,10 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.phoenixctms.ctsms.adapt.JobCollisionFinder;
 import org.phoenixctms.ctsms.domain.Criteria;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.Job;
@@ -27,14 +31,17 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -44,9 +51,10 @@ import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.JobAddVO;
 import org.phoenixctms.ctsms.vo.JobFileVO;
-import org.phoenixctms.ctsms.vo.JobInVO;
 import org.phoenixctms.ctsms.vo.JobOutVO;
+import org.phoenixctms.ctsms.vo.JobUpdateVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -55,6 +63,8 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
  * @see org.phoenixctms.ctsms.service.shared.JobService
  */
 public class JobServiceImpl extends JobServiceBase {
+
+	private final static int JOB_OUTPUT_MAX_LENGTH = 64 * 1024;
 
 	private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -83,7 +93,7 @@ public class JobServiceImpl extends JobServiceBase {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
 	}
 
-	private int numIdsSet(JobInVO job) {
+	private int numIdsSet(JobAddVO job) {
 		int result = 0;
 		result += (job.getTrialId() != null) ? 1 : 0;
 		result += (job.getProbandId() != null) ? 1 : 0;
@@ -139,7 +149,7 @@ public class JobServiceImpl extends JobServiceBase {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_WRONG_CRITERIA_MODULE);
 					}
 					break;
-				case MASS_MAIL_JOB:
+				case MASS_MAIL_CRITERIA_JOB:
 					if (!DBModule.MASS_MAIL_DB.equals(CheckIDUtil.checkCriteriaId(id, this.getCriteriaDao()).getModule())) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_WRONG_CRITERIA_MODULE);
 					}
@@ -152,7 +162,45 @@ public class JobServiceImpl extends JobServiceBase {
 		}
 	}
 
-	private void checkJobInput(JobInVO jobIn) throws ServiceException {
+	private void checkJobFile(byte[] data, String mimeType, String fileName, JobType type) throws ServiceException {
+		if (data == null || data.length == 0) {
+			if (type.isInputFile()) { // || type.isOutputFile()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_REQUIRED);
+			} else {
+				if (mimeType != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_NOT_NULL);
+				}
+				if (fileName != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_NAME_NOT_NULL);
+				}
+			}
+		} else {
+			if (!type.isInputFile() && !type.isOutputFile()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_NOT_NULL);
+			} else {
+				Integer jobDataFileSizeLimit = Settings.getIntNullable(SettingCodes.JOB_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.JOB_FILE_SIZE_LIMIT);
+				if (jobDataFileSizeLimit != null && data.length > jobDataFileSizeLimit) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(jobDataFileSizeLimit));
+				}
+				if (mimeType == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_REQUIRED);
+				}
+				Iterator<MimeType> it = this.getMimeTypeDao().findByMimeTypeModule(mimeType, FileModule.JOB_FILE).iterator();
+				if (!it.hasNext()) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_UNKNOWN, mimeType);
+				}
+				if (CommonUtil.isEmptyString(fileName)) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_NAME_REQUIRED);
+				}
+			}
+		}
+	}
+
+	private void checkUpdateJobInput(JobUpdateVO jobIn, JobType type) throws ServiceException {
+		checkJobFile(jobIn.getDatas(), jobIn.getMimeType(), jobIn.getFileName(), type);
+	}
+
+	private void checkAddJobInput(JobAddVO jobIn) throws ServiceException {
 		JobType type = CheckIDUtil.checkJobTypeId(jobIn.getTypeId(), this.getJobTypeDao());
 		switch (type.getModule()) {
 			case TRIAL_JOB:
@@ -242,7 +290,7 @@ public class JobServiceImpl extends JobServiceBase {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_CRITERIA_ONLY_ALLOWED);
 				}
 				break;
-			case MASS_MAIL_JOB:
+			case MASS_MAIL_CRITERIA_JOB:
 				if (!DBModule.MASS_MAIL_DB.equals(CheckIDUtil.checkCriteriaId(jobIn.getCriteriaId(), this.getCriteriaDao()).getModule())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_WRONG_CRITERIA_MODULE);
 				}
@@ -256,39 +304,38 @@ public class JobServiceImpl extends JobServiceBase {
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
 						new Object[] { type.getModule().toString() }));
 		}
-		if (jobIn.getDatas() == null || jobIn.getDatas().length == 0) {
-			if (type.isInputFile()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_REQUIRED);
+		if ((type.isDaily()
+				|| type.isWeekly()
+				|| type.isMonthly())
+				&& (new JobCollisionFinder(type.getModule(), this.getJobDao(), this.getTrialDao(), this.getProbandDao(), this.getInputFieldDao(), this.getCriteriaDao()))
+						.collides(jobIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_ALREADY_EXISTS, L10nUtil.getJobTypeName(Locales.USER, type.getNameL10nKey()));
+		}
+		if (!CommonUtil.isEmptyString(jobIn.getEmailRecipients())) {
+			if (!type.isEmailRecipients()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_EMAIL_RECIPIENTS_NOT_NULL);
 			}
-		} else {
-			if (!type.isInputFile() && !type.isOutputFile()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_NOT_NULL);
-			} else {
-				Integer jobDataFileSizeLimit = Settings.getIntNullable(SettingCodes.JOB_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.JOB_FILE_SIZE_LIMIT);
-				if (jobDataFileSizeLimit != null && jobIn.getDatas().length > jobDataFileSizeLimit) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(jobDataFileSizeLimit));
-				}
-				if (jobIn.getMimeType() == null) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_REQUIRED);
-				}
-				Iterator<MimeType> it = this.getMimeTypeDao().findByMimeTypeModule(jobIn.getMimeType(), FileModule.JOB_FILE).iterator();
-				if (!it.hasNext()) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_UNKNOWN, jobIn.getMimeType());
-				}
+			try {
+				InternetAddress.parse(jobIn.getEmailRecipients(), true);
+			} catch (AddressException e) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_INVALID_EMAIL_RECIPIENTS, jobIn.getEmailRecipients(), e.getMessage());
 			}
 		}
+		checkJobFile(jobIn.getDatas(), jobIn.getMimeType(), jobIn.getFileName(), type);
 	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.JobService#addJob(AuthenticationVO, JobInVO)
 	 */
-	protected JobOutVO handleAddJob(AuthenticationVO auth, JobInVO newJob)
+	protected JobOutVO handleAddJob(AuthenticationVO auth, JobAddVO newJob)
 			throws Exception {
-		checkJobInput(newJob);
+		checkAddJobInput(newJob);
 		JobDao jobDao = this.getJobDao();
-		Job job = jobDao.jobInVOToEntity(newJob);
+		Job job = jobDao.jobAddVOToEntity(newJob);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		job.setStatus(JobStatus.CREATED);
+		job.setJobOutput(CommonUtil.clipString(job.getJobOutput(), JOB_OUTPUT_MAX_LENGTH, EllipsisPlacement.LEADING));
 		CoreUtil.modifyVersion(job, now, user);
 		job = jobDao.create(job);
 		JobOutVO result = jobDao.toJobOutVO(job);
@@ -310,7 +357,7 @@ public class JobServiceImpl extends JobServiceBase {
 			case INPUT_FIELD_CRITERIA_JOB:
 			case PROBAND_CRITERIA_JOB:
 			case USER_CRITERIA_JOB:
-			case MASS_MAIL_JOB:
+			case MASS_MAIL_CRITERIA_JOB:
 				logSystemMessage(job.getCriteria(), result.getCriteria(), now, user, SystemMessageCodes.JOB_CREATED, result, null, journalEntryDao);
 				break;
 			default:
@@ -318,21 +365,27 @@ public class JobServiceImpl extends JobServiceBase {
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
 						new Object[] { job.getType().getModule().toString() }));
 		}
+		if (!job.getType().isDaily()
+				&& !job.getType().isWeekly()
+				&& !job.getType().isMonthly()) {
+			CoreUtil.launchJob(auth, job, false);
+		}
 		return result;
 	}
 
 	@Override
-	protected JobOutVO handleUpdateJobStatus(AuthenticationVO auth, Long jobId, boolean active) throws Exception {
+	protected JobOutVO handleUpdateJob(AuthenticationVO auth, JobUpdateVO modifiedJob) throws Exception {
 		JobDao jobDao = this.getJobDao();
-		Job job = CheckIDUtil.checkJobId(jobId, jobDao);
-		JobOutVO original = jobDao.toJobOutVO(job);
+		Job originalJob = CheckIDUtil.checkJobId(modifiedJob.getId(), jobDao);
+		checkUpdateJobInput(modifiedJob, originalJob.getType());
+		JobOutVO original = jobDao.toJobOutVO(originalJob);
+		jobDao.evict(originalJob);
+		Job job = jobDao.jobUpdateVOToEntity(modifiedJob);
+		job.setJobOutput(CommonUtil.clipString(job.getJobOutput(), JOB_OUTPUT_MAX_LENGTH, EllipsisPlacement.LEADING));
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		CoreUtil.modifyVersion(job, version.longValue(), now, user);
-		timelineEvent.setDismissed(dismissed);
-		timelineEvent.setDismissedTimestamp(now);
-		timelineEventDao.update(timelineEvent);
-		//notifyTimelineEventReminder(timelineEvent, now);
+		CoreUtil.modifyVersion(originalJob, job, now, user);
+		jobDao.update(job);
 		JobOutVO result = jobDao.toJobOutVO(job);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		switch (job.getType().getModule()) {
@@ -352,7 +405,7 @@ public class JobServiceImpl extends JobServiceBase {
 			case INPUT_FIELD_CRITERIA_JOB:
 			case PROBAND_CRITERIA_JOB:
 			case USER_CRITERIA_JOB:
-			case MASS_MAIL_JOB:
+			case MASS_MAIL_CRITERIA_JOB:
 				logSystemMessage(job.getCriteria(), result.getCriteria(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
 				break;
 			default:
@@ -377,21 +430,21 @@ public class JobServiceImpl extends JobServiceBase {
 				trial.removeJobs(job);
 				job.setTrial(null);
 				jobDao.remove(job);
-				logSystemMessage(job.getTrial(), result.getTrial(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
+				logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
 				break;
 			case PROBAND_JOB:
 				Proband proband = job.getProband();
 				proband.removeJobs(job);
 				job.setProband(null);
 				jobDao.remove(job);
-				logSystemMessage(job.getProband(), result.getProband(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
+				logSystemMessage(proband, result.getProband(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
 				break;
 			case INPUT_FIELD_JOB:
 				InputField inputField = job.getInputField();
 				inputField.removeJobs(job);
 				job.setInputField(null);
 				jobDao.remove(job);
-				logSystemMessage(job.getInputField(), result.getInputField(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
+				logSystemMessage(inputField, result.getInputField(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
 				break;
 			case INVENTORY_CRITERIA_JOB:
 			case STAFF_CRITERIA_JOB:
@@ -400,12 +453,12 @@ public class JobServiceImpl extends JobServiceBase {
 			case INPUT_FIELD_CRITERIA_JOB:
 			case PROBAND_CRITERIA_JOB:
 			case USER_CRITERIA_JOB:
-			case MASS_MAIL_JOB:
+			case MASS_MAIL_CRITERIA_JOB:
 				Criteria criteria = job.getCriteria();
 				criteria.removeJobs(job);
 				job.setCriteria(null);
 				jobDao.remove(job);
-				logSystemMessage(job.getCriteria(), result.getCriteria(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
+				logSystemMessage(criteria, result.getCriteria(), now, user, SystemMessageCodes.JOB_DELETED, result, null, journalEntryDao);
 				break;
 			default:
 				// not supported for now...
@@ -424,18 +477,18 @@ public class JobServiceImpl extends JobServiceBase {
 	}
 
 	@Override
-	protected Collection<JobOutVO> handleGetJobs(AuthenticationVO auth, JobModule module, Long id, Boolean active, PSFVO psf) throws Exception {
+	protected Collection<JobOutVO> handleGetJobs(AuthenticationVO auth, JobModule module, Long id, PSFVO psf) throws Exception {
 		checkJobModuleId(module, id);
 		JobDao jobDao = this.getJobDao();
-		Collection jobs = jobDao.findJobs(module, id, active, psf);
+		Collection jobs = jobDao.findJobs(module, id, psf);
 		jobDao.toJobOutVOCollection(jobs);
 		return jobs;
 	}
 
 	@Override
-	protected long handleGetJobCount(AuthenticationVO auth, JobModule module, Long id, Boolean active) throws Exception {
+	protected long handleGetJobCount(AuthenticationVO auth, JobModule module, Long id) throws Exception {
 		checkJobModuleId(module, id);
-		return this.getJobDao().getCount(module, id, active);
+		return this.getJobDao().getCount(module, id);
 	}
 
 	@Override

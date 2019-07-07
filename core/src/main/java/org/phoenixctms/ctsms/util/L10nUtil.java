@@ -9,8 +9,8 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
@@ -27,8 +27,8 @@ import org.phoenixctms.ctsms.vo.DBModuleVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFValidationStatusVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
-import org.phoenixctms.ctsms.vo.ExportStatusVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
+import org.phoenixctms.ctsms.vo.JobStatusVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileGroupVO;
@@ -108,18 +108,21 @@ public final class L10nUtil {
 	private static String eventImportanceNamesBundleBasename;
 	private static String sexNamesBundleBasename;
 	private static String randomizationModeNamesBundleBasename;
-	private static String exportStatusNamesBundleBasename;
+	private static String jobStatusNamesBundleBasename;
 	private static String ecrfValidationStatusNamesBundleBasename;
 	private static String paymentMethodNamesBundleBasename;
 	private static String dbModuleNamesBundleBasename;
 	private static String journalModuleNamesBundleBasename;
 	private static String hyperlinkModuleNamesBundleBasename;
 	private static String fileModuleNamesBundleBasename;
+	private static String jobModuleNamesBundleBasename;
 	private static String criterionTiesBundleBasename;
 	private static String criterionRestrictionsBundleBasename;
 	private static String criterionPropertiesBundleBasename;
 	private static String hyperlinkCategoriesBundleBasename;
 	private static String hyperlinkTitlePresetsBundleBasename;
+	private static String jobTypeNamesBundleBasename;
+	private static String jobTypeDescriptionsBundleBasename;
 	private static String journalCategoriesBundleBasename;
 	private static String journalTitlePresetsBundleBasename;
 	private static String systemMessageTitlesBundleBasename;
@@ -241,17 +244,17 @@ public final class L10nUtil {
 		return eventImportanceVO;
 	}
 
-	public static ExportStatusVO createExportStatusVO(Locales locale, ExportStatus exportStatus) {
-		ExportStatusVO exportStatusVO;
-		if (exportStatus != null) {
-			exportStatusVO = new ExportStatusVO();
-			exportStatusVO.setExportStatus(exportStatus);
-			exportStatusVO.setNameL10nKey(exportStatus.name());
-			exportStatusVO.setName(getExportStatusName(locale, exportStatus.name()));
+	public static JobStatusVO createJobStatusVO(Locales locale, JobStatus jobStatus) {
+		JobStatusVO jobStatusVO;
+		if (jobStatus != null) {
+			jobStatusVO = new JobStatusVO();
+			jobStatusVO.setJobStatus(jobStatus);
+			jobStatusVO.setNameL10nKey(jobStatus.name());
+			jobStatusVO.setName(getJobStatusName(locale, jobStatus.name()));
 		} else {
-			exportStatusVO = null;
+			jobStatusVO = null;
 		}
-		return exportStatusVO;
+		return jobStatusVO;
 	}
 
 	public static InputFieldTypeVO createInputFieldTypeVO(Locales locale, InputFieldType fieldType) {
@@ -494,12 +497,16 @@ public final class L10nUtil {
 		return CommonUtil.getString(l10nKey, getBundle(locale, eventImportanceNamesBundleBasename), DefaultMessages.EVENT_IMPORTANCE_NAME);
 	}
 
-	public static String getExportStatusName(Locales locale, String l10nKey) {
-		return CommonUtil.getString(l10nKey, getBundle(locale, exportStatusNamesBundleBasename), DefaultMessages.EXPORT_STATUS_NAME);
+	public static String getJobStatusName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, jobStatusNamesBundleBasename), DefaultMessages.JOB_STATUS_NAME);
 	}
 
 	public static String getFileModuleName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, fileModuleNamesBundleBasename), DefaultMessages.FILE_MODULE_NAME);
+	}
+
+	public static String getJobModuleName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, jobModuleNamesBundleBasename), DefaultMessages.JOB_MODULE_NAME);
 	}
 
 	public static String getHolidayName(Locales locale, String l10nKey) {
@@ -508,6 +515,14 @@ public final class L10nUtil {
 
 	public static String getHyperlinkCategoryName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, hyperlinkCategoriesBundleBasename), DefaultMessages.HYPERLINK_CATEGORY_NAME);
+	}
+
+	public static String getJobTypeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, jobTypeNamesBundleBasename), DefaultMessages.JOB_TYPE_NAME);
+	}
+
+	public static String getJobTypeDescription(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, jobTypeDescriptionsBundleBasename), DefaultMessages.JOB_TYPE_DESCRIPTION);
 	}
 
 	public static String getHyperlinkModuleName(Locales locale, String l10nKey) {
@@ -1103,10 +1118,10 @@ public final class L10nUtil {
 	}
 
 	@Autowired(required = true)
-	public void setExportStatusNamesBundleBasename(
-			String exportStatusNamesBundleBasename) {
-		L10nUtil.exportStatusNamesBundleBasename = exportStatusNamesBundleBasename;
-		getBundle(Locales.DEFAULT, exportStatusNamesBundleBasename);
+	public void setJobStatusNamesBundleBasename(
+			String jobStatusNamesBundleBasename) {
+		L10nUtil.jobStatusNamesBundleBasename = jobStatusNamesBundleBasename;
+		getBundle(Locales.DEFAULT, jobStatusNamesBundleBasename);
 	}
 
 	@Autowired(required = true)
@@ -1114,6 +1129,13 @@ public final class L10nUtil {
 			String fileModuleNamesBundleBasename) {
 		L10nUtil.fileModuleNamesBundleBasename = fileModuleNamesBundleBasename;
 		getBundle(Locales.DEFAULT, fileModuleNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setJobModuleNamesBundleBasename(
+			String jobModuleNamesBundleBasename) {
+		L10nUtil.jobModuleNamesBundleBasename = jobModuleNamesBundleBasename;
+		getBundle(Locales.DEFAULT, jobModuleNamesBundleBasename);
 	}
 
 	@Autowired(required = true)
@@ -1128,6 +1150,20 @@ public final class L10nUtil {
 			String hyperlinkCategoriesBundleBasename) {
 		L10nUtil.hyperlinkCategoriesBundleBasename = hyperlinkCategoriesBundleBasename;
 		getBundle(Locales.DEFAULT, hyperlinkCategoriesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setJobTypeNamesBundleBasename(
+			String jobTypeNamesBundleBasename) {
+		L10nUtil.jobTypeNamesBundleBasename = jobTypeNamesBundleBasename;
+		getBundle(Locales.DEFAULT, jobTypeNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setJobTypeDescriptionsBundleBasename(
+			String jobTypeDescriptionsBundleBasename) {
+		L10nUtil.jobTypeDescriptionsBundleBasename = jobTypeDescriptionsBundleBasename;
+		getBundle(Locales.DEFAULT, jobTypeDescriptionsBundleBasename);
 	}
 
 	@Autowired(required = true)
