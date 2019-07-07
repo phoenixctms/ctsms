@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.executable.csv;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import org.phoenixctms.ctsms.domain.PermissionDao;
 import org.phoenixctms.ctsms.domain.ProfilePermissionDao;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,12 +71,22 @@ public class CsvExporter {
 	}
 
 	private long printLines(String fileName, String encoding, LineWriter lineWriter) throws Exception {
-		jobOutput.println("writing to file " + fileName);
-		PrintWriter writer = new PrintWriter(fileName, ExecUtil.sanitizeEncoding(encoding, jobOutput));
+		PrintWriter writer;
+		ByteArrayOutputStream buffer = null;
+		if (!CommonUtil.isEmptyString(fileName)) {
+			jobOutput.println("writing to file " + fileName);
+			writer = new PrintWriter(fileName, ExecUtil.sanitizeEncoding(encoding, jobOutput));
+		} else {
+			buffer = new ByteArrayOutputStream();
+			writer = new PrintWriter(new OutputStreamWriter(buffer, ExecUtil.sanitizeEncoding(encoding, jobOutput)));
+		}
 		lineWriter.init(writer);
 		lineWriter.printLines();
 		writer.close();
 		jobOutput.println(lineWriter.getLineCount() + " rows exported");
+		if (buffer != null) {
+			jobOutput.addEmailCsvAttachment(buffer.toByteArray());
+		}
 		return lineWriter.getLineCount();
 	}
 

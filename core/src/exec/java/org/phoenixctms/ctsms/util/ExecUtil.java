@@ -1,12 +1,7 @@
 package org.phoenixctms.ctsms.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
@@ -23,9 +18,6 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.TikaMetadataKeys;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
-import org.phoenixctms.ctsms.exception.AuthenticationException;
-import org.phoenixctms.ctsms.exception.AuthorisationException;
-import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
 import org.phoenixctms.ctsms.service.massmail.MassMailService;
@@ -33,12 +25,12 @@ import org.phoenixctms.ctsms.service.proband.ProbandService;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.service.shared.HyperlinkService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
+import org.phoenixctms.ctsms.service.shared.JobService;
 import org.phoenixctms.ctsms.service.shared.JournalService;
 import org.phoenixctms.ctsms.service.shared.SearchService;
 import org.phoenixctms.ctsms.service.staff.StaffService;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.service.user.UserService;
-import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
@@ -47,13 +39,14 @@ import org.phoenixctms.ctsms.vo.CriterionOutVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
-import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 
 public final class ExecUtil {
 	// public static String DATE_PATTERN = "yyy-MM-dd";
 
 	// public static String DATETIME_PATTERN = "yyy-MM-dd HH:mm:ss";
 	// private final static String DEFAULT_ENCODING = "UTF-8";
+	public static final String CSV_FILENAME_EXTENSION = "csv";
+	public static final String CSV_MIMETYPE_STRING = "text/csv";
 	public final static ArrayList<Class> AUTHORIZED_SERVICE_CLASSES = new ArrayList<Class>();
 	static {
 		AUTHORIZED_SERVICE_CLASSES.add(InventoryService.class);
@@ -66,6 +59,7 @@ public final class ExecUtil {
 		AUTHORIZED_SERVICE_CLASSES.add(MassMailService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(FileService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(HyperlinkService.class);
+		AUTHORIZED_SERVICE_CLASSES.add(JobService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(JournalService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(SearchService.class);
 	}
@@ -148,28 +142,32 @@ public final class ExecUtil {
 		return filePath.joinFilePath(fileNameFormat);
 	}
 
-	public static URI getExportedFileUri(String fileName) throws URISyntaxException {
-		String httpDocumentRoot = Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT);
-		if (!CommonUtil.isEmptyString(httpDocumentRoot) && fileName.startsWith(httpDocumentRoot)) {
-			StringBuilder downloadUrl = new StringBuilder(Settings.getDocumentRootReplacement());
-			downloadUrl.append(fileName.substring(httpDocumentRoot.length()));
-			return new URI(downloadUrl.toString());
-		}
-		return null;
-	}
-
-	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
-			AuthorisationException, ServiceException, FileNotFoundException {
-		try {
-			long fileId = Long.parseLong(fileName);
-			FileStreamOutVO file = fileService.getFileStream(auth, fileId);
-			jobOutput.println("file ID " + fileName + " (" + file.getFileName() + ")");
-			return file.getStream();
-		} catch (NumberFormatException e) {
-			return new FileInputStream(fileName);
-		}
-	}
-
+	//	public static URI getExportedFileUri(String fileName) throws URISyntaxException {
+	//		String httpDocumentRoot = Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT);
+	//		if (!CommonUtil.isEmptyString(httpDocumentRoot) && fileName.startsWith(httpDocumentRoot)) {
+	//			StringBuilder downloadUrl = new StringBuilder(Settings.getDocumentRootReplacement());
+	//			downloadUrl.append(fileName.substring(httpDocumentRoot.length()));
+	//			return new URI(downloadUrl.toString());
+	//		}
+	//		return null;
+	//	}
+	//	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
+	//			AuthorisationException, ServiceException, FileNotFoundException {
+	//		if (CommonUtil.isEmptyString(fileName)) {
+	//			jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
+	//			return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
+	//		} else {
+	//			try {
+	//				long fileId = Long.parseLong(fileName);
+	//				FileStreamOutVO file = fileService.getFileStream(auth, fileId);
+	//				jobOutput.println("reading from file ID " + fileName + " (" + file.getFileName() + ")");
+	//				return file.getStream();
+	//			} catch (NumberFormatException e) {
+	//				jobOutput.println("reading from file " + fileName);
+	//				return new FileInputStream(fileName);
+	//			}
+	//		}
+	//	}
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
