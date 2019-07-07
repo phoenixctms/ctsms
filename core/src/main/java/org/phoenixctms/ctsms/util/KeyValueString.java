@@ -15,8 +15,8 @@ import org.phoenixctms.ctsms.enumeration.CriterionTie;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
@@ -44,7 +44,6 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFValidationStatusVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
-import org.phoenixctms.ctsms.vo.ExportStatusVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
@@ -55,6 +54,8 @@ import org.phoenixctms.ctsms.vo.InventoryCategoryVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryStatusTypeVO;
 import org.phoenixctms.ctsms.vo.InventoryTagVO;
+import org.phoenixctms.ctsms.vo.JobStatusVO;
+import org.phoenixctms.ctsms.vo.JobTypeVO;
 import org.phoenixctms.ctsms.vo.JournalCategoryVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
 import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
@@ -357,11 +358,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getEventImportanceName(locale, ((EventImportance) value).name());
-			} else if (valueClass.equals(ExportStatus.class)) {
+			} else if (valueClass.equals(JobStatus.class)) {
 				if (value == null) {
 					return "";
 				}
-				return L10nUtil.getExportStatusName(locale, ((ExportStatus) value).name());
+				return L10nUtil.getJobStatusName(locale, ((JobStatus) value).name());
 			} else if (valueClass.equals(ECRFValidationStatus.class)) {
 				if (value == null) {
 					return "";
@@ -452,11 +453,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getEventImportanceName(locale, ((EventImportanceVO) value).getNameL10nKey());
-			} else if (ExportStatusVO.class.isAssignableFrom(valueClass)) {
+			} else if (JobStatusVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
 				}
-				return L10nUtil.getExportStatusName(locale, ((ExportStatusVO) value).getNameL10nKey());
+				return L10nUtil.getJobStatusName(locale, ((JobStatusVO) value).getNameL10nKey());
 			} else if (ECRFValidationStatusVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
@@ -477,6 +478,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getHyperlinkCategoryName(locale, ((HyperlinkCategoryVO) value).getNameL10nKey());
+			} else if (JobTypeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getJobTypeName(locale, ((JobTypeVO) value).getNameL10nKey());
 			} else if (!enumerateEntities && InputFieldOutVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";

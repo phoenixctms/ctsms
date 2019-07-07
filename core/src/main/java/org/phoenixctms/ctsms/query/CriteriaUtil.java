@@ -24,10 +24,10 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
@@ -184,8 +184,8 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, InputFieldType.fromString(value)), or);
 		} else if (propertyClass.equals(EventImportance.class)) {
 			return applyOr(Restrictions.eq(propertyName, EventImportance.fromString(value)), or);
-		} else if (propertyClass.equals(ExportStatus.class)) {
-			return applyOr(Restrictions.eq(propertyName, ExportStatus.fromString(value)), or);
+		} else if (propertyClass.equals(JobStatus.class)) {
+			return applyOr(Restrictions.eq(propertyName, JobStatus.fromString(value)), or);
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
 			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)), or);
 		} else {
