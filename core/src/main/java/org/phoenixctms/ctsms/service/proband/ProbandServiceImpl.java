@@ -92,7 +92,6 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
 import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
@@ -874,7 +873,7 @@ public class ProbandServiceImpl
 		MoneyTransfer moneyTransfer = moneyTransferDao.moneyTransferInVOToEntity(newMoneyTransfer);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
+		//moneyTransfer.setExportStatus(ExportStatus.NOT_EXPORTED);
 		CoreUtil.modifyVersion(moneyTransfer, now, user);
 		moneyTransfer = moneyTransferDao.create(moneyTransfer);
 		Trial trial = moneyTransfer.getTrial();

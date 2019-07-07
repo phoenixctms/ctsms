@@ -10,7 +10,6 @@ import java.util.Collection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -118,8 +117,8 @@ public class ECRFStatusEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryEcrfValidationStatusExportStatus(Long trialId, Long probandListEntryId, Long ecrfId,
-			ECRFValidationStatus validationStatus, ExportStatus exportStatus, PSFVO psf) throws Exception {
+	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryEcrfValidationStatus(Long trialId, Long probandListEntryId, Long ecrfId,
+			ECRFValidationStatus validationStatus, PSFVO psf) throws Exception {
 		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFStatusEntry.class, ecrfStatusEntryCriteria);
 		if (trialId != null) {
@@ -135,9 +134,9 @@ public class ECRFStatusEntryDaoImpl
 		if (validationStatus != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("validationStatus", validationStatus));
 		}
-		if (exportStatus != null) {
-			ecrfStatusEntryCriteria.add(Restrictions.eq("exportStatus", exportStatus));
-		}
+		//		if (exportStatus != null) {
+		//			ecrfStatusEntryCriteria.add(Restrictions.eq("exportStatus", exportStatus));
+		//		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return ecrfStatusEntryCriteria.list();
 	}
@@ -239,7 +238,7 @@ public class ECRFStatusEntryDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
+		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 		target.setValidationStatus(L10nUtil.createEcrfValidationStatusVO(Locales.USER, source.getValidationStatus()));
 	}
 }
