@@ -95,10 +95,24 @@ public class ServiceMethods {
 
 	private static <DAO, ENTITY> long performDeferredDelete(final AuthenticationVO auth, boolean remove, DAO dao, final ServiceMethods sm, String deleteMethodName,
 			final String entityLabel) throws Exception {
+		return performDeferredDelete(auth, remove, dao, sm, deleteMethodName, entityLabel, new SearchParameter[] {
+				new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR)
+		});
+	}
+
+	private static <DAO, ENTITY> long performDeferredDelete(final AuthenticationVO auth, boolean remove, DAO dao, final ServiceMethods sm, String deleteMethodName,
+			final String entityLabel, SearchParameter searchParameter) throws Exception {
+		return performDeferredDelete(auth, remove, dao, sm, deleteMethodName, entityLabel, new SearchParameter[] {
+				new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR),
+				searchParameter
+		});
+	}
+
+	private static <DAO, ENTITY> long performDeferredDelete(final AuthenticationVO auth, boolean remove, DAO dao, final ServiceMethods sm, String deleteMethodName,
+			final String entityLabel, SearchParameter[] searchParameter) throws Exception {
 		final Method deleteMethod = sm.getClass().getMethod(deleteMethodName, AuthenticationVO.class, Long.class);
 		ChunkedDaoOperationAdapter<DAO, ENTITY> processor = new ChunkedDaoOperationAdapter<DAO, ENTITY>(dao,
-				new Search(new SearchParameter[] {
-						new SearchParameter("deferredDelete", true, SearchParameter.EQUAL_COMPARATOR) })) {
+				new Search(searchParameter)) {
 
 			@Override
 			protected boolean isIncrementPageNumber() {
@@ -527,9 +541,9 @@ public class ServiceMethods {
 				performStaffDeferredDelete(auth, remove) +
 				performCourseDeferredDelete(auth, remove) +
 				performTrialDeferredDelete(auth, remove) +
-				performInquiryDeferredDelete(auth, remove) +
-				performEcrfDeferredDelete(auth, remove) +
-				performEcrfFieldDeferredDelete(auth, remove) +
+				performInquiryDeferredDelete(auth, null, remove) +
+				performEcrfDeferredDelete(auth, null, remove) +
+				performEcrfFieldDeferredDelete(auth, null, remove) +
 				performProbandDeferredDelete(auth, remove) +
 				performMassMailDeferredDelete(auth, remove) +
 				performInputFieldDeferredDelete(auth, remove) +
@@ -546,20 +560,35 @@ public class ServiceMethods {
 		return performDeferredDelete(auth, remove, criteriaDao, this, "deleteCriteria", "criteria");
 	}
 
-	public long performEcrfDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
-		return performDeferredDelete(auth, remove, eCRFDao, this, "deleteEcrf", "ecrf");
+	public long performEcrfDeferredDelete(AuthenticationVO auth, Long trialId, boolean remove) throws Exception {
+		if (trialId != null) {
+			return performDeferredDelete(auth, remove, eCRFDao, this, "deleteEcrf", "ecrf",
+					new SearchParameter("trial.id", trialId, SearchParameter.EQUAL_COMPARATOR));
+		} else {
+			return performDeferredDelete(auth, remove, eCRFDao, this, "deleteEcrf", "ecrf");
+		}
 	}
 
-	public long performEcrfFieldDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
-		return performDeferredDelete(auth, remove, eCRFFieldDao, this, "deleteEcrfField", "ecrf field");
+	public long performEcrfFieldDeferredDelete(AuthenticationVO auth, Long trialId, boolean remove) throws Exception {
+		if (trialId != null) {
+			return performDeferredDelete(auth, remove, eCRFFieldDao, this, "deleteEcrfField", "ecrf field",
+					new SearchParameter("trial.id", trialId, SearchParameter.EQUAL_COMPARATOR));
+		} else {
+			return performDeferredDelete(auth, remove, eCRFFieldDao, this, "deleteEcrfField", "ecrf field");
+		}
 	}
 
 	public long performInputFieldDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
 		return performDeferredDelete(auth, remove, inputFieldDao, this, "deleteInputField", "input field");
 	}
 
-	public long performInquiryDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
-		return performDeferredDelete(auth, remove, inquiryDao, this, "deleteInquiry", "inquiry");
+	public long performInquiryDeferredDelete(AuthenticationVO auth, Long trialId, boolean remove) throws Exception {
+		if (trialId != null) {
+			return performDeferredDelete(auth, remove, inquiryDao, this, "deleteInquiry", "inquiry",
+					new SearchParameter("trial.id", trialId, SearchParameter.EQUAL_COMPARATOR));
+		} else {
+			return performDeferredDelete(auth, remove, inquiryDao, this, "deleteInquiry", "inquiry");
+		}
 	}
 
 	public long performInventoryDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {

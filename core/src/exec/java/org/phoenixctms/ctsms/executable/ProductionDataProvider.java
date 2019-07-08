@@ -2837,6 +2837,45 @@ public class ProductionDataProvider {
 				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
+				"perform_inquiry_deferred_delete",
+				"perform_inquiry_deferred_delete",
+				"\"{0}\" -pdtdi -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"perform_ecrf_deferred_delete",
+				"perform_ecrf_deferred_delete",
+				"\"{0}\" -pdtde -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"perform_ecrf_field_deferred_delete",
+				"perform_ecrf_field_deferred_delete",
+				"\"{0}\" -pdtdef -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
 				"export_trial_journal",
 				"export_trial_journal",
 				"\"{0}\" -etj=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",

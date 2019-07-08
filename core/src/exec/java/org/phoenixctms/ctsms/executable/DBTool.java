@@ -612,21 +612,21 @@ public class DBTool {
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT);
-					dbTool.getJobOutput().printPrelude(job);
+					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inquiries will be deleted!")) {
-						sendEmail = dbTool.getServiceMethods().performInquiryDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
+						sendEmail = dbTool.getServiceMethods().performInquiryDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_ECRF_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_DEFERRED_DELETE_OPT);
-					dbTool.getJobOutput().printPrelude(job);
+					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs will be deleted!")) {
-						sendEmail = dbTool.getServiceMethods().performEcrfDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
+						sendEmail = dbTool.getServiceMethods().performEcrfDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT);
-					dbTool.getJobOutput().printPrelude(job);
+					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRF fields will be deleted!")) {
-						sendEmail = dbTool.getServiceMethods().performEcrfFieldDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
+						sendEmail = dbTool.getServiceMethods().performEcrfFieldDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_PROBAND_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_PROBAND_OPT);
