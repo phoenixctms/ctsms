@@ -13,6 +13,7 @@ import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HolidayBaseDate;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.TimelineEventTitlePresetType;
 import org.phoenixctms.ctsms.enumeration.Weekday;
@@ -319,6 +320,8 @@ public class ProductionDataProvider {
 	protected MassMailStatusTypeDao massMailStatusTypeDao;
 	@Autowired
 	protected MassMailTypeDao massMailTypeDao;
+	@Autowired
+	protected JobTypeDao jobTypeDao;
 
 	//	public void clearDB() throws Exception {
 	//		ChunkedRemoveAll.remove(hyperlinkDao);
@@ -2805,6 +2808,437 @@ public class ProductionDataProvider {
 		jobOutput.println("visit types created");
 	}
 
+	private void createJobTypes() {
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"import_ecrfs",
+				"import_ecrfs",
+				"\"{0}\" -ie=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -f",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_ecrfs",
+				"export_ecrfs",
+				"\"{0}\" -ee=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_trial_journal",
+				"export_trial_journal",
+				"\"{0}\" -etj=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_ecrf_journal",
+				"export_ecrf_journal",
+				"\"{0}\" -eej=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_proband_list",
+				"export_proband_list",
+				"\"{0}\" -epl=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_enrollment_log",
+				"export_enrollment_log",
+				"\"{0}\" -epl=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" -ll=\"ENROLLMENT\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_screening_log",
+				"export_screening_log",
+				"\"{0}\" -epl=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" -ll=\"SCREENING\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_pre_screening_log",
+				"export_pre_screening_log",
+				"\"{0}\" -epl=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" -ll=\"PRE_SCREENING\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_sicl",
+				"export_sicl",
+				"\"{0}\" -epl=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" -ll=\"SICL\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"validate_pending_ecrfs",
+				"validate_pending_ecrfs",
+				"\"{0}\" -vpe -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_audit_trail",
+				"export_audit_trail",
+				"\"{0}\" -eat=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_ecrf_data",
+				"export_ecrf_data",
+				"{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=cleanup_all -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" --upload --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_ecrf_pdfs",
+				"export_ecrf_pdfs",
+				"{10} --task=cleanup_all --task=publish_ecrf_data_pdfs --task=cleanup_all -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" --upload --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.INPUT_FIELD_JOB,
+				"export_input_field",
+				"export_input_field",
+				"\"{0}\" -eif=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.INPUT_FIELD_JOB,
+				"import_input_fields",
+				"import_input_fields",
+				"\"{0}\" -iif=\"\" -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\" -f",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.INVENTORY_CRITERIA_JOB,
+				"export_inventory_criteria_result",
+				"export_inventory_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.STAFF_CRITERIA_JOB,
+				"export_staff_criteria_result",
+				"export_staff_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.COURSE_CRITERIA_JOB,
+				"export_course_criteria_result",
+				"export_course_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_CRITERIA_JOB,
+				"export_trial_criteria_result",
+				"export_trial_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.INPUT_FIELD_CRITERIA_JOB,
+				"export_input_field_criteria_result",
+				"export_input_field_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.PROBAND_CRITERIA_JOB,
+				"export_proband_criteria_result",
+				"export_proband_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.MASS_MAIL_CRITERIA_JOB,
+				"export_mass_mail_criteria_result",
+				"export_mass_mail_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.USER_CRITERIA_JOB,
+				"export_user_criteria_result",
+				"export_user_criteria_result",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.INVENTORY_CRITERIA_JOB,
+				"export_inventory_criteria_result_monthly",
+				"export_inventory_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.STAFF_CRITERIA_JOB,
+				"export_staff_criteria_result_monthly",
+				"export_staff_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.COURSE_CRITERIA_JOB,
+				"export_course_criteria_result_monthly",
+				"export_course_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_CRITERIA_JOB,
+				"export_trial_criteria_result_monthly",
+				"export_trial_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.INPUT_FIELD_CRITERIA_JOB,
+				"export_input_field_criteria_result_monthly",
+				"export_input_field_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.PROBAND_CRITERIA_JOB,
+				"export_proband_criteria_result_monthly",
+				"export_proband_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.MASS_MAIL_CRITERIA_JOB,
+				"export_mass_mail_criteria_result_monthly",
+				"export_mass_mail_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		createJobType(
+				JobModule.USER_CRITERIA_JOB,
+				"export_user_criteria_result_monthly",
+				"export_user_criteria_result_monthly",
+				"\"{0}\" -ecr=\"\" -id={1} -u=\"{2}\" -p=\"{3}\" -jid={4} -er=\"{5}\"",
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true);
+		jobOutput.println("job types created");
+	}
+
+	private JobType createJobType(JobModule module,
+			String nameL10nKey, String descriptionL10nKey,
+			String commandFormat, boolean visible,
+			boolean daily, boolean weekly, boolean monthly,
+			boolean inputFile, boolean outputFile,
+			boolean encryptFile, boolean emailRecipients) {
+		JobType type = JobType.Factory.newInstance();
+		type.setModule(module);
+		type.setNameL10nKey(nameL10nKey);
+		type.setDescriptionL10nKey(descriptionL10nKey);
+		type.setCommandFormat(commandFormat);
+		type.setVisible(visible);
+		type.setDaily(daily);
+		type.setWeekly(weekly);
+		type.setMonthly(monthly);
+		type.setInputFile(inputFile);
+		type.setOutputFile(outputFile);
+		type.setEncryptFile(encryptFile);
+		type.setEmailRecipients(emailRecipients);
+		type.setTrial(null);
+		type = jobTypeDao.create(type);
+		return type;
+	}
+
 	private HashSet<CourseParticipationStatusType> getCourseParticipationTransitions(CourseParticipationStatusType... types) {
 		HashSet<CourseParticipationStatusType> result = null;
 		if (types != null && types.length > 0) {
@@ -2962,6 +3396,7 @@ public class ProductionDataProvider {
 		createProbandStatusTypes();
 		createMassMailStatusTypeEntries();
 		createMassMailTypes();
+		createJobTypes();
 	}
 
 	public void setJobOutput(JobOutput jobOutput) {
