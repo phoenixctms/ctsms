@@ -1,27 +1,34 @@
 package org.phoenixctms.ctsms.executable.xls;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-
 import org.phoenixctms.ctsms.Search;
 import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.AspDao;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
+import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
+import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
 
 public class XlsImporter {
 
@@ -119,17 +126,35 @@ public class XlsImporter {
 		setContext(selectionSetValueRowProcessor, context, context.isMandatory(inputFieldRowProcessor));
 		return readRows(context, selectionSetValueRowProcessor);
 	}
+	
+	private InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
+	AuthorisationException, ServiceException, FileNotFoundException {
+if (CommonUtil.isEmptyString(fileName)) {
+	jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
+	return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
+} else {
+	try {
+		long fileId = Long.parseLong(fileName);
+		FileStreamOutVO file = fileService.getFileStream(auth, fileId);
+		jobOutput.println("reading from file ID " + fileName + " (" + file.getFileName() + ")");
+		return file.getStream();
+	} catch (NumberFormatException e) {
+		jobOutput.println("reading from file " + fileName);
+		return new FileInputStream(fileName);
+	}
+}
+}
 
 	private long readRows(XlsImporterContext context, RowProcessor processor) throws Throwable {
 		processor.init();
-		jobOutput.println("reading from file " + context.getFileName());
+		//jobOutput.println("reading from file " + context.getFileName());
 		long rowCount = 0;
 		long lineNumber = 1;
 		Workbook workbook = null;
 		try {
 			// Create a workbook object from the file at specified location.
 			// Change the path of the file as per the location on your computer.
-			InputStream inputStream = ExecUtil.getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput); // new FileInputStream(context.getFileName());
+			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput); // new FileInputStream(context.getFileName());
 			WorkbookSettings workbookSettings = processor.getWorkbookSettings();
 			if (workbookSettings != null) {
 				workbook = Workbook.getWorkbook(inputStream, workbookSettings);

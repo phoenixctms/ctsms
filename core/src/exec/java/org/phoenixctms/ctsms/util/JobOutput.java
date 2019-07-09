@@ -1,8 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,45 +18,61 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
+import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
+import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.service.shared.JobService;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
-import org.phoenixctms.ctsms.vo.EmailAttachmentVO;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.JobFileVO;
+import org.phoenixctms.ctsms.vo.JobOutVO;
+import org.phoenixctms.ctsms.vo.JobUpdateVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class JobOutput {
 
-	// static class EmailAttachment {
-	//
-	// private byte[] data;
-	// private String mimeType;
-	// private String fileName;
-	//
-	// public EmailAttachment(byte[] data, String mimeType, String fileName) {
-	// super();
-	// this.data = data;
-	// this.mimeType = mimeType;
-	// this.fileName = fileName;
-	// }
-	//
-	// public byte[] getData() {
-	// return data;
-	// }
-	//
-	// public String getFileName() {
-	// return fileName;
-	// }
-	//
-	// public String getMimeType() {
-	// return mimeType;
-	// }
-	// }
+	static class EmailAttachment {
+
+		private byte[] data;
+		private String mimeType;
+		private String fileName;
+
+		public EmailAttachment(byte[] data, String mimeType, String fileName) {
+			super();
+			this.data = data;
+			this.mimeType = mimeType;
+			this.fileName = fileName;
+		}
+
+		public byte[] getData() {
+			return data;
+		}
+
+		public String getFileName() {
+			return fileName;
+		}
+
+		public String getMimeType() {
+			return mimeType;
+		}
+	}
+
+	@Autowired
+	protected JobService jobService;
 	private final static String EMAIL_ENCODING = "UTF-8";
 	private final static String LINE_FORMAT = "{0}";
 	private final static String LINE_FORMAT_WITH_TIMESTAMP = "{0}: {1}";
 	private final static boolean ALWAYS_PRINT_TIMESTAMP = false;
 	private final static String DEFAULT_EMAIL_ADDRESS_SEPARATOR = ";";
 	private final static Pattern emailAddressSeparatorRegexp = Pattern.compile(DEFAULT_EMAIL_ADDRESS_SEPARATOR + "|,| ");
+	private final static String JOB_FILE_NAME_FORMAT = "{0}.{1}";
+	private JobUpdateVO job;
+	private AuthenticationVO auth;
+	private JobFileVO jobFile;
 
 	private static StringBuilder getEmailRecipients(CommandLine line, boolean send) {
 		StringBuilder recipients = new StringBuilder();
@@ -80,7 +93,7 @@ public class JobOutput {
 
 	private Date start;
 	private StringBuilder output;
-	private ArrayList<EmailAttachmentVO> attachments;
+	private ArrayList<EmailAttachment> attachments;
 	private JavaMailSender mailSender;
 
 	public JobOutput() {
@@ -88,27 +101,31 @@ public class JobOutput {
 	}
 
 	public void addEmailAttachment(byte[] data, MimeTypeVO contentType, String fileName) {
-		// this.getMimeTypeDao().findByMimeTypeModule(fileContent.getMimeType(), file.getModule()).iterator().next()
-		attachments.add(new EmailAttachmentVO(data, fileName, (long) data.length, contentType));
+		addEmailAttachment(data, contentType.getMimeType(), fileName);
 	}
 
-	public void addLinkOrEmailAttachment(String fileName, byte[] documentData, MimeTypeVO contentType, String documentFileName) throws Exception {
-		if (!CommonUtil.isEmptyString(fileName)) {
-			File file = new java.io.File(fileName);
-			FileOutputStream stream = new FileOutputStream(file);
-			try {
-				stream.write(documentData);
-			} finally {
-				stream.close();
-			}
-			println("saved to file '" + file.getCanonicalPath() + "'");
-			URI downloadUri = ExecUtil.getExportedFileUri(file.getCanonicalPath());
-			if (downloadUri != null) {
-				println("download: " + downloadUri.toString());
-			}
-		} else {
-			addEmailAttachment(documentData, contentType, documentFileName);
+	public void addEmailAttachment(byte[] data, String mimeType, String fileName) {
+		attachments.add(new EmailAttachment(data, mimeType, fileName));
+		if (this.job != null) {
+			this.job.setDatas(data);
+			this.job.setFileName(fileName);
+			this.job.setMimeType(mimeType);
 		}
+	}
+
+	public void addEmailCsvAttachment(byte[] data) {
+		addEmailAttachment(data, ExecUtil.CSV_MIMETYPE_STRING, getJobFileName(ExecUtil.CSV_FILENAME_EXTENSION));
+	}
+
+	public void addEmailXlsAttachment(byte[] data) {
+		addEmailAttachment(data, CoreUtil.EXCEL_MIMETYPE_STRING, getJobFileName(CoreUtil.EXCEL_FILENAME_EXTENSION));
+	}
+
+	private String getJobFileName(String extension) {
+		if (job != null) {
+			return MessageFormat.format(JOB_FILE_NAME_FORMAT, Long.toString(job.getId()), extension);
+		}
+		return null;
 	}
 
 	protected String getEmailEncoding() {
@@ -170,6 +187,59 @@ public class JobOutput {
 		}
 		output.append(lineFormatted);
 		System.out.println(lineFormatted);
+		//updateJob();
+	}
+
+	public void updateJob() {
+		if (this.job != null) {
+			try {
+				JobOutVO job = jobService.updateJob(auth, this.job);
+				this.job.setVersion(job.getVersion());
+			} catch (AuthenticationException | AuthorisationException | ServiceException e) {
+			}
+		}
+	}
+
+	public void flushJob() {
+		if (this.job != null) {
+			this.job.setJobOutput(output.toString());
+		}
+		updateJob();
+	}
+
+	public void flushJob(JobStatus status) {
+		if (this.job != null) {
+			this.job.setStatus(status);
+		}
+		flushJob();
+	}
+
+	public void setJobId(Long jobId) throws Exception {
+		this.job = null;
+		this.jobFile = null;
+		if (jobId != null) {
+			JobOutVO job = jobService.getJob(auth, jobId);
+			this.job = new JobUpdateVO();
+			this.job.setId(jobId);
+			this.job.setVersion(job.getVersion());
+			if (job.getHasFile()) {
+				jobFile = jobService.getJobFile(auth, jobId);
+				this.job.setDatas(jobFile.getDatas());
+				this.job.setFileName(jobFile.getFileName());
+				this.job.setMimeType(jobFile.getContentType().getMimeType());
+			}
+			this.job.setStatus(JobStatus.PROCESSING);
+			this.job.setJobOutput(null);
+			updateJob();
+		}
+	}
+
+	public JobFileVO getJobFile() {
+		return jobFile;
+	}
+
+	public void setAuthentication(AuthenticationVO auth) {
+		this.auth = auth;
 	}
 
 	public void printPrelude(Option task) {
@@ -186,6 +256,11 @@ public class JobOutput {
 			println("instance: " + instanceName);
 		}
 		println("jvm: " + System.getProperty("java.version"));
+		//Iterator<Entry<String, String>> it = System.getenv().entrySet().iterator();
+		//while (it.hasNext()) {
+		//	Entry<String, String> envVar = it.next();
+		//	println(envVar.getKey() + "=" + envVar.getValue());
+		//}
 		if (task != null && !CommonUtil.isEmptyString(task.getDescription())) {
 			println(task.getDescription());
 		}
@@ -196,9 +271,12 @@ public class JobOutput {
 	}
 
 	public void reset() {
-		attachments = new ArrayList<EmailAttachmentVO>();
+		attachments = new ArrayList<EmailAttachment>();
 		start = new Date();
 		output = new StringBuilder();
+		job = null;
+		jobFile = null;
+		auth = null;
 	}
 
 	public int send(String subjectFormat, Option task, CommandLine line, boolean send) throws Exception {
@@ -212,14 +290,14 @@ public class JobOutput {
 				if (toCount > 0) {
 					if (attachments.size() > 0) {
 						Multipart multipart = new MimeMultipart();
-						Iterator<EmailAttachmentVO> it = attachments.iterator();
+						Iterator<EmailAttachment> it = attachments.iterator();
 						MimeBodyPart messageBodyPart = new MimeBodyPart();
 						messageBodyPart.setText(output.toString(), getEmailEncoding());
 						multipart.addBodyPart(messageBodyPart);
 						while (it.hasNext()) {
-							EmailAttachmentVO attachment = it.next();
+							EmailAttachment attachment = it.next();
 							messageBodyPart = new MimeBodyPart();
-							DataSource source = new ByteArrayDataSource(attachment.getDatas(), attachment.getContentType().getMimeType());
+							DataSource source = new ByteArrayDataSource(attachment.getData(), attachment.getMimeType());
 							messageBodyPart.setDataHandler(new DataHandler(source));
 							messageBodyPart.setFileName(attachment.getFileName());
 							multipart.addBodyPart(messageBodyPart);

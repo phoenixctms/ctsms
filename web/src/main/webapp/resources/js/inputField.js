@@ -14,6 +14,9 @@ function handleInputFieldTabChange(index) {
 			break;
 
 		case 4:
+			changeInputFieldByJob();
+			break;
+		case 5:
 			changeInputFieldByJournalEntry();
 			break;
 		default:
@@ -35,6 +38,10 @@ function handleInputFieldTabChange(index) {
 		break;
 
 	case 4:
+		changeInputFieldJob();
+		break;
+		
+	case 5:
 		changeInputFieldJournalEntry();
 		break;
 
@@ -72,9 +79,14 @@ function handleUpdateInputFieldTabTitles(xhr, status, args) {
 		inputFieldTabView.emphasizeTab(1, args[AJAX_SELECTION_SET_VALUE_COUNT] == 0);
 	}
 
+	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOB_COUNT)) {
+		inputFieldTabView.setTabTitle(4, decodeBase64(args[AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(4, args[AJAX_INPUT_FIELD_JOB_COUNT] == 0);
+	}
+	
 	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT)) {
-		inputFieldTabView.setTabTitle(4, decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(4, args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
+		inputFieldTabView.setTabTitle(5, decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(5, args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

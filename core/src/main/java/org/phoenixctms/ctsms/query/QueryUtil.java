@@ -45,10 +45,10 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
@@ -390,7 +390,7 @@ public final class QueryUtil {
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
-		} else if (propertyClass.equals(ExportStatus.class)) {
+		} else if (propertyClass.equals(JobStatus.class)) {
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
@@ -1536,8 +1536,8 @@ public final class QueryUtil {
 			query.setString(pos, InputFieldType.fromString(value).name());
 		} else if (propertyClass.equals(EventImportance.class)) {
 			query.setString(pos, EventImportance.fromString(value).name());
-		} else if (propertyClass.equals(ExportStatus.class)) {
-			query.setString(pos, ExportStatus.fromString(value).name());
+		} else if (propertyClass.equals(JobStatus.class)) {
+			query.setString(pos, JobStatus.fromString(value).name());
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
 			query.setBinary(pos, CryptoUtil.hashForSearch(value));
 		} else {

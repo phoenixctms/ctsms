@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -98,7 +99,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection ecrfFields = null;
 				try {
 					ecrfFields = WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -151,7 +152,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -169,7 +170,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection inquiries = null;
 				try {
 					inquiries = WebUtil.getServiceLocator().getInputFieldService().getInquiryList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -215,7 +216,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 				Collection probandListEntryTags = null;
 				try {
 					probandListEntryTags = WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(WebUtil.getAuthentication(), inputField.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -347,5 +348,10 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		inputFieldResultModel.updateRowCount();
 		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
+	}
+
+	@Override
+	public JobModule getJobModule() {
+		return JobModule.INPUT_FIELD_CRITERIA_JOB;
 	}
 }

@@ -12,7 +12,6 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.Format;
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +73,6 @@ import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
@@ -381,7 +379,7 @@ public class TrialServiceImpl
 		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		checkAddEcrfStatusEntry(ecrf, listEntry, statusType, user);
 		ECRFStatusEntry statusEntry = ECRFStatusEntry.Factory.newInstance();
-		statusEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
+		//statusEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		statusEntry.setValidationStatus(ECRFValidationStatus.NOT_VALIDATED);
 		statusEntry.setStatus(statusType);
 		statusEntry.setEcrf(ecrf);
@@ -449,7 +447,7 @@ public class TrialServiceImpl
 		}
 		ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(signup, proband.isPerson()).iterator().next();
 		// Trial trial = listEntry.getTrial();
-		listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
+		//listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		boolean randomized = false;
 		if (randomization != null) {
 			if (RandomizationType.GROUP.equals(randomization.getType())) {
@@ -1964,11 +1962,11 @@ public class TrialServiceImpl
 					},
 					new StringBuffer(),
 					null).toString();
-			long count0based = this.getProbandDao().getCountByAlias(trial.getType().isPerson(),likePattern);
+			long count0based = this.getProbandDao().getCountByAlias(trial.getType().isPerson(), likePattern);
 			long count1based = count0based + 1l;
 			long maxAlias0based = 0l;
 			long maxAlias1based = 1l;
-			Proband maxAliasProband = this.getProbandDao().findByMaxAlias(trial.getType().isPerson(),likePattern);
+			Proband maxAliasProband = this.getProbandDao().findByMaxAlias(trial.getType().isPerson(), likePattern);
 			if (maxAliasProband != null) {
 				String alias;
 				if (maxAliasProband.isPerson()) {
@@ -1977,20 +1975,17 @@ public class TrialServiceImpl
 					alias = maxAliasProband.getAnimalParticulars().getAlias();
 				}
 				MessageFormat format = new MessageFormat(trial.getProbandAliasFormat());
-					Object[] args = format.parse(alias,new ParsePosition(0));
-					try {
-						maxAlias0based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX];
-						maxAlias0based += 1l;						
-					} catch (Exception e) {
-						
-					}
-					try {
-						maxAlias1based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX];
-						maxAlias1based += 1l;						
-					} catch (Exception e) {
-						
-					}
-				
+				Object[] args = format.parse(alias, new ParsePosition(0));
+				try {
+					maxAlias0based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX];
+					maxAlias0based += 1l;
+				} catch (Exception e) {
+				}
+				try {
+					maxAlias1based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX];
+					maxAlias1based += 1l;
+				} catch (Exception e) {
+				}
 			}
 			String alias = MessageFormat.format(trial.getProbandAliasFormat(),
 					user.getDepartment().getNameL10nKey(), // {0}
@@ -2003,8 +1998,8 @@ public class TrialServiceImpl
 					maxAlias1based, // {7}
 					count0based, // {8}
 					count1based); // {9}
-			if (this.getProbandDao().getCountByAlias(trial.getType().isPerson(),CommonUtil.escapeSqlLikeWildcards(alias)) > 0l) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS,alias);
+			if (this.getProbandDao().getCountByAlias(trial.getType().isPerson(), CommonUtil.escapeSqlLikeWildcards(alias)) > 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS, alias);
 			}
 			return alias;
 		} catch (IllegalArgumentException e) {
@@ -4110,6 +4105,22 @@ public class TrialServiceImpl
 				signatureDao.remove(signature);
 			}
 			trial.getSignatures().clear();
+			JobDao jobDao = this.getJobDao();
+			Iterator<Job> jobsIt = trial.getJobs().iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				job.setTrial(null);
+				jobDao.remove(job);
+			}
+			trial.getJobs().clear();
+			JobTypeDao jobTypeDao = this.getJobTypeDao();
+			Iterator<JobType> jobTypesIt = trial.getJobTypes().iterator();
+			while (jobTypesIt.hasNext()) {
+				JobType jobType = jobTypesIt.next();
+				jobType.setTrial(null);
+				jobTypeDao.remove(jobType);
+			}
+			trial.getJobTypes().clear();
 			Iterator<JournalEntry> journalEntriesIt = trial.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();
@@ -7936,7 +7947,7 @@ public class TrialServiceImpl
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Iterator<ECRFStatusEntry> statusEntryIt = ecrfStatusEntryDao
-				.findByTrialListEntryEcrfValidationStatusExportStatus(trialId, probandListEntryId, ecrfId, ECRFValidationStatus.PENDING, null, null).iterator();
+				.findByTrialListEntryEcrfValidationStatus(trialId, probandListEntryId, ecrfId, ECRFValidationStatus.PENDING, null).iterator();
 		while (statusEntryIt.hasNext()) {
 			ECRFStatusEntry statusEntry = statusEntryIt.next();
 			ECRFStatusEntryVO original = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);

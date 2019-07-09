@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -58,7 +59,7 @@ public class CourseSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -107,7 +108,7 @@ public class CourseSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -160,5 +161,10 @@ public class CourseSearchBean extends SearchBeanBase {
 		courseResultModel.updateRowCount();
 		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
+	}
+
+	@Override
+	public JobModule getJobModule() {
+		return JobModule.COURSE_CRITERIA_JOB;
 	}
 }

@@ -172,7 +172,11 @@ function resetSessionTimers(depth) {
 	}
 
 	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers && depth < 10) {
-		window.opener.resetSessionTimers(depth + 1);
+		try {
+			window.opener.resetSessionTimers(depth + 1);
+		} catch (e) {
+			//console.log(e);
+		}
 	}
 //	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
 //		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {

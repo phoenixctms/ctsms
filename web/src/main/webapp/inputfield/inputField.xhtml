@@ -56,6 +56,13 @@
 						<ui:include src="/META-INF/includes/inputfield/inputFieldAssociation.xhtml" />
 					</p:tab>
 					<p:tab
+						id="inputfieldjobs"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT'))}">
+						<ui:include src="/META-INF/includes/inputfield/inputFieldJob.xhtml" />
+					</p:tab>
+					<p:tab
 						id="inputfieldjournal"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

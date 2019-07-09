@@ -340,6 +340,8 @@ public interface MessageCodes {
 	public static final String JOURNAL_ENTRY_TITLE = "journal_entry_title";
 	public static final String SYSTEM_MESSAGE_TITLE = "system_message_title";
 	public static final String CREATE_NEW_JOURNAL_ENTRY = "create_new_journal_entry";
+	public static final String JOB_TITLE = "job_title";
+	public static final String CREATE_NEW_JOB = "create_new_job";
 	public static final String HYPERLINK_TITLE = "hyperlink_title";
 	public static final String CREATE_NEW_HYPERLINK = "create_new_hyperlink";
 	public static final String FILE_TITLE = "file_title";
@@ -612,6 +614,8 @@ public interface MessageCodes {
 	public final static String PROBAND_LIST_TAB_TITLE_WITH_COUNT = "proband_list_tab_title_with_count";
 	public final static String TRIAL_HYPERLINKS_TAB_TITLE = "trial_hyperlinks_tab_title";
 	public final static String TRIAL_HYPERLINKS_TAB_TITLE_WITH_COUNT = "trial_hyperlinks_tab_title_with_count";
+	public final static String TRIAL_JOBS_TAB_TITLE = "trial_jobs_tab_title";
+	public final static String TRIAL_JOBS_TAB_TITLE_WITH_COUNT = "trial_jobs_tab_title_with_count";
 	public final static String TRIAL_FILES_TAB_TITLE = "trial_files_tab_title";
 	public final static String TRIAL_FILES_TAB_TITLE_WITH_COUNT = "trial_files_tab_title_with_count";
 	public final static String TRIAL_JOURNAL_TAB_TITLE = "trial_journal_tab_title";
@@ -650,6 +654,8 @@ public interface MessageCodes {
 	public final static String PROBAND_FILES_TAB_TITLE_WITH_COUNT = "proband_files_tab_title_with_count";
 	public final static String PROBAND_JOURNAL_TAB_TITLE = "proband_journal_tab_title";
 	public final static String PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT = "proband_journal_tab_title_with_count";
+	public final static String PROBAND_JOBS_TAB_TITLE = "proband_jobs_tab_title";
+	public final static String PROBAND_JOBS_TAB_TITLE_WITH_COUNT = "proband_jobs_tab_title_with_count";
 	public final static String MASS_MAIL_RECIPIENTS_TAB_TITLE = "mass_mail_recipients_tab_title";
 	public final static String MASS_MAIL_RECIPIENTS_TAB_TITLE_WITH_COUNT = "mass_mail_recipients_tab_title_with_count";
 	public final static String MASS_MAIL_FILES_TAB_TITLE = "mass_mail_files_tab_title";
@@ -666,8 +672,12 @@ public interface MessageCodes {
 	public final static String SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT = "selection_set_values_tab_title_with_count";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE = "input_field_journal_tab_title";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT = "input_field_journal_tab_title_with_count";
+	public final static String INPUT_FIELD_JOBS_TAB_TITLE = "input_field_jobs_tab_title";
+	public final static String INPUT_FIELD_JOBS_TAB_TITLE_WITH_COUNT = "input_field_jobs_tab_title_with_count";
 	public final static String CRITERIA_JOURNAL_TAB_TITLE = "criteria_journal_tab_title";
 	public final static String CRITERIA_JOURNAL_TAB_TITLE_WITH_COUNT = "criteria_journal_tab_title_with_count";
+	public final static String CRITERIA_JOBS_TAB_TITLE = "criteria_jobs_tab_title";
+	public final static String CRITERIA_JOBS_TAB_TITLE_WITH_COUNT = "criteria_jobs_tab_title_with_count";
 	public final static String SKETCH_TOGGLE_REGION_TOOLTIP = "sketch_toggle_region_tooltip";
 	public final static String SKETCH_DRAW_MODE_TOOLTIP = "sketch_draw_mode_tooltip";
 	public final static String SKETCH_UNDO_TOOLTIP = "sketch_undo_tooltip";

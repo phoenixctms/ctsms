@@ -25,6 +25,8 @@ import org.springframework.aop.ThrowsAdvice;
 
 public class ErrorLogger implements ThrowsAdvice {
 
+	private final static int MAX_STACK_TRACE_LENGTH = 1024;
+
 	private static ArrayList<String> obfuscatePasswords(Method method, Object[] args) {
 		ArrayList<String> passwords;
 		if (method != null && args != null && args.length > 0) {
@@ -175,7 +177,7 @@ public class ErrorLogger implements ThrowsAdvice {
 			} catch (Exception e) {
 			}
 			try {
-				error.setStackTrace(CoreUtil.getStackTrace(ex));
+				error.setStackTrace(CoreUtil.getStackTrace(ex).substring(0, MAX_STACK_TRACE_LENGTH - 1));
 			} catch (Exception e) {
 			}
 		}

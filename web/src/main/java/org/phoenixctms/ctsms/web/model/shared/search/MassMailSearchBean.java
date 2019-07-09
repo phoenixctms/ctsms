@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -69,7 +70,7 @@ public class MassMailSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -133,5 +134,10 @@ public class MassMailSearchBean extends SearchBeanBase {
 		massMailResultModel.updateRowCount();
 		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
+	}
+
+	@Override
+	public JobModule getJobModule() {
+		return JobModule.MASS_MAIL_CRITERIA_JOB;
 	}
 }

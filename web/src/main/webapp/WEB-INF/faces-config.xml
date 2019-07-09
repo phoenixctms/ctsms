@@ -130,6 +130,13 @@
            <renderer-class>org.phoenixctms.ctsms.web.component.datatable.DataTableRenderer</renderer-class>
        </renderer>
     </render-kit>	
+    <render-kit>
+       <renderer>
+           <component-family>org.primefaces.component</component-family>
+           <renderer-type>org.primefaces.component.DataGridRenderer</renderer-type>
+           <renderer-class>org.phoenixctms.ctsms.web.component.datagrid.DataGridRenderer</renderer-class>
+       </renderer>
+    </render-kit>	
     <component>
         <component-type>org.primefaces.component.DataTable</component-type>
         <component-class>org.phoenixctms.ctsms.web.component.datatable.DataTable</component-class>

@@ -424,6 +424,7 @@
 		<property name="massMailRecipientDao" ref="massMailRecipientDao" />
 		<property name="staffTagValueDao" ref="staffTagValueDao" />
 		<property name="staffStatusEntryDao" ref="staffStatusEntryDao" />
+		<property name="jobDao" ref="jobDao" />		
 		<property name="criteriaDao" ref="criteriaDao" />
 		<property name="criterionDao" ref="criterionDao" />
 		<property name="criterionPropertyDao" ref="criterionPropertyDao" />
@@ -578,13 +579,16 @@
    <property name="eventImportanceNamesBundleBasename" value="ctsms-eventimportancenames" />
    <property name="sexNamesBundleBasename" value="ctsms-sexnames" />
    <property name="randomizationModeNamesBundleBasename" value="ctsms-randomizationmodenames" />
-   <property name="exportStatusNamesBundleBasename" value="ctsms-exportstatusnames" />
+   <property name="jobStatusNamesBundleBasename" value="ctsms-jobstatusnames" />
+   <property name="jobTypeNamesBundleBasename" value="ctsms-jobtypenames" />
+   <property name="jobTypeDescriptionsBundleBasename" value="ctsms-jobtypedescriptions" />
    <property name="ecrfValidationStatusNamesBundleBasename" value="ctsms-ecrfvalidationstatusnames" />
    <property name="paymentMethodNamesBundleBasename" value="ctsms-paymentmethodnames" />
    <property name="dbModuleNamesBundleBasename" value="ctsms-dbmodulenames" />
    <property name="journalModuleNamesBundleBasename" value="ctsms-journalmodulenames" />
    <property name="hyperlinkModuleNamesBundleBasename" value="ctsms-hyperlinkmodulenames" />
    <property name="fileModuleNamesBundleBasename" value="ctsms-filemodulenames" />
+   <property name="jobModuleNamesBundleBasename" value="ctsms-jobmodulenames" />
 
    <property name="criterionTiesBundleBasename" value="ctsms-criterionties" />
    <property name="criterionRestrictionsBundleBasename" value="ctsms-criterionrestrictions" />

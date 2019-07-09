@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -80,7 +81,7 @@ public class StaffSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -103,7 +104,7 @@ public class StaffSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -135,7 +136,7 @@ public class StaffSearchBean extends SearchBeanBase {
 				Collection staffAddresses = null;
 				try {
 					staffAddresses = WebUtil.getServiceLocator().getStaffService().getStaffAddressList(WebUtil.getAuthentication(), staff.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -159,7 +160,7 @@ public class StaffSearchBean extends SearchBeanBase {
 				try {
 					staffContactDetailValues = WebUtil.getServiceLocator().getStaffService()
 							.getStaffContactDetailValueList(WebUtil.getAuthentication(), staff.getId(), false, null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -186,7 +187,7 @@ public class StaffSearchBean extends SearchBeanBase {
 				Collection staffTagValues = null;
 				try {
 					staffTagValues = WebUtil.getServiceLocator().getStaffService().getStaffTagValueList(WebUtil.getAuthentication(), staff.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -238,5 +239,10 @@ public class StaffSearchBean extends SearchBeanBase {
 		staffResultModel.updateRowCount();
 		DataTable.clearFilters(getResultListId());
 		return SEARCH_OUTCOME;
+	}
+
+	@Override
+	public JobModule getJobModule() {
+		return JobModule.STAFF_CRITERIA_JOB;
 	}
 }

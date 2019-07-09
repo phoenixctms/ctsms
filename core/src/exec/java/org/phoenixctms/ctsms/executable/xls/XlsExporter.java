@@ -1,7 +1,9 @@
 package org.phoenixctms.ctsms.executable.xls;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,14 +60,24 @@ public class XlsExporter {
 	}
 
 	private long printRows(XlsExporterContext context, RowWriter writer) throws Throwable {
-		jobOutput.println("writing to file " + context.getFileName());
+		ByteArrayOutputStream buffer = null;
 		try {
 			WritableWorkbook workbook;
 			WorkbookSettings workbookSettings = writer.getWorkbookSettings();
-			if (workbookSettings != null) {
-				workbook = Workbook.createWorkbook(new File(context.getFileName()), workbookSettings);
+			if (!CommonUtil.isEmptyString(context.getFileName())) {
+				jobOutput.println("writing to file " + context.getFileName());
+				if (workbookSettings != null) {
+					workbook = Workbook.createWorkbook(new File(context.getFileName()), workbookSettings);
+				} else {
+					workbook = Workbook.createWorkbook(new File(context.getFileName()));
+				}
 			} else {
-				workbook = Workbook.createWorkbook(new File(context.getFileName()));
+				buffer = new ByteArrayOutputStream();
+				if (workbookSettings != null) {
+					workbook = Workbook.createWorkbook(buffer, workbookSettings);
+				} else {
+					workbook = Workbook.createWorkbook(buffer);
+				}
 			}
 			context.setWorkbook(workbook);
 			writer.init();
@@ -74,6 +86,9 @@ public class XlsExporter {
 			workbook.close();
 		} catch (Exception e) {
 			throw new IllegalArgumentException("row " + (writer.getLineCount() + 1) + ": error writing row", e);
+		}
+		if (buffer != null) {
+			jobOutput.addEmailXlsAttachment(buffer.toByteArray());
 		}
 		jobOutput.println(writer.getLineCount() + " rows exported");
 		return writer.getLineCount();

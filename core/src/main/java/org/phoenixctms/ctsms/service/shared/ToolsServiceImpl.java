@@ -705,6 +705,7 @@ public class ToolsServiceImpl
 					this.getSignatureDao(),
 					this.getECRFStatusEntryDao(),
 					this.getMassMailRecipientDao(),
+					this.getJobDao(),
 					this.getFileDao());
 			if (countMap.containsKey(probandDepartmentId)) {
 				countMap.put(probandDepartmentId, countMap.get(probandDepartmentId) + 1l);
@@ -1294,6 +1295,11 @@ public class ToolsServiceImpl
 				}
 			}
 		}
+	}
+
+	@Override
+	protected Integer handleGetJobFileUploadSizeLimit() throws Exception {
+		return Settings.getIntNullable(SettingCodes.JOB_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.JOB_FILE_SIZE_LIMIT);
 	}
 
 	public void setAuthenticator(Authenticator authenticator) {

@@ -70,7 +70,7 @@ public class SessionScopeBean {
 	private static AnnouncementVO getAnnouncement() {
 		try {
 			return WebUtil.getServiceLocator().getToolsService().getAnnouncement();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -81,7 +81,7 @@ public class SessionScopeBean {
 		Collection<LocaleVO> locales = null;
 		try {
 			locales = WebUtil.getServiceLocator().getSelectionSetService().getLocales(WebUtil.getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -133,7 +133,7 @@ public class SessionScopeBean {
 		Collection<TimeZoneVO> timeZones = null;
 		try {
 			timeZones = WebUtil.getServiceLocator().getSelectionSetService().getTimeZones(WebUtil.getAuthentication());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -151,6 +151,7 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterInputFieldTypes;
 	private ArrayList<SelectItem> filterSexes;
 	private ArrayList<SelectItem> filterRandomizationModes;
+	private ArrayList<SelectItem> filterJobStates;
 	private ArrayList<SelectItem> filterVariablePeriods;
 	private ArrayList<SelectItem> filterEventImportances;
 	private ArrayList<SelectItem> filterPaymentMethods;
@@ -214,7 +215,7 @@ public class SessionScopeBean {
 			auth.setPassword(newPassword);
 			initSets();
 			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getUser().getId()), true));
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -483,6 +484,14 @@ public class SessionScopeBean {
 		return filterRandomizationModes;
 	}
 
+	public synchronized ArrayList<SelectItem> getFilterJobStates() {
+		if (filterJobStates == null) {
+			filterJobStates = WebUtil.getJobStates();
+			filterJobStates.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterJobStates;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterSexes() {
 		if (filterSexes == null) {
 			filterSexes = WebUtil.getSexes();
@@ -665,7 +674,7 @@ public class SessionScopeBean {
 		if (policy == null) {
 			try {
 				policy = WebUtil.getServiceLocator().getToolsService().getPasswordPolicy(WebUtil.getAuthentication());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -857,6 +866,7 @@ public class SessionScopeBean {
 		filterInputFieldTypes = null;
 		filterSexes = null;
 		filterRandomizationModes = null;
+		filterJobStates = null;
 		filterVariablePeriods = null;
 		filterEventImportances = null;
 		filterPaymentMethods = null;
@@ -1330,7 +1340,7 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateLocale(auth, locale);
 			success = true;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		} finally {
@@ -1347,7 +1357,7 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateShowTooltips(auth, showTooltips);
 			success = true;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		} finally {
@@ -1364,7 +1374,7 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateTheme(auth, theme);
 			success = true;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		} finally {
@@ -1381,7 +1391,7 @@ public class SessionScopeBean {
 		try {
 			logon = WebUtil.getServiceLocator().getUserService().updateTimeZone(auth, timeZone);
 			success = true;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		} finally {

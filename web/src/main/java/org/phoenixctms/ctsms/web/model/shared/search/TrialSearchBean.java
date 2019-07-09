@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -103,7 +104,7 @@ public class TrialSearchBean extends SearchBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -142,7 +143,7 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection teamMembers = null;
 				try {
 					teamMembers = WebUtil.getServiceLocator().getTrialService().getTeamMemberList(WebUtil.getAuthentication(), trial.getId(), null, null, null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -165,7 +166,7 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection timelineEvents = null;
 				try {
 					timelineEvents = WebUtil.getServiceLocator().getTrialService().getTimelineEventList(WebUtil.getAuthentication(), trial.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -197,7 +198,7 @@ public class TrialSearchBean extends SearchBeanBase {
 				Collection trialTagValues = null;
 				try {
 					trialTagValues = WebUtil.getServiceLocator().getTrialService().getTrialTagValueList(WebUtil.getAuthentication(), trial.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -248,5 +249,10 @@ public class TrialSearchBean extends SearchBeanBase {
 
 	public String trialToColor(TrialOutVO trial) {
 		return (trial != null ? WebUtil.colorToStyleClass(trial.getStatus().getColor()) : "");
+	}
+
+	@Override
+	public JobModule getJobModule() {
+		return JobModule.TRIAL_CRITERIA_JOB;
 	}
 }

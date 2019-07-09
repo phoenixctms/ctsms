@@ -14,8 +14,6 @@ import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
-import org.phoenixctms.ctsms.util.L10nUtil;
-import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 
@@ -115,6 +113,6 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
-		target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
+		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 	}
 }

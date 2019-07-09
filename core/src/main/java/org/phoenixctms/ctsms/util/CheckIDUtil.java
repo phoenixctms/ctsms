@@ -879,6 +879,22 @@ public final class CheckIDUtil {
 		return type;
 	}
 
+	public static JobType checkJobTypeId(Long typeId, JobTypeDao jobTypeDao) throws ServiceException {
+		JobType type = jobTypeDao.load(typeId);
+		if (type == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_JOB_TYPE_ID, typeId == null ? null : typeId.toString());
+		}
+		return type;
+	}
+
+	public static Job checkJobId(Long jobId, JobDao jobDao) throws ServiceException {
+		Job job = jobDao.load(jobId);
+		if (job == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_JOB_ID, jobId == null ? null : jobId.toString());
+		}
+		return job;
+	}
+
 	private final static MethodTransfilter getLockModeMethodTransfilter() {
 		return new MethodTransfilter() {
 

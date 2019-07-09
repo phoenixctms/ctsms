@@ -14,6 +14,9 @@ function handleSearchTabChange(index) {
 			// changeCriteriaByTag();
 			break;
 		case 2:
+			// changeCriteriaByTag();
+			break;
+		case 3:
 			// changeCriteriaByJournalEntry();
 			break;
 		default:
@@ -27,8 +30,12 @@ function handleSearchTabChange(index) {
 		break;
 
 	case 2:
-		changeCriteriaJournalEntry();
+		changeCriteriaJob();
 		break;
+		
+	case 3:
+		changeCriteriaJournalEntry();
+		break;		
 
 	default:
 		break;
@@ -92,9 +99,13 @@ function handleUpdateCriteriaTabTitles(xhr, status, args) {
 		searchTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 
+	if (_testPropertyExists(args, AJAX_CRITERIA_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_CRITERIA_JOB_COUNT)) {
+		searchTabView.setTabTitle(2, decodeBase64(args[AJAX_CRITERIA_JOB_TAB_TITLE_BASE64]));
+		searchTabView.emphasizeTab(2, args[AJAX_CRITERIA_JOB_COUNT] == 0);
+	}
 	if (_testPropertyExists(args, AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_CRITERIA_JOURNAL_ENTRY_COUNT)) {
-		searchTabView.setTabTitle(2, decodeBase64(args[AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64]));
-		searchTabView.emphasizeTab(2, args[AJAX_CRITERIA_JOURNAL_ENTRY_COUNT] == 0);
+		searchTabView.setTabTitle(3, decodeBase64(args[AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64]));
+		searchTabView.emphasizeTab(3, args[AJAX_CRITERIA_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

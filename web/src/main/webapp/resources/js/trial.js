@@ -72,9 +72,12 @@ function handleTrialTabChange(index) {
 			changeTrialByHyperlink();
 			break;
 		case 21:
+			changeTrialByJob();
+			break;			
+		case 22:
 			changeTrialByFile();
 			break;
-		case 22:
+		case 23:
 			changeTrialByJournalEntry();
 			break;
 		default:
@@ -168,10 +171,14 @@ function handleTrialTabChange(index) {
 		break;
 
 	case 21:
+		changeTrialJob();
+		break;
+		
+	case 22:
 		changeTrialFile();
 		break;
 
-	case 22:
+	case 23:
 		changeTrialJournalEntry();
 		break;
 
@@ -277,13 +284,17 @@ function handleUpdateTrialTabTitles(xhr, status, args) {
 		trialTabView.setTabTitle(20, decodeBase64(args[AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64]));
 		trialTabView.emphasizeTab(20, args[AJAX_TRIAL_HYPERLINK_COUNT] == 0);
 	}
+	if (_testPropertyExists(args, AJAX_TRIAL_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_JOB_COUNT)) {
+		trialTabView.setTabTitle(21, decodeBase64(args[AJAX_TRIAL_JOB_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(21, args[AJAX_TRIAL_JOB_COUNT] == 0);
+	}
 	if (_testPropertyExists(args, AJAX_TRIAL_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_FILE_COUNT)) {
-		trialTabView.setTabTitle(21, decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(21, args[AJAX_TRIAL_FILE_COUNT] == 0);
+		trialTabView.setTabTitle(22, decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(22, args[AJAX_TRIAL_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_JOURNAL_ENTRY_COUNT)) {
-		trialTabView.setTabTitle(22, decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(22, args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
+		trialTabView.setTabTitle(23, decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(23, args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

@@ -24,13 +24,14 @@ public class TestDataProvider extends ProductionDataProvider {
 	public void createMimeTypes() {
 		createMimeTypes(FileModule.INVENTORY_DOCUMENT);
 		createMimeTypes(FileModule.STAFF_DOCUMENT);
-		createMimeTypes(FileModule.STAFF_IMAGE);
 		createMimeTypes(FileModule.COURSE_DOCUMENT);
 		createMimeTypes(FileModule.TRIAL_DOCUMENT);
 		createMimeTypes(FileModule.PROBAND_DOCUMENT);
-		createMimeTypes(FileModule.PROBAND_IMAGE);
 		createMimeTypes(FileModule.INPUT_FIELD_IMAGE);
 		createMimeTypes(FileModule.MASS_MAIL_DOCUMENT);
+		createMimeTypes(FileModule.STAFF_IMAGE);
+		createMimeTypes(FileModule.PROBAND_IMAGE);
+		createMimeTypes(FileModule.JOB_FILE);
 	}
 
 	public void createMimeTypes(FileModule module) {

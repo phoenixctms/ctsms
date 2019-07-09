@@ -154,6 +154,13 @@
 					</p:tab>
 
 					<p:tab
+						id="probandjobs"
+						disabled="#{!probandBean.created}"
+						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{probandBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_JOB_COUNT'))}">
+						<ui:include src="/META-INF/includes/proband/probandJob.xhtml" />
+					</p:tab>
+					<p:tab
 						id="probandfiles"
 						disabled="#{!probandBean.created}"
 						titleStyleClass="#{probandBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

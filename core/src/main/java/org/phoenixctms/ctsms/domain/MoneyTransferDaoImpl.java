@@ -538,7 +538,7 @@ public class MoneyTransferDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		target.setMethod(L10nUtil.createPaymentMethodVO(Locales.USER, source.getMethod()));
-		target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
+		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 		try {
 			if (!CoreUtil.isPassDecryption()) {
 				throw new Exception();

@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -31,6 +32,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.web.jersey.index.InputFieldListIndex;
 import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
@@ -50,11 +52,12 @@ import com.sun.jersey.multipart.FormDataParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="inputfield")
+@Api(value = "inputfield")
 @Path("/inputfield")
 public final class InputFieldResource extends ServiceResourceBase {
 
 	private final static JournalModule journalModule = JournalModule.INPUT_FIELD_JOURNAL;
+	private final static JobModule jobModule = JobModule.INPUT_FIELD_JOB;
 	private final static Class<?> SERVICE_INTERFACE = InputFieldService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InputFieldOutVO.class);
@@ -68,23 +71,24 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO addInputField(@FormDataParam("json") InputFieldInVO in,
+	public InputFieldOutVO addInputField(@FormDataParam("json") FormDataBodyPart json,
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws Exception {
+		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		InputFieldInVO in = json.getValueAs(InputFieldInVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
 		in.setMimeType(content.getMediaType().toString());
 		in.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
 	}
-	
+
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public InputFieldOutVO addInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService().addInputField(auth, in);
 	}
-
 
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -154,6 +158,15 @@ public final class InputFieldResource extends ServiceResourceBase {
 		return new Page<JournalEntryOutVO>(WebUtil.getServiceLocator().getJournalService().getJournal(auth, journalModule, id, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/jobs")
+	public Page<JobOutVO> getJobs(@PathParam("id") Long id, @Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<JobOutVO>(WebUtil.getServiceLocator().getJobService().getJobs(auth, jobModule, id, psf = new PSFUriPart(uriInfo)), psf);
+	}
+
 	@Override
 	protected String getRootEntityIdMethodParamName() {
 		return ROOT_ENTITY_ID_METHOD_PARAM_NAME;
@@ -179,7 +192,7 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public InputFieldListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}
@@ -187,10 +200,12 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public InputFieldOutVO updateInputField(@FormDataParam("json") InputFieldInVO in,
+	public InputFieldOutVO updateInputField(@FormDataParam("json") FormDataBodyPart json,
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws Exception {
+		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		InputFieldInVO in = json.getValueAs(InputFieldInVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
 		in.setMimeType(content.getMediaType().toString());
 		in.setFileName(contentDisposition.getFileName());

@@ -43,10 +43,10 @@ import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
-import org.phoenixctms.ctsms.enumeration.ExportStatus;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
@@ -753,7 +753,7 @@ public final class CommonUtil {
 				String key = it.next();
 				try {
 					symbols.put(key, bundle.getString(key));
-				} catch (MissingResourceException|ClassCastException e) {
+				} catch (MissingResourceException | ClassCastException e) {
 				}
 			}
 			return symbols;
@@ -1197,7 +1197,7 @@ public final class CommonUtil {
 		}
 		try {
 			return MessageFormat.format(bundle.getString(l10nKey), args);
-		} catch (MissingResourceException|ClassCastException|IllegalArgumentException e) {
+		} catch (MissingResourceException | ClassCastException | IllegalArgumentException e) {
 			return MessageFormat.format(l10nKey, args);
 		}
 	}
@@ -1490,7 +1490,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(l10nKey);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return l10nKey;
 		}
 	}
@@ -1537,7 +1537,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Boolean.parseBoolean(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1548,7 +1548,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Double.parseDouble(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1559,7 +1559,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Float.parseFloat(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1570,7 +1570,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Integer.parseInt(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1581,7 +1581,7 @@ public final class CommonUtil {
 		}
 		try {
 			return Long.parseLong(bundle.getString(key));
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1592,7 +1592,7 @@ public final class CommonUtil {
 		}
 		try {
 			return bundle.getString(key);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return defaultValue;
 		}
 	}
@@ -1608,7 +1608,7 @@ public final class CommonUtil {
 			} else {
 				return Boolean.parseBoolean(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1624,7 +1624,7 @@ public final class CommonUtil {
 			} else {
 				return Double.parseDouble(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1640,7 +1640,7 @@ public final class CommonUtil {
 			} else {
 				return Float.parseFloat(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1656,7 +1656,7 @@ public final class CommonUtil {
 			} else {
 				return Integer.parseInt(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1672,7 +1672,7 @@ public final class CommonUtil {
 			} else {
 				return Long.parseLong(tristate);
 			}
-		} catch (MissingResourceException|ClassCastException|NumberFormatException e) {
+		} catch (MissingResourceException | ClassCastException | NumberFormatException e) {
 			return defaultValue;
 		}
 	}
@@ -1684,7 +1684,7 @@ public final class CommonUtil {
 		String value;
 		try {
 			value = bundle.getString(key);
-		} catch (MissingResourceException|ClassCastException e) {
+		} catch (MissingResourceException | ClassCastException e) {
 			return defaultValue == null ? new ArrayList<String>() : (ArrayList<String>) defaultValue.clone();
 		}
 		ArrayList<String> result;
@@ -1883,8 +1883,8 @@ public final class CommonUtil {
 			return ((InputFieldType) value).name();
 		} else if (valueClass.equals(EventImportance.class)) {
 			return ((EventImportance) value).name();
-		} else if (valueClass.equals(ExportStatus.class)) {
-			return ((ExportStatus) value).name();
+		} else if (valueClass.equals(JobStatus.class)) {
+			return ((JobStatus) value).name();
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(INPUT_TYPE_NOT_SUPPORTED, valueClass.toString()));

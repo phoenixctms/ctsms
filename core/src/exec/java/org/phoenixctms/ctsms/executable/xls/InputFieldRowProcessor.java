@@ -346,11 +346,13 @@ public class InputFieldRowProcessor extends RowProcessor {
 			inputFieldIn.setDatas(file.getDatas());
 			inputFieldIn.setMimeType(file.getContentType().getMimeType());
 		} catch (NumberFormatException e) {
+			//if (filePath != null) {
 			java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
 			inputFieldIn.setFileName(file.getName());
 			FileInputStream stream = new FileInputStream(file);
 			inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
 			inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+			//}
 		}
 		// try {
 		//

@@ -125,6 +125,12 @@
 				update=":tabView:probandfile_form" />
 			<p:remoteCommand
 				process="@this"
+				name="changeProbandJob"
+				actionListener="#{jobBean.changeProband(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandjob_form:job_list,:tabView:probandjob_form:job_input" />				
+			<p:remoteCommand
+				process="@this"
 				name="changeProbandJournalEntry"
 				actionListener="#{journalBean.changeProband(probandBean.in.id)}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
@@ -215,6 +221,12 @@
 				actionListener="#{probandBean.change(journalBean.in.probandId)}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
 				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand
+				process="@this"
+				name="changeProbandByJob"
+				actionListener="#{probandBean.change(jobBean.in.probandId)}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input" />				
 			<p:remoteCommand
 				process="@this"
 				name="changeProbandByFile"

@@ -10,8 +10,8 @@ public final class DefaultSettings {
 	public static final String INLAND = "";
 	public static final boolean USE_EXTERNAL_FILE_DATA_DIR = false;
 	public static final String EXTERNAL_FILE_DATA_DIR = "";
-	public final static String HTTP_DOCUMENT_ROOT = "";
-	public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "";
+	//public final static String HTTP_DOCUMENT_ROOT = "";
+	//public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "";
 	public static final String EMAIL_DOMAIN_NAME = "{0}";
 	public static final String HTTP_DOMAIN_NAME = "localhost";
 	public static final String HTTP_BASE_URL = "{0}://{1}";
@@ -231,6 +231,9 @@ public final class DefaultSettings {
 	public static final Long EMAIL_PROCESS_MASS_MAILS_MAX = 3l;
 	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
+	public static final Integer JOB_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
+	public static final String DB_TOOL = "dbtool";
+	public static final String PROCESS_PL = "process";
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");

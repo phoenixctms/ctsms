@@ -88,7 +88,7 @@ public class JournalBean extends ManagedBeanBase {
 			JournalCategoryVO categoryPreset = null;
 			try {
 				categoryPreset = WebUtil.getServiceLocator().getSelectionSetService().getJournalCategoryPreset(WebUtil.getAuthentication(), module);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -149,7 +149,7 @@ public class JournalBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -301,7 +301,7 @@ public class JournalBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -325,7 +325,7 @@ public class JournalBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -402,7 +402,7 @@ public class JournalBean extends ManagedBeanBase {
 					CriteriaOutVO defaultCriteria = null;
 					try {
 						defaultCriteria = WebUtil.getServiceLocator().getSearchService().getDefaultCriteria(WebUtil.getAuthentication(), criteriaModule);
-					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						WebUtil.publishException(e);
 					}
@@ -480,7 +480,7 @@ public class JournalBean extends ManagedBeanBase {
 				try {
 					userVOs = WebUtil.getServiceLocator().getJournalService().getJournalUsers(WebUtil.getAuthentication(), module, entityId,
 							Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_USERS, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_USERS));
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -696,7 +696,7 @@ public class JournalBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -740,7 +740,7 @@ public class JournalBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

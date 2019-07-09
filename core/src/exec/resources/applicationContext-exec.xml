@@ -28,12 +28,15 @@
   <bean id="departmentManager" class="org.phoenixctms.ctsms.executable.DepartmentManager">
     <property name="authenticator" ref="authenticator"/>
   </bean>
+  <bean id="jobRunner" class="org.phoenixctms.ctsms.executable.JobRunner">
+    <property name="authenticator" ref="authenticator"/>
+  </bean>
   <bean id="demoDataProvider" class="org.phoenixctms.ctsms.executable.DemoDataProvider"/>
   <bean id="fileSystemLoader" class="org.phoenixctms.ctsms.executable.FileSystemLoader"/>
   <bean id="notificationSender" class="org.phoenixctms.ctsms.executable.NotificationSender"/>
   <bean id="massMailSender" class="org.phoenixctms.ctsms.executable.MassMailSender"/>
   <!-- <bean id="probandRemover" class="org.phoenixctms.ctsms.executable.ProbandRemover"/> -->
-  <bean id="serviceMethodExecutor" class="org.phoenixctms.ctsms.executable.ServiceMethodExecutor"/>
+  <bean id="serviceMethods" class="org.phoenixctms.ctsms.executable.ServiceMethods"/>
   <bean id="probandImageFieldInitializer" class="org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer">
     <property name="authenticator" ref="authenticator"/>
   </bean>

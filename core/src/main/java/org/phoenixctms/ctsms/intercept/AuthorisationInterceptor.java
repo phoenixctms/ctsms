@@ -44,6 +44,7 @@ import org.phoenixctms.ctsms.domain.InventoryBookingDao;
 import org.phoenixctms.ctsms.domain.InventoryDao;
 import org.phoenixctms.ctsms.domain.InventoryStatusEntryDao;
 import org.phoenixctms.ctsms.domain.InventoryTagValueDao;
+import org.phoenixctms.ctsms.domain.JobDao;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.Lecturer;
 import org.phoenixctms.ctsms.domain.LecturerDao;
@@ -88,6 +89,7 @@ import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterOverride;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterRestriction;
@@ -232,6 +234,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private StaffTagValueDao staffTagValueDao;
 	private StaffStatusEntryDao staffStatusEntryDao;
 	private CriteriaDao criteriaDao;
+	private JobDao jobDao;
 	private CriterionDao criterionDao;
 	private CriterionPropertyDao criterionPropertyDao;
 	private CriterionTieDao criterionTieDao;
@@ -914,6 +917,10 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		this.criteriaDao = criteriaDao;
 	}
 
+	public void setJobDao(JobDao jobDao) {
+		this.jobDao = jobDao;
+	}
+
 	public void setCriterionDao(CriterionDao criterionDao) {
 		this.criterionDao = criterionDao;
 	}
@@ -1134,6 +1141,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			JournalModule journalModule;
 			Long id;
 			HyperlinkModule hyperlinkModule;
+			JobModule jobModule;
 			FileModule fileModule;
 			switch (permission.getTransformation()) {
 				case INVENTORY_TAG_VALUE_ID_TO_INVENTORY_ID:
@@ -1549,6 +1557,30 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						}
 					}
 					return null;
+				case JOB_ID_TO_TRIAL_ID:
+					if (parameterValue != null) {
+						Trial trial = CheckIDUtil.checkJobId((Long) parameterValue, jobDao).getTrial();
+						if (trial != null) {
+							return trial.getId();
+						}
+					}
+					return null;
+				case JOB_ID_TO_PROBAND_ID:
+					if (parameterValue != null) {
+						Proband proband = CheckIDUtil.checkJobId((Long) parameterValue, jobDao).getProband();
+						if (proband != null) {
+							return proband.getId();
+						}
+					}
+					return null;
+				case JOB_ID_TO_INPUT_FIELD_ID:
+					if (parameterValue != null) {
+						InputField inputField = CheckIDUtil.checkJobId((Long) parameterValue, jobDao).getInputField();
+						if (inputField != null) {
+							return inputField.getId();
+						}
+					}
+					return null;
 				case HYPERLINK_MODULE_AND_ID_TO_INVENTORY_ID:
 					hyperlinkModule = (HyperlinkModule) ((Object[]) parameterValue)[0];
 					if (!HyperlinkModule.INVENTORY_HYPERLINK.equals(hyperlinkModule)) {
@@ -1667,8 +1699,61 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 								permission.getParameterGetter(), fileModule == null ? null : L10nUtil.getFileModuleName(Locales.USER, fileModule.name()));
 					}
 					return ((Object[]) parameterValue)[1];
+				case JOB_MODULE_AND_ID_TO_TRIAL_ID:
+					jobModule = (JobModule) ((Object[]) parameterValue)[0];
+					if (!JobModule.TRIAL_JOB.equals(jobModule)) {
+						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+								permission.getParameterGetter(), jobModule == null ? null : L10nUtil.getJobModuleName(Locales.USER, jobModule.name()));
+					}
+					return ((Object[]) parameterValue)[1];
+				case JOB_MODULE_AND_ID_TO_PROBAND_ID:
+					jobModule = (JobModule) ((Object[]) parameterValue)[0];
+					if (!JobModule.PROBAND_JOB.equals(jobModule)) {
+						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+								permission.getParameterGetter(), jobModule == null ? null : L10nUtil.getJobModuleName(Locales.USER, jobModule.name()));
+					}
+					return ((Object[]) parameterValue)[1];
+				case JOB_MODULE_AND_ID_TO_INPUT_FIELD_ID:
+					jobModule = (JobModule) ((Object[]) parameterValue)[0];
+					if (!JobModule.INPUT_FIELD_JOB.equals(jobModule)) {
+						throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+								permission.getParameterGetter(), jobModule == null ? null : L10nUtil.getJobModuleName(Locales.USER, jobModule.name()));
+					}
+					return ((Object[]) parameterValue)[1];
 				case CRITERIA_ID_TO_DB_MODULE:
 					return parameterValue == null ? null : CheckIDUtil.checkCriteriaId((Long) parameterValue, criteriaDao).getModule();
+				case CRITERIA_JOB_ID_TO_DB_MODULE:
+					if (parameterValue != null) {
+						jobModule = CheckIDUtil.checkJobId((Long) parameterValue, jobDao).getType().getModule();
+						switch (jobModule) {
+							//					case TRIAL_JOB:
+							//						return DBModule.TRIAL_DB;
+							//					case PROBAND_JOB:
+							//						return DBModule.PROBAND_DB;
+							//					case INPUT_FIELD_JOB:
+							//						return DBModule.INPUT_FIELD_DB;
+							case INVENTORY_CRITERIA_JOB:
+								return DBModule.INVENTORY_DB;
+							case STAFF_CRITERIA_JOB:
+								return DBModule.STAFF_DB;
+							case COURSE_CRITERIA_JOB:
+								return DBModule.COURSE_DB;
+							case TRIAL_CRITERIA_JOB:
+								return DBModule.TRIAL_DB;
+							case INPUT_FIELD_CRITERIA_JOB:
+								return DBModule.INPUT_FIELD_DB;
+							case PROBAND_CRITERIA_JOB:
+								return DBModule.PROBAND_DB;
+							case USER_CRITERIA_JOB:
+								return DBModule.USER_DB;
+							case MASS_MAIL_CRITERIA_JOB:
+								return DBModule.MASS_MAIL_DB;
+							default:
+								throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+										permission.getParameterGetter(), jobModule == null ? null : L10nUtil.getJobModuleName(Locales.USER, jobModule.name()));
+						}
+					}
+					return null;
 				default:
 					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_SERVICE_METHOD_PARAMETER_TRANSFORMATION,
 							DefaultMessages.UNSUPPORTED_SERVICE_METHOD_PARAMETER_TRANSFORMATION, new Object[] { permission.getTransformation().name() }));

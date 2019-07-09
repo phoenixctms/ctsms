@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -174,7 +175,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -196,7 +197,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			initSets();
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.CLONE_ADD_OPERATION_SUCCESSFUL, out.getName());
 			return CLONE_ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -216,6 +217,9 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_SELECTION_SET_VALUE_TAB_TITLE_BASE64, JSValues.AJAX_SELECTION_SET_VALUE_COUNT,
 					MessageCodes.SELECTION_SET_VALUES_TAB_TITLE, MessageCodes.SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT,
 					tabCountMap.get(JSValues.AJAX_SELECTION_SET_VALUE_COUNT.toString()));
+			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOB_COUNT,
+					MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE, MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE_WITH_COUNT,
+					tabCountMap.get(JSValues.AJAX_INPUT_FIELD_JOB_COUNT.toString()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 					MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT,
 					tabCountMap.get(JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT.toString()));
@@ -228,7 +232,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getInputFieldService().getInputField(WebUtil.getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -315,7 +319,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		Collection<String> categories = null;
 		try {
 			categories = WebUtil.getServiceLocator().getSelectionSetService().getInputFieldCategories(WebUtil.getAuthentication(), null, query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -346,7 +350,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -507,7 +511,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		if (in.getId() != null) {
 			try {
 				image = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(in.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -522,7 +526,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		uploadSizeLimit = null;
 		try {
 			uploadSizeLimit = WebUtil.getServiceLocator().getToolsService().getInputFieldImageUploadSizeLimit();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -532,6 +536,10 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		tabCountMap.put(JSValues.AJAX_SELECTION_SET_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_SELECTION_SET_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.SELECTION_SET_VALUES_TAB_TITLE, MessageCodes.SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT, count));
+		count = (out == null ? null : WebUtil.getJobCount(JobModule.INPUT_FIELD_JOB, in.getId()));
+		tabCountMap.put(JSValues.AJAX_INPUT_FIELD_JOB_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_INPUT_FIELD_JOB_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE, MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.INPUT_FIELD_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT.toString(),
@@ -598,7 +606,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		try {
 			out = WebUtil.getServiceLocator().getInputFieldService().getInputField(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -659,7 +667,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

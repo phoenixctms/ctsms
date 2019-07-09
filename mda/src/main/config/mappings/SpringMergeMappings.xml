@@ -144,6 +144,14 @@
         </to>
     </mapping>
     <mapping>
+        <from><![CDATA[<!-- JobService top-level interceptor merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <value>org.phoenixctms.ctsms.intercept.ErrorLogger</value>
+            ]]>
+        </to>
+    </mapping>
+    <mapping>
         <from><![CDATA[<!-- InputFieldService top-level interceptor merge-point -->]]></from>
         <to>
             <![CDATA[
