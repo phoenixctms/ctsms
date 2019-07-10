@@ -50,7 +50,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{labels.job_job_list_status_column}" />
 					</f:facet>
-					<h:outputText value="#{job.vo.status.name}" />
+					<h:outputText styleClass="#{job.vo.status.jobStatus == 'FAILED' ? 'ctsms-text-red' : job.vo.status.jobStatus == 'OK' ? 'ctsms-text-green' : 'ctsms-text-bold'}" value="#{job.vo.status.name}" />
 				</p:column>
 				 <p:column
 					sortBy="#{job.vo.type.daily}"
