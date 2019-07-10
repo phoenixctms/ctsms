@@ -71,11 +71,18 @@ public class JobOutput {
 	private final static Pattern emailAddressSeparatorRegexp = Pattern.compile(DEFAULT_EMAIL_ADDRESS_SEPARATOR + "|,| ");
 	private final static String JOB_FILE_NAME_FORMAT = "{0}.{1}";
 	private JobUpdateVO job;
+	private String jobEmailRecipients;
 	private AuthenticationVO auth;
 	private JobFileVO jobFile;
 
-	private static StringBuilder getEmailRecipients(CommandLine line, boolean send) {
+	private StringBuilder getEmailRecipients(CommandLine line, boolean send) {
 		StringBuilder recipients = new StringBuilder();
+		if (jobEmailRecipients != null) {
+			if (recipients.length() > 0) {
+				recipients.append(DEFAULT_EMAIL_ADDRESS_SEPARATOR);
+			}
+			recipients.append(jobEmailRecipients);
+		}
 		if (line.hasOption(DBToolOptions.EMAIL_RECIPIENTS_OPT)) {
 			if (recipients.length() > 0) {
 				recipients.append(DEFAULT_EMAIL_ADDRESS_SEPARATOR);
@@ -219,6 +226,7 @@ public class JobOutput {
 		this.jobFile = null;
 		if (jobId != null) {
 			JobOutVO job = jobService.getJob(auth, jobId);
+			this.jobEmailRecipients = job.getEmailRecipients();
 			this.job = new JobUpdateVO();
 			this.job.setId(jobId);
 			this.job.setVersion(job.getVersion());
@@ -275,6 +283,7 @@ public class JobOutput {
 		start = new Date();
 		output = new StringBuilder();
 		job = null;
+		jobEmailRecipients = null;
 		jobFile = null;
 		auth = null;
 	}

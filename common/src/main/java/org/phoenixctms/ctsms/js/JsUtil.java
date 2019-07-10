@@ -28,7 +28,6 @@ public final class JsUtil {
 
 	public final static String INPUT_JSON_DATETIME_PATTERN = "yyyy-MM-dd " + CommonUtil.DEFAULT_INPUT_TIME_PATTERN;
 	public final static String JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-	private final static String BASE64_CHARSET = "UTF8";
 	public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
 			new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
 			new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
@@ -75,7 +74,7 @@ public final class JsUtil {
 	public static String decodeBase64(String base64String) {
 		if (base64String != null && base64String.length() > 0 && Base64.isBase64(base64String)) {
 			try {
-				return new String(Base64.decodeBase64(base64String), BASE64_CHARSET);
+				return new String(Base64.decodeBase64(base64String), CommonUtil.BASE64_CHARSET);
 			} catch (UnsupportedEncodingException e) {
 			}
 		}
@@ -85,7 +84,7 @@ public final class JsUtil {
 	public static String encodeBase64(String string, boolean urlSafe) { // url safe
 		if (string != null && string.length() > 0) {
 			try {
-				return new String(Base64.encodeBase64(string.getBytes(BASE64_CHARSET), false, urlSafe, Integer.MAX_VALUE));
+				return new String(Base64.encodeBase64(string.getBytes(CommonUtil.BASE64_CHARSET), false, urlSafe, Integer.MAX_VALUE));
 			} catch (UnsupportedEncodingException e) {
 			}
 		}

@@ -43,6 +43,7 @@ public final class DBToolOptions {
 	public static final String NEW_DEPARTMENT_PASSWORD_OPT = "ndp";
 	public static final String USERNAME_OPT = "u";
 	public static final String PASSWORD_OPT = "p";
+	public static final String AUTH_OPT = "auth";
 	public static final String ID_OPT = "id";
 	public static final String JOB_ID_OPT = "jid";
 	public static final String LIMIT_OPT = "l";
@@ -381,6 +382,7 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(ENCODING_OPT, "encoding", "encoding of csv/text file to import", 1));
 		options.addOption(registerOptionalOption(USERNAME_OPT, "username", "username", 1));
 		options.addOption(registerOptionalOption(PASSWORD_OPT, "password", "user password", 1));
+		options.addOption(registerOptionalOption(AUTH_OPT, "auth", "base64 encoded username and password", 1));
 		options.addOption(registerOptionalOption(PERMISSION_PROFILES_OPT, "permission_profiles", "list of permission profiles", 1));
 		options.addOption(registerOptionalOption(ID_OPT, "entity_id", "record id of entity", 1));
 		options.addOption(registerOptionalOption(JOB_ID_OPT, "job_id", "job id", 1));

@@ -39,6 +39,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.apache.commons.codec.binary.Base64;
 import org.phoenixctms.ctsms.PrincipalStore;
 import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
@@ -1111,14 +1112,17 @@ public final class CoreUtil {
 		//'{0} --xyz="{}" --id={} --user="{}" --password="{}" --job={}'
 		try {
 			//return (new ProcessBuilder("\"" + Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL) + "\" --ie")).start();
+			String username = auth.getUsername() != null ? auth.getUsername().trim() : "";
+			String password = auth.getPassword() != null ? auth.getPassword().trim() : "";
+			//String emailRecipients = job.getEmailRecipients() != null ? job.getEmailRecipients().trim() : "";
 			String command = MessageFormat.format(job.getType().getCommandFormat(),
 					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
 					Long.toString(id),
-					auth.getUsername(),
-					auth.getPassword(),
+					username,
+					password,
+					new String(Base64.encodeBase64((username + "\n" + password).getBytes(CommonUtil.BASE64_CHARSET), false, false)),
 					Long.toString(job.getId()),
-					job.getEmailRecipients(),
-					null,
+					null, //new String(Base64.encodeBase64(emailRecipients.getBytes(CommonUtil.BASE64_CHARSET), false, false)),
 					null,
 					null,
 					null,

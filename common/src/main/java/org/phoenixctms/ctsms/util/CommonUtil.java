@@ -182,6 +182,7 @@ public final class CommonUtil {
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.INTERSECT);
 		BLANK_TIES.add(org.phoenixctms.ctsms.enumeration.CriterionTie.EXCEPT);
 	}
+	public final static String BASE64_CHARSET = "UTF8";
 	public final static BundleControl BUNDLE_CONTROL = new BundleControl();
 	private final static String VO_ID_GETTER_METHOD_NAME = "getId";
 	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
