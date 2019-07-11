@@ -883,13 +883,13 @@ var FieldCalculation = FieldCalculation || {};
 			return false;
 		} else if (input instanceof Array) {
 		    return (input.length <= 0 || (input.length == 1 && input[0] == ""));
-		} else if(entered instanceof JSJoda.LocalDate) {
+		} else if(input instanceof JSJoda.LocalDate) {
 			return false;
-	    } else if(entered instanceof JSJoda.LocalTime) {
+	    } else if(input instanceof JSJoda.LocalTime) {
 	    	return false;
-	    } else if(entered instanceof JSJoda.LocalDateTime) {
+	    } else if(input instanceof JSJoda.LocalDateTime) {
 	    	return false;
-	    } else if(entered instanceof JSJoda.ZonedDateTime) {
+	    } else if(input instanceof JSJoda.ZonedDateTime) {
 	    	return false;
 		} else if(typeof input === "object" && 'ids' in input){
 			return input.ids.length <= 0;
