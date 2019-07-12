@@ -2756,7 +2756,8 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues, PSFVO psf,
+	public static ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues,
+			String fieldQuery, PSFVO psf,
 			ECRFFieldDao ecrfFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
@@ -2767,13 +2768,13 @@ public final class ServiceUtil {
 		if (listEntryVO != null && ecrf != null) {
 			// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
-			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, null, psf);
+			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, null, fieldQuery, psf);
 			HashMap<String, Long> maxSeriesIndexMap = null;
 			HashMap<String, Long> fieldMaxPositionMap = null;
 			HashMap<String, Long> fieldMinPositionMap = null;
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
 			// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
-			if (addSeries) {
+			if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 				maxSeriesIndexMap = new HashMap<String, Long>();
 				fieldMaxPositionMap = new HashMap<String, Long>();
 				fieldMinPositionMap = new HashMap<String, Long>();
@@ -2797,7 +2798,7 @@ public final class ServiceUtil {
 					ecrfFieldStatusEntryDao,
 					ecrfFieldStatusTypeDao)); // this.getInputFieldSelectionSetValueDao()
 			if (jsValues) {
-				if (addSeries) {
+				if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 					maxSeriesIndexMap.clear();
 					fieldMaxPositionMap.clear();
 					fieldMinPositionMap.clear();
@@ -2815,7 +2816,7 @@ public final class ServiceUtil {
 							ecrfFieldValueDao);
 				}
 				if (loadAllJsValues) {
-					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, true, null),
+					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, true, null, null),
 							maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 							false, ecrfFieldValueDao,
 							inputFieldSelectionSetValueDao));
@@ -5380,7 +5381,7 @@ public final class ServiceUtil {
 			if (ecrf != null) {
 				ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 				populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-						getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, ecrfFieldDao,
+						getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null, ecrfFieldDao,
 								ecrfFieldValueDao,
 								inputFieldSelectionSetValueDao,
 								ecrfFieldStatusEntryDao,
@@ -5399,7 +5400,7 @@ public final class ServiceUtil {
 					ecrf = ecrfIt.next();
 					ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
 									ecrfFieldDao,
 									ecrfFieldValueDao,
 									inputFieldSelectionSetValueDao,
@@ -5425,7 +5426,7 @@ public final class ServiceUtil {
 				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 				if (ecrf != null) {
 					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
 									ecrfFieldDao,
 									ecrfFieldValueDao,
 									inputFieldSelectionSetValueDao,
@@ -5445,7 +5446,7 @@ public final class ServiceUtil {
 						ecrf = ecrfIt.next();
 						ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 						populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-								getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null,
+								getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
 										ecrfFieldDao,
 										ecrfFieldValueDao,
 										inputFieldSelectionSetValueDao,

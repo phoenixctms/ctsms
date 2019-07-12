@@ -888,7 +888,8 @@ public class TrialServiceImpl
 					ecrfFieldValueDao);
 		}
 		// Collection values = ecrfFieldValueDao.findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null);
-		Collection<ECRFFieldValueJsonVO> jsValues = ServiceUtil.getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, true, null),
+		Collection<ECRFFieldValueJsonVO> jsValues = ServiceUtil.getEcrfFieldJsonValues(
+				ecrfFieldValueDao.findByListEntryEcrfJsField(listEntry.getId(), ecrf.getId(), true, true, null, null),
 				maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 				false, ecrfFieldValueDao, inputFieldSelectionSetValueDao);
 		// ecrfFieldValueDao.toECRFFieldValueJsonVOCollection(jsValues);
@@ -926,7 +927,7 @@ public class TrialServiceImpl
 		} catch (Exception e) {
 			scriptException = e;
 		}
-		Iterator<Map> ecrfFieldValuesIt = ecrfFieldValueDao.findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null).iterator();
+		Iterator<Map> ecrfFieldValuesIt = ecrfFieldValueDao.findByListEntryEcrfJsField(listEntry.getId(), ecrf.getId(), true, null, null, null).iterator();
 		while (ecrfFieldValuesIt.hasNext()) { // && (maxMissingCount == null || missingCount < maxMissingCount)) {
 			Map<String, Object> entities = ecrfFieldValuesIt.next();
 			ECRFFieldValue ecrfFieldValue = (ECRFFieldValue) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS);
@@ -1618,7 +1619,7 @@ public class TrialServiceImpl
 			HashMap<Long, HashMap<Long, String>> errorMessagesMap = new HashMap<Long, HashMap<Long, String>>();
 			int missingCount = 0;
 			InputFieldDao inputFieldDao = this.getInputFieldDao();
-			Iterator<Map> ecrfFieldValuesIt = this.getECRFFieldValueDao().findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null).iterator();
+			Iterator<Map> ecrfFieldValuesIt = this.getECRFFieldValueDao().findByListEntryEcrfJsField(listEntry.getId(), ecrf.getId(), true, null, null, null).iterator();
 			while (ecrfFieldValuesIt.hasNext() && (maxMissingCount == null || missingCount < maxMissingCount)) {
 				Map<String, Object> entities = ecrfFieldValuesIt.next();
 				ECRFFieldValue ecrfFieldValue = (ECRFFieldValue) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS);
@@ -2475,7 +2476,7 @@ public class TrialServiceImpl
 					break;
 				case VALIDATE_VALUES:
 					if (scheduleValidationLimit == null
-							|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
+							|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCountField(listEntry.getId(), ecrf.getId(), null) <= scheduleValidationLimit)) {
 						addValidationEcrfFieldStatusEntries(statusEntry, true, now, user);
 					} else {
 						statusEntry.setValidationStatus(ECRFValidationStatus.PENDING);
@@ -2492,7 +2493,7 @@ public class TrialServiceImpl
 					break;
 				case NO_MISSING_VALUES:
 					if (scheduleValidationLimit == null
-							|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCount(listEntry.getId(), ecrf.getId()) <= scheduleValidationLimit)) {
+							|| (scheduleValidationLimit > 0 && this.getECRFFieldValueDao().getCountField(listEntry.getId(), ecrf.getId(), null) <= scheduleValidationLimit)) {
 						checkMissingEcrfFieldValuesDeeply(listEntry, ecrf);
 					} else {
 						checkMissingEcrfFieldValues(listEntry, ecrf);
@@ -2558,19 +2559,20 @@ public class TrialServiceImpl
 
 	private ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, String section, Long index, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues,
 			boolean loadAllJsValues,
-			PSFVO psf) throws Exception {
+			String fieldQuery, PSFVO psf) throws Exception {
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		if (listEntryVO != null && ecrf != null) {
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			index = limitEcrfFieldValueIndex(ecrf.getId(), section, index, listEntryVO.getId());
-			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfSectionIndexJs(listEntryVO.getId(), ecrf.getId(), section, index, true, null, psf);
+			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfSectionIndexJsField(listEntryVO.getId(), ecrf.getId(), section, index, true, null, fieldQuery,
+					psf);
 			HashMap<String, Long> maxSeriesIndexMap = null;
 			HashMap<String, Long> fieldMaxPositionMap = null;
 			HashMap<String, Long> fieldMinPositionMap = null;
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
 			// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
-			if (addSeries) {
+			if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 				maxSeriesIndexMap = new HashMap<String, Long>();
 				fieldMaxPositionMap = new HashMap<String, Long>();
 				fieldMinPositionMap = new HashMap<String, Long>();
@@ -2594,7 +2596,7 @@ public class TrialServiceImpl
 					this.getECRFFieldStatusEntryDao(),
 					this.getECRFFieldStatusTypeDao())); // this.getInputFieldSelectionSetValueDao()
 			if (jsValues) {
-				if (addSeries) {
+				if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 					maxSeriesIndexMap.clear();
 					fieldMaxPositionMap.clear();
 					fieldMinPositionMap.clear();
@@ -2615,7 +2617,7 @@ public class TrialServiceImpl
 				if (loadAllJsValues) {
 					result.setJsValues(ServiceUtil.getEcrfFieldJsonValues(
 							// ecrfFieldValueDao.findByListEntryEcrfSectionJs(listEntryVO.getId(), ecrf.getId(), section, true, true, null),
-							ecrfFieldValueDao.findByListEntryEcrfJs(listEntryVO.getId(), ecrf.getId(), true, true, null),
+							ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, true, null, null),
 							maxSeriesIndexMap, fieldMaxPositionMap,
 							fieldMinPositionMap, seriesEcrfFieldMap,
 							false, ecrfFieldValueDao,
@@ -5750,10 +5752,10 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, Long probandListEntryId) throws Exception {
+	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, String fieldQuery) throws Exception {
 		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
-		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId);
+		return this.getECRFFieldValueDao().getCountField(probandListEntryId, ecrfId, fieldQuery);
 	}
 
 	@Override
@@ -5764,18 +5766,19 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId, boolean excludeAuditTrail) throws Exception {
+	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId, boolean excludeAuditTrail)
+			throws Exception {
 		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId, section, excludeAuditTrail, null);
 	}
 
 	@Override
-	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId) throws Exception {
+	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId, String fieldQuery) throws Exception {
 		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		index = limitEcrfFieldValueIndex(ecrfId, section, index, probandListEntryId);
-		return this.getECRFFieldValueDao().getCount(probandListEntryId, ecrfId, section, index);
+		return this.getECRFFieldValueDao().getCountField(probandListEntryId, ecrfId, section, index, fieldQuery);
 	}
 
 	@Override
@@ -5816,7 +5819,9 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, boolean addSeries, boolean loadAllJsValues, PSFVO psf)
+	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, Long probandListEntryId, boolean addSeries, boolean loadAllJsValues,
+			String fieldQuery,
+			PSFVO psf)
 			throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
@@ -5824,14 +5829,15 @@ public class TrialServiceImpl
 		return ServiceUtil.getEcrfFieldValues(ecrf, listEntryVO, addSeries,
 				ecrf.isEnableBrowserFieldCalculation() && Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
-				loadAllJsValues, psf, this.getECRFFieldDao(),
+				loadAllJsValues, fieldQuery, psf, this.getECRFFieldDao(),
 				this.getECRFFieldValueDao(), this.getInputFieldSelectionSetValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getECRFFieldStatusTypeDao());
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId, boolean addSeries,
-			boolean loadAllJsValues, PSFVO psf)
+	protected ECRFFieldValuesOutVO handleGetEcrfFieldValues(AuthenticationVO auth, Long ecrfId, String section, Long index, Long probandListEntryId,
+			boolean addSeries,
+			boolean loadAllJsValues, String fieldQuery, PSFVO psf)
 			throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
@@ -5839,7 +5845,7 @@ public class TrialServiceImpl
 		return getEcrfFieldValues(ecrf, section, index, listEntryVO, addSeries,
 				ecrf.isEnableBrowserFieldCalculation() && Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
-				loadAllJsValues, psf);
+				loadAllJsValues, fieldQuery, psf);
 	}
 
 	@Override
@@ -7187,7 +7193,7 @@ public class TrialServiceImpl
 		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
 		HashSet<Long> ecrfIds = new HashSet<Long>();
 		ServiceUtil.populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-				getEcrfFieldValues(ecrf, section, null, listEntryVO, blank, false, false, null).getPageValues(),
+				getEcrfFieldValues(ecrf, section, null, listEntryVO, blank, false, false, null, null).getPageValues(),
 				listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
 				this.getInputFieldDao(),
 				this.getECRFFieldValueDao(),
@@ -7362,12 +7368,13 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, PSFVO psf) throws Exception {
+	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, String fieldQuery, PSFVO psf)
+			throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
 		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult);
 		ECRFFieldValuesOutVO result;
 		if (loadPageResult) {
-			result = ServiceUtil.getEcrfFieldValues((ECRF) resultItems[1], (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, psf, this.getECRFFieldDao(),
+			result = ServiceUtil.getEcrfFieldValues((ECRF) resultItems[1], (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, fieldQuery, psf, this.getECRFFieldDao(),
 					this.getECRFFieldValueDao(), this.getInputFieldSelectionSetValueDao(), this.getECRFFieldStatusEntryDao(),
 					this.getECRFFieldStatusTypeDao());
 			result.setJsValues(((ECRFFieldValuesOutVO) resultItems[0]).getJsValues());
@@ -7378,14 +7385,14 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index, Boolean addSeries,
-			PSFVO psf)
+	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index,
+			Boolean addSeries, String fieldQuery, PSFVO psf)
 			throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
 		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult);
 		ECRFFieldValuesOutVO result;
 		if (loadPageResult) {
-			result = getEcrfFieldValues((ECRF) resultItems[1], section, index, (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, psf);
+			result = getEcrfFieldValues((ECRF) resultItems[1], section, index, (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, fieldQuery, psf);
 			result.setJsValues(((ECRFFieldValuesOutVO) resultItems[0]).getJsValues());
 		} else {
 			return (ECRFFieldValuesOutVO) resultItems[0];
