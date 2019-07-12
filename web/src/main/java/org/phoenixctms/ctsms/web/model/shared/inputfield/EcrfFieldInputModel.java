@@ -401,7 +401,7 @@ public class EcrfFieldInputModel extends InputModel {
 				return values.getJsValues();
 				// }
 				// return updateModels(values);
-			} catch (NoSuchElementException|ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
 				setErrorMessage(e.getMessage());
@@ -664,7 +664,7 @@ public class EcrfFieldInputModel extends InputModel {
 			ecrfFieldValues.add(ecrfFieldValue);
 			try {
 				ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
-						.setEcrfFieldValues(WebUtil.getAuthentication(), ecrfFieldValues, null, null);
+						.setEcrfFieldValues(WebUtil.getAuthentication(), ecrfFieldValues, null, null, null);
 				ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
 				setLastFieldStatus(out);
@@ -673,7 +673,7 @@ public class EcrfFieldInputModel extends InputModel {
 				return values.getJsValues();
 				// }
 				// return updateModels(values);
-			} catch (NoSuchElementException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
 				setErrorMessageFromServiceException(e.getData(), e.getMessage());
