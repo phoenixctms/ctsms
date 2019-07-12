@@ -365,7 +365,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -471,7 +471,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntryCount(WebUtil.getAuthentication(), probandListEntry.getId(), null, null, null, true, null,
 						null, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -580,7 +580,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -889,7 +889,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntryCount(WebUtil.getAuthentication(), probandListEntry.getId(), null, null, null, null, null,
 						null, true);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -946,6 +946,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 		// ecrfFieldValueBean.setFilterSection(null);
+		ecrfFieldValueBean.setFieldQuery(null);
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
@@ -1013,7 +1014,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			} else {
 				return WebUtil.getServiceLocator().getSelectionSetService().getInitialEcrfStatusTypes(WebUtil.getAuthentication());
 			}
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -1034,7 +1035,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		if (ecrf != null && probandListEntry != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfSignature(WebUtil.getAuthentication(), ecrf.getId(), probandListEntry.getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -1343,7 +1344,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		try {
 			signature = WebUtil.getServiceLocator().getTrialService()
 					.verifyEcrfSignature(WebUtil.getAuthentication(), ecrf == null ? null : ecrf.getId(), probandListEntry == null ? null : probandListEntry.getId());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

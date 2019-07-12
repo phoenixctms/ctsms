@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
-import io.swagger.annotations.Api;
-
 import java.util.Collection;
 
 import javax.ws.rs.DELETE;
@@ -32,7 +30,9 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api(value="trial")
+import io.swagger.annotations.Api;
+
+@Api(value = "trial")
 @Path("/ecrfstatusentry")
 public class EcrfStatusEntryResource {
 
@@ -70,10 +70,10 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues")
 	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValues(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
+			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf = new PSFUriPart(uriInfo, "load_all_js_values");
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, ecrfId, listEntryId, false, loadAllJsValues, psf);
+		PSFUriPart psf = new PSFUriPart(uriInfo, "load_all_js_values", "query");
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, ecrfId, listEntryId, false, loadAllJsValues, query, psf);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 	}
 

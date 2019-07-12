@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="trial")
+@Api(value = "trial")
 @Path("/ecrffieldvalue")
 public class EcrfFieldValuesResource {
 
@@ -45,7 +45,7 @@ public class EcrfFieldValuesResource {
 	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> setEcrfFieldValues(Collection<ECRFFieldValueInVO> in)
 			throws AuthenticationException, AuthorisationException,
 			ServiceException {
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null, null);
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null, null, null);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 	}
 }

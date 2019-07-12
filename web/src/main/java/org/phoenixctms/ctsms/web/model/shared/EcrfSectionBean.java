@@ -121,6 +121,7 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 		}
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 		ecrfFieldValueBean.setFilterSection(section);
+		ecrfFieldValueBean.setFilterSection(null);
 		ecrfFieldValueBean.setFilterIndex(index);
 		ecrfFieldValueBean.changeRootEntity(ecrfId);
 		if (fieldStatusEntry != null) {
@@ -134,7 +135,7 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 		try {
 			fieldStatusEntry = WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntry(WebUtil.getAuthentication(), fieldStatusEntryId);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -86,6 +87,17 @@ public class ECRFFieldValueDaoImpl
 		}
 		if (ecrfFieldValueCriteria != null) {
 			ecrfFieldValueCriteria.addOrder(Order.asc("id"));
+		}
+	}
+
+	private void applyEcrfFieldSearchCriterions(org.hibernate.Criteria ecrfFieldCriteria, String fieldQuery) {
+		if (!CommonUtil.isEmptyString(fieldQuery)) {
+			ecrfFieldCriteria.createCriteria("field", "inputField0");
+			ecrfFieldCriteria.add(
+					Restrictions.or(Restrictions.or(
+							Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE),
+							Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE)),
+							Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE)));
 		}
 	}
 
@@ -376,7 +388,7 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected Collection<Map> handleFindByListEntryEcrfJs(Long probandListEntryId, Long ecrfId, boolean sort, Boolean js, PSFVO psf) throws Exception {
+	protected Collection<Map> handleFindByListEntryEcrfJsField(Long probandListEntryId, Long ecrfId, boolean sort, Boolean js, String fieldQuery, PSFVO psf) throws Exception {
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
@@ -390,6 +402,7 @@ public class ECRFFieldValueDaoImpl
 				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		if (psf != null) {
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFField.class, ecrfFieldCriteria);
 			// clear sort and filters?
@@ -422,7 +435,9 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected Collection<Map> handleFindByListEntryEcrfSectionIndexJs(Long probandListEntryId, Long ecrfId, String section, Long index, boolean sort, Boolean js, PSFVO psf)
+	protected Collection<Map> handleFindByListEntryEcrfSectionIndexJsField(Long probandListEntryId, Long ecrfId, String section, Long index, boolean sort, Boolean js,
+			String fieldQuery,
+			PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
@@ -438,6 +453,7 @@ public class ECRFFieldValueDaoImpl
 		if (index != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("index", index.longValue()));
 		}
+		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		if (js != null) {
 			if (js) {
 				ecrfFieldCriteria.add(Restrictions.and(Restrictions.ne("jsVariableName", ""), Restrictions.isNotNull("jsVariableName")));
@@ -494,10 +510,11 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId) throws Exception {
+	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, String fieldQuery) throws Exception {
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		// org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
+		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		return (Long) ecrfFieldCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -552,7 +569,7 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId, String section, Long index) throws Exception {
+	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, String section, Long index, String fieldQuery) throws Exception {
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
@@ -561,6 +578,7 @@ public class ECRFFieldValueDaoImpl
 		} else {
 			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
 		}
+		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		if (index != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("index", index.longValue()));
 		}

@@ -476,6 +476,13 @@ td .ui-selectonemenu {
 }
 
 .ctsms-text-column-bold {
+	/* vertical-align: top; */
+	white-space: nowrap;
+	font-weight: bold;
+	border: none !important;
+}
+
+.ctsms-text-top-column-bold {
 	vertical-align: top;
 	white-space: nowrap;
 	font-weight: bold;
@@ -483,28 +490,35 @@ td .ui-selectonemenu {
 }
 
 .ctsms-multilinetext-bold {
-	vertical-align: top;
+	/* vertical-align: top; */
 	font-weight: bold;
 }
 .ctsms-multilinetext-bold-large {
-	vertical-align: top;
+	/* vertical-align: top; */
 	font-weight: bold;
 	font-size: 2.0em !important;
 	margin: 0px;
 }
 .ctsms-multilinetext-large {
-	vertical-align: top;
+	/* vertical-align: top; */
 	font-size: 2.0em !important;
 	margin: 0px;
 }
 
 .ctsms-text-column {
-	vertical-align: top;
+	/* vertical-align: top; */
 	white-space: nowrap;
 	border: none !important;
 }
 
 .ctsms-label-for-text-column-bold {
+	white-space: nowrap;
+	/* vertical-align: top; */
+	padding-top: 1.2em !important;
+	border: none !important;
+}
+
+.ctsms-label-for-text-top-column-bold {
 	white-space: nowrap;
 	vertical-align: top;
 	padding-top: 1.2em !important;
@@ -513,8 +527,8 @@ td .ui-selectonemenu {
 
 .ctsms-label-for-text-column {
 	white-space: nowrap;
-	vertical-align: top;
-	padding-top: 1.2em !important;
+	/* vertical-align: top; */
+	/* padding-top: 1.2em !important; */
 	border: none !important;
 }
 
