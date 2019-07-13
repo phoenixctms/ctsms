@@ -198,6 +198,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
 		// initIn();
+		ecrfFieldValueBean.setFieldQuery(null);
 		initSets(false);
 		//ColumnManagementBean.resetVisibleMap(getProbandListEntryDataTableId());
 		return CHANGE_OUTCOME;
@@ -946,7 +947,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 		// ecrfFieldValueBean.setFilterSection(null);
-		ecrfFieldValueBean.setFieldQuery(null);
+		//ecrfFieldValueBean.setFieldQuery(null);
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
@@ -1102,6 +1103,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			this.ecrf = (ECRFOutVO) ecrf.getVo();
 			// out = null;
 			// this.initIn();
+			ecrfFieldValueBean.setFieldQuery(null);
 			initSets(true);
 		}
 	}
@@ -1133,6 +1135,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfModel.updateRowCount();
 		// this.initIn();
+		ecrfFieldValueBean.setFieldQuery(null);
 		initSets(false);
 		// this.probandListEntryTagValueBean.appendRequestContextCallbackArgs(true);
 		// RequestContext requestContext = RequestContext.getCurrentInstance();
