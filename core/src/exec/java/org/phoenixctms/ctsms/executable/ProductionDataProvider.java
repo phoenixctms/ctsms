@@ -2886,7 +2886,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_ecrf_journal",
@@ -2912,7 +2912,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_enrollment_log",
@@ -2925,7 +2925,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_screening_log",
@@ -2938,7 +2938,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_pre_screening_log",
@@ -2951,7 +2951,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_sicl",
@@ -2964,7 +2964,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true,
-				true);
+				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"validate_pending_ecrfs",
@@ -3068,7 +3068,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		createJobType(
 				JobModule.COURSE_CRITERIA_JOB,
 				"export_course_criteria_result",
@@ -3120,7 +3120,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		createJobType(
 				JobModule.MASS_MAIL_CRITERIA_JOB,
 				"export_mass_mail_criteria_result",
@@ -3146,7 +3146,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		createJobType(
 				JobModule.INVENTORY_CRITERIA_JOB,
 				"export_inventory_criteria_result_monthly",
@@ -3172,7 +3172,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		createJobType(
 				JobModule.COURSE_CRITERIA_JOB,
 				"export_course_criteria_result_monthly",
@@ -3224,7 +3224,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		createJobType(
 				JobModule.MASS_MAIL_CRITERIA_JOB,
 				"export_mass_mail_criteria_result_monthly",
@@ -3250,7 +3250,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true);
+				false);
 		jobOutput.println("job types created");
 	}
 

@@ -182,7 +182,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -220,7 +220,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -239,7 +239,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -258,7 +258,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -277,7 +277,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -296,7 +296,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 't',
-'t',
+'f',
 null
 );
 
@@ -449,7 +449,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
 
@@ -525,7 +525,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
 
@@ -563,7 +563,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
 
@@ -603,7 +603,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
 
@@ -679,7 +679,7 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
 
@@ -717,6 +717,6 @@ nextval('hibernate_sequence'),
 'f',
 't',
 'f',
-'t',
+'f',
 null
 );
