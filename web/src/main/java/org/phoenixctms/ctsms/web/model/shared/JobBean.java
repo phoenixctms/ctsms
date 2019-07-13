@@ -72,14 +72,18 @@ public class JobBean extends ManagedBeanBase {
 	private Integer uploadSizeLimit;
 	private String allowTypes;
 	private JobFileVO jobFile;
+	private boolean decrypted;
 
 	public JobBean() {
 		super();
 		jobModel = new JobLazyModel();
+		decrypted = true;
 	}
 
 	@Override
 	public String addAction() {
+		JobAddVO backup = new JobAddVO(in);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getJobService().addJob(WebUtil.getAuthentication(), in);
 			initIn();
@@ -87,8 +91,10 @@ public class JobBean extends ManagedBeanBase {
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
+			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
@@ -310,7 +316,12 @@ public class JobBean extends ManagedBeanBase {
 		addOperationSuccessMessage(MessageCodes.UPLOAD_OPERATION_SUCCESSFUL);
 	}
 
+	public boolean isDecrypted() {
+		return decrypted;
+	}
+
 	private void initSets() {
+		decrypted = true;
 		jobFile = null;
 		if (out != null) {
 			try {
@@ -324,6 +335,7 @@ public class JobBean extends ManagedBeanBase {
 				in.setFileName(jobFile.getFileName());
 				in.setMimeType(contentTypeVO == null ? null : contentTypeVO.getMimeType());
 				in.setDatas(jobFile.getDatas());
+				decrypted = jobFile.isDecrypted();
 			}
 		}
 		allowTypes = WebUtil.getAllowedFileExtensionsPattern(FileModule.JOB_FILE, false);
@@ -393,17 +405,26 @@ public class JobBean extends ManagedBeanBase {
 		return filterTypes;
 	}
 
+	private void sanitizeInVals() {
+		if (!isInputFile() || !decrypted) {
+			clearFile();
+		}
+		if (type != null && !type.isEmailRecipients()) {
+			in.setEmailRecipients(null);
+		}
+	}
+
 	public void handleTypeChange() {
 		loadSelectedType();
-		if (out != null) {
-			out = null;
-			if (!isInputFile()) {
-				clearFile();
-			}
-			if (type != null && !type.isEmailRecipients()) {
-				in.setEmailRecipients(null);
-			}
-		}
+		//		if (out != null) {
+		//			out = null;
+		//			if (!isInputFile()) {
+		//				clearFile();
+		//			}
+		//			if (type != null && !type.isEmailRecipients()) {
+		//				in.setEmailRecipients(null);
+		//			}
+		//		}
 	}
 
 	private void loadSelectedType() {

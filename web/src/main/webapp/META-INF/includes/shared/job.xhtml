@@ -227,17 +227,20 @@
 							value="#{jobBean.out.status.name}" />
 
 
-						<h:outputLabel rendered="#{jobBean.hasFile or jobBean.inputFile}"
+						<h:outputLabel rendered="#{jobBean.hasFile or jobBean.inputFile or !jobBean.decrypted}"
 							value="#{labels.job_file_label}" />
 
 						<p:commandLink immediate="true" id="filedownload"
-							rendered="#{jobBean.hasFile or jobBean.inputFile}" ajax="false"
+							rendered="#{(jobBean.hasFile or jobBean.inputFile) and jobBean.decrypted}" ajax="false"
 							disabled="#{!jobBean.hasFile}"
 							styleClass="#{jobBean.hasFile ? 'ctsms-field-icon ctsms-mimetype-unknown ' : ''}#{jobBean.jobFile.contentType.nodeStyleClass}"
 							title="#{labels.file_download_tooltip} #{jobBean.fileDownloadLinkLabel}">
 							<h:outputText value="#{jobBean.fileDownloadLinkLabel}" />
 							<p:fileDownload value="#{jobBean.fileStreamedContent}" />
 						</p:commandLink>
+						
+						<h:outputLabel rendered="#{!jobBean.hasFile and !jobBean.inputFile and !jobBean.decrypted}"
+							value="#{labels.encrypted_file_label}" />
 
 					</h:panelGrid>
 
@@ -286,7 +289,7 @@
 								value="#{labels.clear_job_file_label}"
 								actionListener="#{jobBean.clearFile}"
 								icon="ui-icon ui-icon-close" ajax="true"
-								disabled="#{!jobBean.hasFile}" rendered="#{jobBean.inputFile}"
+								disabled="#{!jobBean.hasFile or !jobBean.decrypted}" rendered="#{jobBean.inputFile}"
 								update="job_input" />
 
 							<!-- <p:commandButton process="@this"
