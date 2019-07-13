@@ -276,7 +276,19 @@
 						update=":tabView:probandecrfstatusentry_form:ecrf_header,:tabView:probandecrfstatusentry_form:ecrffield_input_grid"
 						oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 					<f:facet name="header">
-						<h:outputText value="#{probandEcrfStatusEntryBean.ecrfListHeader}" />
+						
+						<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{probandEcrfStatusEntryBean.ecrfListHeader}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									styleClass="ctsms-list-header-button"
+									onclick="probandEcrfStatusEcrfListTableColumnsDialog.show()" />
+							</h:panelGrid>	
 					</f:facet>
 					<p:column style="width:16px;" rendered="#{probandEcrfStatusEntryBean.showEcrfLog}">
 						<p:rowToggler />
@@ -323,10 +335,12 @@
 
 					<p:column>
 						<f:facet name="header">
-						    <h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_field_status_count_column}">
+							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_validation_field_status_counts_column}" />
+						    <!-- <h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_field_status_count_column}">
 								<f:param value="#{probandEcrfStatusEntryBean.ecrfFieldValidationStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat>  -->
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -357,6 +371,7 @@
 						<f:facet name="header">
 							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_status_validation_timestamp_column}" />
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfValidationTimestamp.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -370,10 +385,12 @@
 
 					<p:column>
 						<f:facet name="header">
-							<h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_field_status_count_column}">
+							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_query_field_status_counts_column}" />
+							<!-- <h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_field_status_count_column}">
 								<f:param value="#{probandEcrfStatusEntryBean.ecrfFieldQueryStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat>  -->
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -400,16 +417,46 @@
 					</p:column>							
 
 
-					<!-- <p:column>
+					<p:column>
 						<f:facet name="header">
-							<h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_total_ecrf_field_status_count_column}">
+							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_annotation_field_status_counts_column}" />
+							<!-- <h:outputFormat value="#{probandlabels.probandecrfstatus_ecrf_list_total_ecrf_field_status_count_column}">
 								<f:param value="#{probandEcrfStatusEntryBean.ecrfFieldAnnotationStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat>  -->
 						</f:facet>
-						<h:outputText rendered="#{probandEcrfStatusEntryBean.getTotalEcrfFieldStatusCount(ecrf.vo,'ANNOTATION') > 0}" value="#{probandEcrfStatusEntryBean.getTotalEcrfFieldStatusCount(ecrf.vo,'ANNOTATION')}" />
-					</p:column>	-->		
+						<f:attribute name="visibleDefault" value = "false" />
+						<h:outputText rendered="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total > 0}" value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total}" />						
+					</p:column>
 
-
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_field_status_counts_column}" />
+						</f:facet>
+						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
+							<ui:param
+								name="validationStatus"
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
+							<ui:param
+								name="showNew"
+								value="true" />
+							<ui:param
+								name="showUpdate"
+								value="true" />
+							<ui:param
+								name="showProposed"
+								value="true" />								
+							<ui:param
+								name="showResolved"
+								value="true" />
+							<ui:param
+								name="value"
+								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION, QUERY')}" />
+							<ui:param
+								name="idSuffix"
+								value="ecrfTotal" />								
+						</ui:include>
+					</p:column>
+					
 
 					<p:column style="width:250px;">
 						<f:facet name="header">
@@ -1190,7 +1237,15 @@
 				<ui:param
 					name="dataTableId"
 					value=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list" />
-			</ui:include>					
+			</ui:include>	
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="probandEcrfStatusEcrfListTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list" />
+			</ui:include>				
 		</h:form>
 	</ui:composition>
 </h:body>

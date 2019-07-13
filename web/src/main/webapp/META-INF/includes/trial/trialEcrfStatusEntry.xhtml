@@ -402,9 +402,21 @@
 						update=":tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"
 						oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 					<f:facet name="header">
-						<h:outputText value="#{trialEcrfStatusEntryBean.ecrfListHeader}" />
+							<h:panelGrid
+								columns="2"
+								cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+								<h:outputText value="#{trialEcrfStatusEntryBean.ecrfListHeader}" />
+								<p:commandButton
+									type="button"
+									title="#{labels.open_table_columns_dialog_button_label}"
+									icon="ui-icon ui-icon-wrench"
+									styleClass="ctsms-list-header-button"
+									onclick="trialEcrfStatusEcrfListTableColumnsDialog.show()" />
+							</h:panelGrid>	
+						
 					</f:facet>
-					 <p:column style="width:16px;" rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
+					<p:column style="width:16px;" rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
 						<p:rowToggler />
 					</p:column> 
 					<!-- <p:column sortBy="#{ecrf.vo.id}">
@@ -449,10 +461,12 @@
 	
 					<p:column>
 						<f:facet name="header">
-						    <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
+							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_validation_field_status_counts_column}" />
+						    <!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
 								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldValidationStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat>-->
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -483,6 +497,7 @@
 						<f:facet name="header">
 							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_validation_timestamp_column}" />
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfValidationTimestamp.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -496,10 +511,12 @@
 
 					<p:column>
 						<f:facet name="header">
-							<h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
+							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_query_field_status_counts_column}" />
+							<!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
 								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldQueryStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat> -->
 						</f:facet>
+						<f:attribute name="visibleDefault" value = "false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param
 								name="validationStatus"
@@ -526,14 +543,45 @@
 					</p:column>		
 
 
-					<!-- <p:column>
+					<p:column>
 						<f:facet name="header">
-							<h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_total_ecrf_field_status_count_column}">
+							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_annotation_field_status_counts_column}" />
+							<!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_total_ecrf_field_status_count_column}">
 								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldAnnotationStatusEntryBean.queueName}" />
-							</h:outputFormat>
+							</h:outputFormat>  -->
 						</f:facet>
-						<h:outputText rendered="#{trialEcrfStatusEntryBean.getTotalEcrfFieldStatusCount(ecrf.vo,'ANNOTATION') > 0}" value="#{trialEcrfStatusEntryBean.getTotalEcrfFieldStatusCount(ecrf.vo,'ANNOTATION')}" />
-					</p:column>	-->	
+						<f:attribute name="visibleDefault" value = "false" />
+						<h:outputText rendered="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total > 0}" value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total}" />
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_field_status_counts_column}" />
+						</f:facet>
+						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
+							<ui:param
+								name="validationStatus"
+								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
+							<ui:param
+								name="showNew"
+								value="true" />
+							<ui:param
+								name="showUpdate"
+								value="true" />
+							<ui:param
+								name="showProposed"
+								value="true" />								
+							<ui:param
+								name="showResolved"
+								value="true" />
+							<ui:param
+								name="value"
+								value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION, QUERY')}" />
+							<ui:param
+								name="idSuffix"
+								value="ecrfTotal" />																												
+						</ui:include>
+					</p:column>
 
 
 					<p:column style="width:250px;">
@@ -1348,6 +1396,14 @@
 				<ui:param
 					name="dataTableId"
 					value=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list" />
+			</ui:include>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="trialEcrfStatusEcrfListTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list" />
 			</ui:include>					
 		</h:form>
 	</ui:composition>
