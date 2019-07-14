@@ -203,6 +203,16 @@ public class JobOutput {
 				JobOutVO job = jobService.updateJob(auth, this.job);
 				this.job.setVersion(job.getVersion());
 			} catch (AuthenticationException | AuthorisationException | ServiceException e) {
+				println(e.getMessage());
+				this.job.setDatas(null);
+				this.job.setFileName(null);
+				this.job.setMimeType(null);
+				flushJob(JobStatus.FAILED);
+				try {
+					JobOutVO job = jobService.updateJob(auth, this.job);
+					this.job.setVersion(job.getVersion());
+				} catch (AuthenticationException | AuthorisationException | ServiceException exc) {
+				}
 			}
 		}
 	}

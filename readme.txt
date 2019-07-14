@@ -132,7 +132,7 @@
 
         edit: summary of important mvn commands:
         
-        mvn -Peclipse -Dmaven.test.skip=true
+        mvn install -DskipTests
         mvn dependency:tree
         mvn -f core/pom.xml -Dmaven.test.skip=true
         mvn -f common/pom.xml -Dmaven.test.skip=true
