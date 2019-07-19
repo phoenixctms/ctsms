@@ -701,6 +701,49 @@
         primary key (ID)
     );
 
+    create table JOB (
+        ID BIGINT not null,
+        FILE_NAME CHARACTER VARYING(1024),
+        FILE_SIZE BIGINT,
+        DATA BYTEA,
+        ENCRYPTED_FILE_NAME BYTEA,
+        FILE_NAME_IV BYTEA,
+        FILE_NAME_HASH BYTEA,
+        DATA_IV BYTEA,
+        ENCRYPTED_FILE BOOLEAN not null,
+        EMAIL_RECIPIENTS CHARACTER VARYING(1024),
+        STATUS CHARACTER VARYING(1024) not null,
+        JOB_OUTPUT TEXT,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        VERSION BIGINT not null,
+        TYPE_FK BIGINT not null,
+        CONTENT_TYPE_FK BIGINT,
+        MODIFIED_USER_FK BIGINT not null,
+        TRIAL_FK BIGINT,
+        PROBAND_FK BIGINT,
+        INPUT_FIELD_FK BIGINT,
+        CRITERIA_FK BIGINT,
+        primary key (ID)
+    );
+
+    create table JOB_TYPE (
+        ID BIGINT not null,
+        MODULE CHARACTER VARYING(1024) not null,
+        NAME_L10N_KEY CHARACTER VARYING(1024) not null,
+        DESCRIPTION_L10N_KEY CHARACTER VARYING(1024) not null,
+        COMMAND_FORMAT CHARACTER VARYING(1024) not null,
+        VISIBLE BOOLEAN not null,
+        DAILY BOOLEAN not null,
+        WEEKLY BOOLEAN not null,
+        MONTHLY BOOLEAN not null,
+        INPUT_FILE BOOLEAN not null,
+        OUTPUT_FILE BOOLEAN not null,
+        ENCRYPT_FILE BOOLEAN not null,
+        EMAIL_RECIPIENTS BOOLEAN not null,
+        TRIAL_FK BIGINT,
+        primary key (ID)
+    );
+
     create table JOURNAL_CATEGORY (
         ID BIGINT not null,
         MODULE CHARACTER VARYING(1024) not null,
@@ -935,9 +978,6 @@
         VERSION BIGINT not null,
         REFERENCE CHARACTER VARYING(1024),
         REASON_FOR_PAYMENT CHARACTER VARYING(1024),
-        EXPORT_STATUS CHARACTER VARYING(1024) not null,
-        EXPORT_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
-        EXPORT_RESPONSE_MSG CHARACTER VARYING(1024),
         VOUCHER_CODE CHARACTER VARYING(1024),
         ENCRYPTED_COMMENT BYTEA not null unique,
         COMMENT_IV BYTEA not null unique,
@@ -1296,9 +1336,6 @@
         POSITION BIGINT not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
-        EXPORT_STATUS CHARACTER VARYING(1024) not null,
-        EXPORT_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
-        EXPORT_RESPONSE_MSG CHARACTER VARYING(1024),
         RATING BIGINT,
         RATING_MAX BIGINT,
         PROBAND_FK BIGINT not null,
@@ -1962,9 +1999,6 @@
         ID BIGINT not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
-        EXPORT_STATUS CHARACTER VARYING(1024) not null,
-        EXPORT_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
-        EXPORT_RESPONSE_MSG CHARACTER VARYING(1024),
         VALIDATION_STATUS CHARACTER VARYING(1024) not null,
         VALIDATION_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
         VALIDATION_RESPONSE_MSG CHARACTER VARYING(1024),
@@ -2073,6 +2107,14 @@
         AUTH_METHOD CHARACTER VARYING(1024) not null,
         SHOW_TOOLTIPS BOOLEAN not null,
         DECRYPT BOOLEAN not null,
+        ENABLE_INVENTORY_MODULE BOOLEAN not null,
+        ENABLE_STAFF_MODULE BOOLEAN not null,
+        ENABLE_COURSE_MODULE BOOLEAN not null,
+        ENABLE_TRIAL_MODULE BOOLEAN not null,
+        ENABLE_INPUT_FIELD_MODULE BOOLEAN not null,
+        ENABLE_PROBAND_MODULE BOOLEAN not null,
+        ENABLE_MASS_MAIL_MODULE BOOLEAN not null,
+        ENABLE_USER_MODULE BOOLEAN not null,
         DEFERRED_DELETE BOOLEAN not null,
         DEFERRED_DELETE_REASON TEXT,
         IDENTITY_FK BIGINT,
@@ -2471,6 +2513,46 @@
         add constraint INVENTORY_TAG_VALUE_TAG_FKC 
         foreign key (TAG_FK) 
         references INVENTORY_TAG;
+
+    alter table JOB 
+        add constraint JOB_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table JOB 
+        add constraint JOB_INPUT_FIELD_FKC 
+        foreign key (INPUT_FIELD_FK) 
+        references INPUT_FIELD;
+
+    alter table JOB 
+        add constraint JOB_PROBAND_FKC 
+        foreign key (PROBAND_FK) 
+        references PROBAND;
+
+    alter table JOB 
+        add constraint JOB_CONTENT_TYPE_FKC 
+        foreign key (CONTENT_TYPE_FK) 
+        references MIME_TYPE;
+
+    alter table JOB 
+        add constraint JOB_CRITERIA_FKC 
+        foreign key (CRITERIA_FK) 
+        references CRITERIA;
+
+    alter table JOB 
+        add constraint JOB_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table JOB 
+        add constraint JOB_TYPE_FKC 
+        foreign key (TYPE_FK) 
+        references JOB_TYPE;
+
+    alter table JOB_TYPE 
+        add constraint JOB_TYPE_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
 
     alter table JOURNAL_ENTRY 
         add constraint JOURNAL_ENTRY_MODIFIED_USER_FKC 

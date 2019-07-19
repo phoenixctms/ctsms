@@ -230,6 +230,30 @@
     alter table INVENTORY_TAG_VALUE 
         drop constraint INVENTORY_TAG_VALUE_TAG_FKC;
 
+    alter table JOB 
+        drop constraint JOB_MODIFIED_USER_FKC;
+
+    alter table JOB 
+        drop constraint JOB_INPUT_FIELD_FKC;
+
+    alter table JOB 
+        drop constraint JOB_PROBAND_FKC;
+
+    alter table JOB 
+        drop constraint JOB_CONTENT_TYPE_FKC;
+
+    alter table JOB 
+        drop constraint JOB_CRITERIA_FKC;
+
+    alter table JOB 
+        drop constraint JOB_TRIAL_FKC;
+
+    alter table JOB 
+        drop constraint JOB_TYPE_FKC;
+
+    alter table JOB_TYPE 
+        drop constraint JOB_TYPE_TRIAL_FKC;
+
     alter table JOURNAL_ENTRY 
         drop constraint JOURNAL_ENTRY_MODIFIED_USER_FKC;
 
@@ -994,6 +1018,10 @@
     drop table INVENTORY_TAG cascade;
 
     drop table INVENTORY_TAG_VALUE cascade;
+
+    drop table JOB cascade;
+
+    drop table JOB_TYPE cascade;
 
     drop table JOURNAL_CATEGORY cascade;
 
