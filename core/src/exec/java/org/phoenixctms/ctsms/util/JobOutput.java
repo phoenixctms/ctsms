@@ -193,7 +193,9 @@ public class JobOutput {
 			lineFormatted = MessageFormat.format(LINE_FORMAT, line);
 		}
 		output.append(lineFormatted);
-		System.out.println(lineFormatted);
+		if (this.job == null) {
+			System.out.println(lineFormatted);
+		}
 		//updateJob();
 	}
 
