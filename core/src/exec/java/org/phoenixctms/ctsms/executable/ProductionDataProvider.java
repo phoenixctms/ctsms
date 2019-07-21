@@ -2069,15 +2069,15 @@ public class ProductionDataProvider {
 	private void createProbandCategories() {
 		createProbandCategory("new_person", Color.WHITESMOKE, true, false, true, false, "ctsms-probandcategory-new-person", true, false, false);
 		createProbandCategory("new_animal", Color.WHITESMOKE, false, true, false, false, "ctsms-probandcategory-new-animal", true, false, false);
-		createProbandCategory("signup", Color.ANTIQUEWHITE, false, true, true, true, "ctsms-probandcategory-signup", true, true, false);
-		createProbandCategory("signup_verified", Color.PALEGREEN, false, true, true, true, "ctsms-probandcategory-signup-verified", false, true, false);
+		createProbandCategory("signup", Color.ANTIQUEWHITE, true, false, true, true, "ctsms-probandcategory-signup", true, true, false);
+		createProbandCategory("signup_verified", Color.PALEGREEN, true, false, true, true, "ctsms-probandcategory-signup-verified", false, true, false);
 		createProbandCategory("migrated", Color.SEASHELL, true, true, false, false, "ctsms-probandcategory-migrated", false, false, false);
 		createProbandCategory("test", Color.PAPAYAWHIP, true, true, false, false, "ctsms-probandcategory-test", false, false, false);
-		createProbandCategory("unable_to_reach", Color.GHOSTWHITE, false, true, true, false, "ctsms-probandcategory-unable-to-reach", false, false, false);
+		createProbandCategory("unable_to_reach", Color.GHOSTWHITE, true, false, true, false, "ctsms-probandcategory-unable-to-reach", false, false, false);
 		createProbandCategory("to_be_deleted", Color.ORANGERED, true, true, false, true, "ctsms-probandcategory-to-be-deleted", false, false, true);
 		createProbandCategory("duplicate", Color.MISTYROSE, true, true, false, false, "ctsms-probandcategory-duplicate", false, false, true);
 		createProbandCategory("locked", Color.GAINSBORO, true, true, false, false, "ctsms-probandcategory-locked", false, false, true);
-		createProbandCategory("participant_to_be_deleted", Color.SALMON, false, true, false, false, "ctsms-probandcategory-participant-to-be-deleted", false, false, true);
+		createProbandCategory("participant_to_be_deleted", Color.SALMON, true, false, false, false, "ctsms-probandcategory-participant-to-be-deleted", false, false, true);
 		// createProbandCategory("new", Color.WHITESMOKE, true, true, "ctsms-probandcategory-new", true, false);
 		// createProbandCategory("migrated", Color.SEASHELL, true, false, "ctsms-probandcategory-migrated", false, false);
 		// createProbandCategory("test", Color.PAPAYAWHIP, true, true, "ctsms-probandcategory-test", false, false);
