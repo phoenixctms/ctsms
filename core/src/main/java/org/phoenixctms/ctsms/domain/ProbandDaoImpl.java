@@ -466,15 +466,15 @@ public class ProbandDaoImpl
 		particularsCriteria.add(Restrictions.like("alias", aliasPattern, MatchMode.EXACT));
 		return (Long) probandCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
-	
+
 	@Override
 	protected Proband handleFindByMaxAlias(boolean person, String aliasPattern) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
 		org.hibernate.Criteria particularsCriteria;
 		if (person) {
-			particularsCriteria = probandCriteria.createCriteria("personParticulars","particulars");
+			particularsCriteria = probandCriteria.createCriteria("personParticulars", "particulars");
 		} else {
-			particularsCriteria = probandCriteria.createCriteria("animalParticulars","particulars");
+			particularsCriteria = probandCriteria.createCriteria("animalParticulars", "particulars");
 		}
 		particularsCriteria.add(Restrictions.like("alias", aliasPattern, MatchMode.EXACT));
 		probandCriteria.addOrder(Order.desc("particulars.alias"));
@@ -504,6 +504,24 @@ public class ProbandDaoImpl
 				this.getCriterionPropertyDao(),
 				this.getCriterionRestrictionDao());
 		return query.list();
+	}
+
+	@Override
+	protected Collection<Proband> handleFindByInquiryValuesTrial(Long departmentId, Long trialId, Boolean active, Boolean activeSignup, PSFVO psf) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(Proband.class, probandCriteria);
+		if (departmentId != null) {
+			criteriaMap.createCriteria("department").add(Restrictions.idEq(departmentId.longValue()));
+		}
+		org.hibernate.Criteria inquiryCriteria = criteriaMap.createCriteria("inquiryValues.inquiry");
+		inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		if (active != null) {
+			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiryCriteria.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 	}
 
 	@Override

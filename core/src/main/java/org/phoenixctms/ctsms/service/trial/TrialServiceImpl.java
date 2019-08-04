@@ -8364,4 +8364,13 @@ public class TrialServiceImpl
 				journalEntryDao);
 		return result;
 	}
+
+	@Override
+	protected Collection<ProbandOutVO> handleGetInquiryProbandList(AuthenticationVO auth, Long trialId, Boolean active, Boolean activeSignup, PSFVO psf) throws Exception {
+		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		ProbandDao probandDao = this.getProbandDao();
+		Collection probands = probandDao.findByInquiryValuesTrial(null, trialId, active, activeSignup, psf);
+		probandDao.toProbandOutVOCollection(probands);
+		return probands;
+	}
 }
