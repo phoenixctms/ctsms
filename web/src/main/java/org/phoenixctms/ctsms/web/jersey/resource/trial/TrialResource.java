@@ -116,6 +116,14 @@ public class TrialResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/inquirymaxselectionsetvaluecount")
+	public long getInquiryMaxSelectionSetValueCount(@PathParam("id") Long id)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getInputFieldService().getInquiryMaxSelectionSetValueCount(auth, id);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/folders")
 	public Page<String> getFileFolders(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {

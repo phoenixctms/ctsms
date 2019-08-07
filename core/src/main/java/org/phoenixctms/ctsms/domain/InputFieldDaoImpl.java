@@ -209,6 +209,28 @@ public class InputFieldDaoImpl
 		return maxSelectionSetValues;
 	}
 
+	@Override
+	protected long handleGetInquiryMaxSelectionSetValueCount(Long trialId) throws Exception {
+		org.hibernate.Criteria inputFieldCriteria = createInputFieldCriteria();
+		inputFieldCriteria.add(
+				Restrictions.in("fieldType", SELECT_FIELD_TYPES)); // no AUTOCOMPLETE!
+		org.hibernate.Criteria ecrfFieldCriteria = inputFieldCriteria.createCriteria("inquiries", "inquiries0", CriteriaSpecification.INNER_JOIN);
+		ecrfFieldCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		org.hibernate.Criteria selectionSetValueCriteria = inputFieldCriteria.createCriteria("selectionSetValues", "inputFieldSelectionSetValues",
+				CriteriaSpecification.INNER_JOIN);
+		inputFieldCriteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("inquiries0.id"))
+				.add(Projections.alias(Projections.count("inputFieldSelectionSetValues.id"), "selectionSetValuesCount")));
+		inputFieldCriteria.addOrder(Order.desc("selectionSetValuesCount"));
+		inputFieldCriteria.setMaxResults(1);
+		long maxSelectionSetValues = 0l;
+		try {
+			maxSelectionSetValues = (Long) ((Object[]) inputFieldCriteria.list().iterator().next())[1];
+		} catch (Exception e) {
+		}
+		return maxSelectionSetValues;
+	}
+
 	/**
 	 * @inheritDoc
 	 */

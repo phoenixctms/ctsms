@@ -1248,6 +1248,12 @@ public class InputFieldServiceImpl
 	}
 
 	@Override
+	protected long handleGetInquiryMaxSelectionSetValueCount(AuthenticationVO auth, Long trialId) throws Exception {
+		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		return this.getInputFieldDao().getInquiryMaxSelectionSetValueCount(trialId);
+	}
+
+	@Override
 	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfFieldId, boolean excludeAuditTrail) throws Exception {
 		CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
 		return this.getECRFFieldValueDao().getCount(ecrfFieldId, excludeAuditTrail);
