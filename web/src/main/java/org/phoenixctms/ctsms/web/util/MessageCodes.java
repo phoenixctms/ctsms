@@ -215,6 +215,7 @@ public interface MessageCodes {
 	public static final String ECRF_FIELD_SECTION_PRESET = "ecrf_field_section_preset";
 	public static final String INQUIRY_COMMENT_PRESET = "inquiry_comment_preset";
 	public static final String INQUIRY_TITLE_PRESET = "inquiry_title_preset";
+	public final static String INQUIRY_EXTERNAL_ID_PRESET = "inquiry_external_id_preset";
 	public static final String INQUIRY_JS_VARIABLE_NAME_PRESET = "inquiry_js_variable_name_preset";
 	public static final String INQUIRY_JS_VALUE_EXPRESSION_PRESET = "inquiry_js_value_expression_preset";
 	public static final String INQUIRY_JS_OUTPUT_EXPRESSION_PRESET = "inquiry_js_output_expression_preset";

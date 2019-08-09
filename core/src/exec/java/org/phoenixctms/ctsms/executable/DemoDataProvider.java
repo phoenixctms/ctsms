@@ -1530,6 +1530,7 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InquiryInVO newInquiry = new InquiryInVO();
 		newInquiry.setCategory(category);
+		//newInquiry.setExternalId();
 		newInquiry.setActive(active);
 		newInquiry.setActiveSignup(activeSignup);
 		newInquiry.setOptional(optional);

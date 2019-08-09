@@ -194,6 +194,15 @@
 									value="#{inquiry.vo.excelValue or inquiry.vo.excelDate}" />
 							</ui:include>
 						</p:column>
+						<p:column
+							sortBy="#{inquiry.vo.externalId}"
+							filterBy="#{inquiry.vo.externalId}">
+							<f:attribute name="visibleDefault" value = "false" />
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.inquiry_inquiry_list_external_id_column}" />
+							</f:facet>
+							<h:outputText value="#{inquiry.vo.externalId}" />
+						</p:column>							
 						<p:column>
 						    <f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">
@@ -695,6 +704,27 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryActiveSignup" />
+								
+								<h:outputLabel
+									for="inquiryExternalId"
+									value="#{triallabels.inquiry_externalid_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="inquiryExternalId"
+										value="#{inquiryBean.in.externalId}"
+										required="false"
+										label="#{triallabels.inquiry_externalid}"
+										styleClass="ctsms-control">
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inquiryExternalId">
+										<h:outputText
+											value="#{triallabels.inquiry_externalid_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="inquiryExternalId" />								
 								
 
 							</h:panelGrid>

@@ -198,7 +198,16 @@
 									name="value"
 									value="#{probandListEntryTag.vo.randomize}" />
 							</ui:include>
-						</p:column>				
+						</p:column>
+						<p:column
+							sortBy="#{probandListEntryTag.vo.externalId}"
+							filterBy="#{probandListEntryTag.vo.externalId}">
+							<f:attribute name="visibleDefault" value = "false" />
+							<f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_external_id_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntryTag.vo.externalId}" />
+						</p:column>											
 						<p:column>
 							<f:attribute name="visibleDefault" value = "false" />
 							<f:facet name="header">

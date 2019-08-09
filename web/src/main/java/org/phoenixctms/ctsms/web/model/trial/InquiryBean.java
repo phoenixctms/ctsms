@@ -63,6 +63,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setJsVariableName(out.getJsVariableName());
 			in.setJsValueExpression(out.getJsValueExpression());
 			in.setJsOutputExpression(out.getJsOutputExpression());
+			in.setExternalId(out.getExternalId());
 		}
 	}
 
@@ -73,7 +74,7 @@ public class InquiryBean extends ManagedBeanBase {
 			if (trialId != null) {
 				try {
 					position = WebUtil.getServiceLocator().getTrialService().getInquiryMaxPosition(WebUtil.getAuthentication(), trialId, category);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -95,6 +96,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setJsVariableName(Messages.getString(MessageCodes.INQUIRY_JS_VARIABLE_NAME_PRESET));
 			in.setJsValueExpression(Messages.getString(MessageCodes.INQUIRY_JS_VALUE_EXPRESSION_PRESET));
 			in.setJsOutputExpression(Messages.getString(MessageCodes.INQUIRY_JS_OUTPUT_EXPRESSION_PRESET));
+			in.setExternalId(Messages.getString(MessageCodes.INQUIRY_EXTERNAL_ID_PRESET));
 		}
 	}
 
@@ -129,7 +131,7 @@ public class InquiryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -165,7 +167,7 @@ public class InquiryBean extends ManagedBeanBase {
 			} else {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_ERROR, MessageCodes.BULK_ADD_INQUIRY_CATEGORY_REQUIRED);
 			}
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -226,7 +228,7 @@ public class InquiryBean extends ManagedBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -244,7 +246,7 @@ public class InquiryBean extends ManagedBeanBase {
 		if (in.getTrialId() != null) {
 			try {
 				categories = WebUtil.getServiceLocator().getTrialService().getInquiryCategories(WebUtil.getAuthentication(), in.getTrialId(), query, null, null, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -352,7 +354,7 @@ public class InquiryBean extends ManagedBeanBase {
 				categoryStrings = WebUtil.getServiceLocator().getTrialService().getInquiryCategories(WebUtil.getAuthentication(), in.getTrialId(), null, null, null, null);
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			}
 		}
 		if (categoryStrings != null) {
@@ -431,7 +433,7 @@ public class InquiryBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getInquiry(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -448,7 +450,7 @@ public class InquiryBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveInquiry(WebUtil.getAuthentication(), inquiryId, PositionMovement.DOWN);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -459,7 +461,7 @@ public class InquiryBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveInquiry(WebUtil.getAuthentication(), inquiryId, PositionMovement.FIRST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -470,7 +472,7 @@ public class InquiryBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveInquiry(WebUtil.getAuthentication(), inquiryId, PositionMovement.LAST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -486,7 +488,7 @@ public class InquiryBean extends ManagedBeanBase {
 				initIn();
 				initSets();
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -500,7 +502,7 @@ public class InquiryBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveInquiry(WebUtil.getAuthentication(), inquiryId, PositionMovement.UP);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -518,7 +520,7 @@ public class InquiryBean extends ManagedBeanBase {
 			initSets();
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -567,7 +569,7 @@ public class InquiryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
