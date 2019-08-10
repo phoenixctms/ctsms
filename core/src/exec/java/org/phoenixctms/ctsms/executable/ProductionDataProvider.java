@@ -3018,6 +3018,32 @@ public class ProductionDataProvider {
 				false,
 				true);
 		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_inquiry_data",
+				"export_inquiry_data",
+				"{11} --task=cleanup_all --task=export_inquiry_data_vertical --task=export_inquiry_data_horizontal --task=publish_inquiry_data_sqlite --task=publish_inquiry_data_horizontal_csv --task=publish_inquiry_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_inquiry_pdfs",
+				"export_inquiry_pdfs",
+				"{10} --task=cleanup_all --task=publish_inquiry_data_pdfs --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
 				JobModule.INPUT_FIELD_JOB,
 				"export_input_field",
 				"export_input_field",

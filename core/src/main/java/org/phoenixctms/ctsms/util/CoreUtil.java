@@ -1126,7 +1126,8 @@ public final class CoreUtil {
 					null,
 					null,
 					null,
-					Settings.getString(SettingCodes.PROCESS_PL, Bundle.SETTINGS, DefaultSettings.PROCESS_PL));
+					Settings.getString(SettingCodes.ECRF_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_PROCESS_PL),
+					Settings.getString(SettingCodes.INQUIRY_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_PROCESS_PL));
 			//ProcessBuilder processBuilder = new ProcessBuilder(command);
 			//processBuilder.environment().clear();
 			//processBuilder.

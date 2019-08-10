@@ -233,7 +233,8 @@ public final class DefaultSettings {
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
 	public static final Integer JOB_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 	public static final String DB_TOOL = "dbtool";
-	public static final String PROCESS_PL = "process";
+	public static final String ECRF_PROCESS_PL = "process";
+	public static final String INQUIRY_PROCESS_PL = "process";
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");

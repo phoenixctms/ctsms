@@ -291,5 +291,6 @@ public interface SettingCodes {
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "resolve_mail_address_domain_name";
 	public static final String JOB_FILE_SIZE_LIMIT = "job_file_size_limit";
 	public static final String DB_TOOL = "db_tool";
-	public static final String PROCESS_PL = "process_pl";
+	public static final String ECRF_PROCESS_PL = "ecrf_process_pl";
+	public static final String INQUIRY_PROCESS_PL = "inquiry_process_pl";
 }
