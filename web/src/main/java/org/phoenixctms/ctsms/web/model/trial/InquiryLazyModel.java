@@ -19,8 +19,8 @@ public class InquiryLazyModel extends LazyDataModelBase<InquiryOutVO> {
 	protected Collection<InquiryOutVO> getLazyResult(PSFVO psf) {
 		if (trialId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getInquiryList(WebUtil.getAuthentication(), trialId, null, null, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				return WebUtil.getServiceLocator().getTrialService().getInquiryList(WebUtil.getAuthentication(), trialId, null, null, false, psf);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

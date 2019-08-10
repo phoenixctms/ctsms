@@ -6082,24 +6082,24 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<InquiryOutVO> handleGetInquiryList(AuthenticationVO auth, Long trialId, Boolean active, Boolean signupActive,
-			PSFVO psf) throws Exception {
+			boolean sort, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		InquiryDao inquiryDao = this.getInquiryDao();
-		Collection inquiries = inquiryDao.findByTrialActiveJs(trialId, active, signupActive, false, null, psf);
+		Collection inquiries = inquiryDao.findByTrialActiveJs(trialId, active, signupActive, sort, null, psf);
 		inquiryDao.toInquiryOutVOCollection(inquiries);
 		return inquiries;
 	}
 
 	@Override
 	protected Collection<InquiryOutVO> handleGetInquiryList(AuthenticationVO auth, Long trialId,
-			String category, Boolean active, Boolean signupActive, PSFVO psf) throws Exception {
+			String category, Boolean active, Boolean signupActive, boolean sort, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		InquiryDao inquiryDao = this.getInquiryDao();
-		Collection inquiries = inquiryDao.findByTrialCategoryActiveJs(trialId, category, active, signupActive, false, null, psf);
+		Collection inquiries = inquiryDao.findByTrialCategoryActiveJs(trialId, category, active, signupActive, sort, null, psf);
 		inquiryDao.toInquiryOutVOCollection(inquiries);
 		return inquiries;
 	}
