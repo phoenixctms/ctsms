@@ -579,6 +579,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	protected abstract Object forceUpdate();
 
 	public final void forceUpdate(ActionEvent actionEvent) {
-		actionPostProcess(update());
+		actionPostProcess(forceUpdate());
 	}
 }

@@ -482,7 +482,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 		return update(true);
 	}
 
-	public Object update(boolean force) {
+	private Object update(boolean force) {
 		if (tagValue != null) {
 			setErrorMessage(null);
 			HashSet<ProbandListEntryTagValueInVO> tagValues = new HashSet<ProbandListEntryTagValueInVO>(1);

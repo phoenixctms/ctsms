@@ -511,7 +511,7 @@ public class InquiryInputModel extends InputModel {
 		return update(true);
 	}
 
-	public Object update(boolean force) {
+	private Object update(boolean force) {
 		if (inquiryValue != null) {
 			setErrorMessage(null);
 			HashSet<InquiryValueInVO> inquiryValues = new HashSet<InquiryValueInVO>(1);
