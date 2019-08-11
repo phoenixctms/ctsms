@@ -762,7 +762,7 @@
 							process="@this,row#{index}"
 							id="update#{index}"
 							title="#{labels.update_button_label}"
-							actionListener="#{fieldInput.update}"
+							actionListener="#{fieldInput.forceUpdate}"
 							tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);#{updateOnComplete}"
 							icon="ui-icon ui-icon-disk"

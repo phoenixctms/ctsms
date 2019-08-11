@@ -336,7 +336,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				// if (isJsVariable()) {
 				return values.getJsValues();
 				// }
-			} catch (NoSuchElementException|ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
 				setErrorMessage(e.getMessage());
@@ -474,19 +474,28 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 
 	@Override
 	public Object update() {
+		return update(false);
+	}
+
+	@Override
+	public Object forceUpdate() {
+		return update(true);
+	}
+
+	public Object update(boolean force) {
 		if (tagValue != null) {
 			setErrorMessage(null);
 			HashSet<ProbandListEntryTagValueInVO> tagValues = new HashSet<ProbandListEntryTagValueInVO>(1);
 			tagValues.add(tagValue);
 			try {
-				ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(WebUtil.getAuthentication(), tagValues);
+				ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(WebUtil.getAuthentication(), tagValues, force);
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
 				setModifiedAnnotation(out);
 				// if (isJsVariable()) {
 				return values.getJsValues();
 				// }
-			} catch (NoSuchElementException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
 				setErrorMessageFromServiceException(e.getData(), e.getMessage());

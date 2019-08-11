@@ -2363,7 +2363,7 @@ public class DemoDataProvider {
 						inquiryValuesIns.add(newInquiryValue);
 					}
 				}
-				jobOutput.println(probandVO.getName() + ": " + probandService.setInquiryValues(getRandomAuth(departmentNum), inquiryValuesIns).getPageValues().size()
+				jobOutput.println(probandVO.getName() + ": " + probandService.setInquiryValues(getRandomAuth(departmentNum), inquiryValuesIns, true).getPageValues().size()
 						+ " inquiry values set/created");
 			}
 			probands = new ArrayList<ProbandOutVO>(performSearch(auth, criteria, null, null));
@@ -2409,7 +2409,7 @@ public class DemoDataProvider {
 				probandListEntryTagValuesIns.add(newProbandListEntryTagValue);
 			}
 			jobOutput.println(probandListEntry.getPosition() + ". " + probandListEntry.getProband().getName() + ": "
-					+ trialService.setProbandListEntryTagValues(getRandomAuth(departmentNum), probandListEntryTagValuesIns).getPageValues().size()
+					+ trialService.setProbandListEntryTagValues(getRandomAuth(departmentNum), probandListEntryTagValuesIns, true).getPageValues().size()
 					+ " proband list entry tag values set/created");
 			HashSet<ProbandListStatusTypeVO> passedProbandListStatus = new HashSet<ProbandListStatusTypeVO>();
 			passedProbandListStatus.add(probandListEntry.getLastStatus().getStatus());

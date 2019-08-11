@@ -81,7 +81,7 @@ public class InquiryInputModel extends InputModel {
 				// if (isJsVariable()) {
 				return values.getJsValues();
 				// }
-			} catch (NoSuchElementException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
 				setErrorMessageFromServiceException(e.getData(), e.getMessage());
@@ -365,7 +365,7 @@ public class InquiryInputModel extends InputModel {
 				// if (isJsVariable()) {
 				return values.getJsValues();
 				// }
-			} catch (NoSuchElementException|ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
 				setErrorMessage(e.getMessage());
@@ -503,19 +503,28 @@ public class InquiryInputModel extends InputModel {
 
 	@Override
 	public Object update() {
+		return update(false);
+	}
+
+	@Override
+	public Object forceUpdate() {
+		return update(true);
+	}
+
+	public Object update(boolean force) {
 		if (inquiryValue != null) {
 			setErrorMessage(null);
 			HashSet<InquiryValueInVO> inquiryValues = new HashSet<InquiryValueInVO>(1);
 			inquiryValues.add(inquiryValue);
 			try {
-				InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), inquiryValues);
+				InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), inquiryValues, force);
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
 				setModifiedAnnotation(out);
 				// if (isJsVariable()) {
 				return values.getJsValues();
 				// }
-			} catch (NoSuchElementException|AuthorisationException|IllegalArgumentException e) {
+			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
 				setErrorMessageFromServiceException(e.getData(), e.getMessage());

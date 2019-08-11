@@ -607,6 +607,7 @@ public class TrialServiceImpl
 	private void addUpdateEcrfFieldValue(ECRFFieldValueInVO ecrfFieldValueIn, ECRFStatusEntry ecrfStatusEntry, ProbandListEntryOutVO listEntryVO, ECRFField ecrfField,
 			Timestamp now,
 			User user,
+			boolean force,
 			boolean logTrial,
 			boolean logProband,
 			LinkedHashMap<String, LinkedHashSet<Long>> sectionIndexMap, ArrayList<ECRFFieldValueOutVO> outEcrfFieldValues, ArrayList<ECRFFieldValueJsonVO> outJsEcrfFieldValues)
@@ -669,7 +670,7 @@ public class TrialServiceImpl
 			}
 			if (!ecrfField.isDisabled()
 					&& (!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
-							|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue()))) {
+							|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), force))) {
 				checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField); // , ecrfFieldVO); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
@@ -745,7 +746,7 @@ public class TrialServiceImpl
 	}
 
 	private void addUpdateProbandListEntryTagValue(ProbandListEntryTagValueInVO probandListEntryTagValueIn, ProbandListEntry listEntry, ProbandListEntryTag listEntryTag,
-			Timestamp now, User user, boolean logTrial,
+			Timestamp now, User user, boolean force, boolean logTrial,
 			boolean logProband, ArrayList<ProbandListEntryTagValueOutVO> tagValues, ArrayList<ProbandListEntryTagValueJsonVO> jsTagValues) throws Exception {
 		ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 		Long id = probandListEntryTagValueIn.getId();
@@ -785,7 +786,7 @@ public class TrialServiceImpl
 		} else {
 			ProbandListEntryTagValue originalListEntryTagValue = CheckIDUtil.checkProbandListEntryTagValueId(id, probandListEntryTagValueDao);
 			if (!listEntryTag.isDisabled()
-					&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue())) {
+					&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), force)) {
 				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user,
 						this.getInputFieldSelectionSetValueDao(),
@@ -1027,7 +1028,7 @@ public class TrialServiceImpl
 					tagIn.setId(originalTagValue.getId());
 					tagIn.setVersion(originalTagValue.getVersion());
 				}
-				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
 						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
 				break;
 			case TAG_TEXT:
@@ -1045,7 +1046,7 @@ public class TrialServiceImpl
 					tagIn.setId(originalTagValue.getId());
 					tagIn.setVersion(originalTagValue.getVersion());
 				}
-				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
 						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
 				break;
 			default:
@@ -7368,10 +7369,11 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, String fieldQuery, PSFVO psf)
+	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, Boolean addSeries, boolean force, String fieldQuery,
+			PSFVO psf)
 			throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
-		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult);
+		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult, force);
 		ECRFFieldValuesOutVO result;
 		if (loadPageResult) {
 			result = ServiceUtil.getEcrfFieldValues((ECRF) resultItems[1], (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, fieldQuery, psf, this.getECRFFieldDao(),
@@ -7386,10 +7388,10 @@ public class TrialServiceImpl
 
 	@Override
 	protected ECRFFieldValuesOutVO handleSetEcrfFieldValues(AuthenticationVO auth, Set<ECRFFieldValueInVO> ecrfFieldValuesIns, String section, Long index,
-			Boolean addSeries, String fieldQuery, PSFVO psf)
+			Boolean addSeries, boolean force, String fieldQuery, PSFVO psf)
 			throws Exception {
 		boolean loadPageResult = addSeries != null && psf != null;
-		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult);
+		Object[] resultItems = setEcrfFieldValues(ecrfFieldValuesIns, loadPageResult, force);
 		ECRFFieldValuesOutVO result;
 		if (loadPageResult) {
 			result = getEcrfFieldValues((ECRF) resultItems[1], section, index, (ProbandListEntryOutVO) resultItems[2], addSeries, false, false, fieldQuery, psf);
@@ -7422,7 +7424,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected ProbandListEntryTagValuesOutVO handleSetProbandListEntryTagValues(
-			AuthenticationVO auth, Set<ProbandListEntryTagValueInVO> probandListEntryTagValuesIn)
+			AuthenticationVO auth, Set<ProbandListEntryTagValueInVO> probandListEntryTagValuesIn, boolean force)
 			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -7460,7 +7462,7 @@ public class TrialServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_DIFFERENT_LIST_ENTRIES);
 				}
 				try {
-					addUpdateProbandListEntryTagValue(probandListEntryTagValueIn, listEntry, listEntryTag, now, user, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
+					addUpdateProbandListEntryTagValue(probandListEntryTagValueIn, listEntry, listEntryTag, now, user, force, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
 							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, tagValues, jsTagValues);
 				} catch (ServiceException e) {
 					if (firstException == null) {
@@ -8141,7 +8143,7 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private Object[] setEcrfFieldValues(Set<ECRFFieldValueInVO> ecrfFieldValuesIn, boolean loadPageResult) throws Exception {
+	private Object[] setEcrfFieldValues(Set<ECRFFieldValueInVO> ecrfFieldValuesIn, boolean force, boolean loadPageResult) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
@@ -8226,7 +8228,7 @@ public class TrialServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_DIFFERENT_PROBAND_LIST_ENTRIES);
 				}
 				try {
-					addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
+					addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
 							ServiceUtil.LOG_ECRF_FIELD_VALUE_PROBAND, sectionIndexMap, ecrfFieldValues, jsEcrfFieldValues);
 				} catch (ServiceException e) {
 					if (firstException == null) {
@@ -8285,7 +8287,7 @@ public class TrialServiceImpl
 							// another error and replace the original exception).
 							ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldValueIn.getEcrfFieldId(), this.getECRFFieldDao());
 							try {
-								addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
+								addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
 										ServiceUtil.LOG_ECRF_FIELD_VALUE_PROBAND, null, ecrfFieldValues, jsEcrfFieldValues);
 							} catch (ServiceException e) {
 								if (firstException == null) {

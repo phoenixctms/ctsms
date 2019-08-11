@@ -326,7 +326,8 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	@Override
 	public String updateAction() {
 		try {
-			portionInquiryValues(WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), new HashSet<InquiryValueInVO>(inquiryValuesIn)));
+			portionInquiryValues(
+					WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), new HashSet<InquiryValueInVO>(inquiryValuesIn), false));
 			initIn(false, false);
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

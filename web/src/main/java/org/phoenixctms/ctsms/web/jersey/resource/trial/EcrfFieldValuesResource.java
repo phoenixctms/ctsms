@@ -9,6 +9,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -42,10 +43,11 @@ public class EcrfFieldValuesResource {
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> setEcrfFieldValues(Collection<ECRFFieldValueInVO> in)
+	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> setEcrfFieldValues(Collection<ECRFFieldValueInVO> in, @QueryParam("force") Boolean force)
 			throws AuthenticationException, AuthorisationException,
 			ServiceException {
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null, null, null);
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setEcrfFieldValues(auth, new LinkedHashSet<ECRFFieldValueInVO>(in), null,
+				force != null ? force : false, null, null);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 	}
 }

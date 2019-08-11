@@ -325,7 +325,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -395,7 +395,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				try {
 					portionTagValues(WebUtil.getServiceLocator().getTrialService()
 							.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, loadAllJsValues, paginator.getPsf()));
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -503,7 +503,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService().getProbandGroupList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -560,7 +560,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	public String updateAction() {
 		try {
 			portionTagValues(WebUtil.getServiceLocator().getTrialService()
-					.setProbandListEntryTagValues(WebUtil.getAuthentication(), new HashSet<ProbandListEntryTagValueInVO>(tagValuesIn)));
+					.setProbandListEntryTagValues(WebUtil.getAuthentication(), new HashSet<ProbandListEntryTagValueInVO>(tagValuesIn), false));
 			initIn(false, false);
 			initSets();
 			addOperationSuccessMessage("probandListEntryTagValueMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -571,7 +571,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

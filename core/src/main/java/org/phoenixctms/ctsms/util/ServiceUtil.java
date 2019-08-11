@@ -200,11 +200,11 @@ public final class ServiceUtil {
 	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
 	private final static String DUUMY_BEACON = "dummy";
-	private final static boolean SAVE_UNCHANGED_ECRF_FIELD_VALUES = false;
+	//private final static boolean SAVE_UNCHANGED_ECRF_FIELD_VALUES = false;
 	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
-	private final static boolean SAVE_UNCHANGED_PROBAND_LIST_ENTRY_TAG_VALUES = false;
+	//private final static boolean SAVE_UNCHANGED_PROBAND_LIST_ENTRY_TAG_VALUES = false;
 	private final static ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER = new ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter();
-	private final static boolean SAVE_UNCHANGED_INQUIRY_VALUES = false;
+	//private final static boolean SAVE_UNCHANGED_INQUIRY_VALUES = false;
 	private final static InquiryValueInVOInputFieldValueEqualsAdapter INQUIRY_VALUE_EQUALS_ADAPTER = new InquiryValueInVOInputFieldValueEqualsAdapter();
 
 	public static InputFieldSelectionSetValueOutVO addAutocompleteSelectionSetValue(InputField inputField, String textValue, Timestamp now, User user,
@@ -2651,8 +2651,8 @@ public final class ServiceUtil {
 		return writer.getExcelVO();
 	}
 
-	public final static boolean ecrfFieldValueEquals(ECRFFieldValueInVO modified, InputFieldValue original) {
-		return !SAVE_UNCHANGED_ECRF_FIELD_VALUES && ECRF_FIELD_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
+	public final static boolean ecrfFieldValueEquals(ECRFFieldValueInVO modified, InputFieldValue original, boolean force) {
+		return !force && ECRF_FIELD_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
 	}
 
 	private static StaffAddressOutVO findOrganisationCvAddress(StaffOutVO staffVO, boolean first, StaffAddressDao staffAddressDao) {
@@ -3313,8 +3313,8 @@ public final class ServiceUtil {
 		}
 	}
 
-	public final static boolean inquiryValueEquals(InquiryValueInVO modified, InputFieldValue original) {
-		return !SAVE_UNCHANGED_INQUIRY_VALUES && INQUIRY_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
+	public final static boolean inquiryValueEquals(InquiryValueInVO modified, InputFieldValue original, boolean force) {
+		return !force && INQUIRY_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
 	}
 
 	public static boolean isInputFieldType(ECRFFieldOutVO ecrfField, InputFieldType type) {
@@ -4592,8 +4592,8 @@ public final class ServiceUtil {
 		summary.setNotAssigned(notAssigned);
 	}
 
-	public final static boolean probandListEntryTagValueEquals(ProbandListEntryTagValueInVO modified, InputFieldValue original) {
-		return !SAVE_UNCHANGED_PROBAND_LIST_ENTRY_TAG_VALUES && PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
+	public final static boolean probandListEntryTagValueEquals(ProbandListEntryTagValueInVO modified, InputFieldValue original, boolean force) {
+		return !force && PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER.valueEquals(modified, original);
 	}
 
 	public static void removeEcrfField(ECRFField ecrfField, boolean deleteCascade, boolean checkProbandLocked, Timestamp now, User user,

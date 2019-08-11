@@ -656,6 +656,15 @@ public class EcrfFieldInputModel extends InputModel {
 	// }
 	@Override
 	public Object update() {
+		return update(false);
+	}
+
+	@Override
+	public Object forceUpdate() {
+		return update(true);
+	}
+
+	private Object update(boolean force) {
 		if (ecrfFieldValue != null) {
 			setErrorMessage(null);
 			setLastFieldStatus(null);
@@ -664,7 +673,7 @@ public class EcrfFieldInputModel extends InputModel {
 			ecrfFieldValues.add(ecrfFieldValue);
 			try {
 				ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
-						.setEcrfFieldValues(WebUtil.getAuthentication(), ecrfFieldValues, null, null, null);
+						.setEcrfFieldValues(WebUtil.getAuthentication(), ecrfFieldValues, null, force, null, null);
 				ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
 				setLastFieldStatus(out);

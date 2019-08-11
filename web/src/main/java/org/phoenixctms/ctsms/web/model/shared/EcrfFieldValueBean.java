@@ -974,10 +974,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				PSFVO psf = paginator.getPsfCopy(true);
 				if (CommonUtil.isEmptyString(filterSection)) {
 					portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, true, fieldQuery, psf));
+							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, true, false, fieldQuery, psf));
 				} else {
 					portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, filterSection, filterIndex, true, fieldQuery, psf));
+							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, filterSection, filterIndex, true, false, fieldQuery, psf));
 				}
 				paginator.initPages(psf, false);
 				initIn(false, false);
@@ -1134,10 +1134,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			PSFVO psf = paginator.getPsfCopy(true);
 			if (CommonUtil.isEmptyString(filterSection)) {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), true, fieldQuery, psf));
+						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), true, false, fieldQuery, psf));
 			} else {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection, filterIndex, true, fieldQuery, psf));
+						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection, filterIndex, true, false, fieldQuery, psf));
 				if (filterSectionProgress != null && filterSectionProgress.getSeries()) {
 					try {
 						filterSectionProgress.copy(WebUtil.getServiceLocator().getTrialService()

@@ -389,6 +389,11 @@ public final class DummyInputModel extends InputModel {
 	}
 
 	@Override
+	public Object forceUpdate() {
+		return null;
+	}
+
+	@Override
 	protected String getInputTitle() {
 		return null;
 	}

@@ -177,7 +177,7 @@ public class ProbandServiceImpl
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !journalEncrypted) });
 	}
 
-	private void addUpdateInquiryValue(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry, Timestamp now, User user, boolean logTrial,
+	private void addUpdateInquiryValue(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry, Timestamp now, User user, boolean force, boolean logTrial,
 			boolean logProband, ArrayList<InquiryValueOutVO> outInquiryValues,
 			ArrayList<InquiryValueJsonVO> outJsInquiryValues) throws Exception {
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
@@ -212,7 +212,7 @@ public class ProbandServiceImpl
 		} else {
 			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, inquiryValueDao);
 			if (!inquiry.isDisabled()
-					&& !ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue())) {
+					&& !ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue(), force)) {
 				checkInquiryValueInput(inquiryValueIn, proband, inquiry); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
@@ -2384,7 +2384,7 @@ public class ProbandServiceImpl
 
 	@Override
 	protected InquiryValuesOutVO handleSetInquiryValues(
-			AuthenticationVO auth, Set<InquiryValueInVO> inquiryValuesIn)
+			AuthenticationVO auth, Set<InquiryValueInVO> inquiryValuesIn, boolean force)
 			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -2421,7 +2421,8 @@ public class ProbandServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS);
 				}
 				try {
-					addUpdateInquiryValue(inquiryValueIn, proband, inquiry, now, user, ServiceUtil.LOG_INQUIRY_VALUE_TRIAL, ServiceUtil.LOG_INQUIRY_VALUE_PROBAND, inquiryValues,
+					addUpdateInquiryValue(inquiryValueIn, proband, inquiry, now, user, force, ServiceUtil.LOG_INQUIRY_VALUE_TRIAL, ServiceUtil.LOG_INQUIRY_VALUE_PROBAND,
+							inquiryValues,
 							jsInquiryValues);
 				} catch (ServiceException e) {
 					if (firstException == null) {

@@ -84,7 +84,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		if (inputField != null && isAutocomplete()) {
 			try {
 				values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValueValue(WebUtil.getAuthentication(), query, inputField.getId(), null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -573,6 +573,12 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	protected abstract Object update();
 
 	public final void update(ActionEvent actionEvent) {
+		actionPostProcess(update());
+	}
+
+	protected abstract Object forceUpdate();
+
+	public final void forceUpdate(ActionEvent actionEvent) {
 		actionPostProcess(update());
 	}
 }
