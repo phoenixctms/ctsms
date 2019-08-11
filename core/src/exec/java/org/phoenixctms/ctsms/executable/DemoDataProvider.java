@@ -1234,7 +1234,7 @@ public class DemoDataProvider {
 				"weight",
 				null,
 				null));
-		inquiries.add(createInquiry(auth, InputFields.BODY_WEIGHT, trial, "01 - BMI", 3, true, true, false, false, false, false, null,
+		inquiries.add(createInquiry(auth, InputFields.BODY_MASS_INDEX, trial, "01 - BMI", 3, true, true, false, false, false, false, null,
 				null,
 				"bmi",
 				"function(weight,size) {\n" +
