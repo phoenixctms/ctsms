@@ -103,7 +103,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -132,7 +132,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -237,7 +237,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 				try {
 					portionInquiryValues(WebUtil.getServiceLocator().getProbandService()
 							.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, loadAllJsValues, paginator.getPsf()));
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -289,7 +289,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			portionInquiryValues(WebUtil.getServiceLocator().getProbandService()
 					.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, true, paginator.getPsf()));
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -311,7 +311,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			try {
 				// probandAddresses =
 				return WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), probandId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -337,7 +337,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

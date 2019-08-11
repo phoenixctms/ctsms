@@ -123,7 +123,7 @@ public class TrialDaoImpl
 		if (departmentId != null) {
 			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
-		//org.hibernate.Criteria statusCriteria = trialCriteria.createCriteria("status", "trialStatus", CriteriaSpecification.INNER_JOIN);
+		org.hibernate.Criteria statusCriteria = trialCriteria.createCriteria("status", "trialStatus", CriteriaSpecification.INNER_JOIN);
 		DetachedCriteria valuesSubQuery = DetachedCriteria.forClass(InquiryValueImpl.class, "inquiryValue"); // IMPL!!!!
 		valuesSubQuery.setProjection(Projections.rowCount());
 		valuesSubQuery.add(Restrictions.eq("proband.id", probandId.longValue()));
