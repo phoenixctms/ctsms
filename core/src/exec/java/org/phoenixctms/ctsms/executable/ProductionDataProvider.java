@@ -3145,7 +3145,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				true,
-				false,
+				true,
 				false);
 		createJobType(
 				JobModule.MASS_MAIL_CRITERIA_JOB,
@@ -3249,7 +3249,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				true,
-				false,
+				true,
 				false);
 		createJobType(
 				JobModule.MASS_MAIL_CRITERIA_JOB,

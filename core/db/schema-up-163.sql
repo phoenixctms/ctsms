@@ -562,7 +562,7 @@ nextval('hibernate_sequence'),
 'f',
 'f',
 't',
-'f',
+'t',
 'f',
 null
 );
@@ -716,7 +716,7 @@ nextval('hibernate_sequence'),
 't',
 'f',
 't',
-'f',
+'t',
 'f',
 null
 );
