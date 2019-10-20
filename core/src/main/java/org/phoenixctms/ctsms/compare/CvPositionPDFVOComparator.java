@@ -24,9 +24,9 @@ public class CvPositionPDFVOComparator implements Comparator<CvPositionPDFVO> {
 					if (dateA != null && dateB != null) {
 						return dateA.compareTo(dateB);
 					} else if (dateA == null && dateB != null) {
-						return -1;
-					} else if (dateA != null && dateB == null) {
 						return 1;
+					} else if (dateA != null && dateB == null) {
+						return -1;
 					} else {
 						return 0;
 					}
