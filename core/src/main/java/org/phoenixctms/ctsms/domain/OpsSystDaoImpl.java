@@ -154,15 +154,17 @@ public class OpsSystDaoImpl
 		super.opsSystVOToEntity(source, target, copyIfNull);
 		Collection blocks = source.getBlocks();
 		if (blocks.size() > 0) {
+			blocks = new ArrayList(blocks); //prevent changing VO
 			this.getOpsSystBlockDao().opsSystBlockVOToEntityCollection(blocks);
-			source.setBlocks(blocks);
+			target.setBlocks(blocks);
 		} else if (copyIfNull) {
 			target.getBlocks().clear();
 		}
 		Collection categories = source.getCategories();
 		if (categories.size() > 0) {
+			categories = new ArrayList(categories); //prevent changing VO
 			this.getOpsSystCategoryDao().opsSystCategoryVOToEntityCollection(categories);
-			source.setCategories(categories);
+			target.setCategories(categories);
 		} else if (copyIfNull) {
 			target.getCategories().clear();
 		}

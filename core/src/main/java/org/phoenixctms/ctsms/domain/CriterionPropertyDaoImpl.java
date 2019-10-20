@@ -55,9 +55,12 @@ public class CriterionPropertyDaoImpl
 		// TODO verify behavior of criterionPropertyVOToEntity
 		super.criterionPropertyVOToEntity(source, target, copyIfNull);
 		Collection validRestrictions = source.getValidRestrictions();
-		if (copyIfNull || validRestrictions.size() > 0) {
+		if (validRestrictions.size() > 0) {
+			validRestrictions = new ArrayList(validRestrictions); //prevent changing VO
 			this.getCriterionRestrictionDao().criterionRestrictionVOToEntityCollection(validRestrictions); // copy if null cannot be passed; copy if null is always true
 			target.setValidRestrictions(validRestrictions);
+		} else if (copyIfNull) {
+			target.getValidRestrictions().clear();
 		}
 	}
 

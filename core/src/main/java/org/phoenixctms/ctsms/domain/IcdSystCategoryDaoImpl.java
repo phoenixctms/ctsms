@@ -68,6 +68,7 @@ public class IcdSystCategoryDaoImpl
 		super.icdSystCategoryVOToEntity(source, target, copyIfNull);
 		Collection modifiers = source.getModifiers();
 		if (modifiers.size() > 0) {
+			modifiers = new ArrayList(modifiers); //prevent changing VO
 			this.getIcdSystModifierDao().icdSystModifierVOToEntityCollection(modifiers);
 			target.setModifiers(modifiers);
 		} else if (copyIfNull) {

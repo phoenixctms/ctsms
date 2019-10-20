@@ -442,10 +442,13 @@ public class InquiryValueDaoImpl
 		if (copyIfNull || source.getInkValues() != null) {
 			value.setInkValue(source.getInkValues());
 		}
-		Collection selectionValues;
-		if ((selectionValues = source.getSelectionValues()).size() > 0 || copyIfNull) {
+		Collection selectionValues = source.getSelectionValues();
+		if (selectionValues.size() > 0) {
+			selectionValues = new ArrayList(selectionValues); //prevent changing VO
 			this.getInputFieldSelectionSetValueDao().inputFieldSelectionSetValueOutVOToEntityCollection(selectionValues);
 			value.setSelectionValues(selectionValues); // hashset-exception!!!
+		} else if (copyIfNull) {
+			value.getSelectionValues().clear();
 		}
 	}
 

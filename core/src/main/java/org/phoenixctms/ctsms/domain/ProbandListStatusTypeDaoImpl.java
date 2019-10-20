@@ -121,9 +121,12 @@ public class ProbandListStatusTypeDaoImpl
 			boolean copyIfNull) {
 		super.probandListStatusTypeVOToEntity(source, target, copyIfNull);
 		Collection logLevels = source.getLogLevels();
-		if (copyIfNull || logLevels.size() > 0) {
+		if (logLevels.size() > 0) {
+			logLevels = new ArrayList(logLevels); //prevent changing VO
 			this.getProbandListStatusLogLevelDao().probandListStatusLogLevelVOToEntityCollection(logLevels);
 			target.setLogLevels(logLevels);
+		} else if (copyIfNull) {
+			target.getLogLevels().clear();
 		}
 	}
 

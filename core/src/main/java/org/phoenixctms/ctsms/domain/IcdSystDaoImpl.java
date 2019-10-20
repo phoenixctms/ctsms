@@ -131,15 +131,17 @@ public class IcdSystDaoImpl
 		super.icdSystVOToEntity(source, target, copyIfNull);
 		Collection blocks = source.getBlocks();
 		if (blocks.size() > 0) {
+			blocks = new ArrayList(blocks); //prevent changing VO
 			this.getIcdSystBlockDao().icdSystBlockVOToEntityCollection(blocks); // possiby dont work..
-			source.setBlocks(blocks);
+			target.setBlocks(blocks);
 		} else if (copyIfNull) {
 			target.getBlocks().clear();
 		}
 		Collection categories = source.getCategories();
 		if (categories.size() > 0) {
+			categories = new ArrayList(categories); //prevent changing VO
 			this.getIcdSystCategoryDao().icdSystCategoryVOToEntityCollection(categories);
-			source.setCategories(categories);
+			target.setCategories(categories);
 		} else if (copyIfNull) {
 			target.getCategories().clear();
 		}

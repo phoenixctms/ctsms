@@ -45,9 +45,12 @@ public class ECRFStatusTypeDaoImpl
 			boolean copyIfNull) {
 		super.eCRFStatusTypeVOToEntity(source, target, copyIfNull);
 		Collection actions = source.getActions();
-		if (copyIfNull || actions.size() > 0) {
+		if (actions.size() > 0) {
+			actions = new ArrayList(actions); //prevent changing VO
 			this.getECRFStatusActionDao().eCRFStatusActionVOToEntityCollection(actions);
 			target.setActions(actions);
+		} else if (copyIfNull) {
+			target.getActions().clear();
 		}
 	}
 

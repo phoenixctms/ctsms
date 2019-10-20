@@ -138,9 +138,12 @@ public class TrialStatusTypeDaoImpl
 			boolean copyIfNull) {
 		super.trialStatusTypeVOToEntity(source, target, copyIfNull);
 		Collection actions = source.getActions();
-		if (copyIfNull || actions.size() > 0) {
+		if (actions.size() > 0) {
+			actions = new ArrayList(actions); //prevent changing VO
 			this.getTrialStatusActionDao().trialStatusActionVOToEntityCollection(actions);
 			target.setActions(actions);
+		} else if (copyIfNull) {
+			target.getActions().clear();
 		}
 	}
 }

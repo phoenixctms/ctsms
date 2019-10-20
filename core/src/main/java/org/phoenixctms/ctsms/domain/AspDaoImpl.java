@@ -94,14 +94,20 @@ public class AspDaoImpl
 			boolean copyIfNull) {
 		super.aspVOToEntity(source, target, copyIfNull);
 		Collection substances = source.getSubstances();
-		if (copyIfNull || substances.size() > 0) {
+		if (substances.size() > 0) {
+			substances = new ArrayList(substances); //prevent changing VO
 			this.getAspSubstanceDao().aspSubstanceVOToEntityCollection(substances); // copy if null cannot be passed; copy if null is always true
 			target.setSubstances(substances);
+		} else if (copyIfNull) {
+			target.getSubstances().clear();
 		}
 		Collection atcCodes = source.getAtcCodes();
-		if (copyIfNull || atcCodes.size() > 0) {
+		if (atcCodes.size() > 0) {
+			atcCodes = new ArrayList(atcCodes); //prevent changing VO
 			this.getAspAtcCodeDao().aspAtcCodeVOToEntityCollection(atcCodes); // copy if null cannot be passed; copy if null is always true
 			target.setAtcCodes(atcCodes);
+		} else if (copyIfNull) {
+			target.getAtcCodes().clear();
 		}
 	}
 

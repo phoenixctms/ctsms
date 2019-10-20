@@ -87,6 +87,7 @@ public class OpsSystCategoryDaoImpl
 		super.opsSystCategoryVOToEntity(source, target, copyIfNull);
 		Collection modifiers = source.getModifiers();
 		if (modifiers.size() > 0) {
+			modifiers = new ArrayList(modifiers); //prevent changing VO
 			this.getOpsSystModifierDao().opsSystModifierVOToEntityCollection(modifiers); // wont work?
 			target.setModifiers(modifiers);
 		} else if (copyIfNull) {

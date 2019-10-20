@@ -400,10 +400,13 @@ public class MedicationDaoImpl
 		// this.getAspSubstanceDao().aspSubstanceVOToEntityCollection(substances); // copyifnull!!
 		// target.setSubstances((Collection<AspSubstance>) substances);
 		// }
-		Collection substances;
-		if ((substances = source.getSubstances()).size() > 0 || copyIfNull) {
+		Collection substances = source.getSubstances();
+		if (substances.size() > 0) {
+			substances = new ArrayList(substances); //prevent changing VO
 			this.getAspSubstanceDao().aspSubstanceVOToEntityCollection(substances);
 			target.setSubstances(substances); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getSubstances().clear();
 		}
 		// if (dosePeriodVO != null) {
 		// target.setDosePeriod(dosePeriodVO.getPeriod());

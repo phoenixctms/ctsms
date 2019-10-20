@@ -64,9 +64,12 @@ public class CriteriaDaoImpl
 			boolean copyIfNull) {
 		super.criteriaInstantVOToEntity(source, target, copyIfNull);
 		Collection criterions = source.getCriterions();
-		if (copyIfNull || criterions.size() > 0) {
+		if (criterions.size() > 0) {
+			criterions = new ArrayList(criterions); //prevent changing VO
 			this.getCriterionDao().criterionInstantVOToEntityCollection(criterions);
 			target.setCriterions(criterions);
+		} else if (copyIfNull) {
+			target.getCriterions().clear();
 		}
 	}
 
@@ -112,9 +115,12 @@ public class CriteriaDaoImpl
 		super.criteriaOutVOToEntity(source, target, copyIfNull);
 		Collection criterions = source.getCriterions();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		if (copyIfNull || criterions.size() > 0) {
+		if (criterions.size() > 0) {
+			criterions = new ArrayList(criterions); //prevent changing VO
 			this.getCriterionDao().criterionOutVOToEntityCollection(criterions); // copyifnull!!
 			target.setCriterions(criterions);
+		} else if (copyIfNull) {
+			target.getCriterions().clear();
 		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
@@ -181,8 +187,11 @@ public class CriteriaDaoImpl
 	private Criteria loadCriteriaFromCriteriaInstantVO(CriteriaInstantVO criteriaInstantVO) {
 		Criteria criteria = Criteria.Factory.newInstance();
 		Collection criterions = criteriaInstantVO.getCriterions();
-		this.getCriterionDao().criterionInstantVOToEntityCollection(criterions);
-		criteria.setCriterions(criterions);
+		if (criterions.size() > 0) {
+			criterions = new ArrayList(criterions); //prevent changing VO
+			this.getCriterionDao().criterionInstantVOToEntityCollection(criterions);
+			criteria.setCriterions(criterions);
+		}
 		return criteria;
 	}
 
