@@ -3,11 +3,11 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.util.HashSet;
 import java.util.Locale;
 
-import jxl.Cell;
-import jxl.WorkbookSettings;
-
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
+
+import jxl.Cell;
+import jxl.WorkbookSettings;
 
 public abstract class RowProcessor {
 
@@ -81,7 +81,25 @@ public abstract class RowProcessor {
 
 	protected abstract int lineHashCode(String[] values);
 
-	protected abstract void postProcess();
+	protected abstract void postProcess() throws Exception;
+
+	public final boolean processHeaderRow(Cell[] row) throws Throwable {
+		if (row != null && row.length > 0) {
+			String[] values = new String[row.length];
+			for (int i = 0; i < row.length; i++) {
+				String value = "";
+				if (row[i] != null) {
+					value = row[i].getContents();
+					if (value != null) {
+						value = trimValues ? value.trim() : value;
+					}
+				}
+				values[i] = value;
+			}
+			return processHeaderRow(values);
+		}
+		return false;
+	}
 
 	public final int processRow(Cell[] row, long rowNumber) throws Throwable {
 		if (row != null && row.length > 0) {
@@ -120,6 +138,10 @@ public abstract class RowProcessor {
 	}
 
 	protected abstract int processRow(String[] values, long rowNumber) throws Throwable;
+
+	protected boolean processHeaderRow(String[] values) throws Throwable {
+		return false;
+	}
 
 	public void setCommentChar(String commentChar) {
 		this.commentChar = commentChar;

@@ -221,12 +221,14 @@ public class CsvImporter {
 		String line = null;
 		processor.init();
 		jobOutput.println("reading from file " + fileName);
-		long rowCount = 0;
-		long lineNumber = 1;
+		long rowCount = 0l;
+		long lineNumber = 1l;
 		try {
 			while (scanner.hasNext()) { // .hasNextLine()) {
 				line = scanner.next(); // scanner.nextLine();
-				rowCount += processor.processLine(line, lineNumber);
+				if (lineNumber > 1l || !processor.processHeaderLine(line)) {
+					rowCount += processor.processLine(line, lineNumber);
+				}
 				lineNumber++;
 			}
 		} catch (Exception e) {
@@ -234,8 +236,8 @@ public class CsvImporter {
 		} finally {
 			scanner.close();
 		}
-		jobOutput.println(rowCount + " rows processed");
 		processor.postProcess();
+		jobOutput.println(rowCount + " rows processed");
 		return rowCount;
 	}
 
