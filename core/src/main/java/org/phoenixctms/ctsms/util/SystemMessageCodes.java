@@ -170,6 +170,7 @@ public interface SystemMessageCodes {
 	public final static String STRATIFICATION_RANDOMIZATION_LIST_CREATED = "stratification_randomization_list_created";
 	public final static String STRATIFICATION_RANDOMIZATION_LIST_UPDATED = "stratification_randomization_list_updated";
 	public final static String STRATIFICATION_RANDOMIZATION_LIST_DELETED = "stratification_randomization_list_deleted";
+	public final static String RANDOMIZATION_CODE_BREAK = "randomization_code_break";
 	public final static String PROBAND_LIST_EXPORTED = "proband_list_exported";
 	public final static String INQUIRY_MOVED_TO_FIRST_POSITION = "inquiry_moved_to_first_position";
 	public final static String INQUIRY_MOVED_UP = "inquiry_moved_up";

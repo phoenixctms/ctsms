@@ -56,6 +56,8 @@ import org.phoenixctms.ctsms.domain.ProbandListEntryTag;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValue;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.RandomizationListCodeDao;
+import org.phoenixctms.ctsms.domain.RandomizationListCodeValueDao;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
@@ -703,6 +705,8 @@ public class InputFieldServiceImpl
 				}
 			}
 			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+			RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+			RandomizationListCodeValueDao randomizationListCodeValueDao = this.getRandomizationListCodeValueDao();
 			Iterator<StratificationRandomizationList> randomizationListsIt = selectionSetValue.getRandomizationLists().iterator();
 			while (randomizationListsIt.hasNext()) {
 				StratificationRandomizationList randomizationList = randomizationListsIt.next();
@@ -714,7 +718,8 @@ public class InputFieldServiceImpl
 				logSystemMessage(trial, result, now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null,
 						journalEntryDao);
 				trial.removeRandomizationLists(randomizationList);
-				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao,
+						randomizationListCodeDao, randomizationListCodeValueDao);
 			}
 			selectionSetValue.getRandomizationLists().clear();
 			ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
@@ -1152,6 +1157,8 @@ public class InputFieldServiceImpl
 			inputField.getEcrfFields().clear();
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+			RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+			RandomizationListCodeValueDao randomizationListCodeValueDao = this.getRandomizationListCodeValueDao();
 			Iterator<InputFieldSelectionSetValue> selectionSetValuesit = inputField.getSelectionSetValues().iterator();
 			while (selectionSetValuesit.hasNext()) {
 				InputFieldSelectionSetValue selectionSetValue = selectionSetValuesit.next();
@@ -1167,7 +1174,8 @@ public class InputFieldServiceImpl
 					logSystemMessage(trial, result, now, user, SystemMessageCodes.INPUT_FIELD_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null,
 							journalEntryDao);
 					trial.removeRandomizationLists(randomizationList);
-					ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+					ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao,
+							randomizationListCodeDao, randomizationListCodeValueDao);
 				}
 				selectionSetValue.getRandomizationLists().clear();
 				inputFieldSelectionSetValueDao.remove(selectionSetValue);

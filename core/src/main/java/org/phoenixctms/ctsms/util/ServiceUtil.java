@@ -159,6 +159,8 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProcedureOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeInVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeValueVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.ShiftDurationSummaryDetailVO;
@@ -382,7 +384,7 @@ public final class ServiceUtil {
 		Iterator<MassMail> massMailsIt = massMailDao.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(), false, null)
 				.iterator();
 		while (massMailsIt.hasNext()) {
-			ServiceUtil.addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
+			addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
 					massMailRecipientDao, journalEntryDao);
 		}
 		// /JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -5335,14 +5337,174 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void removeRandomizationListCode(RandomizationListCode randomizationListCode, boolean deleteCascade,
+			//boolean checkUsed,
+			RandomizationListCodeDao randomizationListCodeDao,
+			RandomizationListCodeValueDao randomizationListCodeValueDao) throws Exception {
+		//if (checkUsed && probandListEntryDao.getByRandomizationListCode(randomizationListCode) != null) {
+		//}
+		if (deleteCascade) {
+			Iterator<RandomizationListCodeValue> valuesIt = randomizationListCode.getValues().iterator();
+			while (valuesIt.hasNext()) {
+				RandomizationListCodeValue value = valuesIt.next();
+				value.setCode(null);
+				randomizationListCodeValueDao.remove(value);
+			}
+			randomizationListCode.getValues().clear();
+			//ProbandListEntry listEntry = randomizationListCode.getListEntry();
+			//if (listEntry != null) {
+			//	listEntry.setRandomizationListCode(null);
+			//	randomizationListCode.setListEntry(null);
+			//}
+		}
+		randomizationListCode.setRandomizationList(null);
+		randomizationListCode.setTrial(null);
+		randomizationListCodeDao.remove(randomizationListCode);
+	}
+
+	public static void createRandomizationListCodes(StratificationRandomizationList randomizationList, Collection<RandomizationListCodeInVO> codes,
+			boolean purge, Timestamp now, User user,
+			RandomizationListCodeDao randomizationListCodeDao,
+			RandomizationListCodeValueDao randomizationListCodeValueDao) throws Exception {
+		if (codes != null) {
+			HashMap<String, RandomizationListCode> originalCodes = new HashMap<String, RandomizationListCode>();
+			Iterator<RandomizationListCode> randomizationListCodesIt = randomizationList.getRandomizationCodes().iterator();
+			while (randomizationListCodesIt.hasNext()) {
+				RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+				if (purge) {
+					removeRandomizationListCode(randomizationListCode, true,
+							randomizationListCodeDao, randomizationListCodeValueDao);
+				} else {
+					originalCodes.put(randomizationListCode.getCode(), randomizationListCode);
+				}
+			}
+			if (purge) {
+				randomizationList.getRandomizationCodes().clear();
+			}
+			Iterator<RandomizationListCodeInVO> codesIt = codes.iterator();
+			while (codesIt.hasNext()) {
+				RandomizationListCodeInVO codeIn = codesIt.next();
+				RandomizationListCode code;
+				if (originalCodes.containsKey(codeIn.getCode())) {
+					code = originalCodes.remove(codeIn.getCode());
+					Iterator<RandomizationListCodeValue> valuesIt = code.getValues().iterator();
+					while (valuesIt.hasNext()) {
+						RandomizationListCodeValue value = valuesIt.next();
+						value.setCode(null);
+						randomizationListCodeValueDao.remove(value);
+					}
+					code.getValues().clear();
+					randomizationListCodeDao.randomizationListCodeInVOToEntity(codeIn, code, true);
+					CoreUtil.modifyVersion(code, code.getVersion(), now, user);
+					randomizationListCodeDao.update(code);
+				} else {
+					code = randomizationListCodeDao.randomizationListCodeInVOToEntity(codeIn);
+					code.setRandomizationList(randomizationList);
+					randomizationList.addRandomizationCodes(code);
+					CoreUtil.modifyVersion(code, now, user);
+					code = randomizationListCodeDao.create(code);
+				}
+				Iterator<RandomizationListCodeValueVO> valuesIt = codeIn.getValues().iterator();
+				while (valuesIt.hasNext()) {
+					RandomizationListCodeValueVO valueIn = valuesIt.next();
+					RandomizationListCodeValue value = randomizationListCodeValueDao.randomizationListCodeValueVOToEntity(valueIn);
+					value.setCode(code);
+					code.addValues(value);
+					value = randomizationListCodeValueDao.create(value);
+				}
+			}
+			if (!purge) {
+				randomizationListCodesIt = originalCodes.values().iterator();
+				while (randomizationListCodesIt.hasNext()) {
+					RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+					randomizationList.removeRandomizationCodes(randomizationListCode);
+					removeRandomizationListCode(randomizationListCode, true,
+							randomizationListCodeDao, randomizationListCodeValueDao);
+				}
+			}
+		}
+	}
+
+	public static void createRandomizationListCodes(Trial trial, Collection<RandomizationListCodeInVO> codes,
+			boolean purge, Timestamp now, User user,
+			RandomizationListCodeDao randomizationListCodeDao,
+			RandomizationListCodeValueDao randomizationListCodeValueDao) throws Exception {
+		if (codes != null) {
+			HashMap<String, RandomizationListCode> originalCodes = new HashMap<String, RandomizationListCode>();
+			Iterator<RandomizationListCode> randomizationListCodesIt = trial.getRandomizationCodes().iterator();
+			while (randomizationListCodesIt.hasNext()) {
+				RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+				if (purge) {
+					removeRandomizationListCode(randomizationListCode, true,
+							randomizationListCodeDao, randomizationListCodeValueDao);
+				} else {
+					originalCodes.put(randomizationListCode.getCode(), randomizationListCode);
+				}
+			}
+			if (purge) {
+				trial.getRandomizationCodes().clear();
+			}
+			Iterator<RandomizationListCodeInVO> codesIt = codes.iterator();
+			while (codesIt.hasNext()) {
+				RandomizationListCodeInVO codeIn = codesIt.next();
+				RandomizationListCode code;
+				if (originalCodes.containsKey(codeIn.getCode())) {
+					code = originalCodes.remove(codeIn.getCode());
+					Iterator<RandomizationListCodeValue> valuesIt = code.getValues().iterator();
+					while (valuesIt.hasNext()) {
+						RandomizationListCodeValue value = valuesIt.next();
+						value.setCode(null);
+						randomizationListCodeValueDao.remove(value);
+					}
+					code.getValues().clear();
+					randomizationListCodeDao.randomizationListCodeInVOToEntity(codeIn, code, true);
+					CoreUtil.modifyVersion(code, code.getVersion(), now, user);
+					randomizationListCodeDao.update(code);
+				} else {
+					code = randomizationListCodeDao.randomizationListCodeInVOToEntity(codeIn);
+					code.setTrial(trial);
+					trial.addRandomizationCodes(code);
+					CoreUtil.modifyVersion(code, now, user);
+					code = randomizationListCodeDao.create(code);
+				}
+				Iterator<RandomizationListCodeValueVO> valuesIt = codeIn.getValues().iterator();
+				while (valuesIt.hasNext()) {
+					RandomizationListCodeValueVO valueIn = valuesIt.next();
+					RandomizationListCodeValue value = randomizationListCodeValueDao.randomizationListCodeValueVOToEntity(valueIn);
+					value.setCode(code);
+					code.addValues(value);
+					value = randomizationListCodeValueDao.create(value);
+				}
+			}
+			if (!purge) {
+				randomizationListCodesIt = originalCodes.values().iterator();
+				while (randomizationListCodesIt.hasNext()) {
+					RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+					trial.removeRandomizationCodes(randomizationListCode);
+					removeRandomizationListCode(randomizationListCode, true,
+							randomizationListCodeDao, randomizationListCodeValueDao);
+				}
+			}
+		}
+	}
+
 	public static void removeStratificationRandomizationList(StratificationRandomizationList randomizationList, boolean deleteCascade,
-			StratificationRandomizationListDao stratificationRandomizationListDao) throws Exception {
+			StratificationRandomizationListDao stratificationRandomizationListDao,
+			RandomizationListCodeDao randomizationListCodeDao,
+			RandomizationListCodeValueDao randomizationListCodeValueDao) throws Exception {
 		if (deleteCascade) {
 			Iterator<InputFieldSelectionSetValue> selectionSetValuesIt = randomizationList.getSelectionSetValues().iterator();
 			while (selectionSetValuesIt.hasNext()) {
 				selectionSetValuesIt.next().removeRandomizationLists(randomizationList);
 			}
 			randomizationList.getSelectionSetValues().clear();
+			Iterator<RandomizationListCode> randomizationListCodesIt = randomizationList.getRandomizationCodes().iterator();
+			while (randomizationListCodesIt.hasNext()) {
+				RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+				removeRandomizationListCode(randomizationListCode, true,
+						randomizationListCodeDao, randomizationListCodeValueDao);
+			}
+			randomizationList.getRandomizationCodes().clear();
 		}
 		randomizationList.setTrial(null);
 		stratificationRandomizationListDao.remove(randomizationList);
@@ -5861,13 +6023,13 @@ public final class ServiceUtil {
 				&& proband.getPrivacyConsentStatus().isAutoDelete()
 				&& now.compareTo(ExpirationEntityAdapter.getInstance(proband, now).getReminderStart(null, null, expiringProbandAutoDeleteReminderPeriod,
 						expiringProbandAutoDeleteReminderPeriodDays)) >= 0) {
-			if (!ServiceUtil.testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
+			if (!testNotificationExists(proband.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE, false)) {
 				Map messageParameters = CoreUtil.createEmptyTemplateModel();
 				messageParameters.put(NotificationMessageTemplateParameters.PROBAND_AUTO_DELETE_DAYS_LEFT, DateCalc.dateDeltaDays(now, proband.getAutoDeleteDeadline()));
 				notificationDao.addNotification(proband, now, messageParameters);
 			}
 		} else {
-			ServiceUtil.cancelNotifications(proband.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE);
+			cancelNotifications(proband.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_PROBAND_AUTO_DELETE);
 		}
 	}
 

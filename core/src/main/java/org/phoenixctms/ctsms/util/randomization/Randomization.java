@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.TreeSet;
@@ -27,7 +29,10 @@ import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTag;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
+import org.phoenixctms.ctsms.domain.ProbandListEntryTagValue;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.RandomizationListCode;
+import org.phoenixctms.ctsms.domain.RandomizationListCodeDao;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
@@ -39,15 +44,22 @@ import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagInVO;
 import org.phoenixctms.ctsms.vo.RandomizationInfoVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeInVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeValueVO;
 import org.phoenixctms.ctsms.vo.RandomizationListInfoVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
@@ -61,7 +73,7 @@ public abstract class Randomization {
 	private final static String RANDOMIZATION_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static String RANDOMIZATION_LIST_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static String RANDOMIZATION_BLOCK_LINE_SEPARATOR = "\n";
-	private final static String RANDOMIZATION_BLOCK_SPLIT_SEPARATOR = ";";
+	public final static String RANDOMIZATION_BLOCK_SPLIT_SEPARATOR = ";";
 	private final static String RANDOMIZATION_BLOCK_SPLIT_REGEX_PATTERN = "(\\r\\n)|\\r|\\n|[," + Pattern.quote(RANDOMIZATION_BLOCK_SPLIT_SEPARATOR) + "]";
 	private final static Pattern RANDOMIZATION_BLOCK_SPLIT_REGEXP = Pattern.compile(RANDOMIZATION_BLOCK_SPLIT_REGEX_PATTERN);
 	private final static boolean TRIM_PROBAND_GROUP_TOKEN = true;
@@ -114,7 +126,8 @@ public abstract class Randomization {
 	public final static void checkProbandListEntryTagInput(Trial trial, InputField field, ProbandListEntryTagInVO listTagIn, TrialDao trialDao, ProbandGroupDao probandGroupDao,
 			ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao)
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao)
 			throws ServiceException {
 		if (listTagIn.isStratification()) {
 			if (listTagIn.isRandomize()) {
@@ -129,7 +142,7 @@ public abstract class Randomization {
 		} else if (listTagIn.isRandomize()) {
 			if (trial.getRandomization() != null) {
 				getInstance(trial.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao).checkProbandListEntryTagField(trial, field);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao).checkProbandListEntryTagField(trial, field);
 			}
 			if ((new ProbandListEntryTagRandomizeCollisionFinder(trialDao, probandListEntryTagDao)).collides(listTagIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_NOT_UNIQUE);
@@ -146,10 +159,13 @@ public abstract class Randomization {
 	// checkInputFieldSelectionSetValueValueInput(inputFieldSelectionSetValueIn);
 	// }
 	// }
-	public final static void checkStratificationRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn,
+	public final static ArrayList<RandomizationListCodeInVO> checkStratificationRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn,
+			Collection<RandomizationListCodeInVO> codes,
+			boolean checkCollision,
 			TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) throws ServiceException {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao) throws ServiceException {
 		Iterator<ProbandListEntryTag> it = probandListEntryTagDao.findByTrialFieldStratificationRandomize(randomizationListIn.getTrialId(), null, true, null).iterator();
 		HashMap<Long, InputField> tagFieldMap = new HashMap<Long, InputField>();
 		while (it.hasNext()) {
@@ -184,28 +200,37 @@ public abstract class Randomization {
 			}
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MISSING_STRATIFICATION_FIELD_SELECTION_SET_VALUES, sb.toString());
 		}
-		if ((new StratificationRandomizationListCollisionFinder(trialDao, stratificationRandomizationListDao)).collides(randomizationListIn)) {
+		if (checkCollision && (new StratificationRandomizationListCollisionFinder(trialDao, stratificationRandomizationListDao)).collides(randomizationListIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.STRATIFICATION_FIELD_SELECTION_SET_VALUES_NOT_UNIQUE);
 		}
 		if (trial.getRandomization() != null) {
-			getInstance(trial.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-					inputFieldSelectionSetValueDao, probandListEntryTagValueDao).checkStratificationRandomizationListRandomizationListInput(trial, randomizationListIn);
+			Randomization randomization = getInstance(trial.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao,
+					probandListEntryTagDao,
+					inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
+			randomization.checkStratificationRandomizationListRandomizationListInput(trial, randomizationListIn);
+			return randomization.checkRandomizationListCodesInput(randomizationListIn.getRandomizationList(), codes);
 		}
+		return null;
 	}
 
-	public final static void checkTrialInput(Trial trial, TrialInVO trialIn, TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
+	public final static ArrayList<RandomizationListCodeInVO> checkTrialInput(Trial trial, TrialInVO trialIn, Collection<RandomizationListCodeInVO> codes, TrialDao trialDao,
+			ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) throws ServiceException {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao) throws ServiceException {
 		if (trialIn.getRandomization() == null) {
 			if (trialIn.getRandomizationList() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_NOT_NULL);
 				// ,L10nUtil.getRandomizationModeName(Locales.USER, trialIn.getRandomization().name()));
 			}
 		} else {
-			getInstance(trialIn.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-					inputFieldSelectionSetValueDao, probandListEntryTagValueDao).checkTrialRandomizationInput(trial,
-							trialIn);
+			Randomization randomization = getInstance(trialIn.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao,
+					probandListEntryTagDao,
+					inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
+			randomization.checkTrialRandomizationInput(trial, trialIn);
+			return randomization.checkRandomizationListCodesInput(trialIn.getRandomizationList(), codes);
 		}
+		return null;
 	}
 
 	protected final static HashMap<Long, InputFieldSelectionSetValue> getInputFieldSelectionSetValueIdMap(Collection<InputFieldSelectionSetValue> inputFieldSelectionSetValues) {
@@ -231,38 +256,39 @@ public abstract class Randomization {
 
 	public final static Randomization getInstance(RandomizationMode mode, TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao) {
 		switch (mode) {
 			case GROUP_COIN:
 				return new GroupCoinRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case GROUP_ADAPTIVE:
 				return new GroupAdaptiveRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case GROUP_LIST:
 				return new GroupListRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case GROUP_STRATIFIED:
 				return new GroupStratifiedRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_COIN:
 				return new TagCoinRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_ADAPTIVE:
 				return new TagAdaptiveRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_SELECT_LIST:
 				return new TagSelectListRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_SELECT_STRATIFIED:
 				return new TagSelectStratifiedRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_TEXT_LIST:
 				return new TagTextListRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			case TAG_TEXT_STRATIFIED:
 				return new TagTextStratifiedRandomization(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao,
-						inputFieldSelectionSetValueDao, probandListEntryTagValueDao);
+						inputFieldSelectionSetValueDao, probandListEntryTagValueDao, randomizationListCodeDao);
 			default:
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANDOMIZATION_MODE, DefaultMessages.UNSUPPORTED_RANDOMIZATION_MODE, mode));
 		}
@@ -310,7 +336,7 @@ public abstract class Randomization {
 		// return result;
 	}
 
-	protected final static void splitInputFieldTextValues(String randomizationBlock, ArrayList<String> values)
+	protected final static void splitInputFieldTextValues(String randomizationBlock, Collection<String> values)
 			throws ServiceException {
 		// ArrayList<String> result = new ArrayList<String>();
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
@@ -329,6 +355,59 @@ public abstract class Randomization {
 			}
 		}
 		// return result;
+	}
+
+	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
+			String randomizationList, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
+		if (codes != null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_LIST_CODES_NOT_SUPPORTED,
+					L10nUtil.getRandomizationModeName(Locales.USER, getRandomizationMode().name()));
+		}
+		return null;
+	}
+
+	protected final static ArrayList<RandomizationListCodeInVO> sanitizeRandomizationListCodesInput(String randomizationBlock, Collection<RandomizationListCodeInVO> codes)
+			throws ServiceException {
+		if (codes != null) {
+			LinkedHashSet<String> textValues = new LinkedHashSet<String>();
+			splitInputFieldTextValues(randomizationBlock, textValues);
+			LinkedHashMap<String, RandomizationListCodeInVO> codeMap = new LinkedHashMap<String, RandomizationListCodeInVO>(codes.size());
+			Iterator<RandomizationListCodeInVO> codesIt = codes.iterator();
+			while (codesIt.hasNext()) {
+				RandomizationListCodeInVO code = codesIt.next();
+				String value = code.getCode();
+				if (CommonUtil.isEmptyString(value)) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.EMPTY_RANDOMIZATION_CODE_VALUE);
+				} else {
+					value = (TRIM_INPUT_FIELD_TEXT_VALUE ? value.trim() : value);
+					if (codeMap.containsKey(value)) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.DUPLICATE_RANDOMIZATION_CODE_VALUE, value);
+					} else if (textValues.remove(value)) {
+						if (TRIM_INPUT_FIELD_TEXT_VALUE) {
+							code = new RandomizationListCodeInVO(code);
+							code.setCode(value);
+						}
+						codeMap.put(value, code);
+					} else {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_RANDOMIZATION_CODE_VALUE, value);
+					}
+				}
+			}
+			if (textValues.size() > 0) {
+				Iterator<String> it = textValues.iterator();
+				StringBuilder sb = new StringBuilder();
+				while (it.hasNext()) {
+					if (sb.length() > 0) {
+						sb.append(", ");
+					}
+					sb.append(it.next());
+				}
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MISSING_RANDOMIZATION_CODE_VALUES, sb.toString());
+			} else {
+				return new ArrayList<RandomizationListCodeInVO>(codeMap.values());
+			}
+		}
+		return null;
 	}
 
 	protected final static void splitProbandGroupTokens(String randomizationBlock, HashMap<String, ProbandGroup> probandGroupMap, ArrayList<String> tokens)
@@ -359,6 +438,7 @@ public abstract class Randomization {
 	protected ProbandListEntryTagDao probandListEntryTagDao;
 	protected InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao;
 	protected ProbandListEntryTagValueDao probandListEntryTagValueDao;
+	protected RandomizationListCodeDao randomizationListCodeDao;
 	private Random random;
 	private boolean locked;
 	protected RandomizationInfoVO randomizationInfo;
@@ -366,7 +446,8 @@ public abstract class Randomization {
 
 	protected Randomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao) {
 		this.trialDao = trialDao;
 		this.probandGroupDao = probandGroupDao;
 		this.probandListEntryDao = probandListEntryDao;
@@ -374,6 +455,7 @@ public abstract class Randomization {
 		this.probandListEntryTagDao = probandListEntryTagDao;
 		this.inputFieldSelectionSetValueDao = inputFieldSelectionSetValueDao;
 		this.probandListEntryTagValueDao = probandListEntryTagValueDao;
+		this.randomizationListCodeDao = randomizationListCodeDao;
 		locked = false;
 	}
 
@@ -392,6 +474,16 @@ public abstract class Randomization {
 		}
 		checkProbandListEntryTagField(trial, randomizationTag.getField());
 		return randomizationTag;
+	}
+
+	protected final ProbandListEntryTagValue getRandomizationTagValue(ProbandListEntry listEntry) throws ServiceException {
+		ProbandListEntryTag tag = checkRandomizeProbandListEntryTag(listEntry.getTrial());
+		try {
+			return probandListEntryTagValueDao.findByListEntryListEntryTag(listEntry.getId(), tag.getId()).iterator().next();
+		} catch (NoSuchElementException e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED,
+					probandListEntryTagDao.toProbandListEntryTagOutVO(tag).getUniqueName());
+		}
 	}
 	// protected abstract void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException;
 
@@ -577,6 +669,11 @@ public abstract class Randomization {
 		return group;
 	}
 
+	public RandomizationListCode getRandomizationListCode(ProbandListEntry listEntry) throws ServiceException {
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_LIST_CODES_NOT_SUPPORTED,
+				L10nUtil.getRandomizationModeName(Locales.USER, getRandomizationMode().name()));
+	}
+
 	protected final StratificationRandomizationList getStratificationRandomizationList(Trial trial, ProbandListEntry exclude) throws ServiceException {
 		if (exclude != null) {
 			Iterator<ProbandListEntryTag> tagIt = probandListEntryTagDao.findByTrialFieldStratificationRandomize(trial.getId(), null, true, null).iterator();
@@ -655,5 +752,17 @@ public abstract class Randomization {
 
 	protected final void saveRandom(Trial trial) throws IOException {
 		trial.setRandom(CoreUtil.serialize(random));
+	}
+
+	public final static void obfuscateRandomizationListCodeValues(RandomizationListCodeOutVO code) {
+		if (!code.isBroken() || Settings.getBoolean(SettingCodes.OBFUSCATE_BROKEN_RANDOMIZATION_CODES, Bundle.SETTINGS, DefaultSettings.OBFUSCATE_BROKEN_RANDOMIZATION_CODES)) {
+			Iterator<RandomizationListCodeValueVO> valuesIt = code.getValues().iterator();
+			while (valuesIt.hasNext()) {
+				RandomizationListCodeValueVO value = valuesIt.next();
+				if (value.isBlinded()) {
+					value.setValue(CoreUtil.OBFUSCATED_STRING);
+				}
+			}
+		}
 	}
 }

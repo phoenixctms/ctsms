@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.RandomizationListCodeDao;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
@@ -70,9 +71,10 @@ public class GroupAdaptiveRandomization extends Randomization {
 
 	protected GroupAdaptiveRandomization(TrialDao trialDao, ProbandGroupDao probandGroupDao, ProbandListEntryDao probandListEntryDao,
 			StratificationRandomizationListDao stratificationRandomizationListDao, ProbandListEntryTagDao probandListEntryTagDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao) {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
-				probandListEntryTagValueDao);
+				probandListEntryTagValueDao, randomizationListCodeDao);
 		// TODO Auto-generated constructor stub
 	}
 

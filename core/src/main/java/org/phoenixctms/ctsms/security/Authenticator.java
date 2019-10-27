@@ -18,7 +18,6 @@ import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
-import org.phoenixctms.ctsms.util.OmittedFields;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
@@ -32,7 +31,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 public class Authenticator {
 
 	private static String obfuscateWrongPassword(String password) {
-		return OmittedFields.OBFUSCATED_STRING;
+		return CoreUtil.OBFUSCATED_STRING;
 	}
 
 	private PasswordDao passwordDao;
