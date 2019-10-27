@@ -26,6 +26,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -47,6 +48,8 @@ public class XlsImporter {
 	protected EcrfRowProcessor ecrfRowProcessor;
 	@Autowired
 	protected AspRowProcessor aspRowProcessor;
+	@Autowired
+	protected RandomizationListCodeRowProcessor randomizationListCodeRowProcessor;
 	@Autowired
 	protected AspDao aspDao;
 	@Autowired
@@ -99,6 +102,14 @@ public class XlsImporter {
 		return readRows(context, aspRowProcessor);
 	}
 
+	public long loadRandomizationLists(String fileName, AuthenticationVO auth, Long trialId, boolean purge) throws Throwable {
+		XlsImporterContext context = createContext(randomizationListCodeRowProcessor, fileName, true);
+		context.setAuth(auth);
+		context.setEntityId(trialId);
+		randomizationListCodeRowProcessor.setPurge(purge);
+		return readRows(context, randomizationListCodeRowProcessor);
+	}
+
 	protected long loadEcrfFields(XlsImporterContext context) throws Throwable {
 		setContext(ecrfFieldRowProcessor, context, true);
 		return readRows(context, ecrfFieldRowProcessor);
@@ -126,30 +137,30 @@ public class XlsImporter {
 		setContext(selectionSetValueRowProcessor, context, context.isMandatory(inputFieldRowProcessor));
 		return readRows(context, selectionSetValueRowProcessor);
 	}
-	
+
 	private InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
-	AuthorisationException, ServiceException, FileNotFoundException {
-if (CommonUtil.isEmptyString(fileName)) {
-	jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
-	return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
-} else {
-	try {
-		long fileId = Long.parseLong(fileName);
-		FileStreamOutVO file = fileService.getFileStream(auth, fileId);
-		jobOutput.println("reading from file ID " + fileName + " (" + file.getFileName() + ")");
-		return file.getStream();
-	} catch (NumberFormatException e) {
-		jobOutput.println("reading from file " + fileName);
-		return new FileInputStream(fileName);
+			AuthorisationException, ServiceException, FileNotFoundException {
+		if (CommonUtil.isEmptyString(fileName)) {
+			jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
+			return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
+		} else {
+			try {
+				long fileId = Long.parseLong(fileName);
+				FileStreamOutVO file = fileService.getFileStream(auth, fileId);
+				jobOutput.println("reading from file ID " + fileName + " (" + file.getFileName() + ")");
+				return file.getStream();
+			} catch (NumberFormatException e) {
+				jobOutput.println("reading from file " + fileName);
+				return new FileInputStream(fileName);
+			}
+		}
 	}
-}
-}
 
 	private long readRows(XlsImporterContext context, RowProcessor processor) throws Throwable {
 		processor.init();
 		//jobOutput.println("reading from file " + context.getFileName());
-		long rowCount = 0;
-		long lineNumber = 1;
+		long rowCount = 0l;
+		long lineNumber = 1l;
 		Workbook workbook = null;
 		try {
 			// Create a workbook object from the file at specified location.
@@ -178,9 +189,17 @@ if (CommonUtil.isEmptyString(fileName)) {
 					jobOutput.println("processing sheet '" + sheetName + "'");
 				}
 				int sheetRowCount = sheet.getRows();
-				for (int i = 0; i < sheetRowCount; i++) {
-					rowCount += processor.processRow(sheet.getRow(i), lineNumber);
+				if (sheetRowCount > 0) {
+					Cell[] row = sheet.getRow(0);
+					if (!processor.processHeaderRow(row)) {
+						rowCount += processor.processRow(row, lineNumber);
+					}
 					lineNumber++;
+					for (int i = 1; i < sheetRowCount; i++) {
+						row = sheet.getRow(i);
+						rowCount += processor.processRow(row, lineNumber);
+						lineNumber++;
+					}
 				}
 			} else {
 				if (context.isMandatory(processor)) {
@@ -196,8 +215,8 @@ if (CommonUtil.isEmptyString(fileName)) {
 				workbook.close();
 			}
 		}
-		jobOutput.println(rowCount + " rows processed");
 		processor.postProcess();
+		jobOutput.println(rowCount + " rows processed");
 		return rowCount;
 	}
 

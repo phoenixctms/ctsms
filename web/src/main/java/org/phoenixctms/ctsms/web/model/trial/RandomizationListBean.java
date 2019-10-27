@@ -96,12 +96,12 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addStratificationRandomizationList(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().addStratificationRandomizationList(WebUtil.getAuthentication(), in, null);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -149,7 +149,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 				IDVO.transformVoCollection(selectionSetValueVOs);
 				return (List<IDVO>) selectionSetValueVOs;
 			} catch (ClassCastException e) {
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -171,7 +171,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -281,13 +281,16 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		if (trialId != null) {
 			try {
 				stratificationProbandListEntryTagVOs = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagList(WebUtil.getAuthentication(), trialId, null, true);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 		}
 		loadSelectionSetValues();
 		updateRequiredFields();
+		if (out != null && out.getCodeCount() > 0) {
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.RANDOMIZATION_LIST_CODES_PRESENT, out.getCodeCount());
+		}
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
@@ -344,7 +347,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getStratificationRandomizationList(WebUtil.getAuthentication(), id);
 			StratificationRandomizationList LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -431,12 +434,12 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		StratificationRandomizationListInVO backup = new StratificationRandomizationListInVO(in);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().updateStratificationRandomizationList(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().updateStratificationRandomizationList(WebUtil.getAuthentication(), in, null, false);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

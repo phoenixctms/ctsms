@@ -130,6 +130,7 @@ public interface MessageCodes {
 	public final static String WEBCAM_FILE_NAME = "webcam_file_name";
 	public final static String UPLOAD_OPERATION_SUCCESSFUL = "upload_operation_successfull";
 	public final static String GENERATE_RANDOMIZATION_LIST_OPERATION_SUCCESSFUL = "generate_randomization_list_operation_successful";
+	public static final String RANDOMIZATION_LIST_CODES_PRESENT = "randomization_list_codes_present";
 	public final static String LOGICAL_FILE_SYSTEM_STATS_LABEL = "logical_file_system_stats_label";
 	public final static String FOLDER_LABEL = "folder_label";
 	public final static String STAFF_TREE_LABEL = "staff_tree_label";
@@ -707,6 +708,7 @@ public interface MessageCodes {
 	public static final String STAFF_SHIFT_SUMMARY_OVERVIEW_MENU_ITEM_LABEL = "staff_shift_summary_overview_menu_item_label";
 	public static final String MONEY_TRANSFER_OVERVIEW_MENU_ITEM_LABEL = "money_transfer_overview_menu_item_label";
 	public static final String ECRF_PROGRESS_OVERVIEW_MENU_ITEM_LABEL = "ecrf_progress_overview_menu_item_label";
+	public static final String RANDOMIZATION_CODE_OVERVIEW_MENU_ITEM_LABEL = "randomization_code_overview_menu_item_label";
 	public final static String MY_COURSES_MENU_ITEM_LABEL = "my_courses_menu_item_label";
 	public static final String MY_UPCOMING_COURSES_MENU_ITEM_LABEL = "my_upcoming_courses_menu_item_label";
 	public final static String MY_EXPIRING_PARTICIPATIONS_MENU_ITEM_LABEL = "my_expiring_participations_menu_item_label";
@@ -875,4 +877,6 @@ public interface MessageCodes {
 	public static final String USER_NEW_DEPARTMENT_PASSWORD_LABEL = "user_new_department_password_label";
 	public static final String USER_OLD_DEPARTMENT_PASSWORD_LABEL = "user_old_department_password_label";
 	public static final String PASSWORD_DEPARTMENT_PASSWORD_LABEL = "password_department_password_label";
+	public static final String CODE_BREAK_PROBAND_TITLE = "code_break_proband_title";
+	public static final String CODE_BREAK_TITLE = "code_break_title";
 }

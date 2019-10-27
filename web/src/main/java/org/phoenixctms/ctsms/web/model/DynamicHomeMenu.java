@@ -541,6 +541,13 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 					ecrfProgressOverviewMenuItem.setUrl("#");
 					ecrfProgressOverviewMenuItem.setId("ecrfProgressOverviewMenuItem");
 					subMenu.getChildren().add(ecrfProgressOverviewMenuItem);
+					MenuItem randomizationCodeOverviewMenuItem = new MenuItem();
+					randomizationCodeOverviewMenuItem.setValue(Messages.getString(MessageCodes.RANDOMIZATION_CODE_OVERVIEW_MENU_ITEM_LABEL));
+					randomizationCodeOverviewMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-randomizationcodes");
+					randomizationCodeOverviewMenuItem.setOnclick("openRandomizationCodeOverview()");
+					randomizationCodeOverviewMenuItem.setUrl("#");
+					randomizationCodeOverviewMenuItem.setId("randomizationCodeOverviewMenuItem");
+					subMenu.getChildren().add(randomizationCodeOverviewMenuItem);
 				}
 			}
 

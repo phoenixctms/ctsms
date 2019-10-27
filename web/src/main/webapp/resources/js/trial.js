@@ -493,7 +493,9 @@ function handleTrialAssociationTabChange(index) {
 	case 4:
 		changeEnrollmentChart();
 		break;
-
+	case 5:
+		changeRandomizationListCodes();
+		break;
 
 	default:
 		break;
