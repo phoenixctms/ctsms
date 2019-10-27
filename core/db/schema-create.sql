@@ -589,6 +589,7 @@
         JS_OUTPUT_EXPRESSION TEXT,
         DEFERRED_DELETE BOOLEAN not null,
         DEFERRED_DELETE_REASON TEXT,
+        EXTERNAL_ID CHARACTER VARYING(1024),
         FIELD_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
@@ -1488,6 +1489,30 @@
         PROFILE CHARACTER VARYING(1024) not null,
         ACTIVE BOOLEAN not null,
         PERMISSION_FK BIGINT not null,
+        primary key (ID)
+    );
+
+    create table RANDOMIZATION_LIST_CODE (
+        ID BIGINT not null,
+        CODE CHARACTER VARYING(1024) not null,
+        BROKEN BOOLEAN not null,
+        REASON_FOR_BREAK TEXT,
+        BREAK_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        VERSION BIGINT not null,
+        TRIAL_FK BIGINT,
+        RANDOMIZATION_LIST_FK BIGINT,
+        MODIFIED_USER_FK BIGINT not null,
+        BREAK_USER_FK BIGINT,
+        primary key (ID)
+    );
+
+    create table RANDOMIZATION_LIST_CODE_VALUE (
+        ID BIGINT not null,
+        NAME CHARACTER VARYING(1024) not null,
+        VALUE CHARACTER VARYING(1024),
+        BLINDED BOOLEAN not null,
+        CODE_FK BIGINT not null,
         primary key (ID)
     );
 
@@ -3093,6 +3118,31 @@
         add constraint PROFILE_PERMISSION_PERMISSION_FKC 
         foreign key (PERMISSION_FK) 
         references PERMISSION;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        add constraint RANDOMIZATION_LIST_CODE_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        add constraint RANDOMIZATION_LIST_CODE_RANDOMIZATION_LIST_FKC 
+        foreign key (RANDOMIZATION_LIST_FK) 
+        references STRATIFICATION_RANDOMIZATION_LIST;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        add constraint RANDOMIZATION_LIST_CODE_TRIAL_FKC 
+        foreign key (TRIAL_FK) 
+        references TRIAL;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        add constraint RANDOMIZATION_LIST_CODE_BREAK_USER_FKC 
+        foreign key (BREAK_USER_FK) 
+        references users;
+
+    alter table RANDOMIZATION_LIST_CODE_VALUE 
+        add constraint RANDOMIZATION_LIST_CODE_VALUE_CODE_FKC 
+        foreign key (CODE_FK) 
+        references RANDOMIZATION_LIST_CODE;
 
     alter table SIGNATURE 
         add constraint SIGNATURE_ECRF_STATUS_ENTRY_FKC 
