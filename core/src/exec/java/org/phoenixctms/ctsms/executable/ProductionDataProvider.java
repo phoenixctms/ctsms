@@ -2822,6 +2822,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false);
+		
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_ecrfs",
@@ -3277,6 +3278,21 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false);
+		
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"import_randomization_list_codes",
+				"import_randomization_list_codes",
+				"{0} -irl=\"\" -id={1} -auth={4} -jid={5} -f",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				false);		
+		
 		jobOutput.println("job types created");
 	}
 
