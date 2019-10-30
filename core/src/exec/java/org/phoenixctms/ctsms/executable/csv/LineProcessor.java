@@ -67,7 +67,36 @@ public abstract class LineProcessor {
 
 	protected abstract int lineHashCode(String[] values);
 
-	protected abstract void postProcess();
+	protected abstract void postProcess() throws Exception;
+
+	public final boolean processHeaderLine(String line) throws Exception {
+		if (line != null) {
+			String preparedLine = trimValues ? line.trim() : line;
+			if (preparedLine.length() > 0) {
+				String[] values;
+				if (fieldSeparatorRegexp != null) {
+					values = fieldSeparatorRegexp.split(preparedLine, -1);
+					if (removeValueEnclosing) {
+						for (int i = 0; i < values.length; i++) {
+							if (values[i].startsWith(valueEnclosingChar) && values[i].endsWith(valueEnclosingChar)) {
+								values[i] = values[i].substring(valueEnclosingChar.length(), values[i].length() - valueEnclosingChar.length());
+							}
+						}
+					}
+					if (trimValues) {
+						for (int i = 0; i < values.length; i++) {
+							values[i] = values[i].trim();
+						}
+					}
+				} else {
+					values = new String[1];
+					values[0] = line;
+				}
+				return processHeaderLine(values);
+			}
+		}
+		return false;
+	}
 
 	public final int processLine(String line, long lineNumber) throws Exception {
 		if (line != null) {
@@ -116,6 +145,10 @@ public abstract class LineProcessor {
 	}
 
 	protected abstract int processLine(String[] values, long lineNumber) throws Exception;
+
+	protected boolean processHeaderLine(String[] values) throws Exception {
+		return false;
+	}
 
 	public void setCommentChar(String commentChar) {
 		this.commentChar = commentChar;

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>randomization list code break dialog</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:remoteCommand
+			process="@this"
+			name="#{openRandomiationCodeBreakRemoteCommand}"
+			actionListener="#{codeBreakBean.changeRandomizationCode()}"
+			oncomplete="codeBreakDialog.show()"
+			update="code_break_dialog" />
+		<p:dialog
+			widgetVar="codeBreakDialog"
+			modal="true"
+			id="code_break_dialog"
+			header="#{codeBreakBean.title}"
+			showEffect="#{effect}"
+			hideEffect="#{effect}"
+			onHide="#{codeBreakDialogOnHide}"
+			styleClass="ctsms-codebreak-dialog">
+
+			<h:panelGrid
+				id="code_break_input"
+				columns="1"
+				cellpadding="0"
+				styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+
+				<h:panelGrid
+					columns="2"
+					cellpadding="2"
+					columnClasses="ctsms-codebreak-left-column,ctsms-codebreak-right-column">
+
+					<h:panelGrid
+						columns="2"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-text-column">
+						
+						<h:outputLabel value="#{triallabels.code_break_code_label}" />
+						<h:outputLabel styleClass="ctsms-text-bold" value="#{codeBreakBean.out.code}" />
+						
+						<h:outputLabel value="#{triallabels.code_break_trial_label}" />
+						<h:outputLabel value="#{codeBreakBean.trial.name}" />
+						
+						<h:outputLabel value="#{triallabels.code_break_proband_label}" />
+						<h:outputLabel styleClass="ctsms-text-bold" value="#{codeBreakBean.out.listEntry.proband.name}" />
+						
+						<h:outputLabel value="#{triallabels.code_break_stratification_label}" />
+						<h:outputLabel value="#{codeBreakBean.stratificationRandomizationListSelectionSetValuesString}" />
+						
+						<h:outputLabel value="#{triallabels.code_break_user_label}" />
+						<h:outputLabel value="#{applicationScopeBean.getIdentityString(codeBreakBean.out.breakUser)}" />
+						
+						<h:outputLabel value="#{triallabels.code_break_timestamp_label}" />				
+						<h:outputLabel value="#{codeBreakBean.out.breakTimestamp}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputLabel>
+					</h:panelGrid>
+				
+					<h:panelGroup>
+						<h:outputText
+							rendered="#{applicationScopeBean.getListSize(codeBreakBean.out.values) == 0}"
+							value="#{triallabels.no_randomizationcode_values_label}" />
+						<p:dataList
+							rendered="#{applicationScopeBean.getListSize(codeBreakBean.out.values) > 0}"
+							value="#{codeBreakBean.out.values}"
+							var="codeValue"
+							type="definition">
+							<h:outputText value="#{codeValue.name}:" />
+							<f:facet name="description">
+								<h:outputText
+									styleClass="ctsms-codebreak-datalist-descriptiontext #{codeValue.blinded ? (codeBreakBean.unblinded ? 'ctsms-text-green' : 'ctsms-text-red') : ''}"
+									value="#{codeValue.value}" />
+							</f:facet>
+						</p:dataList>
+					</h:panelGroup>
+					
+				</h:panelGrid>
+
+				<h:panelGrid
+					columns="1"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+					<h:outputLabel
+						for="reasonForBreak"
+						value="#{triallabels.code_break_reasonforbreak_label}" />
+					<h:panelGroup>
+						<p:inputTextarea
+							id="reasonForBreak"
+							value="#{codeBreakBean.reasonForBreak}"
+							required="false"
+							disabled="#{codeBreakBean.unblinded}"
+							autoResize="false"
+							styleClass="ctsms-textarea"
+							label="#{triallabels.code_break_reasonforbreak}">
+						</p:inputTextarea>
+						<p:tooltip
+							rendered="#{enableTooltips}"
+							for="reasonForBreak">
+							<h:outputText
+								value="#{triallabels.code_break_reasonforbreak_tooltip}"
+								escape="false" />
+						</p:tooltip>
+					</h:panelGroup>
+				</h:panelGrid>
+				
+				<p:messages />
+				
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+							
+					<p:commandButton
+						process="@this,reasonForBreak"
+						id="updateCode"
+						value="#{triallabels.code_break_button_label}"
+						actionListener="#{codeBreakBean.load}"
+						icon="ui-icon ui-icon-unlocked"
+						ajax="true"
+						disabled="#{codeBreakBean.unblinded}"
+						update="code_break_input" />
+						
+							
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>				
+			</h:panelGrid>
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

@@ -403,7 +403,7 @@ public class SearchServiceImpl
 				obfuscatedCriterion.setCriteria(result);
 				CriterionPropertyVO property = obfuscatedCriterion.getProperty();
 				if (property != null && OmittedFields.isOmitted(property.getProperty())) {
-					obfuscatedCriterion.setStringValue(OmittedFields.OBFUSCATED_STRING);
+					obfuscatedCriterion.setStringValue(CoreUtil.OBFUSCATED_STRING);
 				}
 				obfuscatedCriterions.add(obfuscatedCriterion);
 			}
@@ -1436,7 +1436,7 @@ public class SearchServiceImpl
 					property = criterionPropertyDao.load(obfuscatedCriterion.getPropertyId());
 				}
 				if (property != null && OmittedFields.isOmitted(property.getProperty())) {
-					obfuscatedCriterion.setStringValue(OmittedFields.OBFUSCATED_STRING);
+					obfuscatedCriterion.setStringValue(CoreUtil.OBFUSCATED_STRING);
 				}
 				obfuscatedCriterions.add(obfuscatedCriterion);
 			}

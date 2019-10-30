@@ -1221,7 +1221,7 @@ public class DemoDataProvider {
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
-		TrialOutVO trial = trialService.addTrial(auth, newTrial);
+		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
 		inquiries.add(createInquiry(auth, InputFields.BODY_HEIGHT, trial, "01 - BMI", 1, true, true, false, false, false, false, null,
@@ -1458,7 +1458,7 @@ public class DemoDataProvider {
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
-		TrialOutVO trial = trialService.addTrial(auth, newTrial);
+		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
 		newProbandGroup.setTitle("Screeninggruppe");
@@ -2031,7 +2031,7 @@ public class DemoDataProvider {
 		newTrial.setTypeId(getRandomElement(selectionSetService.getTrialTypes(auth, null)).getId());
 		newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
 		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
-		TrialOutVO trial = trialService.addTrial(auth, newTrial);
+		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ArrayList<Staff> departmentStaff = new ArrayList<Staff>(staffDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("department.id", trial.getDepartment().getId(), SearchParameter.EQUAL_COMPARATOR),
@@ -2339,7 +2339,7 @@ public class DemoDataProvider {
 			newTrial.setId(trial.getId());
 			newTrial.setVersion(trial.getVersion());
 			newTrial.setStatusId(trialStatusTypeDao.searchUniqueNameL10nKey("started").getId());
-			trial = trialService.updateTrial(auth, newTrial);
+			trial = trialService.updateTrial(auth, newTrial, null, false);
 			jobOutput.println("trial " + trial.getName() + " updated: " + trial.getStatus().getName());
 		}
 		Collection allProbands = probandDao.search(new Search(new SearchParameter[] {

@@ -15,7 +15,6 @@ import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
-import org.phoenixctms.ctsms.util.OmittedFields;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -35,43 +34,43 @@ public class ErrorLogger implements ThrowsAdvice {
 				if (args[i] instanceof AuthenticationVO) {
 					AuthenticationVO auth = (AuthenticationVO) args[i];
 					passwords.add(auth.getPassword());
-					auth.setPassword(OmittedFields.OBFUSCATED_STRING);
+					auth.setPassword(CoreUtil.OBFUSCATED_STRING);
 					passwords.add(auth.getLocalPassword());
-					auth.setLocalPassword(OmittedFields.OBFUSCATED_STRING);
+					auth.setLocalPassword(CoreUtil.OBFUSCATED_STRING);
 				} else if (args[i] instanceof PasswordInVO) {
 					PasswordInVO passwordInVO = (PasswordInVO) args[i];
 					passwords.add(passwordInVO.getPassword());
-					passwordInVO.setPassword(OmittedFields.OBFUSCATED_STRING);
+					passwordInVO.setPassword(CoreUtil.OBFUSCATED_STRING);
 				}
 			}
 			String methodName = method.getName();
 			String serviceName = method.getDeclaringClass().getName();
 			if (ToolsService.class.getName().equals(serviceName) && "changeDepartmentPassword".equals(methodName)) {
 				passwords.add((String) args[1]);
-				args[1] = OmittedFields.OBFUSCATED_STRING;
+				args[1] = CoreUtil.OBFUSCATED_STRING;
 				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				args[2] = CoreUtil.OBFUSCATED_STRING;
 			} else if (ToolsService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				args[2] = CoreUtil.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				args[2] = CoreUtil.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "updateUser".equals(methodName)) {
 				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				args[2] = CoreUtil.OBFUSCATED_STRING;
 				passwords.add((String) args[3]);
-				args[3] = OmittedFields.OBFUSCATED_STRING;
+				args[3] = CoreUtil.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "setPassword".equals(methodName)) {
 				passwords.add((String) args[1]);
-				args[1] = OmittedFields.OBFUSCATED_STRING;
+				args[1] = CoreUtil.OBFUSCATED_STRING;
 				passwords.add((String) args[2]);
-				args[2] = OmittedFields.OBFUSCATED_STRING;
+				args[2] = CoreUtil.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
 				//passwords.add((String) args[2]);
 				//args[2] = OmittedFields.OBFUSCATED_STRING;
 				passwords.add((String) args[3]);
-				args[3] = OmittedFields.OBFUSCATED_STRING;
+				args[3] = CoreUtil.OBFUSCATED_STRING;
 			}
 		} else {
 			passwords = new ArrayList<String>();

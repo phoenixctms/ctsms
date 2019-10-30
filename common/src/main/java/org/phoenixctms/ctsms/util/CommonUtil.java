@@ -56,6 +56,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionInstantVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
@@ -72,10 +73,17 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationModeVO;
+import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
 import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
+import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
+import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -396,6 +404,41 @@ public final class CommonUtil {
 		int g = Integer.parseInt(hexValue.substring(2, 4), 16);
 		int b = Integer.parseInt(hexValue.substring(4, 6), 16);
 		return new java.awt.Color(r, g, b);
+	}
+
+	public static void copyTrialOutToIn(TrialInVO in, TrialOutVO out) {
+		if (in != null && out != null) {
+			DepartmentVO departmentVO = out.getDepartment();
+			TrialStatusTypeVO statusVO = out.getStatus();
+			TrialTypeVO typeVO = out.getType();
+			SponsoringTypeVO sponsoringVO = out.getSponsoring();
+			SurveyStatusTypeVO surveyStatusVO = out.getSurveyStatus();
+			VariablePeriodVO blockingPeriodVO = out.getBlockingPeriod();
+			RandomizationModeVO randomizationVO = out.getRandomization();
+			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
+			in.setDescription(out.getDescription());
+			in.setSignupProbandList(out.getSignupProbandList());
+			in.setSignupInquiries(out.getSignupInquiries());
+			in.setSignupRandomize(out.getSignupRandomize());
+			in.setSignupDescription(out.getSignupDescription());
+			in.setId(out.getId());
+			in.setName(out.getName());
+			in.setStatusId(statusVO == null ? null : statusVO.getId());
+			in.setTitle(out.getTitle());
+			in.setVersion(out.getVersion());
+			in.setTypeId(typeVO == null ? null : typeVO.getId());
+			in.setSponsoringId(sponsoringVO == null ? null : sponsoringVO.getId());
+			in.setSurveyStatusId(surveyStatusVO == null ? null : surveyStatusVO.getId());
+			in.setExclusiveProbands(out.getExclusiveProbands());
+			in.setProbandAliasFormat(out.getProbandAliasFormat());
+			in.setBlockingPeriod(blockingPeriodVO == null ? null : blockingPeriodVO.getPeriod());
+			in.setBlockingPeriodDays(out.getBlockingPeriodDays());
+			in.setDutySelfAllocationLocked(out.getDutySelfAllocationLocked());
+			in.setDutySelfAllocationLockedUntil(out.getDutySelfAllocationLockedUntil());
+			in.setDutySelfAllocationLockedFrom(out.getDutySelfAllocationLockedFrom());
+			in.setRandomization(randomizationVO == null ? null : randomizationVO.getMode());
+			in.setRandomizationList(null); // out.getRandomizationList());
+		}
 	}
 
 	public static void copyEcrfFieldValueInToJson(ECRFFieldValueJsonVO out, ECRFFieldValueInVO in, ECRFFieldOutVO ecrfFieldVO) {

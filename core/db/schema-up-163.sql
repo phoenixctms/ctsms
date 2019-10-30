@@ -758,3 +758,22 @@ nextval('hibernate_sequence'),
 'f',
 null
 );
+
+insert into JOB_TYPE 
+(id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+values (
+nextval('hibernate_sequence'), 
+'TRIAL_JOB',
+'import_randomization_list_codes',
+'import_randomization_list_codes',
+'{0} -irl="" -id={1} -auth={4} -jid={5} -f',
+'t',
+'f',
+'f',
+'f',
+'t',
+'f',
+'f',
+'f',
+null
+);

@@ -47,6 +47,7 @@ public final class CriteriaUtil {
 	private static HashSet<String> EXACT_STRING_FILTER_ENTITY_FIELDS = new HashSet<String>();
 	static {
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("logicalPath");
+		EXACT_STRING_FILTER_ENTITY_FIELDS.add("code"); //randomization list code
 	}
 	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
 	static {

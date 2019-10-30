@@ -578,6 +578,21 @@
     alter table PROFILE_PERMISSION 
         drop constraint PROFILE_PERMISSION_PERMISSION_FKC;
 
+    alter table RANDOMIZATION_LIST_CODE 
+        drop constraint RANDOMIZATION_LIST_CODE_MODIFIED_USER_FKC;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        drop constraint RANDOMIZATION_LIST_CODE_RANDOMIZATION_LIST_FKC;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        drop constraint RANDOMIZATION_LIST_CODE_TRIAL_FKC;
+
+    alter table RANDOMIZATION_LIST_CODE 
+        drop constraint RANDOMIZATION_LIST_CODE_BREAK_USER_FKC;
+
+    alter table RANDOMIZATION_LIST_CODE_VALUE 
+        drop constraint RANDOMIZATION_LIST_CODE_VALUE_CODE_FKC;
+
     alter table SIGNATURE 
         drop constraint SIGNATURE_ECRF_STATUS_ENTRY_FKC;
 
@@ -1112,6 +1127,10 @@
     drop table PROCEDURE cascade;
 
     drop table PROFILE_PERMISSION cascade;
+
+    drop table RANDOMIZATION_LIST_CODE cascade;
+
+    drop table RANDOMIZATION_LIST_CODE_VALUE cascade;
 
     drop table SIGNATURE cascade;
 

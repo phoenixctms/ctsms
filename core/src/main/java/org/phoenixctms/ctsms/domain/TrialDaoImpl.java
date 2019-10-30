@@ -367,6 +367,7 @@ public class TrialDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
+		target.setCodeCount(this.getRandomizationListCodeDao().getCount(source.getId(), null, null));
 	}
 
 	@Override

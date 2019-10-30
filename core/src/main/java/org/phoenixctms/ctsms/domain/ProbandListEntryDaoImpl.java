@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -247,6 +248,42 @@ public class ProbandListEntryDaoImpl
 		} else {
 			return (Long) listEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 		}
+	}
+
+	@Override
+	protected ProbandListEntry handleGetByRandomizationListCode(
+			RandomizationListCode code) throws Exception {
+		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
+		StratificationRandomizationList randomizationList = code.getRandomizationList();
+		Trial trial = null;
+		HashSet<Long> selectionSetValueIds = null;
+		if (randomizationList != null) {
+			trial = randomizationList.getTrial();
+			selectionSetValueIds = new HashSet<Long>();
+			Iterator<InputFieldSelectionSetValue> selectionSetValuesIt = randomizationList.getSelectionSetValues().iterator();
+			while (selectionSetValuesIt.hasNext()) {
+				selectionSetValueIds.add(selectionSetValuesIt.next().getId());
+			}
+		} else {
+			trial = code.getTrial();
+		}
+		listEntryCriteria.add(Restrictions.eq("trial.id", trial.getId().longValue()));
+		org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
+		tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("randomize", true));
+		tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("stringValue", code.getCode()));
+		Iterator listEntryIt = listEntryCriteria.list().iterator();
+		while (listEntryIt.hasNext()) {
+			ProbandListEntry listEntry = (ProbandListEntry) listEntryIt.next();
+			if (selectionSetValueIds != null) {
+				if (applyStratificationTagValuesCriterions(createListEntryCriteria().add(Restrictions.idEq(listEntry.getId().longValue())), selectionSetValueIds).list().iterator()
+						.hasNext()) {
+					return listEntry;
+				}
+			} else {
+				return listEntry;
+			}
+		}
+		return null;
 	}
 
 	@Override

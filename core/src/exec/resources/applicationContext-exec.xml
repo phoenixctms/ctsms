@@ -64,6 +64,7 @@
 	<bean id="ecrfFieldRowProcessor" class="org.phoenixctms.ctsms.executable.xls.EcrfFieldRowProcessor"/>
 	<bean id="ecrfRowProcessor" class="org.phoenixctms.ctsms.executable.xls.EcrfRowProcessor"/>
 	<bean id="aspRowProcessor" class="org.phoenixctms.ctsms.executable.xls.AspRowProcessor"/>
+	<bean id="randomizationListCodeRowProcessor" class="org.phoenixctms.ctsms.executable.xls.RandomizationListCodeRowProcessor"/>
 
 	<bean id="xlslExporter" class="org.phoenixctms.ctsms.executable.xls.XlsExporter"/>
 	<bean id="selectionSetValueRowWriter" class="org.phoenixctms.ctsms.executable.xls.SelectionSetValueRowWriter"/>

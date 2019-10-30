@@ -69,7 +69,7 @@ public class TrialResource extends ServiceResourceBase {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public TrialOutVO addTrial(TrialInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().addTrial(auth, in);
+		return WebUtil.getServiceLocator().getTrialService().addTrial(auth, in, null);
 	}
 
 	@GET
@@ -235,6 +235,6 @@ public class TrialResource extends ServiceResourceBase {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public TrialOutVO updateTrial(TrialInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().updateTrial(auth, in);
+		return WebUtil.getServiceLocator().getTrialService().updateTrial(auth, in, null, false);
 	}
 }

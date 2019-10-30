@@ -7,12 +7,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
+import org.phoenixctms.ctsms.web.adapt.ProbandListEntryTagValueOutVOStringAdapter;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.BookingDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.BookingDurationSummaryModel.BookingDurationSummaryType;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel.ShiftDurationSummaryType;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 @ManagedBean
@@ -26,6 +32,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	private TrialMassMailLazyModel trialMassMailModel;
 	private BookingDurationSummaryModel bookingDurationModel;
 	private EnrollmentChartBean enrollmentChartBean;
+	private RandomizationListCodeLazyModel randomizationListCodeModel;
 
 	public TrialAssociationBean() {
 		super();
@@ -35,12 +42,14 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		trialMassMailModel = new TrialMassMailLazyModel();
 		bookingDurationModel = new BookingDurationSummaryModel(BookingDurationSummaryType.TRIAL);
 		enrollmentChartBean = new EnrollmentChartBean();
+		randomizationListCodeModel = new RandomizationListCodeLazyModel();
 	}
 
 	@Override
 	protected String changeAction(Long id) {
 		DataTable.clearFilters("trialcourses_list");
 		DataTable.clearFilters("trialmassmails_list");
+		DataTable.clearFilters("randomizationlistcodes_list");
 		this.trialId = id;
 		initIn();
 		initSets();
@@ -63,6 +72,16 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		return WebUtil.getMassMailProgressValue(massMail, trialMassMailModel.getMassMailProgress(massMail));
 	}
 
+	public String stratificationRandomizationListSelectionSetValuesToString(StratificationRandomizationListOutVO randomizationList) {
+		if (randomizationList != null) {
+			return (new ProbandListEntryTagValueOutVOStringAdapter(
+					Settings.getInt(SettingCodes.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
+							DefaultSettings.STRATIFICATION_RANDOMIZATION_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH)))
+									.selectionSetValuesToString(randomizationList.getSelectionSetValues(), true);
+		}
+		return null;
+	}
+
 	public ShiftDurationSummaryModel getShiftDurationModel() {
 		return shiftDurationModel;
 	}
@@ -73,6 +92,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	public TrialMassMailLazyModel getTrialMassMailModel() {
 		return trialMassMailModel;
+	}
+
+	public RandomizationListCodeLazyModel getRandomizationListCodeModel() {
+		return randomizationListCodeModel;
 	}
 
 	public void handleBookingDurationSummaryChange() {
@@ -99,6 +122,11 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		trialMassMailModel.updateRowCount();
 	}
 
+	public void handleRandomizationListCodesChange() {
+		randomizationListCodeModel.setTrialId(trialId);
+		randomizationListCodeModel.updateRowCount();
+	}
+
 	@PostConstruct
 	private void init() {
 		initIn();
@@ -114,6 +142,8 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		trialCourseModel.updateRowCount();
 		trialMassMailModel.setTrialId(trialId);
 		trialMassMailModel.updateRowCount();
+		randomizationListCodeModel.setTrialId(trialId);
+		randomizationListCodeModel.updateRowCount();
 		shiftDurationModel.reset(now, ShiftDurationSummaryType.TRIAL, null); //trialId);
 		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, null); //trialId);
 		enrollmentChartBean.changeRootEntity(null); // trialId);
@@ -137,5 +167,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	public void refreshTrialMassMails() {
 		trialMassMailModel.updateRowCount();
 		DataTable.clearFilters("trialmassmails_list");
+	}
+
+	public void refreshRandomizationListCodes() {
+		randomizationListCodeModel.updateRowCount();
+		DataTable.clearFilters("randomizationlistcodes_list");
 	}
 }

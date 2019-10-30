@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>randomization code datatable columns</title>
+</h:head>
+<h:body>
+	<ui:composition>
+
+		<p:column filterBy="#{randomizationListCode.vo.code}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_code_column}" />
+			</f:facet>
+			<h:outputText value="#{randomizationListCode.vo.code}" />
+		</p:column>
+
+		<p:column
+		    rendered="#{showRandomizationList}"
+			filterBy="#{randomizationListCode.vo.randomizationList.selectionSetValues.nameL10nKey}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_randomizationlistlist_selection_set_values_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{trialAssociationBean.stratificationRandomizationListSelectionSetValuesToString(randomizationListCode.vo.stratificationRandomizationList)}" />
+		</p:column>
+
+		<p:column sortBy="#{randomizationListCode.vo.broken}"
+			filterBy="#{randomizationListCode.vo.broken}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_broken_column}" />
+			</f:facet>
+			<ui:include src="listCodeBreakIcon.xhtml">
+				<ui:param name="value" value="#{randomizationListCode.vo.broken}" />
+			</ui:include>
+		</p:column>
+
+		<p:column sortBy="#{randomizationListCode.vo.breakUser.name}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_break_user_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.getIdentityString(randomizationListCode.vo.breakUser)}" />
+		</p:column>
+		<p:column sortBy="#{randomizationListCode.vo.breakTimestamp}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_break_timestamp_column}" />
+			</f:facet>
+			<h:outputText value="#{randomizationListCode.vo.breakTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone"
+					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+			</h:outputText>
+		</p:column>
+
+		<p:column 
+			rendered="#{showReason}"
+			filterBy="#{randomizationListCode.vo.reasonForBreak}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_reason_for_break_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.clipStringTrailing(randomizationListCode.vo.reasonForBreak)}" />
+		</p:column>
+
+
+		<p:column>
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_proband_id_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{randomizationListCode.vo.listEntry.proband.id}" />
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_proband_name_column}" />
+			</f:facet>
+			<ui:include src="listIcon.xhtml">
+				<ui:param name="label"
+					value="#{randomizationListCode.vo.listEntry.proband.name}" />
+				<ui:param name="icon"
+					value="#{randomizationListCode.vo.listEntry.proband.category.nodeStyleClass}" />
+				<ui:param name="rendered"
+					value="#{randomizationListCode.vo.listEntry.proband.decrypted}" />
+			</ui:include>
+			<ui:include src="listIcon.xhtml">
+				<ui:param name="label"
+					value="#{randomizationListCode.vo.listEntry.proband.name}" />
+				<ui:param name="icon" value="ctsms-icon-encrypted" />
+				<ui:param name="rendered"
+					value="#{not empty randomizationListCode.vo.listEntry.proband and !randomizationListCode.vo.listEntry.proband.decrypted}" />
+			</ui:include>
+		</p:column>
+
+		<p:column>
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.trial_association_randomizationlistcodes_list_proband_department_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{randomizationListCode.vo.listEntry.proband.department.name}" />
+		</p:column>
+		
+		<p:rowExpansion>
+			<h:panelGrid
+				columns="4"
+				cellpadding="0"
+				styleClass="ctsms-randomizationcodes-rowexpansion-panelgrid"
+				columnClasses="ctsms-randomizationcodes-rowexpansion-column">
+				<h:outputText
+					rendered="#{applicationScopeBean.getListSize(randomizationListCode.vo.values) == 0}"
+					value="#{triallabels.no_randomizationcode_values_label}" />
+				<p:dataList
+					rendered="#{applicationScopeBean.getListSize(randomizationListCode.vo.values) > 0}"
+					value="#{randomizationListCode.vo.values}"
+					var="codeValue"
+					type="definition">
+					<h:outputText value="#{codeValue.name}:" />
+					<f:facet name="description">
+						<h:outputText
+							styleClass="ctsms-randomizationcodes-rowexpansion-datalist-descriptiontext"
+							value="#{codeValue.value}" />
+					</f:facet>
+				</p:dataList>
+			</h:panelGrid>
+		</p:rowExpansion>
+		
+	</ui:composition>
+</h:body>
+</html>

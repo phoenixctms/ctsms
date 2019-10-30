@@ -68,6 +68,7 @@ import org.phoenixctms.ctsms.domain.ProbandListStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandTagValueDao;
 import org.phoenixctms.ctsms.domain.ProcedureDao;
+import org.phoenixctms.ctsms.domain.RandomizationListCodeDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffAddressDao;
 import org.phoenixctms.ctsms.domain.StaffContactDetailValueDao;
@@ -245,6 +246,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private LecturerDao lecturerDao;
 	private TrialTagValueDao trialTagValueDao;
 	private StratificationRandomizationListDao stratificationRandomizationListDao;
+	private RandomizationListCodeDao randomizationListCodeDao;
 	private TeamMemberDao teamMemberDao;
 	private TimelineEventDao timelineEventDao;
 	private ProbandGroupDao probandGroupDao;
@@ -1103,6 +1105,10 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		this.stratificationRandomizationListDao = stratificationRandomizationListDao;
 	}
 
+	public void setRandomizationListCodeDao(RandomizationListCodeDao randomizationListCodeDao) {
+		this.randomizationListCodeDao = randomizationListCodeDao;
+	}
+
 	public void setTeamMemberDao(TeamMemberDao teamMemberDao) {
 		this.teamMemberDao = teamMemberDao;
 	}
@@ -1227,6 +1233,9 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				case STRATIFICATION_RANDOMIZATION_LIST_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null
 							: CheckIDUtil.checkStratificationRandomizationListId((Long) parameterValue, stratificationRandomizationListDao).getTrial().getId();
+				case RANDOMIZATION_LIST_CODE_ID_TO_TRIAL_ID:
+					return parameterValue == null ? null
+							: CheckIDUtil.checkRandomizationListCodeId((Long) parameterValue, randomizationListCodeDao).getTrial().getId();
 				case TRIAL_TEAM_MEMBER_ID_TO_TRIAL_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkTeamMemberId((Long) parameterValue, teamMemberDao).getTrial().getId();
 				case TRIAL_TEAM_MEMBER_ID_TO_STAFF_ID:

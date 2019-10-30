@@ -5126,6 +5126,16 @@ public final class WebUtil {
 		return "";
 	}
 
+	public static TrialOutVO getRandomizationCodeTrial(RandomizationListCodeOutVO code) {
+		if (code != null) {
+			if (code.getStratificationRandomizationList() != null) {
+				return code.getStratificationRandomizationList().getTrial();
+			}
+			return getTrial(code.getTrialRandomizationList().getId());
+		}
+		return null;
+	}
+
 	private WebUtil() {
 	}
 }

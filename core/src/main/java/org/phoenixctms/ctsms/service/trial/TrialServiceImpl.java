@@ -181,6 +181,9 @@ import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
 import org.phoenixctms.ctsms.vo.RandomizationInfoVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeInVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodeOutVO;
+import org.phoenixctms.ctsms.vo.RandomizationListCodesVO;
 import org.phoenixctms.ctsms.vo.RandomizationListInfoVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
@@ -1279,7 +1282,7 @@ public class TrialServiceImpl
 	// }
 	// }
 	// }
-	private void checkAddTrialInput(TrialInVO trialIn) throws ServiceException {
+	private ArrayList<RandomizationListCodeInVO> checkAddTrialInput(TrialInVO trialIn, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
 		checkTrialInput(trialIn);
 		TrialStatusTypeDao trialStatusTypeDao = this.getTrialStatusTypeDao();
 		TrialStatusType state = CheckIDUtil.checkTrialStatusTypeId(trialIn.getStatusId(), trialStatusTypeDao);
@@ -1298,8 +1301,10 @@ public class TrialServiceImpl
 		// if (hasTrialStatusAction(state, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
 		// checkTeamMemberSign(trial, user);
 		// }
-		Randomization.checkTrialInput(null, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(), this.getStratificationRandomizationListDao(),
-				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+		return Randomization.checkTrialInput(null, trialIn, codes, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(),
+				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
+				this.getRandomizationListCodeDao());
 	}
 
 	private ProbandListEntry checkClearEcrfFieldValues(Long ecrfId, Long probandListEntryId, Timestamp now, User user) throws Exception {
@@ -1787,7 +1792,8 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_POSITION_NOT_UNIQUE);
 		}
 		Randomization.checkProbandListEntryTagInput(trial, field, listTagIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
-				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
+				this.getRandomizationListCodeDao());
 	}
 
 	private void checkProbandListEntryTagValueInput(ProbandListEntryTagValueInVO probandListEntryTagValueIn, ProbandListEntry listEntry, ProbandListEntryTag listEntryTag)
@@ -1814,11 +1820,14 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkStratificationRandomizationListInput(StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
+	private ArrayList<RandomizationListCodeInVO> checkStratificationRandomizationListInput(StratificationRandomizationListInVO randomizationListIn,
+			Collection<RandomizationListCodeInVO> codes, boolean checkCollision) throws ServiceException {
 		Trial trial = CheckIDUtil.checkTrialId(randomizationListIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
-		Randomization.checkStratificationRandomizationListInput(trial, randomizationListIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
-				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+		return Randomization.checkStratificationRandomizationListInput(trial, randomizationListIn, codes, checkCollision,
+				this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
+				this.getRandomizationListCodeDao());
 	}
 
 	private void checkTeamMemberInput(TeamMemberInVO teamMemberIn) throws ServiceException {
@@ -2164,7 +2173,8 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkUpdateTrialInput(Trial originalTrial, TrialInVO trialIn, User user) throws ServiceException {
+	private ArrayList<RandomizationListCodeInVO> checkUpdateTrialInput(Trial originalTrial, TrialInVO trialIn, Collection<RandomizationListCodeInVO> codes, User user)
+			throws ServiceException {
 		checkTrialInput(trialIn);
 		TrialStatusTypeDao trialStatusTypeDao = this.getTrialStatusTypeDao();
 		TrialStatusType state = CheckIDUtil.checkTrialStatusTypeId(trialIn.getStatusId(), trialStatusTypeDao);
@@ -2186,8 +2196,9 @@ public class TrialServiceImpl
 		} else if (hasTrialStatusAction(originalTrial.getStatus(), org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
 			checkTeamMemberSign(originalTrial, user);
 		}
-		Randomization.checkTrialInput(originalTrial, trialIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
-				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+		return Randomization.checkTrialInput(originalTrial, trialIn, codes, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
+				this.getRandomizationListCodeDao());
 	}
 
 	private void checkVisitInput(VisitInVO visitIn) throws ServiceException {
@@ -2655,7 +2666,7 @@ public class TrialServiceImpl
 			if (trial.getRandomization() != null) {
 				Randomization randomization = Randomization.getInstance(trial.getRandomization(), this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
 						this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(),
-						this.getProbandListEntryTagValueDao());
+						this.getProbandListEntryTagValueDao(), this.getRandomizationListCodeDao());
 				switch (randomization.getType()) {
 					case GROUP:
 						// if (groupId != null) {
@@ -2949,14 +2960,16 @@ public class TrialServiceImpl
 
 	@Override
 	protected StratificationRandomizationListOutVO handleAddStratificationRandomizationList(AuthenticationVO auth,
-			StratificationRandomizationListInVO newStratificationRandomizationList) throws Exception {
-		checkStratificationRandomizationListInput(newStratificationRandomizationList);
+			StratificationRandomizationListInVO newStratificationRandomizationList, RandomizationListCodesVO newCodes) throws Exception {
+		ArrayList<RandomizationListCodeInVO> codes = checkStratificationRandomizationListInput(newStratificationRandomizationList, newCodes != null ? newCodes.getCodes() : null,
+				true);
 		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
 		StratificationRandomizationList randomizationList = stratificationRandomizationListDao.stratificationRandomizationListInVOToEntity(newStratificationRandomizationList);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(randomizationList, now, user);
 		randomizationList = stratificationRandomizationListDao.create(randomizationList);
+		ServiceUtil.createRandomizationListCodes(randomizationList, codes, false, now, user, this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
 		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
 		ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_CREATED, result, null,
 				this.getJournalEntryDao());
@@ -3024,14 +3037,15 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected TrialOutVO handleAddTrial(AuthenticationVO auth, TrialInVO newTrial) throws Exception {
-		checkAddTrialInput(newTrial);
+	protected TrialOutVO handleAddTrial(AuthenticationVO auth, TrialInVO newTrial, RandomizationListCodesVO newCodes) throws Exception {
+		ArrayList<RandomizationListCodeInVO> codes = checkAddTrialInput(newTrial, newCodes != null ? newCodes.getCodes() : null);
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = trialDao.trialInVOToEntity(newTrial);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(trial, now, user);
 		trial = trialDao.create(trial);
+		ServiceUtil.createRandomizationListCodes(trial, codes, false, now, user, this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
 		execTrialStatusActions(null, trial, now, user);
 		TrialOutVO result = trialDao.toTrialOutVO(trial);
 		ServiceUtil.logSystemMessage(trial, result, now, user, SystemMessageCodes.TRIAL_CREATED, result, null, this.getJournalEntryDao());
@@ -3808,7 +3822,8 @@ public class TrialServiceImpl
 		ServiceUtil.checkTrialLocked(trial);
 		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
 		trial.removeRandomizationLists(randomizationList);
-		ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+		ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao,
+				this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_DELETED, result, null, this.getJournalEntryDao());
@@ -3940,12 +3955,22 @@ public class TrialServiceImpl
 			}
 			trial.getListEntryTags().clear();
 			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+			RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+			RandomizationListCodeValueDao randomizationListCodeValueDao = this.getRandomizationListCodeValueDao();
 			Iterator<StratificationRandomizationList> randomizationListsIt = trial.getRandomizationLists().iterator();
 			while (randomizationListsIt.hasNext()) {
 				StratificationRandomizationList randomizationList = randomizationListsIt.next();
-				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao);
+				ServiceUtil.removeStratificationRandomizationList(randomizationList, true, stratificationRandomizationListDao,
+						randomizationListCodeDao, randomizationListCodeValueDao);
 			}
 			trial.getRandomizationLists().clear();
+			Iterator<RandomizationListCode> randomizationListCodesIt = trial.getRandomizationCodes().iterator();
+			while (randomizationListCodesIt.hasNext()) {
+				RandomizationListCode randomizationListCode = randomizationListCodesIt.next();
+				ServiceUtil.removeRandomizationListCode(randomizationListCode, true,
+						randomizationListCodeDao, randomizationListCodeValueDao);
+			}
+			trial.getRandomizationCodes().clear();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -5259,7 +5284,8 @@ public class TrialServiceImpl
 		// throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
 		// }
 		Randomization randomization = Randomization.getInstance(mode, trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
-				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao());
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
+				this.getRandomizationListCodeDao());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		String result = randomization.generateRandomizationList(trial, n);
@@ -7787,12 +7813,13 @@ public class TrialServiceImpl
 
 	@Override
 	protected StratificationRandomizationListOutVO handleUpdateStratificationRandomizationList(AuthenticationVO auth,
-			StratificationRandomizationListInVO modifiedStratificationRandomizationList)
+			StratificationRandomizationListInVO modifiedStratificationRandomizationList, RandomizationListCodesVO modifiedCodes, boolean purgeOldCodes)
 			throws Exception {
 		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
 		StratificationRandomizationList originalRandomizationList = CheckIDUtil.checkStratificationRandomizationListId(modifiedStratificationRandomizationList.getId(),
 				stratificationRandomizationListDao);
-		checkStratificationRandomizationListInput(modifiedStratificationRandomizationList);
+		ArrayList<RandomizationListCodeInVO> codes = checkStratificationRandomizationListInput(modifiedStratificationRandomizationList,
+				modifiedCodes != null ? modifiedCodes.getCodes() : null, true);
 		StratificationRandomizationListOutVO original = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(originalRandomizationList);
 		stratificationRandomizationListDao.evict(originalRandomizationList);
 		StratificationRandomizationList randomizationList = stratificationRandomizationListDao.stratificationRandomizationListInVOToEntity(modifiedStratificationRandomizationList);
@@ -7800,9 +7827,57 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalRandomizationList, randomizationList, now, user);
 		stratificationRandomizationListDao.update(randomizationList);
+		ServiceUtil.createRandomizationListCodes(randomizationList, codes, purgeOldCodes, now, user, this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
 		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
 		ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_UPDATED, result, original,
 				this.getJournalEntryDao());
+		return result;
+	}
+
+	@Override
+	protected StratificationRandomizationListOutVO handleAddUpdateStratificationRandomizationList(AuthenticationVO auth,
+			StratificationRandomizationListInVO modifiedStratificationRandomizationList, RandomizationListCodesVO modifiedCodes, boolean purgeOldCodes)
+			throws Exception {
+		StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
+		if (modifiedStratificationRandomizationList.getId() != null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.STRATIFICATION_RANDOMIZATION_LIST_ID_NOT_NULL);
+		}
+		ArrayList<RandomizationListCodeInVO> codes = checkStratificationRandomizationListInput(modifiedStratificationRandomizationList,
+				modifiedCodes != null ? modifiedCodes.getCodes() : null, false);
+		StratificationRandomizationList originalRandomizationList;
+		try {
+			originalRandomizationList = stratificationRandomizationListDao.findByTrialTagValues(modifiedStratificationRandomizationList.getTrialId(),
+					new HashSet<Long>(modifiedStratificationRandomizationList.getSelectionSetValueIds())).iterator().next();
+		} catch (NoSuchElementException e) {
+			originalRandomizationList = null;
+		}
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		StratificationRandomizationListOutVO result;
+		if (originalRandomizationList != null) {
+			StratificationRandomizationListOutVO original = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(originalRandomizationList);
+			stratificationRandomizationListDao.evict(originalRandomizationList);
+			StratificationRandomizationListInVO randomizationListIn = new StratificationRandomizationListInVO(modifiedStratificationRandomizationList);
+			randomizationListIn.setId(original.getId());
+			randomizationListIn.setVersion(original.getVersion());
+			StratificationRandomizationList randomizationList = stratificationRandomizationListDao.stratificationRandomizationListInVOToEntity(randomizationListIn);
+			CoreUtil.modifyVersion(originalRandomizationList, randomizationList, now, user);
+			stratificationRandomizationListDao.update(randomizationList);
+			ServiceUtil.createRandomizationListCodes(randomizationList, codes, purgeOldCodes, now, user, this.getRandomizationListCodeDao(),
+					this.getRandomizationListCodeValueDao());
+			result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+			ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_UPDATED, result, original,
+					this.getJournalEntryDao());
+		} else {
+			StratificationRandomizationList randomizationList = stratificationRandomizationListDao
+					.stratificationRandomizationListInVOToEntity(modifiedStratificationRandomizationList);
+			CoreUtil.modifyVersion(randomizationList, now, user);
+			randomizationList = stratificationRandomizationListDao.create(randomizationList);
+			ServiceUtil.createRandomizationListCodes(randomizationList, codes, false, now, user, this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
+			result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
+			ServiceUtil.logSystemMessage(randomizationList.getTrial(), result.getTrial(), now, user, SystemMessageCodes.STRATIFICATION_RANDOMIZATION_LIST_CREATED, result, null,
+					this.getJournalEntryDao());
+		}
 		return result;
 	}
 
@@ -7847,13 +7922,13 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected TrialOutVO handleUpdateTrial(AuthenticationVO auth, TrialInVO modifiedTrial)
+	protected TrialOutVO handleUpdateTrial(AuthenticationVO auth, TrialInVO modifiedTrial, RandomizationListCodesVO modifiedCodes, boolean purgeOldCodes)
 			throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial originalTrial = CheckIDUtil.checkTrialId(modifiedTrial.getId(), trialDao, LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		checkUpdateTrialInput(originalTrial, modifiedTrial, user);
+		ArrayList<RandomizationListCodeInVO> codes = checkUpdateTrialInput(originalTrial, modifiedTrial, modifiedCodes != null ? modifiedCodes.getCodes() : null, user);
 		TrialStatusType originalTrialStatusType = originalTrial.getStatus();
 		TrialOutVO original = trialDao.toTrialOutVO(originalTrial);
 		this.getTrialStatusTypeDao().evict(originalTrialStatusType);
@@ -7871,6 +7946,7 @@ public class TrialServiceImpl
 		}
 		CoreUtil.modifyVersion(originalTrial, trial, now, user);
 		trialDao.update(trial);
+		ServiceUtil.createRandomizationListCodes(trial, codes, purgeOldCodes, now, user, this.getRandomizationListCodeDao(), this.getRandomizationListCodeValueDao());
 		execTrialStatusActions(originalTrialStatusType, trial, now, user);
 		TrialOutVO result = trialDao.toTrialOutVO(trial);
 		ServiceUtil.logSystemMessage(trial, result, now, user, SystemMessageCodes.TRIAL_UPDATED, result, original, this.getJournalEntryDao());
@@ -8374,5 +8450,70 @@ public class TrialServiceImpl
 		Collection probands = probandDao.findByInquiryValuesTrial(null, trialId, active, activeSignup, psf);
 		probandDao.toProbandOutVOCollection(probands);
 		return probands;
+	}
+
+	@Override
+	protected RandomizationListCodeOutVO handleGetRandomizationListCode(AuthenticationVO auth, Long probandListEntryId, boolean breakCode, String reasonForBreak) throws Exception {
+		ProbandListEntry listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
+		RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+		Randomization randomization = Randomization.getInstance(listEntry.getTrial().getRandomization(), this.getTrialDao(), this.getProbandGroupDao(),
+				this.getProbandListEntryDao(),
+				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(),
+				this.getProbandListEntryTagValueDao(), randomizationListCodeDao);
+		RandomizationListCode randomizationListCode = randomization.getRandomizationListCode(listEntry);
+		RandomizationListCodeOutVO result;
+		if (breakCode) {
+			if (CommonUtil.isEmptyString(reasonForBreak)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.REASON_FOR_BREAK_REQUIRED);
+			}
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			User user = CoreUtil.getUser();
+			randomizationListCode.setBreakUser(user);
+			randomizationListCode.setReasonForBreak(reasonForBreak);
+			randomizationListCode.setBreakTimestamp(now);
+			randomizationListCode.setBroken(true);
+			CoreUtil.modifyVersion(randomizationListCode, randomizationListCode.getVersion(), now, user);
+			randomizationListCodeDao.update(randomizationListCode);
+			RandomizationListCodeOutVO resultLog = randomizationListCodeDao.toRandomizationListCodeOutVO(randomizationListCode);
+			if (Settings.getBoolean(SettingCodes.OBFUSCATE_BROKEN_RANDOMIZATION_CODES, Bundle.SETTINGS, DefaultSettings.OBFUSCATE_BROKEN_RANDOMIZATION_CODES)) {
+				Randomization.obfuscateRandomizationListCodeValues(resultLog);
+				CoreUtil.getUserContext().voMapClear();
+				result = randomizationListCodeDao.toRandomizationListCodeOutVO(randomizationListCode);
+			} else {
+				result = resultLog;
+			}
+			ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.RANDOMIZATION_CODE_BREAK, resultLog, null,
+					this.getJournalEntryDao());
+			ServiceUtil.logSystemMessage(listEntry.getProband(), result.getListEntry().getTrial(), now, user, SystemMessageCodes.RANDOMIZATION_CODE_BREAK, resultLog, null,
+					this.getJournalEntryDao());
+		} else {
+			result = randomizationListCodeDao.toRandomizationListCodeOutVO(randomizationListCode);
+			Randomization.obfuscateRandomizationListCodeValues(result);
+		}
+		return result;
+	}
+
+	@Override
+	protected Collection<RandomizationListCodeOutVO> handleGetRandomizationListCodeList(AuthenticationVO auth, Long trialId, PSFVO psf) throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+		Collection codes = randomizationListCodeDao.findByTrialBroken(trialId, null, psf);
+		randomizationListCodeDao.toRandomizationListCodeOutVOCollection(codes);
+		Iterator codesIt = codes.iterator();
+		while (codesIt.hasNext()) {
+			Randomization.obfuscateRandomizationListCodeValues((RandomizationListCodeOutVO) codesIt.next());
+		}
+		return codes;
+	}
+
+	@Override
+	protected RandomizationListCodeOutVO handleGetRandomizationListCodeById(AuthenticationVO auth, Long randomizationListCodeId) throws Exception {
+		RandomizationListCodeDao randomizationListCodeDao = this.getRandomizationListCodeDao();
+		RandomizationListCode code = CheckIDUtil.checkRandomizationListCodeId(randomizationListCodeId, randomizationListCodeDao);
+		RandomizationListCodeOutVO result = randomizationListCodeDao.toRandomizationListCodeOutVO(code);
+		Randomization.obfuscateRandomizationListCodeValues(result);
+		return result;
 	}
 }

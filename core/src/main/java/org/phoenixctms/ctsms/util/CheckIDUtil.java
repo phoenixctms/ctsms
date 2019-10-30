@@ -742,6 +742,16 @@ public final class CheckIDUtil {
 		return stratificationRandomizationList;
 	}
 
+	public static RandomizationListCode checkRandomizationListCodeId(Long randomizationListCodeId,
+			RandomizationListCodeDao randomizationListCodeDao) throws ServiceException {
+		RandomizationListCode randomizationListCode = randomizationListCodeDao.load(randomizationListCodeId);
+		if (randomizationListCode == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_RANDOMIZATION_LIST_CODE_ID,
+					randomizationListCodeId == null ? null : randomizationListCodeId.toString());
+		}
+		return randomizationListCode;
+	}
+
 	public static SurveyStatusType checkSurveyStatusTypeId(Long typeId, SurveyStatusTypeDao surveyStatusTypeDao) throws ServiceException {
 		SurveyStatusType type = surveyStatusTypeDao.load(typeId);
 		if (type == null) {
