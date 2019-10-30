@@ -80,6 +80,8 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_SURVEY_STATUS_TYPE_ID = "invalid_survey_status_type_id";
 	public final static String INVALID_VISIT_SCHEDULE_ITEM_ID = "invalid_visit_schedule_item_id";
 	public final static String INVALID_STRATIFICATION_RANDOMIZATION_LIST_ID = "invalid_stratification_randomization_list_id";
+	public final static String INVALID_RANDOMIZATION_LIST_CODE_ID = "invalid_randomization_list_code_id";
+	public final static String STRATIFICATION_RANDOMIZATION_LIST_ID_NOT_NULL = "stratification_randomization_list_id_not_null";
 	public final static String TRIAL_LOCKED = "trial_locked";
 	public final static String PROBAND_LOCKED = "proband_locked";
 	public final static String MASS_MAIL_LOCKED = "mass_mail_locked";
@@ -520,6 +522,7 @@ public interface ServiceExceptionCodes {
 	public final static String NO_RANDOMIZE_PROBAND_LIST_ENTRY_TAG = "no_randomize_proband_list_entry_tag";
 	public final static String RANDOMIZE_INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "randomize_input_field_selection_set_value_not_empty";
 	public final static String RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "randomize_input_field_text_value_not_empty";
+	public final static String RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED = "randomization_proband_list_entry_tag_value_required";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";
@@ -720,6 +723,13 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_TEXT_VALUE_RANDOMIZATION_NOT_SUPPORTED = "input_field_text_value_randomization_not_supported";
 	public static final String PROBAND_GROUP_RANDOMIZATION_NOT_SUPPORTED = "proband_group_randomization_not_supported";
 	public static final String RANDOMIZATION_LISTS_NOT_SUPPORTED = "randomization_lists_not_supported";
+	public static final String RANDOMIZATION_LIST_CODES_NOT_SUPPORTED = "randomization_list_codes_not_supported";
+	public static final String EMPTY_RANDOMIZATION_CODE_VALUE = "empty_randomization_code_value";
+	public static final String DUPLICATE_RANDOMIZATION_CODE_VALUE = "duplicate_randomization_code_value";
+	public static final String UNKNOWN_RANDOMIZATION_CODE_VALUE = "unknown_randomization_code_value";
+	public static final String MISSING_RANDOMIZATION_CODE_VALUES = "missing_randomization_code_values";
+	public final static String RANDOMIZATION_LIST_CODE_NOT_FOUND = "randomization_list_code_not_found";
+	public static final String REASON_FOR_BREAK_REQUIRED = "reason_for_break_required";
 	public static final String STRATIFICATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED = "stratification_proband_list_entry_tag_value_required";
 	public static final String MISSING_STRATIFICATION_RANDOMIZATION_LIST = "missing_stratification_randomization_list";
 	public static final String RANDOMIZATION_PROBAND_LIST_ENTRY_REQUIRED = "randomization_proband_list_entry_required";

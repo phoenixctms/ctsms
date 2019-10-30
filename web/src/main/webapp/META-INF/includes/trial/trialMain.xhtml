@@ -796,7 +796,8 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="trialrandomizationlist" />
+									<!-- <p:message for="trialrandomizationlist" /> -->
+									<p:messages for="trialrandomizationlistMessages" />
 									<p:toolbar id="generaterandomizationlisttoolbar">
 										<p:toolbarGroup align="right">
 											<p:commandButton
@@ -926,7 +927,8 @@
 								name="tooltip"
 								value="#{triallabels.trial_signature_tooltip}" />
 						</ui:include>
-						<p:messages />
+						<!-- <p:messages /> -->
+						<p:messages globalOnly="true" />
 						<p:toolbar id="toolbar">
 							<p:toolbarGroup align="left">
 								<h:outputText

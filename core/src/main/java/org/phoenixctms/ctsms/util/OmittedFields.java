@@ -44,7 +44,6 @@ import com.thoughtworks.xstream.XStream;
 
 public final class OmittedFields {
 
-	public final static String OBFUSCATED_STRING = "********";
 	private static HashMap<Class, HashSet<String>> protectedOutVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashMap<Class, HashSet<String>> protectedInVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashMap<Class, HashSet<String>> lcProtectedOutVOFieldMap = new HashMap<Class, HashSet<String>>();

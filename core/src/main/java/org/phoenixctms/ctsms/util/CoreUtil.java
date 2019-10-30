@@ -73,6 +73,7 @@ import com.thoughtworks.xstream.XStream;
 
 public final class CoreUtil {
 
+	public final static String OBFUSCATED_STRING = "********";
 	public final static String RANDOM_ALGORITHM = "SHA1PRNG";
 	private final static String JAVASCRIPT_ENGINE_NAME = "JavaScript";
 	public static final String PDF_FILENAME_EXTENSION = "pdf";

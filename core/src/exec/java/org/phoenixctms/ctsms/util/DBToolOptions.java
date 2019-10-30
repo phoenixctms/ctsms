@@ -175,6 +175,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_ECRFS_OPT = "ie";
 	public static final String IMPORT_ASPS_OPT = "ia";
 	public static final String VALIDATE_PENDING_ECRFS_OPT = "vpe";
+	public static final String IMPORT_RANDOMIZATION_LISTS_OPT = "irl";
 	public static final String EXPORT_INVENTORY_JOURNAL_OPT = "eij";
 	public static final String EXPORT_STAFF_JOURNAL_OPT = "esj";
 	public static final String EXPORT_COURSE_JOURNAL_OPT = "ecj";
@@ -340,6 +341,8 @@ public final class DBToolOptions {
 				"export input field and selection set values", 1)); //allLockIds
 		tasks.addOption(registerTaskOption(IMPORT_ECRFS_OPT, "import_ecrfs",
 				"import eCRFs, eCRF fields, input fields and selection set values", 1)); //allLockIds
+		tasks.addOption(registerTaskOption(IMPORT_RANDOMIZATION_LISTS_OPT, "import_randomization_lists",
+				"import (stratification) randomization lists (including blinded data)", 1)); //allLockIds		
 		tasks.addOption(registerTaskOption(EXPORT_ECRFS_OPT, "export_ecrfs",
 				"export eCRFs, eCRF fields, input fields and selection set values", 1)); //allLockIds
 		tasks.addOption(registerTaskOption(IMPORT_ASPS_OPT, "import_asps",

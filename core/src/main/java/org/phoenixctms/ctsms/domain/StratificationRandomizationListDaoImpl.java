@@ -260,10 +260,13 @@ public class StratificationRandomizationListDaoImpl
 				trial.removeRandomizationLists(target);
 			}
 		}
-		Collection selectionSetValues;
-		if ((selectionSetValues = source.getSelectionSetValues()).size() > 0 || copyIfNull) {
+		Collection selectionSetValues = source.getSelectionSetValues();
+		if (selectionSetValues.size() > 0) {
+			selectionSetValues = new ArrayList(selectionSetValues); //prevent changing VO
 			this.getInputFieldSelectionSetValueDao().inputFieldSelectionSetValueOutVOToEntityCollection(selectionSetValues);
 			target.setSelectionSetValues(selectionSetValues); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getSelectionSetValues().clear();
 		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
@@ -344,5 +347,6 @@ public class StratificationRandomizationListDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		target.setSelectionSetValues(toInputFieldSelectionSetValueOutVOCollection(source.getSelectionSetValues()));
+		target.setCodeCount(this.getRandomizationListCodeDao().getCount(null, source.getId(), null));
 	}
 }

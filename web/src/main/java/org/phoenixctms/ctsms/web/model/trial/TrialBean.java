@@ -24,19 +24,13 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.vo.DepartmentVO;
-import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
-import org.phoenixctms.ctsms.vo.SponsoringTypeVO;
-import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
-import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
@@ -58,41 +52,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	private static final int BLOCKING_PERIOD_PROPERTY_ID = 1;
 	private static final int RANDOMIZATION_MODE_PROPERTY_ID = 1;
-
-	public static void copyTrialOutToIn(TrialInVO in, TrialOutVO out) {
-		if (in != null && out != null) {
-			DepartmentVO departmentVO = out.getDepartment();
-			TrialStatusTypeVO statusVO = out.getStatus();
-			TrialTypeVO typeVO = out.getType();
-			SponsoringTypeVO sponsoringVO = out.getSponsoring();
-			SurveyStatusTypeVO surveyStatusVO = out.getSurveyStatus();
-			VariablePeriodVO blockingPeriodVO = out.getBlockingPeriod();
-			RandomizationModeVO randomizationVO = out.getRandomization();
-			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
-			in.setDescription(out.getDescription());
-			in.setSignupProbandList(out.getSignupProbandList());
-			in.setSignupInquiries(out.getSignupInquiries());
-			in.setSignupRandomize(out.getSignupRandomize());
-			in.setSignupDescription(out.getSignupDescription());
-			in.setId(out.getId());
-			in.setName(out.getName());
-			in.setStatusId(statusVO == null ? null : statusVO.getId());
-			in.setTitle(out.getTitle());
-			in.setVersion(out.getVersion());
-			in.setTypeId(typeVO == null ? null : typeVO.getId());
-			in.setSponsoringId(sponsoringVO == null ? null : sponsoringVO.getId());
-			in.setSurveyStatusId(surveyStatusVO == null ? null : surveyStatusVO.getId());
-			in.setExclusiveProbands(out.getExclusiveProbands());
-			in.setProbandAliasFormat(out.getProbandAliasFormat());
-			in.setBlockingPeriod(blockingPeriodVO == null ? null : blockingPeriodVO.getPeriod());
-			in.setBlockingPeriodDays(out.getBlockingPeriodDays());
-			in.setDutySelfAllocationLocked(out.getDutySelfAllocationLocked());
-			in.setDutySelfAllocationLockedUntil(out.getDutySelfAllocationLockedUntil());
-			in.setDutySelfAllocationLockedFrom(out.getDutySelfAllocationLockedFrom());
-			in.setRandomization(randomizationVO == null ? null : randomizationVO.getMode());
-			in.setRandomizationList(null); // out.getRandomizationList());
-		}
-	}
 
 	public static void initTrialDefaultValues(TrialInVO in, UserOutVO user) {
 		if (in != null) {
@@ -153,6 +112,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	private Collection<TrialStatusTypeVO> allStatusTypes;
 	private String deferredDeleteReason;
 	private RandomizationModeSelector randomizationMode;
+	private TrialRandomizationListVO trialRandomizationList;
 
 	public TrialBean() {
 		super();
@@ -175,7 +135,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			// if (getTrialStatusTypePasswordRequired()) {
 			// WebUtil.testPassword(password);
 			// }
-			out = WebUtil.getServiceLocator().getTrialService().addTrial(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().addTrial(WebUtil.getAuthentication(), in, null);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
@@ -498,7 +458,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in = new TrialInVO();
 		}
 		if (out != null) {
-			copyTrialOutToIn(in, out);
+			CommonUtil.copyTrialOutToIn(in, out);
 		} else {
 			initTrialDefaultValues(in, WebUtil.getUser());
 		}
@@ -619,6 +579,10 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		loadTrialStatusType();
 		loadTrialRandomizationList();
 		loadSignature();
+		if (trialRandomizationList != null && trialRandomizationList.getCodeCount() > 0) {
+			Messages.addLocalizedMessageClientId("trialrandomizationlistMessages", FacesMessage.SEVERITY_WARN, MessageCodes.RANDOMIZATION_LIST_CODES_PRESENT,
+					trialRandomizationList.getCodeCount());
+		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
@@ -722,7 +686,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	}
 
 	private void loadTrialRandomizationList() {
-		TrialRandomizationListVO trialRandomizationList = null;
+		trialRandomizationList = null;
 		in.setRandomizationList(Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
 		if (in.getId() != null) {
 			try {
@@ -735,6 +699,10 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 				in.setRandomizationList(trialRandomizationList.getRandomizationList());
 			}
 		}
+	}
+
+	public TrialRandomizationListVO getTrialRandomizationList() {
+		return trialRandomizationList;
 	}
 
 	private void loadTrialStatusType() {
@@ -811,7 +779,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			if (getTrialStatusTypePasswordRequired()) {
 				WebUtil.testPassword(password);
 			}
-			out = WebUtil.getServiceLocator().getTrialService().updateTrial(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().updateTrial(WebUtil.getAuthentication(), in, null, false);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

@@ -64,6 +64,12 @@
 						</f:facet>
 						<h:outputText value="#{applicationScopeBean.clipStringTrailing(stratificationRandomizationList.vo.randomizationList,96)}" />
 					</p:column>
+					<p:column >
+						<f:facet name="header">
+							<h:outputText value="#{triallabels.randomizationlist_randomizationlist_list_codecount_column}" />
+						</f:facet>
+						<h:outputText value="#{stratificationRandomizationList.vo.codeCount}" />
+					</p:column>
 				</p:dataTable>
 				<p:panel id="randomizationlist_input">
 					<f:facet name="header">

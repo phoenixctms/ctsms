@@ -66,7 +66,8 @@ public enum Urls {
 	RECIPIENT_OVERVIEW("/massmail/recipientOverview.jsf"),
 	MONEY_TRANSFER_OVERVIEW("/trial/moneyTransferOverview.jsf"),
 	ECRF_PROGRESS_OVERVIEW("/trial/ecrfProgressOverview.jsf"),
-	DUTY_ROSTER_SCHEDULE("/trial/dutyRosterSchedule.jsf");
+	DUTY_ROSTER_SCHEDULE("/trial/dutyRosterSchedule.jsf"),
+	RANDOMIZATION_CODE_OVERVIEW("/trial/randomizationCodeOverview.jsf");
 
 	private static Urls fromValue(String viewId) {
 		if (viewId != null) {

@@ -772,7 +772,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				result.append(" ");
 				String criterionValue;
 				if (obfuscateCriterions && OmittedFields.isOmitted(property.getProperty())) {
-					criterionValue = OmittedFields.OBFUSCATED_STRING;
+					criterionValue = CoreUtil.OBFUSCATED_STRING;
 				} else {
 					if (resolveCriterionValues) {
 						try {
@@ -820,7 +820,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			if (property != null && !CriterionValueType.NONE.equals(property.getValueType())) {
 				result.append(" ");
 				if (getObfuscateCriterionsArg(args) && OmittedFields.isOmitted(property.getProperty())) {
-					result.append(OmittedFields.OBFUSCATED_STRING);
+					result.append(CoreUtil.OBFUSCATED_STRING);
 				} else {
 					result.append(getCriterionValueString(token, property));
 				}

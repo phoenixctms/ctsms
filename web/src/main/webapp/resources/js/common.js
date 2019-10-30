@@ -1305,6 +1305,12 @@ function openEcrfProgressOverview() {
 
 }
 
+function openRandomizationCodeOverview() {
+
+	_openHome(RANDOMIZATION_CODE_OVERVIEW_URL, TRIAL_HOME_WINDOW_NAME);
+
+}
+
 function openTrialShiftSummaryOverview() {
 
 	_openHome(TRIAL_SHIFT_SUMMARY_OVERVIEW_URL, TRIAL_HOME_WINDOW_NAME);

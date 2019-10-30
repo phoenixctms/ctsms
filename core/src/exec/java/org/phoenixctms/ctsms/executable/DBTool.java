@@ -877,6 +877,13 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT),
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT);
+					dbTool.initJob(line).printPrelude(job);
+					if (dbTool.testForced(line, "DB will be modified - randomization lists will be updated!")) {
+						sendEmail = dbTool.getXlsImporter().loadRandomizationLists(line.getOptionValue(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT),
+								getAuthenticationOptionValue(line), getIdOptionValue(line, true), true) > 0l;
+					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_ASPS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ASPS_OPT);
 					dbTool.getJobOutput().printPrelude(job);

@@ -293,4 +293,5 @@ public interface SettingCodes {
 	public static final String DB_TOOL = "db_tool";
 	public static final String ECRF_PROCESS_PL = "ecrf_process_pl";
 	public static final String INQUIRY_PROCESS_PL = "inquiry_process_pl";
+	public static final String OBFUSCATE_BROKEN_RANDOMIZATION_CODES = "obfuscate_broken_randomization_codes";
 }
