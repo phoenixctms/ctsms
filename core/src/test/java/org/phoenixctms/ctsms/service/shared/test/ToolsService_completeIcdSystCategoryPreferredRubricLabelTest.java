@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.ToolsService#completeIcdSystCategoryPreferredRubricLabel(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Integer)
  */
-@Test(groups = { "service", "ToolsService" })
+@Test(groups={"service","ToolsService"})
 public class ToolsService_completeIcdSystCategoryPreferredRubricLabelTest extends ToolsServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>completeIcdSystCategoryPreferredRubricLabel</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'ToolsService_completeIcdSystCategoryPreferredRubricLabelTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeIcdSystCategoryPreferredRubricLabel]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>completeIcdSystCategoryPreferredRubricLabel</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'ToolsService_completeIcdSystCategoryPreferredRubricLabelTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.completeIcdSystCategoryPreferredRubricLabel]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.SelectionSetService#getBankIdentifications(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.String, java.lang.String, java.lang.Integer)
  */
-@Test(groups = { "service", "SelectionSetService" })
+@Test(groups={"service","SelectionSetService"})
 public class SelectionSetService_getBankIdentificationsTest extends SelectionSetServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getBankIdentifications</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'SelectionSetService_getBankIdentificationsTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getBankIdentifications]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getBankIdentifications</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'SelectionSetService_getBankIdentificationsTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'SelectionSetService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.SelectionSetService.getBankIdentifications]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

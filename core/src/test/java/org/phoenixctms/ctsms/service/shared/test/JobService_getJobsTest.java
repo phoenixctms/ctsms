@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getJobs</code> of service <code>JobService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.JobService#getJobs(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.JobModule, java.lang.Long, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.shared.JobService#getJobs(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.JobModule, java.lang.Long, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","JobService"})
 public class JobService_getJobsTest extends JobServiceBaseTest {

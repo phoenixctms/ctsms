@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.trial.TrialService#addVisit(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.VisitInVO)
  */
-@Test(groups = { "service", "TrialService" })
+@Test(groups={"service","TrialService"})
 public class TrialService_addVisitTest extends TrialServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>addVisit</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'TrialService_addVisitTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addVisit]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>addVisit</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'TrialService_addVisitTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addVisit]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

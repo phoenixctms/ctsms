@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.staff.StaffService#deleteStaffTagValue(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
  */
-@Test(groups = { "service", "StaffService" })
+@Test(groups={"service","StaffService"})
 public class StaffService_deleteStaffTagValueTest extends StaffServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>deleteStaffTagValue</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'StaffService_deleteStaffTagValueTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.deleteStaffTagValue]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>deleteStaffTagValue</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'StaffService_deleteStaffTagValueTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.deleteStaffTagValue]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

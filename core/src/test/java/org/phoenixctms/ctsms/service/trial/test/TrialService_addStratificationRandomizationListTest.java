@@ -11,29 +11,31 @@ import org.testng.annotations.Test;
  * Test case for method <code>addStratificationRandomizationList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#addStratificationRandomizationList(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#addStratificationRandomizationList(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO, org.phoenixctms.ctsms.vo.RandomizationListCodesVO)
  */
-@Test(groups = { "service", "TrialService" })
+@Test(groups={"service","TrialService"})
 public class TrialService_addStratificationRandomizationListTest extends TrialServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>addStratificationRandomizationList</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'TrialService_addStratificationRandomizationListTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addStratificationRandomizationList]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>addStratificationRandomizationList</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'TrialService_addStratificationRandomizationListTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.addStratificationRandomizationList]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.massmail.MassMailService#resetMassMailRecipient(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long)
  */
-@Test(groups = { "service", "MassMailService" })
+@Test(groups={"service","MassMailService"})
 public class MassMailService_resetMassMailRecipientTest extends MassMailServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>resetMassMailRecipient</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'MassMailService_resetMassMailRecipientTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'MassMailService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.massmail.MassMailService.resetMassMailRecipient]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>resetMassMailRecipient</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'MassMailService_resetMassMailRecipientTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'MassMailService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.massmail.MassMailService.resetMassMailRecipient]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

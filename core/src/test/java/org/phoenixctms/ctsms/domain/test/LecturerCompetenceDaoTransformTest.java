@@ -10,26 +10,27 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.LecturerCompetence
 */
-@Test(groups = { "transform", "LecturerCompetenceDao" })
+@Test(groups={"transform","LecturerCompetenceDao"})
 public class LecturerCompetenceDaoTransformTest extends DaoTransformTestBase {
 
-	/**
-	 * Test for method LecturerCompetenceDao.toLecturerCompetenceVO
-	 *
-	 * @see org.phoenixctms.ctsms.domain.LecturerCompetenceDao#toLecturerCompetenceVO(org.phoenixctms.ctsms.domain.LecturerCompetence source, org.phoenixctms.ctsms.vo.LecturerCompetenceVO target)
-	 */
-	@Test
-	public void testToLecturerCompetenceVO() {
-		Assert.fail("Test 'LecturerCompetenceDaoTransformTest.testToLecturerCompetenceVO' not implemented!");
-	}
+  /**
+   * Test for method LecturerCompetenceDao.toLecturerCompetenceVO
+   *
+   * @see org.phoenixctms.ctsms.domain.LecturerCompetenceDao#toLecturerCompetenceVO(org.phoenixctms.ctsms.domain.LecturerCompetence source, org.phoenixctms.ctsms.vo.LecturerCompetenceVO target)
+   */
+  @Test
+  public void testToLecturerCompetenceVO() {
+    Assert.fail("Test 'LecturerCompetenceDaoTransformTest.testToLecturerCompetenceVO' not implemented!");
+  }
 
-	/**
-	* Test for method lecturerCompetenceVOToEntity
-	*
-	* @see org.phoenixctms.ctsms.domain.LecturerCompetenceDao#lecturerCompetenceVOToEntity(org.phoenixctms.ctsms.vo.LecturerCompetenceVO source, org.phoenixctms.ctsms.domain.LecturerCompetence target, boolean copyIfNull)
-	*/
-	@Test
-	public void testLecturerCompetenceVOToEntity() {
-		Assert.fail("Test 'LecturerCompetenceDaoTransformTest.testLecturerCompetenceVOToEntity' not implemented!");
-	}
+    /**
+   * Test for method lecturerCompetenceVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.LecturerCompetenceDao#lecturerCompetenceVOToEntity(org.phoenixctms.ctsms.vo.LecturerCompetenceVO source, org.phoenixctms.ctsms.domain.LecturerCompetence target, boolean copyIfNull)
+   */
+  @Test
+  public void testLecturerCompetenceVOToEntity() {
+    Assert.fail("Test 'LecturerCompetenceDaoTransformTest.testLecturerCompetenceVOToEntity' not implemented!");
+  }
+
 }

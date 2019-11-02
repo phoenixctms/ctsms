@@ -11,29 +11,31 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfFieldValues</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean, boolean, java.lang.String, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups = { "service", "TrialService" })
+@Test(groups={"service","TrialService"})
 public class TrialService_getEcrfFieldValuesTest extends TrialServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getEcrfFieldValues</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'TrialService_getEcrfFieldValuesTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldValues]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getEcrfFieldValues</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'TrialService_getEcrfFieldValuesTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldValues]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

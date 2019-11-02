@@ -11,29 +11,31 @@ import org.testng.annotations.Test;
  * Test case for method <code>adminSetPassword</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#adminSetPassword(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PasswordInVO)
+ * @see org.phoenixctms.ctsms.service.user.UserService#adminSetPassword(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PasswordInVO, java.lang.String)
  */
-@Test(groups = { "service", "UserService" })
+@Test(groups={"service","UserService"})
 public class UserService_adminSetPasswordTest extends UserServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>adminSetPassword</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'UserService_adminSetPasswordTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.adminSetPassword]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>adminSetPassword</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'UserService_adminSetPasswordTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'UserService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.user.UserService.adminSetPassword]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

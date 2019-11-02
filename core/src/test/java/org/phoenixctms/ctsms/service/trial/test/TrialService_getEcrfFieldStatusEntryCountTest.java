@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldStatusEntryCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue, java.lang.Long, java.lang.Long, java.lang.Long, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
  */
-@Test(groups = { "service", "TrialService" })
+@Test(groups={"service","TrialService"})
 public class TrialService_getEcrfFieldStatusEntryCountTest extends TrialServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getEcrfFieldStatusEntryCount</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'TrialService_getEcrfFieldStatusEntryCountTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldStatusEntryCount]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getEcrfFieldStatusEntryCount</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'TrialService_getEcrfFieldStatusEntryCountTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'TrialService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.trial.TrialService.getEcrfFieldStatusEntryCount]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.staff.StaffService#getCollidingStaffStatusIntervalDayCounts(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.util.Date, java.util.Date)
  */
-@Test(groups = { "service", "StaffService" })
+@Test(groups={"service","StaffService"})
 public class StaffService_getCollidingStaffStatusIntervalDayCountsTest extends StaffServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getCollidingStaffStatusIntervalDayCounts</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'StaffService_getCollidingStaffStatusIntervalDayCountsTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingStaffStatusIntervalDayCounts]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getCollidingStaffStatusIntervalDayCounts</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'StaffService_getCollidingStaffStatusIntervalDayCountsTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'StaffService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.staff.StaffService.getCollidingStaffStatusIntervalDayCounts]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

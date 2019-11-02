@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.massmail.MassMailService#getPendingRecipientList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups = { "service", "MassMailService" })
+@Test(groups={"service","MassMailService"})
 public class MassMailService_getPendingRecipientListTest extends MassMailServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getPendingRecipientList</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'MassMailService_getPendingRecipientListTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'MassMailService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.massmail.MassMailService.getPendingRecipientList]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getPendingRecipientList</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'MassMailService_getPendingRecipientListTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'MassMailService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.massmail.MassMailService.getPendingRecipientList]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getJobCount</code> of service <code>JobService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.JobService#getJobCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.JobModule, java.lang.Long, java.lang.Boolean)
+ * @see org.phoenixctms.ctsms.service.shared.JobService#getJobCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.JobModule, java.lang.Long)
  */
 @Test(groups={"service","JobService"})
 public class JobService_getJobCountTest extends JobServiceBaseTest {

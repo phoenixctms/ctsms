@@ -10,26 +10,27 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.ProbandListStatusType
 */
-@Test(groups = { "transform", "ProbandListStatusTypeDao" })
+@Test(groups={"transform","ProbandListStatusTypeDao"})
 public class ProbandListStatusTypeDaoTransformTest extends DaoTransformTestBase {
 
-	/**
-	 * Test for method ProbandListStatusTypeDao.toProbandListStatusTypeVO
-	 *
-	 * @see org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao#toProbandListStatusTypeVO(org.phoenixctms.ctsms.domain.ProbandListStatusType source, org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO target)
-	 */
-	@Test
-	public void testToProbandListStatusTypeVO() {
-		Assert.fail("Test 'ProbandListStatusTypeDaoTransformTest.testToProbandListStatusTypeVO' not implemented!");
-	}
+  /**
+   * Test for method ProbandListStatusTypeDao.toProbandListStatusTypeVO
+   *
+   * @see org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao#toProbandListStatusTypeVO(org.phoenixctms.ctsms.domain.ProbandListStatusType source, org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO target)
+   */
+  @Test
+  public void testToProbandListStatusTypeVO() {
+    Assert.fail("Test 'ProbandListStatusTypeDaoTransformTest.testToProbandListStatusTypeVO' not implemented!");
+  }
 
-	/**
-	* Test for method probandListStatusTypeVOToEntity
-	*
-	* @see org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao#probandListStatusTypeVOToEntity(org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO source, org.phoenixctms.ctsms.domain.ProbandListStatusType target, boolean copyIfNull)
-	*/
-	@Test
-	public void testProbandListStatusTypeVOToEntity() {
-		Assert.fail("Test 'ProbandListStatusTypeDaoTransformTest.testProbandListStatusTypeVOToEntity' not implemented!");
-	}
+    /**
+   * Test for method probandListStatusTypeVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao#probandListStatusTypeVOToEntity(org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO source, org.phoenixctms.ctsms.domain.ProbandListStatusType target, boolean copyIfNull)
+   */
+  @Test
+  public void testProbandListStatusTypeVOToEntity() {
+    Assert.fail("Test 'ProbandListStatusTypeDaoTransformTest.testProbandListStatusTypeVOToEntity' not implemented!");
+  }
+
 }

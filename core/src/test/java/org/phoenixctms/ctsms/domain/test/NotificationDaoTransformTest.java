@@ -10,26 +10,27 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.Notification
 */
-@Test(groups = { "transform", "NotificationDao" })
+@Test(groups={"transform","NotificationDao"})
 public class NotificationDaoTransformTest extends DaoTransformTestBase {
 
-	/**
-	 * Test for method NotificationDao.toNotificationVO
-	 *
-	 * @see org.phoenixctms.ctsms.domain.NotificationDao#toNotificationVO(org.phoenixctms.ctsms.domain.Notification source, org.phoenixctms.ctsms.vo.NotificationVO target)
-	 */
-	@Test
-	public void testToNotificationVO() {
-		Assert.fail("Test 'NotificationDaoTransformTest.testToNotificationVO' not implemented!");
-	}
+  /**
+   * Test for method NotificationDao.toNotificationVO
+   *
+   * @see org.phoenixctms.ctsms.domain.NotificationDao#toNotificationVO(org.phoenixctms.ctsms.domain.Notification source, org.phoenixctms.ctsms.vo.NotificationVO target)
+   */
+  @Test
+  public void testToNotificationVO() {
+    Assert.fail("Test 'NotificationDaoTransformTest.testToNotificationVO' not implemented!");
+  }
 
-	/**
-	* Test for method notificationVOToEntity
-	*
-	* @see org.phoenixctms.ctsms.domain.NotificationDao#notificationVOToEntity(org.phoenixctms.ctsms.vo.NotificationVO source, org.phoenixctms.ctsms.domain.Notification target, boolean copyIfNull)
-	*/
-	@Test
-	public void testNotificationVOToEntity() {
-		Assert.fail("Test 'NotificationDaoTransformTest.testNotificationVOToEntity' not implemented!");
-	}
+    /**
+   * Test for method notificationVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.NotificationDao#notificationVOToEntity(org.phoenixctms.ctsms.vo.NotificationVO source, org.phoenixctms.ctsms.domain.Notification target, boolean copyIfNull)
+   */
+  @Test
+  public void testNotificationVOToEntity() {
+    Assert.fail("Test 'NotificationDaoTransformTest.testNotificationVOToEntity' not implemented!");
+  }
+
 }

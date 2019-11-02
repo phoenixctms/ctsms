@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.proband.ProbandService#getAutoDeletionProbands(org.phoenixctms.ctsms.vo.AuthenticationVO, java.util.Date, java.lang.Long, java.lang.Long, org.phoenixctms.ctsms.enumeration.VariablePeriod, java.lang.Long, org.phoenixctms.ctsms.vo.PSFVO)
  */
-@Test(groups = { "service", "ProbandService" })
+@Test(groups={"service","ProbandService"})
 public class ProbandService_getAutoDeletionProbandsTest extends ProbandServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getAutoDeletionProbands</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'ProbandService_getAutoDeletionProbandsTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getAutoDeletionProbands]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getAutoDeletionProbands</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'ProbandService_getAutoDeletionProbandsTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'ProbandService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.proband.ProbandService.getAutoDeletionProbands]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

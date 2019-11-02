@@ -34,23 +34,23 @@ public class JobDaoTransformTest extends DaoTransformTestBase {
   }
 
   /**
-   * Test for method JobDao.toJobInVO
+   * Test for method JobDao.toJobAddVO
    *
-   * @see org.phoenixctms.ctsms.domain.JobDao#toJobInVO(org.phoenixctms.ctsms.domain.Job source, org.phoenixctms.ctsms.vo.JobInVO target)
+   * @see org.phoenixctms.ctsms.domain.JobDao#toJobAddVO(org.phoenixctms.ctsms.domain.Job source, org.phoenixctms.ctsms.vo.JobAddVO target)
    */
   @Test
-  public void testToJobInVO() {
-    Assert.fail("Test 'JobDaoTransformTest.testToJobInVO' not implemented!");
+  public void testToJobAddVO() {
+    Assert.fail("Test 'JobDaoTransformTest.testToJobAddVO' not implemented!");
   }
 
     /**
-   * Test for method jobInVOToEntity
+   * Test for method jobAddVOToEntity
    *
-   * @see org.phoenixctms.ctsms.domain.JobDao#jobInVOToEntity(org.phoenixctms.ctsms.vo.JobInVO source, org.phoenixctms.ctsms.domain.Job target, boolean copyIfNull)
+   * @see org.phoenixctms.ctsms.domain.JobDao#jobAddVOToEntity(org.phoenixctms.ctsms.vo.JobAddVO source, org.phoenixctms.ctsms.domain.Job target, boolean copyIfNull)
    */
   @Test
-  public void testJobInVOToEntity() {
-    Assert.fail("Test 'JobDaoTransformTest.testJobInVOToEntity' not implemented!");
+  public void testJobAddVOToEntity() {
+    Assert.fail("Test 'JobDaoTransformTest.testJobAddVOToEntity' not implemented!");
   }
 
   /**
@@ -71,6 +71,26 @@ public class JobDaoTransformTest extends DaoTransformTestBase {
   @Test
   public void testJobOutVOToEntity() {
     Assert.fail("Test 'JobDaoTransformTest.testJobOutVOToEntity' not implemented!");
+  }
+
+  /**
+   * Test for method JobDao.toJobUpdateVO
+   *
+   * @see org.phoenixctms.ctsms.domain.JobDao#toJobUpdateVO(org.phoenixctms.ctsms.domain.Job source, org.phoenixctms.ctsms.vo.JobUpdateVO target)
+   */
+  @Test
+  public void testToJobUpdateVO() {
+    Assert.fail("Test 'JobDaoTransformTest.testToJobUpdateVO' not implemented!");
+  }
+
+    /**
+   * Test for method jobUpdateVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.JobDao#jobUpdateVOToEntity(org.phoenixctms.ctsms.vo.JobUpdateVO source, org.phoenixctms.ctsms.domain.Job target, boolean copyIfNull)
+   */
+  @Test
+  public void testJobUpdateVOToEntity() {
+    Assert.fail("Test 'JobDaoTransformTest.testJobUpdateVOToEntity' not implemented!");
   }
 
 }

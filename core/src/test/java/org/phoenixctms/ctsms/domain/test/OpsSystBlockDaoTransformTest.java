@@ -10,26 +10,27 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.OpsSystBlock
 */
-@Test(groups = { "transform", "OpsSystBlockDao" })
+@Test(groups={"transform","OpsSystBlockDao"})
 public class OpsSystBlockDaoTransformTest extends DaoTransformTestBase {
 
-	/**
-	 * Test for method OpsSystBlockDao.toOpsSystBlockVO
-	 *
-	 * @see org.phoenixctms.ctsms.domain.OpsSystBlockDao#toOpsSystBlockVO(org.phoenixctms.ctsms.domain.OpsSystBlock source, org.phoenixctms.ctsms.vo.OpsSystBlockVO target)
-	 */
-	@Test
-	public void testToOpsSystBlockVO() {
-		Assert.fail("Test 'OpsSystBlockDaoTransformTest.testToOpsSystBlockVO' not implemented!");
-	}
+  /**
+   * Test for method OpsSystBlockDao.toOpsSystBlockVO
+   *
+   * @see org.phoenixctms.ctsms.domain.OpsSystBlockDao#toOpsSystBlockVO(org.phoenixctms.ctsms.domain.OpsSystBlock source, org.phoenixctms.ctsms.vo.OpsSystBlockVO target)
+   */
+  @Test
+  public void testToOpsSystBlockVO() {
+    Assert.fail("Test 'OpsSystBlockDaoTransformTest.testToOpsSystBlockVO' not implemented!");
+  }
 
-	/**
-	* Test for method opsSystBlockVOToEntity
-	*
-	* @see org.phoenixctms.ctsms.domain.OpsSystBlockDao#opsSystBlockVOToEntity(org.phoenixctms.ctsms.vo.OpsSystBlockVO source, org.phoenixctms.ctsms.domain.OpsSystBlock target, boolean copyIfNull)
-	*/
-	@Test
-	public void testOpsSystBlockVOToEntity() {
-		Assert.fail("Test 'OpsSystBlockDaoTransformTest.testOpsSystBlockVOToEntity' not implemented!");
-	}
+    /**
+   * Test for method opsSystBlockVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.OpsSystBlockDao#opsSystBlockVOToEntity(org.phoenixctms.ctsms.vo.OpsSystBlockVO source, org.phoenixctms.ctsms.domain.OpsSystBlock target, boolean copyIfNull)
+   */
+  @Test
+  public void testOpsSystBlockVOToEntity() {
+    Assert.fail("Test 'OpsSystBlockDaoTransformTest.testOpsSystBlockVOToEntity' not implemented!");
+  }
+
 }

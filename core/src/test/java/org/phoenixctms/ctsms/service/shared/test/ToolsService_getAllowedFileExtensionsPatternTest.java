@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.shared.ToolsService#getAllowedFileExtensionsPattern(org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Boolean)
  */
-@Test(groups = { "service", "ToolsService" })
+@Test(groups={"service","ToolsService"})
 public class ToolsService_getAllowedFileExtensionsPatternTest extends ToolsServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getAllowedFileExtensionsPattern</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'ToolsService_getAllowedFileExtensionsPatternTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getAllowedFileExtensionsPattern]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getAllowedFileExtensionsPattern</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'ToolsService_getAllowedFileExtensionsPatternTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'ToolsService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.shared.ToolsService.getAllowedFileExtensionsPattern]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

@@ -13,27 +13,29 @@ import org.testng.annotations.Test;
  *
  * @see org.phoenixctms.ctsms.service.inventory.InventoryService#getCollidingCourseParticipationStatusEntries(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean)
  */
-@Test(groups = { "service", "InventoryService" })
+@Test(groups={"service","InventoryService"})
 public class InventoryService_getCollidingCourseParticipationStatusEntriesTest extends InventoryServiceBaseTest {
 
-	/**
-	 * Test succes path for service method <code>getCollidingCourseParticipationStatusEntries</code>
-	 *
-	 * Tests expected behaviour of service method.
-	 */
-	@Test
-	public void testSuccessPath() {
-		Assert.fail("Test 'InventoryService_getCollidingCourseParticipationStatusEntriesTest.testSuccessPath()}' not implemented.");
-	}
-	/*
-	 * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getCollidingCourseParticipationStatusEntries]()' service method.
-	 */
-	/**
-	 * Test special case XYZ for service method <code></code>
-	 */
-	/*
-	@Test
-	public void testCaseXYZ() {
-	}
-	*/
+  /**
+   * Test succes path for service method <code>getCollidingCourseParticipationStatusEntries</code>
+   *
+   * Tests expected behaviour of service method.
+   */
+  @Test
+  public void testSuccessPath() {
+    Assert.fail( "Test 'InventoryService_getCollidingCourseParticipationStatusEntriesTest.testSuccessPath()}' not implemented." );
+  }
+
+  /*
+   * Add test methods for each test case of the 'InventoryService.org.andromda.cartridges.spring.metafacades.SpringServiceOperationLogicImpl[org.phoenixctms.ctsms.service.inventory.InventoryService.getCollidingCourseParticipationStatusEntries]()' service method.
+   */
+
+  /**
+   * Test special case XYZ for service method <code></code>
+   */
+  /*
+  @Test
+  public void testCaseXYZ() {
+  }
+  */
 }

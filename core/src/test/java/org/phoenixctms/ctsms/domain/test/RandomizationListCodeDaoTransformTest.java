@@ -14,23 +14,43 @@ import org.testng.annotations.Test;
 public class RandomizationListCodeDaoTransformTest extends DaoTransformTestBase {
 
   /**
-   * Test for method RandomizationListCodeDao.toRandomizationListCodeVO
+   * Test for method RandomizationListCodeDao.toRandomizationListCodeOutVO
    *
-   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#toRandomizationListCodeVO(org.phoenixctms.ctsms.domain.RandomizationListCode source, org.phoenixctms.ctsms.vo.RandomizationListCodeVO target)
+   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#toRandomizationListCodeOutVO(org.phoenixctms.ctsms.domain.RandomizationListCode source, org.phoenixctms.ctsms.vo.RandomizationListCodeOutVO target)
    */
   @Test
-  public void testToRandomizationListCodeVO() {
-    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testToRandomizationListCodeVO' not implemented!");
+  public void testToRandomizationListCodeOutVO() {
+    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testToRandomizationListCodeOutVO' not implemented!");
   }
 
     /**
-   * Test for method randomizationListCodeVOToEntity
+   * Test for method randomizationListCodeOutVOToEntity
    *
-   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#randomizationListCodeVOToEntity(org.phoenixctms.ctsms.vo.RandomizationListCodeVO source, org.phoenixctms.ctsms.domain.RandomizationListCode target, boolean copyIfNull)
+   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#randomizationListCodeOutVOToEntity(org.phoenixctms.ctsms.vo.RandomizationListCodeOutVO source, org.phoenixctms.ctsms.domain.RandomizationListCode target, boolean copyIfNull)
    */
   @Test
-  public void testRandomizationListCodeVOToEntity() {
-    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testRandomizationListCodeVOToEntity' not implemented!");
+  public void testRandomizationListCodeOutVOToEntity() {
+    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testRandomizationListCodeOutVOToEntity' not implemented!");
+  }
+
+  /**
+   * Test for method RandomizationListCodeDao.toRandomizationListCodeInVO
+   *
+   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#toRandomizationListCodeInVO(org.phoenixctms.ctsms.domain.RandomizationListCode source, org.phoenixctms.ctsms.vo.RandomizationListCodeInVO target)
+   */
+  @Test
+  public void testToRandomizationListCodeInVO() {
+    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testToRandomizationListCodeInVO' not implemented!");
+  }
+
+    /**
+   * Test for method randomizationListCodeInVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.RandomizationListCodeDao#randomizationListCodeInVOToEntity(org.phoenixctms.ctsms.vo.RandomizationListCodeInVO source, org.phoenixctms.ctsms.domain.RandomizationListCode target, boolean copyIfNull)
+   */
+  @Test
+  public void testRandomizationListCodeInVOToEntity() {
+    Assert.fail("Test 'RandomizationListCodeDaoTransformTest.testRandomizationListCodeInVOToEntity' not implemented!");
   }
 
 }

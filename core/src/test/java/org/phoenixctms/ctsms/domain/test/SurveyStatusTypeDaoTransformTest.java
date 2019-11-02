@@ -10,26 +10,27 @@ import org.testng.annotations.Test;
 /**
  * @see org.phoenixctms.ctsms.domain.SurveyStatusType
 */
-@Test(groups = { "transform", "SurveyStatusTypeDao" })
+@Test(groups={"transform","SurveyStatusTypeDao"})
 public class SurveyStatusTypeDaoTransformTest extends DaoTransformTestBase {
 
-	/**
-	 * Test for method SurveyStatusTypeDao.toSurveyStatusTypeVO
-	 *
-	 * @see org.phoenixctms.ctsms.domain.SurveyStatusTypeDao#toSurveyStatusTypeVO(org.phoenixctms.ctsms.domain.SurveyStatusType source, org.phoenixctms.ctsms.vo.SurveyStatusTypeVO target)
-	 */
-	@Test
-	public void testToSurveyStatusTypeVO() {
-		Assert.fail("Test 'SurveyStatusTypeDaoTransformTest.testToSurveyStatusTypeVO' not implemented!");
-	}
+  /**
+   * Test for method SurveyStatusTypeDao.toSurveyStatusTypeVO
+   *
+   * @see org.phoenixctms.ctsms.domain.SurveyStatusTypeDao#toSurveyStatusTypeVO(org.phoenixctms.ctsms.domain.SurveyStatusType source, org.phoenixctms.ctsms.vo.SurveyStatusTypeVO target)
+   */
+  @Test
+  public void testToSurveyStatusTypeVO() {
+    Assert.fail("Test 'SurveyStatusTypeDaoTransformTest.testToSurveyStatusTypeVO' not implemented!");
+  }
 
-	/**
-	* Test for method surveyStatusTypeVOToEntity
-	*
-	* @see org.phoenixctms.ctsms.domain.SurveyStatusTypeDao#surveyStatusTypeVOToEntity(org.phoenixctms.ctsms.vo.SurveyStatusTypeVO source, org.phoenixctms.ctsms.domain.SurveyStatusType target, boolean copyIfNull)
-	*/
-	@Test
-	public void testSurveyStatusTypeVOToEntity() {
-		Assert.fail("Test 'SurveyStatusTypeDaoTransformTest.testSurveyStatusTypeVOToEntity' not implemented!");
-	}
+    /**
+   * Test for method surveyStatusTypeVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.SurveyStatusTypeDao#surveyStatusTypeVOToEntity(org.phoenixctms.ctsms.vo.SurveyStatusTypeVO source, org.phoenixctms.ctsms.domain.SurveyStatusType target, boolean copyIfNull)
+   */
+  @Test
+  public void testSurveyStatusTypeVOToEntity() {
+    Assert.fail("Test 'SurveyStatusTypeDaoTransformTest.testSurveyStatusTypeVOToEntity' not implemented!");
+  }
+
 }
