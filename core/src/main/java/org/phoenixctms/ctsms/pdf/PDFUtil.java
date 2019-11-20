@@ -83,10 +83,20 @@ public final class PDFUtil {
 			Encoding encoding = EncodingManager.INSTANCE.getEncoding(COSName.WIN_ANSI_ENCODING);
 			for (int i = 0; i < tc.length; i++) {
 				Character c = tc[i];
+				String charName = null;
 				try {
-					sb.appendCodePoint(encoding.getCode(encoding.getNameFromCharacter(c)));
-				} catch (IOException e) {
-					sb.append(c);
+					charName = encoding.getNameFromCharacter(c);
+					sb.appendCodePoint(encoding.getCode(charName));
+				} catch (IOException e1) {
+					if (charName != null) {
+						try {
+							sb.appendCodePoint(encoding.getCode(CommonUtil.capitalizeFirstChar(charName, true)));
+						} catch (IOException e2) {
+							sb.append(c);
+						}
+					} else {
+						sb.append(c);
+					}
 				}
 			}
 			contentStream.drawString(sb.toString());
