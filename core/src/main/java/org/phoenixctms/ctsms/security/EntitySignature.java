@@ -342,7 +342,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 				}
 				comment.append(key);
 				comment.append(keyValueSeparator);
-				comment.append(ReflectionToStringBuilder.toString(value, COMMENT_VALUE_TO_STRING_STYLE));
+				comment.append(ReflectionToStringBuilder.toString(value != null ? value : "null", COMMENT_VALUE_TO_STRING_STYLE));
 			}
 			signature.update(CoreUtil.serialize(key));
 			signature.update(CoreUtil.serialize(value));
@@ -357,7 +357,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 				}
 				comment.append(key);
 				comment.append(keyValueSeparator);
-				comment.append(ReflectionToStringBuilder.toString(value, COMMENT_VALUE_TO_STRING_STYLE));
+				comment.append(ReflectionToStringBuilder.toString(value != null ? value : "null", COMMENT_VALUE_TO_STRING_STYLE));
 			}
 			signature.update(CoreUtil.serialize(key));
 			signature.update(CoreUtil.serialize(value));
