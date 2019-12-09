@@ -40,6 +40,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/massmail/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/user/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
@@ -89,6 +93,10 @@
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/inputfield/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/massmail/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
