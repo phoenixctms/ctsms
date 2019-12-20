@@ -23,4 +23,6 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String ECRF_FIELD_STATUS_WRITEHEAD = "ecrf_field_status_writehead";
 	public static final String ECRF_FIELD_STATUS_APPEND_HEADER_FOOTER = "ecrf_field_status_append_header_footer";
 	public static final String ECRF_FIELD_STATUS_QUEUES = "ecrf_field_status_queues";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

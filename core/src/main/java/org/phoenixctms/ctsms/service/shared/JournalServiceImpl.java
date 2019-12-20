@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.JournalExcelWriter;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
@@ -395,7 +396,7 @@ public class JournalServiceImpl
 
 	@Override
 	protected JournalExcelVO handleExportEcrfJournal(AuthenticationVO auth, Long trialId) throws Exception {
-		JournalExcelWriter writer = new JournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
+		JournalExcelWriter writer = ExcelWriterFactory.createJournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		writer.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		// Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
@@ -426,7 +427,7 @@ public class JournalServiceImpl
 
 	@Override
 	protected JournalExcelVO handleExportJournal(AuthenticationVO auth, JournalModule module, Long id) throws Exception {
-		JournalExcelWriter writer = new JournalExcelWriter(module, !CoreUtil.isPassDecryption());
+		JournalExcelWriter writer = ExcelWriterFactory.createJournalExcelWriter(module, !CoreUtil.isPassDecryption());
 		Inventory inventory = null;
 		Staff staff = null;
 		Course course = null;

@@ -80,6 +80,7 @@ import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.SearchResultExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.SearchResultExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.SearchResultExcelWriter;
@@ -618,7 +619,7 @@ public class SearchServiceImpl
 	}
 
 	private SearchResultExcelVO exportExcelHelper(CriteriaInstantVO criteria, DBModule module, String spreadSheetName, PSFVO psf) throws Exception {
-		SearchResultExcelWriter writer = new SearchResultExcelWriter(module, !CoreUtil.isPassDecryption());
+		SearchResultExcelWriter writer = ExcelWriterFactory.createSearchResultExcelWriter(module, !CoreUtil.isPassDecryption());
 		Collection VOs;
 		ArrayList<String> distinctColumnNames;
 		HashMap<Long, HashMap<String, Object>> distinctFieldRows;

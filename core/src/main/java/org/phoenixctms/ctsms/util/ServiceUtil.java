@@ -54,6 +54,7 @@ import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelWriter;
@@ -2294,7 +2295,7 @@ public final class ServiceUtil {
 			AddressTypeDao addressTypeDao,
 			UserDao userDao) throws Exception {
 		boolean passDecryption = CoreUtil.isPassDecryption();
-		ReimbursementsExcelWriter writer = new ReimbursementsExcelWriter(!passDecryption, method);
+		ReimbursementsExcelWriter writer = ExcelWriterFactory.createReimbursementsExcelWriter(!passDecryption, method);
 		writer.setCostType(costType);
 		writer.setPaid(paid);
 		writer.setTrial(trialVO);
@@ -2434,7 +2435,7 @@ public final class ServiceUtil {
 			ProbandAddressDao probandAddressDao,
 			UserDao userDao) throws Exception {
 		boolean passDecryption = CoreUtil.isPassDecryption();
-		VisitScheduleExcelWriter writer = new VisitScheduleExcelWriter(!passDecryption, style);
+		VisitScheduleExcelWriter writer = ExcelWriterFactory.createVisitScheduleExcelWriter(!passDecryption, style);
 		writer.setTrial(trialVO);
 		writer.setProband(probandVO);
 		writer.setAddress(probandVO == null ? null : probandAddressDao.toProbandAddressOutVO(probandAddressDao.findByProbandWireTransfer(probandVO.getId())));

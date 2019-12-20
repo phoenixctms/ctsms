@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -22,6 +18,10 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class VisitScheduleExcelWriter extends WorkbookWriter {
 
@@ -61,6 +61,10 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 	private static final String VISIT_SCHEDULE_EXCEL_FILENAME_TRIAL = "trial_";
 	private static final String VISIT_SCHEDULE_EXCEL_FILENAME_PROBAND = "proband_";
 	public static final String RECENT_PROBAND_LIST_STATUS_ENTRY = "_RECENT_PROBAND_LIST_STATUS_ENTRY";
+
+	protected VisitScheduleExcelWriter() {
+		super();
+	}
 
 	public VisitScheduleExcelWriter(boolean omitFields, Styles style) {
 		super();

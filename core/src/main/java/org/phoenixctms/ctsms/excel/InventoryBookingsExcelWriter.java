@@ -7,10 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -20,6 +16,10 @@ import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
+
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class InventoryBookingsExcelWriter extends WorkbookWriter {
 
@@ -55,6 +55,10 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	// public static String getZipCodesColumnName() {
 	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	// }
+	protected InventoryBookingsExcelWriter() {
+		super();
+	}
+
 	public InventoryBookingsExcelWriter(boolean omitFields) {
 		super();
 		excelVO = new InventoryBookingsExcelVO();

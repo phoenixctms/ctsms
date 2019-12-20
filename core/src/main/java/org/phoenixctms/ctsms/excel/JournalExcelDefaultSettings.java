@@ -105,6 +105,8 @@ public final class JournalExcelDefaultSettings {
 	public static final ArrayList<String> INPUT_FIELD_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> ECRF_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final ArrayList<String> MASS_MAIL_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		INVENTORY_VO_FIELD_COLUMNS.add("id");
 		INVENTORY_VO_FIELD_COLUMNS.add("systemMessage");

@@ -23,6 +23,8 @@ public final class TeamMembersExcelDefaultSettings {
 	public static final boolean AGGREGATE_ADDRESSES = false;
 	public static final boolean AGGREGATE_CONTACT_DETAILS = false;
 	public static final boolean APPEND_HEADER_FOOTER = true;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		VO_FIELD_COLUMNS.add("role" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		VO_FIELD_COLUMNS.add("staff" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "nameWithTitles");

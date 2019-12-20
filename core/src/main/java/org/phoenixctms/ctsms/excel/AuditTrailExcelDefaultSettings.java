@@ -25,6 +25,8 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final boolean ECRF_FIELD_STATUS_WRITEHEAD = true;
 	public static final boolean ECRF_FIELD_STATUS_APPEND_HEADER_FOOTER = false;
 	public static final ArrayList<String> ECRF_FIELD_STATUS_QUEUES = new ArrayList<String>();
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
