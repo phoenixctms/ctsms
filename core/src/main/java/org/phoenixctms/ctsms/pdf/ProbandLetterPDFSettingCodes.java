@@ -26,4 +26,6 @@ public interface ProbandLetterPDFSettingCodes {
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
 	public static final String PROBAND_ID_Y = "proband_id_y";
 	public static final String ADDRESS_Y = "address_y";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

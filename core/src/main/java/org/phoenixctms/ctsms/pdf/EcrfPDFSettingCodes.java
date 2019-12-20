@@ -97,4 +97,6 @@ public interface EcrfPDFSettingCodes {
 	public static final String AUDIT_TRAIL = "audit_trail";
 	public static final String SHOW_PROBAND_LIST_ENTRY_TAGS = "show_proband_list_entry_tags";
 	public static final String SHOW_ALL_PROBAND_LIST_ENTRY_TAGS = "show_all_proband_list_entry_tags";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

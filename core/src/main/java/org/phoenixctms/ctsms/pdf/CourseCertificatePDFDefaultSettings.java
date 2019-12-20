@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.ArrayList;
+
 import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class CourseCertificatePDFDefaultSettings {
@@ -22,6 +24,8 @@ public final class CourseCertificatePDFDefaultSettings {
 	public static final int GRAPH_MAX_STAFF_INSTANCES = 10;
 	public static final float SPACER_SMALL_HEIGHT = 10.0f;
 	public static final boolean SHOW_PAGE_NUMBERS = true;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private CourseCertificatePDFDefaultSettings() {
 	}

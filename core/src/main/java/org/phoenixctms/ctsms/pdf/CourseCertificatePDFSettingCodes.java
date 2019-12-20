@@ -24,4 +24,6 @@ public interface CourseCertificatePDFSettingCodes {
 	public static final String GRAPH_MAX_STAFF_INSTANCES = "graph_max_staff_instances";
 	public static final String SPACER_SMALL_HEIGHT = "spacer_small_height";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

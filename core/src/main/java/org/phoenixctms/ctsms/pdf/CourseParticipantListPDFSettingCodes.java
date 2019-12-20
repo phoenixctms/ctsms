@@ -41,4 +41,6 @@ public interface CourseParticipantListPDFSettingCodes {
 	public static final String PARTICIPANT_TABLE_COLUMN_PARTICIPANT_SIGNATURE_WIDTH = "participant_table_column_participant_signature_width";
 	public static final String BLANK_ROWS = "blank_rows";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

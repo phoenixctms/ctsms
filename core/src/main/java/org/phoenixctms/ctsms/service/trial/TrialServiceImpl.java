@@ -98,6 +98,7 @@ import org.phoenixctms.ctsms.js.FieldCalculation;
 import org.phoenixctms.ctsms.js.ValidationError;
 import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
+import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.EntitySignature;
@@ -7230,7 +7231,7 @@ public class TrialServiceImpl
 				this.getProbandListEntryTagValueDao(),
 				this.getSignatureDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		EcrfPDFPainter painter = new EcrfPDFPainter();
+		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter(); //new EcrfPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setEcrfVOMap(ecrfVOMap);
 		painter.setValueVOMap(valueVOMap);

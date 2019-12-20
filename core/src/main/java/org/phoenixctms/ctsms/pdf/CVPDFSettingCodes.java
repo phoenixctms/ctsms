@@ -46,4 +46,6 @@ public interface CVPDFSettingCodes {
 	public static final String IMAGE_DPI = "image_dpi";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
 	public static final String IMAGE_CENTERED = "image_centered";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

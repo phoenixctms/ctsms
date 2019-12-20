@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.ArrayList;
+
 import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class CourseParticipantListPDFDefaultSettings {
@@ -39,6 +41,8 @@ public final class CourseParticipantListPDFDefaultSettings {
 	public static final float PARTICIPANT_TABLE_COLUMN_SIGNATURE_SIGNATURE_WIDTH = 110.0f;
 	public static final int BLANK_ROWS = 10;
 	public static final boolean SHOW_PAGE_NUMBERS = true;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private CourseParticipantListPDFDefaultSettings() {
 	}
