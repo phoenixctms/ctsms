@@ -275,7 +275,8 @@ public class JobOutput {
 		if (!CommonUtil.isEmptyString(instanceName)) {
 			println("instance: " + instanceName);
 		}
-		println("jvm: " + System.getProperty("java.version"));
+		println("java.version: " + System.getProperty("java.version"));
+		println("java.home: " + System.getProperty("java.home"));
 		//Iterator<Entry<String, String>> it = System.getenv().entrySet().iterator();
 		//while (it.hasNext()) {
 		//	Entry<String, String> envVar = it.next();

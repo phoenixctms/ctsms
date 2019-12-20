@@ -196,6 +196,47 @@ public class DBTool {
 		try {
 			line = parser.parse(DBToolOptions.options, args);
 			dbTool = new DBTool(); // hibernate starts a long time...
+			//			try {
+			//				//				Compile.clean(new java.util.ArrayList<String>() {
+			//				//
+			//				//					{
+			//				//						add("test.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
+			//				//					}
+			//				//				});
+			//				//Object test = Compile.instantiate("org.phoenixctms.ctsms.pdf.MyCvPDFPainter");//, new java.util.ArrayList<String>() {
+			//				//
+			//				//					{
+			//				//						add("test.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
+			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
+			//				//					}
+			//				//				});
+			//				Object test1 = Compile.loadClass("org.phoenixctms.ctsms.pdf.MyCvPDFPainter", new java.util.ArrayList<String>() {
+			//
+			//					{
+			//						//add("test.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
+			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
+			//					}
+			//				}).newInstance();
+			//			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+			//				// TODO Auto-generated catch block
+			//				e1.printStackTrace();
+			//			}
 			try {
 				setPropertiesFile(line);
 				//				if (line.hasOption(DBToolOptions.CLEAN_OPT)) {

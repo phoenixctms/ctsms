@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,64 +8,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
-import java.util.regex.Pattern;
 
 public class BundleControl extends Control {
 
 	private static final String BUNDLE_EXTENSION = "properties";
 	private static final String ENCODING = "UTF-8"; // "ISO-8859-1"
-	private final static Pattern PATH_ENVIRONMENT_VARIABLE_REGEXP = Pattern.compile("\\s*[,;]\\s*");
-	private final static String PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE = "CTSMS_PROPERTIES";
-	public final static LinkedHashSet<String> PROPERTIES_SEARCH_PATHS = getPropertiesSearchPaths();
-
-	private static LinkedHashSet<String> getPropertiesSearchPaths() {
-		String[] searchPaths = null;
-		String envVar = null;
-		LinkedHashSet<String> result = new LinkedHashSet<String>();
-		try {
-			envVar = System.getProperty(PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
-		if (!(envVar != null && envVar.length() > 0)) {
-			try {
-				envVar = System.getenv(PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE);
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
-		}
-		if (envVar != null && envVar.length() > 0) {
-			System.out.println(PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE + ": " + envVar);
-			searchPaths = PATH_ENVIRONMENT_VARIABLE_REGEXP.split(envVar);
-		}
-		if (searchPaths != null && searchPaths.length > 0) {
-			for (int i = 0; i < searchPaths.length; i++) {
-				String searchPath = searchPaths[i];
-				if (searchPath != null && searchPath.length() > 0) {
-					File file = new File(searchPath);
-					if (file.exists()) {
-						if (file.isDirectory()) {
-							if (file.isAbsolute()) {
-								if (file.canRead()) {
-									try {
-										result.add(file.getCanonicalPath());
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
 
 	public static PropertyResourceBundle newBundle(java.io.File propertiesFile) throws IOException {
 		InputStream stream = new FileInputStream(propertiesFile);
@@ -125,7 +75,7 @@ public class BundleControl extends Control {
 				stream.close();
 			}
 		}
-		Iterator<String> it = PROPERTIES_SEARCH_PATHS.iterator();
+		Iterator<String> it = FileOverloads.PROPERTIES_SEARCH_PATHS.iterator();
 		while (it.hasNext()) {
 			try {
 				stream = new FileInputStream(new java.io.File(it.next(), resourceName));
@@ -136,7 +86,7 @@ public class BundleControl extends Control {
 				} finally {
 					stream.close();
 				}
-			} catch (FileNotFoundException|SecurityException e) {
+			} catch (FileNotFoundException | SecurityException e) {
 				// e.printStackTrace();
 			}
 		}

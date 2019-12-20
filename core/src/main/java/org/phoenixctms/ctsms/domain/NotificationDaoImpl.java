@@ -33,11 +33,11 @@ import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
-import org.phoenixctms.ctsms.util.BundleControl;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.FileOverloads;
 import org.phoenixctms.ctsms.util.KeyValueString;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -326,7 +326,7 @@ public class NotificationDaoImpl
 	private String getMessage(Notification notification, Map messageParameters) throws Exception {
 		String messageVslFileName = L10nUtil.getNotificationMessageTemplate(Locales.NOTIFICATION, notification.getType().getMessageTemplateL10nKey());
 		if (messageVslFileName != null && messageVslFileName.length() > 0) {
-			Iterator<String> it = BundleControl.PROPERTIES_SEARCH_PATHS.iterator();
+			Iterator<String> it = FileOverloads.PROPERTIES_SEARCH_PATHS.iterator();
 			while (it.hasNext()) {
 				try {
 					File messageVslFile = new java.io.File(it.next(), messageVslFileName);
