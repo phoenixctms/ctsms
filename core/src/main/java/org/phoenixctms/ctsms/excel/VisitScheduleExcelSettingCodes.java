@@ -65,4 +65,6 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = "travel_expenses_visit_schedule_show_aliquot_visit_reimbursement";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = "travel_expenses_visit_schedule_show_first_visit_reimbursement";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = "travel_expenses_visit_schedule_append_header_footer";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

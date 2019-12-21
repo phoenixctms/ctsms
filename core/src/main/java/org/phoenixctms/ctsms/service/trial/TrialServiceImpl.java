@@ -86,6 +86,7 @@ import org.phoenixctms.ctsms.excel.AuditTrailExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelWriter;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.ProbandListExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.ProbandListExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.ProbandListExcelWriter;
@@ -98,6 +99,7 @@ import org.phoenixctms.ctsms.js.FieldCalculation;
 import org.phoenixctms.ctsms.js.ValidationError;
 import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
+import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.EntitySignature;
@@ -4357,7 +4359,7 @@ public class TrialServiceImpl
 		// ECRFFieldStatusQueue[] queues = new ECRFFieldStatusQueue[] {
 		// ECRFFieldStatusQueue.VALIDATION,ECRFFieldStatusQueue.QUERY, ECRFFieldStatusQueue.ANNOTATION
 		// };
-		AuditTrailExcelWriter writer = new AuditTrailExcelWriter(!passDecryption, queues);
+		AuditTrailExcelWriter writer = ExcelWriterFactory.createAuditTrailExcelWriter(!passDecryption, queues);
 		writer.setTrial(trialVO);
 		writer.setListEntry(listEntryVO);
 		writer.setEcrf(ecrfVO);
@@ -4400,7 +4402,7 @@ public class TrialServiceImpl
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
 		boolean passDecryption = CoreUtil.isPassDecryption();
-		ProbandListExcelWriter writer = new ProbandListExcelWriter(logLevel, !passDecryption);
+		ProbandListExcelWriter writer = ExcelWriterFactory.createProbandListExcelWriter(logLevel, !passDecryption);
 		writer.setTrial(trialVO);
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		Collection probandListEntries = probandListEntryDao.getProbandList(trialId, logLevel, false);
@@ -5033,7 +5035,7 @@ public class TrialServiceImpl
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
-		TeamMembersExcelWriter writer = new TeamMembersExcelWriter(!CoreUtil.isPassDecryption());
+		TeamMembersExcelWriter writer = ExcelWriterFactory.createTeamMembersExcelWriter(!CoreUtil.isPassDecryption());
 		writer.setTrial(trialVO);
 		Collection<TeamMember> members = trial.getMembers();
 		boolean showAddresses = Settings.getBoolean(TeamMembersExcelSettingCodes.SHOW_ADDRESSES, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.SHOW_ADDRESSES);
@@ -7230,7 +7232,7 @@ public class TrialServiceImpl
 				this.getProbandListEntryTagValueDao(),
 				this.getSignatureDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		EcrfPDFPainter painter = new EcrfPDFPainter();
+		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter(); //new EcrfPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setEcrfVOMap(ecrfVOMap);
 		painter.setValueVOMap(valueVOMap);

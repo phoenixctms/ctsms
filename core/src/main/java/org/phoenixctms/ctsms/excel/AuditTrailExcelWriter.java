@@ -146,6 +146,10 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	// public static String getZipCodesColumnName() {
 	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	// }
+	protected AuditTrailExcelWriter() {
+		super();
+	}
+
 	public AuditTrailExcelWriter(boolean omitFields, ECRFFieldStatusQueue... queues) {
 		super();
 		// this.method = L10nUtil.createPaymentMethodVO(Locales.USER, method);

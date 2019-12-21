@@ -73,6 +73,8 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		TRIAL_VISIT_SCHEDULE_VO_FIELD_COLUMNS.add("name");
 		TRIAL_VISIT_SCHEDULE_VO_FIELD_COLUMNS.add("group" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "token");

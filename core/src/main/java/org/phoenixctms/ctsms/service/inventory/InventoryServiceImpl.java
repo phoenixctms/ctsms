@@ -58,6 +58,7 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.InventoryBookingsExcelWriter;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
@@ -787,7 +788,7 @@ public class InventoryServiceImpl
 		if (trialDepartmentId != null) {
 			trialDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(trialDepartmentId, departmentDao));
 		}
-		InventoryBookingsExcelWriter writer = new InventoryBookingsExcelWriter(!CoreUtil.isPassDecryption());
+		InventoryBookingsExcelWriter writer = ExcelWriterFactory.createInventoryBookingsExcelWriter(!CoreUtil.isPassDecryption());
 		writer.setProbandDepartment(probandDepartmentVO);
 		writer.setCourseDepartment(courseDepartmentVO);
 		writer.setTrialDepartment(trialDepartmentVO);

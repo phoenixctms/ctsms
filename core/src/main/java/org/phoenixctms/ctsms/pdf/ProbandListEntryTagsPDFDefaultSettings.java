@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.ArrayList;
+
 import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class ProbandListEntryTagsPDFDefaultSettings {
@@ -73,6 +75,8 @@ public final class ProbandListEntryTagsPDFDefaultSettings {
 	public static final boolean SHOW_SKETCH_REGIONS = true;
 	public static final int LONG_TITLE_LENGTH = 36;
 	public static final boolean SHOW_MODIFIED_LABEL = false;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private ProbandListEntryTagsPDFDefaultSettings() {
 	}

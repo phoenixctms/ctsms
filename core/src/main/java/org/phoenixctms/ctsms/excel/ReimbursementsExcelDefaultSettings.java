@@ -57,6 +57,8 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean WIRE_TRANSFER_APPEND_HEADER_FOOTER = true;
 	public static final boolean WIRE_TRANSFER_SHOW_ADDRESSES = false;
 	public static final boolean WIRE_TRANSFER_AGGREGATE_ADDRESSES = false;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		VO_FIELD_COLUMNS.add("trial" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

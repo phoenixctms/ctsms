@@ -4,9 +4,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -26,6 +23,9 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
+
 public class JournalExcelWriter extends WorkbookWriter {
 
 	private JournalModule module;
@@ -40,6 +40,10 @@ public class JournalExcelWriter extends WorkbookWriter {
 	private MassMailOutVO massMail;
 	private JournalExcelVO excelVO;
 	private static final String JOURNAL_EXCEL_FILENAME_PREFIX = "journal_";
+
+	protected JournalExcelWriter() {
+		super();
+	}
 
 	public JournalExcelWriter(JournalModule module, boolean omitFields) {
 		super();

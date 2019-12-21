@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -21,6 +18,9 @@ import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
+
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class SearchResultExcelWriter extends WorkbookWriter {
 
@@ -38,6 +38,10 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 	private DBModule module;
 	private SearchResultExcelVO excelVO;
 	private static final String SEARCH_RESULT_EXCEL_FILENAME_PREFIX = "search_result_";
+
+	protected SearchResultExcelWriter() {
+		super();
+	}
 
 	public SearchResultExcelWriter(DBModule module, boolean omitFields) {
 		super();

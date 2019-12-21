@@ -93,4 +93,6 @@ public interface JournalExcelSettingCodes {
 	public static final String CRITERIA_ROW_COLORS = "criteria_row_colors";
 	public static final String ECRF_ROW_COLORS = "ecrf_row_colors";
 	public static final String MASS_MAIL_ROW_COLORS = "mass_mail_row_colors";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

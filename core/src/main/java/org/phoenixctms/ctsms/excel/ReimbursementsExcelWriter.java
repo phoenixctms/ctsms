@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -21,6 +17,10 @@ import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class ReimbursementsExcelWriter extends WorkbookWriter {
 
@@ -47,6 +47,10 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	protected ReimbursementsExcelWriter() {
+		super();
 	}
 
 	public ReimbursementsExcelWriter(boolean omitFields, PaymentMethod method) {

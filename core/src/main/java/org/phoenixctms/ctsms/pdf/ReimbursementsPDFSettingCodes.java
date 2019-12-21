@@ -54,4 +54,6 @@ public interface ReimbursementsPDFSettingCodes {
 	public static final String ADDRESS_Y = "address_y";
 	public static final String PAYMENT_TABLE_ROW_HEIGHT_LIMIT = "payment_table_row_height_limit";
 	public static final String Y_TOTALS_INDENT = "y_totals_indent";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

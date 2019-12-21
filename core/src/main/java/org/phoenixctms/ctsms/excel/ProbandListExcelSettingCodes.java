@@ -128,4 +128,6 @@ public interface ProbandListExcelSettingCodes {
 	public static final String SICL_SHOW_IC_AGE = "sicl_show_ic_age";
 	public static final String SICL_SHOW_SCREENING_DATE = "sicl_show_screening_date";
 	public static final String SICL_SHOW_SCREENING_REASON = "sicl_show_screening_reason";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

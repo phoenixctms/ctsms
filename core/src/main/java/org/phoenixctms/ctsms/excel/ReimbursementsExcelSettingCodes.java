@@ -47,4 +47,6 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String WIRE_TRANSFER_APPEND_HEADER_FOOTER = "wire_transfer_append_header_footer";
 	public static final String WIRE_TRANSFER_SHOW_ADDRESSES = "wire_transfer_show_addresses";
 	public static final String WIRE_TRANSFER_AGGREGATE_ADDRESSES = "wire_transfer_aggregate_addresses";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

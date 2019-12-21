@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.ArrayList;
+
 import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class ProbandLetterPDFDefaultSettings {
@@ -24,6 +26,8 @@ public final class ProbandLetterPDFDefaultSettings {
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final float PROBAND_ID_Y = 120.0f;
 	public static final float ADDRESS_Y = 680.0f;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private ProbandLetterPDFDefaultSettings() {
 	}

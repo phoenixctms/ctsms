@@ -104,6 +104,8 @@ public final class SearchResultExcelDefaultSettings {
 	public static final boolean SHOW_ALL_INQUIRIES = false;
 	public static final boolean SHOW_ALL_INQUIRY_DATES = false;
 	public static final boolean SHOW_EMPTY_INQUIRY_COLUMNS = false;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
 		INVENTORY_VO_FIELD_COLUMNS.add("id");
 		INVENTORY_VO_FIELD_COLUMNS.add("deferredDelete");

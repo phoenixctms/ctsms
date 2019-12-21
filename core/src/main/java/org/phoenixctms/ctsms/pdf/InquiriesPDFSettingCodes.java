@@ -90,4 +90,6 @@ public interface InquiriesPDFSettingCodes {
 	// public final static String SPACER_HEIGHT = "spacer_height";
 	public static final String LONG_TITLE_LENGTH = "long_title_length";
 	public static final String SHOW_MODIFIED_LABEL = "show_modified_label";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

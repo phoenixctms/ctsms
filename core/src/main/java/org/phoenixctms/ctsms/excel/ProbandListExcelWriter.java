@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -26,6 +22,10 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class ProbandListExcelWriter extends WorkbookWriter {
 
@@ -114,6 +114,10 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PROBAND_LIST_ENTRY_TAG_DATE_HEAD, ExcelUtil.DEFAULT_LABEL,
 				probandListEntryTag == null ? null : probandListEntryTag.getUniqueName(),
 				probandListEntryTag == null ? null : CommonUtil.inputFieldOutVOToString(probandListEntryTag.getField()));
+	}
+
+	protected ProbandListExcelWriter() {
+		super();
 	}
 
 	public ProbandListExcelWriter(ProbandListStatusLogLevel logLevel, boolean omitFields) {

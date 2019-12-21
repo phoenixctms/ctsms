@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import jxl.HeaderFooter;
-import jxl.WorkbookSettings;
-import jxl.write.WritableSheet;
-
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -19,6 +15,10 @@ import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.TeamMembersExcelVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+
+import jxl.HeaderFooter;
+import jxl.WorkbookSettings;
+import jxl.write.WritableSheet;
 
 public class TeamMembersExcelWriter extends WorkbookWriter {
 
@@ -48,6 +48,10 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	protected TeamMembersExcelWriter() {
+		super();
 	}
 
 	public TeamMembersExcelWriter(boolean omitFields) {

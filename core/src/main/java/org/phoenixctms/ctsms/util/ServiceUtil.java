@@ -54,6 +54,7 @@ import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
+import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.ReimbursementsExcelWriter;
@@ -72,6 +73,7 @@ import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
 import org.phoenixctms.ctsms.pdf.EcrfPDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
+import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFPainter;
 import org.phoenixctms.ctsms.pdf.ReimbursementsPDFPainter;
@@ -1115,7 +1117,7 @@ public final class ServiceUtil {
 
 	public static CourseCertificatePDFPainter createCourseCertificatePDFPainter(Collection<CourseParticipationStatusEntryOutVO> participantVOs, StaffDao staffDao,
 			StaffAddressDao staffAddressDao, LecturerDao lecturerDao, LecturerCompetenceDao competenceDao) throws Exception {
-		CourseCertificatePDFPainter painter = new CourseCertificatePDFPainter();
+		CourseCertificatePDFPainter painter = PDFPainterFactory.createCourseCertificatePDFPainter(); //new CourseCertificatePDFPainter();
 		Collection allCompetences = competenceDao.loadAllSorted(0, 0);
 		competenceDao.toLecturerCompetenceVOCollection(allCompetences);
 		if (participantVOs != null) {
@@ -1156,7 +1158,7 @@ public final class ServiceUtil {
 
 	public static CourseParticipantListPDFPainter createCourseParticipantListPDFPainter(Collection<CourseOutVO> courseVOs, boolean blank, LecturerDao lecturerDao,
 			LecturerCompetenceDao competenceDao, CourseParticipationStatusEntryDao courseParticipationDao, InventoryBookingDao bookingDao) throws Exception {
-		CourseParticipantListPDFPainter painter = new CourseParticipantListPDFPainter();
+		CourseParticipantListPDFPainter painter = PDFPainterFactory.createCourseParticipantListPDFPainter(); //new CourseParticipantListPDFPainter();
 		Collection allCompetences = competenceDao.loadAllSorted(0, 0);
 		competenceDao.toLecturerCompetenceVOCollection(allCompetences);
 		if (courseVOs != null) {
@@ -1195,7 +1197,7 @@ public final class ServiceUtil {
 
 	public static CVPDFPainter createCVPDFPainter(Collection<StaffOutVO> staffVOs, StaffDao staffDao, CvSectionDao cvSectionDao, CvPositionDao cvPositionDao,
 			CourseParticipationStatusEntryDao courseParticipationDao, StaffAddressDao staffAddressDao) throws Exception {
-		CVPDFPainter painter = new CVPDFPainter();
+		CVPDFPainter painter = PDFPainterFactory.createCVPDFPainter(); //new CVPDFPainter();
 		Collection allCvSections = cvSectionDao.loadAllSorted(0, 0);
 		cvSectionDao.toCvSectionVOCollection(allCvSections);
 		if (staffVOs != null) {
@@ -2245,7 +2247,7 @@ public final class ServiceUtil {
 	}
 
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(Collection<ProbandOutVO> probandVOs, ProbandAddressDao probandAddressDao) throws Exception {
-		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
+		ProbandLetterPDFPainter painter = PDFPainterFactory.createProbandLetterPDFPainter(); //new ProbandLetterPDFPainter();
 		if (probandVOs != null) {
 			ArrayList<ProbandOutVO> VOs = new ArrayList<ProbandOutVO>(probandVOs.size());
 			HashMap<Long, Collection<ProbandAddressOutVO>> addressVOMap = new HashMap<Long, Collection<ProbandAddressOutVO>>(probandVOs.size());
@@ -2268,7 +2270,7 @@ public final class ServiceUtil {
 	}
 
 	public static ProbandLetterPDFPainter createProbandLetterPDFPainter(ProbandAddressOutVO probandAddress) throws Exception {
-		ProbandLetterPDFPainter painter = new ProbandLetterPDFPainter();
+		ProbandLetterPDFPainter painter = PDFPainterFactory.createProbandLetterPDFPainter(); //new ProbandLetterPDFPainter();
 		if (probandAddress != null) {
 			ProbandOutVO probandVO = probandAddress.getProband();
 			HashMap<Long, Collection<ProbandAddressOutVO>> addressVOMap = new HashMap<Long, Collection<ProbandAddressOutVO>>(1);
@@ -2293,7 +2295,7 @@ public final class ServiceUtil {
 			AddressTypeDao addressTypeDao,
 			UserDao userDao) throws Exception {
 		boolean passDecryption = CoreUtil.isPassDecryption();
-		ReimbursementsExcelWriter writer = new ReimbursementsExcelWriter(!passDecryption, method);
+		ReimbursementsExcelWriter writer = ExcelWriterFactory.createReimbursementsExcelWriter(!passDecryption, method);
 		writer.setCostType(costType);
 		writer.setPaid(paid);
 		writer.setTrial(trialVO);
@@ -2433,7 +2435,7 @@ public final class ServiceUtil {
 			ProbandAddressDao probandAddressDao,
 			UserDao userDao) throws Exception {
 		boolean passDecryption = CoreUtil.isPassDecryption();
-		VisitScheduleExcelWriter writer = new VisitScheduleExcelWriter(!passDecryption, style);
+		VisitScheduleExcelWriter writer = ExcelWriterFactory.createVisitScheduleExcelWriter(!passDecryption, style);
 		writer.setTrial(trialVO);
 		writer.setProband(probandVO);
 		writer.setAddress(probandVO == null ? null : probandAddressDao.toProbandAddressOutVO(probandAddressDao.findByProbandWireTransfer(probandVO.getId())));
@@ -5644,7 +5646,7 @@ public final class ServiceUtil {
 		// listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds);
 		// }
 		// }
-		EcrfPDFPainter painter = new EcrfPDFPainter();
+		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter(); //new EcrfPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setEcrfVOMap(ecrfVOMap);
 		painter.setValueVOMap(valueVOMap);
@@ -5679,7 +5681,7 @@ public final class ServiceUtil {
 					probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, inputFieldDao);
 			// }
 		}
-		InquiriesPDFPainter painter = new InquiriesPDFPainter();
+		InquiriesPDFPainter painter = PDFPainterFactory.createInquiriesPDFPainter(); //new InquiriesPDFPainter();
 		painter.setProbandVOs(probandVOs);
 		painter.setTrialVOMap(trialVOMap);
 		painter.setValueVOMap(valueVOMap);
@@ -5720,7 +5722,7 @@ public final class ServiceUtil {
 						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
 			}
 		}
-		ProbandListEntryTagsPDFPainter painter = new ProbandListEntryTagsPDFPainter();
+		ProbandListEntryTagsPDFPainter painter = PDFPainterFactory.createProbandListEntryTagsPDFPainter(); //new ProbandListEntryTagsPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setValueVOMap(valueVOMap);
 		painter.setImageVOMap(imageVOMap);
@@ -5784,7 +5786,7 @@ public final class ServiceUtil {
 				}
 			}
 		}
-		ReimbursementsPDFPainter painter = new ReimbursementsPDFPainter();
+		ReimbursementsPDFPainter painter = PDFPainterFactory.createReimbursementsPDFPainter(); //new ReimbursementsPDFPainter();
 		painter.setTrialVO(trialVO);
 		painter.setTrialTagValueVOs(trialTagValues);
 		painter.setProbandVOs(probandVOs);

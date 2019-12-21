@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.ArrayList;
+
 import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class ReimbursementsPDFDefaultSettings {
@@ -51,6 +53,8 @@ public final class ReimbursementsPDFDefaultSettings {
 	public static final float ADDRESS_Y = 680.0f;
 	public static final float PAYMENT_TABLE_ROW_HEIGHT_LIMIT = 220.0f; // 300.0f;
 	public final static float Y_TOTALS_INDENT = 10.0f;
+	public static final String PAINTER_CLASS = null;
+	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private ReimbursementsPDFDefaultSettings() {
 	}

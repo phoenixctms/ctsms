@@ -20,4 +20,6 @@ public interface TeamMembersExcelSettingCodes {
 	public static final String AGGREGATE_CONTACT_DETAILS = "aggregate_contact_details";
 	public static final String GRAPH_MAX_STAFF_INSTANCES = "graph_max_staff_instances";
 	public static final String APPEND_HEADER_FOOTER = "append_header_footer";
+	public static final String PAINTER_CLASS = "painter_class";
+	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }
