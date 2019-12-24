@@ -134,6 +134,9 @@ public class PDFImprinter {
 				createPage(painter.getTemplatePageNum());
 				openContentStream();
 				while (painter.hasNextBlock()) {
+					if (!painter.nextBlockFitsOnFullPage()) {
+						painter.splitNextBlock();
+					}
 					if (!painter.nextBlockFitsOnPage()) {
 						painter.drawPageBreakOldPage(contentStream);
 						painter.drawPage(contentStream);

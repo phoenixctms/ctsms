@@ -41,6 +41,15 @@ public abstract class PDFPainterBase implements PDFContentPainter {
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 	}
 
+	@Override
+	public boolean nextBlockFitsOnFullPage() throws Exception {
+		return true;
+	}
+
+	@Override
+	public void splitNextBlock() throws Exception {
+	}
+
 	protected abstract void drawPageNumber(PDFImprinter writer, PDPage page, int pageNumber, int totalPages) throws IOException;
 
 	@Override

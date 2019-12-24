@@ -132,6 +132,14 @@ public class CVPDFBlock {
 		return type;
 	}
 
+	public CvSectionVO getCvSection() {
+		return cvSection;
+	}
+
+	public Collection<CvPositionPDFVO> getCvPositions() {
+		return cvPositions;
+	}
+
 	public float renderBlock(PDPageContentStream contentStream, CVPDFBlockCursor cursor) throws Exception {
 		float x;
 		float y;
