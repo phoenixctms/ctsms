@@ -51,6 +51,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			MaintenanceTypeVO maintenanceTypeVO = out.getType();
 			InventoryOutVO inventoryVO = out.getInventory();
 			StaffOutVO responsiblePersonVO = out.getResponsiblePerson();
+			StaffOutVO responsiblePersonProxyVO = out.getResponsiblePersonProxy();
 			StaffOutVO companyContactVO = out.getCompanyContact();
 			VariablePeriodVO recurrencePeriodVO = out.getRecurrencePeriod();
 			VariablePeriodVO reminderPeriodVO = out.getReminderPeriod();
@@ -68,6 +69,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			in.setReminderPeriodDays(out.getReminderPeriodDays());
 			in.setDismissed(getDismissed(out, today));
 			in.setResponsiblePersonId(responsiblePersonVO == null ? null : responsiblePersonVO.getId());
+			in.setResponsiblePersonProxyId(responsiblePersonProxyVO == null ? null : responsiblePersonProxyVO.getId());
 			in.setCompanyContactId(companyContactVO == null ? null : companyContactVO.getId());
 			in.setTitle(out.getTitle());
 			in.setTypeId(maintenanceTypeVO == null ? null : maintenanceTypeVO.getId());
@@ -109,6 +111,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 					DefaultSettings.INVENTORY_MAINTENANCE_REMINDER_PERIOD_DAYS_PRESET));
 			in.setDismissed(Settings.getBoolean(SettingCodes.INVENTORY_MAINTENANCE_DISMISSED_PRESET, Bundle.SETTINGS, DefaultSettings.INVENTORY_MAINTENANCE_DISMISSED_PRESET));
 			in.setResponsiblePersonId(identity != null ? identity.getId() : null);
+			in.setResponsiblePersonProxyId(null);
 			in.setCompanyContactId(null);
 			in.setTitle(Messages.getString(MessageCodes.MAINTENANCE_ITEM_TITLE_PRESET));
 			in.setTypeId(null);
@@ -147,7 +150,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -194,7 +197,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -260,6 +263,10 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 		return WebUtil.staffIdToName(in.getResponsiblePersonId());
 	}
 
+	public String getResponsiblePersonProxyName() {
+		return WebUtil.staffIdToName(in.getResponsiblePersonProxyId());
+	}
+
 	public IDVO getSelectedMaintenanceScheduleItem() {
 		if (this.out != null) {
 			return IDVO.transformVo(this.out);
@@ -315,7 +322,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 		Collection<MaintenanceTypeVO> maintenanceTypeVOs = null;
 		try {
 			maintenanceTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getMaintenanceTypes(WebUtil.getAuthentication(), in.getTypeId());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -369,7 +376,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().getMaintenanceScheduleItem(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -430,7 +437,7 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

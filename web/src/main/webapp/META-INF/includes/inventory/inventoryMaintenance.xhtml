@@ -44,7 +44,18 @@
 						event="rowSelect"
 						update=":tabView:inventorymaintenance_form:inventorymaintenance_input" />
 					<f:facet name="header">
-						<h:outputText value="#{inventoryMaintenanceBean.maintenanceItemModel.rowCount} #{inventorylabels.inventory_maintenance_inventorymaintenance_list_header}" />
+						<h:panelGrid
+							columns="2"
+							cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{inventoryMaintenanceBean.maintenanceItemModel.rowCount} #{inventorylabels.inventory_maintenance_inventorymaintenance_list_header}" />
+							<p:commandButton
+								type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="maintenanceItemfTableColumnsDialog.show()" />
+						</h:panelGrid>
 					</f:facet>
 					<p:column sortBy="#{maintenanceItem.vo.id}">
 						<f:facet name="header">
@@ -106,6 +117,7 @@
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{maintenanceItem.vo.responsiblePerson}">
+					    <f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{inventorylabels.inventory_maintenance_inventorymaintenance_list_responsible_person_column}" />
 						</f:facet>
@@ -121,7 +133,25 @@
 								value="true" />
 						</ui:include>
 					</p:column>
+					<p:column sortBy="#{maintenanceItem.vo.responsiblePersonProxy}">
+					    <f:attribute name="visibleDefault" value = "false" />
+						<f:facet name="header">
+							<h:outputText value="#{inventorylabels.inventory_maintenance_inventorymaintenance_list_responsible_person_proxy_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{maintenanceItem.vo.responsiblePersonProxy.name}" />
+							<ui:param
+								name="icon"
+								value="#{maintenanceItem.vo.responsiblePersonProxy.category.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>
 					<p:column sortBy="#{maintenanceItem.vo.charge}">
+					    <f:attribute name="visibleDefault" value = "false" />
 						<f:facet name="header">
 							<h:outputText value="#{inventorylabels.inventory_maintenance_inventorymaintenance_list_charge_column}" />
 						</f:facet>
@@ -248,6 +278,57 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="maintenancedate" />
+
+							<h:outputLabel
+								for="reminderPeriod"
+								value="#{inventorylabels.inventory_maintenance_reminder_period_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu
+									id="reminderPeriod"
+									disabled="#{!inventoryMaintenanceBean.reminderPeriodSelectorEnabled}"
+									value="#{inventoryMaintenanceBean.reminder.period}"
+									required="true"
+									label="#{inventorylabels.inventory_maintenance_reminder_period}"
+									styleClass="ctsms-control">
+									<f:selectItems
+										value="#{inventoryMaintenanceBean.reminder.variablePeriods}"
+										var="selectItem"
+										itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="reminderPeriodDays" />
+								</p:selectOneMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="reminderPeriod">
+									<h:outputText
+										value="#{inventorylabels.inventory_maintenance_reminder_period_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="reminderPeriod" />
+							<h:outputLabel
+								for="reminderPeriodDays"
+								value="#{inventorylabels.inventory_maintenance_reminder_period_days_label}" />
+							<h:panelGroup>
+								<p:spinner
+									disabled="#{!inventoryMaintenanceBean.reminderPeriodSpinnerEnabled}"
+									id="reminderPeriodDays"
+									value="#{inventoryMaintenanceBean.in.reminderPeriodDays}"
+									styleClass="ctsms-spinner"
+									required="false"
+									label="#{inventorylabels.inventory_maintenance_reminder_period_days}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="reminderPeriodDays">
+									<h:outputText
+										value="#{inventorylabels.inventory_maintenance_reminder_period_days_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<!-- <p:message for="reminderPeriodDays" />  -->
+
+
+
 							<h:outputLabel
 								for="responsiblePerson"
 								value="#{inventorylabels.inventory_maintenance_responsible_person_label}" />
@@ -288,6 +369,42 @@
 									onclick="clearIDAjax(':tabView:inventorymaintenance_form:responsiblePerson',':tabView:inventorymaintenance_form:responsiblePersonName','#{applicationScopeBean.noStaffPickedMessage}')" />
 							</h:panelGrid>
 							<p:message for="responsiblePerson" />
+							
+							<h:outputLabel
+								for="responsiblePersonProxy"
+								value="#{inventorylabels.inventory_maintenance_responsible_person_proxy_label}" />
+							<h:panelGrid
+								columns="3"
+								cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden
+										id="responsiblePersonProxy"
+										required="false"
+										value="#{inventoryMaintenanceBean.in.responsiblePersonProxyId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton
+										id="responsiblePersonProxyName"
+										value="#{applicationScopeBean.clipStringPicker(inventoryMaintenanceBean.responsiblePersonProxyName)}"
+										title="#{inventorylabels.inventory_maintenance_responsible_person_proxy_tooltip}#{labels.open_staff_button_label}"
+										styleClass="ctsms-picker"
+										icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedStaff(':tabView:inventorymaintenance_form:responsiblePersonProxy')" />
+								</h:panelGroup>
+								<p:commandButton
+									title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search"
+									type="button"
+									onclick="openStaffPickerAjax(':tabView:inventorymaintenance_form:responsiblePersonProxy',':tabView:inventorymaintenance_form:responsiblePersonProxyName')" />
+								<p:commandButton
+									title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close"
+									type="button"
+									onclick="clearIDAjax(':tabView:inventorymaintenance_form:responsiblePersonProxy',':tabView:inventorymaintenance_form:responsiblePersonProxyName','#{applicationScopeBean.noStaffPickedMessage}')" />
+							</h:panelGrid>
+							<p:message for="responsiblePersonProxy" />
+							
 							<h:outputLabel
 								for="notify"
 								value="#{inventorylabels.inventory_maintenance_notify_label}" />
@@ -368,68 +485,9 @@
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<h:outputLabel
-								for="reminderPeriod"
-								value="#{inventorylabels.inventory_maintenance_reminder_period_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="reminderPeriod"
-									disabled="#{!inventoryMaintenanceBean.reminderPeriodSelectorEnabled}"
-									value="#{inventoryMaintenanceBean.reminder.period}"
-									required="true"
-									label="#{inventorylabels.inventory_maintenance_reminder_period}"
-									styleClass="ctsms-control">
-									<f:selectItems
-										value="#{inventoryMaintenanceBean.reminder.variablePeriods}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="reminderPeriodDays" />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="reminderPeriod">
-									<h:outputText
-										value="#{inventorylabels.inventory_maintenance_reminder_period_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="reminderPeriod" />
-							<h:outputLabel
-								for="reminderPeriodDays"
-								value="#{inventorylabels.inventory_maintenance_reminder_period_days_label}" />
-							<h:panelGroup>
-								<p:spinner
-									disabled="#{!inventoryMaintenanceBean.reminderPeriodSpinnerEnabled}"
-									id="reminderPeriodDays"
-									value="#{inventoryMaintenanceBean.in.reminderPeriodDays}"
-									styleClass="ctsms-spinner"
-									required="false"
-									label="#{inventorylabels.inventory_maintenance_reminder_period_days}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="reminderPeriodDays">
-									<h:outputText
-										value="#{inventorylabels.inventory_maintenance_reminder_period_days_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="reminderPeriodDays" />
-							<h:outputLabel
-								for="dismissed"
-								value="#{inventorylabels.inventory_maintenance_dismissed_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="dismissed"
-									value="#{inventoryMaintenanceBean.in.dismissed}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="dismissed">
-									<h:outputText
-										value="#{inventorylabels.inventory_maintenance_dismissed_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
+
+
+
 							<h:outputLabel
 								for="companyContact"
 								value="#{inventorylabels.inventory_maintenance_company_contact_label}" />
@@ -492,6 +550,22 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="charge" />
+							
+							<h:outputLabel
+								for="dismissed"
+								value="#{inventorylabels.inventory_maintenance_dismissed_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="dismissed"
+									value="#{inventoryMaintenanceBean.in.dismissed}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="dismissed">
+									<h:outputText
+										value="#{inventorylabels.inventory_maintenance_dismissed_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>							
 						</h:panelGrid>
 						<h:panelGrid
 							columns="1"
@@ -601,6 +675,14 @@
 					onclick="setMaintenanceItemTitle(false)"
 					type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param
+					name="tableColumnsDialog"
+					value="maintenanceItemfTableColumnsDialog" />
+				<ui:param
+					name="dataTableId"
+					value=":tabView:inventorymaintenance_form:inventorymaintenance_list" />
+			</ui:include>		
 		</h:form>
 	</ui:composition>
 </h:body>
