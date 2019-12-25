@@ -594,6 +594,20 @@ public class StaffServiceImpl
 						responsiblePersonMaintenanceItemVO, original, journalEntryDao);
 			}
 			staff.getResponsiblePersonMaintenanceItems().clear();
+			Iterator<MaintenanceScheduleItem> responsiblePersonProxyMaintenanceItemsIt = staff.getResponsiblePersonProxyMaintenanceItems().iterator();
+			while (responsiblePersonProxyMaintenanceItemsIt.hasNext()) {
+				MaintenanceScheduleItem responsiblePersonProxyMaintenanceItem = responsiblePersonProxyMaintenanceItemsIt.next();
+				MaintenanceScheduleItemOutVO original = maintenanceItemScheduleDao.toMaintenanceScheduleItemOutVO(responsiblePersonProxyMaintenanceItem);
+				responsiblePersonProxyMaintenanceItem.setResponsiblePersonProxy(null);
+				responsiblePersonProxyMaintenanceItem.setNotify(false);
+				CoreUtil.modifyVersion(responsiblePersonProxyMaintenanceItem, responsiblePersonProxyMaintenanceItem.getVersion(), now, user);
+				maintenanceItemScheduleDao.update(responsiblePersonProxyMaintenanceItem);
+				MaintenanceScheduleItemOutVO responsiblePersonProxyMaintenanceItemVO = maintenanceItemScheduleDao
+						.toMaintenanceScheduleItemOutVO(responsiblePersonProxyMaintenanceItem);
+				logSystemMessage(responsiblePersonProxyMaintenanceItem.getInventory(), result, now, user, SystemMessageCodes.STAFF_DELETED_MAINTENANCE_ITEM_UPDATED,
+						responsiblePersonProxyMaintenanceItemVO, original, journalEntryDao);
+			}
+			staff.getResponsiblePersonProxyMaintenanceItems().clear();
 			Iterator<MaintenanceScheduleItem> companyContactMaintenanceItemsIt = staff.getCompanyContactMaintenanceItems().iterator();
 			while (companyContactMaintenanceItemsIt.hasNext()) {
 				MaintenanceScheduleItem companyContactMaintenanceItem = companyContactMaintenanceItemsIt.next();
@@ -1579,7 +1593,7 @@ public class StaffServiceImpl
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
-		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findByResponsiblePerson(staffId, psf);
+		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findByResponsiblePerson(staffId, staffId, psf);
 		maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVOCollection(maintenanceScheduleItems);
 		return maintenanceScheduleItems;
 	}

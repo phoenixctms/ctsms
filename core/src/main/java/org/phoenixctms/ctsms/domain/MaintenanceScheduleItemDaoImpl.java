@@ -70,14 +70,24 @@ public class MaintenanceScheduleItemDaoImpl
 		return maintenanceItemCriteria.list();
 	}
 
+	private static void applyResponsiblePersonProxyCriterions(Criteria maintenanceItemCriteria, Long responsiblePersonId, Long responsiblePersonProxyId) {
+		if (responsiblePersonId != null && responsiblePersonProxyId == null) {
+			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId.longValue()));
+		} else if (responsiblePersonId == null && responsiblePersonProxyId != null) {
+			maintenanceItemCriteria.add(Restrictions.eq("responsiblePersonProxy.id", responsiblePersonProxyId.longValue()));
+		} else if (responsiblePersonId != null && responsiblePersonProxyId != null) {
+			maintenanceItemCriteria.add(Restrictions.or(
+					Restrictions.eq("responsiblePerson.id", responsiblePersonId.longValue()),
+					Restrictions.eq("responsiblePersonProxy.id", responsiblePersonProxyId.longValue())));
+		}
+	}
+
 	@Override
 	protected Collection<MaintenanceScheduleItem> handleFindByResponsiblePerson(
-			Long responsiblePersonId, PSFVO psf) throws Exception {
+			Long responsiblePersonId, Long responsiblePersonProxyId, PSFVO psf) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MaintenanceScheduleItem.class, maintenanceItemCriteria);
-		if (responsiblePersonId != null) {
-			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId.longValue()));
-		}
+		applyResponsiblePersonProxyCriterions(maintenanceItemCriteria, responsiblePersonId, responsiblePersonProxyId);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return maintenanceItemCriteria.list();
 	}
@@ -85,7 +95,7 @@ public class MaintenanceScheduleItemDaoImpl
 	@Override
 	protected Collection<MaintenanceScheduleItem> handleFindMaintenanceInterval(
 			Long inventoryId, Long departmentId,
-			Long inventoryCategoryId, Long responsiblePersonId,
+			Long inventoryCategoryId, Long responsiblePersonId, Long responsiblePersonProxyId,
 			Boolean reminder, Timestamp from, Timestamp to) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		if (inventoryId != null || departmentId != null || inventoryCategoryId != null) {
@@ -100,9 +110,7 @@ public class MaintenanceScheduleItemDaoImpl
 				inventoryCriteria.add(Restrictions.eq("category.id", inventoryCategoryId.longValue()));
 			}
 		}
-		if (responsiblePersonId != null) {
-			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId.longValue()));
-		}
+		applyResponsiblePersonProxyCriterions(maintenanceItemCriteria, responsiblePersonId, responsiblePersonProxyId);
 		maintenanceItemCriteria.add(Restrictions.eq("active", true)); // performance only...
 		return CriteriaUtil.listEvents(maintenanceItemCriteria, from, to, reminder);
 	}
@@ -110,7 +118,7 @@ public class MaintenanceScheduleItemDaoImpl
 	@Override
 	protected Collection<MaintenanceScheduleItem> handleFindMaintenanceSchedule(
 			Date today, Long inventoryId, Long departmentId,
-			Long inventoryCategoryId, Long responsiblePersonId,
+			Long inventoryCategoryId, Long responsiblePersonId, Long responsiblePersonProxyId,
 			Boolean reminder, boolean includeAlreadyPassed, PSFVO psf) throws Exception {
 		Criteria maintenanceItemCriteria = createMaintenanceItemCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MaintenanceScheduleItem.class, maintenanceItemCriteria);
@@ -123,9 +131,7 @@ public class MaintenanceScheduleItemDaoImpl
 		if (inventoryCategoryId != null) {
 			criteriaMap.createCriteria("inventory").add(Restrictions.eq("category.id", inventoryCategoryId));
 		}
-		if (responsiblePersonId != null) {
-			maintenanceItemCriteria.add(Restrictions.eq("responsiblePerson.id", responsiblePersonId));
-		}
+		applyResponsiblePersonProxyCriterions(maintenanceItemCriteria, responsiblePersonId, responsiblePersonProxyId);
 		maintenanceItemCriteria.add(Restrictions.eq("active", true)); // performance only...
 		if (psf != null) {
 			PSFVO sorterFilter = new PSFVO();
@@ -201,6 +207,7 @@ public class MaintenanceScheduleItemDaoImpl
 		super.maintenanceScheduleItemInVOToEntity(source, target, copyIfNull);
 		Long companyContactId = source.getCompanyContactId();
 		Long responsiblePersonId = source.getResponsiblePersonId();
+		Long responsiblePersonProxyId = source.getResponsiblePersonProxyId();
 		Long inventoryId = source.getInventoryId();
 		Long typeId = source.getTypeId();
 		if (companyContactId != null) {
@@ -223,6 +230,17 @@ public class MaintenanceScheduleItemDaoImpl
 			target.setResponsiblePerson(null);
 			if (responsiblePerson != null) {
 				responsiblePerson.removeResponsiblePersonMaintenanceItems(target);
+			}
+		}
+		if (responsiblePersonProxyId != null) {
+			Staff responsiblePersonProxy = this.getStaffDao().load(responsiblePersonProxyId);
+			target.setResponsiblePersonProxy(responsiblePersonProxy);
+			responsiblePersonProxy.addResponsiblePersonProxyMaintenanceItems(target);
+		} else if (copyIfNull) {
+			Staff responsiblePersonProxy = target.getResponsiblePersonProxy();
+			target.setResponsiblePersonProxy(null);
+			if (responsiblePersonProxy != null) {
+				responsiblePersonProxy.removeResponsiblePersonProxyMaintenanceItems(target);
 			}
 		}
 		if (inventoryId != null) {
@@ -264,6 +282,7 @@ public class MaintenanceScheduleItemDaoImpl
 		super.maintenanceScheduleItemOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO companyContactVO = source.getCompanyContact();
 		StaffOutVO responsiblePersonVO = source.getResponsiblePerson();
+		StaffOutVO responsiblePersonProxyVO = source.getResponsiblePersonProxy();
 		InventoryOutVO inventoryVO = source.getInventory();
 		MaintenanceTypeVO typeVO = source.getType();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -289,6 +308,17 @@ public class MaintenanceScheduleItemDaoImpl
 			target.setResponsiblePerson(null);
 			if (responsiblePerson != null) {
 				responsiblePerson.removeResponsiblePersonMaintenanceItems(target);
+			}
+		}
+		if (responsiblePersonProxyVO != null) {
+			Staff responsiblePersonProxy = this.getStaffDao().staffOutVOToEntity(responsiblePersonProxyVO);
+			target.setResponsiblePersonProxy(responsiblePersonProxy);
+			responsiblePersonProxy.addResponsiblePersonProxyMaintenanceItems(target);
+		} else if (copyIfNull) {
+			Staff responsiblePersonProxy = target.getResponsiblePersonProxy();
+			target.setResponsiblePersonProxy(null);
+			if (responsiblePersonProxy != null) {
+				responsiblePersonProxy.removeResponsiblePersonProxyMaintenanceItems(target);
 			}
 		}
 		if (inventoryVO != null) {
@@ -342,6 +372,7 @@ public class MaintenanceScheduleItemDaoImpl
 		super.toMaintenanceScheduleItemInVO(source, target);
 		Staff companyContact = source.getCompanyContact();
 		Staff responsiblePerson = source.getResponsiblePerson();
+		Staff responsiblePersonProxy = source.getResponsiblePersonProxy();
 		Inventory inventory = source.getInventory();
 		MaintenanceType type = source.getType();
 		if (companyContact != null) {
@@ -349,6 +380,9 @@ public class MaintenanceScheduleItemDaoImpl
 		}
 		if (responsiblePerson != null) {
 			target.setResponsiblePersonId(responsiblePerson.getId());
+		}
+		if (responsiblePersonProxy != null) {
+			target.setResponsiblePersonProxyId(responsiblePersonProxy.getId());
 		}
 		if (inventory != null) {
 			target.setInventoryId(inventory.getId());
@@ -376,6 +410,7 @@ public class MaintenanceScheduleItemDaoImpl
 		super.toMaintenanceScheduleItemOutVO(source, target);
 		Staff companyContact = source.getCompanyContact();
 		Staff responsiblePerson = source.getResponsiblePerson();
+		Staff responsiblePersonProxy = source.getResponsiblePersonProxy();
 		Inventory inventory = source.getInventory();
 		MaintenanceType type = source.getType();
 		User modifiedUser = source.getModifiedUser();
@@ -384,6 +419,9 @@ public class MaintenanceScheduleItemDaoImpl
 		}
 		if (responsiblePerson != null) {
 			target.setResponsiblePerson(this.getStaffDao().toStaffOutVO(responsiblePerson));
+		}
+		if (responsiblePersonProxy != null) {
+			target.setResponsiblePersonProxy(this.getStaffDao().toStaffOutVO(responsiblePersonProxy));
 		}
 		if (inventory != null) {
 			target.setInventory(this.getInventoryDao().toInventoryOutVO(inventory));

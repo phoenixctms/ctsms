@@ -1,4 +1,4 @@
-Hallo $maintenancescheduleitem_responsibleperson_firstname,
+Hallo #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
 dies ist die Benachrichtigung für folgendes Ereignis:
 

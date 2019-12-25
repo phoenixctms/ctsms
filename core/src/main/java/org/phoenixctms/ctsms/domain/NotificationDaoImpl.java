@@ -794,6 +794,7 @@ public class NotificationDaoImpl
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
 			createNotificationRecipient(notification, maintenanceScheduleItem.getResponsiblePerson());
+			createNotificationRecipient(notification, maintenanceScheduleItem.getResponsiblePersonProxy());
 			return notification;
 		} else {
 			maintenanceScheduleItem.removeNotifications(notification);
