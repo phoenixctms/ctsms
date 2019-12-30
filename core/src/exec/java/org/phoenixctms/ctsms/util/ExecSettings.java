@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.util;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -59,6 +60,10 @@ public final class ExecSettings {
 
 	public static String getString(String key, String defaultValue) {
 		return CommonUtil.getValue(key, getBundle(false), defaultValue);
+	}
+
+	public static ArrayList<String> getStringList(String key, ArrayList<String> defaultValue) {
+		return CommonUtil.getValueStringList(key, getBundle(false), defaultValue);
 	}
 
 	public static void setBundleBasename(String basename) { // synchronized
