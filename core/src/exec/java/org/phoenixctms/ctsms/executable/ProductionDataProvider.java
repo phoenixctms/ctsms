@@ -2277,7 +2277,7 @@ public class ProductionDataProvider {
 				true,
 				getProbandListStatusLogLevels());
 		updateProbandListStatusType(candidateProbandListStatusType,
-				getProbandListStatusTransitions(candidateProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType));
+				getProbandListStatusTransitions(candidateProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType, ongoingProbandListStatusType));
 		updateProbandListStatusType(signupProbandListStatusType,
 				getProbandListStatusTransitions(signupProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType));
 		updateProbandListStatusType(contactedProbandListStatusType,
@@ -2822,7 +2822,6 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false);
-		
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"export_ecrfs",
@@ -3278,7 +3277,6 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false);
-		
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"import_randomization_list_codes",
@@ -3291,8 +3289,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				false);		
-		
+				false);
 		jobOutput.println("job types created");
 	}
 
