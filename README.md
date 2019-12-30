@@ -55,7 +55,7 @@ Eclipse IDE
 The following was tested on a vanilla Windows 10 VM.
 
 1. Prerequisites:
-* download and install a recent JDK (eg. Oracle JDK1.8.0 u201 64bit)
+* download and install a recent Java8 JDK (eg. Oracle JDK1.8.0 u201 64bit)
 * download and install git
 * download a recent Apache Maven (eg. apache-maven-3.6.0-bin.zip, extract to C:\apache-maven-3.6.0)
 
