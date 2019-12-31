@@ -36,6 +36,10 @@ public interface PDFContentPainter {
 
 	public boolean nextBlockFitsOnPage() throws Exception;
 
+	public boolean nextBlockFitsOnFullPage() throws Exception;
+
+	public void splitNextBlock() throws Exception;
+
 	public void populateBlocks();
 
 	public void reset();

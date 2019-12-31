@@ -190,6 +190,45 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 	}
 
 	@Override
+	public boolean nextBlockFitsOnFullPage() throws Exception {
+		CVPDFBlock block = blocks.get(blockIndex);
+		if (BlockType.CV_SECTION_POSITIONS.equals(block.getType())) {
+			return (pageHeight
+					- Settings.getFloat(CVPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.BLOCKS_UPPER_MARGIN)
+					- block.getHeight(cursor)) > Settings.getFloat(CVPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.CV_PDF,
+							CVPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public void splitNextBlock() throws Exception {
+		CVPDFBlock block = blocks.get(blockIndex);
+		if (BlockType.CV_SECTION_POSITIONS.equals(block.getType())) {
+			ArrayList<CvPositionPDFVO> blockCvPositions = new ArrayList<CvPositionPDFVO>();
+			CVPDFBlock testBlock = new CVPDFBlock(block.getCvSection(), new ArrayList<CvPositionPDFVO>());
+			Iterator<CvPositionPDFVO> it = block.getCvPositions().iterator();
+			while (it.hasNext()) {
+				CvPositionPDFVO cvPosition = it.next();
+				testBlock.getCvPositions().add(cvPosition);
+				if ((pageHeight
+						- Settings.getFloat(CVPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.BLOCKS_UPPER_MARGIN)
+						- testBlock.getHeight(cursor)) > Settings.getFloat(CVPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.CV_PDF,
+								CVPDFDefaultSettings.BLOCKS_LOWER_MARGIN)) {
+					blockCvPositions.add(cvPosition);
+				} else {
+					break;
+				}
+			}
+			if (blockCvPositions.size() > 0) {
+				blocks.add(blockIndex, new CVPDFBlock(block.getCvSection(), blockCvPositions));
+				block.getCvPositions().removeAll(blockCvPositions);
+			}
+		}
+	}
+
+	@Override
 	public void populateBlocks() {
 		blocks.clear();
 		if (staffVOs != null) {
