@@ -1054,7 +1054,7 @@ public class ToolsServiceImpl
 		NotificationDao notificationDao = this.getNotificationDao();
 		long count = 0;
 		Iterator<MaintenanceScheduleItem> maintenanceScheduleIt = this.getMaintenanceScheduleItemDao()
-				.findMaintenanceSchedule(today, null, departmentId, null, null, true, false, null)
+				.findMaintenanceSchedule(today, null, departmentId, null, null, null, true, false, null)
 				.iterator();
 		while (maintenanceScheduleIt.hasNext()) {
 			MaintenanceScheduleItem maintenanceScheduleItem = maintenanceScheduleIt.next();

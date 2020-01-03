@@ -314,6 +314,9 @@ public class InventoryServiceImpl
 		if (maintenanceScheduleItemIn.getResponsiblePersonId() != null) {
 			checkResponsiblePersonId(maintenanceScheduleItemIn.getResponsiblePersonId(), this.getStaffDao());
 		}
+		if (maintenanceScheduleItemIn.getResponsiblePersonProxyId() != null) {
+			checkResponsiblePersonProxyId(maintenanceScheduleItemIn.getResponsiblePersonProxyId(), this.getStaffDao());
+		}
 		// other input checks
 		if (maintenanceScheduleItemIn.getRecurring()) {
 			if (maintenanceScheduleItemIn.getRecurrencePeriod() == null) {
@@ -332,9 +335,11 @@ public class InventoryServiceImpl
 						maintenanceScheduleItemIn.getRecurrencePeriod(), maintenanceScheduleItemIn.getRecurrencePeriodDays()) >= 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MAINTENANCE_SCHEDULE_ITEM_REMINDER_PERIOD_GREATER_THAN_OR_EQUAL_TO_RECURRENCE_PERIOD);
 		}
-		if (maintenanceScheduleItemIn.isNotify() && maintenanceScheduleItemIn.getResponsiblePersonId() == null) {
+		if (maintenanceScheduleItemIn.isNotify()
+				&& maintenanceScheduleItemIn.getResponsiblePersonId() == null
+				&& maintenanceScheduleItemIn.getResponsiblePersonProxyId() == null) {
 			// reminder without person to email makes no sense... we don't want to send it to the modifying user
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_REQUIRED);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_OR_PROXY_REQUIRED);
 		}
 		if (maintenanceScheduleItemIn.getCharge() < 0.0f) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MAINTENANCE_SCHEDULE_ITEM_CHARGE_NEGATIVE);
@@ -348,6 +353,15 @@ public class InventoryServiceImpl
 					: responsiblePersonId.toString());
 		}
 		return responsiblePerson;
+	}
+
+	private Staff checkResponsiblePersonProxyId(Long responsiblePersonProxyId, StaffDao staffDao) throws ServiceException {
+		Staff responsiblePersonProxy = staffDao.load(responsiblePersonProxyId);
+		if (responsiblePersonProxy == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MAINTENANCE_SCHEDULE_ITEM_INVALID_RESPONSIBLE_PERSON_PROXY_STAFF_ID, responsiblePersonProxyId == null ? null
+					: responsiblePersonProxyId.toString());
+		}
+		return responsiblePersonProxy;
 	}
 
 	private void deleteInventoryHelper(Inventory inventory, boolean deleteCascade, User user, Timestamp now) throws Exception {
@@ -398,6 +412,7 @@ public class InventoryServiceImpl
 				MaintenanceScheduleItemOutVO maintenanceItemVO = maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVO(maintenanceItem);
 				Staff companyContact = maintenanceItem.getCompanyContact();
 				Staff responsiblePerson = maintenanceItem.getResponsiblePerson();
+				Staff responsiblePersonProxy = maintenanceItem.getResponsiblePersonProxy();
 				if (companyContact != null) {
 					logSystemMessage(companyContact, result, now, user, SystemMessageCodes.INVENTORY_DELETED_MAINTENANCE_ITEM_DELETED, maintenanceItemVO, null, journalEntryDao);
 					companyContact.removeCompanyContactMaintenanceItems(maintenanceItem);
@@ -407,6 +422,12 @@ public class InventoryServiceImpl
 					logSystemMessage(responsiblePerson, result, now, user, SystemMessageCodes.INVENTORY_DELETED_MAINTENANCE_ITEM_DELETED, maintenanceItemVO, null, journalEntryDao);
 					responsiblePerson.removeResponsiblePersonMaintenanceItems(maintenanceItem);
 					maintenanceItem.setResponsiblePerson(null);
+				}
+				if (responsiblePersonProxy != null) {
+					logSystemMessage(responsiblePersonProxy, result, now, user, SystemMessageCodes.INVENTORY_DELETED_MAINTENANCE_ITEM_DELETED, maintenanceItemVO, null,
+							journalEntryDao);
+					responsiblePerson.removeResponsiblePersonProxyMaintenanceItems(maintenanceItem);
+					maintenanceItem.setResponsiblePersonProxy(null);
 				}
 				maintenanceItem.setInventory(null);
 				ServiceUtil.removeNotifications(maintenanceItem.getNotifications(), notificationDao, notificationRecipientDao);
@@ -602,6 +623,10 @@ public class InventoryServiceImpl
 		if (responsiblePerson != null) {
 			logSystemMessage(responsiblePerson, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, result, null, journalEntryDao);
 		}
+		Staff responsiblePersonProxy = maintenanceScheduleItem.getResponsiblePersonProxy();
+		if (responsiblePerson != null) {
+			logSystemMessage(responsiblePersonProxy, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_CREATED, result, null, journalEntryDao);
+		}
 		return result;
 	}
 
@@ -744,6 +769,7 @@ public class InventoryServiceImpl
 		Inventory inventory = maintenanceScheduleItem.getInventory();
 		Staff companyContact = maintenanceScheduleItem.getCompanyContact();
 		Staff responsiblePerson = maintenanceScheduleItem.getResponsiblePerson();
+		Staff responsiblePersonProxy = maintenanceScheduleItem.getResponsiblePersonProxy();
 		MaintenanceScheduleItemOutVO result = maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVO(maintenanceScheduleItem);
 		inventory.removeMaintenanceScheduleItems(maintenanceScheduleItem);
 		maintenanceScheduleItem.setInventory(null);
@@ -754,6 +780,10 @@ public class InventoryServiceImpl
 		if (responsiblePerson != null) {
 			responsiblePerson.removeResponsiblePersonMaintenanceItems(maintenanceScheduleItem);
 			maintenanceScheduleItem.setResponsiblePerson(null);
+		}
+		if (responsiblePersonProxy != null) {
+			responsiblePersonProxy.removeResponsiblePersonProxyMaintenanceItems(maintenanceScheduleItem);
+			maintenanceScheduleItem.setResponsiblePersonProxy(null);
 		}
 		ServiceUtil.removeNotifications(maintenanceScheduleItem.getNotifications(), this.getNotificationDao(), this.getNotificationRecipientDao());
 		maintenanceScheduleItemDao.remove(maintenanceScheduleItem);
@@ -766,6 +796,9 @@ public class InventoryServiceImpl
 		}
 		if (responsiblePerson != null) {
 			logSystemMessage(responsiblePerson, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, result, null, journalEntryDao);
+		}
+		if (responsiblePersonProxy != null) {
+			logSystemMessage(responsiblePersonProxy, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, result, null, journalEntryDao);
 		}
 		return result;
 	}
@@ -1194,7 +1227,8 @@ public class InventoryServiceImpl
 			checkResponsiblePersonId(responsiblePersonId, this.getStaffDao());
 		}
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
-		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findMaintenanceInterval(inventoryId, departmentId, inventoryCategoryId, responsiblePersonId, notify,
+		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findMaintenanceInterval(inventoryId, departmentId, inventoryCategoryId, responsiblePersonId,
+				responsiblePersonId, notify,
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to));
 		ArrayList<MaintenanceScheduleItemOutVO> result = new ArrayList<MaintenanceScheduleItemOutVO>(maintenanceScheduleItems.size());
 		Iterator maintenanceScheduleItemsIt = maintenanceScheduleItems.iterator();
@@ -1229,6 +1263,7 @@ public class InventoryServiceImpl
 		}
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
 		Collection maintenanceScheduleItems = maintenanceScheduleItemDao.findMaintenanceSchedule(today, inventoryId, departmentId, inventoryCategoryId, responsiblePersonId,
+				responsiblePersonId,
 				reminder, true, psf);
 		maintenanceScheduleItemDao.toMaintenanceScheduleItemOutVOCollection(maintenanceScheduleItems);
 		return maintenanceScheduleItems;
@@ -1284,6 +1319,11 @@ public class InventoryServiceImpl
 		Staff responsiblePerson = maintenanceScheduleItem.getResponsiblePerson();
 		if (responsiblePerson != null) {
 			logSystemMessage(responsiblePerson, result.getInventory(), now, user, dismissed ? SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_SET
+					: SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_UNSET, result, original, journalEntryDao);
+		}
+		Staff responsiblePersonProxy = maintenanceScheduleItem.getResponsiblePersonProxy();
+		if (responsiblePersonProxy != null) {
+			logSystemMessage(responsiblePersonProxy, result.getInventory(), now, user, dismissed ? SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_SET
 					: SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_UNSET, result, original, journalEntryDao);
 		}
 		return result;
@@ -1417,6 +1457,10 @@ public class InventoryServiceImpl
 		Staff responsiblePerson = maintenanceScheduleItem.getResponsiblePerson();
 		if (responsiblePerson != null) {
 			logSystemMessage(responsiblePerson, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_UPDATED, result, original, journalEntryDao);
+		}
+		Staff responsiblePersonProxy = maintenanceScheduleItem.getResponsiblePersonProxy();
+		if (responsiblePersonProxy != null) {
+			logSystemMessage(responsiblePersonProxy, result.getInventory(), now, user, SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_UPDATED, result, original, journalEntryDao);
 		}
 		return result;
 	}

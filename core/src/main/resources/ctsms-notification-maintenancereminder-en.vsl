@@ -1,4 +1,4 @@
-Dear $maintenancescheduleitem_responsibleperson_firstname,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
 this is a notification for the following event:
 
