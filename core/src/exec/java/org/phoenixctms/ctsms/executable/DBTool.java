@@ -27,8 +27,11 @@ import org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryReasonDe
 import org.phoenixctms.ctsms.executable.xls.XlsExporter;
 import org.phoenixctms.ctsms.executable.xls.XlsImporter;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compile;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DBToolOptions;
+import org.phoenixctms.ctsms.util.ExecDefaultSettings;
+import org.phoenixctms.ctsms.util.ExecSettingCodes;
 import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
@@ -1306,9 +1309,16 @@ public class DBTool {
 		return probandListStatusEntryReasonDecryptInitializer;
 	}
 
-	private ProductionDataProvider getProductionDataProvider() {
+	private ProductionDataProvider getProductionDataProvider() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (productionDataProvider == null) {
-			productionDataProvider = context.getBean(ProductionDataProvider.class);
+			String className = ExecSettings.getString(ExecSettingCodes.DATA_PROVIDER_CLASS, ExecDefaultSettings.DATA_PROVIDER_CLASS);
+			if (CommonUtil.isEmptyString(className)) {
+				productionDataProvider = context.getBean(ProductionDataProvider.class);
+			} else {
+				productionDataProvider = (ProductionDataProvider) Compile
+						.loadClass(className, ExecSettings.getStringList(ExecSettingCodes.DATA_PROVIDER_CLASS_SOURCE_FILES, ExecDefaultSettings.DATA_PROVIDER_CLASS_SOURCE_FILES))
+						.newInstance();
+			}
 			productionDataProvider.setJobOutput(getJobOutput());
 		}
 		return productionDataProvider;
