@@ -70,7 +70,6 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 			while (it.hasNext()) {
 				InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
 				if (sb.length() > 0) {
-					// sb.append(SELECTION_SET_VALUES_SEPARATOR);
 					sb.append(getSelectionSetValuesSeparator());
 				}
 				if (selectionSetValue != null) {

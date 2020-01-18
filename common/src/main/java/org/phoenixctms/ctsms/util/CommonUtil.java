@@ -115,12 +115,10 @@ public final class CommonUtil {
 	private final static String UNKNOWN_LOCAL_HOST_NAME = "localhost";
 	public final static String LOCAL_HOST_NAME = getLocalHostName();
 	public final static String TIME_SEPARATOR = ":";
-	// var INPUT_DATE_PATTERN = 'dd.MM.yyyy';
-	// var INPUT_TIME_PATTERN = 'HH:mm';
 	public final static String DEFAULT_INPUT_TIME_PATTERN = "HH" + TIME_SEPARATOR + "mm"; // must not be locale dependent
-	private final static String DEFAULT_INPUT_DATE_PATTERN = "yyyy-MM-dd"; // "dd.MM.yyyy"; // "yyyy-MM-dd"; //must not be locale dependent
+	private final static String DEFAULT_INPUT_DATE_PATTERN = "yyyy-MM-dd"; // "dd.MM.yyyy"; //must not be locale dependent
 	private final static String DEFAULT_INPUT_DATETIME_PATTERN = DEFAULT_INPUT_DATE_PATTERN + " " + DEFAULT_INPUT_TIME_PATTERN; // "yyyy-MM-dd HH:mm"; //must not be locale
-	// dependent
+
 	public final static String DIGITS_ONLY_DATETIME_PATTERN = "yyyyMMddHHmmss";
 	public final static boolean FILE_EXTENSION_REGEXP_MODE = true; // different primefaces versions(?), etc...
 	public final static String DEFAULT_FILE_EXTENSION_PATTERN = (FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)([a-zA-Z0-9]+)$/" : "*.*");
@@ -141,7 +139,7 @@ public final class CommonUtil {
 	private final static String DEFAULT_FILENAME_ESCAPE_CHAR = "_";
 	// the only custom error messages that are not localized.
 	private final static String INVALID_LONG_CAST = "long ({0}) cannot be converted to int";
-	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported"; // criterion, filter stuff only
+	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported"; 
 	public static final String UNSUPPORTED_CRITERION_VALUE_TYPE = "unsupported criterion value type {0}";
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> UNARY_RESTRICTIONS = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
 	static {
@@ -242,7 +240,7 @@ public final class CommonUtil {
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
 	public static final String BEACON_PATH = "beacon";
-	// public static final String BEACON_GET_PARAMETER_NAME = "beacon";
+
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
@@ -1127,7 +1125,6 @@ public final class CommonUtil {
 			try {
 				ip = getLocalHostLANAddress().getHostAddress();
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1275,12 +1272,6 @@ public final class CommonUtil {
 				}
 			} else {
 				appendProbandAlias(sb, proband, null, null);
-				// String alias = proband.getAlias();
-				// if (alias != null && alias.trim().length() > 0) {
-				// sb.append(alias.trim());
-				// } else if (proband.getId() > 0) {
-				// sb.append(Long.toString(proband.getId()));
-				// }
 			}
 		}
 		return sb.toString();
@@ -1314,11 +1305,7 @@ public final class CommonUtil {
 	public static String getProbandAlias(ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		StringBuilder sb = new StringBuilder();
 		if (proband != null) {
-			// if (proband.isDecrypted()) {
-			// if (proband.isBlinded()) {
 			appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
-			// }
-			// }
 		}
 		return sb.toString();
 	}
@@ -1345,7 +1332,6 @@ public final class CommonUtil {
 					}
 				} else {
 					sb.append(ecryptedProbandNameLabel);
-					// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
 				}
 			} else {
 				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
@@ -1379,15 +1365,12 @@ public final class CommonUtil {
 							} else {
 								CommonUtil.appendString(sb, proband.getLastName(), null, "?");
 							}
-							// CommonUtil.appendString(sb, proband.getFirstName(), null);
-							// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
 						}
 					} else {
 						CommonUtil.appendString(sb, proband.getAnimalName(), null, "?");
 					}
 				} else {
 					sb.append(ecryptedProbandNameLabel);
-					// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
 				}
 			} else {
 				appendProbandAlias(sb, proband, newBlindedProbandNameLabel, blindedProbandNameLabel);
@@ -1412,55 +1395,6 @@ public final class CommonUtil {
 				SET_OPERATION_EXPRESSION_SELECT_LABEL_ALPHABETIC ? toAlphabetic(selectCount - SET_OPERATION_EXPRESSION_FIRST_INDEX) : selectCount);
 	}
 
-	// public static final String getStaffName(StaffInVO staff, boolean withTitles) {
-	// StringBuilder sb = new StringBuilder();
-	// if (staff != null) {
-	// if (staff.isPerson()) {
-	// if (withTitles) {
-	// appendString(sb, staff.getPrefixedTitle1(), null);
-	// appendString(sb, staff.getPrefixedTitle2(), " ");
-	// appendString(sb, staff.getPrefixedTitle3(), " ");
-	// appendString(sb, staff.getFirstName(), " ");
-	// appendString(sb, staff.getLastName(), " ", "?");
-	// appendString(sb, staff.getPostpositionedTitle1(), ", ");
-	// appendString(sb, staff.getPostpositionedTitle2(), ", ");
-	// appendString(sb, staff.getPostpositionedTitle3(), ", ");
-	// } else {
-	// appendString(sb, staff.getFirstName(), null);
-	// appendString(sb, staff.getLastName(), " ", "?");
-	// }
-	// } else {
-	// sb.append(staff.getOrganisationName());
-	// }
-	// }
-	// return sb.toString();
-	// }
-	//
-	// public static final String getStaffInitials(StaffInVO staff) {
-	// StringBuilder sb = new StringBuilder();
-	// if (staff != null) {
-	//
-	//
-	// if (staff.isPerson()) {
-	// String firstName = staff.getFirstName();
-	// if (firstName != null && firstName.trim().length() > 0) {
-	// sb.append(firstName.trim().substring(0, 1).toUpperCase());
-	// }
-	// String lastName = staff.getLastName();
-	// if (lastName != null && lastName.trim().length() > 0) {
-	// sb.append(lastName.trim().substring(0, 1).toUpperCase());
-	// }
-	// } else {
-	// String organisationName = staff.getOrganisationName();
-	// if (organisationName != null && organisationName.trim().length() > 0) {
-	// sb.append(organisationName.trim().substring(0, 3).toUpperCase());
-	// }
-	// }
-	//
-	//
-	// }
-	// return sb.toString();
-	// }
 	public static final String getStaffInitials(StaffOutVO staff) {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null) {
@@ -1819,15 +1753,6 @@ public final class CommonUtil {
 							Iterator<Entry<String, JsonElement>> strokeAttributesIt = stroke.entrySet().iterator();
 							while (strokeAttributesIt.hasNext()) {
 								Entry<String, JsonElement> strokeAttribute = strokeAttributesIt.next();
-								// StringBuilder attributeValue = new StringBuilder();
-								// if (strokeAttribute.getValue().isJsonArray()) {
-								// Iterator<JsonElement> it = strokeAttribute.getValue().getAsJsonArray().iterator();
-								// while (it.hasNext()) {
-								// attributeValue.append(it.next().getAsString());
-								// }
-								// } else {
-								// attributeValue.append(strokeAttribute.getValue().getAsString());
-								// }
 								if (strokeAttribute.getValue().isJsonPrimitive()) {
 									path.setAttributeNS(null, strokeAttribute.getKey(), strokeAttribute.getValue().getAsString());
 								}
@@ -1862,7 +1787,6 @@ public final class CommonUtil {
 			while ((nRead = inputStream.read(block, 0, block.length)) != -1) {
 				buffer.write(block, 0, nRead);
 			}
-			// buffer.flush();
 			return buffer.toByteArray();
 		} catch (Exception e) {
 			throw e;
@@ -1978,13 +1902,7 @@ public final class CommonUtil {
 		return locale == null ? null : locale.getLanguage();
 	}
 
-	// public static String normalizeLineEndings(String string) {
-	// return normalizeLineEndings(string, "\n");
-	// }
-	//
-	// public static String normalizeLineEndings(String string, String lineBreak) {
-	// return string == null ? null : string.replaceAll("\\r\\n?", lineBreak);
-	// }
+
 	public static String massMailOutVOToString(MassMailOutVO massMail) {
 		if (massMail != null) {
 			return massMail.getName();
@@ -2058,7 +1976,7 @@ public final class CommonUtil {
 
 	public static String probandOutVOToString(ProbandOutVO proband) {
 		if (proband != null) {
-			return proband.getName(); // Long.toString(proband.getId());
+			return proband.getName();
 		}
 		return null;
 	}

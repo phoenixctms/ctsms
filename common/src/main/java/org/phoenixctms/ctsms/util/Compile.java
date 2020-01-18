@@ -52,7 +52,6 @@ public final class Compile {
 		ArrayList<File> fileList = getFileList(sourceFiles);
 		try {
 			return getClassLoader().loadClass(className);
-			//return clazz.newInstance();
 		} catch (ClassNotFoundException e) {
 		}
 		if (fileList.size() > 0) {
@@ -72,7 +71,6 @@ public final class Compile {
 						compilationUnit);
 				if (task.call()) {
 					return getClassLoader().loadClass(className);
-					//return clazz.newInstance();
 				} else {
 					Iterator<Diagnostic<? extends JavaFileObject>> it = diagnostics.getDiagnostics().iterator();
 					StringBuilder sb = new StringBuilder();

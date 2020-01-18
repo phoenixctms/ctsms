@@ -21,25 +21,14 @@ public class BundleControl extends Control {
 	public static PropertyResourceBundle newBundle(java.io.File propertiesFile) throws IOException {
 		InputStream stream = new FileInputStream(propertiesFile);
 		try {
-			// stream = new FileInputStream(propertiesFile);
 			return new PropertyResourceBundle(new InputStreamReader(stream, ENCODING));
-			// } catch (IOException e) {
-			// // e.printStackTrace();
 		} finally {
-			// try {
 			stream.close();
-			// } catch (IOException e) {
-			// }
-			// if (stream != null) {
-			// stream.close();
-			// }
 		}
 	}
 
 	@Override
 	public Locale getFallbackLocale(String baseName, Locale locale) {
-		// return new Locale("");
-		// return null;
 		if (baseName == null) {
 			throw new NullPointerException();
 		}
@@ -82,12 +71,12 @@ public class BundleControl extends Control {
 				try {
 					bundle = new ChildPropertyResourceBundle(new InputStreamReader(stream, ENCODING), bundle);
 				} catch (IOException e) {
-					// e.printStackTrace();
+
 				} finally {
 					stream.close();
 				}
 			} catch (FileNotFoundException | SecurityException e) {
-				// e.printStackTrace();
+
 			}
 		}
 		return bundle;

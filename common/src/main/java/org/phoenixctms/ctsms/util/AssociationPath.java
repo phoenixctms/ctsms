@@ -14,7 +14,6 @@ import org.andromda.spring.MethodParameterNames;
 
 public class AssociationPath {
 
-	// public static final MethodTransfilter MethodTransfilter.DEFAULT_TRANSFILTER = new MethodTransfilter();
 	public final static String ASSOCIATION_PATH_SEPARATOR = ".";
 	private final static Pattern ASSOCIATION_PATH_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ASSOCIATION_PATH_SEPARATOR));
 	public final static String ASSOCIATION_PATH_PATTERN = "([a-zA-Z_][a-zA-Z0-9_]*)(" + Pattern.quote(ASSOCIATION_PATH_SEPARATOR) + "[a-zA-Z_][a-zA-Z0-9_]*)*";
@@ -65,19 +64,6 @@ public class AssociationPath {
 		return (new AssociationPath(methodPath)).invoke(root, rootInterface, filter, padNullArgs, args);
 	}
 
-	// public static Collection<String> listMethodNames(Class propertyInterface) throws Exception {
-	// return listMethodNames(propertyInterface, MethodTransfilter.DEFAULT_TRANSFILTER);
-	// }
-	//
-	// public static Collection<String> listMethodNames(Class propertyInterface, MethodTransfilter filter) throws Exception {
-	// Collection methods = listMethods(propertyInterface, filter);
-	// CollectionUtils.transform(methods, new Transformer() {
-	// public Object transform(Object input) {
-	// return ((Method) input).getName();
-	// }
-	// });
-	// return methods;
-	// }
 	public static Collection<Method> listMethods(Class propertyInterface) throws Exception {
 		return listMethods(propertyInterface, MethodTransfilter.DEFAULT_TRANSFILTER);
 	}
@@ -249,7 +235,7 @@ public class AssociationPath {
 			boolean isRoot = rootInterface != null;
 			Iterator<String> it = associationPath.iterator();
 			while (it.hasNext()) {
-				String methodName = it.next(); // "get" + capitalizeFirstChar(it.next());
+				String methodName = it.next(); 
 				Method[] methods;
 				if (isRoot) {
 					methods = rootInterface.getMethods();

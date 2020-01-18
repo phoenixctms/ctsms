@@ -63,7 +63,7 @@ public final class JsUtil {
 	private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
 			GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
 					.serializeNulls()
-					.setDateFormat(INPUT_JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
+					.setDateFormat(INPUT_JSON_DATETIME_PATTERN)
 					.create();
 	private final static Gson VO_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
 			JsUtil.GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
@@ -81,7 +81,7 @@ public final class JsUtil {
 		return "";
 	}
 
-	public static String encodeBase64(String string, boolean urlSafe) { // url safe
+	public static String encodeBase64(String string, boolean urlSafe) {
 		if (string != null && string.length() > 0) {
 			try {
 				return new String(Base64.encodeBase64(string.getBytes(CommonUtil.BASE64_CHARSET), false, urlSafe, Integer.MAX_VALUE));
@@ -91,25 +91,8 @@ public final class JsUtil {
 		return "";
 	}
 
-	public static String inputFieldVariableValueToJson(Object src) { // , final TimeZone timeZone) {
+	public static String inputFieldVariableValueToJson(Object src) { 
 		return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-		// final DateFormat dateFormat = new SimpleDateFormat(INPUT_JSON_DATETIME_PATTERN);
-		// if (timeZone != null) {
-		// dateFormat.setTimeZone(timeZone);
-		// }
-		// return registerGsonTypeAdapters(new GsonBuilder(),
-		// GSON_SHORTCUT_SERIALISATIONS)
-		// .registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
-		//
-		// @Override
-		// public synchronized JsonElement serialize(Date date, Type type, JsonSerializationContext jsonSerializationContext) {
-		// return new JsonPrimitive(dateFormat.format(date));
-		// }
-		// })
-		// .setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
-		// .serializeNulls()
-		// // .setDateFormat(JSON_DATETIME_PATTERN) // CommonUtil.INPUT_DATETIME_PATTERN)
-		// .create().toJson(src);
 	}
 
 	public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {

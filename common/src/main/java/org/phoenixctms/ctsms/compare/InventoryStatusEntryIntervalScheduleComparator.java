@@ -8,7 +8,6 @@ public class InventoryStatusEntryIntervalScheduleComparator extends IntervalSche
 
 	public InventoryStatusEntryIntervalScheduleComparator(boolean intDesc) {
 		super(intDesc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

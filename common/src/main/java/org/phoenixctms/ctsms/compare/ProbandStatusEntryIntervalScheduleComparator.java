@@ -8,7 +8,6 @@ public class ProbandStatusEntryIntervalScheduleComparator extends IntervalSchedu
 
 	public ProbandStatusEntryIntervalScheduleComparator(boolean intDesc) {
 		super(intDesc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

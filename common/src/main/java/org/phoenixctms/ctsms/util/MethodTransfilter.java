@@ -9,10 +9,7 @@ import org.phoenixctms.ctsms.compare.MethodComparator;
 public class MethodTransfilter {
 
 	public static final MethodTransfilter DEFAULT_TRANSFILTER = new MethodTransfilter();
-	//publ final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^get"); // Pattern.compile("^((get)|(is))");
-	//protected final static Pattern VO_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((isSet)|(getClass)|(getDeclaringClass))");
-	//protected final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
-	//protected final static Pattern ENTITY_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((getClass)|(getDeclaringClass))");
+
 	protected final static Comparator<Method> METHOD_COMPARATOR = new MethodComparator(false);
 
 	public final static MethodTransfilter getEntityMethodTransfilter(final boolean lowerCaseFieldNames) {

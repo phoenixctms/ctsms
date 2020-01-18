@@ -8,7 +8,6 @@ public interface ServiceExceptionCodes {
 	public final static String UNSUPPORTED_POSITION_MOVEMENT = "unsupported_position_movement";
 	public final static String INVALID_ZIP_CODE = "invalid_zip_code";
 	public final static String CANNOT_DECRYPT_PROBAND = "cannot_decrypt_proband";
-	// public final static String REMINDER_ENTITY_NOT_SUPPORTED = "reminder_entity_not_supported";
 	public final static String PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT = "proband_department_not_equal_to_user_department";
 	public final static String PROBAND_DEPARTMENT_CHANGED = "proband_department_changed";
 	public final static String PROBAND_DEPARTMENT_NOT_CHANGED = "proband_department_not_changed";
@@ -52,7 +51,6 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_COURSE_PARTICIPATION_STATUS_TYPE_ID = "invalid_course_participation_status_type_id";
 	public final static String INVALID_COURSE_PARTICIPATION_STATUS_ENTRY_ID = "invalid_course_participation_status_entry_id";
 	public final static String COURSE_PARTICIPATION_STAFF_NOT_PERSON = "course_participation_staff_not_person";
-	// public final static String COURSE_PARTICIPATION_STAFF_NOT_EMPLOYEE = "course_participation_staff_not_employee";
 	public final static String COURSE_PARTICIPATION_COURSE_ADMIN_REGISTRATION = "course_participation_course_admin_registration";
 	public final static String COURSE_PARTICIPATION_COURSE_SELF_REGISTRATION = "course_participation_course_self_registration";
 	public final static String COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED = "course_participation_show_cv_preset_disabled";
@@ -64,7 +62,6 @@ public interface ServiceExceptionCodes {
 	public final static String COURSE_PARTICIPATION_INVALID_INITIAL_PARTICIPATION_STATUS_TYPE = "course_participation_invalid_initial_participation_status_type";
 	public final static String COURSE_PARTICIPATION_INVALID_NEW_PARTICIPATION_STATUS_TYPE = "course_participation_invalid_new_participation_status_type";
 	public final static String COURSE_PARTICIPATION_STAFF_CHANGED = "course_participation_staff_changed";
-	// public final static String COURSE_PARTICIPATION_STAFF_NOT_EMPLOYEE_ANY_MORE = "course_participation_staff_not_employee_any_more";
 	public final static String COURSE_PARTICIPATION_COURSE_CHANGED = "course_participation_course_changed";
 	public final static String INVALID_COURSE_ID = "invalid_course_id";
 	public final static String INVALID_COURSE_CATEGORY_ID = "invalid_course_category_id";
@@ -113,7 +110,6 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_ZERO = "ecrf_field_status_entry_index_not_zero";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_LESS_THAN_ZERO = "ecrf_field_status_entry_index_less_than_zero";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_GAP = "ecrf_field_status_entry_index_gap";
-	// public final static String ECRF_FIELD_STATUS_ENTRY_NO_VALUE = "ecrf_field_status_entry_no_value";
 	public final static String INVALID_INITIAL_ECRF_FIELD_STATUS_TYPE = "invalid_initial_ecrf_field_status_type";
 	public final static String INVALID_NEW_ECRF_FIELD_STATUS_TYPE = "invalid_new_ecrf_field_status_type";
 	public final static String ECRF_FIELD_STATUS_ENTRY_COMMENT_REQUIRED = "ecrf_field_status_entry_comment_required";
@@ -126,8 +122,6 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS = "ecrf_field_value_input_disabled_for_proband_list_status";
 	public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_value_input_locked_for_ecrf_status";
 	public final static String ECRF_FIELD_STATUS_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_status_input_locked_for_ecrf_status";
-	// public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_FIELD_STATUS = "ecrf_field_value_input_locked_for_ecrf_field_status";
-	// public final static String ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS = "ecrf_field_value_input_audit_trail_enabled_for_ecrf_status";
 	public final static String ECRF_FIELD_VALUES_FOR_WRONG_TRIAL = "ecrf_field_values_for_wrong_trial";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_NOT_NULL = "ecrf_field_value_reason_for_change_not_null";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_EMPTY = "ecrf_field_value_reason_for_change_empty";
@@ -206,16 +200,13 @@ public interface ServiceExceptionCodes {
 	public final static String INVENTORY_BOOKING_INVENTORY_NOT_BOOKABLE = "inventory_booking_inventory_not_bookable";
 	public final static String INVENTORY_BOOKING_COURSE_TRIAL_PROBAND_OR_COMMENT_REQUIRED = "inventory_booking_course_trial_proband_or_comment_required";
 	public final static String INVENTORY_BOOKING_END_TIMESTAMP_LESS_THAN_OR_EQUAL_TO_START_TIMESTAMP = "inventory_booking_end_timestamp_less_than_or_equal_to_start_timestamp";
-	// public final static String INVENTORY_BOOKING_OVERLAPPING = "inventory_booking_overlapping";
 	public final static String INVENTORY_BOOKING_MAX_OVERLAPPING_EXCEEDED = "inventory_booking_max_overlapping_exceeded";
 	public final static String INVALID_INVENTORY_BOOKING_ID = "invalid_inventory_booking_id";
 	public final static String INVALID_MAINTENANCE_SCHEDULE_ITEM_ID = "invalid_maintenance_schedule_item_id";
 	public final static String INVALID_INVENTORY_TAG_VALUE_ID = "invalid_inventory_tag_value_id";
 	public final static String INVALID_INVENTORY_STATUS_ENTRY_ID = "invalid_inventory_status_entry_id";
 	public final static String COURSE_SELF_REGISTRATION_FLAG_CHANGED = "course_self_registration_flag_changed";
-	// public final static String RENEWAL_COURSE_NULL = "renewal_course_null";
 	public final static String PRECEDING_COURSE_NULL = "preceding_course_null";
-	// public final static String DUPLICATE_RENEWAL_COURSE = "duplicate_renewal_course";
 	public final static String DUPLICATE_PRECEDING_COURSE = "duplicate_preceding_course";
 	public final static String DUPLICATE_PROBAND_CHILD = "duplicate_proband_child";
 	public final static String PROBAND_CHILD_NULL = "proband_child_null";
@@ -225,7 +216,6 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_TAG_NOT_FOR_PERSON_ENTRIES = "proband_tag_not_for_person_entries";
 	public final static String PROBAND_TAG_NOT_FOR_ANIMAL_ENTRIES = "proband_tag_not_for_animal_entries";
 	public final static String COURSE_INVALID_INSTITUTION_STAFF_ID = "course_invalid_institution_staff_id";
-	// public final static String COURSE_INVALID_TRIAL_ID = "course_invalid_trial_id";
 	public final static String COURSE_TRIAL_REQUIRED = "course_trial_required";
 	public final static String INVALID_CV_SECTION_ID_PRESET = "invalid_cv_section_id_preset";
 	public final static String MAX_NUMBER_OF_PARTICIPANTS_NOT_NULL = "max_number_of_participants_not_null";
@@ -242,7 +232,6 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_LECTURER_ID = "invalid_lecturer_id";
 	public final static String STAFF_PERSON_FLAG_CHANGED = "staff_person_flag_changed";
 	public final static String CANNOT_DELETE_ACTIVE_IDENTITY = "cannot_delete_active_identity";
-	// public final static String WRONG_STAFF_CATEGORY = "wrong_staff_category";
 	public final static String STAFF_CATEGORY_NOT_FOR_PERSON_ENTRIES = "staff_category_not_for_person_entries";
 	public final static String STAFF_CATEGORY_NOT_FOR_ORGANISATION_ENTRIES = "staff_category_not_for_organisation_entries";
 	public final static String INVALID_PARENT_STAFF_ID = "invalid_parent_staff_id";
@@ -272,7 +261,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_STAFF_STATUS_ENTRY_ID = "invalid_staff_status_entry_id";
 	public final static String STAFF_STATUS_ENTRY_STAFF_NOT_PERSON = "staff_status_entry_staff_not_person";
 	public final static String STAFF_STATUS_ENTRY_STAFF_NOT_EMPLOYEE = "staff_status_entry_staff_not_employee";
-	public final static String STAFF_STATUS_ENTRY_END_DATE_LESS_THAN_OR_EQUAL_TO_START_DATE = "staff_status_entry_end_date_less_than_or_equal_to_start_date"; // "staff_status_entry_end_date_must_be_null_or_greater_than_start_date";
+	public final static String STAFF_STATUS_ENTRY_END_DATE_LESS_THAN_OR_EQUAL_TO_START_DATE = "staff_status_entry_end_date_less_than_or_equal_to_start_date";
 	public final static String STAFF_STATUS_ENTRY_OVERLAPPING = "staff_status_entry_overlapping";
 	public final static String INVALID_STAFF_ADDRESS_ID = "invalid_staff_address_id";
 	public final static String INVALID_CV_POSITION_ID = "invalid_cv_position_id";
@@ -289,7 +278,6 @@ public interface ServiceExceptionCodes {
 	public final static String DUTY_ROSTER_TURN_STAFF_NOT_EMPLOYEE = "duty_roster_turn_staff_not_employee";
 	public final static String DUTY_ROSTER_TURN_STAFF_NOT_ALLOCATABLE = "duty_roster_turn_staff_not_allocatable";
 	public final static String DUTY_ROSTER_TURN_END_TIMESTAMP_LESS_THAN_OR_EQUAL_TO_START_TIMESTAMP = "duty_roster_turn_end_timestamp_less_than_or_equal_to_start_timestamp";
-	// public final static String DUTY_ROSTER_TURN_OVERLAPPING = "duty_roster_turn_overlapping";
 	public final static String DUTY_ROSTER_TURN_MAX_OVERLAPPING_EXCEEDED = "duty_roster_turn_max_overlapping_exceeded";
 	public static final String DUTY_ROSTER_TURN_NOT_SELF_ALLOCATABLE = "duty_roster_turn_not_self_allocatable";
 	public static final String DUTY_ROSTER_TURN_ALREADY_ALLOCATED = "duty_roster_turn_already_allocated";
@@ -315,7 +303,6 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_DATE_OF_BIRTH_NOT_NULL = "proband_date_of_birth_not_null";
 	public final static String PROBAND_GENDER_NOT_NULL = "proband_gender_not_null";
 	public final static String PROBAND_CITIZENSHIP_NOT_NULL = "proband_citizenship_not_null";
-	// public final static String PROBAND_DATE_OF_BIRTH_IN_THE_FUTURE = "proband_date_of_birth_in_the_future";
 	public final static String PROBAND_RATING_MAX_LESS_THAN_OR_EQUAL_ZERO = "proband_rating_less_than_zero";
 	public final static String PROBAND_RATING_REQUIRED = "proband_rating_required";
 	public final static String PROBAND_RATING_LESS_THAN_ZERO = "proband_rating_less_than_zero";
@@ -393,7 +380,6 @@ public interface ServiceExceptionCodes {
 	public final static String MONEY_TRANSFER_PROBAND_NOT_PERSON = "money_transfer_proband_not_person";
 	public final static String MONEY_TRANSFER_BANK_ACCOUNT_NOT_NULL = "money_transfer_bank_account_not_null";
 	public final static String MONEY_TRANSFER_AMOUNT_NEGATIVE = "money_transfer_amount_negative";
-	// public final static String MONEY_TRANSFER_AMOUNT_POSITIVE = "money_transfer_amount_positive";
 	public final static String MONEY_TRANSFER_COST_TYPE_MAX_NUMBER_EXCEEDED = "money_transfer_cost_type_max_number_exceeded";
 	public final static String MONEY_TRANSFER_PAID_NOT_CHANGED = "money_transfer_paid_not_changed";
 	public final static String CANNOT_DECRYPT_MONEY_TRANSFER = "cannot_decrypt_money_transfer";
@@ -407,9 +393,6 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_INQUIRY_VALUE_ID = "invalid_inquiry_value_id";
 	public final static String INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS = "inquiry_values_for_different_probands";
 	public static final String PROBAND_LETTER_NOT_FOR_ANIMAL_ENTRIES = "proband_letter_not_for_animal_entries";
-	// public final static String PROBAND_AUTO_DELETE_DEADLINE_REQUIRED = "proband_auto_delete_deadline_required";
-	// public final static String PROBAND_AUTO_DELETE_PERIOD_EXPLICIT_DAYS_REQUIRED = "proband_auto_delete_period_explicit_days_required";
-	// public final static String PROBAND_AUTO_DELETE_PERIOD_EXPLICIT_DAYS_LESS_THAN_ONE = "proband_auto_delete_period_explicit_days_less_than_one";
 	public final static String INVALID_NEW_PRIVACY_CONSENT_STATUS_TYPE = "invalid_new_privacy_consent_status_type";
 	public final static String INVALID_PRIVACY_CONSENT_STATUS_TYPE_ID = "invalid_privacy_consent_status_type_id";
 	public final static String INVALID_INITIAL_TRIAL_STATUS_TYPE = "invalid_initial_trial_status_type";
@@ -519,7 +502,6 @@ public interface ServiceExceptionCodes {
 	public final static String NO_INPUT_FIELD_SELECTION_SET_VALUE_RANDOMIZED = "no_input_field_selection_set_value_randomized";
 	public final static String NO_INPUT_FIELD_TEXT_VALUE_RANDOMIZED = "no_input_field_text_value_randomized";
 	public final static String RANDOMIZATION_NOT_DEFINED_FOR_TRIAL = "randomization_not_defined_for_trial";
-	// public final static String PROBAND_GROUP_NOT_NULL = "proband_group_not_null";
 	public final static String NO_RANDOMIZE_PROBAND_LIST_ENTRY_TAG = "no_randomize_proband_list_entry_tag";
 	public final static String RANDOMIZE_INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "randomize_input_field_selection_set_value_not_empty";
 	public final static String RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "randomize_input_field_text_value_not_empty";
@@ -529,7 +511,6 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";
 	public final static String ECRF_CHARGE_NEGATIVE = "ecrf_charge_negative";
 	public final static String ECRF_NAME_NOT_UNIQUE = "ecrf_name_not_unique";
-	//public final static String USER_DEPARTMENT_CHANGED = "user_department_changed";
 	public final static String CANNOT_DELETE_ACTIVE_USER = "cannot_delete_active_user";
 	public final static String USER_EXISTING_JOURNAL_ENTRIES = "user_existing_journal_entries";
 	public final static String OLD_PASSWORD_WRONG = "old_password_wrong";
@@ -537,7 +518,6 @@ public interface ServiceExceptionCodes {
 	public static final String INVALID_USER_PERMISSION_PROFILE_ID = "invalid_user_permission_profile_id";
 	public static final String USER_PERMISSION_PROFILE_ALREADY_EXISTS = "user_permission_profile_already_exists";
 	public static final String INCONSISTENT_GROUP_PERMISSION_PROFILES = "inconsistent_group_permission_profiles";
-	// public static final String INVALID_PERMISSION_IDENTIFIER1 = "invalid_permission_identifier";
 	public static final String CANNOT_DECRYPT_FILE = "cannot_decrypt_file";
 	public final static String EXTERNAL_FILE_DATA_DIR_DISABLED = "external_file_data_dir_disabled";
 	public final static String INSUFFICIENT_SPACE_LEFT_ON_DISK = "insufficient_space_left_on_disk";
@@ -551,7 +531,6 @@ public interface ServiceExceptionCodes {
 	public final static String FILE_COURSE_ONLY_ALLOWED = "file_course_only_allowed";
 	public final static String FILE_TRIAL_ONLY_ALLOWED = "file_trial_only_allowed";
 	public final static String FILE_PROBAND_ONLY_ALLOWED = "file_proband_only_allowed";
-	// public final static String FILE_INPUT_FIELD_ONLY_ALLOWED = "file_input_field_only_allowed";
 	public final static String FILE_MASS_MAIL_ONLY_ALLOWED = "file_mass_mail_only_allowed";
 	public final static String INVALID_LOGICAL_PATH = "invalid_logical_path";
 	public final static String INVALID_HYPERLINK_ID = "invalid_hyperlink_id";
@@ -588,11 +567,8 @@ public interface ServiceExceptionCodes {
 	public final static String INPUT_FIELD_TYPE_CHANGED_RANDOMIZE = "input_field_type_changed_randomize";
 	public final static String SELECTION_SET_VALUES_NOT_FOR_SELECT = "selection_set_values_not_for_select";
 	public final static String SELECTION_SET_VALUES_NOT_FOR_SKETCH = "selection_set_values_not_for_sketch";
-	// public final static String CANNOT_UPDATE_LOCALIZED_INPUT_FIELD = "cannot_update_localized_input_field";
-	// public final static String CANNOT_DELETE_LOCALIZED_INPUT_FIELD = "cannot_delete_localized_input_field";
 	public final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE_REQUIRED = "input_field_validation_error_mesasge_required";
 	public final static String INPUT_FIELD_VALIDATION_ERROR_MESSAGE_NOT_NULL = "input_field_validation_error_message_not_null";
-	// INPUT_FIELD_INVALID_REGEXP_PATTERN = "input_field_invalid_regexp_pattern";
 	public final static String INPUT_FIELD_MIN_SELECTION_LIMIT_GREATER_THAN_MAX_SELECTION_LIMIT = "input_field_min_selection_limit_greater_than_max_selection_limit";
 	public final static String INPUT_FIELD_MIN_INTEGER_LIMIT_GREATER_THAN_MAX_INTEGER_LIMIT = "input_field_min_integer_limit_greater_than_max_integer_limit";
 	public final static String INPUT_FIELD_MIN_FLOAT_LIMIT_GREATER_THAN_MAX_FLOAT_LIMIT = "input_field_min_float_limit_greater_than_max_float_limit";
@@ -608,8 +584,6 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_IMAGE_CANNOT_READ_DIMENSIONS = "input_field_image_cannot_read_dimensions";
 	public static final String INPUT_FIELD_SKETCH_WIDTH_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_width_less_than_or_equal_to_zero";
 	public static final String INPUT_FIELD_SKETCH_HEIGHT_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_height_less_than_or_equal_to_zero";
-	// public static final String INPUT_FIELD_INVALID_HOUR_LIMIT = "input_field_invalid_hour_limit";
-	// public static final String INPUT_FIELD_INVALID_MINUTE_LIMIT = "input_field_invalid_minute_limit";
 	public final static String FIELD_NAME_ALREADY_EXISTS = "field_name_already_exists";
 	public final static String INPUT_FIELD_REGEXP_OR_TEXT_PRESET_NOT_NULL = "input_field_regexp_or_text_preset_not_null";
 	public final static String INPUT_FIELD_SELECTION_LIMITS_NOT_NULL = "input_field_selection_limits_not_null";
@@ -620,15 +594,11 @@ public interface ServiceExceptionCodes {
 	public final static String INPUT_FIELD_TIME_LIMITS_OR_PRESET_NOT_NULL = "input_field_time_limits_or_preset_not_null";
 	public final static String INPUT_FIELD_TIMESTAMP_LIMITS_OR_PRESET_NOT_NULL = "input_field_timestamp_limits_or_preset_not_null";
 	public static final String INPUT_FIELD_SKETCH_PARAMETERS_NOT_NULL = "input_field_sketch_parameters_not_null";
-	// public final static String CANNOT_DELETE_LOCALIZED_SELECTION_SET_VALUE = "cannot_delete_localized_selection_set_value";
-	// public final static String CANNOT_ADD_SELECTION_SET_VALUES_TO_LOCALIZED_INPUT_FIELD = "cannot_add_selection_set_values_to_localized_input_field";
 	public final static String SELECTION_SET_VALUE_INPUT_FIELD_CHANGED = "selection_set_value_input_field_changed";
-	// public final static String CANNOT_UPDATE_LOCALIZED_SELECTION_SET_VALUE = "cannot_update_localized_selection_set_value";
 	public final static String SELECTION_SET_VALUE_NAME_ALREADY_EXISTS = "selection_set_value_name_already_exists";
 	public final static String SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS = "selection_set_value_value_already_exists";
 	public static final String SELECTION_SET_VALUE_VALUE_REQUIRED = "selection_set_value_value_required";
 	public final static String SELECTION_SET_VALUE_MULTIPLE_PRESET_VALUES = "selection_set_value_multiple_preset_values";
-	// public final static String SELECTION_SET_VALUE_INK_REGION_REQUIRED = "selection_set_value_ink_region_required";
 	public final static String SELECTION_SET_VALUES_ALLOWED_FOR_SELECTION_INPUTS_ONLY = "selection_set_values_allowed_for_selection_inputs_only";
 	public final static String SELECTION_SET_VALUE_INK_REGION_NOT_NULL = "selection_set_value_ink_region_not_null";
 	public final static String SELECTION_SET_VALUE_STROKES_ID_NOT_NULL = "selection_set_value_strokes_id_not_null";
@@ -670,9 +640,7 @@ public interface ServiceExceptionCodes {
 	public final static String CRITERION_NO_PROBAND_SELECTED = "criterion_no_proband_selected";
 	public final static String CRITERION_NO_INPUT_FIELD_SELECTED = "criterion_no_input_field_selected";
 	public final static String CRITERION_NO_MASS_MAIL_SELECTED = "criterion_no_mass_mail_selected";
-	// public final static String CRITERION_EMPTY_GROUP = "criterion_empty_group";
 	public final static String CRITERION_MISSING_LEFT_PARENTHESIS = "criterion_missing_left_parenthesis";
-	// public final static String CRITERION_MISSING_RIGHT_PARENTHESIS = "criterion_missing_right_parenthesis";
 	public final static String CRITERION_MISSING_OPERAND = "criterion_missing_operand";
 	public final static String CRITERION_MISSING_OPERATOR = "criterion_missing_operator";
 	public final static String CRITERION_INCOMPATIBLE_FIRST_OPERAND_TYPE = "criterion_incompatible_first_operand_type";
@@ -691,10 +659,6 @@ public interface ServiceExceptionCodes {
 	public static final String CRITERION_VALUE_AFTER_RIGHT_PARENTHESIS = "criterion_value_after_right_parenthesis";
 	public static final String CRITERION_VALUE_AFTER_VALUE = "criterion_value_after_value";
 	public static final String CRITERION_PARENTHESIS_MISSING = "criterion_parenthesis_missing";
-	// public final static String CRITERIA_NOT_SAVED = "criteria_not_saved";
-	// public final static String CRITERIA_MODIFIED_DIFFERENT_NUMBER_OF_CRITERIONS = "criteria_modified_different_number_of_criterions";
-	// public final static String CRITERIA_MODIFIED_DIFFERENT_TIE = "criteria_modified_different_tie";
-	// public final static String CRITERIA_MODIFIED_DIFFERENT_PROPERTY = "criteria_modified_different_property";
 	public static final String UNSUPPORTED_TRIAL_STATUS_ACTION = "unsupported_trial_status_action";
 	public static final String INVALID_NOTIFICATION_ID = "invalid_notification_id";
 	public static final String INVALID_NOTIFICATION_TYPE_ID = "invalid_notification_type_id";
@@ -769,16 +733,12 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_trial_files_logical_path_not_null";
 	public static final String MASS_MAIL_PROBAND_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_proband_files_logical_path_not_null";
 	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE = "mass_mail_attach_trial_files_not_false";
-	// public static final String MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_NOT_FALSE = "mass_mail_attach_proband_list_entry_tags_not_false";
-	// public static final String MASS_MAIL_ATTACH_ECRFS_NOT_FALSE = "mass_mail_attach_ecrfs_not_false";
-	// public static final String MASS_MAIL_ATTACH_REIMBURSEMENTS_PDF_NOT_FALSE = "mass_mail_attach_reimbursements_pdf_not_false";
 	public static final String MASS_MAIL_RECIPIENT_ALREADY_EXISTS = "mass_mail_recipient_already_exists";
 	public static final String EMAIL_EMPTY_SUBJECT = "email_empty_subject";
 	public static final String EMAIL_EMPTY_MESSAGE = "email_empty_message";
 	public static final String SENDING_MASS_MAILS_DISABLED = "sending_mass_mails_disabled";
 	public static final String EMAIL_NOTIFICATIONS_DISABLED = "email_notifications_disabled";
 	public static final String MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND = "mass_mail_recipient_beacon_not_found";
-	// public static final String MASS_MAIL_RECIPIENT_PENDING = "mass_mail_recipient_pending";
 	public static final String MASS_MAIL_RECIPIENT_PROBAND_NULL = "mass_mail_recipient_proband_null";
 	public static final String MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN = "mass_mail_attachment_mime_type_unknown";
 	public static final String PROBAND_DELETED_OR_MARKED_FOR_DELETION = "proband_deleted_or_marked_for_deletion";
