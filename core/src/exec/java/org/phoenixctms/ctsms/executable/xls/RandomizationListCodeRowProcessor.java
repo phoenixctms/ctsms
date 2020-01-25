@@ -69,7 +69,6 @@ public class RandomizationListCodeRowProcessor extends RowProcessor {
 	public RandomizationListCodeRowProcessor() {
 		super();
 		filterDupes = false;
-		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 		stratificationTagIndexMap = new LinkedHashMap<Integer, ProbandListEntryTagOutVO>();
 		codeValueNameIndexMap = new LinkedHashMap<Integer, String>();
@@ -152,7 +151,7 @@ public class RandomizationListCodeRowProcessor extends RowProcessor {
 				in.setRandomizationList(randomizationList.toString());
 				in.setTrialId(context.getEntityId());
 				in.setSelectionSetValueIds(stratification.getSelectionSetValueIds());
-				StratificationRandomizationListOutVO out = trialService.addUpdateStratificationRandomizationList(context.getAuth(), in, codes, false); //purge);
+				StratificationRandomizationListOutVO out = trialService.addUpdateStratificationRandomizationList(context.getAuth(), in, codes, false);
 				jobOutput.println("stratification randomization list " + getStratificationrandomizationListName(out) + ": " + codes.getCodes().size() + " codes");
 				stratificationListIds.add(out.getId());
 			} else {
@@ -193,7 +192,7 @@ public class RandomizationListCodeRowProcessor extends RowProcessor {
 			RandomizationListCodesVO codes = new RandomizationListCodesVO();
 			appendCode(trialStratification, randomizationList, codes);
 			trialIn.setRandomizationList(randomizationList.toString());
-			TrialOutVO out = trialService.updateTrial(context.getAuth(), trialIn, codes, false); //purge);
+			TrialOutVO out = trialService.updateTrial(context.getAuth(), trialIn, codes, false);
 			jobOutput.println("trial randomization list: " + codes.getCodes().size() + " codes");
 			if (purge) {
 				Iterator<StratificationRandomizationListOutVO> it = trialService.getStratificationRandomizationListList(context.getAuth(), context.getEntityId(),
@@ -221,7 +220,6 @@ public class RandomizationListCodeRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean processHeaderRow(String[] values) throws Throwable {
-		//Long trial = trialService.getTrial(context.getAuth(), context.getEntityId());
 		Iterator<ProbandListEntryTagOutVO> it = trialService.getProbandListEntryTagList(context.getAuth(), context.getEntityId(), null, true).iterator();
 		while (it.hasNext()) {
 			ProbandListEntryTagOutVO stratificationTag = it.next();

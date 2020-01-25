@@ -42,8 +42,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 14;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 15;
 	private final static int NOTIFY_COLUMN_INDEX = 16;
-	// @Autowired
-	// protected InputFieldService inputFieldService;
 	private int ecrfProbandGroupColumnIndex;
 	private int ecrfPositionColumnIndex;
 	private int sectionColumnIndex;
@@ -61,12 +59,9 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
 	private int notifyColumnIndex;
-	// private AuthenticationVO auth;
-	// private Long inputFieldId;
 	private HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>> ecrfFieldMap;
 	private HashMap<String, Long> probandGroupIdMap;
 	private HashMap<String, HashMap<Long, ECRF>> ecrfMap;
-	// private HashMap<String, Long> inputFieldIdMap;
 	@Autowired
 	protected ECRFDao eCRFDao; // varnames must match bean ids in applicationContext.xml
 	@Autowired
@@ -81,12 +76,10 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	public EcrfFieldRowProcessor() {
 		super();
 		filterDupes = false;
-		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 		ecrfFieldMap = new HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>>();
 		probandGroupIdMap = new HashMap<String, Long>();
 		ecrfMap = new HashMap<String, HashMap<Long, ECRF>>();
-		// inputFieldIdMap = new HashMap<String, Long>();
 	}
 
 	public void clearEcrf(String probandGroupToken, Long ecrfPosition) {
@@ -113,9 +106,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, auditTrailColumnIndex);
 	}
 
-	// public HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>> getEcrfFieldMap() {
-	// return ecrfFieldMap;
-	// }
 	private String getComment(String[] values) {
 		return getColumnValue(values, commentColumnIndex);
 	}
@@ -175,7 +165,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		if (inputField != null) {
 			fieldId = inputField.getId();
 		} else {
-			// fieldId = null;
 			jobOutput.println("input field '" + inputFieldName + "' not found");
 		}
 		return fieldId;
@@ -200,14 +189,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private String getNotify(String[] values) {
 		return getColumnValue(values, notifyColumnIndex);
 	}
-	// public HashMap<String, Long> getProbandGroupIdMap() {
-	// return probandGroupIdMap;
-	// }
 
-	// public Long getProbandGroupId(String probandGroupToken) {
-	// return probandGroupIdMap.get(probandGroupToken);
-	//
-	// }
 	private String getOptional(String[] values) {
 		return getColumnValue(values, optionalColumnIndex);
 	}
@@ -249,7 +231,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 
@@ -275,7 +256,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
 		ecrfFieldMap.clear();
 		probandGroupIdMap.clear();
-		// inputFieldIdMap.clear();
 		ecrfMap.clear();
 		context.getImporter().loadInputFields(context);
 	}
@@ -283,10 +263,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-				// .append(getEcrfProbandGroup(values))
-				// .append(getEcrfPosition(values))
-				// .append(getSection(values))
-				// .append(getPosition(values))
 				.append(getEcrfProbandGroup(values))
 				.append(getEcrfPosition(values))
 				.append(getSection(values))
@@ -377,11 +353,9 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
 		if (CommonUtil.isEmptyString(getEcrfPosition(values))) {
-			// jobOutput.println("row " + rowNumber + ": empty value");
 			return false;
 		}
 		if (CommonUtil.isEmptyString(getPosition(values))) {
-			// jobOutput.println("row " + rowNumber + ": empty value");
 			return false;
 		}
 		return true;

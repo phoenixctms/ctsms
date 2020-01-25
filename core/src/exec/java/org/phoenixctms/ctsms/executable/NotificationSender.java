@@ -36,7 +36,6 @@ public class NotificationSender {
 			jobOutput.println("limit: " + limit);
 		}
 		long emailSentCount = toolsService.processNotifications(ExecUtil.departmentL10nKeyToId(departmentL10nKey, departmentDao, jobOutput), psf);
-		// jobOutput.println(emailSentCount + " of " + psf.getRowCount() + " pending notification emails sent");
 		jobOutput.println("emails sent to " + emailSentCount + " recipients of " + psf.getRowCount() + " pending notifications");
 		return emailSentCount;
 	}

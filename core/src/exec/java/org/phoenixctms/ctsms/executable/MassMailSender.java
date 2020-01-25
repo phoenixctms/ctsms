@@ -22,8 +22,6 @@ public class MassMailSender {
 	public long processMassMails(AuthenticationVO auth, String departmentL10nKey, Integer limit) throws Exception {
 		jobOutput.println("department l10n key: " + departmentL10nKey);
 		PSFVO psf = new PSFVO();
-		// psf.setSortField("id");
-		// psf.setSortOrder(true);
 		if (limit != null && limit >= 0) {
 			psf.setFirst(0);
 			psf.setPageSize(limit);

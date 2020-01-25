@@ -58,7 +58,6 @@ public class EcrfFieldRowWriter extends RowWriter {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 

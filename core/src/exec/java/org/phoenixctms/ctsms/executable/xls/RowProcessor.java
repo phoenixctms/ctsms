@@ -67,11 +67,8 @@ public abstract class RowProcessor {
 	}
 
 	public WorkbookSettings getWorkbookSettings() {
-		// return null;
 		WorkbookSettings workbookSettings = new WorkbookSettings();
-		// Locale locale = Locale.getDefault();
 		workbookSettings.setLocale(Locale.getDefault());
-		// wbSettings.setEncoding("UTF-8");
 		return workbookSettings;
 	}
 

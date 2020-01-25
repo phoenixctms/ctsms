@@ -41,7 +41,6 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_UPDATED, "Wartungseintrag aktualisiert - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DELETED, "Wartungseintrag gelöscht - {0}");
 		addLegacyTitleRegexp(SystemMessageCodes.MAINTENANCE_SCHEDULE_ITEM_DISMISSED_SET, "Wartungserinnerung ignorieren - {0}");
-		// maintenance_schedule_item_dismissed_unset=Wartungserinnerung schlie\u00DFen zur\u00FCckgesetzt - {0}
 		addLegacyTitleRegexp("course_deleted_renewal_removed", "course {0} deleted - renewal course removed");
 		addLegacyTitleRegexp("course_deleted_renewal_removed", "Kurs {0} gelöscht - Auffrischungskurs entfernt");
 		addLegacyTitleRegexp(SystemMessageCodes.VISIT_CREATED, "visite erstellt - {0}");
@@ -58,13 +57,10 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 		try {
 			LEGACY_TITLE_REGEXP.add(new AbstractMap.SimpleEntry<String, Pattern>(code, CommonUtil.createMessageFormatRegexp(titleFormat, false)));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
 		}
 	}
 
 	private static ArrayList<Entry<String, Pattern>> createTitleRegexps(JobOutput jobOutput) throws Exception {
-		// if (titleRegexps == null) {
 		ArrayList<Entry<String, Pattern>> titleRegexps = new ArrayList<Entry<String, Pattern>>();
 		jobOutput.println(LEGACY_TITLE_REGEXP.size() + " legacy system message code patterns");
 		titleRegexps.addAll(LEGACY_TITLE_REGEXP);
@@ -101,7 +97,6 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 			jobOutput.println(locale.name() + ": " + titleFormatList.size() + " system message code patterns");
 		}
 		jobOutput.println(titleRegexps.size() + " system message code patterns overall");
-		// }
 		return titleRegexps;
 	}
 
@@ -130,19 +125,9 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 	@Override
 	public long update(AuthenticationVO auth) throws Exception {
 		authenticate(auth);
-		// final FileModule module = FileModule.TRIAL_DOCUMENT;
-		// ((JournalEntryDaoImpl) journalEntryDao).setUserDao(null);
 		final ArrayList<Map.Entry<String, Pattern>> titleRegexps = createTitleRegexps(jobOutput);
 		journalProcessor = new ChunkedDaoOperationAdapter<JournalEntryDao, JournalEntry>(journalEntryDao) {
 
-			// new Search(new SearchParameter[] {
-			// new SearchParameter("systemMessage", true, SearchParameter.EQUAL_COMPARATOR),
-			// new SearchParameter("systemMessageCode", SearchParameter.NULL_COMPARATOR)
-			// }
-			// @Override
-			// protected boolean isIncrementPageNumber() {
-			// return false;
-			// }
 			@Override
 			protected boolean process(Collection<JournalEntry> page,
 					Object passThrough) throws Exception {
@@ -177,7 +162,6 @@ public class JournalSystemMessageCodeInitializer extends EncryptedFieldInitializ
 							journalEntry.setSystemMessageCode(systemMessageCode);
 						}
 						this.dao.update(journalEntry);
-						// jobOutput.println("row updated");
 						inOut.put("updated", ((Long) inOut.get("updated")) + 1l);
 					} catch (Exception e) {
 						jobOutput.println("row skipped: " + e.getMessage());

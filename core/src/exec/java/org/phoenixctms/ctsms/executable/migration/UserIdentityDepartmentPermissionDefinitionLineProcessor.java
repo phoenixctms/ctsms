@@ -178,11 +178,7 @@ public class UserIdentityDepartmentPermissionDefinitionLineProcessor extends Per
 
 	@Override
 	protected void injectProfiles(String serviceMethod, ArrayList<String> profiles) {
-		// ArrayList<String> newProfiles = new ArrayList<String>(profiles);
 		profiles.set(0, buildNewProfile(profiles.get(0), true));
-		// addProfiles(serviceMethod, newProfiles, 0);
-		// profiles.clear();
-		// profiles.addAll(newProfiles);
 	}
 
 	@Override

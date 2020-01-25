@@ -100,8 +100,6 @@ public class CsvImporter {
 		if (!CommonUtil.isEmptyString(icdSystRevision)) {
 			jobOutput.println("using icd systematics revision " + icdSystRevision);
 		} else {
-			// icdSystRevision = Settings.getString(SettingCodes.ICD_SYSTEMATICS_REVISION, Bundle.SETTINGS, DefaultSettings.ICD_SYSTEMATICS_REVISION);
-			// jobOutput.println("no icd systematics revision specified, using " + icdSystRevision);
 			throw new IllegalArgumentException("no icd systematics revision specified");
 		}
 		alphaIdLineProcessor.setIcdSystRevision(icdSystRevision);
@@ -141,7 +139,7 @@ public class CsvImporter {
 
 	public long loadMimeTypes(String fileName, String encoding, FileModule module, boolean removeAllBeforeInsert) throws Exception {
 		if (removeAllBeforeInsert) {
-			mimeTypeDao.remove(mimeTypeDao.findByMimeTypeModule(null, module)); // .loadAll());
+			mimeTypeDao.remove(mimeTypeDao.findByMimeTypeModule(null, module));
 			jobOutput.println("mime types for module " + module + " cleared");
 		}
 		mimeTypeProcessor.setFieldSeparatorRegexpPattern("\\t+");
@@ -166,8 +164,6 @@ public class CsvImporter {
 		if (!CommonUtil.isEmptyString(opsSystRevision)) {
 			jobOutput.println("using ops systematics revision " + opsSystRevision);
 		} else {
-			// opsSystRevision = Settings.getString(SettingCodes.OPS_SYSTEMATICS_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_SYSTEMATICS_REVISION);
-			// jobOutput.println("no ops systematics revision specified, using " + opsSystRevision);
 			throw new IllegalArgumentException("no ops systematics revision specified");
 		}
 		opsCodeLineProcessor.setOpsSystRevision(opsSystRevision);
@@ -224,8 +220,8 @@ public class CsvImporter {
 		long rowCount = 0l;
 		long lineNumber = 1l;
 		try {
-			while (scanner.hasNext()) { // .hasNextLine()) {
-				line = scanner.next(); // scanner.nextLine();
+			while (scanner.hasNext()) {
+				line = scanner.next();
 				if (lineNumber > 1l || !processor.processHeaderLine(line)) {
 					rowCount += processor.processLine(line, lineNumber);
 				}

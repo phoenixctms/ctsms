@@ -102,7 +102,7 @@ public abstract class LineProcessor {
 		if (line != null) {
 			String preparedLine;
 			if (useComments) {
-				int commentPos = line.indexOf(commentChar); // line.lastIndexOf(commentChar);
+				int commentPos = line.indexOf(commentChar);
 				if (commentPos >= 0) {
 					preparedLine = trimValues ? line.substring(0, commentPos).trim() : line.substring(0, commentPos);
 				} else {

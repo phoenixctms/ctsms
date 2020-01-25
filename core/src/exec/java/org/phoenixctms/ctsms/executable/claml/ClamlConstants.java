@@ -19,7 +19,6 @@ public class ClamlConstants {
 	public final static String CODE_ATTR = "code";
 	public final static String MODIFIER_ATTR = "modifier";
 	public final static String KIND_ATTR = "kind";
-	// public final static String USAGE_ATTR = "usage";
 	public final static String RUBRIC_KIND_PREFFERD_ATTR = "preferred";
 	public final static String CLASS_KIND_CATEGORY_ATTR = "category";
 	public final static String CLASS_KIND_BLOCK_ATTR = "block";

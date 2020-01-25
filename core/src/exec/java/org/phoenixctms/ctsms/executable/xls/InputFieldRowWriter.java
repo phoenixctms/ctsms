@@ -103,7 +103,6 @@ public class InputFieldRowWriter extends RowWriter {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 
@@ -272,10 +271,6 @@ public class InputFieldRowWriter extends RowWriter {
 		java.io.File file = new java.io.File(filePath.getDirectory(), inputFieldImage.getFileName());
 		FileOutputStream stream = null;
 		try {
-			// if file doesnt exists, then create it
-			// if (!file.exists()) {
-			// file.createNewFile();
-			// }
 			stream = new FileOutputStream(file);
 			stream.write(inputFieldImage.getDatas());
 			stream.flush();

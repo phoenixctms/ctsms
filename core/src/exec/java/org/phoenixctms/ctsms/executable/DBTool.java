@@ -199,77 +199,17 @@ public class DBTool {
 		try {
 			line = parser.parse(DBToolOptions.options, args);
 			dbTool = new DBTool(); // hibernate starts a long time...
-			//			try {
-			//				//				Compile.clean(new java.util.ArrayList<String>() {
-			//				//
-			//				//					{
-			//				//						add("test.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
-			//				//					}
-			//				//				});
-			//				//Object test = Compile.instantiate("org.phoenixctms.ctsms.pdf.MyCvPDFPainter");//, new java.util.ArrayList<String>() {
-			//				//
-			//				//					{
-			//				//						add("test.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
-			//				//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
-			//				//					}
-			//				//				});
-			//				Object test1 = Compile.loadClass("org.phoenixctms.ctsms.pdf.MyCvPDFPainter", new java.util.ArrayList<String>() {
-			//
-			//					{
-			//						//add("test.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlock.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFBlockCursor.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFDefaultSettings.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFLabelCodes.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFPainter.java");
-			//						add("org/phoenixctms/ctsms/pdf/MyCvPDFSettingCodes.java");
-			//					}
-			//				}).newInstance();
-			//			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
-			//				// TODO Auto-generated catch block
-			//				e1.printStackTrace();
-			//			}
 			try {
 				setPropertiesFile(line);
-				//				if (line.hasOption(DBToolOptions.CLEAN_OPT)) {
-				//					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CLEAN_OPT);
-				//					dbTool.getJobOutput().printPrelude(job);
-				//					if (dbTool.testForced(line, "THIS WILL DELETE ANY CONTENTS FROM DB!")) {
-				//						dbTool.getProductionDataProvider().clearDB();
-				//					}
-				//				} else 
 				if (line.hasOption(DBToolOptions.INIT_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INIT_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - master data records will be (re-)created!")) {
 						dbTool.getProductionDataProvider().initializeDB();
 					}
-					// } else if (line.hasOption(DBToolOptions.INIT_CRITERIA_TABLES_OPT)) {
-					// job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INIT_CRITERIA_TABLES_OPT);
-					// dbTool.getJobOutput().printPrelude(job);
-					// //dbTool.getDemoDataProvider().printCriteriaSetup();
-					// dbTool.getProductionDataProvider().initializeCriteriaTables();
-					// } else if (line.hasOption(DBToolOptions.CLEAR_CRITERIA_TABLES_OPT)) {
-					// job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CLEAR_CRITERIA_TABLES_OPT);
-					// dbTool.getJobOutput().printPrelude(job);
-					// if (dbTool.testForced(line,"DB will be modified - stored queries will be deleted!")) {
-					// dbTool.getProductionDataProvider().clearCriteriaTables();
-					// }
 				} else if (line.hasOption(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT);
 					dbTool.getJobOutput().printPrelude(job);
-					// dbTool.getDemoDataProvider().printCriteriaSetup();
 					sendEmail = dbTool.getCsvImporter().loadCriterionProperties(line.getOptionValue(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.SCAN_MISSING_OPT)) {
@@ -412,29 +352,23 @@ public class DBTool {
 							line.getOptionValue(DBToolOptions.NEW_DEPARTMENT_PASSWORD_OPT),
 							line.getOptionValue(DBToolOptions.OLD_DEPARTMENT_PASSWORD_OPT));
 				} else if (line.hasOption(DBToolOptions.LOAD_DEMO_DATA_OPT)) {
-					// dbTool.getServiceMethods().test(getAuthenticationOptionValue(line));
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.LOAD_DEMO_DATA_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - created test data records will remain!")) {
-						// dbTool.getDemoDataProvider().createDepartmentsAndUsers(1, 1);
 						dbTool.getDemoDataProvider().createDepartmentsAndUsers(3, 5);
 						dbTool.getDemoDataProvider().createStaff(10);
 						dbTool.getDemoDataProvider().createInventory(10);
 						dbTool.getDemoDataProvider().createCourses(5);
-						dbTool.getDemoDataProvider().createProbands(30); // 300);
+						dbTool.getDemoDataProvider().createProbands(30);
 						dbTool.getDemoDataProvider().createTrials(2,
 								new DemoDataProvider.SearchCriteria[] { SearchCriteria.SUBJECTS_1 },
-								new Integer[] { 4 }, // 8 },
-								new Integer[] { 2 }, // 8, 10 },
-								new Integer[] { 2 }); // 5, 6 });
+								new Integer[] { 4 },
+								new Integer[] { 2 },
+								new Integer[] { 2 });
 						dbTool.getDemoDataProvider().createFormScriptingTrial();
 						dbTool.getDemoDataProvider().createGroupCoinRandomizationTrial(5, 100);
 						dbTool.getDemoDataProvider().createCriterias();
 					}
-					// } else if (line.hasOption(DBToolOptions.CREATE_DEMO_INPUT_FIELDS_OPT)) {
-					// job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CREATE_DEMO_INPUT_FIELDS_OPT);
-					// dbTool.getJobOutput().printPrelude(job);
-					// sendEmail = dbTool.getDemoDataProvider().createInputFields().size() > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT);
 					dbTool.initJob(line).printPrelude(job);
@@ -461,11 +395,6 @@ public class DBTool {
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_PROBAND_DOCUMENT_FILES_OPT),
 							FileModule.PROBAND_DOCUMENT, getIdOptionValue(line, true)) > 0l;
-					// } else if (line.hasOption(DBToolOptions.IMPORT_INPUT_FIELD_DOCUMENT_FILES_OPT)) {
-					// job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_INPUT_FIELD_DOCUMENT_FILES_OPT);
-					// dbTool.initJob(line).printPrelude(job);
-					// dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_INPUT_FIELD_DOCUMENT_FILES_OPT),
-					// FileModule.INPUT_FIELD_DOCUMENT, getIdOptionValue(line,true));
 				} else if (line.hasOption(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT);
 					dbTool.initJob(line).printPrelude(job);
@@ -502,12 +431,6 @@ public class DBTool {
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.PROBAND_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
-					// } else if (line.hasOption(DBToolOptions.REMOVE_INPUT_FIELD_DOCUMENT_FILES_OPT)) {
-					// job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_INPUT_FIELD_DOCUMENT_FILES_OPT);
-					// dbTool.initJob(line).printPrelude(job);
-					// if (dbTool.testForced(line,"DB and file system will be modified - records and files will be deleted!")) {
-					// dbTool.getFileSystemLoader().deleteFileRecords(FileModule.INPUT_FIELD_DOCUMENT, getIdOptionValue(line,true),true);
-					// }
 				} else if (line.hasOption(DBToolOptions.REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT);
 					dbTool.initJob(line).printPrelude(job);
@@ -1054,18 +977,6 @@ public class DBTool {
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJobRunner().processJobs(getAuthenticationOptionValue(line), null, null, true) > 0l;
 				}
-				// } catch (IllegalArgumentException e) {
-				// (new JobOutput()).println(e.getMessage());
-				// System.exit(1);
-				// } catch (ServiceException e) {
-				// (new JobOutput()).println(e.getMessage());
-				// System.exit(1);
-				// } catch (AuthorisationException e) {
-				// (new JobOutput()).println(e.getMessage());
-				// System.exit(1);
-				// } catch (AuthenticationException e) {
-				// (new JobOutput()).println(e.getMessage());
-				// System.exit(1);
 			} catch (Throwable t) {
 				if (job == null) { //lockexception
 					try {
@@ -1131,7 +1042,6 @@ public class DBTool {
 	private FileSystemLoader fileSystemLoader;
 	private NotificationSender notificationSender;
 	private MassMailSender massMailSender;
-	// private ProbandRemover probandRemover;
 	private ServiceMethods serviceMethods;
 	private ClamlImporter clamlImporter;
 	private ProbandImageFieldInitializer probandImageFieldInitializer;
@@ -1180,13 +1090,6 @@ public class DBTool {
 		return jobRunner;
 	}
 
-	// private ProbandRemover getProbandRemover() {
-	// if (probandRemover == null) {
-	// probandRemover = context.getBean(ProbandRemover.class);
-	// probandRemover.setJobOutput(getJobOutput());
-	// }
-	// return probandRemover;
-	// }
 	private DemoDataProvider getDemoDataProvider() {
 		if (demoDataProvider == null) {
 			demoDataProvider = context.getBean(DemoDataProvider.class);

@@ -158,7 +158,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 					profilePermission.setActive(true);
 					profilePermission.setProfile(profile);
 					profilePermission.setPermission(permission);
-					permission.addProfilePermissions(profilePermission);// XXX
+					permission.addProfilePermissions(profilePermission);
 					if (isWrite()) {
 						profilePermission = profilePermissionDao.create(profilePermission);
 					}
@@ -279,7 +279,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 				for (int i = 0; i < profileNames.length; i++) {
 					profiles.add(profileNames[i]);
 				}
-				// injectProfiles(serviceMethod, profiles);
 				String parameterGetter = getParameterGetter(values);
 				String parameterSetter = getParameterSetter(values);
 				if (!CommonUtil.isEmptyString(parameterGetter)) {
@@ -313,7 +312,6 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 					}
 					permissions.addAll(generatePermissionsFromOverrides(getIpRanges(values), parameterSetter, overrides));
 				} else {
-					// injectNoGetterSetter(serviceMethod, profiles);
 					injectProfiles(serviceMethod, profiles);
 					if (profiles.size() > 1) {
 						throw new IllegalArgumentException("more than one profile for service method " + serviceMethod);

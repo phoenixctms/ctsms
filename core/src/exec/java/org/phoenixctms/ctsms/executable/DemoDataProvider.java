@@ -183,7 +183,6 @@ public class DemoDataProvider {
 		HYPERTENSION_YN("Bluthochdruck J/N"),
 		HYPERTENSION("Bluthochdruck"),
 		RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
-		// insufficiencyYN//nieren
 		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"),
 		LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
 		LIVER_DISEASE("Lebererkrankung"),
@@ -873,15 +872,6 @@ public class DemoDataProvider {
 	}
 
 	private Long createDemoEcrfIncrement() {
-		// function(){
-		//
-		// if ($prevValue != null) {
-		// return $prevValue.clone().add(3).days();
-		// }
-		//
-		// return $enteredValue;
-		//
-		// }
 		return null;
 	}
 
@@ -1493,7 +1483,6 @@ public class DemoDataProvider {
 			ProbandOutVO proband = probandService.addProband(auth, newProband, null, null, null);
 			jobOutput.println("proband created: " + proband.getName());
 			ProbandListEntryInVO newProbandListEntry = new ProbandListEntryInVO();
-			// newProbandListEntry.setGroupId(null); //getRandomElement(probandGroups).getId());
 			newProbandListEntry.setPosition(i + 1l);
 			newProbandListEntry.setTrialId(trial.getId());
 			newProbandListEntry.setProbandId(proband.getId());
@@ -1530,7 +1519,6 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InquiryInVO newInquiry = new InquiryInVO();
 		newInquiry.setCategory(category);
-		//newInquiry.setExternalId();
 		newInquiry.setActive(active);
 		newInquiry.setActiveSignup(activeSignup);
 		newInquiry.setOptional(optional);
@@ -1633,8 +1621,6 @@ public class DemoDataProvider {
 		// todo: relatives graph
 		auth = (auth == null ? getRandomAuth() : auth);
 		ProbandInVO newProband = new ProbandInVO();
-		// newProband.setAvailable(getRandomBoolean(90));
-		// newProband.setRecruitmentForOtherTrialsAllowed(getRandomBoolean(50));
 		newProband.setDepartmentId(getDepartmentId(departmentNum));
 		newProband.setCategoryId(getRandomElement(categories).getId());
 		if (getRandomBoolean(25)) {
@@ -1659,7 +1645,6 @@ public class DemoDataProvider {
 		Long oldestChildDoBTime = null;
 		if (childIds != null && childIds.size() > 0) {
 			newProband.setChildIds(childIds);
-			// stop = null;
 			Iterator<Long> it = childIds.iterator();
 			while (it.hasNext()) {
 				Long childId = it.next();
@@ -1667,15 +1652,7 @@ public class DemoDataProvider {
 				if (oldestChildDoBTime == null || oldestChildDoBTime > child.getDateOfBirth().getTime()) {
 					oldestChildDoBTime = child.getDateOfBirth().getTime();
 				}
-				// if (precedingCourse.isExpires()) {
-				// Date precedingExpiration = DateCalc.addInterval(precedingCourse.getStop(), precedingCourse.getValidityPeriod().getPeriod(),
-				// precedingCourse.getValidityPeriodDays());
-				// if (stop == null || precedingExpiration.compareTo(stop) < 0) {
-				// stop = precedingExpiration;
-				// }
-				// }
 			}
-			// stop = stop == null ? getRandomCourseStop() : DateCalc.subInterval(stop, VariablePeriod.EXPLICIT, new Long(random.nextInt(8)));
 		}
 		Date dOb;
 		if (oldestChildDoBTime != null) {
@@ -1979,7 +1956,7 @@ public class DemoDataProvider {
 		TimelineEventType eventType = typeNameL10nKey != null ? timelineEventTypeDao.searchUniqueNameL10nKey(typeNameL10nKey) : getRandomElement(timelineEventTypeDao.loadAll());
 		newTimelineEvent.setTrialId(trialId);
 		newTimelineEvent.setTypeId(eventType.getId());
-		newTimelineEvent.setImportance(getRandomElement(EventImportance.values())); // eventType.getImportancePreset());
+		newTimelineEvent.setImportance(getRandomElement(EventImportance.values()));
 		newTimelineEvent.setNotify(eventType.isNotifyPreset());
 		newTimelineEvent.setReminderPeriod(VariablePeriod.EXPLICIT);
 		newTimelineEvent.setReminderPeriodDays(getRandomElement(new Long[] { 7L, 14L, 21L }));
@@ -2317,24 +2294,6 @@ public class DemoDataProvider {
 		probandListEntryTags
 				.add(createProbandListEntryTag(auth, InputFields.COMPLETION_LETTER_IN_MEDOCS, trial, 8, false, false, true, true, true, false, false, null, null, null, null,
 						null));
-		// HashMap<Long, HashMap<Long, ArrayList<ECRFFieldOutVO>>> ecrfFieldsPerVisitPerGroupMap = new HashMap<Long, HashMap<Long,
-		// ArrayList<ECRFFieldOutVO>>>(probandGroups.size());
-		// Iterator<ProbandGroupOutVO> probandGroupIt = probandGroups.iterator();
-		// while (probandGroupIt.hasNext()) {
-		// ProbandGroupOutVO probandGroup = probandGroupIt.next();
-		// HashMap<Long, ArrayList<ECRFFieldOutVO>> ecrfFieldsPerVisitMap = new HashMap<Long, ArrayList<ECRFFieldOutVO>>(visits.size());
-		// visitIt = visits.iterator();
-		// int ecrfPosition = 1;
-		// while (visitIt.hasNext()) {
-		// VisitOutVO visit = visitIt.next();
-		// ecrfFieldsPerVisitMap.put(
-		// visit.getId(),
-		// createDemoEcrf(auth, trial, "demo eCRF " + probandGroup.getToken() + "-" + visit.getToken(), "demo eCRF to show field calculations with series sections",
-		// probandGroup.getId(), ecrfPosition, visit.getId()));
-		// ecrfPosition++;
-		// }
-		// ecrfFieldsPerVisitPerGroupMap.put(probandGroup.getId(), ecrfFieldsPerVisitMap);
-		// }
 		if (!"migration_started".equals(trial.getStatus().getNameL10nKey())) {
 			newTrial.setId(trial.getId());
 			newTrial.setVersion(trial.getVersion());
@@ -2344,7 +2303,6 @@ public class DemoDataProvider {
 		}
 		Collection allProbands = probandDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("department.id", getDepartmentId(departmentNum), SearchParameter.EQUAL_COMPARATOR) }));
-		// new SearchParameter("available", true, SearchParameter.EQUAL_COMPARATOR) })));
 		ArrayList<ProbandOutVO> probands;
 		if (criteria != null) {
 			Iterator<Proband> probandsIt = allProbands.iterator();

@@ -10,7 +10,6 @@ public class XlsImporterContext {
 	private String fileName;
 	private AuthenticationVO auth;
 	private Long entityId;
-	// private HashMap<RowProcessor, String> sheetNameMap;
 	private HashMap<RowProcessor, Boolean> mandatoryMap;
 
 	public XlsImporterContext(XlsImporter importer, String fileName) {
@@ -19,7 +18,6 @@ public class XlsImporterContext {
 		this.auth = null;
 		this.entityId = null;
 		mandatoryMap = new HashMap<RowProcessor, Boolean>();
-		// sheetIndexMap = new HashMap<RowProcessor, Integer>();
 	}
 
 	public AuthenticationVO getAuth() {
@@ -37,13 +35,7 @@ public class XlsImporterContext {
 	public XlsImporter getImporter() {
 		return importer;
 	}
-	// public String getSheetName(RowProcessor processor) {
-	// return sheetNameMap.get(processor);
-	// }
 
-	// public void setSheetName(RowProcessor processor, String sheetName) {
-	// sheetNameMap.put(processor, sheetName);
-	// }
 	public boolean isMandatory(RowProcessor processor) {
 		if (mandatoryMap.containsKey(processor)) {
 			return mandatoryMap.get(processor);

@@ -69,7 +69,6 @@ public class ProductionDataProvider {
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(PERSONNEL_STAFF_CATEGORY_NAME_L10N_KEY);
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(PERSON_STAFF_CATEGORY_NAME_L10N_KEY);
 		ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(GRADUAND_STAFF_CATEGORY_NAME_L10N_KEY);
-		// ALL_STAFF_CATEGORY_NAME_L10N_KEYS.add(RETIRED_STAFF_CATEGORY_NAME_L10N_KEY);
 	}
 	@Autowired
 	protected DepartmentDao departmentDao;
@@ -323,159 +322,6 @@ public class ProductionDataProvider {
 	@Autowired
 	protected JobTypeDao jobTypeDao;
 
-	//	public void clearDB() throws Exception {
-	//		ChunkedRemoveAll.remove(hyperlinkDao);
-	//		ChunkedRemoveAll.remove(hyperlinkCategoryDao);
-	//		jobOutput.println("hyperlink tables cleared");
-	//		ChunkedRemoveAll.remove(journalEntryDao);
-	//		ChunkedRemoveAll.remove(journalCategoryDao);
-	//		jobOutput.println("journal tables cleared");
-	//		ChunkedRemoveAll.remove(signatureDao);
-	//		jobOutput.println("digital signature table cleared");
-	//		ChunkedRemoveAll.remove(criterionDao);
-	//		ChunkedRemoveAll.remove(criteriaDao);
-	//		ChunkedRemoveAll.remove(criterionPropertyDao);
-	//		ChunkedRemoveAll.remove(criterionTieDao);
-	//		ChunkedRemoveAll.remove(criterionRestrictionDao);
-	//		jobOutput.println("search related tables cleared");
-	//		ChunkedRemoveAll.remove(fileDao);
-	//		ChunkedRemoveAll.remove(fileFolderPresetDao);
-	//		jobOutput.println("file attachment tables cleared");
-	//		ChunkedRemoveAll.remove(holidayDao);
-	//		jobOutput.println("holiday table cleared");
-	//		ChunkedRemoveAll.remove(announcementDao);
-	//		jobOutput.println("announcement table cleared");
-	//		ChunkedRemoveAll.remove(notificationRecipientDao);
-	//		ChunkedRemoveAll.remove(notificationDao);
-	//		ChunkedRemoveAll.remove(notificationTypeDao);
-	//		jobOutput.println("notification tables cleared");
-	//		ChunkedRemoveAll.remove(inventoryStatusEntryDao);
-	//		ChunkedRemoveAll.remove(inventoryStatusTypeDao);
-	//		ChunkedRemoveAll.remove(inventoryTagValueDao);
-	//		ChunkedRemoveAll.remove(inventoryTagDao);
-	//		ChunkedRemoveAll.remove(maintenanceScheduleItemDao);
-	//		ChunkedRemoveAll.remove(maintenanceTypeDao);
-	//		ChunkedRemoveAll.remove(inventoryBookingDao);
-	//		// unlinkInventoryParent();
-	//		ChunkedRemoveAll.remove(inventoryDao);
-	//		ChunkedRemoveAll.remove(inventoryCategoryDao);
-	//		jobOutput.println("inventory db tables cleared");
-	//		ChunkedRemoveAll.remove(staffTagValueDao);
-	//		ChunkedRemoveAll.remove(staffTagDao);
-	//		ChunkedRemoveAll.remove(staffContactDetailValueDao);
-	//		ChunkedRemoveAll.remove(staffStatusEntryDao);
-	//		ChunkedRemoveAll.remove(staffStatusTypeDao);
-	//		ChunkedRemoveAll.remove(staffAddressDao);
-	//		ChunkedRemoveAll.remove(cvPositionDao);
-	//		ChunkedRemoveAll.remove(courseParticipationStatusEntryDao);
-	//		ChunkedRemoveAll.remove(courseParticipationStatusTypeDao);
-	//		jobOutput.println("staff db tables cleared (1)");
-	//		ChunkedRemoveAll.remove(lecturerDao);
-	//		ChunkedRemoveAll.remove(lecturerCompetenceDao);
-	//		// unlinkCourseRenewals();
-	//		// unlinkCoursePrecedingCourses();
-	//		ChunkedRemoveAll.remove(courseDao);
-	//		ChunkedRemoveAll.remove(cvSectionDao);
-	//		ChunkedRemoveAll.remove(courseCategoryDao);
-	//		jobOutput.println("course db tables cleared");
-	//		ChunkedRemoveAll.remove(massMailRecipientDao);
-	//		ChunkedRemoveAll.remove(massMailDao);
-	//		ChunkedRemoveAll.remove(massMailStatusTypeDao);
-	//		ChunkedRemoveAll.remove(massMailTypeDao);
-	//		jobOutput.println("mass mail db tables cleared");
-	//		ChunkedRemoveAll.remove(trialTagValueDao);
-	//		ChunkedRemoveAll.remove(trialTagDao);
-	//		ChunkedRemoveAll.remove(teamMemberDao);
-	//		ChunkedRemoveAll.remove(teamMemberRoleDao);
-	//		ChunkedRemoveAll.remove(timelineEventDao);
-	//		ChunkedRemoveAll.remove(timelineEventTypeDao);
-	//		ChunkedRemoveAll.remove(eCRFFieldValueDao);
-	//		ChunkedRemoveAll.remove(eCRFFieldStatusEntryDao);
-	//		ChunkedRemoveAll.remove(eCRFFieldDao);
-	//		ChunkedRemoveAll.remove(eCRFStatusEntryDao);
-	//		ChunkedRemoveAll.remove(eCRFDao);
-	//		unlinkProbandListEntryLastStatus();
-	//		ChunkedRemoveAll.remove(probandListStatusEntryDao);
-	//		ChunkedRemoveAll.remove(probandListStatusTypeDao);
-	//		ChunkedRemoveAll.remove(probandListStatusLogLevelDao);
-	//		ChunkedRemoveAll.remove(probandListEntryTagValueDao);
-	//		ChunkedRemoveAll.remove(probandListEntryTagDao);
-	//		ChunkedRemoveAll.remove(probandListEntryDao);
-	//		ChunkedRemoveAll.remove(moneyTransferDao);
-	//		ChunkedRemoveAll.remove(dutyRosterTurnDao);
-	//		ChunkedRemoveAll.remove(visitScheduleItemDao);
-	//		ChunkedRemoveAll.remove(probandGroupDao);
-	//		ChunkedRemoveAll.remove(visitDao);
-	//		ChunkedRemoveAll.remove(visitTypeDao);
-	//		ChunkedRemoveAll.remove(inquiryValueDao);
-	//		ChunkedRemoveAll.remove(inquiryDao);
-	//		ChunkedRemoveAll.remove(trialDao);
-	//		ChunkedRemoveAll.remove(trialStatusTypeDao);
-	//		ChunkedRemoveAll.remove(trialStatusActionDao);
-	//		ChunkedRemoveAll.remove(trialTypeDao);
-	//		ChunkedRemoveAll.remove(sponsoringTypeDao);
-	//		ChunkedRemoveAll.remove(surveyStatusTypeDao);
-	//		ChunkedRemoveAll.remove(eCRFStatusTypeDao);
-	//		ChunkedRemoveAll.remove(eCRFStatusActionDao);
-	//		ChunkedRemoveAll.remove(eCRFFieldStatusTypeDao);
-	//		jobOutput.println("trial db tables cleared");
-	//		ChunkedRemoveAll.remove(inputFieldValueDao);
-	//		ChunkedRemoveAll.remove(inputFieldSelectionSetValueDao);
-	//		ChunkedRemoveAll.remove(inputFieldDao);
-	//		jobOutput.println("input field tables cleared");
-	//		ChunkedRemoveAll.remove(probandTagValueDao);
-	//		ChunkedRemoveAll.remove(probandTagDao);
-	//		ChunkedRemoveAll.remove(probandStatusEntryDao);
-	//		ChunkedRemoveAll.remove(probandStatusTypeDao);
-	//		ChunkedRemoveAll.remove(diagnosisDao);
-	//		ChunkedRemoveAll.remove(procedureDao);
-	//		ChunkedRemoveAll.remove(probandContactDetailValueDao);
-	//		ChunkedRemoveAll.remove(probandAddressDao);
-	//		ChunkedRemoveAll.remove(bankAccountDao);
-	//		ChunkedRemoveAll.remove(probandDao);
-	//		ChunkedRemoveAll.remove(probandContactParticularsDao);
-	//		ChunkedRemoveAll.remove(probandCategoryDao);
-	//		ChunkedRemoveAll.remove(privacyConsentStatusTypeDao);
-	//		jobOutput.println("proband db tables cleared");
-	//		unlinkUserIdentity();
-	//		// unlinkStaffParent();
-	//		ChunkedRemoveAll.remove(staffDao);
-	//		ChunkedRemoveAll.remove(personContactParticularsDao);
-	//		ChunkedRemoveAll.remove(organisationContactParticularsDao);
-	//		ChunkedRemoveAll.remove(staffCategoryDao);
-	//		jobOutput.println("staff db tables cleared (2)");
-	//		ChunkedRemoveAll.remove(passwordDao);
-	//		ChunkedRemoveAll.remove(userPermissionProfileDao);
-	//		ChunkedRemoveAll.remove(userDao);
-	//		ChunkedRemoveAll.remove(keyPairDao);
-	//		jobOutput.println("user db tables cleared");
-	//		ChunkedRemoveAll.remove(profilePermissionDao);
-	//		ChunkedRemoveAll.remove(permissionDao);
-	//		jobOutput.println("permission db tables cleared");
-	//		ChunkedRemoveAll.remove(contactDetailTypeDao);
-	//		ChunkedRemoveAll.remove(addressTypeDao);
-	//		ChunkedRemoveAll.remove(departmentDao);
-	//		jobOutput.println("shared db tables cleared");
-	//		ChunkedRemoveAll.remove(titleDao);
-	//		ChunkedRemoveAll.remove(streetDao, PageSizes.BIG);
-	//		ChunkedRemoveAll.remove(zipDao);
-	//		ChunkedRemoveAll.remove(countryDao);
-	//		ChunkedRemoveAll.remove(bankIdentificationDao);
-	//		ChunkedRemoveAll.remove(alphaIdDao);
-	//		ChunkedRemoveAll.remove(icdSystModifierDao);
-	//		ChunkedRemoveAll.remove(icdSystBlockDao);
-	//		ChunkedRemoveAll.remove(icdSystCategoryDao);
-	//		ChunkedRemoveAll.remove(icdSystDao);
-	//		ChunkedRemoveAll.remove(opsCodeDao);
-	//		ChunkedRemoveAll.remove(opsSystModifierDao);
-	//		ChunkedRemoveAll.remove(opsSystBlockDao);
-	//		ChunkedRemoveAll.remove(opsSystCategoryDao);
-	//		ChunkedRemoveAll.remove(opsSystDao);
-	//		ChunkedRemoveAll.remove(mimeTypeDao);
-	//		jobOutput.println("autocomplete db tables cleared");
-	//		ChunkedRemoveAll.remove(errorDao);
-	//		jobOutput.println("error table cleared");
-	//	}
 	private AddressType createAddressType(String nameL10nKey, Integer maxOccurrence, boolean deliverPreset, boolean staff, boolean proband, boolean animal) {
 		AddressType addressType = AddressType.Factory.newInstance();
 		addressType.setNameL10nKey(nameL10nKey);
@@ -488,19 +334,6 @@ public class ProductionDataProvider {
 		return addressType;
 	}
 
-	// public void clearCriteriaTables() throws Exception {
-	//
-	// journalEntryDao.remove(journalEntryDao.search(new Search(new SearchParameter[] {
-	// new SearchParameter("criteria.id",SearchParameter.NOT_NULL_COMPARATOR) })));
-	//
-	// ChunckedRemoveAll.remove(criterionDao);
-	// ChunckedRemoveAll.remove(criteriaDao);
-	// ChunckedRemoveAll.remove(criterionPropertyDao);
-	// ChunckedRemoveAll.remove(criterionTieDao);
-	// ChunckedRemoveAll.remove(criterionRestrictionDao);
-	// jobOutput.println("search related tables cleared");
-	//
-	// }
 	private void createAddressTypes() {
 		createAddressType("business", null, false, true, true, false);
 		createAddressType("home", null, true, true, true, false);
@@ -547,7 +380,6 @@ public class ProductionDataProvider {
 		createContactDetailType("web_page_url", false, false, true, false, null, CoreUtil.URL_PATTERN, ServiceExceptionCodes.INVALID_URL, true, true, false, false);
 		createContactDetailType("care_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, false, false,
 				true, false);
-		// createContactDetailType("skype_user_name",false,false,false,false,null,null,null,true,true);
 		jobOutput.println("contact detail types created");
 	}
 
@@ -635,73 +467,65 @@ public class ProductionDataProvider {
 				getCourseParticipationTransitions(passedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				failedParticipationStatusType,
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				cancelledParticipationStatusType,
 				getCourseParticipationTransitions(cancelledParticipationStatusType, registeredParticipationStatusType, acknowledgedParticipationStatusType),
 				getCourseParticipationTransitions(cancelledParticipationStatusType, invitedParticipationStatusType, acknowledgedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				unregisteredParticipationStatusType,
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				absentParticipationStatusType,
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				acknowledgedParticipationStatusType,
 				getCourseParticipationTransitions(cancelledParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(cancelledParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				invitedParticipationStatusType,
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(invitedParticipationStatusType, acknowledgedParticipationStatusType, cancelledParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // ()
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // passedParticipationStatusType,unregisteredParticipationStatusType),
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		updateCourseParticipationStatusType(
 				registeredParticipationStatusType,
 				getCourseParticipationTransitions(registeredParticipationStatusType, acknowledgedParticipationStatusType, cancelledParticipationStatusType),
 				getCourseParticipationTransitions(),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType), // passedParticipationStatusType,unregisteredParticipationStatusType,absentParticipationStatusType)
+						unregisteredParticipationStatusType, absentParticipationStatusType, acknowledgedParticipationStatusType, registeredParticipationStatusType),
 				getCourseParticipationTransitions(passedParticipationStatusType, failedParticipationStatusType, cancelledParticipationStatusType,
-						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType) // ()
-		);
+						unregisteredParticipationStatusType, acknowledgedParticipationStatusType, invitedParticipationStatusType));
 		jobOutput.println("course participation states created");
 	}
 
@@ -751,7 +575,6 @@ public class ProductionDataProvider {
 		createCvSection("present_position", "present_position", null, 0, true, true);
 		createCvSection("relevant_education", "relevant_education", "relevant_education", 10, true, true);
 		createCvSection("relevant_previous_positions", "relevant_previous_positions", "relevant_previous_positions", 20, true, true);
-		// createCvSection("relevant_job_related_training","relevant_job_related_training","relevant_job_related_training",3,true,true);
 		createCvSection("relevant_clinical_trial_and_research_experience", "relevant_clinical_trial_and_research_experience", null, 30, true, true);
 		createCvSection("documentation_of_gcp_training_and_other_trainings", "documentation_of_gcp_training_and_other_trainings",
 				"documentation_of_gcp_training_and_other_trainings", 40, true, true);
@@ -800,14 +623,6 @@ public class ProductionDataProvider {
 	}
 
 	private void createEcrfFieldStatusTypeEntries() {
-		// boolean initial,
-		// boolean request,
-		// boolean response,
-		// boolean resolved,
-		// boolean validationError,
-		// boolean validationFailed,
-		// boolean validationSuccess,
-		// boolean commentRequired
 		ECRFFieldStatusType annotationEcrfFieldStatusType = createEcrfFieldStatusType(
 				"annotation",
 				Color.GAINSBORO,
@@ -863,19 +678,9 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true);
-		// ECRFFieldStatusType validationUpdateRequestEcrfFieldStatusType = createEcrfFieldStatusType(
-		// "validation_udate_request",
-		// Color.ORANGE,
-		// ECRFFieldStatusQueue.VALIDATION,
-		// false,
-		// true,
-		// false,
-		// false,
-		// true,
-		// true);
 		ECRFFieldStatusType validationProposedResolutionEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_proposed_resolution",
-				Color.LIGHTSKYBLUE, // Color.GOLD, // LIGHTSTEELBLUE,
+				Color.LIGHTSKYBLUE,
 				ECRFFieldStatusQueue.VALIDATION,
 				false,
 				false,
@@ -885,7 +690,7 @@ public class ProductionDataProvider {
 				false);
 		ECRFFieldStatusType validationCorrectedEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_corrected",
-				Color.LIMEGREEN, // PALEGREEN,
+				Color.LIMEGREEN,
 				ECRFFieldStatusQueue.VALIDATION,
 				false,
 				false,
@@ -895,7 +700,7 @@ public class ProductionDataProvider {
 				false);
 		ECRFFieldStatusType validationDataNaEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_data_na",
-				Color.DARKGREY, // PALEGREEN,
+				Color.DARKGREY,
 				ECRFFieldStatusQueue.VALIDATION,
 				false,
 				false,
@@ -905,7 +710,7 @@ public class ProductionDataProvider {
 				false);
 		ECRFFieldStatusType validationClosedEcrfFieldStatusType = createEcrfFieldStatusType(
 				"validation_closed",
-				Color.GAINSBORO, // LIGHTGREEN,
+				Color.GAINSBORO,
 				ECRFFieldStatusQueue.VALIDATION,
 				false,
 				false,
@@ -936,22 +741,6 @@ public class ProductionDataProvider {
 				validationCorrectedEcrfFieldStatusType,
 				validationDataNaEcrfFieldStatusType,
 				validationClosedEcrfFieldStatusType));
-		//never re-raise once closed:
-		//updateEcrfFieldStatusType(validationCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-		//		validationSuccessEcrfFieldStatusType,
-		//		validationFailedEcrfFieldStatusType,
-		//		validationErrorEcrfFieldStatusType
-		//		));
-		//updateEcrfFieldStatusType(validationDataNaEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-		//		validationSuccessEcrfFieldStatusType,
-		//		validationFailedEcrfFieldStatusType,
-		//		validationErrorEcrfFieldStatusType
-		//		));
-		//updateEcrfFieldStatusType(validationClosedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-		//		validationSuccessEcrfFieldStatusType,
-		//		validationFailedEcrfFieldStatusType,
-		//		validationErrorEcrfFieldStatusType
-		//		));
 		ECRFFieldStatusType queryNewEcrfFieldStatusType = createEcrfFieldStatusType(
 				"query_new",
 				Color.SALMON,
@@ -964,7 +753,7 @@ public class ProductionDataProvider {
 				true);
 		ECRFFieldStatusType queryUpdateEcrfFieldStatusType = createEcrfFieldStatusType(
 				"query_udate",
-				Color.ORANGE, // DARKORANGE,
+				Color.ORANGE,
 				ECRFFieldStatusQueue.QUERY,
 				false,
 				true,
@@ -972,19 +761,9 @@ public class ProductionDataProvider {
 				false,
 				true,
 				true);
-		// ECRFFieldStatusType queryUpdateRequestEcrfFieldStatusType = createEcrfFieldStatusType(
-		// "query_udate_request",
-		// Color.ORANGE,
-		// ECRFFieldStatusQueue.QUERY,
-		// false,
-		// true,
-		// false,
-		// false,
-		// true,
-		// true);
 		ECRFFieldStatusType queryProposedResolutionEcrfFieldStatusType = createEcrfFieldStatusType(
 				"query_proposed_resolution",
-				Color.LIGHTSKYBLUE, // .GOLD, // LIGHTSTEELBLUE,
+				Color.LIGHTSKYBLUE,
 				ECRFFieldStatusQueue.QUERY,
 				false,
 				false,
@@ -1034,18 +813,15 @@ public class ProductionDataProvider {
 				queryDataNaEcrfFieldStatusType,
 				queryClosedEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryCorrectedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				// queryResolutionEcrfFieldStatusType,
 				queryNewEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryDataNaEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				// queryResolutionEcrfFieldStatusType,
 				queryNewEcrfFieldStatusType));
 		updateEcrfFieldStatusType(queryClosedEcrfFieldStatusType, getEcrfFieldStatusTransitions(
-				// queryResolutionEcrfFieldStatusType,
 				queryNewEcrfFieldStatusType));
 		jobOutput.println("eCRF field states created");
 	}
 
-	private ECRFStatusAction createEcrfStatusAction(org.phoenixctms.ctsms.enumeration.ECRFStatusAction a) { // , long seq) {
+	private ECRFStatusAction createEcrfStatusAction(org.phoenixctms.ctsms.enumeration.ECRFStatusAction a) {
 		ECRFStatusAction action = ECRFStatusAction.Factory.newInstance();
 		action.setAction(a);
 		action = eCRFStatusActionDao.create(action);
@@ -1055,7 +831,7 @@ public class ProductionDataProvider {
 	private void createEcrfStatusActions() {
 		org.phoenixctms.ctsms.enumeration.ECRFStatusAction[] actions = org.phoenixctms.ctsms.enumeration.ECRFStatusAction.values();
 		for (int i = 0; i < actions.length; i++) {
-			createEcrfStatusAction(actions[i]); // ,i);
+			createEcrfStatusAction(actions[i]);
 		}
 		jobOutput.println("eCRF status actions created");
 	}
@@ -1087,8 +863,6 @@ public class ProductionDataProvider {
 		ecrfStatusType.setReview(review);
 		ecrfStatusType.setVerified(verified);
 		ecrfStatusType.setDone(done);
-		// ecrfStatusType.setIgnoreTimelineEvents(ignoreTimelineEvents);
-		// ecrfStatusType.setInquiryValueInputEnabled(inquiryValueInputEnabled);
 		ecrfStatusType.setNameL10nKey(nameL10nKey);
 		ecrfStatusType.setActions(actions);
 		ecrfStatusType = eCRFStatusTypeDao.create(ecrfStatusType);
@@ -1109,29 +883,25 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(
-						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType skippedEcrfStatusType = createEcrfStatusType("skipped", Color.DARKGREY,
-				"ui-icon-arrowthick-1-e", // "ui-icon-cancel", // "ui-icon-seek-end",
+				"ui-icon-arrowthick-1-e",
 				true,
-				true, // false, // true,
 				true,
-				false, // true,
+				true,
 				false,
 				false,
 				false,
-				true, // false,
 				false,
-				false, // true,
+				true,
+				false,
+				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_STATUS_ENTRIES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_VALUES,
-						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-		// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-		);
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType skippedVerifiedEcrfStatusType = createEcrfStatusType(
 				"skipped_verified",
-				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
-				"ui-icon-circle-arrow-e", // "ui-icon-circle-check",
+				Color.LIGHTSKYBLUE,
+				"ui-icon-circle-arrow-e",
 				false,
 				true,
 				true,
@@ -1142,10 +912,10 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
+				getEcrfStatusActions(
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType skippedSignedEcrfStatusType = createEcrfStatusType("skipped_signed", Color.ORCHID,
-				"ui-icon-radio-on", // "ui-icon-locked",
+				"ui-icon-radio-on",
 				false,
 				true,
 				true,
@@ -1160,7 +930,7 @@ public class ProductionDataProvider {
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType validatedEcrfStatusType = createEcrfStatusType("validated", Color.YELLOWGREEN,
-				"ui-icon-gear", // "ui-icon-check",
+				"ui-icon-gear",
 				false,
 				true,
 				false,
@@ -1172,12 +942,11 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.VALIDATE_VALUES,
-						// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeEcrfStatusType = createEcrfStatusType(
 				"complete",
 				Color.LIGHTYELLOW,
-				"ui-icon-check", // "ui-icon-flag",
+				"ui-icon-check",
 				false,
 				true,
 				false,
@@ -1191,7 +960,7 @@ public class ProductionDataProvider {
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeVerifiedEcrfStatusType = createEcrfStatusType(
 				"complete_verified",
-				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
+				Color.LIGHTSKYBLUE,
 				"ui-icon-circle-check",
 				false,
 				true,
@@ -1206,7 +975,7 @@ public class ProductionDataProvider {
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType completeSignedEcrfStatusType = createEcrfStatusType("complete_signed", Color.ORCHID,
-				"ui-icon-bullet", // "ui-icon-locked",
+				"ui-icon-bullet",
 				false,
 				true,
 				true,
@@ -1221,25 +990,23 @@ public class ProductionDataProvider {
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
 		ECRFStatusType incompleteEcrfStatusType = createEcrfStatusType("incomplete", Color.TOMATO,
-				"ui-icon-close", // "ui-icon-circle-close",
+				"ui-icon-close",
 				false,
 				true,
 				false,
-				false, // true,
+				false,
 				true,
 				true,
 				false,
-				true, // false,
+				true,
 				false,
-				false, // true,
-				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)
-		// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS)
-		);
+				false,
+				getEcrfStatusActions(
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType incompleteVerifiedEcrfStatusType = createEcrfStatusType(
 				"incomplete_verified",
-				Color.LIGHTSKYBLUE, // .LIGHTSTEELBLUE,
-				"ui-icon-circle-close", // "ui-icon-circle-check",
+				Color.LIGHTSKYBLUE,
+				"ui-icon-circle-close",
 				false,
 				true,
 				true,
@@ -1250,10 +1017,10 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				getEcrfStatusActions(// org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
+				getEcrfStatusActions(
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
 		ECRFStatusType incompleteSignedEcrfStatusType = createEcrfStatusType("incomplete_signed", Color.ORCHID,
-				"ui-icon-radio-off", // "ui-icon-locked",
+				"ui-icon-radio-off",
 				false,
 				true,
 				true,
@@ -1324,11 +1091,6 @@ public class ProductionDataProvider {
 	}
 
 	private void createFileFolderPresets() {
-		// createFileFolderPreset(FileModule.INVENTORY_DOCUMENT,CommonUtil.fixLogicalPathFolderName("01 - Manuals"));
-		// createFileFolderPreset(FileModule.INVENTORY_DOCUMENT,CommonUtil.fixLogicalPathFolderName("02 - Receipts"));
-		// createFileFolderPreset(FileModule.INVENTORY_DOCUMENT,CommonUtil.fixLogicalPathFolderName("03 - Reports & Certificates"));
-		// createFileFolderPreset(FileModule.INVENTORY_DOCUMENT,CommonUtil.fixLogicalPathFolderName("04 - End-Use-Certificates"));
-		// createFileFolderPreset(FileModule.INVENTORY_DOCUMENT,CommonUtil.fixLogicalPathFolderName("05 - Miscellaneous"));
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Manuals"));
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Reports und Zertifikate"));
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Rechnungen"));
@@ -1348,29 +1110,6 @@ public class ProductionDataProvider {
 		createFileFolderPreset(FileModule.COURSE_DOCUMENT, CommonUtil.fixLogicalPathFolderName("02 - Participation Lists"));
 		createFileFolderPreset(FileModule.COURSE_DOCUMENT, CommonUtil.fixLogicalPathFolderName("03 - Live Recordings"));
 		createFileFolderPreset(FileModule.COURSE_DOCUMENT, CommonUtil.fixLogicalPathFolderName("04 - Miscellaneous"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("01 - Proband Information"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("02 - Protocol"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("03 - CRF"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("04 - Project Management"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("05 - Ethical Review Committee"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("06 - Recruitment"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("07 - Meetings"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("08 - IB"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("09 - Medication"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("10 - Checklists"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("11 - TMM"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("12 - Hotel"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("13 - Proband Journal"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("14 - Lab"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("15 - SOP"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("16 - Trial Guide"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("17 - Kitchen"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("18 - Q&A"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("19 - Medical Board"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("20 - Shipment"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("21 - Note to File"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("22 - DCF"));
-		// createFileFolderPreset(FileModule.TRIAL_DOCUMENT,CommonUtil.fixLogicalPathFolderName("23 - Final Report"));
 		// /1. Projektmanagement
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.1. PM Dokumente"));
 		createFileFolderPreset(FileModule.TRIAL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("1. Projektmanagement/1.2. Projektmeetingaufzeichungen"));
@@ -1438,8 +1177,6 @@ public class ProductionDataProvider {
 		createFileFolderPreset(FileModule.PROBAND_DOCUMENT, CommonUtil.fixLogicalPathFolderName("3. Befunde"));
 		createFileFolderPreset(FileModule.PROBAND_DOCUMENT, CommonUtil.fixLogicalPathFolderName("4. Verschiedenes"));
 		createFileFolderPreset(FileModule.PROBAND_DOCUMENT, CommonUtil.fixLogicalPathFolderName("5. Belege"));
-		// createFileFolderPreset(FileModule.INPUT_FIELD_DOCUMENT,CommonUtil.fixLogicalPathFolderName("01 - Background Images"));
-		// createFileFolderPreset(FileModule.INPUT_FIELD_DOCUMENT,CommonUtil.fixLogicalPathFolderName("02 - Miscellaneous"));
 		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("01 - Attachments"));
 		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("02 - Images"));
 		createFileFolderPreset(FileModule.MASS_MAIL_DOCUMENT, CommonUtil.fixLogicalPathFolderName("03 - Miscellaneous"));
@@ -1817,11 +1554,6 @@ public class ProductionDataProvider {
 				false,
 				false,
 				true);
-		// MassMailStatusType sendingMassMailStatusType = createMassMailStatusType("locked", Color.LIMEGREEN,
-		// "ctsms-massmailstatus-sending",
-		// false,
-		// false,
-		// false);
 		MassMailStatusType closedMassMailStatusType = createMassMailStatusType("closed", Color.MISTYROSE,
 				"ctsms-massmailstatus-closed",
 				false,
@@ -1888,7 +1620,7 @@ public class ProductionDataProvider {
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.INVENTORY_INACTIVE,
 				org.phoenixctms.ctsms.enumeration.Color.WHITESMOKE,
-				null, // "ctsms-icon-inventoryentity",
+				null,
 				false, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.INVENTORY_INACTIVE_BOOKING,
@@ -1898,7 +1630,7 @@ public class ProductionDataProvider {
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE,
 				org.phoenixctms.ctsms.enumeration.Color.PAPAYAWHIP,
-				null, // "ctsms-icon-staffentity",
+				null,
 				false, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE_DUTY_ROSTER_TURN,
@@ -1933,12 +1665,12 @@ public class ProductionDataProvider {
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.COURSE_PARTICIPATION_STATUS_UPDATED,
 				org.phoenixctms.ctsms.enumeration.Color.SNOW,
-				null, // "ctsms-icon-courseentity",
+				null,
 				true, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.TIMELINE_EVENT_REMINDER,
 				org.phoenixctms.ctsms.enumeration.Color.LAVENDERBLUSH,
-				null, // "ctsms-icon-timelineevents",
+				null,
 				true, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER,
@@ -1958,7 +1690,7 @@ public class ProductionDataProvider {
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.TRIAL_STATUS_UPDATED,
 				org.phoenixctms.ctsms.enumeration.Color.FLORALWHITE,
-				null, // "ctsms-icon-trialentity",
+				null,
 				false, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.PROBANDS_DELETED,
@@ -2003,12 +1735,12 @@ public class ProductionDataProvider {
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.ECRF_STATUS_UPDATED,
 				org.phoenixctms.ctsms.enumeration.Color.FLORALWHITE,
-				null, // "ctsms-icon-trialentity",
+				null,
 				true, true,
 				allStaffCategories);
 		createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_FIELD_STATUS,
 				org.phoenixctms.ctsms.enumeration.Color.FLORALWHITE,
-				null, // "ctsms-icon-trialentity",
+				null,
 				true, true,
 				allStaffCategories);
 		jobOutput.println("notification types created");
@@ -2078,14 +1810,6 @@ public class ProductionDataProvider {
 		createProbandCategory("duplicate", Color.MISTYROSE, true, true, false, false, "ctsms-probandcategory-duplicate", false, false, true);
 		createProbandCategory("locked", Color.GAINSBORO, true, true, false, false, "ctsms-probandcategory-locked", false, false, true);
 		createProbandCategory("participant_to_be_deleted", Color.SALMON, true, false, false, false, "ctsms-probandcategory-participant-to-be-deleted", false, false, true);
-		// createProbandCategory("new", Color.WHITESMOKE, true, true, "ctsms-probandcategory-new", true, false);
-		// createProbandCategory("migrated", Color.SEASHELL, true, false, "ctsms-probandcategory-migrated", false, false);
-		// createProbandCategory("test", Color.PAPAYAWHIP, true, true, "ctsms-probandcategory-test", false, false);
-		// createProbandCategory("unable_to_reach", Color.GHOSTWHITE, true, true, "ctsms-probandcategory-unable-to-reach", false, false);
-		// createProbandCategory("to_be_deleted", Color.ORANGERED, true, true, "ctsms-probandcategory-to-be-deleted", false, true);
-		// createProbandCategory("duplicate", Color.MISTYROSE, true, true, "ctsms-probandcategory-duplicate", false, true);
-		// createProbandCategory("locked", Color.GAINSBORO, true, false, "ctsms-probandcategory-locked", false, true);
-		// createProbandCategory("participant_to_be_deleted", Color.SALMON, true, false, "ctsms-probandcategory-participant-to-be-deleted", false, true);
 		jobOutput.println("proband categories created");
 	}
 
@@ -2195,7 +1919,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				true, // false,
+				true,
 				false,
 				true,
 				getProbandListStatusLogLevels());
@@ -2239,7 +1963,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				true, // false,
+				true,
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
@@ -2261,7 +1985,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				true, // false,
+				true,
 				false,
 				true,
 				getProbandListStatusLogLevels());
@@ -2272,7 +1996,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				true, // false,
+				true,
 				false,
 				true,
 				getProbandListStatusLogLevels());
@@ -2318,7 +2042,7 @@ public class ProductionDataProvider {
 				false,
 				false,
 				false,
-				true, // false,
+				true,
 				false,
 				false,
 				getProbandListStatusLogLevels());
@@ -2329,7 +2053,7 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				true, // false,
+				true,
 				false,
 				false,
 				getProbandListStatusLogLevels());
@@ -2525,7 +2249,6 @@ public class ProductionDataProvider {
 	private void createTeamMemberRoles() {
 		createTeamMemberRole("sponsor", null, true);
 		createTeamMemberRole("principal_investigator", null, true);
-		// createTeamMemberRole("co_investigator",null,true);
 		createTeamMemberRole("project_manager", null, true);
 		createTeamMemberRole("assistant_to_project_management", null, true);
 		createTeamMemberRole("student", null, true);
@@ -2533,7 +2256,6 @@ public class ProductionDataProvider {
 		createTeamMemberRole("quality_manager", null, true);
 		createTeamMemberRole("monitor", null, true);
 		createTeamMemberRole("project_staff", null, true);
-		// createTeamMemberRole("academic_assistant",null,true);
 		jobOutput.println("trial team member roles created");
 	}
 
@@ -2558,13 +2280,13 @@ public class ProductionDataProvider {
 
 	private void createTimelineEventTypes() {
 		createTimelineEventType("trial", 1, true, true, false, EventImportance.HIGH, "ctsms-icon-timeline-trial", Color.ALICEBLUE, TimelineEventTitlePresetType.TRIAL_NAME, null,
-				true); // "../resources/images/timeline/blue_circle.png"
+				true);
 		createTimelineEventType("phase", null, true, true, false, EventImportance.LOW, "ctsms-icon-timeline-phase", Color.WHITESMOKE, TimelineEventTitlePresetType.NONE, null,
-				false); // "../resources/images/timeline/orange_triangle.png"
+				false);
 		createTimelineEventType("deadline", null, true, true, true, EventImportance.NORMAL, "ctsms-icon-timeline-deadline", Color.SEASHELL, TimelineEventTitlePresetType.NONE,
-				null, false); // "../resources/images/timeline/red_marker.png"
+				null, false);
 		createTimelineEventType("event", null, true, true, false, EventImportance.NORMAL, "ctsms-icon-timeline-event", Color.WHITESMOKE, TimelineEventTitlePresetType.NONE,
-				null, false); // "../resources/images/timeline/red_marker.png"
+				null, false);
 		createTimelineEventType("phase_initiation", 1, true, true, false, EventImportance.LOW, "ctsms-icon-timeline-phase-initiation", Color.PAPAYAWHIP,
 				TimelineEventTitlePresetType.TEXT, "phase_initiation_title_preset", true);
 		createTimelineEventType("phase_design", 1, true, true, false, EventImportance.LOW, "ctsms-icon-timeline-phase-design", Color.OLDLACE, TimelineEventTitlePresetType.TEXT,
@@ -2599,7 +2321,7 @@ public class ProductionDataProvider {
 		jobOutput.println("timeline event types created");
 	}
 
-	private TrialStatusAction createTrialStatusAction(org.phoenixctms.ctsms.enumeration.TrialStatusAction a) { // , long seq) {
+	private TrialStatusAction createTrialStatusAction(org.phoenixctms.ctsms.enumeration.TrialStatusAction a) {
 		TrialStatusAction action = TrialStatusAction.Factory.newInstance();
 		action.setAction(a);
 		action = trialStatusActionDao.create(action);
@@ -2609,7 +2331,7 @@ public class ProductionDataProvider {
 	private void createTrialStatusActions() {
 		org.phoenixctms.ctsms.enumeration.TrialStatusAction[] actions = org.phoenixctms.ctsms.enumeration.TrialStatusAction.values();
 		for (int i = 0; i < actions.length; i++) {
-			createTrialStatusAction(actions[i]); // ,i);
+			createTrialStatusAction(actions[i]);
 		}
 		jobOutput.println("trial status actions created");
 	}
@@ -2799,7 +2521,6 @@ public class ProductionDataProvider {
 	}
 
 	private void createVisitTypes() {
-		// createVisitType("pre_screening",null,true,Color.ORANGE);
 		createVisitType("screening", null, true, true, Color.TOMATO);
 		createVisitType("outpatient", null, true, true, Color.KHAKI); // application
 		createVisitType("inpatient", null, true, true, Color.YELLOWGREEN); // treatment

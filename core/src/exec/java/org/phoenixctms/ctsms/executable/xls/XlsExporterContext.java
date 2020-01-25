@@ -23,7 +23,6 @@ public class XlsExporterContext {
 		this.workbook = null;
 		spreadSheetMap = new HashMap<RowWriter, WritableSheet>();
 		entityIdMap = new HashMap<RowWriter, Long>();
-		// sheetIndexMap = new HashMap<RowProcessor, Integer>();
 	}
 
 	public AuthenticationVO getAuth() {
@@ -49,16 +48,6 @@ public class XlsExporterContext {
 		return spreadSheetMap.get(writer);
 	}
 
-	// public WritableWorkbook getWorkbook(WorkbookSettings workbookSettings) throws Exception {
-	// if (workbook == null) {
-	// if (workbookSettings != null) {
-	// workbook = Workbook.createWorkbook(new File(fileName), workbookSettings);
-	// } else {
-	// workbook = Workbook.createWorkbook(new File(fileName));
-	// }
-	// }
-	// return workbook;
-	// }
 	public WritableWorkbook getWorkbook() {
 		return workbook;
 	}
@@ -74,10 +63,4 @@ public class XlsExporterContext {
 	public void setWorkbook(WritableWorkbook workbook) {
 		this.workbook = workbook;
 	}
-	// public void setSpreadSheet(RowWriter writer, WritableSheet spreadSheet) {
-	// spreadSheetMap.put(writer, spreadSheet);
-	// }
-	// public void setWorkbook(WritableWorkbook workbook) {
-	// this.workbook = workbook;
-	// }
 }

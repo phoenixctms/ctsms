@@ -94,7 +94,7 @@ public class XlsExporter {
 		return writer.getLineCount();
 	}
 
-	private void setContext(RowWriter writer, XlsExporterContext context) { // , String sheetName) {
+	private void setContext(RowWriter writer, XlsExporterContext context) {
 		writer.setContext(context);
 		writer.setJobOutput(jobOutput);
 	}

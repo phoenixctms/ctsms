@@ -66,13 +66,13 @@ public final class ExecSettings {
 		return CommonUtil.getValueStringList(key, getBundle(false), defaultValue);
 	}
 
-	public static void setBundleBasename(String basename) { // synchronized
+	public static void setBundleBasename(String basename) {
 		bundleBasename = basename;
 		bundle = null;
 		getBundle(basename, true);
 	}
 
-	public static void setBundleFilename(String pathname) throws Exception { // synchronized
+	public static void setBundleFilename(String pathname) throws Exception {
 		bundle = null;
 		bundle = BundleControl.newBundle(new java.io.File(pathname));
 		bundleBasename = null;

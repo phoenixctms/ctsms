@@ -61,12 +61,9 @@ public class XlsImporter {
 	public XlsImporter() {
 	}
 
-	private XlsImporterContext createContext(RowProcessor processor, String fileName, boolean mandatory) {// , String sheetName) {
+	private XlsImporterContext createContext(RowProcessor processor, String fileName, boolean mandatory) {
 		XlsImporterContext context = new XlsImporterContext(this, fileName);
-		// context.setSheetName(processor, sheetName);
 		setContext(processor, context, mandatory);
-		// processor.setContext(context);
-		// processor.setJobOutput(jobOutput);
 		return context;
 	}
 
@@ -141,7 +138,7 @@ public class XlsImporter {
 	private InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
 			AuthorisationException, ServiceException, FileNotFoundException {
 		if (CommonUtil.isEmptyString(fileName)) {
-			jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
+			jobOutput.println("reading from job");
 			return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
 		} else {
 			try {
@@ -158,14 +155,11 @@ public class XlsImporter {
 
 	private long readRows(XlsImporterContext context, RowProcessor processor) throws Throwable {
 		processor.init();
-		//jobOutput.println("reading from file " + context.getFileName());
 		long rowCount = 0l;
 		long lineNumber = 1l;
 		Workbook workbook = null;
 		try {
-			// Create a workbook object from the file at specified location.
-			// Change the path of the file as per the location on your computer.
-			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput); // new FileInputStream(context.getFileName());
+			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput);
 			WorkbookSettings workbookSettings = processor.getWorkbookSettings();
 			if (workbookSettings != null) {
 				workbook = Workbook.getWorkbook(inputStream, workbookSettings);
@@ -248,7 +242,7 @@ public class XlsImporter {
 		aspRemover.remove();
 	}
 
-	private void setContext(RowProcessor processor, XlsImporterContext context, boolean mandatory) { // , String sheetName) {
+	private void setContext(RowProcessor processor, XlsImporterContext context, boolean mandatory) {
 		context.setMandatory(processor, mandatory);
 		processor.setContext(context);
 		processor.setJobOutput(jobOutput);

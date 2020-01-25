@@ -300,7 +300,6 @@ public class ServiceMethods {
 	}
 
 	public long exportAuditTrail(AuthenticationVO auth, Long id, String fileName) throws Exception {
-		// trialService.getEcrfFieldValueLog(auth, id, null, null, null);
 		AuditTrailExcelVO result = trialService.exportAuditTrail(auth, id, null, null);
 		if (result != null) {
 			long count = 0l;
@@ -346,11 +345,8 @@ public class ServiceMethods {
 		CriteriaInVO criteria = new CriteriaInVO();
 		HashSet<CriterionInVO> criterions = new HashSet<CriterionInVO>();
 		ExecUtil.criteriaOutToIn(criteria, criterions, searchService.getCriteria(auth, id));
-		// CriteriaInstantVO instantCriteria = searchService.parseCriteria(auth, criteria.getModule(), criterions, true);
-		// jobOutput.println("criteria id " + criteria.getId() + " '" + criteria.getLabel() + "' parsed: " + instantCriteria.getCriterionExpression());
 		SearchResultExcelVO result;
 		String type;
-		// PSFVO psf = new PSFVO();
 		switch (criteria.getModule()) {
 			case INVENTORY_DB:
 				result = searchService.exportInventory(auth, criteria, criterions, null);
@@ -458,7 +454,6 @@ public class ServiceMethods {
 
 	public long exportProbandAppointments(AuthenticationVO auth, Long id, String fileName) throws Exception {
 		Date now = new Date();
-		// now.setDate(5);
 		Date from = DateCalc.getStartOfDay(now);
 		Date to = DateCalc.getEndOfDay(now);
 		jobOutput
@@ -491,7 +486,6 @@ public class ServiceMethods {
 	}
 
 	public long exportProbandList(AuthenticationVO auth, Long id, ProbandListStatusLogLevel logLevel, String fileName) throws Exception {
-		// trialService.getEcrfFieldValueLog(auth, id, null, null, null);
 		ProbandListExcelVO result = trialService.exportProbandList(auth, id, logLevel);
 		if (result != null) {
 			jobOutput.println(result.getTrial().getName() + " " + (result.getLogLevel() != null ? result.getLogLevel().name() : "[full subject list]") + ": "
@@ -622,7 +616,6 @@ public class ServiceMethods {
 	private void printCriteriaResult(CriteriaInVO criteriaIn, CriteriaInstantVO instantCriteria, long rowCount, String type) {
 		jobOutput.println("criteria ID " + Long.toString(criteriaIn.getId()) + " '" + criteriaIn.getLabel() + "' returned " + rowCount + " " + type + " items:\n"
 				+ (CommonUtil.isEmptyString(instantCriteria.getCriterionExpression()) ? "<no criterions>" : instantCriteria.getCriterionExpression()));
-		// jobOutput.println("search returned " + result.getRowCount() + " " + type + " items"); // (psf != null ? " of " + psf.getRowCount() : "")
 	}
 
 	public long renderCourseParticipantListPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {
@@ -687,8 +680,7 @@ public class ServiceMethods {
 	}
 
 	public int validatePendingTrialEcrfs(AuthenticationVO auth, Long id) throws Exception {
-		Collection<ECRFStatusEntryVO> statusEntries = trialService.validatePendingEcrfs(auth, id, null, null); // .getEcrfFieldValues(auth, 5986436l, 5991949l, false, true, null);
-		// // 5994474l
+		Collection<ECRFStatusEntryVO> statusEntries = trialService.validatePendingEcrfs(auth, id, null, null);
 		jobOutput.println("trial ID " + Long.toString(id) + ": " + statusEntries.size() + " eCRFs pending for validation");
 		Iterator<ECRFStatusEntryVO> it = statusEntries.iterator();
 		while (it.hasNext()) {

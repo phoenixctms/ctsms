@@ -222,9 +222,6 @@ public class FileSystemLoader {
 				case PROBAND_DOCUMENT:
 					newFile.setProbandId(id);
 					break;
-				// case INPUT_FIELD_DOCUMENT:
-				// newFile.setInputFieldId(id);
-				// break;
 				case MASS_MAIL_DOCUMENT:
 					newFile.setMassMailId(id);
 					break;

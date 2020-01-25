@@ -24,8 +24,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
-	// @Autowired
-	// protected InputFieldService inputFieldService;
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -33,8 +31,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
-	// private AuthenticationVO auth;
-	// private Long inputFieldId;
 	private HashMap<String, InputField> inputFieldMap;
 	private HashMap<String, Set<InputFieldSelectionSetValueInVO>> selectionSetValueMap;
 	@Autowired
@@ -45,14 +41,10 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	public SelectionSetValueRowProcessor() {
 		super();
 		filterDupes = false;
-		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 		inputFieldMap = new HashMap<String, InputField>();
 		selectionSetValueMap = new HashMap<String, Set<InputFieldSelectionSetValueInVO>>();
 	}
-	// public AuthenticationVO getAuth() {
-	// return auth;
-	// }
 
 	public void clearInputField(String fieldName) {
 		inputFieldMap.remove(fieldName);
@@ -68,7 +60,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 
 	public InputField getInputField(String fieldName) {
 		InputField inputField = null;
-		// inputFieldDao.clearEhcache
 		if (inputFieldMap.containsKey(fieldName)) {
 			inputField = inputFieldMap.get(fieldName);
 		} else {
@@ -78,9 +69,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		return inputField;
 	}
 
-	// public Long getInputFieldId() {
-	// return inputFieldId;
-	// }
 	private String getLocalized(String[] values) {
 		return getColumnValue(values, localizedColumnIndex);
 	}
@@ -93,16 +81,12 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		return getColumnValue(values, presetColumnIndex);
 	}
 
-	// public HashMap<String, Set<InputFieldSelectionSetValueInVO>> getSelectionSetValueMap() {
-	// return selectionSetValueMap;
-	// }
 	public Set<InputFieldSelectionSetValueInVO> getSelectionSetValues(String fieldName) {
 		return selectionSetValueMap.get(fieldName);
 	}
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 
@@ -131,8 +115,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-				// .append(getFieldName(values))
-				// .append(getValue(values))
 				.append(getFieldName(values))
 				.append(getName(values))
 				.append(getValue(values))
@@ -192,7 +174,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
 		if (CommonUtil.isEmptyString(getValue(values))) {
-			// jobOutput.println("row " + rowNumber + ": empty value");
 			return false;
 		}
 		return true;

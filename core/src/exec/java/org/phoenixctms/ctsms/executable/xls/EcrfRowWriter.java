@@ -15,12 +15,12 @@ public class EcrfRowWriter extends RowWriter {
 	private final static int VISIT_COLUMN_INDEX = 2;
 	private final static int ACTIVE_COLUMN_INDEX = 3;
 	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 4;
-	private final static int EXTERNAL_ID_COLUMN_INDEX = 5; // 4;
-	private final static int NAME_COLUMN_INDEX = 6; // 5;
-	private final static int TITLE_COLUMN_INDEX = 7; // 6;
-	private final static int DESCRIPTION_COLUMN_INDEX = 8; // 7;
-	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9; // 8;
-	private final static int CHARGE_COLUMN_INDEX = 10; // 8;
+	private final static int EXTERNAL_ID_COLUMN_INDEX = 5;
+	private final static int NAME_COLUMN_INDEX = 6;
+	private final static int TITLE_COLUMN_INDEX = 7;
+	private final static int DESCRIPTION_COLUMN_INDEX = 8;
+	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9;
+	private final static int CHARGE_COLUMN_INDEX = 10;
 	private int probandGroupColumnIndex;
 	private int positionColumnIndex;
 	private int visitColumnIndex;
@@ -43,7 +43,6 @@ public class EcrfRowWriter extends RowWriter {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 

@@ -177,7 +177,7 @@ public class DepartmentManager {
 
 	private UserInVO getNewUser(Long departmentId, String name, String locale) throws Exception {
 		UserInVO newUser = new UserInVO();
-		newUser.setLocale(locale); // CommonUtil.localeToString(Locale.getDefault()));
+		newUser.setLocale(locale);
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
 		newUser.setDateFormat(null);
 		newUser.setDecimalSeparator(null);

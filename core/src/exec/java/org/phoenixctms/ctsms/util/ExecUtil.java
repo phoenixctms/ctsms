@@ -41,10 +41,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
 
 public final class ExecUtil {
-	// public static String DATE_PATTERN = "yyy-MM-dd";
 
-	// public static String DATETIME_PATTERN = "yyy-MM-dd HH:mm:ss";
-	// private final static String DEFAULT_ENCODING = "UTF-8";
 	public static final String CSV_FILENAME_EXTENSION = "csv";
 	public static final String CSV_MIMETYPE_STRING = "text/csv";
 	public final static ArrayList<Class> AUTHORIZED_SERVICE_CLASSES = new ArrayList<Class>();
@@ -142,32 +139,6 @@ public final class ExecUtil {
 		return filePath.joinFilePath(fileNameFormat);
 	}
 
-	//	public static URI getExportedFileUri(String fileName) throws URISyntaxException {
-	//		String httpDocumentRoot = Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT);
-	//		if (!CommonUtil.isEmptyString(httpDocumentRoot) && fileName.startsWith(httpDocumentRoot)) {
-	//			StringBuilder downloadUrl = new StringBuilder(Settings.getDocumentRootReplacement());
-	//			downloadUrl.append(fileName.substring(httpDocumentRoot.length()));
-	//			return new URI(downloadUrl.toString());
-	//		}
-	//		return null;
-	//	}
-	//	public static InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
-	//			AuthorisationException, ServiceException, FileNotFoundException {
-	//		if (CommonUtil.isEmptyString(fileName)) {
-	//			jobOutput.println("reading from job"); // + jobOutput.getJobFile().getFileName());
-	//			return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
-	//		} else {
-	//			try {
-	//				long fileId = Long.parseLong(fileName);
-	//				FileStreamOutVO file = fileService.getFileStream(auth, fileId);
-	//				jobOutput.println("reading from file ID " + fileName + " (" + file.getFileName() + ")");
-	//				return file.getStream();
-	//			} catch (NumberFormatException e) {
-	//				jobOutput.println("reading from file " + fileName);
-	//				return new FileInputStream(fileName);
-	//			}
-	//		}
-	//	}
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
@@ -221,7 +192,6 @@ public final class ExecUtil {
 				FileLock lock = fc.tryLock();
 				if (lock == null) {
 					throw new RuntimeException("another instance is running");
-					// System.out.println("another instance is running");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);

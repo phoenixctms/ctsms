@@ -259,7 +259,7 @@ public class PermissionDefinitionWriter extends LineWriter {
 				Permission permission = noGetterSetterMap.get(serviceMethodName);
 				ArrayList<String> permissionLine = new ArrayList<String>();
 				permissionLine.add(serviceMethodName);
-				permissionLine.add(""); //permission.getIpRanges() != null ? permission.getIpRanges() : "");
+				permissionLine.add("");
 				permissionLine.add("");
 				permissionLine.add("");
 				permissionLine.add("");

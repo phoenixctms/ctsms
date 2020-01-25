@@ -104,12 +104,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 	public InputFieldRowProcessor() {
 		super();
 		filterDupes = false;
-		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 	}
-	// public AuthenticationVO getAuth() {
-	// return auth;
-	// }
 
 	private String getBooleanPreset(String[] values) {
 		return getColumnValue(values, booleanPresetColumnIndex);
@@ -217,7 +213,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 
@@ -300,7 +295,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-				// .append(getName(values))
 				.append(getName(values))
 				.append(getTitle(values))
 				.append(getLocalized(values))
@@ -346,19 +340,12 @@ public class InputFieldRowProcessor extends RowProcessor {
 			inputFieldIn.setDatas(file.getDatas());
 			inputFieldIn.setMimeType(file.getContentType().getMimeType());
 		} catch (NumberFormatException e) {
-			//if (filePath != null) {
 			java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
 			inputFieldIn.setFileName(file.getName());
 			FileInputStream stream = new FileInputStream(file);
 			inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
 			inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
-			//}
 		}
-		// try {
-		//
-		// } finally {
-		//
-		// }
 	}
 
 	@Override
@@ -428,9 +415,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setMinSelections(CommonUtil.isEmptyString(getMinSelections(values)) ? null : Integer.parseInt(getMinSelections(values)));
 				inputFieldIn.setMaxSelections(CommonUtil.isEmptyString(getMaxSelections(values)) ? null : Integer.parseInt(getMaxSelections(values)));
 				break;
-			// case SELECT_ONE_DROPDOWN:
-			// case SELECT_ONE_RADIO_H:
-			// case SELECT_ONE_RADIO_V:
 			default:
 				break;
 		}
@@ -446,7 +430,6 @@ public class InputFieldRowProcessor extends RowProcessor {
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
 		if (CommonUtil.isEmptyString(getName(values))) {
-			// jobOutput.println("row " + rowNumber + ": empty name");
 			return false;
 		}
 		return true;

@@ -29,12 +29,12 @@ public class EcrfRowProcessor extends RowProcessor {
 	private final static int VISIT_COLUMN_INDEX = 2;
 	private final static int ACTIVE_COLUMN_INDEX = 3;
 	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 4;
-	private final static int EXTERNAL_ID_COLUMN_INDEX = 5; // 4;
-	private final static int NAME_COLUMN_INDEX = 6; // 5;
-	private final static int TITLE_COLUMN_INDEX = 7; // 6;
-	private final static int DESCRIPTION_COLUMN_INDEX = 8; // 7;
-	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9; // 8;
-	private final static int CHARGE_COLUMN_INDEX = 10; // 8;
+	private final static int EXTERNAL_ID_COLUMN_INDEX = 5;
+	private final static int NAME_COLUMN_INDEX = 6;
+	private final static int TITLE_COLUMN_INDEX = 7;
+	private final static int DESCRIPTION_COLUMN_INDEX = 8;
+	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9;
+	private final static int CHARGE_COLUMN_INDEX = 10;
 	private int probandGroupColumnIndex;
 	private int positionColumnIndex;
 	private int visitColumnIndex;
@@ -61,7 +61,6 @@ public class EcrfRowProcessor extends RowProcessor {
 	public EcrfRowProcessor() {
 		super();
 		filterDupes = false;
-		// this.setCommentChar(null);
 		acceptCommentsIndex = 0;
 		visitIdMap = new HashMap<String, Long>();
 		probandListStatusTypeIdMap = new HashMap<String, Long>();
@@ -78,9 +77,6 @@ public class EcrfRowProcessor extends RowProcessor {
 		return trialService.addVisit(context.getAuth(), newVisit);
 	}
 
-	// public AuthenticationVO getAuth() {
-	// return auth;
-	// }
 	private String getActive(String[] values) {
 		return getColumnValue(values, activeColumnIndex);
 	}
@@ -137,7 +133,6 @@ public class EcrfRowProcessor extends RowProcessor {
 
 	@Override
 	public String getSheetName() {
-		// return context.getSheetName(this);
 		return SHEET_NAME;
 	}
 
@@ -191,8 +186,6 @@ public class EcrfRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-				// .append(getProbandGroup(values))
-				// .append(getPosition(values))
 				.append(getProbandGroup(values))
 				.append(getPosition(values))
 				.append(getVisit(values))
@@ -241,7 +234,6 @@ public class EcrfRowProcessor extends RowProcessor {
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
 		if (CommonUtil.isEmptyString(getPosition(values))) {
-			// jobOutput.println("row " + rowNumber + ": empty name");
 			return false;
 		}
 		return true;

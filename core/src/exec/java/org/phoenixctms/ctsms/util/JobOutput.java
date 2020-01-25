@@ -156,7 +156,6 @@ public class JobOutput {
 	}
 
 	private void prepareEmail(MimeMessage mimeMessage, String subject, String emailAddresses) throws Exception {
-		// int toCount = 0;
 		if (!CommonUtil.isEmptyString(emailAddresses)) {
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, getEmailEncoding());
 			mimeMessageHelper.setSubject(subject);
@@ -166,11 +165,9 @@ public class JobOutput {
 			for (int i = 0; i < addresses.length; i++) {
 				if (!CommonUtil.isEmptyString(addresses[i])) {
 					mimeMessageHelper.addTo(addresses[i].trim());
-					// toCount++;
 				}
 			}
 		}
-		// return toCount;
 	}
 
 	public void printExecutionTime(boolean error) {
@@ -196,7 +193,6 @@ public class JobOutput {
 		if (this.job == null) {
 			System.out.println(lineFormatted);
 		}
-		//updateJob();
 	}
 
 	public void updateJob() {
@@ -277,11 +273,6 @@ public class JobOutput {
 		}
 		println("java.version: " + System.getProperty("java.version"));
 		println("java.home: " + System.getProperty("java.home"));
-		//Iterator<Entry<String, String>> it = System.getenv().entrySet().iterator();
-		//while (it.hasNext()) {
-		//	Entry<String, String> envVar = it.next();
-		//	println(envVar.getKey() + "=" + envVar.getValue());
-		//}
 		if (task != null && !CommonUtil.isEmptyString(task.getDescription())) {
 			println(task.getDescription());
 		}

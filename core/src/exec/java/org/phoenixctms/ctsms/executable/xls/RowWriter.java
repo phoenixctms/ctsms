@@ -2,9 +2,9 @@ package org.phoenixctms.ctsms.executable.xls;
 
 import java.util.Locale;
 
-import jxl.WorkbookSettings;
-
 import org.phoenixctms.ctsms.util.JobOutput;
+
+import jxl.WorkbookSettings;
 
 public abstract class RowWriter {
 
@@ -12,7 +12,6 @@ public abstract class RowWriter {
 	protected JobOutput jobOutput;
 	private String commentChar;
 	protected int lineNumber;
-	// private WritableSheet spreadSheet;
 	protected XlsExporterContext context;
 
 	protected RowWriter() {
@@ -41,11 +40,8 @@ public abstract class RowWriter {
 	}
 
 	public WorkbookSettings getWorkbookSettings() {
-		// return null;
 		WorkbookSettings workbookSettings = new WorkbookSettings();
-		// Locale locale = Locale.getDefault();
 		workbookSettings.setLocale(Locale.getDefault());
-		// wbSettings.setEncoding("UTF-8");
 		return workbookSettings;
 	}
 
@@ -80,7 +76,6 @@ public abstract class RowWriter {
 					} else {
 						isComment = false;
 					}
-					//sb.append(CommonUtil.clipString(it.next(), ExcelUtil.EXCEL_MAX_CELL_TEXT_LENGTH));
 					if (values[c] != null) {
 						sb.append(values[c]);
 					}

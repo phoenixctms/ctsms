@@ -78,10 +78,6 @@ public class ClamlImporter {
 			throw new IllegalArgumentException("icd systematics of revision " + revision + " are referenced by alpha ids used by " + diagnosisCount + " diagnoses");
 		}
 		if (removeAllBeforeInsert) {
-			// ChunkedRemoveAll.remove(icdSystModifierDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(icdSystBlockDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(icdSystCategoryDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(icdSystDao, getRevisionSearch(revision));
 			removeIcdSystRecords(revision);
 			jobOutput.println("icd systemtics revision " + revision + " cleared");
 		}
@@ -103,10 +99,6 @@ public class ClamlImporter {
 			throw new IllegalArgumentException("ops systematics of revision " + revision + " are referenced by ops codes used by " + procedureCount + " procedures");
 		}
 		if (removeAllBeforeInsert) {
-			// ChunkedRemoveAll.remove(opsSystModifierDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(opsSystBlockDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(opsSystCategoryDao, getRevisionSearch(revision));
-			// ChunkedRemoveAll.remove(opsSystDao, getRevisionSearch(revision));
 			removeOpsSystRecords(revision);
 			jobOutput.println("ops systemtics revision " + revision + " cleared");
 		}
