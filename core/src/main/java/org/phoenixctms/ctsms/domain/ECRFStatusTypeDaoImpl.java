@@ -91,8 +91,6 @@ public class ECRFStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFStatusType loadECRFStatusTypeFromECRFStatusTypeVO(ECRFStatusTypeVO eCRFStatusTypeVO) {
-		// TODO implement loadECRFStatusTypeFromECRFStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFStatusTypeFromECRFStatusTypeVO(ECRFStatusTypeVO) not yet implemented.");
 		ECRFStatusType ecrfStatusType = null;
 		Long id = eCRFStatusTypeVO.getId();
 		if (id != null) {
@@ -126,7 +124,6 @@ public class ECRFStatusTypeDaoImpl
 			ECRFStatusType source,
 			ECRFStatusTypeVO target) {
 		super.toECRFStatusTypeVO(source, target);
-		// WARNING! No conversion for target.actions (can't convert source.getActions():org.phoenixctms.ctsms.domain.ECRFStatusAction to org.phoenixctms.ctsms.vo.ECRFStatusActionVO
 		target.setName(L10nUtil.getEcrfStatusTypeName(Locales.USER, source.getNameL10nKey()));
 		target.setActions(toEcrfStatusActionVOCollection(source.getActions()));
 	}

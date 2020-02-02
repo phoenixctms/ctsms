@@ -263,49 +263,17 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleClearCache() throws Exception {
-		// TODO Auto-generated method stub
-		// cacheManager.clearAll();
 		Session session = sessionFactory.getCurrentSession();
 		if (session != null) {
 			session.clear(); // internal cache clear
 		}
 		Cache cache = sessionFactory.getCache();
-		//
-		// if (cache != null) {
-		// cache.ev..evictAllRegions(); // Evict data from all query regions.
-		// }
-		// sessionFactory.getCache().evictQueryRegions();
-		// sessionFactory.getCache().evictDefaultQueryRegion();
-		// sessionFactory.getCache().evictCollectionRegions();
-		// sessionFactory.getCache().evictEntityRegions();
 		if (cache != null) {
 			cache.evictCollectionRegions();
 			cache.evictDefaultQueryRegion();
 			cache.evictEntityRegions();
 			cache.evictQueryRegions();
 		}
-		// cache.evictNaturalIdRegions();
-		// // {
-		// // Session s = (Session)em.getDelegate();
-		// //SessionFactory sf = s.getSessionFactory();
-		// Map classMetadata = sessionFactory.getAllClassMetadata();
-		// Iterator it = classMetadata.values().iterator();
-		// while (it.hasNext()) {
-		// //for (EntityPersister ep : classMetadata.values()) {
-		// EntityPersister ep = (EntityPersister) it.next();
-		// if (ep.hasCache()) {
-		// sessionFactory.evictEntity(ep..getCache().getRegionName());
-		// }
-		// }
-		// Map collMetadata = sf.getAllCollectionMetadata();
-		// for (AbstractCollectionPersister acp : collMetadata.values()) {
-		// if (acp.hasCache()) {
-		// sf.evictCollection(acp.getCache().getRegionName());
-		// }
-		// }
-		//
-		// return;
-		// // }
 	}
 
 	@Override
@@ -1001,7 +969,7 @@ public class ToolsServiceImpl
 		PasswordOutVO lastPasswordVO;
 		UserOutVO userVO;
 		try {
-			lastPassword = authenticator.authenticate(auth, true); // ServiceUtil.authenticate(auth, true, this.getUserDao(), passwordDao);
+			lastPassword = authenticator.authenticate(auth, true);
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
@@ -1225,7 +1193,6 @@ public class ToolsServiceImpl
 					if (toCount > 0) {
 						sent = true;
 						if (delayMillis > 0) {
-							//Thread.currentThread();
 							Thread.sleep(delayMillis);
 						}
 					} else {
@@ -1234,7 +1201,6 @@ public class ToolsServiceImpl
 				} catch (Throwable t) {
 					recipient.setErrorMessage(t.getMessage());
 					if (delayMillis > 0) {
-						//Thread.currentThread();
 						Thread.sleep(delayMillis);
 					}
 				}
@@ -1247,8 +1213,6 @@ public class ToolsServiceImpl
 			recipient.setDropped(dropped);
 			notificationRecipientDao.update(recipient);
 			notificationRecipientDao.commitAndResumeTransaction();
-			// this.updateNotificationRecipient(recipient);
-			// sessionFactory.getCurrentSession().getTransaction().commit();
 			totalEmailCount += toCount;
 		}
 		return totalEmailCount;
@@ -1263,8 +1227,6 @@ public class ToolsServiceImpl
 	@Override
 	protected void handleUnsubscribeProbandEmail(String beacon) throws Exception {
 		CommonUtil.parseUUID(beacon);
-		// if (auth != null) {
-		// authenticator.authenticate(auth, false);
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);

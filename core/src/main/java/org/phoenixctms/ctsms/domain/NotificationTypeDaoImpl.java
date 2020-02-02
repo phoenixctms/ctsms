@@ -25,18 +25,7 @@ public class NotificationTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private NotificationType loadNotificationTypeFromNotificationTypeVO(NotificationTypeVO notificationTypeVO) {
-		// TODO implement loadNotificationTypeFromNotificationTypeVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationTypeFromNotificationTypeVO(NotificationTypeVO) not yet implemented.");
-		// NotificationType notificationType = null;
-		// Long id = notificationTypeVO.getId();
-		// if ( id != null) {
-		// notificationType = this.load(id);
-		// }
-		// if (notificationType == null)
-		// {
-		// notificationType = NotificationType.Factory.newInstance();
-		// }
-		// return notificationType;
 	}
 
 	/**

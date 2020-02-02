@@ -153,7 +153,6 @@ public class InventoryServiceImpl
 				&& (trial = inventoryBooking.getTrial()) != null
 				&& (proband = inventoryBooking.getProband()) != null
 				&& (probandListEntry = this.getProbandListEntryDao().findByTrialProband(trial.getId(), proband.getId())) != null) {
-			// ProbandListEntry probandListEntry = it.next();
 			Object[] args;
 			String l10nKey;
 			String comment = CommonUtil.isEmptyString(inventoryBooking.getComment()) ? ""
@@ -162,14 +161,11 @@ public class InventoryServiceImpl
 							new Object[] { inventoryBooking.getComment() });
 			String datetimePattern = Settings.getString(SettingCodes.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN, Bundle.SETTINGS,
 					DefaultSettings.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN);
-			//String datePattern = Settings.getString(SettingCodes.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN);
 			if (!CommonUtil.isEmptyString(inventoryBooking.getCalendar())) {
 				args = new Object[] {
 						CommonUtil.inventoryOutVOToString(this.getInventoryDao().toInventoryOutVO(inventoryBooking.getInventory())),
 						CommonUtil.formatDate(inventoryBooking.getStart(), datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON)),
 						CommonUtil.formatDate(inventoryBooking.getStop(), datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON)),
-						// (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON))).format(inventoryBooking.getStart()),
-						// (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON))).format(inventoryBooking.getStop()),
 						CommonUtil.staffOutVOToString(this.getStaffDao().toStaffOutVO(inventoryBooking.getOnBehalfOf())),
 						inventoryBooking.getCalendar(),
 						comment
@@ -180,8 +176,6 @@ public class InventoryServiceImpl
 						CommonUtil.inventoryOutVOToString(this.getInventoryDao().toInventoryOutVO(inventoryBooking.getInventory())),
 						CommonUtil.formatDate(inventoryBooking.getStart(), datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON)),
 						CommonUtil.formatDate(inventoryBooking.getStop(), datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON)),
-						// (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON))).format(inventoryBooking.getStart()),
-						// (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(Locales.PROBAND_LIST_STATUS_ENTRY_REASON))).format(inventoryBooking.getStop()),
 						CommonUtil.staffOutVOToString(this.getStaffDao().toStaffOutVO(inventoryBooking.getOnBehalfOf())),
 						comment
 				};
@@ -828,7 +822,6 @@ public class InventoryServiceImpl
 		writer.setCalendar(calendar);
 		writer.setFrom(from);
 		writer.setTo(to);
-		//writer.s
 		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 		Collection VOs = inventoryBookingDao.findByAppointmentDepartmentsCalendarInterval(
 				probandDepartmentId,
@@ -838,18 +831,12 @@ public class InventoryServiceImpl
 				isRelevantForCourseAppointments, isTrialAppointment, isRelevantForTrialAppointments);
 		inventoryBookingDao.toInventoryBookingOutVOCollection(VOs);
 		writer.setVOs(VOs);
-		//writer.setDistinctColumnNames(distinctColumnNames);
-		//writer.setDistinctFieldRows(distinctFieldRows);
 		User user = CoreUtil.getUser();
-		// UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
 		InventoryBookingsExcelVO result = writer.getExcelVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(user, null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INVENTORY_BOOKINGS_EXPORTED, result,
 				null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -932,7 +919,7 @@ public class InventoryServiceImpl
 		if (course != null
 				&& (isRelevantForCourseAppointments == null || isRelevantForCourseAppointments.booleanValue() == courseInventoryBooking.getInventory().getCategory()
 						.isRelevantForCourseAppointments())) {
-			Collection collidingDutyRosterTurns = new HashSet(); // new ArrayList();
+			Collection collidingDutyRosterTurns = new HashSet();
 			DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 			Iterator<CourseParticipationStatusEntry> it = course.getParticipations().iterator();
 			while (it.hasNext()) {
@@ -1002,7 +989,7 @@ public class InventoryServiceImpl
 		if (course != null
 				&& (isRelevantForCourseAppointments == null || isRelevantForCourseAppointments.booleanValue() == courseInventoryBooking.getInventory().getCategory()
 						.isRelevantForCourseAppointments())) {
-			Collection collidingStaffStatusEntries = new HashSet(); // new ArrayList();
+			Collection collidingStaffStatusEntries = new HashSet();
 			StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
 			Iterator<CourseParticipationStatusEntry> it = course.getParticipations().iterator();
 			while (it.hasNext()) {
@@ -1159,7 +1146,7 @@ public class InventoryServiceImpl
 		}
 		InventoryStatusEntryDao statusEntryDao = this.getInventoryStatusEntryDao();
 		Collection inventoryStatusEntries = statusEntryDao.findByDepartmentCategoryInterval(departmentId, inventoryCategoryId, CommonUtil.dateToTimestamp(from),
-				CommonUtil.dateToTimestamp(to), statusTypeId, null, null, hideAvailability); // false,true);
+				CommonUtil.dateToTimestamp(to), statusTypeId, null, null, hideAvailability);
 		statusEntryDao.toInventoryStatusEntryOutVOCollection(inventoryStatusEntries);
 		if (sort) {
 			inventoryStatusEntries = new ArrayList(inventoryStatusEntries);

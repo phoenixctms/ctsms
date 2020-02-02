@@ -12,7 +12,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -87,8 +86,6 @@ public class CountryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Country loadCountryFromCountryVO(CountryVO countryVO) {
-		// TODO implement loadCountryFromCountryVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCountryFromCountryVO(CountryVO) not yet implemented.");
 		Country country = null;
 		Long id = countryVO.getId();
 		if (id != null) {

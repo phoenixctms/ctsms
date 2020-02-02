@@ -22,9 +22,6 @@ public class RandomizationListCodeValueDaoImpl
 			RandomizationListCodeValue source,
 			RandomizationListCodeValueVO target) {
 		super.toRandomizationListCodeValueVO(source, target);
-		//if (source.getCode().isBroken())
-		//	target.set
-		//}
 	}
 
 	/**
@@ -40,8 +37,6 @@ public class RandomizationListCodeValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private RandomizationListCodeValue loadRandomizationListCodeValueFromRandomizationListCodeValueVO(RandomizationListCodeValueVO randomizationListCodeValueVO) {
-		// TODO implement loadRandomizationListCodeValueFromRandomizationListCodeValueVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadRandomizationListCodeValueFromRandomizationListCodeValueVO(RandomizationListCodeValueVO) not yet implemented.");
 		return RandomizationListCodeValue.Factory.newInstance();
 	}
 

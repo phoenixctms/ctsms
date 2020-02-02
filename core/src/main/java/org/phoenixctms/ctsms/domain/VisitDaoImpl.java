@@ -84,8 +84,6 @@ public class VisitDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Visit loadVisitFromVisitInVO(VisitInVO visitInVO) {
-		// TODO implement loadVisitFromVisitInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitFromVisitInVO(VisitInVO) not yet implemented.");
 		Visit visit = null;
 		Long id = visitInVO.getId();
 		if (id != null) {
@@ -103,8 +101,6 @@ public class VisitDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Visit loadVisitFromVisitOutVO(VisitOutVO visitOutVO) {
-		// TODO implement loadVisitFromVisitOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitFromVisitOutVO(VisitOutVO) not yet implemented.");
 		Visit visit = this.load(visitOutVO.getId());
 		if (visit == null) {
 			visit = Visit.Factory.newInstance();
@@ -154,9 +150,6 @@ public class VisitDaoImpl
 			Visit source,
 			VisitOutVO target) {
 		super.toVisitOutVO(source, target);
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.VisitType to org.phoenixctms.ctsms.vo.VisitTypeVO
 		VisitType type = source.getType();
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();

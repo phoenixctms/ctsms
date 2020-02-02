@@ -187,7 +187,6 @@ public interface DefaultMessages {
 	public static final String ECRF_VALIDATION_OK_NO_ERROR_RESPONSE = "validation successful - no errors";
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
 	public static final String NOTIFICATION_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
-	// public static final String NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR = ", ";
 	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_CHECKED = "checked";
 	public static final String MASS_MAIL_INPUT_FIELD_VALUE_CHECKBOX_UNCHECKED = "unchecked";
 	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "invalid proband/no email addresses";

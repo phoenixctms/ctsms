@@ -39,8 +39,6 @@ public class MassMailTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private MassMailType loadMassMailTypeFromMassMailTypeVO(MassMailTypeVO massMailTypeVO) {
-		// TODO implement loadMassMailTypeFromMassMailTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailTypeFromMassMailTypeVO(MassMailTypeVO) not yet implemented.");
 		MassMailType massMailType = null;
 		Long id = massMailTypeVO.getId();
 		if (id != null) {

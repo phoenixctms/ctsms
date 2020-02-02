@@ -54,13 +54,11 @@ public class StaffAddressTypeTagAdapter extends TagAdapter<Staff, AddressType, S
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_ZIP_CODE, tagValueIn.getZipCode(), zipCodeRegExp.pattern());
 		}
 		if (tagValueIn.getId() == null) {
-			// if (tagValueIn.isCv() && staffAddressDao.findByStaff(tagValueIn.getStaffId(), true, null, null, null).size() > 0) {
 			if (tagValueIn.isCv() && staffAddressDao.getCount(tagValueIn.getStaffId(), true, null, null) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_ADDRESS_ALREADY_ANOTHER_ADDRESS_MARKED_FOR_CV);
 			}
 		} else {
 			if (tagValueIn.isCv() && !CheckIDUtil.checkStaffAddressId(tagValueIn.getId(), staffAddressDao).isCv() &&
-			// staffAddressDao.findByStaff(tagValueIn.getStaffId(), true, null, null, null).size() > 0) {
 					staffAddressDao.getCount(tagValueIn.getStaffId(), true, null, null) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_ADDRESS_ALREADY_ANOTHER_ADDRESS_MARKED_FOR_CV);
 			}

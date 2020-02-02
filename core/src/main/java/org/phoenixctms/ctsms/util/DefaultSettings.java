@@ -10,15 +10,12 @@ public final class DefaultSettings {
 	public static final String INLAND = "";
 	public static final boolean USE_EXTERNAL_FILE_DATA_DIR = false;
 	public static final String EXTERNAL_FILE_DATA_DIR = "";
-	//public final static String HTTP_DOCUMENT_ROOT = "";
-	//public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "";
 	public static final String EMAIL_DOMAIN_NAME = "{0}";
 	public static final String HTTP_DOMAIN_NAME = "localhost";
 	public static final String HTTP_BASE_URL = "{0}://{1}";
 	public static final String HTTP_HOST = "{1}:80";
 	public final static String HTTP_SCHEME = "https";
 	public final static String INSTANCE_NAME = "{0}";
-	// public final static int PBE_KEY_ITERATIONS = 1;
 	public static final int EXTERNAL_FILE_SIZE_LIMIT = 1024 * 1024 * 30;
 	public static final int EXTERNAL_FILE_CONTENT_SIZE_LIMIT = 1024 * 1024 * 5;
 	public static final int EXTERNAL_FILE_CONTENT_STREAM_THRESHOLD = 1024 * 1024 * 10;
@@ -96,7 +93,7 @@ public final class DefaultSettings {
 	public static final boolean STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS = true;
 	public static final boolean STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_STAFF = true;
 	public static final boolean NOTIFY_SUPERVISOR_DUTY_ROSTER_TURN_UPDATES = false;
-	public static final int NOTIFICATION_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
+	public static final int NOTIFICATION_TEMPLATE_MODEL_VO_DEPTH = 3;
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String NOTIFICATION_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
@@ -211,11 +208,10 @@ public final class DefaultSettings {
 	public static final ArrayList<String> NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES = new ArrayList<String>();
 	public static final ArrayList<String> RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = new ArrayList<String>();
 	public static final Integer ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT = 200;
-	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "(?i)ecrf";
 	public final static int FIELD_CALCULATION_DEBUG_LEVEL = 0;
 	public final static Integer INPUT_FIELD_DELTA_SUMMARY_MAX = 100;
 	public static final boolean REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED = false;
-	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3; // 2;
+	public static final int MASS_MAIL_TEMPLATE_MODEL_VO_DEPTH = 3;
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String MASS_MAIL_TEMPLATE_MODEL_TIME_PATTERN = "HH:mm";
@@ -239,19 +235,9 @@ public final class DefaultSettings {
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");
-		// NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("ANNOTATION");
 		RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES.add("QUERY");
 	}
 
-	// public final static String ENV_JS_FILE_NAME = "env.js";
-	// public final static String FIELD_CALCULATION_JS_FILE_NAME = "fieldCalculation.js";
-	// public final static String SPRINTF_JS_FILE_NAME = "sprintf.js";
-	// public final static String DATE_JS_FILE_NAME = "date.js";
-	// public final static String TIME_JS_FILE_NAME = "time.js";
-	// public final static String STRIP_COMMENTS_JS_FILE_NAME = "strip-comments.js";
-	// public final static String JQUERY_BASE64_JS_FILE_NAME = "jquery.base64.js";
-	// public final static String REST_API_SHIM_JS_FILE_NAME = "restApiShim.js";
-	// public final static String LOCATION_DISTANCE_SHIM_JS_FILE_NAME = "locationDistanceShim.js";
 	private DefaultSettings() {
 	}
 }

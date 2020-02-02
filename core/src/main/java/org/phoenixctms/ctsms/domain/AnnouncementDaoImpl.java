@@ -8,7 +8,6 @@ package org.phoenixctms.ctsms.domain;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 
 /**
@@ -22,7 +21,6 @@ public class AnnouncementDaoImpl
 	 */
 	@Override
 	public Announcement announcementVOToEntity(AnnouncementVO announcementVO) {
-		// TODO verify behavior of announcementVOToEntity
 		Announcement entity = this.loadAnnouncementFromAnnouncementVO(announcementVO);
 		this.announcementVOToEntity(announcementVO, entity, true);
 		return entity;
@@ -36,7 +34,6 @@ public class AnnouncementDaoImpl
 			AnnouncementVO source,
 			Announcement target,
 			boolean copyIfNull) {
-		// TODO verify behavior of announcementVOToEntity
 		super.announcementVOToEntity(source, target, copyIfNull);
 	}
 
@@ -60,9 +57,6 @@ public class AnnouncementDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Announcement loadAnnouncementFromAnnouncementVO(AnnouncementVO announcementVO) {
-		// TODO implement loadAnnouncementFromAnnouncementVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadAnnouncementFromAnnouncementVO(AnnouncementVO) not yet implemented.");
-		// A typical implementation looks like this:
 		Long id = announcementVO.getId();
 		Announcement announcement = null;
 		if (id != null) {
@@ -79,7 +73,6 @@ public class AnnouncementDaoImpl
 	 */
 	@Override
 	public AnnouncementVO toAnnouncementVO(final Announcement entity) {
-		// TODO verify behavior of toAnnouncementVO
 		return super.toAnnouncementVO(entity);
 	}
 
@@ -90,7 +83,6 @@ public class AnnouncementDaoImpl
 	public void toAnnouncementVO(
 			Announcement source,
 			AnnouncementVO target) {
-		// TODO verify behavior of toAnnouncementVO
 		super.toAnnouncementVO(source, target);
 	}
 }

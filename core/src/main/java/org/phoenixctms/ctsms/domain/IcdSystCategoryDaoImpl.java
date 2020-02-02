@@ -38,8 +38,6 @@ public class IcdSystCategoryDaoImpl
 		icdSystCategoryCriteria.setCacheable(true);
 		CategoryCriterion.apply(icdSystCategoryCriteria, new CategoryCriterion(preferredRubricLabelInfix, "preferredRubricLabel", MatchMode.ANYWHERE));
 		icdSystCategoryCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("preferredRubricLabel", ""), Restrictions.isNull("preferredRubricLabel"))));
-		// icdSystCategoryCriteria.add(Restrictions.eq("revision",
-		// Settings.getString(SettingCodes.ICD_SYSTEMATICS_REVISION, Bundle.SETTINGS, DefaultSettings.ICD_SYSTEMATICS_REVISION)));
 		icdSystCategoryCriteria.addOrder(Order.asc("preferredRubricLabel"));
 		icdSystCategoryCriteria.setProjection(Projections.distinct(Projections.property("preferredRubricLabel")));
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.ICD_SYST_CATEGORY_PREFERRED_RUBRIC_LABEL_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -82,8 +80,6 @@ public class IcdSystCategoryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private IcdSystCategory loadIcdSystCategoryFromIcdSystCategoryVO(IcdSystCategoryVO icdSystCategoryVO) {
-		// TODO implement loadIcdSystCategoryFromIcdSystCategoryVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystCategoryFromIcdSystCategoryVO(IcdSystCategoryVO) not yet implemented.");
 		Long id = icdSystCategoryVO.getId();
 		IcdSystCategory icdSystCategory = null;
 		if (id != null) {

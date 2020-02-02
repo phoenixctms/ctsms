@@ -91,27 +91,21 @@ public class FileServiceImpl
 	private static JournalEntry logSystemMessage(Course course, CourseOutVO courseVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(course, now, modified, systemMessageCode, new Object[] { CommonUtil.courseOutVOToString(courseVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.COURSE_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Inventory inventory, InventoryOutVO inventoryVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL,
-		// null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Staff staff, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
-	// private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	// JournalEntryDao journalEntryDao) throws Exception {
-	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
-	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	// }
 	private static boolean mkDir(java.io.File file) throws Exception {
 		return file.getParentFile().mkdirs();
 	}
@@ -151,9 +145,8 @@ public class FileServiceImpl
 				ProbandDao probandDao = this.getProbandDao();
 				Proband proband = probandDao.load(id);
 				ServiceUtil
-						.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao); // creates
-				// mixed
-				// encryptions!
+						.logSystemMessage(proband, probandDao.toProbandOutVO(proband), now, user, SystemMessageCodes.AGGREGATED_PDF_FILES_EXPORTED, pdfVO, null, journalEntryDao);
+				// creates mixed encryptions!
 				break;
 			case MASS_MAIL_DOCUMENT:
 				MassMailDao massMailDao = this.getMassMailDao();
@@ -271,7 +264,7 @@ public class FileServiceImpl
 	}
 
 	private void checkFileModuleId(FileModule module, Long id) throws Exception {
-		if (id != null) { // module != null
+		if (id != null) {
 			switch (module) {
 				case INVENTORY_DOCUMENT:
 					CheckIDUtil.checkInventoryId(id, this.getInventoryDao());
@@ -332,7 +325,7 @@ public class FileServiceImpl
 			default:
 				// not supported for now...
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
-						.getModule().toString() })); // L10nUtil.initServiceException("file module {0} not supported",file.getModule());
+						.getModule().toString() }));
 		}
 		return result;
 	}

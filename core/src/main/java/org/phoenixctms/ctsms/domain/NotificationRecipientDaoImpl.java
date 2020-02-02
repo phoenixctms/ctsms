@@ -53,10 +53,7 @@ public class NotificationRecipientDaoImpl
 	 * a new, blank entity is created
 	 */
 	private NotificationRecipient loadNotificationRecipientFromNotificationRecipientVO(NotificationRecipientVO notificationRecipientVO) {
-		// TODO implement loadNotificationRecipientFromNotificationRecipientVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationRecipientFromNotificationRecipientVO(NotificationRecipientVO) not yet implemented.");
-		/* A typical implementation looks like this: NotificationRecipient notificationRecipient = this.load(notificationRecipientVO.getId()); if (notificationRecipient == null) {
-		 * notificationRecipient = NotificationRecipient.Factory.newInstance(); } return notificationRecipient; */
 	}
 
 	/**
@@ -64,7 +61,6 @@ public class NotificationRecipientDaoImpl
 	 */
 	@Override
 	public NotificationRecipient notificationRecipientVOToEntity(NotificationRecipientVO notificationRecipientVO) {
-		// TODO verify behavior of notificationRecipientVOToEntity
 		NotificationRecipient entity = this.loadNotificationRecipientFromNotificationRecipientVO(notificationRecipientVO);
 		this.notificationRecipientVOToEntity(notificationRecipientVO, entity, true);
 		return entity;
@@ -78,7 +74,6 @@ public class NotificationRecipientDaoImpl
 			NotificationRecipientVO source,
 			NotificationRecipient target,
 			boolean copyIfNull) {
-		// TODO verify behavior of notificationRecipientVOToEntity
 		super.notificationRecipientVOToEntity(source, target, copyIfNull);
 	}
 
@@ -87,7 +82,6 @@ public class NotificationRecipientDaoImpl
 	 */
 	@Override
 	public NotificationRecipientVO toNotificationRecipientVO(final NotificationRecipient entity) {
-		// TODO verify behavior of toNotificationRecipientVO
 		return super.toNotificationRecipientVO(entity);
 	}
 
@@ -98,9 +92,7 @@ public class NotificationRecipientDaoImpl
 	public void toNotificationRecipientVO(
 			NotificationRecipient source,
 			NotificationRecipientVO target) {
-		// TODO verify behavior of toNotificationRecipientVO
 		super.toNotificationRecipientVO(source, target);
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		Staff staff = source.getStaff();
 		if (staff != null) {
 			target.setStaff(this.getStaffDao().toStaffOutVO(staff));

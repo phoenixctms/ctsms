@@ -35,11 +35,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class EcrfPDFBlock extends InputFieldPDFBlock {
 
 	public enum BlockType {
-		// NEW_PAGE,
-		// NEW_LIST_ENTRY,
 		PAGE_TITLE, NEW_ECRF, LIST_ENTRY_TAG_VALUE, NEW_SECTION, NEW_INDEX, INPUT_FIELD, AUDIT_TRAIL_VALUE, FIELD_STATUS_ENTRY, END_OF_INDEX, END_OF_SECTION,
-		// ECRF_SIGNATURE,
-		// SPACER,
 	}
 
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
@@ -145,13 +141,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		this.type = type;
 		this.inserted = inserted;
 	}
-	// public EcrfPDFBlock() {
-	// type = BlockType.SPACER;
-	// }
 
-	// public EcrfPDFBlock(BlockType type) {
-	// this.type = type;
-	// }
 	public EcrfPDFBlock(ECRFFieldValueOutVO value, PDFJpeg ximage, boolean blank, boolean hasNext) {
 		super(value.getEcrfField().getField(), ximage, blank);
 		this.value = value;
@@ -193,11 +183,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		}
 	}
 
-	// public EcrfPDFBlock(ProbandListEntryOutVO listEntry) {
-	// super();
-	// this.listEntry = listEntry;
-	// this.type = BlockType.NEW_LIST_ENTRY;
-	// }
 	public EcrfPDFBlock(ProbandListEntryOutVO listEntry, ECRFOutVO ecrf, ECRFStatusEntryVO statusEntry, SignatureVO signature, Date now, boolean blank) {
 		super();
 		this.listEntry = listEntry;
@@ -218,11 +203,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		this.type = BlockType.LIST_ENTRY_TAG_VALUE;
 	}
 
-	// public EcrfPDFBlock(SignatureVO signature) {
-	// super();
-	// this.signature = signature;
-	// this.type = BlockType.ECRF_SIGNATURE;
-	// }
 	public EcrfPDFBlock(String section) {
 		super();
 		this.section = section;
@@ -459,10 +439,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		return value.getTimeValue();
 	}
 
-	// @Override
-	// protected boolean isShowValidationErrorMessages() {
-	// return Settings.getBoolean(EcrfPDFSettingCodes.SHOW_VALIDATION_ERROR_MESSAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_VALIDATION_ERROR_MESSAGES);
-	// }
 	@Override
 	protected SimpleDateFormat getTimeValueFormat() {
 		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF);
@@ -567,9 +543,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	}
 
 	public float renderBlock(PDPageContentStream contentStream, EcrfPDFBlockCursor cursor) throws Exception {
-		// if (contentStream != null) {
-		// System.out.println("rendering block " + type);
-		// }
 		float x;
 		float y;
 		float y1;
@@ -582,8 +555,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		switch (type) {
 			case PAGE_TITLE:
 				height = PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.BIG, getTextColor(),
-						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(), ecrf.getName(), // +
-								// "xxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXX"
+						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(), ecrf.getName(),
 								Long.toString(listEntry.getProband().getId()), listEntry
 										.getProband()
 										.getInitials(),
@@ -676,7 +648,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								Alignment.TOP_LEFT,
 								width - getXFrameIndent()),
 						height3);
-				//
 				x = cursor.getBlockX();
 				y -= Math.max(Math.max(height1, height2), height3) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -722,7 +693,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						y,
 						Alignment.TOP_LEFT,
 						width - getXFrameIndent()), height3);
-				//
 				x = cursor.getBlockX();
 				y -= Math.max(Math.max(height1, height2), height3) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -811,12 +781,9 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						contentStream,
 						getFrameColor(),
 						cursor.getBlockX(),
-						// + (cursor.hasSection() ? Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF,
-						// EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT) : 0.0f),
 						y1,
-						cursor.getBlockWidth(), // .getIndexWidth(),
+						cursor.getBlockWidth(),
 						y1 - y,
-						// - Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT),
 						Alignment.TOP_LEFT,
 						Settings.getFloat(EcrfPDFSettingCodes.HEAD_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.HEAD_FRAME_LINE_WIDTH));
 				y -= Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT);
@@ -855,7 +822,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								y1 - y,
 								Alignment.TOP_LEFT,
 								Settings.getFloat(EcrfPDFSettingCodes.HEAD_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.HEAD_FRAME_LINE_WIDTH));
-						// Settings.getFloat(EcrfPDFSettingCodes.SIGNATURE_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_FRAME_LINE_WIDTH));
 					}
 					height += Settings.getFloat(EcrfPDFSettingCodes.Y_HEADLINE_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_HEADLINE_INDENT);
 				}
@@ -874,7 +840,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				break;
 			case NEW_INDEX:
 				height = 0.0f;
-				if (cursor.hasIndex() || contentStream == null) { // always allow getHeight
+				if (cursor.hasIndex() || contentStream == null) {
 					if (!inserted) {
 						height += Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 						height += PDFUtil.renderTextLine(contentStream, cursor.getFontA(), FontSize.BIG, getTextColor(), cursor.getIndexLabel(), cursor.getBlockIndentedX(),
@@ -887,28 +853,13 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			case END_OF_INDEX:
 				height = 0.0f;
 				if (cursor.hasIndex()) {
-					// PDFUtil.renderFrame(
-					// contentStream,
-					// getFrameColor(),
-					// cursor.getBlockX()
-					// + (cursor.hasSection() ? (cursor.getSectionWidth() + Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF,
-					// EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT)) : 0.0f),
-					// cursor.getIndexY(),
-					// cursor.getIndexWidth(),
-					// cursor.getIndexY() - cursor.getBlockY(),
-					// // - Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-					// Alignment.TOP_LEFT,
-					// Settings.getFloat(EcrfPDFSettingCodes.INDEX_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.INDEX_FRAME_LINE_WIDTH));
 					PDFUtil.renderFrame(
 							contentStream,
 							getFrameColor(),
 							cursor.getBlockX(),
-							// + (cursor.hasSection() ? Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF,
-							// EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT) : 0.0f),
 							cursor.getIndexY(),
-							cursor.getBlockWidth(), // .getIndexWidth(),
+							cursor.getBlockWidth(),
 							cursor.getIndexY() - cursor.getBlockY(),
-							// - Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT),
 							Alignment.TOP_LEFT,
 							Settings.getFloat(EcrfPDFSettingCodes.INDEX_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.INDEX_FRAME_LINE_WIDTH),
 							LineStyle.DASHED);
@@ -918,15 +869,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			case END_OF_SECTION:
 				height = 0.0f;
 				if (cursor.hasSection()) {
-					// PDFUtil.renderFrame(contentStream,
-					// getFrameColor(),
-					// cursor.getBlockX(),
-					// cursor.getSectionY(),
-					// cursor.getSectionWidth(),
-					// cursor.getSectionY() - cursor.getBlockY(),
-					// // + Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-					// Alignment.TOP_LEFT,
-					// Settings.getFloat(EcrfPDFSettingCodes.SECTION_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SECTION_FRAME_LINE_WIDTH));
 					height += Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				}
 				break;
@@ -954,7 +896,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						x + getXFrameIndent(),
 						y,
 						PDFUtil.Alignment.TOP_LEFT,
-						getXFieldColumnIndent() - getXFrameIndent()), // , TextDecoration.UNDERLINE),
+						getXFieldColumnIndent() - getXFrameIndent()),
 						PDFUtil.renderMultilineText(
 								contentStream,
 								cursor.getFontA(),
@@ -995,20 +937,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				height += (hasNext ? Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_LOG_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_LOG_FRAME_INDENT)
 						: Settings
 								.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT));
-				// height += Settings.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-				// if (isInputFieldLongTitle()) {
-				// y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
-				// y -= renderTextValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor) + getYFrameIndent();
-				// } else {
-				// y1 = y;
-				// y2 = y;
-				// y1 -= renderTitle(x, y1, contentStream, cursor);
-				// y2 -= renderTextValue(x + getXFieldColumnIndent() + getXFrameIndent(), y2, fieldType, contentStream, cursor);
-				// y = Math.min(y1, y2) - getYFrameIndent();
-				// }
-				// y -= renderComments(x, y, contentStream, cursor);
-				// height = cursor.getBlockY() - y;
-				// renderFrame(height, contentStream, cursor);
 				break;
 			case FIELD_STATUS_ENTRY:
 				x = cursor.getBlockIndentedX();
@@ -1019,7 +947,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								cursor.getFontA(),
 								PDFUtil.FontSize.SMALL,
 								fieldStatusEntry.getStatus().getColor(),
-								// getTextColor(),
 								L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.FIELD_STATUS_LABEL, PDFUtil.DEFAULT_LABEL,
 										L10nUtil.getEcrfFieldStatusTypeName(Locales.ECRF_PDF, fieldStatusEntry.getStatus().getNameL10nKey())),
 								x + getXFrameIndent(),
@@ -1054,63 +981,6 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						: Settings
 								.getFloat(EcrfPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_BOX_FRAME_INDENT));
 				break;
-			// case ECRF_SIGNATURE:
-			// height = 0.0f;
-			// // if (signature != null) {
-			// // x = cursor.getBlockX() + getXFrameIndent();
-			// // y = cursor.getBlockY() - getYFrameIndent();
-			// // if (signature.getVerified()) {
-			// // if (signature.getValid()) {
-			// // ximage = cursor.getSignatureValidImage();
-			// // } else {
-			// // ximage = cursor.getSignatureInvalidImage();
-			// // }
-			// // } else {
-			// // ximage = cursor.getSignatureAvailableImage();
-			// // }
-			// // PDFUtil.renderImage(contentStream, ximage, x, y, Alignment.TOP_LEFT);
-			// // x += ximage.getWidthPoints();
-			// // y -= Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.TINY, getTextColor(),
-			// // EntitySignature.getDescription(signature, Locales.ECRF_PDF),
-			// // x + getXFrameIndent(),
-			// // y,
-			// // Alignment.TOP_LEFT,
-			// // cursor.getBlockWidth() - x - 2.0f * getXFrameIndent()), ximage.getHeightPoints());
-			// // y -= getYFrameIndent();
-			// // height = cursor.getBlockY() - y;
-			// // PDFUtil.renderFrame(contentStream,
-			// // getFrameColor(),
-			// // cursor.getBlockX(),
-			// // cursor.getBlockY(),
-			// // cursor.getBlockWidth(),
-			// // height,
-			// // Alignment.TOP_LEFT,
-			// // Settings.getFloat(EcrfPDFSettingCodes.SIGNATURE_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SIGNATURE_FRAME_LINE_WIDTH));
-			// // }
-			//
-			// break;
-			// case NEW_SECTION:
-			// PDFUtil.renderFrame(contentStream,
-			// getFrameColor(),
-			// cursor.getBlockX(),
-			// cursor.getPreviousSectionY(),
-			// 50.0f,
-			// cursor.getPreviousSectionY() - cursor.getBlockY(),
-			// Alignment.TOP_LEFT,
-			// 2.0f);
-			// height = 0.0f;
-			// break;
-			// case NEW_INDEX:
-			// PDFUtil.renderFrame(contentStream,
-			// getFrameColor(),
-			// cursor.getBlockX() + 20.0f,
-			// cursor.getPreviousIndexY(),
-			// 30.0f,
-			// cursor.getPreviousIndexY() - cursor.getBlockY(),
-			// Alignment.TOP_LEFT,
-			// 2.0f);
-			// height = 0.0f;
-			// break;
 			default:
 				height = 0.0f;
 				break;

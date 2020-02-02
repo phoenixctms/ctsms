@@ -127,32 +127,18 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_VALUE_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	// public static String getCityNamesColumnName() {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
 	private AuditTrailExcelVO excelVO;
-	// private String costType;
-	// private PaymentMethodVO method;
-	// private Boolean paid;
 	private TrialOutVO trial;
 	private ProbandListEntryOutVO listEntry;
 	private ECRFOutVO ecrf;
-	// private HashMap<Integer,ECRFFieldStatusQueue> sheetIndexQueueMap;
 	private LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
 
-	// public static String getStreetsColumnName() {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	// public static String getZipCodesColumnName() {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
 	protected AuditTrailExcelWriter() {
 		super();
 	}
 
 	public AuditTrailExcelWriter(boolean omitFields, ECRFFieldStatusQueue... queues) {
 		super();
-		// this.method = L10nUtil.createPaymentMethodVO(Locales.USER, method);
 		excelVO = new AuditTrailExcelVO();
 		getSpreadSheetWriters().add(createAuditTrailSpreadSheetWriter(omitFields));
 		queueSheetIndexMap = new LinkedHashMap<ECRFFieldStatusQueue, Integer>(queues.length);
@@ -165,14 +151,11 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
-		// temp = CommonUtil.trialOutVOToString(trial);
-		// if (!CommonUtil.isEmptyString(temp)) {
 		if (trial != null) {
 			header.getLeft().append(
 					L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.TRIAL_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, CommonUtil.trialOutVOToString(trial)));
 		} else {
 			if (listEntry != null) {
-				// temp = CommonUtil.trialOutVOToString(listEntry.getTrial());
 				header.getLeft().append(
 						L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.TRIAL_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
 								CommonUtil.trialOutVOToString(listEntry.getTrial())));
@@ -206,7 +189,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 					L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.DATE_REQUESTING_USER_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp,
 							CommonUtil.formatDate(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now, ExcelUtil.EXCEL_DATE_PATTERN,
 									L10nUtil.getLocale(Locales.USER))));
-			// (new SimpleDateFormat(ExcelUtil.EXCEL_DATE_PATTERN)).format(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now)));
 		}
 	}
 
@@ -291,68 +273,14 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return ecrf;
 	}
 
-	// public String getCostType() {
-	// return costType;
-	// }
-	// public ArrayList<String> getDistinctColumnNames() {
-	// return getSpreadSheetWriters().get(0).getDistinctColumnNames();
-	// }
-	//
-	// public HashMap<Long, HashMap<String, Object>> getDistinctFieldRows() {
-	// return getSpreadSheetWriters().get(0).getDistinctFieldRows();
-	// }
 	public AuditTrailExcelVO getExcelVO() {
 		return excelVO;
 	}
-	// public void setCostType(String costType) {
-	// this.costType = costType;
-	// }
-	// public void setDistinctColumnNames(ArrayList<String> distinctColumnNames) {
-	// getSpreadSheetWriters().get(0).setDistinctColumnNames(distinctColumnNames);
-	// }
-	//
-	// public void setDistinctFieldRows(
-	// HashMap<Long, HashMap<String, Object>> distinctFieldRows) {
-	// getSpreadSheetWriters().get(0).setDistinctFieldRows(distinctFieldRows);
-	// }
-	// public void setPaid(Boolean paid) {
-	// this.paid = paid;
-	// setSpreadSheetName(null);
-	// }
-	// public void setProband(ProbandOutVO proband) {
-	// this.proband = proband;
-	// setSpreadSheetName(null);
-	// }
 
 	public ProbandListEntryOutVO getListEntry() {
 		return listEntry;
 	}
 
-	// public Boolean getPaid() {
-	// return paid;
-	// }
-	// private String getPaidMethodString() {
-	// if (method == null) {
-	// if (paid == null) {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PAID_AND_NOT_PAID_LABEL, ExcelUtil.DEFAULT_LABEL);
-	// } else if (paid) {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PAID_LABEL, ExcelUtil.DEFAULT_LABEL);
-	// } else {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.NOT_PAID_LABEL, ExcelUtil.DEFAULT_LABEL);
-	// }
-	// } else {
-	// if (paid == null) {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PAID_AND_NOT_PAID_METHOD_LABEL, ExcelUtil.DEFAULT_LABEL, method.getName());
-	// } else if (paid) {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.PAID_METHOD_LABEL, ExcelUtil.DEFAULT_LABEL, method.getName());
-	// } else {
-	// return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.NOT_PAID_METHOD_LABEL, ExcelUtil.DEFAULT_LABEL, method.getName());
-	// }
-	// }
-	// }
-	// public ProbandOutVO getProband() {
-	// return proband;
-	// }
 	@Override
 	public String getTemplateFileName() throws Exception {
 		return Settings.getString(AuditTrailExcelSettingCodes.TEMPLATE_FILE_NAME, Bundle.AUDIT_TRAIL_EXCEL, AuditTrailExcelDefaultSettings.TEMPLATE_FILE_NAME);
@@ -366,9 +294,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return getSpreadSheetWriters().get(0).getVOs();
 	}
 
-	// public TrialOutVO getTrial() {
-	// return trial;
-	// }
 	public Collection getVOs(ECRFFieldStatusQueue queue) {
 		return getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).getVOs();
 	}
@@ -440,10 +365,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().get(0).setDistinctFieldRows(distinctFieldRows);
 	}
 
-	// public void setTrial(TrialOutVO trial) {
-	// this.trial = trial;
-	// setSpreadSheetName(null);
-	// }
 	public void setVOs(ECRFFieldStatusQueue queue, Collection VOs) {
 		getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).setVOs(VOs);
 	}
@@ -455,8 +376,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		excelVO.setTrial(trial);
 		excelVO.setListEntry(listEntry);
 		excelVO.setEcrf(ecrf);
-		// excelVO.setMethod(method);
-		// excelVO.setPaid(paid);
 		excelVO.setAuditTrailRowCount(getVOs().size());
 		LinkedHashMap<ECRFFieldStatusQueue, Long> ecrfFieldStatusRowCountMap = new LinkedHashMap<ECRFFieldStatusQueue, Long>(queueSheetIndexMap.size());
 		Iterator<ECRFFieldStatusQueue> it = queueSheetIndexMap.keySet().iterator();
@@ -465,9 +384,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			ecrfFieldStatusRowCountMap.put(queue, new Long(getVOs(queue).size()));
 		}
 		excelVO.setEcrfFieldStatusRowCountMap(ecrfFieldStatusRowCountMap);
-		// excelVO.setValidationRowCount(getValidationVOs().size());
-		// excelVO.setQueryRowCount(getQueryVOs().size());
-		// excelVO.setAnnotationRowCount(getAnnotationVOs().size());
 		StringBuilder fileName = new StringBuilder(AUDIT_TRAIL_EXCEL_FILENAME_PREFIX);
 		if (trial != null) {
 			fileName.append(AUDIT_TRAIL_EXCEL_FILENAME_TRIAL);
@@ -494,9 +410,6 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	public Color voToColor(Object vo) {
 		if (vo instanceof ECRFFieldStatusEntryOutVO) {
 			return ((ECRFFieldStatusEntryOutVO) vo).getStatus().getColor();
-			// if (lastStatus != null) {
-			// return lastStatus.getStatus().getColor();
-			// }
 		}
 		return null;
 	}

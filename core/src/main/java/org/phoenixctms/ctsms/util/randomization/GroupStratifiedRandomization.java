@@ -32,7 +32,6 @@ public class GroupStratifiedRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -47,17 +46,12 @@ public class GroupStratifiedRandomization extends Randomization {
 		return getRandomizationListGroups(trial);
 	}
 
-	//	@Override
-	//	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
-	//			String randomizationList, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
-	//		return sanitizeRandomizationListCodesInput(randomizationList, codes);
-	//	}
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.GROUP_STRATIFIED;
 	}
 
-	private int getTotalGroupsSize(Long excludeListEntryId, Collection<ProbandGroup> probandGroups, StratificationRandomizationList randomizationList) { // long trialId,
+	private int getTotalGroupsSize(Long excludeListEntryId, Collection<ProbandGroup> probandGroups, StratificationRandomizationList randomizationList) {
 		int result = 0;
 		Set<Long> selectionSetValueIds = getInputFieldSelectionSetValueIdMap(randomizationList.getSelectionSetValues()).keySet();
 		Iterator<ProbandGroup> it = probandGroups.iterator();

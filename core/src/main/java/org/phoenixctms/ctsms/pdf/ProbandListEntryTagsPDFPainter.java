@@ -36,10 +36,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	private HashMap<Long, HashMap<Long, PDFJpeg>> images;
 	private ProbandListEntryTagsPDFVO pdfVO;
 	private Collection<ProbandListEntryOutVO> listEntryVOs;
-	// private HashMap<Long, Collection<TrialOutVO>> trialVOMap;
 	private HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap;
-	// private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap;
-	// private HashMap<Long, SignatureVO> signatureVOMap;
 	private HashMap<Long, InputFieldImageVO> imageVOMap;
 	private boolean blank;
 	private float pageWidth;
@@ -57,8 +54,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	private PDFJpeg checkboxCheckedPresetImage;
 	private PDFJpeg radioOnPresetImage;
 	private PDFJpeg selectboxCheckedPresetImage;
-	// private PDFont fontE;
-	// private PDFont fontF;
 	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
 	private static final String PROBAND_LIST_ENTRY_TAGS_PDF_FILENAME_PREFIX = "probandlistentrytags_";
 
@@ -73,17 +68,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	}
 
 	private void drawBlock(PDPageContentStream contentStream, ProbandListEntryTagsPDFBlock block) throws Exception {
-		// if (// BlockType.NEW_LIST_ENTRY.equals(block.getType())
-		// BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
-		// // || BlockType.ECRF_SIGNATURE.equals(block.getType())) {
-		// cursor.setCategoryY(cursor.getBlockY());
-		// // cursor.setIndexY(cursor.getBlockY());
-		// } else if (BlockType.NEW_CATEGORY.equals(block.getType())) {
-		// cursor.setCategoryY(cursor.getBlockY());
-		// // cursor.setIndexY(cursor.getBlockY());
-		// // } else if (BlockType.NEW_INDEX.equals(block.getType())) {
-		// // cursor.setIndexY(cursor.getBlockY());
-		// }
 		cursor.setBlocks(block);
 		cursor.setBlockY(cursor.getBlockY() - block.renderBlock(contentStream, cursor));
 	}
@@ -99,42 +83,14 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		if (cursor.getListEntryBlock() != null) {
 			(new ProbandListEntryTagsPDFBlock(cursor.getListEntryBlock(), BlockType.PAGE_TITLE, true)).renderBlock(contentStream, cursor);
 		}
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-		// ProbandListEntryTagsPDFDefaultSettings.PAGE_LEFT_MARGIN),
-		// Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.PAGE_LOWER_MARGIN),
-		// pageWidth -
-		// Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.PAGE_LEFT_MARGIN) -
-		// Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_RIGHT_MARGIN,
-		// Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN -
-		// Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.PAGE_LOWER_MARGIN,
-		// Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-		// ProbandListEntryTagsPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
 	@Override
 	public void drawPageBreakNewPage(PDPageContentStream contentStream) throws Exception {
-		// ProbandListEntryTagsPDFBlock block = blocks.get(blockIndex);
-		// if (BlockType.INPUT_FIELD.equals(block.getType())
-		// || BlockType.NEW_CATEGORY.equals(block.getType())) {
-		// // || BlockType.NEW_INDEX.equals(block.getType())) {
-		// drawBlock(contentStream, new ProbandListEntryTagsPDFBlock(cursor.getProbandTrialBlock(), true));
-		// }
-		// if (BlockType.INPUT_FIELD.equals(block.getType())) {
-		// drawBlock(contentStream, new ProbandListEntryTagsPDFBlock(cursor.getCategoryBlock(), true));
-		// // drawBlock(contentStream, new ProbandListEntryTagsPDFBlock(cursor.getIndexBlock(), true));
-		// }
 	}
 
 	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
-		// ProbandListEntryTagsPDFBlock block = blocks.get(blockIndex - 1);
-		// // if (BlockType.NEW_INDEX.equals(block.getType())) {
-		// // (new ProbandListEntryTagsPDFBlock(BlockType.END_OF_SECTION)).renderBlock(contentStream, cursor);
-		// // } else
-		// if (BlockType.INPUT_FIELD.equals(block.getType())) {
-		// // drawBlock(contentStream, new ProbandListEntryTagsPDFBlock(BlockType.END_OF_INDEX, true));
-		// drawBlock(contentStream, new ProbandListEntryTagsPDFBlock(BlockType.END_OF_CATEGORY, true));
-		// }
 	}
 
 	@Override
@@ -177,13 +133,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	public PDRectangle getDefaultPageSize() {
 		return DEFAULT_PAGE_SIZE;
 	}
-	// public PDFont getFontE() {
-	// return fontE;
-	// }
-	//
-	// public PDFont getFontF() {
-	// return fontF;
-	// }
 
 	public PDFont getFontA() {
 		return fontA;
@@ -268,8 +217,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		fontB = PDFUtil.loadFont(Settings.getPDFFontName(ProbandListEntryTagsPDFSettingCodes.FONT_B, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontC = PDFUtil.loadFont(Settings.getPDFFontName(ProbandListEntryTagsPDFSettingCodes.FONT_C, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontD = PDFUtil.loadFont(Settings.getPDFFontName(ProbandListEntryTagsPDFSettingCodes.FONT_D, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontE = PDFUtil.loadFont(Settings.getPDFFontName(ProbandListEntryTagsPDFSettingCodes.FONT_E, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontF = PDFUtil.loadFont(Settings.getPDFFontName(ProbandListEntryTagsPDFSettingCodes.FONT_F, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null), doc, DEFAULT_BASE_FONT);
 	}
 
 	@Override
@@ -317,54 +264,23 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				&& imageVOMap != null
 				&& Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
-			// Integer width = Settings.getIntNullable(ProbandListEntryTagsPDFSettingCodes.IMAGE_WIDTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.IMAGE_WIDTH);
-			// Integer height = Settings.getIntNullable(ProbandListEntryTagsPDFSettingCodes.IMAGE_HEIGHT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.IMAGE_HEIGHT);
 			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryMapIt = valueVOMap.values().iterator();
 			while (listEntryMapIt.hasNext()) {
 				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryMapIt.next().iterator();
 				while (valuesIt.hasNext()) {
 					putSketchImage(valuesIt.next(), doc);
-					// ECRFFieldValueOutVO value = valuesIt.next();
-					// InputFieldOutVO field = value.getEcrfField().getField();
-					// InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
-					// Long x =
-					// if (inputFieldImage != null) {
-					// images.put(
-					// value.getId(),
-					// );
-					// }
 				}
 			}
-			// Iterator<InputFieldImageVO> it = imageVOMap.values().iterator();
-			// while (it.hasNext()) {
-			// InputFieldImageVO inputFieldImage = it.next();
-			// images.put(inputFieldImage.getId(),
-			// PDFJpeg.prepareInputFieldImage(doc, inputFieldImage,
-			// cursor.getBlockWidth() - 2.0f * Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.X_FRAME_INDENT),
-			// quality, dpi, bgColor));
-			// }
 		}
 	}
 
 	@Override
 	public boolean nextBlockFitsOnPage() throws Exception {
 		ProbandListEntryTagsPDFBlock block = blocks.get(blockIndex);
-		if (blockIndex > 0 && BlockType.NEW_LIST_ENTRY.equals(block.getType())) { // BlockType.NEW_LIST_ENTRY.equals(block.getType()) ||
+		if (blockIndex > 0 && BlockType.NEW_LIST_ENTRY.equals(block.getType())) {
 			return false;
 		} else {
 			float height = block.getHeight(cursor);
-			// if (BlockType.NEW_CATEGORY.equals(block.getType())) {
-			// height += blocks.get(blockIndex + 1).getHeight(cursor); // + blocks.get(blockIndex + 2).getHeight(cursor);
-			// // } else if (BlockType.NEW_INDEX.equals(block.getType())) {
-			// // height += blocks.get(blockIndex + 1).getHeight(cursor);
-			// // } else if (BlockType.END_OF_INDEX.equals(block.getType())) {
-			// // return true;
-			// } else if (BlockType.END_OF_CATEGORY.equals(block.getType())) {
-			// return true;
-			// }
 			return (cursor.getBlockY() - height) > Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 					ProbandListEntryTagsPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
 		}
@@ -380,47 +296,13 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				blocks.add(new ProbandListEntryTagsPDFBlock(listEntryVO, now, blank));
 				Collection<ProbandListEntryTagValueOutVO> valueVOs = valueVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
 				if (valueVOs != null && valueVOs.size() > 0) {
-					// boolean first = true;
-					// String previousSection = null;
-					// Long previousIndex = null;
 					Iterator<ProbandListEntryTagValueOutVO> valueIt = valueVOs.iterator();
 					while (valueIt.hasNext()) {
 						ProbandListEntryTagValueOutVO valueVO = valueIt.next();
-						// String section = valueVO.getEcrfField().getSection();
-						// Long index = valueVO.getIndex();
-						// if (first) {
-						// blocks.add(new EcrfPDFBlock(section));
-						// blocks.add(new EcrfPDFBlock(section, index));
-						// first = false;
-						// } else {
-						// if (previousSection == null ? section == null : previousSection.equals(section)) {
-						// if (previousIndex == null ? index == null : previousIndex.equals(index)) {
-						//
-						// } else {
-						// blocks.add(new EcrfPDFBlock(BlockType.END_OF_INDEX, false));
-						// blocks.add(new EcrfPDFBlock(section, index));
-						// }
-						// } else {
-						// blocks.add(new EcrfPDFBlock(BlockType.END_OF_INDEX, false));
-						// blocks.add(new EcrfPDFBlock(BlockType.END_OF_SECTION, false));
-						// blocks.add(new EcrfPDFBlock(section));
-						// blocks.add(new EcrfPDFBlock(section, index));
-						// }
-						// }
 						blocks.add(new ProbandListEntryTagsPDFBlock(valueVO, getSketchImage(valueVO), blank));
-						// previousSection = section;
-						// previousIndex = index;
 					}
-					// blocks.add(new EcrfPDFBlock(BlockType.END_OF_INDEX, false));
-					// blocks.add(new EcrfPDFBlock(BlockType.END_OF_SECTION, false));
 				}
 			}
-			// SignatureVO signatureVO;
-			// if (signatureVOMap != null && statusEntryVO != null && (signatureVO = signatureVOMap.get(statusEntryVO.getId())) != null) {
-			// blocks.add(new EcrfPDFBlock(signatureVO));
-			// } else {
-			// blocks.add(new EcrfPDFBlock(BlockType.ECRF_SIGNATURE, false));
-			// }
 		}
 	}
 
@@ -452,9 +334,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 										ProbandListEntryTagsPDFDefaultSettings.SHOW_SKETCH_REGIONS),
 								!blank,
 								cursor.getBlockIndentedWidth(false),
-								// - 2.0f
-								// * Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-								// ProbandListEntryTagsPDFDefaultSettings.X_FRAME_INDENT),
 								quality, dpi, bgColor));
 				return true;
 			}
@@ -484,8 +363,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		fontB = null;
 		fontC = null;
 		fontD = null;
-		// fontE = null;
-		// fontF = null;
 		checkboxCheckedImage = null;
 		checkboxCheckedPresetImage = null;
 		checkboxUncheckedImage = null;
@@ -495,9 +372,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		selectboxCheckedImage = null;
 		selectboxCheckedPresetImage = null;
 		selectboxUncheckedImage = null;
-		// signatureValidImage = null;
-		// signatureInvalidImage = null;
-		// signatureAvailableImage = null;
 		images.clear();
 		updateProbandListEntryTagsPDFVO();
 	}
@@ -529,8 +403,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		cursor.setBlockY(pageHeight
 				- Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
-		// cursor.setCategoryY(cursor.getBlockY());
-		// cursor.setIndexY(cursor.getBlockY());
 	}
 
 	@Override
@@ -543,27 +415,13 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 						ProbandListEntryTagsPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 	}
 
-	// public void setProbandVOs(Collection<ProbandOutVO> probandVOs) {
-	// this.probandVOs = probandVOs;
-	// }
-	//
-	// public void setTrialVOMap(HashMap<Long, Collection<TrialOutVO>> trialVOMap) {
-	// this.trialVOMap = trialVOMap;
-	// }
-	//
-	//
-	//
-	// public void setValueVOMap(HashMap<Long, HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>> valueVOMap) {
-	// this.valueVOMap = valueVOMap;
-	// }
 	public void setValueVOMap(HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap) {
 		this.valueVOMap = valueVOMap;
 	}
 
 	@Override
 	public void startNewPage() {
-		super.startNewPage(!hasNextBlock() || BlockType.NEW_LIST_ENTRY.equals(blocks.get(blockIndex).getType())); // BlockType.NEW_LIST_ENTRY.equals(blocks.get(blockIndex).getType())
-		// ||
+		super.startNewPage(!hasNextBlock() || BlockType.NEW_LIST_ENTRY.equals(blocks.get(blockIndex).getType()));
 		cursor.setBlockY(pageHeight - Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 				ProbandListEntryTagsPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
 		cursor.setBlockX(Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -573,8 +431,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 						ProbandListEntryTagsPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
 				- Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
-		//cursor.setCategoryY(cursor.getBlockY());
-		// cursor.setIndexY(cursor.getBlockY());
 	}
 
 	@Override
@@ -591,25 +447,6 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		pdfVO.getListEntries().clear();
 		if (listEntryVOs != null) {
 			pdfVO.getListEntries().addAll(listEntryVOs);
-			//
-			// Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
-			// while (listEntryIt.hasNext()) {
-			// ProbandListEntryOutVO listEntryVO = listEntryIt.next();
-			// Collection<ECRFOutVO> ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-			// if (ecrfVOs != null) { // && ecrfVOs.size() > 0) {
-			// Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
-			// while (ecrfIt.hasNext()) {
-			// ECRFOutVO ecrfVO = ecrfIt.next();
-			// ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO.getId());
-			// if (statusEntryVO == null) {
-			// statusEntryVO = new ECRFStatusEntryVO();
-			// statusEntryVO.setEcrf(ecrfVO);
-			// statusEntryVO.setListEntry(listEntryVO);
-			// }
-			// pdfVO.getStatusEntries().add(statusEntryVO);
-			// }
-			// }
-			// }
 		}
 		StringBuilder fileName = new StringBuilder(PROBAND_LIST_ENTRY_TAGS_PDF_FILENAME_PREFIX);
 		if (listEntryVOs != null && listEntryVOs.size() == 1) {
@@ -618,27 +455,11 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				fileName.append(listEntryVO.getId());
 				fileName.append("_");
 			}
-			// Collection<ECRFOutVO> ecrfVOs;
-			// if (ecrfVOMap != null && (ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId())) != null && ecrfVOs.size() == 1) {
-			// fileName.append(ecrfVOs.iterator().next().getId());
-			// fileName.append("_");
-			// }
 			if (blank) {
 				fileName.append("blank");
 				fileName.append("_");
 			}
 		}
-		// if (pdfVO.getStatusEntries().size() == 1) {
-		// ECRFStatusEntryVO statusEntryVO = pdfVO.getStatusEntries().iterator().next();
-		// if (statusEntryVO.getEcrf() != null) {
-		// fileName.append(statusEntryVO.getEcrf().getId());
-		// fileName.append("_");
-		// }
-		// if (statusEntryVO.getListEntry() != null) {
-		// fileName.append(statusEntryVO.getListEntry().getId());
-		// fileName.append("_");
-		// }
-		// }
 		fileName.append(CommonUtil.formatDate(now, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
 		fileName.append(".");
 		fileName.append(CoreUtil.PDF_FILENAME_EXTENSION);

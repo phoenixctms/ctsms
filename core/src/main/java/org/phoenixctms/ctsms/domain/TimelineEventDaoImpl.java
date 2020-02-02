@@ -76,7 +76,6 @@ public class TimelineEventDaoImpl
 					membersCriteria.add(Restrictions.eq("notifyTimelineEvent", notify.booleanValue()));
 				}
 				membersCriteria.add(Restrictions.eq("staff.id", teamMemberStaffId.longValue()));
-				// timelineEventCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 				distinctRoot = true;
 			}
 		}
@@ -166,8 +165,6 @@ public class TimelineEventDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TimelineEvent loadTimelineEventFromTimelineEventInVO(TimelineEventInVO timelineEventInVO) {
-		// TODO implement loadTimelineEventFromTimelineEventInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventFromTimelineEventInVO(TimelineEventInVO) not yet implemented.");
 		TimelineEvent timelineEvent = null;
 		Long id = timelineEventInVO.getId();
 		if (id != null) {
@@ -185,8 +182,6 @@ public class TimelineEventDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TimelineEvent loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO timelineEventOutVO) {
-		// TODO implement loadTimelineEventFromTimelineEventOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO) not yet implemented.");
 		TimelineEvent timelineEvent = this.load(timelineEventOutVO.getId());
 		if (timelineEvent == null) {
 			timelineEvent = TimelineEvent.Factory.newInstance();
@@ -332,9 +327,6 @@ public class TimelineEventDaoImpl
 			TimelineEvent source,
 			TimelineEventOutVO target) {
 		super.toTimelineEventOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.TimelineEventType to org.phoenixctms.ctsms.vo.TimelineEventTypeVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		TimelineEventType type = source.getType();
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();

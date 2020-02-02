@@ -250,9 +250,6 @@ public class StaffAddressDaoImpl
 			StaffAddress source,
 			StaffAddressOutVO target) {
 		super.toStaffAddressOutVO(source, target);
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.AddressType to org.phoenixctms.ctsms.vo.AddresTypeVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		AddressType type = source.getType();
 		Staff staff = source.getStaff();
 		User modifiedUser = source.getModifiedUser();

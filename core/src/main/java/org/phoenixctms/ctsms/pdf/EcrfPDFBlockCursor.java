@@ -12,15 +12,11 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFBlockCursor {
 
 	private EcrfPDFPainter painter;
-	// private float previousSectionY;
 	private float sectionY;
-	// private float previousIndexY;
 	private float indexY;
 	private EcrfPDFBlock sectionBlock;
 	private EcrfPDFBlock indexBlock;
 	private EcrfPDFBlock ecrfBlock;
-	// private EcrfPDFBlock previousBlock;
-	// private EcrfPDFBlock block;
 	private ProbandListEntryOutVO listEntry;
 
 	public EcrfPDFBlockCursor(EcrfPDFPainter painter) {
@@ -32,8 +28,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		this.sectionBlock = null;
 		this.indexBlock = null;
 		this.ecrfBlock = null;
-		// this.previousBlock = null;
-		// this.block = null;
 	}
 
 	@Override
@@ -49,12 +43,9 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	public float getBlockIndentedWidth(boolean max) throws Exception {
 		float width = blockWidth;
 		if (!max || hasSection()) {
-			// width -= //getSectionWidth() +
-			// Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
 		}
 		if (!max || hasIndex()) {
-			width -= // getIndexWidth() +
-					2.0f * Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
+			width -= 2.0f * Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
 		}
 		return width;
 	}
@@ -67,8 +58,7 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 			// Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
 		}
 		if (hasIndex()) {
-			x += // getIndexWidth() +
-					Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
+			x += Settings.getFloat(EcrfPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_BOX_FRAME_INDENT);
 		}
 		return x;
 	}
@@ -102,13 +92,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return painter.getFontB();
 	}
 
-	// public PDFont getFontE() {
-	// return painter.getFontE();
-	// }
-	//
-	// public PDFont getFontF() {
-	// return painter.getFontF();
-	// }
 	@Override
 	public PDFont getFontC() {
 		return painter.getFontC();
@@ -118,20 +101,11 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	public PDFont getFontD() {
 		return painter.getFontD();
 	}
-	// public float getIndexWidth() throws Exception {
-	// return 0.0f; //PDFUtil.renderTextLine(null, painter.getFontA(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
-	// }
 
-	// public EcrfPDFBlock getPreviousBlock() {
-	// return previousBlock;
-	// }
 	public EcrfPDFBlock getIndexBlock() {
 		return indexBlock;
 	}
 
-	// public float getIndexY() {
-	// return indexY;
-	// }
 	public String getIndexLabel() {
 		if (indexBlock != null) {
 			Long index = indexBlock.getIndex();
@@ -160,17 +134,11 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		return painter.getRadioOnImage();
 	}
 
-	// public float getSectionWidth() throws Exception {
-	// return PDFUtil.renderTextLine(null, painter.getFontB(), FontSize.BIG, null, null, 0.0f, 0.0f, null);
-	// }
 	@Override
 	public PDFJpeg getRadioOnPresetImage() {
 		return painter.getRadioOnPresetImage();
 	}
 
-	// public float getSectionY() {
-	// return sectionY;
-	// }
 	public EcrfPDFBlock getSectionBlock() {
 		return sectionBlock;
 	}
@@ -225,16 +193,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	}
 
 	public void setBlocks(EcrfPDFBlock block) {
-		// this.previousBlock = this.block;
-		// if (this.previousBlock != null) {
-		// if (BlockType.NEW_SECTION.equals(this.previousBlock.getType())) {
-		// this.previousSectionBlock = this.previousBlock;
-		// } else if (BlockType.NEW_INDEX.equals(this.previousBlock.getType())) {
-		// this.previousIndexBlock = this.previousBlock;
-		// }
-		// }
-		// this.block = block;
-		// this.previousBlock = this.block;
 		if (block != null) {
 			if (BlockType.NEW_SECTION.equals(block.getType())) {
 				this.sectionBlock = block;
@@ -244,11 +202,9 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 				this.ecrfBlock = block;
 			}
 		}
-		// this.block = block;
 	}
 
 	public void setIndexY(float indexY) {
-		// this.previousIndexY = this.indexY;
 		this.indexY = indexY;
 	}
 
@@ -257,7 +213,6 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 	}
 
 	public void setSectionY(float sectionY) {
-		// this.previousSectionY = this.sectionY;
 		this.sectionY = sectionY;
 	}
 }

@@ -105,7 +105,6 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 					L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.DATE_REQUESTING_USER_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp,
 							CommonUtil.formatDate(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now, ExcelUtil.EXCEL_DATE_PATTERN,
 									L10nUtil.getLocale(Locales.USER))));
-			// (new SimpleDateFormat(ExcelUtil.EXCEL_DATE_PATTERN)).format(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now)));
 		}
 	}
 

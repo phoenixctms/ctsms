@@ -23,7 +23,6 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 	private int parentDepth;
 	private int childrenDepth;
 	private UserDaoImpl userDaoImpl;
-	// private StaffDao staffDao;
 	private DepartmentDao departmentDao;
 	public final static int DEFAULT_MAX_INSTANCES = 1;
 	private final static int DEFAULT_PARENT_DEPTH = Integer.MAX_VALUE >> 1;
@@ -34,7 +33,6 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 		this.parentDepth = maxInstances != null && maxInstances.length > 1 ? (maxInstances[1] == null ? DEFAULT_PARENT_DEPTH : maxInstances[1]) : DEFAULT_PARENT_DEPTH;
 		this.childrenDepth = maxInstances != null && maxInstances.length > 2 ? (maxInstances[2] == null ? DEFAULT_CHILDREN_DEPTH : maxInstances[2]) : DEFAULT_CHILDREN_DEPTH;
 		this.userDaoImpl = userDaoImpl;
-		// this.staffDao = staffDao;
 		this.departmentDao = departmentDao;
 	}
 

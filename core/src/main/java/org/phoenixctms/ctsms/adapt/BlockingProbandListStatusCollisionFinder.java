@@ -25,7 +25,7 @@ public abstract class BlockingProbandListStatusCollisionFinder<IN, ENTITY> exten
 		if (trial.isExclusiveProbands()) {
 			ProbandListStatusEntry lastStatus = getLastStatus(existing);
 			if (lastStatus == null) {
-				return false; // true;
+				return false;
 			} else {
 				ProbandListStatusType statusType = lastStatus.getStatus();
 				if (statusType.getTransitions().size() > 0) {

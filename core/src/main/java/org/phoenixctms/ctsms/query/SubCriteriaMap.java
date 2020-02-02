@@ -154,7 +154,6 @@ public class SubCriteriaMap {
 				}
 			}
 			path = fullyQualifiedPropertyName.getFullQualifiedPropertyName();
-			// if (isPropertyAssociation) {
 			if (!propertyPathMap.containsKey(path)) {
 				try {
 					subCriteria = criterias[criterias.length - 1];
@@ -172,13 +171,6 @@ public class SubCriteriaMap {
 				subCriteria = propertyPathMap.get(path);
 				propertyClass = propertyClassMap.get(path);
 			}
-			// } else {
-			// if (!propertyClassMap.containsKey(path)) {
-			// propertyClass = CoreUtil.getPropertyClass(propertyClass, fullyQualifiedPropertyName.getPropertyName());
-			// propertyClassMap.put(path, propertyClass);
-			// }
-			// }
-			// return subCriteria;
 		} else {
 			// invalid path from db property entry:
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INVALID_PROPERTY_ASSOCIATION_PATH, DefaultMessages.INVALID_PROPERTY_ASSOCIATION_PATH,

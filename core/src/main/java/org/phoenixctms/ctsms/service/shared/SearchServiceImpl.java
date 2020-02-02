@@ -227,8 +227,7 @@ public class SearchServiceImpl
 					if (checkValues && !isUnaryRestriction && criterion.getDateValue() == null) {
 						throw initServiceExceptionWithPosition(ServiceExceptionCodes.CRITERION_DATE_VALUE_IS_NULL, logError, criterion);
 					}
-					if (// criterion.getDateValue() != null ||
-					criterion.getTimeValue() != null ||
+					if (criterion.getTimeValue() != null ||
 							criterion.getFloatValue() != null ||
 							criterion.getLongValue() != null ||
 							criterion.getStringValue() != null ||
@@ -244,7 +243,6 @@ public class SearchServiceImpl
 						throw initServiceExceptionWithPosition(ServiceExceptionCodes.CRITERION_TIME_VALUE_IS_NULL, logError, criterion);
 					}
 					if (criterion.getDateValue() != null ||
-					// criterion.getTimeValue() != null ||
 							criterion.getFloatValue() != null ||
 							criterion.getLongValue() != null ||
 							criterion.getStringValue() != null ||
@@ -753,7 +751,6 @@ public class SearchServiceImpl
 		} else {
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao, LockMode.PESSIMISTIC_WRITE);
 			result = criteriaDao.toCriteriaOutVO(criteria);
-			// if (deleteCascade) {
 			CriterionDao criterionDao = this.getCriterionDao();
 			Iterator<Criterion> criterionsIt = criteria.getCriterions().iterator();
 			while (criterionsIt.hasNext()) {
@@ -777,7 +774,6 @@ public class SearchServiceImpl
 				journalEntryDao.remove(journalEntry);
 			}
 			criteria.getJournalEntries().clear();
-			// }
 			criteriaDao.remove(criteria);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.CRITERIA_DELETED, obfuscateCriterions(result), null, journalEntryDao);
 		}
@@ -1167,8 +1163,6 @@ public class SearchServiceImpl
 		ArrayList<IntermediateSetDetailVO> setCriterias = null;
 		try {
 			setCriterias = criterionIntermediateSetParser.parseCriterions(sortedCriterions, prettyPrint, obfuscateCriterions);
-			// setCriterias = (new CriterionIntermediateSetParser(this.getCriterionTieDao(), prettyPrint ? this.getCriterionPropertyDao() : null,
-			// prettyPrint ? this.getCriterionRestrictionDao() : null, obfuscateCriterions)).parseCriterions(sortedCriterions, prettyPrint);
 		} catch (SyntaxException e) {
 			String errorCode = getServiceExcpetionCodeFromSyntaxError(e.getError());
 			throw initServiceExceptionWithPosition(errorCode, false, (CriterionInstantVO) e.getToken());
@@ -1300,8 +1294,6 @@ public class SearchServiceImpl
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao);
 			CriteriaOutVO criteriaVO = criteriaDao.toCriteriaOutVO(criteria);
 			String systemMessageCode = SystemMessageCodes.SEARCH_COURSE_PARTICIPANT_LIST_EXPORTED;
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			this.getJournalEntryDao().addSystemMessage(
 					criteria,
 					now,
@@ -1312,7 +1304,6 @@ public class SearchServiceImpl
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
 							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
-			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
 
@@ -1324,8 +1315,6 @@ public class SearchServiceImpl
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao);
 			CriteriaOutVO criteriaVO = criteriaDao.toCriteriaOutVO(criteria);
 			String systemMessageCode = SystemMessageCodes.SEARCH_CV_EXPORTED;
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			this.getJournalEntryDao().addSystemMessage(
 					criteria,
 					now,
@@ -1336,7 +1325,6 @@ public class SearchServiceImpl
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
 							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
-			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
 
@@ -1348,8 +1336,6 @@ public class SearchServiceImpl
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao);
 			CriteriaOutVO criteriaVO = criteriaDao.toCriteriaOutVO(criteria);
 			String systemMessageCode = SystemMessageCodes.SEARCH_EXPORTED;
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			this.getJournalEntryDao().addSystemMessage(
 					criteria,
 					now,
@@ -1360,7 +1346,6 @@ public class SearchServiceImpl
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
 							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
-			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
 
@@ -1372,8 +1357,6 @@ public class SearchServiceImpl
 			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao);
 			CriteriaOutVO criteriaVO = criteriaDao.toCriteriaOutVO(criteria);
 			String systemMessageCode = SystemMessageCodes.SEARCH_PROBAND_LETTER_EXPORTED;
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			this.getJournalEntryDao().addSystemMessage(
 					criteria,
 					now,
@@ -1384,21 +1367,12 @@ public class SearchServiceImpl
 							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
 									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
 							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
-			// result.setDocumentDatas(documentDataBackup);
 		}
 	}
 
 	private void logSearch(Long criteriaId, CriteriaInstantVO criteriaInstantVO, PSFVO psf, Collection result) throws Exception {
 		if (psf == null || psf.getPageSize() == null || psf.getPageSize() == 0 ||
-				(Settings.getBoolean(SettingCodes.LOG_SEARCH_FILTERED, Bundle.SETTINGS, DefaultSettings.LOG_SEARCH_FILTERED) && psf.getPageSize() > 0)) { // && (psf.getFilters() ==
-			// null ||
-			// psf.getFilters().size()
-			// == 0) &&
-			// !CommonUtil.isEmptyString(psf.getSortField()))
-			// ) { //avoid double
-			// log entry - primeface
-			// rowcount update ??
-			// only ??
+				(Settings.getBoolean(SettingCodes.LOG_SEARCH_FILTERED, Bundle.SETTINGS, DefaultSettings.LOG_SEARCH_FILTERED) && psf.getPageSize() > 0)) {
 			if (criteriaId != null && criteriaInstantVO != null) {
 				Timestamp now = new Timestamp(System.currentTimeMillis());
 				User user = CoreUtil.getUser();
@@ -1452,8 +1426,6 @@ public class SearchServiceImpl
 		Collections.sort(sortedCriterions, new VOPositionComparator(false));
 		try {
 			return criterionSyntaxParser.parseCriterions(sortedCriterions, prettyPrint, obfuscateCriterions);
-			// return (new CriterionSyntaxParser(this.getCriterionTieDao(), prettyPrint ? this.getCriterionPropertyDao() : null,
-			// prettyPrint ? this.getCriterionRestrictionDao() : null, obfuscateCriterions)).parseCriterions(sortedCriterions, prettyPrint);
 		} catch (SyntaxException e) {
 			String errorCode = getServiceExcpetionCodeFromSyntaxError(e.getError());
 			throw initServiceExceptionWithPosition(errorCode, logError, (CriterionInstantVO) e.getToken());
@@ -1548,15 +1520,6 @@ public class SearchServiceImpl
 		}
 		Iterator<InquiryOutVO> inquiriesIt;
 		HashMap<Long, Long> inquiryValueCountMap = new HashMap<Long, Long>(inquiries.size());
-		// while (inquiriesIt.hasNext()) {
-		// InquiryOutVO inquiryVO = inquiriesIt.next();
-		// if (showAllInquiries || inquiryVO.isExcelValue()) {
-		// distinctColumnNames.add(writer.getInquiryColumnName(inquiryVO));
-		// }
-		// if (showAllInquiryDates || inquiryVO.isExcelDate()) {
-		// distinctColumnNames.add(writer.getInquiryDateColumnName(inquiryVO));
-		// }
-		// }
 		ProbandTagValueDao probandTagValueDao = this.getProbandTagValueDao();
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
@@ -1644,7 +1607,7 @@ public class SearchServiceImpl
 				if (inquiryValueMap.containsKey(inquiryVO.getId())) {
 					inquiryValueVO = inquiryValueDao.toInquiryValueOutVO(inquiryValueMap.get(inquiryVO.getId()));
 				} else {
-					inquiryValueVO = ServiceUtil.createPresetInquiryOutValue(probandVO, inquiryVO, null); // inputFieldSelectionSetValueDao
+					inquiryValueVO = ServiceUtil.createPresetInquiryOutValue(probandVO, inquiryVO, null);
 				}
 				if (showAllInquiries || inquiryVO.isExcelValue()) {
 					Object fieldValue = null;
@@ -1724,8 +1687,7 @@ public class SearchServiceImpl
 			HashMap<Long, HashMap<String, Object>> distinctFieldRows) throws Exception {
 		boolean showTags = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_STAFF_TAGS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.SHOW_STAFF_TAGS);
 		StaffTagDao staffTagDao = this.getStaffTagDao();
-		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList(); // .findByVisibleIdExcel(null, null,true) : new
-		// ArrayList();
+		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList();
 		staffTagDao.toStaffTagVOCollection(staffTags);
 		distinctColumnNames.ensureCapacity(staffTags.size());
 		Iterator<StaffTagVO> staffTagsIt = staffTags.iterator();
@@ -1923,11 +1885,6 @@ public class SearchServiceImpl
 	}
 
 	private Collection<ProbandOutVO> searchProbandHelper(CriteriaInstantVO criteria, Integer maxInstances, PSFVO psf) throws Exception {
-		//		checkCriteriaInput(DBModule.PROBAND_DB, criteria, true, true);
-		//		ProbandDao probandDao = this.getProbandDao();
-		//		Collection probands = probandDao.findByCriteria(criteria, psf);
-		//		probandDao.toProbandOutVOCollection(probands);
-		//		return probands;
 		checkCriteriaInput(DBModule.PROBAND_DB, criteria, true, true);
 		ProbandDao probandDao = this.getProbandDao();
 		Collection probands = probandDao.findByCriteria(criteria, psf);

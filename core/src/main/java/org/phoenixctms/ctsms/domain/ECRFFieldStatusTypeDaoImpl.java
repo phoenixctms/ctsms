@@ -165,8 +165,6 @@ public class ECRFFieldStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldStatusType loadECRFFieldStatusTypeFromECRFFieldStatusTypeVO(ECRFFieldStatusTypeVO eCRFFieldStatusTypeVO) {
-		// TODO implement loadECRFFieldStatusTypeFromECRFFieldStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldStatusTypeFromECRFFieldStatusTypeVO(ECRFFieldStatusTypeVO) not yet implemented.");
 		ECRFFieldStatusType ecrfFieldStatusType = null;
 		Long id = eCRFFieldStatusTypeVO.getId();
 		if (id != null) {

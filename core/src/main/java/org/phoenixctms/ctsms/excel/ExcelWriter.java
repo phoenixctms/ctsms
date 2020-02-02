@@ -1,8 +1,9 @@
 package org.phoenixctms.ctsms.excel;
 
+import org.phoenixctms.ctsms.enumeration.Color;
+
 import jxl.WorkbookSettings;
 import jxl.write.WritableWorkbook;
-import org.phoenixctms.ctsms.enumeration.Color;
 
 public interface ExcelWriter {
 
@@ -16,5 +17,5 @@ public interface ExcelWriter {
 
 	public Color voToColor(Object vo);
 
-	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception; // WritableWorkbook workbook) throws Exception;
+	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception;
 }

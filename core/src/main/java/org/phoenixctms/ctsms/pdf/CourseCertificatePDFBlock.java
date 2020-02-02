@@ -157,7 +157,7 @@ public class CourseCertificatePDFBlock {
 			Date start = course.getStart();
 			Date stop = course.getStop();
 			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
-					CourseCertificatePDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_CERTIFICATE_PDF); // CoreUtil.getDateFormat(Settings.getCvPositionDatePattern());
+					CourseCertificatePDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_CERTIFICATE_PDF);
 			if (start != null && stop != null) {
 				return L10nUtil.getCourseCertificatePDFLabel(Locales.COURSE_CERTIFICATE_PDF, CourseCertificatePDFLabelCodes.COURSE_FROM_TO, PDFUtil.DEFAULT_LABEL,
 						coursePeriodDateFormat.format(start), coursePeriodDateFormat.format(stop));

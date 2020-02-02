@@ -158,9 +158,6 @@ public class ProbandListStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListStatusEntry loadProbandListStatusEntryFromProbandListStatusEntryInVO(ProbandListStatusEntryInVO probandListStatusEntryInVO) {
-		// TODO implement loadProbandListStatusEntryFromProbandListStatusEntryInVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusEntryFromProbandListStatusEntryInVO(ProbandListStatusEntryInVO) not yet implemented.");
 		ProbandListStatusEntry probandListStatusEntry = null;
 		Long id = probandListStatusEntryInVO.getId();
 		if (id != null) {
@@ -178,16 +175,7 @@ public class ProbandListStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListStatusEntry loadProbandListStatusEntryFromProbandListStatusEntryOutVO(ProbandListStatusEntryOutVO probandListStatusEntryOutVO) {
-		// TODO implement loadProbandListStatusEntryFromProbandListStatusEntryOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusEntryFromProbandListStatusEntryOutVO(ProbandListStatusEntryOutVO) not yet implemented.");
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
-		// ProbandListStatusEntry probandListStatusEntry = this.load(probandListStatusEntryOutVO.getId());
-		// if (probandListStatusEntry == null)
-		// {
-		// probandListStatusEntry = ProbandListStatusEntry.Factory.newInstance();
-		// }
-		// return probandListStatusEntry;
 	}
 
 	/**

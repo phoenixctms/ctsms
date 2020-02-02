@@ -105,7 +105,6 @@ public class ECRFFieldValueDaoImpl
 			org.hibernate.Criteria probandListEntryCriteria,
 			Long probandListEntryId, Long ecrfFieldId) {
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldValueImpl.class, "ecrfFieldValue1"); // IMPL!!!!
-		// subQuery.setProjection(Projections.max("id"));
 		if (probandListEntryId == null) {
 			if (probandListEntryCriteria == null) {
 				probandListEntryCriteria = ecrfFieldValueCriteria.createCriteria("listEntry", "probandListEntry0");
@@ -139,15 +138,8 @@ public class ECRFFieldValueDaoImpl
 		org.hibernate.Criteria ecrfFieldValueCriteria = ecrfFieldCriteria.createCriteria("fieldValues", ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS,
 				CriteriaSpecification.LEFT_JOIN,
 				Restrictions.eq(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".listEntry.id", probandListEntryId.longValue()));
-		// criteriaMap.createCriteria("ecrfField", CriteriaSpecification.LEFT_JOIN);
-		// ecrfFieldValueCriteria.add(Restrictions.or(Restrictions.eq("listEntry.id", probandListEntryId.longValue()),
-		// Restrictions.isNull("listEntry")));
 		// correlated - slow:
 		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, ecrfFieldCriteria, null, probandListEntryId, null);
-		// DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldValueImpl.class, "ecrfFieldValue1"); // IMPL!!!!
-		// subQuery.setProjection(Projections.max("id"));
-		// subQuery.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// subQuery.add(Restrictions.eqProperty("ecrfField.id", "ecrfField0.id"));
 		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
 				Restrictions.eqProperty("index", ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".index")));
 		ecrfFieldValueCriteria.add(Restrictions.or(
@@ -155,7 +147,6 @@ public class ECRFFieldValueDaoImpl
 				Restrictions.and(
 						Restrictions.eq("listEntry.id", probandListEntryId.longValue()),
 						Subqueries.propertyIn("id", subQuery))));
-		// System.out.println(CriteriaUtil.criteriaToSql(ecrfFieldCriteria));
 		return new org.hibernate.Criteria[] { ecrfFieldCriteria, ecrfFieldValueCriteria };
 	}
 
@@ -220,9 +211,6 @@ public class ECRFFieldValueDaoImpl
 					Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH)));
 		}
 		value.setBooleanValue(source.getBooleanValue());
-		// if (copyIfNull || source.getBooleanValue() != null) {
-		// value.setBooleanValue(booleanValueIn)
-		// }
 		if (copyIfNull || source.getLongValue() != null) {
 			value.setLongValue(source.getLongValue());
 		}
@@ -262,7 +250,6 @@ public class ECRFFieldValueDaoImpl
 			ECRFFieldValueJsonVO source,
 			ECRFFieldValue target,
 			boolean copyIfNull) {
-		// TODO verify behavior of eCRFFieldValueJsonVOToEntity
 		super.eCRFFieldValueJsonVOToEntity(source, target, copyIfNull);
 	}
 
@@ -320,9 +307,6 @@ public class ECRFFieldValueDaoImpl
 					Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH)));
 		}
 		value.setBooleanValue(source.getBooleanValue());
-		// if (copyIfNull || source.getBooleanValue() != null) {
-		// value.setBooleanValue(booleanValueIn)
-		// }
 		if (copyIfNull || source.getLongValue() != null) {
 			value.setLongValue(source.getLongValue());
 		}
@@ -395,9 +379,6 @@ public class ECRFFieldValueDaoImpl
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
-		//		if (active != null) {
-		//			ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		//		}
 		if (js != null) {
 			if (js) {
 				ecrfFieldCriteria.add(Restrictions.and(Restrictions.ne("jsVariableName", ""), Restrictions.isNotNull("jsVariableName")));
@@ -445,9 +426,6 @@ public class ECRFFieldValueDaoImpl
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
-		// if (active != null) {
-		// ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		// }
 		if (section != null && section.length() > 0) {
 			ecrfFieldCriteria.add(Restrictions.eq("section", section));
 		} else {
@@ -490,14 +468,6 @@ public class ECRFFieldValueDaoImpl
 		applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, ecrfFieldId, index);
 		ecrfFieldValueCriteria.setMaxResults(1);
 		return (ECRFFieldValue) ecrfFieldValueCriteria.uniqueResult();
-		// PSFVO p = new PSFVO();
-		// p.setPageSize(1);
-		// p.setUpdateRowCount(false);
-		// Iterator<ECRFFieldValue> it = this.handleFindByListEntryEcrfFieldIndex(probandListEntryId, ecrfFieldId, index, false, false, p).iterator();
-		// if (it.hasNext()) {
-		// return it.next();
-		// }
-		// return null;
 	}
 
 	@Override
@@ -516,7 +486,6 @@ public class ECRFFieldValueDaoImpl
 	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, String fieldQuery) throws Exception {
 		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
-		// org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
 		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		return (Long) ecrfFieldCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -524,16 +493,9 @@ public class ECRFFieldValueDaoImpl
 	@Override
 	protected long handleGetCount(Long probandListEntryId, Long ecrfId, boolean excludeAuditTrail, Boolean series, Boolean optional) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
-		// if (probandListEntryId != null) {
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// }
-		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0"); // , CriteriaSpecification.INNER_JOIN);
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		// if (ecrfId != null) {
-		// ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0", CriteriaSpecification.INNER_JOIN);
-		// ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
-		// }
-		// org.hibernate.Criteria ecrfFieldCriteria = null;
 		if (series != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("series", series.booleanValue()));
 		}
@@ -549,14 +511,9 @@ public class ECRFFieldValueDaoImpl
 	@Override
 	protected long handleGetCount(Long probandListEntryId, Long ecrfId, String section, boolean excludeAuditTrail, Boolean optional) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
-		// if (probandListEntryId != null) {
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// }
-		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0"); // , CriteriaSpecification.INNER_JOIN);
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		// if (series != null) {
-		// ecrfFieldCriteria.add(Restrictions.eq("series", series.booleanValue()));
-		// }
 		if (optional != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("optional", optional.booleanValue()));
 		}
@@ -636,15 +593,10 @@ public class ECRFFieldValueDaoImpl
 		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
 		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		//		if (sort) { // after applyPSFVO
-		//			ecrfFieldValueCriteria.addOrder(Order.asc("index"));
-		//			ecrfFieldValueCriteria.addOrder(Order.desc("id"));
-		//		}
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		return ecrfFieldValueCriteria.list();
-		//throw new Exception();
 	}
 
 	@Override
@@ -677,15 +629,10 @@ public class ECRFFieldValueDaoImpl
 		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
 		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		//		if (sort) { // after applyPSFVO
-		//			ecrfFieldValueCriteria.addOrder(Order.asc("index"));
-		//			ecrfFieldValueCriteria.addOrder(Order.desc("id"));
-		//		}
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		return ecrfFieldValueCriteria.list();
-		//throw new Exception();
 	}
 
 	@Override
@@ -721,8 +668,6 @@ public class ECRFFieldValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldValue loadECRFFieldValueFromECRFFieldValueInVO(ECRFFieldValueInVO eCRFFieldValueInVO) {
-		// TODO implement loadECRFFieldValueFromECRFFieldValueInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldValueFromECRFFieldValueInVO(ECRFFieldValueInVO) not yet implemented.");
 		ECRFFieldValue ecrfFieldValue = null;
 		Long id = eCRFFieldValueInVO.getId();
 		if (id != null) {
@@ -740,7 +685,6 @@ public class ECRFFieldValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldValue loadECRFFieldValueFromECRFFieldValueJsonVO(ECRFFieldValueJsonVO eCRFFieldValueJsonVO) {
-		// TODO implement loadECRFFieldValueFromECRFFieldValueJsonVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldValueFromECRFFieldValueJsonVO(ECRFFieldValueJsonVO) not yet implemented.");
 		/* A typical implementation looks like this:
 		ECRFFieldValue eCRFFieldValue = this.load(eCRFFieldValueJsonVO.getId());
@@ -758,8 +702,6 @@ public class ECRFFieldValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldValue loadECRFFieldValueFromECRFFieldValueOutVO(ECRFFieldValueOutVO eCRFFieldValueOutVO) {
-		// TODO implement loadECRFFieldValueFromECRFFieldValueOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldValueFromECRFFieldValueOutVO(ECRFFieldValueOutVO) not yet implemented.");
 		ECRFFieldValue ecrfFieldValue = this.load(eCRFFieldValueOutVO.getId());
 		if (ecrfFieldValue == null) {
 			ecrfFieldValue = ECRFFieldValue.Factory.newInstance();
@@ -804,7 +746,6 @@ public class ECRFFieldValueDaoImpl
 	 */
 	@Override
 	public ECRFFieldValueJsonVO toECRFFieldValueJsonVO(final ECRFFieldValue entity) {
-		// TODO verify behavior of toECRFFieldValueJsonVO
 		return super.toECRFFieldValueJsonVO(entity);
 	}
 
@@ -874,8 +815,6 @@ public class ECRFFieldValueDaoImpl
 			ECRFFieldValue source,
 			ECRFFieldValueOutVO target) {
 		super.toECRFFieldValueOutVO(source, target);
-		// WARNING! No conversion for target.ecrfField (can't convert source.getEcrfField():org.phoenixctms.ctsms.domain.ECRFField to org.phoenixctms.ctsms.vo.ECRFFieldOutVO
-		// WARNING! No conversion for target.listEntry (can't convert source.getListEntry():org.phoenixctms.ctsms.domain.ProbandListEntry to org.phoenixctms.ctsms.vo.ProbandListEntryOutVO
 		ProbandListEntry listEntry = source.getListEntry();
 		ECRFField ecrfField = source.getEcrfField();
 		User modifiedUser = source.getModifiedUser();
@@ -916,26 +855,10 @@ public class ECRFFieldValueDaoImpl
 					}
 				}
 			}
-			// ServiceUtil.populateEcrfFieldStatusEntryCount(target.getEcrfFieldStatusQueueCounts(), listEntry.getId(), ecrfField.getId(), source.getIndex(),
-			// this.getECRFFieldStatusEntryDao());
 		}
 	}
 
 	private ArrayList<InputFieldSelectionSetValueJsonVO> toInputFieldSelectionSetValueJsonVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
-		// persistentset
-		// prevention
-		// ArrayList<InputFieldSelectionSetValueJsonVO> result;
-		// if (selectionValues != null && selectionValues.size() > 0) {
-		// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
-		// result = new ArrayList<InputFieldSelectionSetValueJsonVO>(selectionValues.size());
-		// Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
-		// while (it.hasNext()) {
-		// result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
-		// }
-		// } else {
-		// result = new ArrayList<InputFieldSelectionSetValueJsonVO>();
-		// }
-		// return result;
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ArrayList<InputFieldSelectionSetValueJsonVO> result = new ArrayList<InputFieldSelectionSetValueJsonVO>(selectionValues.size());
 		Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
@@ -947,20 +870,6 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	private ArrayList<InputFieldSelectionSetValueOutVO> toInputFieldSelectionSetValueOutVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
-		// persistentset
-		// prevention
-		// ArrayList<InputFieldSelectionSetValueOutVO> result;
-		// if (selectionValues != null && selectionValues.size() > 0) {
-		// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
-		// result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValues.size());
-		// Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
-		// while (it.hasNext()) {
-		// result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
-		// }
-		// } else {
-		// result = new ArrayList<InputFieldSelectionSetValueOutVO>();
-		// }
-		// return result;
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ArrayList<InputFieldSelectionSetValueOutVO> result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValues.size());
 		Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();

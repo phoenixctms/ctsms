@@ -208,9 +208,6 @@ public class StaffTagValueDaoImpl
 			StaffTagValue source,
 			StaffTagValueOutVO target) {
 		super.toStaffTagValueOutVO(source, target);
-		// WARNING! No conversion for target.tag (can't convert source.getTag():org.phoenixctms.ctsms.domain.StaffTag to org.phoenixctms.ctsms.vo.StaffTagVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		StaffTag tag = source.getTag();
 		Staff staff = source.getStaff();
 		User modifiedUser = source.getModifiedUser();

@@ -98,7 +98,7 @@ public class CourseParticipantListPDFBlock {
 	private String getBookingString(InventoryBookingOutVO booking) {
 		if (booking != null) {
 			DateFormat bookingDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.BOOKING_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-					CourseParticipantListPDFDefaultSettings.BOOKING_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF); // CoreUtil.getDateFormat(Settings.getCvPositionDatePattern());
+					CourseParticipantListPDFDefaultSettings.BOOKING_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF);
 			return L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.BOOKING_FROM_TO, PDFUtil.DEFAULT_LABEL,
 					booking.getInventory().getName(), bookingDateFormat.format(booking.getStart()), bookingDateFormat.format(booking.getStop()));
 		}
@@ -149,7 +149,7 @@ public class CourseParticipantListPDFBlock {
 			Date start = course.getStart();
 			Date stop = course.getStop();
 			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-					CourseParticipantListPDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF); // CoreUtil.getDateFormat(Settings.getCvPositionDatePattern());
+					CourseParticipantListPDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF);
 			if (start != null && stop != null) {
 				return L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_FROM_TO, PDFUtil.DEFAULT_LABEL,
 						coursePeriodDateFormat.format(start), coursePeriodDateFormat.format(stop));
@@ -792,7 +792,7 @@ public class CourseParticipantListPDFBlock {
 								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_INDENT));
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_FRAME_INDENT);
-				height = cursor.getBlockY() - y1; // Math.min(y1, 22);
+				height = cursor.getBlockY() - y1;
 				PDFUtil.renderFrame(contentStream, Settings.getColor(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_FRAME_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockWidth(), height,
 						PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH,

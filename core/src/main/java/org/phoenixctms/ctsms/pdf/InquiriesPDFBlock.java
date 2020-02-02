@@ -25,31 +25,21 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class InquiriesPDFBlock extends InputFieldPDFBlock {
 
 	public enum BlockType {
-		// NEW_PAGE,
-		// NEW_LIST_ENTRY,
 		PAGE_TITLE,
 		NEW_PROBAND_TRIAL,
 		NEW_CATEGORY,
-		// NEW_INDEX,
 		INPUT_FIELD,
-		// END_OF_INDEX,
 		END_OF_CATEGORY,
-		// ECRF_SIGNATURE,
-		// SPACER,
 	}
 
 	private InquiryValueOutVO value;
 	private ProbandOutVO proband;
 	private TrialOutVO trial;
 	private String category;
-	// private Long index;
 	private BlockType type;
 	private boolean inserted = false;
 	private Date now;
 
-	// public InquiriesPDFBlock() {
-	// type = BlockType.SPACER;
-	// }
 	public InquiriesPDFBlock(BlockType type, boolean inserted) {
 		super();
 		this.type = type;
@@ -76,20 +66,12 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		this(block, block.type, inserted);
 	}
 
-	// public InquiriesPDFBlock(BlockType type) {
-	// this.type = type;
-	// }
 	public InquiriesPDFBlock(InquiryValueOutVO value, PDFJpeg ximage, boolean blank) {
 		super(value.getInquiry().getField(), ximage, blank);
 		this.value = value;
 		this.type = BlockType.INPUT_FIELD;
 	}
 
-	// public InquiriesPDFBlock(ProbandListEntryOutVO listEntry) {
-	// super();
-	// this.listEntry = listEntry;
-	// this.type = BlockType.NEW_LIST_ENTRY;
-	// }
 	public InquiriesPDFBlock(ProbandOutVO proband, TrialOutVO trial, Date now, boolean blank) {
 		super();
 		this.proband = proband;
@@ -99,23 +81,12 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		this.type = BlockType.NEW_PROBAND_TRIAL;
 	}
 
-	// public InquiriesPDFBlock(SignatureVO signature) {
-	// super();
-	// this.signature = signature;
-	// this.type = BlockType.ECRF_SIGNATURE;
-	// }
 	public InquiriesPDFBlock(String category) {
 		super();
 		this.category = category;
 		this.type = BlockType.NEW_CATEGORY;
 	}
 
-	// public InquiriesPDFBlock(String section, Long index) {
-	// super();
-	// this.section = section;
-	// this.index = index;
-	// this.type = BlockType.NEW_INDEX;
-	// }
 	@Override
 	protected boolean getBooleanValue() {
 		return value.getBooleanValue();
@@ -181,9 +152,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		return renderBlock(null, cursor);
 	}
 
-	// public Long getIndex() {
-	// return index;
-	// }
 	@Override
 	protected Float getHorizontalSelectionItemWidth() {
 		return Settings.getFloatNullable(InquiriesPDFSettingCodes.HORIZONTAL_SELECTION_ITEM_WIDTH, Bundle.INQUIRIES_PDF,
@@ -298,22 +266,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		return "";
 	}
 
-	// private String getStatusTypeName() {
-	// if (statusEntry != null && statusEntry.getStatus() != null) {
-	// return L10nUtil.getEcrfStatusTypeName(Locales.INQUIRIES_PDF, statusEntry.getStatus().getNameL10nKey());
-	// }
-	// return "";
-	// }
-	// private String getStatusUser() {
-	// if (statusEntry != null && statusEntry.getModifiedUser() != null) {
-	// if (statusEntry.getModifiedUser().getIdentity() != null) {
-	// return CommonUtil.staffOutVOToString(statusEntry.getModifiedUser().getIdentity());
-	// } else {
-	// return CommonUtil.userOutVOToString(statusEntry.getModifiedUser());
-	// }
-	// }
-	// return "";
-	// }
 	@Override
 	protected Color getTextColor() {
 		return Settings.getColor(InquiriesPDFSettingCodes.TEXT_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.TEXT_COLOR);
@@ -364,10 +316,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		return type;
 	}
 
-	// @Override
-	// protected boolean isShowValidationErrorMessages() {
-	// return Settings.getBoolean(InquiriesPDFSettingCodes.SHOW_VALIDATION_ERROR_MESSAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SHOW_VALIDATION_ERROR_MESSAGES);
-	// }
 	@Override
 	protected Color getValidationErrorMessageTextColor() {
 		return Settings.getColor(InquiriesPDFSettingCodes.VALIDATION_ERROR_MESSAGE_TEXT_COLOR, Bundle.INQUIRIES_PDF,
@@ -461,15 +409,11 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	public float renderBlock(PDPageContentStream contentStream, InquiriesPDFBlockCursor cursor) throws Exception {
-		// if (contentStream != null) {
-		// System.out.println("rendering block " + type);
-		// }
 		float x;
 		float y;
 		float y1;
 		float height1;
 		float height2;
-		// float height3;
 		float height;
 		float width;
 		PDFJpeg ximage;
@@ -518,21 +462,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 				}
 				y1 = y;
 				y -= getYFrameIndent();
-				// height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-				// L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
-				// x + getXFrameIndent(),
-				// y,
-				// Alignment.TOP_LEFT,
-				// Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-				// - getXFrameIndent());
-				// x += Settings.getFloat(InquiriesPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
-				// height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
-				// L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.TRIAL_NAME, PDFUtil.DEFAULT_LABEL, trial.getName(), trial.getTitle()),
-				// x + getXFrameIndent(),
-				// y,
-				// Alignment.TOP_LEFT,
-				// width - getXFrameIndent()), height1);
-				// x += width;
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.PROBAND_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
 						x + getXFrameIndent(),
@@ -586,7 +515,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								Alignment.TOP_LEFT,
 								width - getXFrameIndent()),
 						height2);
-				//
 				x = cursor.getBlockX();
 				y -= Math.max(height1, height2) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -665,12 +593,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 						contentStream,
 						getFrameColor(),
 						cursor.getBlockX(),
-						// + (cursor.hasSection() ? Settings.getFloat(InquiriesPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF,
-						// InquiriesPDFDefaultSettings.X_BOX_FRAME_INDENT) : 0.0f),
 						y1,
-						cursor.getBlockWidth(), // .getIndexWidth(),
-						y1 - y,
-						// - Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT),
+						cursor.getBlockWidth(), y1 - y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(InquiriesPDFSettingCodes.HEAD_FRAME_LINE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.HEAD_FRAME_LINE_WIDTH));
 				y -= Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
@@ -698,15 +622,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 			case END_OF_CATEGORY:
 				height = 0.0f;
 				if (cursor.hasCategory()) {
-					// PDFUtil.renderFrame(contentStream,
-					// getFrameColor(),
-					// cursor.getBlockX(),
-					// cursor.getSectionY(),
-					// cursor.getSectionWidth(),
-					// cursor.getSectionY() - cursor.getBlockY(),
-					// // + Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-					// Alignment.TOP_LEFT,
-					// Settings.getFloat(InquiriesPDFSettingCodes.SECTION_FRAME_LINE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SECTION_FRAME_LINE_WIDTH));
 					height += Settings.getFloat(InquiriesPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				}
 				break;

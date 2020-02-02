@@ -40,12 +40,7 @@ public class RandomizationListCodeDaoImpl
 	public void toRandomizationListCodeOutVO(
 			RandomizationListCode source,
 			RandomizationListCodeOutVO target) {
-		// TODO verify behavior of toRandomizationListCodeOutVO
 		super.toRandomizationListCodeOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.randomizationList (can't convert source.getRandomizationList():org.phoenixctms.ctsms.domain.StratificationRandomizationList to org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO
-		// WARNING! No conversion for target.values (can't convert source.getValues():org.phoenixctms.ctsms.domain.RandomizationListCodeValue to org.phoenixctms.ctsms.vo.RandomizationListCodeValueVO
 		User modifiedUser = source.getModifiedUser();
 		User breakUser = source.getBreakUser();
 		Trial trial = source.getTrial();
@@ -93,9 +88,6 @@ public class RandomizationListCodeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private RandomizationListCode loadRandomizationListCodeFromRandomizationListCodeOutVO(RandomizationListCodeOutVO randomizationListCodeOutVO) {
-		// TODO implement loadRandomizationListCodeFromRandomizationListCodeOutVO
-		//throw new UnsupportedOperationException(
-		//		"org.phoenixctms.ctsms.domain.loadRandomizationListCodeFromRandomizationListCodeOutVO(RandomizationListCodeOutVO) not yet implemented.");
 		RandomizationListCode randomizationListCode = this.get(randomizationListCodeOutVO.getId());
 		if (randomizationListCode == null) {
 			randomizationListCode = RandomizationListCode.Factory.newInstance();
@@ -123,7 +115,6 @@ public class RandomizationListCodeDaoImpl
 		super.randomizationListCodeOutVOToEntity(source, target, copyIfNull);
 		StratificationRandomizationListOutVO stratificationRandomizationListVO = source.getStratificationRandomizationList();
 		TrialRandomizationListVO trialRandomizationListVO = source.getTrialRandomizationList();
-		//Collection<RandomizationListCodeValueVO> valueVOs = source.getValues();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		UserOutVO breakUserVO = source.getBreakUser();
 		if (stratificationRandomizationListVO != null) {
@@ -176,7 +167,6 @@ public class RandomizationListCodeDaoImpl
 			RandomizationListCode source,
 			RandomizationListCodeInVO target) {
 		super.toRandomizationListCodeInVO(source, target);
-		// WARNING! No conversion for target.values (can't convert source.getValues():org.phoenixctms.ctsms.domain.RandomizationListCodeValue to org.phoenixctms.ctsms.vo.RandomizationListCodeValueVO
 		target.setValues(toRandomizationListCodeValueVOCollection(source.getValues()));
 	}
 
@@ -193,8 +183,6 @@ public class RandomizationListCodeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private RandomizationListCode loadRandomizationListCodeFromRandomizationListCodeInVO(RandomizationListCodeInVO randomizationListCodeInVO) {
-		// TODO implement loadRandomizationListCodeFromRandomizationListCodeInVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadRandomizationListCodeFromRandomizationListCodeInVO(RandomizationListCodeInVO) not yet implemented.");
 		return RandomizationListCode.Factory.newInstance();
 	}
 
@@ -249,8 +237,6 @@ public class RandomizationListCodeDaoImpl
 		if (broken != null) {
 			randomizationListCodeCriteria.add(Restrictions.eq("broken", broken.booleanValue()));
 		}
-		//CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		//return randomizationListCodeCriteria.list();
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); // support filter by selection set value
 	}
 

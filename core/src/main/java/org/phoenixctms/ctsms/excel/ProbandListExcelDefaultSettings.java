@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public final class ProbandListExcelDefaultSettings {
 
-	public static final int VO_GRAPH_RECURSION_DEPTH = 3; // 2;
+	public static final int VO_GRAPH_RECURSION_DEPTH = 3;
 	public static final String PROBAND_LIST_SPREADSHEET_NAME = null;
 	public static final String ENROLLMENT_LOG_SPREADSHEET_NAME = null;
 	public static final String PRE_SCREENING_LOG_SPREADSHEET_NAME = null;
@@ -148,7 +148,6 @@ public final class ProbandListExcelDefaultSettings {
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "category" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "privacyConsentStatus" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR
 				+ "name");
-		// PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id",null);
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "citizenship");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "firstName");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "lastName");
@@ -164,9 +163,6 @@ public final class ProbandListExcelDefaultSettings {
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("lastStatus" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "realTimestamp");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("lastStatus" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR
 				+ "identity" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
-		// PROBAND_LIST_VO_FIELD_COLUMNS.add("exportStatus",null);
-		// PROBAND_LIST_VO_FIELD_COLUMNS.add("exportTimestamp",null);
-		// PROBAND_LIST_VO_FIELD_COLUMNS.add("exportResponseMsg",null);
 		ENROLLMENT_LOG_VO_FIELD_COLUMNS.add("position");
 		ENROLLMENT_LOG_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "firstName");
 		ENROLLMENT_LOG_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "lastName");

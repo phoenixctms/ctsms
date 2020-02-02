@@ -172,15 +172,6 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 				}
 				maxTargetIndex = i;
 			}
-			// if (targetPosition == getPosition(items.get(i))) {
-			// targetIndex = i;
-			// } else if (targetPosition > getPosition(items.get(i))) {
-			// if (i < (items.size() - 1) && targetPosition > getPosition(items.get(i + 1))) {
-			// targetIndex = i + 1;
-			// } else {
-			// targetIndex = i;
-			// }
-			// }
 		}
 		if (sourceIndex < 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MOVE_ITEM_ID_NOT_FOUND);

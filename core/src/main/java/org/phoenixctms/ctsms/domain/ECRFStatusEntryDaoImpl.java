@@ -78,11 +78,6 @@ public class ECRFStatusEntryDaoImpl
 		ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		ecrfStatusEntryCriteria.setMaxResults(1);
 		return (ECRFStatusEntry) ecrfStatusEntryCriteria.uniqueResult();
-		// Iterator<ECRFStatusEntry> it = ecrfStatusEntryCriteria.list().iterator();
-		// if (it.hasNext()) {
-		// return it.next();
-		// }
-		// return null;
 	}
 
 	@Override
@@ -134,9 +129,6 @@ public class ECRFStatusEntryDaoImpl
 		if (validationStatus != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("validationStatus", validationStatus));
 		}
-		//		if (exportStatus != null) {
-		//			ecrfStatusEntryCriteria.add(Restrictions.eq("exportStatus", exportStatus));
-		//		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return ecrfStatusEntryCriteria.list();
 	}
@@ -145,7 +137,6 @@ public class ECRFStatusEntryDaoImpl
 	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done, Boolean validated,
 			Boolean review, Boolean verified)
 			throws Exception {
-		// protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean lockDown) throws Exception {
 		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
 		if (probandListEntryId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
@@ -153,9 +144,7 @@ public class ECRFStatusEntryDaoImpl
 		if (ecrfId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		if (ecrfStatusTypeId != null || valueLockdown != null || done != null || validated != null || review != null || verified != null) {// || done != null || valueLockdown !=
-																																			// null ||
-																																			// fieldStatusLockdown != null) {
+		if (ecrfStatusTypeId != null || valueLockdown != null || done != null || validated != null || review != null || verified != null) {
 			org.hibernate.Criteria ecrfStatusTypeCriteria = ecrfStatusEntryCriteria.createCriteria("status");
 			if (ecrfStatusTypeId != null) {
 				ecrfStatusTypeCriteria.add(Restrictions.idEq(ecrfStatusTypeId.longValue()));
@@ -175,19 +164,6 @@ public class ECRFStatusEntryDaoImpl
 			if (verified != null) {
 				ecrfStatusTypeCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
 			}
-			// if (done != null) {
-			// ecrfStatusTypeCriteria.add(Restrictions.eq("done", done.booleanValue()));
-			// }
-			// if (valueLockdown != null) {
-			// ecrfStatusTypeCriteria.add(Restrictions.eq("fieldStatusLockdown", fieldStatusLockdown.booleanValue()));
-			// }
-			// if (ecrfStatusTypeId != null) {
-			// ecrfStatusTypeCriteria.add(Restrictions.idEq(ecrfStatusTypeId.longValue()));
-			// }
-			//
-			// if (lockDown != null) {
-			// ecrfStatusTypeCriteria.add(Restrictions.eq("lockdown", lockDown.booleanValue()));
-			// }
 		}
 		return (Long) ecrfStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -198,8 +174,6 @@ public class ECRFStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFStatusEntry loadECRFStatusEntryFromECRFStatusEntryVO(ECRFStatusEntryVO eCRFStatusEntryVO) {
-		// TODO implement loadECRFStatusEntryFromECRFStatusEntryVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFStatusEntryFromECRFStatusEntryVO(ECRFStatusEntryVO) not yet implemented.");
 		ECRFStatusEntry ecrfStatusEntry = this.load(eCRFStatusEntryVO.getId());
 		if (ecrfStatusEntry == null) {
 			ecrfStatusEntry = ECRFStatusEntry.Factory.newInstance();
@@ -217,11 +191,6 @@ public class ECRFStatusEntryDaoImpl
 			ECRFStatusEntry source,
 			ECRFStatusEntryVO target) {
 		super.toECRFStatusEntryVO(source, target);
-		// WARNING! No conversion for target.status (can't convert source.getStatus():org.phoenixctms.ctsms.domain.ECRFStatusType to org.phoenixctms.ctsms.vo.ECRFStatusTypeVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.ecrf (can't convert source.getEcrf():org.phoenixctms.ctsms.domain.ECRF to org.phoenixctms.ctsms.vo.ECRFOutVO
-		// WARNING! No conversion for target.listEntry (can't convert source.getListEntry():org.phoenixctms.ctsms.domain.ProbandListEntry to
-		// org.phoenixctms.ctsms.vo.ProbandListEntryOutVO
 		ECRFStatusType status = source.getStatus();
 		ECRF ecrf = source.getEcrf();
 		ProbandListEntry listEntry = source.getListEntry();
@@ -238,7 +207,6 @@ public class ECRFStatusEntryDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 		target.setValidationStatus(L10nUtil.createEcrfValidationStatusVO(Locales.USER, source.getValidationStatus()));
 	}
 }

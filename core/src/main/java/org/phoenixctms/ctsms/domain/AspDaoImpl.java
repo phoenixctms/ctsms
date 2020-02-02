@@ -140,15 +140,6 @@ public class AspDaoImpl
 				Settings.getIntNullable(SettingCodes.ASP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.ASP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
 				aspCriteria);
 		if (MATCH_SUBSTANCE_NAME || MATCH_ATC_CODE_CODE) {
-			// ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-			// projectionList.add(Projections.property("name"));
-			// List asps = aspCriteria.setProjection(Projections.distinct(projectionList)).list();
-			// Iterator it = asps.iterator();
-			// ArrayList result = new ArrayList(asps.size());
-			// while (it.hasNext()) {
-			// result.add(this.load((Long) ((Object[]) it.next())[0]));
-			// }
-			// return result;
 			return CriteriaUtil.listDistinctRoot(aspCriteria, this, "name");
 		} else {
 			return aspCriteria.list();

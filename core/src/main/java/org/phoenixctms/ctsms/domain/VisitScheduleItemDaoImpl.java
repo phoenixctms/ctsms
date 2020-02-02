@@ -40,14 +40,6 @@ public class VisitScheduleItemDaoImpl
 		if (trialId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		//		if (groupId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		//					Restrictions.isNull("group.id")));
-		//		}
-		//		if (visitId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		//					Restrictions.isNull("visit.id")));
-		//		}
 		if (groupId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
 		} else {
@@ -206,14 +198,6 @@ public class VisitScheduleItemDaoImpl
 		if (trialId != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		// if (groupId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		// Restrictions.isNull("group.id")));
-		// }
-		// if (visitId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		// Restrictions.isNull("visit.id")));
-		// }
 		CriteriaUtil.applyPSFVO(criteriaMap, psf); // proband has only one probandlistentry, and listentry has only one group, but left joins
 		if (sort) {
 			visitScheduleItemCriteria.addOrder(Order.asc("trial"));
@@ -229,19 +213,6 @@ public class VisitScheduleItemDaoImpl
 	@Override
 	protected Collection<VisitScheduleItem> handleFindCollidingTrialGroupVisit(Long trialId, Long groupId, Long visitId) throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
-		// if (trialId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		// }
-		// if (groupId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
-		// } else {
-		// visitScheduleItemCriteria.add(Restrictions.isNull("group.id"));
-		// }
-		// if (visitId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
-		// } else {
-		// visitScheduleItemCriteria.add(Restrictions.isNull("visit.id"));
-		// }
 		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
 		return visitScheduleItemCriteria.list();
 	}
@@ -251,14 +222,6 @@ public class VisitScheduleItemDaoImpl
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
-		//		if (groupId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		//					Restrictions.isNull("group.id")));
-		//		}
-		//		if (visitId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		//					Restrictions.isNull("visit.id")));
-		//		}
 		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
@@ -268,14 +231,6 @@ public class VisitScheduleItemDaoImpl
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitTokenCriterions(visitScheduleItemCriteria, trialId, groupId, visitId, token);
-		//		if (groupId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		//					Restrictions.isNull("group.id")));
-		//		}
-		//		if (visitId != null) {
-		//			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		//					Restrictions.isNull("visit.id")));
-		//		}
 		visitScheduleItemCriteria.setProjection(Projections.max("stop"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
@@ -285,14 +240,6 @@ public class VisitScheduleItemDaoImpl
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitCriterions(visitScheduleItemCriteria, trialId, groupId, visitId);
-		// if (groupId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		// Restrictions.isNull("group.id")));
-		// }
-		// if (visitId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		// Restrictions.isNull("visit.id")));
-		// }
 		visitScheduleItemCriteria.setProjection(Projections.min("start"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
@@ -302,14 +249,6 @@ public class VisitScheduleItemDaoImpl
 			throws Exception {
 		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
 		applyTrialGroupVisitTokenCriterions(visitScheduleItemCriteria, trialId, groupId, visitId, token);
-		// if (groupId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		// Restrictions.isNull("group.id")));
-		// }
-		// if (visitId != null) {
-		// visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		// Restrictions.isNull("visit.id")));
-		// }
 		visitScheduleItemCriteria.setProjection(Projections.min("start"));
 		return (Timestamp) visitScheduleItemCriteria.uniqueResult();
 	}
@@ -330,12 +269,6 @@ public class VisitScheduleItemDaoImpl
 		if (ignoreTimelineEvents != null) {
 			criteriaMap.createCriteria("trial.status").add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));
 		}
-		// if (teamMemberStaffId != null) {
-		// criteriaMap.createCriteria("trial.members").add(Restrictions.eq("staff.id", teamMemberStaffId.longValue())); // unique staff!
-		// if (notify != null) {
-		// criteriaMap.createCriteria("trial.members").add(Restrictions.eq("notifyTimelineEvent", notify.booleanValue()));
-		// }
-		// }
 		if (notify != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("notify", notify.booleanValue()));
 		}
@@ -383,11 +316,8 @@ public class VisitScheduleItemDaoImpl
 		}
 		if (probandId == null) {
 			return (Long) visitScheduleItemCriteria.setProjection(Projections.rowCount()).uniqueResult();
-			//			CriteriaUtil.applyPSFVO(criteriaMap, psf); // proband has only one probandlistentry, and listentry has only one group, but left joins
-			//			return visitScheduleItemCriteria.list();
 		} else {
 			return (Long) visitScheduleItemCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
-			//			return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 		}
 	}
 
@@ -397,8 +327,6 @@ public class VisitScheduleItemDaoImpl
 	 * a new, blank entity is created
 	 */
 	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemInVO(VisitScheduleItemInVO visitScheduleItemInVO) {
-		// TODO implement loadVisitScheduleItemFromVisitScheduleItemInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitScheduleItemFromVisitScheduleItemInVO(VisitScheduleItemInVO) not yet implemented.");
 		VisitScheduleItem visitScheduleItem = null;
 		Long id = visitScheduleItemInVO.getId();
 		if (id != null) {
@@ -416,8 +344,6 @@ public class VisitScheduleItemDaoImpl
 	 * a new, blank entity is created
 	 */
 	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleItemOutVO(VisitScheduleItemOutVO visitScheduleItemOutVO) {
-		// TODO implement loadVisitScheduleItemFromVisitScheduleItemOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitScheduleItemFromVisitScheduleItemOutVO(VisitScheduleItemOutVO) not yet implemented.");
 		VisitScheduleItem visitScheduleItem = this.load(visitScheduleItemOutVO.getId());
 		if (visitScheduleItem == null) {
 			visitScheduleItem = VisitScheduleItem.Factory.newInstance();
@@ -471,10 +397,6 @@ public class VisitScheduleItemDaoImpl
 			VisitScheduleItem source,
 			VisitScheduleItemOutVO target) {
 		super.toVisitScheduleItemOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.visit (can't convert source.getVisit():org.phoenixctms.ctsms.domain.Visit to org.phoenixctms.ctsms.vo.VisitOutVO
-		// WARNING! No conversion for target.group (can't convert source.getGroup():org.phoenixctms.ctsms.domain.ProbandGroup to org.phoenixctms.ctsms.vo.ProbandGroupOutVO
 		Trial trial = source.getTrial();
 		Visit visit = source.getVisit();
 		ProbandGroup group = source.getGroup();

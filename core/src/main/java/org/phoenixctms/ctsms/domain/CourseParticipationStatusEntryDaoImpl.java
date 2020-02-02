@@ -174,7 +174,6 @@ public class CourseParticipationStatusEntryDaoImpl
 	 */
 	@Override
 	public CourseParticipationStatusEntry cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO) {
-		// TODO verify behavior of cvPositionPDFVOToEntity
 		CourseParticipationStatusEntry entity = this.loadCourseParticipationStatusEntryFromCvPositionPDFVO(cvPositionPDFVO);
 		this.cvPositionPDFVOToEntity(cvPositionPDFVO, entity, true);
 		return entity;
@@ -188,7 +187,6 @@ public class CourseParticipationStatusEntryDaoImpl
 			CvPositionPDFVO source,
 			CourseParticipationStatusEntry target,
 			boolean copyIfNull) {
-		// TODO verify behavior of cvPositionPDFVOToEntity
 		super.cvPositionPDFVOToEntity(source, target, copyIfNull);
 	}
 
@@ -365,11 +363,7 @@ public class CourseParticipationStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO) {
-		// TODO implement loadCourseParticipationStatusEntryFromCvPositionPDFVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCourseParticipationStatusEntryFromCvPositionPDFVO(CvPositionPDFVO) not yet implemented.");
-		/* A typical implementation looks like this: CourseParticipationStatusEntry courseParticipationStatusEntry = this.load(cvPositionPDFVO.getId()); if
-		 * (courseParticipationStatusEntry == null) { courseParticipationStatusEntry = CourseParticipationStatusEntry.Factory.newInstance(); } return
-		 * courseParticipationStatusEntry; */
 	}
 
 	/**
@@ -421,14 +415,7 @@ public class CourseParticipationStatusEntryDaoImpl
 	public void toCourseParticipationStatusEntryOutVO(
 			CourseParticipationStatusEntry source,
 			CourseParticipationStatusEntryOutVO target) {
-		// TODO verify behavior of toCourseParticipationStatusEntryOutVO
 		super.toCourseParticipationStatusEntryOutVO(source, target);
-		// WARNING! No conversion for target.section (can't convert source.getSection():org.phoenixctms.ctsms.domain.CvSection to org.phoenixctms.ctsms.vo.CvSectionVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.status (can't convert source.getStatus():org.phoenixctms.ctsms.domain.CourseParticipationStatusType to
-		// org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		CvSection section = source.getSection();
 		Course course = source.getCourse();
 		Staff staff = source.getStaff();

@@ -287,7 +287,6 @@ public class ECRFFieldDaoImpl
 			org.hibernate.Criteria trialCriteria = ecrfFieldCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria ecrfCriteria = ecrfFieldCriteria.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = ecrfFieldCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			// fieldCriteria.add(Restrictions.eq("localized", false));
 			ecrfFieldCriteria.add(Restrictions.or(
 					(new CategoryCriterion(nameInfix, "section", MatchMode.ANYWHERE)).getRestriction(),
 					Restrictions.or(
@@ -429,9 +428,6 @@ public class ECRFFieldDaoImpl
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		// if (active != null) {
-		// ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		// }
 		CategoryCriterion.apply(ecrfFieldCriteria, new CategoryCriterion(sectionPrefix, "section", MatchMode.START));
 		ecrfFieldCriteria.addOrder(Order.asc("section"));
 		ecrfFieldCriteria.setProjection(Projections.distinct(Projections.property("section")));
@@ -449,9 +445,6 @@ public class ECRFFieldDaoImpl
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		// if (active != null) {
-		// ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		// }
 		if (series != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("series", series.booleanValue()));
 		}
@@ -470,9 +463,6 @@ public class ECRFFieldDaoImpl
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		// if (active != null) {
-		// ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		// }
 		if (series != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("series", series.booleanValue()));
 		}
@@ -532,8 +522,6 @@ public class ECRFFieldDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFField loadECRFFieldFromECRFFieldInVO(ECRFFieldInVO eCRFFieldInVO) {
-		// TODO implement loadECRFFieldFromECRFFieldInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldFromECRFFieldInVO(ECRFFieldInVO) not yet implemented.");
 		ECRFField ecrfField = null;
 		Long id = eCRFFieldInVO.getId();
 		if (id != null) {
@@ -551,8 +539,6 @@ public class ECRFFieldDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFField loadECRFFieldFromECRFFieldOutVO(ECRFFieldOutVO eCRFFieldOutVO) {
-		// TODO implement loadECRFFieldFromECRFFieldOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldFromECRFFieldOutVO(ECRFFieldOutVO) not yet implemented.");
 		ECRFField ecrfField = this.load(eCRFFieldOutVO.getId());
 		if (ecrfField == null) {
 			ecrfField = ECRFField.Factory.newInstance();
@@ -566,8 +552,6 @@ public class ECRFFieldDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFField loadECRFFieldFromLightECRFFieldOutVO(LightECRFFieldOutVO lightECRFFieldOutVO) {
-		// TODO implement loadECRFFieldFromLightECRFFieldOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldFromLightECRFFieldOutVO(LightECRFFieldOutVO) not yet implemented.");
 		ECRFField ecrfField = this.load(lightECRFFieldOutVO.getId());
 		if (ecrfField == null) {
 			ecrfField = ECRFField.Factory.newInstance();
@@ -613,10 +597,6 @@ public class ECRFFieldDaoImpl
 			ECRFField source,
 			ECRFFieldOutVO target) {
 		super.toECRFFieldOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.ecrf (can't convert source.getEcrf():org.phoenixctms.ctsms.domain.ECRF to org.phoenixctms.ctsms.vo.ECRFOutVO
-		// WARNING! No conversion for target.field (can't convert source.getField():org.phoenixctms.ctsms.domain.InputField to org.phoenixctms.ctsms.vo.InputFieldOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		Trial trial = source.getTrial();
 		ECRF ecrf = source.getEcrf();
 		InputField field = source.getField();

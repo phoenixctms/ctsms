@@ -67,7 +67,6 @@ public class ProbandTagAdapter extends TagAdapter<Proband, ProbandTag, ProbandTa
 
 	@Override
 	protected Collection<ProbandTag> findTagsIncludingId(Proband root, Long tagId) {
-		// return probandTagDao.findByVisibleIdExcel(true, tagId, null);
 		if (root != null) {
 			if (root.isPerson()) {
 				return probandTagDao.findByPersonAnimalIdExcel(true, null, tagId, null);

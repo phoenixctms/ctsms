@@ -89,37 +89,25 @@ public abstract class Randomization {
 
 	private final static void checkInputFieldSelectionSetValueValue(String value) throws ServiceException {
 		if (RANDOMIZATION_BLOCK_SPLIT_REGEXP.matcher(value).find()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value); // ,probandGroupIn.getToken());
-			// //,probandGroupIn.getToken());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
 		}
 		if (TRIM_INPUT_FIELD_SELECTION_SET_VALUE_VALUE && !value.trim().equals(value)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value); // ,probandGroupIn.getToken()); //_whitespace
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
 		}
 	}
 
-	// protected abstract void checkInputFieldSelectionSetValueValueInput(Trial trial, InputFieldSelectionSetValueInVO inputFieldSelectionSetValueIn) throws ServiceException;
 	public final static void checkProbandGroupInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException {
 		if (probandGroupIn.getRandomize()) {
 			checkProbandGroupToken(probandGroupIn.getToken());
-			// if (RANDOMIZATION_BLOCK_SPLIT_REGEXP.matcher(probandGroupIn.getToken()).find()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_GROUP_TOKEN, probandGroupIn.getToken()); // ,probandGroupIn.getToken());
-			// // //,probandGroupIn.getToken());
-			// }
-			// if (TRIM_PROBAND_GROUP_TOKEN && !probandGroupIn.getToken().trim().equals(probandGroupIn.getToken())) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_PROBAND_GROUP_TOKEN, probandGroupIn.getToken()); // ,probandGroupIn.getToken()); //_whitespace
-			// }
-			// checkProbandGroupToken(probandGroupIn.getToken());
-			// getInstance(trial.getRandomization(),trialDao,probandGroupDao,probandListEntryDao,stratificationRandomizationListDao).checkProbandGroupTokenInput(trial,
-			// probandGroupIn);
 		}
 	}
 
 	private final static void checkProbandGroupToken(String token) throws ServiceException {
 		if (RANDOMIZATION_BLOCK_SPLIT_REGEXP.matcher(token).find()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_GROUP_TOKEN, token); // ,probandGroupIn.getToken()); //,probandGroupIn.getToken());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_GROUP_TOKEN, token);
 		}
 		if (TRIM_PROBAND_GROUP_TOKEN && !token.trim().equals(token)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_PROBAND_GROUP_TOKEN, token); // ,probandGroupIn.getToken()); //_whitespace
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_PROBAND_GROUP_TOKEN, token);
 		}
 	}
 
@@ -154,11 +142,6 @@ public abstract class Randomization {
 		}
 	}
 
-	// public static void checkInputFieldSelectionSetValueInput( InputFieldSelectionSetValueInVO inputFieldSelectionSetValueIn) throws ServiceException {
-	// if ( probandListEntryTagDao.getCountByFieldStratificationRandomize(inputFieldSelectionSetValueIn.getFieldId(), null, true)) {
-	// checkInputFieldSelectionSetValueValueInput(inputFieldSelectionSetValueIn);
-	// }
-	// }
 	public final static ArrayList<RandomizationListCodeInVO> checkStratificationRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn,
 			Collection<RandomizationListCodeInVO> codes,
 			boolean checkCollision,
@@ -221,7 +204,6 @@ public abstract class Randomization {
 		if (trialIn.getRandomization() == null) {
 			if (trialIn.getRandomizationList() != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_NOT_NULL);
-				// ,L10nUtil.getRandomizationModeName(Locales.USER, trialIn.getRandomization().name()));
 			}
 		} else {
 			Randomization randomization = getInstance(trialIn.getRandomization(), trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao,
@@ -317,7 +299,6 @@ public abstract class Randomization {
 	protected final static void splitInputFieldSelectionSetValueValues(String randomizationBlock, HashMap<String, InputFieldSelectionSetValue> inputFieldSelectionSetValueMap,
 			ArrayList<String> values)
 			throws ServiceException {
-		// ArrayList<String> result = new ArrayList<String>();
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
 			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
 			for (int i = 0; i < block.length; i++) {
@@ -333,28 +314,21 @@ public abstract class Randomization {
 				}
 			}
 		}
-		// return result;
 	}
 
 	protected final static void splitInputFieldTextValues(String randomizationBlock, Collection<String> values)
 			throws ServiceException {
-		// ArrayList<String> result = new ArrayList<String>();
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
 			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
 			for (int i = 0; i < block.length; i++) {
 				String value = (TRIM_INPUT_FIELD_TEXT_VALUE ? block[i].trim() : block[i]);
 				if (!CommonUtil.isEmptyString(value)) {
-					// if (inputFieldSelectionSetValueMap.containsKey(value)) {
 					if (values != null) {
 						values.add(value);
 					}
-					// } else {
-					// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
-					// }
 				}
 			}
 		}
-		// return result;
 	}
 
 	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
@@ -412,7 +386,6 @@ public abstract class Randomization {
 
 	protected final static void splitProbandGroupTokens(String randomizationBlock, HashMap<String, ProbandGroup> probandGroupMap, ArrayList<String> tokens)
 			throws ServiceException {
-		// ArrayList<String> result = new ArrayList<String>();
 		if (!CommonUtil.isEmptyString(randomizationBlock)) {
 			String[] block = RANDOMIZATION_BLOCK_SPLIT_REGEXP.split(randomizationBlock, -1);
 			for (int i = 0; i < block.length; i++) {
@@ -428,7 +401,6 @@ public abstract class Randomization {
 				}
 			}
 		}
-		// return result;
 	}
 
 	protected TrialDao trialDao;
@@ -485,9 +457,7 @@ public abstract class Randomization {
 					probandListEntryTagDao.toProbandListEntryTagOutVO(tag).getUniqueName());
 		}
 	}
-	// protected abstract void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException;
 
-	// protected abstract void checkProbandListEntryTagInputFieldSelectionSetValueValuesInput() throws ServiceException ;
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn)
 			throws ServiceException {
 	}
@@ -502,7 +472,6 @@ public abstract class Randomization {
 		if (n > 0) {
 			randomizationListInfo.setN(n);
 			StringBuilder sb = new StringBuilder();
-			//ArrayList<String> result = new ArrayList<String>(tokens.size() * n);
 			int blocks = (int) Math.ceil(((double) n) / ((double) items.size()));
 			int count = 0;
 			long seed = SecureRandom.getInstance(RANDOMIZATION_LIST_SEED_RANDOM_ALGORITHM).nextLong();
@@ -528,7 +497,6 @@ public abstract class Randomization {
 					count++;
 					randomizationListInfo.getRandomizationLists().add(item);
 				}
-				//result.addAll(permutation);
 			}
 			return sb.toString();
 		} else {
@@ -553,11 +521,6 @@ public abstract class Randomization {
 
 	protected final Collection<ProbandGroup> getRandomizationGroups(Trial trial) throws ServiceException {
 		return probandGroupDao.findByTrialRandomize(trial.getId(), true);
-		// Collection<ProbandGroup> groups = probandGroupDao.findByTrialRandomize(trial.getId(), true);
-		// if (groups.size() == 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_PROBAND_GROUPS);
-		// }
-		// return groups;
 	}
 
 	public final RandomizationInfoVO getRandomizationInfoVO() {
@@ -570,16 +533,6 @@ public abstract class Randomization {
 		} catch (NoSuchElementException e) {
 			return new ArrayList<InputFieldSelectionSetValue>();
 		}
-		// Collection<ProbandListEntryTag> randomizeTags = probandListEntryTagDao.findByTrialFieldStratificationRandomize(trial.getId(), null, true);
-		// if (randomizeTags.size() == 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_INPUT_FIELD_SELECTION_SET_VALUES);
-		// } else {
-		// Collection<InputFieldSelectionSetValue> inputFieldSelectionSetValues = randomizeTags.iterator().next().getField().getSelectionSetValues();
-		// if (inputFieldSelectionSetValues.size() == 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_INPUT_FIELD_SELECTION_SET_VALUES);
-		// }
-		// return inputFieldSelectionSetValues;
-		// }
 	}
 
 	protected final TreeSet<String> getRandomizationListGroups(Trial trial) throws Exception {
@@ -709,9 +662,6 @@ public abstract class Randomization {
 
 	public abstract RandomizationType getType();
 
-	// protected abstract InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception;
-	// protected abstract String randomizeInputFieldTextValue(Trial trial, ProbandListEntry exclude) throws Exception;
-	// protected abstract ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception;
 	protected final void initGroupsInfo(Collection<ProbandGroup> probandGroups) {
 		randomizationInfo.setSizes(new HashMap<String, Long>());
 		Iterator<ProbandGroup> it = probandGroups.iterator();

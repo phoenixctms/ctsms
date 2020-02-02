@@ -182,11 +182,6 @@ public class StaffServiceImpl
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null)) });
 	}
 
-	// private static JournalEntry logSystemMessage(Trial trial, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	// JournalEntryDao journalEntryDao) throws Exception {
-	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) }, systemMessageCode,
-	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	// }
 	private static JournalEntry logSystemMessage(User user, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
@@ -545,7 +540,6 @@ public class StaffServiceImpl
 				}
 			}
 			staff.getDutyRosterTurns().clear();
-			// ProbandDao probandDao = this.getProbandDao();
 			InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 			Iterator<InventoryBooking> bookingsIt = staff.getInventoryBookings().iterator();
 			while (bookingsIt.hasNext()) {
@@ -771,18 +765,6 @@ public class StaffServiceImpl
 				logSystemMessage(patient, result, now, user, SystemMessageCodes.STAFF_DELETED_PROBAND_UPDATED, patientVO, original, journalEntryDao);
 			}
 			staff.getPatients().clear();
-			// MassMailDao massMailDao = this.getMassMailDao();
-			// Iterator<MassMail> massMailsIt = trial.getMassMails().iterator();
-			// while (massMailsIt.hasNext()) {
-			// MassMail massMail = massMailsIt.next();
-			// MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
-			// massMail.setTrial(null);
-			// CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
-			// massMailDao.update(massMail);
-			// MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
-			// logSystemMessage(massMail, result, now, user, SystemMessageCodes.STAFF_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
-			// }
-			// trial.getMassMails().clear();
 			staff.getHyperlinks().clear();
 			Iterator<JournalEntry> journalEntriesIt = staff.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
@@ -803,13 +785,11 @@ public class StaffServiceImpl
 			Iterator<NotificationRecipient> notificationRecipientsIt = staff.getNotificationReceipts().iterator();
 			while (notificationRecipientsIt.hasNext()) {
 				NotificationRecipient recipient = notificationRecipientsIt.next();
-				// recipient.getNotification().removeRecipients(recipient);
 				recipient.setStaff(null);
 				recipient.setNotification(null);
 				notificationRecipientDao.remove(recipient);
 			}
 			staff.getNotificationReceipts().clear();
-			// staff.getNotifications().clear();
 		}
 		Iterator<Staff> childrenIt = staff.getChildren().iterator();
 		while (childrenIt.hasNext()) {
@@ -817,7 +797,6 @@ public class StaffServiceImpl
 			child.setParent(null);
 			CoreUtil.modifyVersion(child, child.getVersion(), now, user);
 			staffDao.update(child);
-			// StaffOutVO childVO = staffDao.toStaffOutVO(child);
 		}
 		staff.getChildren().clear();
 		Staff parent = staff.getParent();
@@ -1235,7 +1214,7 @@ public class StaffServiceImpl
 				this.getCourseParticipationStatusEntryDao());
 		if (isRelevantForCourseAppointments == null
 				|| isRelevantForCourseAppointments.booleanValue() == courseParticipationStatusEntry.getStatus().isRelevantForCourseAppointments()) {
-			Collection collidingCourseInventoryBookings = new HashSet(); // new ArrayList();
+			Collection collidingCourseInventoryBookings = new HashSet();
 			InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 			Collection<InventoryBooking> courseInventoryBookings = inventoryBookingDao.findByCourseSorted(courseParticipationStatusEntry.getCourse().getId(),
 					isRelevantForCourseAppointments, false);
@@ -1265,7 +1244,7 @@ public class StaffServiceImpl
 		DutyRosterTurn dutyRosterTurn = CheckIDUtil.checkDutyRosterTurnId(dutyRosterTurnId, this.getDutyRosterTurnDao());
 		Staff staff = dutyRosterTurn.getStaff();
 		if (staff != null) {
-			Collection collidingCourseInventoryBookings = new HashSet(); // new ArrayList();
+			Collection collidingCourseInventoryBookings = new HashSet();
 			InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 			Iterator<CourseParticipationStatusEntry> it = staff.getParticipations().iterator();
 			while (it.hasNext()) {
@@ -1285,7 +1264,7 @@ public class StaffServiceImpl
 			AuthenticationVO auth, Long staffStatusEntryId, Boolean isRelevantForCourseAppointments) throws Exception {
 		StaffStatusEntry staffStatus = CheckIDUtil.checkStaffStatusEntryId(staffStatusEntryId, this.getStaffStatusEntryDao());
 		if (!staffStatus.getType().isStaffActive()) {
-			Collection collidingCourseInventoryBookings = new HashSet(); // new ArrayList();
+			Collection collidingCourseInventoryBookings = new HashSet();
 			InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 			Iterator<CourseParticipationStatusEntry> it = staffStatus.getStaff().getParticipations().iterator();
 			while (it.hasNext()) {
@@ -1759,7 +1738,7 @@ public class StaffServiceImpl
 		}
 		StaffStatusEntryDao statusEntryDao = this.getStaffStatusEntryDao();
 		Collection staffStatusEntries = statusEntryDao.findByDepartmentCategoryInterval(departmentId, staffCategoryId, CommonUtil.dateToTimestamp(from),
-				CommonUtil.dateToTimestamp(to), null, null, hideAvailability); // false,true);
+				CommonUtil.dateToTimestamp(to), null, null, hideAvailability);
 		statusEntryDao.toStaffStatusEntryOutVOCollection(staffStatusEntries);
 		if (sort) {
 			staffStatusEntries = new ArrayList(staffStatusEntries);
@@ -1885,11 +1864,8 @@ public class StaffServiceImpl
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
 		CvPDFVO result = painter.getPdfVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		logSystemMessage(staff, staffVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.CV_PDF_RENDERED, result, null,
 				this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -1914,7 +1890,7 @@ public class StaffServiceImpl
 			ServiceUtil.checkTrialLocked(visitScheduleItem.getTrial());
 		}
 		Staff oldStaff = dutyRosterTurn.getStaff();
-		if (trial != null && dutyRosterTurn.getStart() != null && trial.isDutySelfAllocationLocked() && oldStaff != null) { // (oldStaff != null || lockEmpty)) {
+		if (trial != null && dutyRosterTurn.getStart() != null && trial.isDutySelfAllocationLocked() && oldStaff != null) {
 			if (trial.getDutySelfAllocationLockedUntil() == null && trial.getDutySelfAllocationLockedFrom() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.DUTY_ROSTER_TURN_SELF_ALLOCATION_LOCKED,
 						CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
@@ -1933,7 +1909,7 @@ public class StaffServiceImpl
 			}
 		}
 		if (allocate) {
-			if (oldStaff != null) { // && !identity.equals(oldStaff)) {
+			if (oldStaff != null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.DUTY_ROSTER_TURN_ALREADY_ALLOCATED);
 			}
 			checkDutyRosterTurnStaff(identity);
@@ -2252,7 +2228,6 @@ public class StaffServiceImpl
 					DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_STAFF_LIMIT);
 			if (staffLimit != null && staffLimit > 0 && !statusEntry.getType().isHideAvailability()
 					&& !(new DateInterval(statusEntry.getStart(), statusEntry.getStop())).isOver(now)) {
-				// Long departmentId = null;
 				boolean perDay = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY, Bundle.SETTINGS,
 						DefaultSettings.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_PER_DAY);
 				boolean allTrials = Settings.getBoolean(SettingCodes.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM_NOTIFICATION_ALL_TRIALS, Bundle.SETTINGS,

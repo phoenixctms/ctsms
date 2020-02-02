@@ -24,7 +24,6 @@ public class TagCoinRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

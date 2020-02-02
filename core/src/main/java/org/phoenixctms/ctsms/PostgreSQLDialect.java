@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms;
 import org.hibernate.Hibernate;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
-//import org.hibernate.dialect.PostgreSQLDialect;
 //https://forum.hibernate.org/viewtopic.php?f=1&t=1003143&p=2426758&hilit=UPGRADE_NOWAIT#p2426758
 public class PostgreSQLDialect extends org.hibernate.dialect.PostgreSQLDialect {
 

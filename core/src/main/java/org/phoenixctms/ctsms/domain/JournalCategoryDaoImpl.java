@@ -49,12 +49,6 @@ public class JournalCategoryDaoImpl
 		categoryCriteria.add(Restrictions.eq("preset", true));
 		categoryCriteria.setMaxResults(1);
 		return (JournalCategory) categoryCriteria.uniqueResult();
-		// List result = categoryCriteria.list();
-		// if (result.size() > 0) {
-		// return (JournalCategory) result.iterator().next();
-		// } else {
-		// return null;
-		// }
 	}
 
 	/**

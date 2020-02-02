@@ -52,7 +52,6 @@ public class CriterionPropertyDaoImpl
 			CriterionPropertyVO source,
 			CriterionProperty target,
 			boolean copyIfNull) {
-		// TODO verify behavior of criterionPropertyVOToEntity
 		super.criterionPropertyVOToEntity(source, target, copyIfNull);
 		Collection validRestrictions = source.getValidRestrictions();
 		if (validRestrictions.size() > 0) {

@@ -59,8 +59,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class MassMailRecipientDaoImpl
 		extends MassMailRecipientDaoBase {
 
-	private static void applyPendingCriteria(org.hibernate.Criteria recipientCriteria, boolean not) { // , org.hibernate.Criteria probandCriteria, org.hibernate.Criteria
-		// probandCategoryCriteria) {
+	private static void applyPendingCriteria(org.hibernate.Criteria recipientCriteria, boolean not) {
 		Conjunction criterions = Restrictions.conjunction();
 		criterions.add(Restrictions.eq("sent", false));
 		criterions.add(Restrictions.eq("cancelled", false));
@@ -73,14 +72,6 @@ public class MassMailRecipientDaoImpl
 		} else {
 			recipientCriteria.add(criterions);
 		}
-		// if (probandCriteria == null) {
-		// probandCriteria = recipientCriteria.createCriteria("proband");
-		// }
-		// probandCriteria.add(Restrictions.eq("deferredDelete", false));
-		// if (probandCategoryCriteria == null) {
-		// probandCategoryCriteria = probandCriteria.createCriteria("category");
-		// }
-		// probandCategoryCriteria.add(Restrictions.eq("locked", false));
 	}
 
 	private static EmailAddressVO internetAddressToEmailAddressVO(InternetAddress address) {
@@ -135,7 +126,6 @@ public class MassMailRecipientDaoImpl
 	 */
 	@Override
 	public MassMailRecipient emailMessageVOToEntity(EmailMessageVO emailMessageVO) {
-		// TODO verify behavior of emailMessageVOToEntity
 		MassMailRecipient entity = this.loadMassMailRecipientFromEmailMessageVO(emailMessageVO);
 		this.emailMessageVOToEntity(emailMessageVO, entity, true);
 		return entity;
@@ -149,7 +139,6 @@ public class MassMailRecipientDaoImpl
 			EmailMessageVO source,
 			MassMailRecipient target,
 			boolean copyIfNull) {
-		// TODO verify behavior of emailMessageVOToEntity
 		super.emailMessageVOToEntity(source, target, copyIfNull);
 	}
 
@@ -161,15 +150,13 @@ public class MassMailRecipientDaoImpl
 		}
 		Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(mimeType, FileModule.MASS_MAIL_DOCUMENT).iterator();
 		if (it.hasNext()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACHMENT_MIME_TYPE_UNKNOWN, mimeType);
 			return mimeTypeDao.toMimeTypeVO(it.next());
 		}
-		// return mimeTypeDao.toMimeTypeVO(it.next());
 		return null;
 	}
 
 	@Override
-	protected Collection<MassMailRecipient> handleFindByDepartmentPending(Long departmentId, Timestamp now, Boolean pending, boolean scheduled, PSFVO psf) // boolean lock,
+	protected Collection<MassMailRecipient> handleFindByDepartmentPending(Long departmentId, Timestamp now, Boolean pending, boolean scheduled, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria recipientCriteria = createRecipientCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MassMailRecipient.class, recipientCriteria);
@@ -177,7 +164,7 @@ public class MassMailRecipientDaoImpl
 			criteriaMap.createCriteria("massMail").add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (pending != null) {
-			applyPendingCriteria(recipientCriteria, !pending); // , probandCriteria, criteriaMap.createCriteria("proband.category"));
+			applyPendingCriteria(recipientCriteria, !pending);
 		}
 		if (scheduled) {
 			criteriaMap.createCriteria("massMail.status").add(Restrictions.eq("sending", true));
@@ -211,7 +198,7 @@ public class MassMailRecipientDaoImpl
 	}
 
 	@Override
-	protected Collection<MassMailRecipient> handleFindPending(Long massMailId, Long departmentId, Long probandDepartmentId, Timestamp now, boolean sort, PSFVO psf) // boolean lock,
+	protected Collection<MassMailRecipient> handleFindPending(Long massMailId, Long departmentId, Long probandDepartmentId, Timestamp now, boolean sort, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria recipientCriteria = createRecipientCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MassMailRecipient.class, recipientCriteria);
@@ -223,16 +210,10 @@ public class MassMailRecipientDaoImpl
 		if (departmentId != null) {
 			criteriaMap.createCriteria("massMail").add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
-		// Criteria probandCriteria = criteriaMap.createCriteria("proband");
 		if (probandDepartmentId != null) {
 			criteriaMap.createCriteria("proband").add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
-			// probandCriteria.add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
-			//		} else {
-			//			recipientCriteria.add(Restrictions.isNotNull("proband"));
 		}
-		applyPendingCriteria(recipientCriteria, false); // , probandCriteria, criteriaMap.createCriteria("proband.category"));
-		// if (lock) {
-		// recipientCriteria.setLockMode(LockMode.PESSIMISTIC_WRITE);
+		applyPendingCriteria(recipientCriteria, false);
 		if (sort) {
 			if (psf == null) {
 				psf = new PSFVO();
@@ -240,9 +221,7 @@ public class MassMailRecipientDaoImpl
 			psf.setSortField("id");
 			psf.setSortOrder(true);
 		}
-		// } else {
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// }
 		return recipientCriteria.list();
 	}
 
@@ -256,7 +235,7 @@ public class MassMailRecipientDaoImpl
 			recipientCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		if (pending) {
-			applyPendingCriteria(recipientCriteria, false); // , null, null);
+			applyPendingCriteria(recipientCriteria, false);
 		}
 		return (Long) recipientCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -267,10 +246,7 @@ public class MassMailRecipientDaoImpl
 	 * a new, blank entity is created
 	 */
 	private MassMailRecipient loadMassMailRecipientFromEmailMessageVO(EmailMessageVO emailMessageVO) {
-		// TODO implement loadMassMailRecipientFromEmailMessageVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailRecipientFromEmailMessageVO(EmailMessageVO) not yet implemented.");
-		/* A typical implementation looks like this: MassMailRecipient massMailRecipient = this.get(emailMessageVO.getId()); if (massMailRecipient == null) { massMailRecipient =
-		 * MassMailRecipient.Factory.newInstance(); } return massMailRecipient; */
 	}
 
 	private MassMailRecipient loadMassMailRecipientFromMassMailRecipientInVO(MassMailRecipientInVO massMailRecipientInVO) {
@@ -286,8 +262,6 @@ public class MassMailRecipientDaoImpl
 	}
 
 	private MassMailRecipient loadMassMailRecipientFromMassMailRecipientOutVO(MassMailRecipientOutVO massMailRecipientOutVO) {
-		// TODO implement loadMassMailRecipientFromMassMailRecipientOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailRecipientFromMassMailRecipientOutVO(MassMailRecipientOutVO) not yet implemented.");
 		MassMailRecipient massMailRecipient = this.get(massMailRecipientOutVO.getId());
 		if (massMailRecipient == null) {
 			massMailRecipient = MassMailRecipient.Factory.newInstance();
@@ -310,7 +284,6 @@ public class MassMailRecipientDaoImpl
 		super.massMailRecipientInVOToEntity(source, target, copyIfNull);
 		Long massMailId = source.getMassMailId();
 		Long probandId = source.getProbandId();
-		// Long trialId = source.getTrialId();
 		if (massMailId != null) {
 			MassMail massMail = this.getMassMailDao().load(massMailId);
 			target.setMassMail(massMail);
@@ -333,17 +306,6 @@ public class MassMailRecipientDaoImpl
 				proband.removeMassMailReceipts(target);
 			}
 		}
-		// if (trialId != null) {
-		// Trial trial = this.getTrialDao().load(trialId);
-		// target.setTrial(trial);
-		// trial.addMassMailReceipts(target);
-		// } else if (copyIfNull) {
-		// Trial trial = target.getTrial();
-		// target.setTrial(null);
-		// if (trial != null) {
-		// trial.removeMassMailReceipts(target);
-		// }
-		// }
 	}
 
 	@Override
@@ -364,7 +326,6 @@ public class MassMailRecipientDaoImpl
 		super.massMailRecipientOutVOToEntity(source, target, copyIfNull);
 		MassMailOutVO massMailVO = source.getMassMail();
 		ProbandOutVO probandVO = source.getProband();
-		// TrialOutVO trialVO = source.getTrial();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (massMailVO != null) {
 			MassMail massMail = this.getMassMailDao().massMailOutVOToEntity(massMailVO);
@@ -388,17 +349,6 @@ public class MassMailRecipientDaoImpl
 				proband.removeMassMailReceipts(target);
 			}
 		}
-		// if (trialVO != null) {
-		// Trial trial = this.getTrialDao().trialOutVOToEntity(trialVO);
-		// target.setTrial(trial);
-		// trial.addMassMailReceipts(target);
-		// } else if (copyIfNull) {
-		// Trial trial = target.getTrial();
-		// target.setTrial(null);
-		// if (trial != null) {
-		// trial.removeMassMailReceipts(target);
-		// }
-		// }
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
@@ -486,14 +436,11 @@ public class MassMailRecipientDaoImpl
 				} else {
 					target.setText(content.toString());
 				}
-				// target.setSize(mimeMessage.getSize());
 				target.setDecrypted(true);
 			} catch (MessagingException e) {
 				throw new RuntimeException(e);
 			} catch (IOException e) { // covered by MessagingException, but not handler.getInputStream()
 				throw new RuntimeException(e);
-				// } catch (ServiceException e) {
-				// throw new RuntimeException(e);
 			} catch (Exception e) {
 				target.setSubject(null);
 				target.setText(null);
@@ -503,14 +450,12 @@ public class MassMailRecipientDaoImpl
 				target.getCcAddresses().clear();
 				target.getBccAddresses().clear();
 				target.getAttachments().clear();
-				// target.setSize(null);
 				target.setDecrypted(false);
 			} finally {
 				if (stream != null) {
 					try {
 						stream.close();
 					} catch (IOException e1) {
-						// System.out.println("XXX");
 					}
 				}
 			}
@@ -529,16 +474,12 @@ public class MassMailRecipientDaoImpl
 		super.toMassMailRecipientInVO(source, target);
 		MassMail massMail = source.getMassMail();
 		Proband proband = source.getProband();
-		// Trial trial = source.getTrial();
 		if (massMail != null) {
 			target.setMassMailId(massMail.getId());
 		}
 		if (proband != null) {
 			target.setProbandId(proband.getId());
 		}
-		// if (trial != null) {
-		// target.setTrialId(trial.getId());
-		// }
 	}
 
 	@Override
@@ -553,14 +494,9 @@ public class MassMailRecipientDaoImpl
 	public void toMassMailRecipientOutVO(
 			MassMailRecipient source,
 			MassMailRecipientOutVO target) {
-		// TODO verify behavior of toMassMailRecipientOutVO
 		super.toMassMailRecipientOutVO(source, target);
-		// WARNING! No conversion for target.massMail (can't convert source.getMassMail():org.phoenixctms.ctsms.domain.MassMail to org.phoenixctms.ctsms.vo.MassMailOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		MassMail massMail = source.getMassMail();
 		Proband proband = source.getProband();
-		// Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		if (massMail != null) {
 			target.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
@@ -568,9 +504,6 @@ public class MassMailRecipientDaoImpl
 		if (proband != null) {
 			target.setProband(this.getProbandDao().toProbandOutVO(proband));
 		}
-		// if (trial != null) {
-		// target.setTrial(this.getTrialDao().toTrialOutVO(trial));
-		// }
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}

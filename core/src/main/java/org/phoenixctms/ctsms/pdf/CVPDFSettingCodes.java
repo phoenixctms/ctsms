@@ -3,7 +3,7 @@ package org.phoenixctms.ctsms.pdf;
 public interface CVPDFSettingCodes {
 
 	public final static String GRAPH_MAX_STAFF_INSTANCES = "graph_max_staff_instances";
-	public final static String POSITION_DATE_PATTERN = "position_date_pattern"; // "yyyy";
+	public final static String POSITION_DATE_PATTERN = "position_date_pattern";
 	public final static String TEMPLATE_FILE_NAME = "template_file_name";
 	public final static String FONT_A = "font_a";
 	public final static String FONT_B = "font_b";

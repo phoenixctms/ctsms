@@ -59,10 +59,8 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		this.maxInstances = maxInstances != null && maxInstances.length > 0 ? (maxInstances[0] == null ? DEFAULT_MAX_INSTANCES : maxInstances[0]) : DEFAULT_MAX_INSTANCES;
 		this.precedingCoursesDepth = maxInstances != null && maxInstances.length > 1 ? (maxInstances[1] == null ? DEFAULT_PRECEDING_COURSES_DEPTH : maxInstances[1])
 				: DEFAULT_PRECEDING_COURSES_DEPTH;
-		// renewalsDepth
 		this.renewalsDepth = maxInstances != null && maxInstances.length > 2 ? (maxInstances[2] == null ? DEFAULT_RENEWALS_DEPTH : maxInstances[2])
 				: DEFAULT_RENEWALS_DEPTH;
-		// precedingCoursesDepth
 		this.courseDaoImpl = courseDaoImpl;
 		this.courseCategoryDao = courseCategoryDao;
 		this.departmentDao = departmentDao;
@@ -97,14 +95,6 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		} else {
 			return renewals;
 		}
-		// Collection<Course> precedingCourses = source.getPrecedingCourses();
-		// if (precedingCourses.size() > 1) {
-		// TreeSet<Course> result = new TreeSet<Course>(new CourseComparator());
-		// result.addAll(precedingCourses);
-		// return result;
-		// } else {
-		// return precedingCourses;
-		// }
 	}
 
 	@Override
@@ -122,25 +112,16 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		} else {
 			return precedingCourses;
 		}
-		// Collection<Course> renewals = source.getRenewals();
-		// if (renewals.size() > 1) {
-		// TreeSet<Course> result = new TreeSet<Course>(new CourseComparator());
-		// result.addAll(renewals);
-		// return result;
-		// } else {
-		// return renewals;
-		// }
 	}
 
 	@Override
 	protected ReflexionDepth getInitialReflexionDepth() {
-		// return new ReflexionDepth(renewalsDepth, precedingCoursesDepth);
 		return new ReflexionDepth(precedingCoursesDepth, renewalsDepth);
 	}
 
 	@Override
 	protected int getMaxInstances() {
-		return maxInstances; // Settings.getInt(SettingCodes.COURSEOUTVO_MAX_INSTANCES,Bundle.SETTINGS,DefaultSettings.COURSEOUTVO_MAX_INSTANCES);
+		return maxInstances;
 	}
 
 	@Override
@@ -150,13 +131,11 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 
 	@Override
 	protected Collection<CourseOutVO> getVOChildren(CourseOutVO target) {
-		// return target.getPrecedingCourses();
 		return target.getRenewals();
 	}
 
 	@Override
 	protected Collection<CourseOutVO> getVOParents(CourseOutVO target) {
-		// return target.getRenewals();
 		return target.getPrecedingCourses();
 	}
 
@@ -195,7 +174,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	}
 
 	@Override
-	protected void toVORemainingFields(Course source, CourseOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) { // , HashMap<Class,HashMap<Long,Object>> deferredVoMap) {
+	protected void toVORemainingFields(Course source, CourseOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		courseDaoImpl.toCourseOutVOBase(source, target);
 		CourseCategory category = source.getCategory();
 		Department department = source.getDepartment();
@@ -225,7 +204,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		if (target.getExpires()) {
 			target.setExpiration(DateCalc.addInterval(target.getStop(), source.getValidityPeriod(), source.getValidityPeriodDays()));
 		}
-		target.setPrecedingCoursesCount(courseDaoImpl.getPrecedingCoursesCount(source.getId())); // source.getPrecedingCourses().size());
-		target.setRenewalsCount(courseDaoImpl.getRenewalsCount(source.getId())); // source.getRenewals().Xsize());
+		target.setPrecedingCoursesCount(courseDaoImpl.getPrecedingCoursesCount(source.getId()));
+		target.setRenewalsCount(courseDaoImpl.getRenewalsCount(source.getId()));
 	}
 }

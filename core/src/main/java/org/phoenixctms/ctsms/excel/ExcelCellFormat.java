@@ -1,9 +1,10 @@
 package org.phoenixctms.ctsms.excel;
 
-import jxl.write.WritableFont;
-import jxl.write.WritableFont.FontName;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
+
+import jxl.write.WritableFont;
+import jxl.write.WritableFont.FontName;
 
 public class ExcelCellFormat {
 
@@ -24,7 +25,7 @@ public class ExcelCellFormat {
 	private WritableFont font;
 	private final static FontName DEFAULT_HEAD_FONT_NAME = WritableFont.ARIAL;
 	private final static int DEFAULT_HEAD_FONT_SIZE = 10;
-	private final static Color DEFAULT_HEAD_BG_COLOR = Color.LIGHTGRAY; // null
+	private final static Color DEFAULT_HEAD_BG_COLOR = Color.LIGHTGRAY;
 	private final static boolean DEFAULT_HEAD_BOLD = true;
 	private final static ExcelCellFormat DEFAULT_HEAD_FORMAT = new ExcelCellFormat(DEFAULT_HEAD_FONT_NAME, DEFAULT_HEAD_FONT_SIZE, DEFAULT_HEAD_BOLD, DEFAULT_HEAD_BG_COLOR, true);
 	private final static FontName DEFAULT_ROW_FONT_NAME = WritableFont.ARIAL;

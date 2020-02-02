@@ -102,60 +102,18 @@ public final class QueryUtil {
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
-		// addPropertyCriterionTerms("proband.diagnoses.code",
-		// "proband.diagnoses.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
-		// addPropertyCriterionTerms("proband.diagnoses.code.systematics",
-		// "proband.diagnoses.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
-		// addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
-		// "proband.diagnoses.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
 				"proband.diagnoses.code.systematics.blocks.last", "{0} = ?",
 				new QueryParameterValue(true));
-		// addPropertyCriterionTerms("proband.diagnoses.code.systematics.categories",
-		// "proband.diagnoses.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ALPHA_ID_REVISION, Bundle.SETTINGS, DefaultSettings.ALPHA_ID_REVISION)));
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.categories",
 				"proband.diagnoses.code.systematics.categories.last", "{0} = ?",
 				new QueryParameterValue(true));
-		// addPropertyCriterionTerms("proband.procedures.code",
-		// "proband.procedures.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.OPS_CODE_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_CODE_REVISION)));
-		// addPropertyCriterionTerms("proband.procedures.code.systematics",
-		// "proband.procedures.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.OPS_CODE_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_CODE_REVISION)));
-		// addPropertyCriterionTerms("proband.procedures.code.systematics.blocks",
-		// "proband.procedures.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.OPS_CODE_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_CODE_REVISION)));
 		addPropertyCriterionTerms("proband.procedures.code.systematics.blocks",
 				"proband.procedures.code.systematics.blocks.last", "{0} = ?",
 				new QueryParameterValue(true));
-		// addPropertyCriterionTerms("proband.procedures.code.systematics.categories",
-		// "proband.procedures.code.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.OPS_CODE_REVISION, Bundle.SETTINGS, DefaultSettings.OPS_CODE_REVISION)));
 		addPropertyCriterionTerms("proband.procedures.code.systematics.categories",
 				"proband.procedures.code.systematics.categories.last", "{0} = ?",
 				new QueryParameterValue(true));
-		// addPropertyCriterionTerms("proband.medications.asp",
-		// "proband.medications.asp.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
-		// addPropertyCriterionTerms("proband.medications.asp.substances",
-		// "proband.medications.asp.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
-		// addPropertyCriterionTerms("proband.medications.asp.atcCodes",
-		// "proband.medications.asp.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
-		// addPropertyCriterionTerms("proband.medications.substances",
-		// "proband.medications.substances.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
-		// addPropertyCriterionTerms("proband.medications.substances.asp",
-		// "proband.medications.substances.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
-		// addPropertyCriterionTerms("proband.medications.substances.asp.atcCodes",
-		// "proband.medications.substances.revision", "{0} = ?",
-		// new QueryParameterValue(Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
 	}
 	private final static HashMap<DBModule, String> ENTITY_NAMES = new HashMap<DBModule, String>();
 	static {
@@ -421,17 +379,6 @@ public final class QueryUtil {
 		return propertyMap;
 	}
 
-	// public static HashMap<String, String> createCriterionPropertyNameMap(
-	// DBModule module, CriterionPropertyDao criterionPropertyDao) {
-	// Collection<CriterionProperty> criterionProperties = criterionPropertyDao.findByModule(module);
-	// HashMap<String, String> propertyMap = new HashMap<String, String>(criterionProperties.size());
-	// Iterator<CriterionProperty> criterionPropertyIt = criterionProperties.iterator();
-	// while (criterionPropertyIt.hasNext()) {
-	// CriterionProperty criterionProperty = criterionPropertyIt.next();
-	// propertyMap.put(criterionProperty.getNameL10nKey(), L10nUtil.getCriterionPropertyName(Locales.USER, criterionProperty.getNameL10nKey()));
-	// }
-	// return propertyMap;
-	// }
 	public static HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> createCriterionRestrictionMap(
 			CriterionRestrictionDao criterionRestrictionDao) {
 		Collection<CriterionRestriction> criterionRestrictions = criterionRestrictionDao.loadAllSorted(0, 0);
@@ -490,9 +437,8 @@ public final class QueryUtil {
 				createCriterionTieMap(criterionTieDao),
 				createCriterionTieNameMap(criterionTieDao),
 				createCriterionPropertyMap(module, criterionPropertyDao),
-				// null, // createCriterionPropertyNameMap(module, criterionPropertyDao),
 				createCriterionRestrictionMap(criterionRestrictionDao),
-				null); // createCriterionRestrictionNameMap(criterionRestrictionDao));
+				null);
 		Class rootEntityClass = getRootEntityClass(module);
 		SQLQuery query;
 		if (psf != null) {
@@ -508,7 +454,7 @@ public final class QueryUtil {
 			if (sortField != null && sortField.length() > 0) {
 				// http://weblogs.sqlteam.com/jeffs/archive/2007/12/13/select-distinct-order-by-error.aspx
 				sqlQuery.append(" order by ");
-				sqlQuery.append(getPropertyColumnName(rootEntityClass, sortField, sessionFactory)); // sessionFactory));
+				sqlQuery.append(getPropertyColumnName(rootEntityClass, sortField, sessionFactory));
 				if (psf.getSortOrder()) {
 					sqlQuery.append(" asc");
 				} else {
@@ -961,18 +907,6 @@ public final class QueryUtil {
 							case TRUE:
 								hqlTerm.append("1 = 1"); // https://forum.hibernate.org/viewtopic.php?f=1&t=974534
 								break;
-							// case IS_ID_EQ_ENTITY_ID:
-							// hqlTerm.append(propertyName);
-							// hqlTerm.append(".id = ");
-							// hqlTerm.append(entityName);
-							// hqlTerm.append(".id");
-							// break;
-							// case IS_ID_NE_ENTITY_ID:
-							// hqlTerm.append(propertyName);
-							// hqlTerm.append(".id != ");
-							// hqlTerm.append(entityName);
-							// hqlTerm.append(".id");
-							// break;
 							case HOUR_EQ:
 								hqlTerm.append("hour(");
 								hqlTerm.append(propertyName);
@@ -1100,7 +1034,6 @@ public final class QueryUtil {
 			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionTie> tieMap,
 			HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, String> tieNameMap,
 			HashMap<Long, CriterionProperty> propertyMap,
-			// HashMap<String, String> propertyNameMap,
 			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictionMap,
 			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNameMap) throws Exception {
 		ArrayList<CriterionInstantVO> sortedCriterions = null;
@@ -1186,11 +1119,6 @@ public final class QueryUtil {
 									sqlSetStatement.append(sqlSetKeyWord);
 								}
 								setOperationExpression.append(getSetExpressionTieName(tie, tieNameMap));
-								// xif (tieNameMap != null && tieMap.containsKey(tie)) {
-								// setOperationExpression.append(tieNameMap.get(tie));
-								// } else {
-								// setOperationExpression.append(sqlSetKeyWord);
-								// }
 							} else {
 								throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.SQL_SET_OPERATION_KEYWORD_UNDEFINED,
 										DefaultMessages.SQL_SET_OPERATION_KEYWORD_UNDEFINED, new Object[] { tie.toString() }));
@@ -1201,7 +1129,7 @@ public final class QueryUtil {
 							setOperationExpression.append(" ");
 							lastSetTieIndex = i;
 							selectCount++;
-						} else { // if (!isParenthesis) {
+						} else {
 							if (criterion.getSelectStatementIndex() == null) {
 								criterion.setSelectStatementIndex(selectCount);
 							}
@@ -1291,21 +1219,21 @@ public final class QueryUtil {
 	private static Class getRootEntityClass(DBModule module) {
 		switch (module) {
 			case INVENTORY_DB:
-				return InventoryImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return InventoryImpl.class;
 			case STAFF_DB:
-				return StaffImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return StaffImpl.class;
 			case COURSE_DB:
-				return CourseImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return CourseImpl.class;
 			case USER_DB:
-				return UserImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return UserImpl.class;
 			case TRIAL_DB:
-				return TrialImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return TrialImpl.class;
 			case PROBAND_DB:
-				return ProbandImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return ProbandImpl.class;
 			case INPUT_FIELD_DB:
-				return InputFieldImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return InputFieldImpl.class;
 			case MASS_MAIL_DB:
-				return MassMailImpl.class; // "org.phoenixctms.ctsms.domain.Inventory";
+				return MassMailImpl.class;
 			default:
 				// unsupported root entity
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_DB_MODULE, DefaultMessages.UNSUPPORTED_DB_MODULE,
@@ -1321,9 +1249,8 @@ public final class QueryUtil {
 				createCriterionTieMap(criterionTieDao),
 				createCriterionTieNameMap(criterionTieDao),
 				createCriterionPropertyMap(module, criterionPropertyDao),
-				// null, // createCriterionPropertyNameMap(module, criterionPropertyDao),
 				createCriterionRestrictionMap(criterionRestrictionDao),
-				null); // createCriterionRestrictionNameMap(criterionRestrictionDao));
+				null);
 		StringBuilder countStatement = new StringBuilder("select count(*) from (");
 		countStatement.append(sqlQuery);
 		countStatement.append(") as resultset");
@@ -1347,7 +1274,6 @@ public final class QueryUtil {
 	}
 
 	private static String getSqlSetKeyWord(org.phoenixctms.ctsms.enumeration.CriterionTie tie) {
-		//		if (tie != null) {
 		switch (tie) {
 			case EXCEPT:
 				return Settings.getString(SettingCodes.SQL_EXCEPT_KEYWORD, Bundle.SETTINGS, null);
@@ -1362,7 +1288,6 @@ public final class QueryUtil {
 			default:
 				break;
 		}
-		//		}
 		return null;
 	}
 
@@ -1387,7 +1312,6 @@ public final class QueryUtil {
 				createCriterionTieMap(criterionTieDao),
 				createCriterionTieNameMap(criterionTieDao),
 				null,
-				// null,
 				null,
 				null);
 	}

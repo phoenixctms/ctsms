@@ -49,7 +49,6 @@ public final class OmittedFields {
 	private static HashMap<Class, HashSet<String>> lcProtectedOutVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashMap<Class, HashSet<String>> lcProtectedInVOFieldMap = new HashMap<Class, HashSet<String>>();
 	private static HashSet<String> protectedCriterionProperties = new HashSet<String>();
-	// private static final boolean IGNORE_CASE = true;
 	static {
 		addProtectedField(protectedOutVOFieldMap, BankAccountOutVO.class, "accountHolderName");
 		addProtectedField(protectedOutVOFieldMap, BankAccountOutVO.class, "accountNumber");

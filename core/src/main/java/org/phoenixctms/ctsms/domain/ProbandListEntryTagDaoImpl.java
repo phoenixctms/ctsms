@@ -88,7 +88,6 @@ public class ProbandListEntryTagDaoImpl
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = listEntryTagCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = listEntryTagCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			// fieldCriteria.add(Restrictions.eq("localized", false));
 			listEntryTagCriteria.add(Restrictions.or(
 					(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
 					(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction()));
@@ -122,8 +121,6 @@ public class ProbandListEntryTagDaoImpl
 					.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		applySortOrders(listEntryTagCriteria);
-		// listEntryTagCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return listEntryTagCriteria.list();
 		return CriteriaUtil.listDistinctRoot(listEntryTagCriteria, this, "trial.id", "position");
 	}
 
@@ -168,7 +165,6 @@ public class ProbandListEntryTagDaoImpl
 		if (randomize != null) {
 			listEntryTagCriteria.add(Restrictions.eq("randomize", randomize.booleanValue()));
 		}
-		// applySortOrders(listEntryTagCriteria);
 		return listEntryTagCriteria.list();
 	}
 
@@ -257,10 +253,6 @@ public class ProbandListEntryTagDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTag loadProbandListEntryTagFromLightProbandListEntryTagOutVO(LightProbandListEntryTagOutVO lightProbandListEntryTagOutVO) {
-		// TODO implement loadProbandListEntryTagFromLightProbandListEntryTagOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagFromLightProbandListEntryTagOutVO(LightProbandListEntryTagOutVO) not yet
-		// implemented.");
 		ProbandListEntryTag probandListEntryTag = this.load(lightProbandListEntryTagOutVO.getId());
 		if (probandListEntryTag == null) {
 			probandListEntryTag = ProbandListEntryTag.Factory.newInstance();
@@ -274,8 +266,6 @@ public class ProbandListEntryTagDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTag loadProbandListEntryTagFromProbandListEntryTagInVO(ProbandListEntryTagInVO probandListEntryTagInVO) {
-		// TODO implement loadProbandListEntryTagFromProbandListEntryTagInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagFromProbandListEntryTagInVO(ProbandListEntryTagInVO) not yet implemented.");
 		ProbandListEntryTag probandListEntryTag = null;
 		Long id = probandListEntryTagInVO.getId();
 		if (id != null) {
@@ -293,9 +283,6 @@ public class ProbandListEntryTagDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTag loadProbandListEntryTagFromProbandListEntryTagOutVO(ProbandListEntryTagOutVO probandListEntryTagOutVO) {
-		// TODO implement loadProbandListEntryTagFromProbandListEntryTagOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagFromProbandListEntryTagOutVO(ProbandListEntryTagOutVO) not yet
-		// implemented.");
 		ProbandListEntryTag probandListEntryTag = this.load(probandListEntryTagOutVO.getId());
 		if (probandListEntryTag == null) {
 			probandListEntryTag = ProbandListEntryTag.Factory.newInstance();
@@ -462,9 +449,6 @@ public class ProbandListEntryTagDaoImpl
 			ProbandListEntryTag source,
 			ProbandListEntryTagOutVO target) {
 		super.toProbandListEntryTagOutVO(source, target);
-		// WARNING! No conversion for target.field (can't convert source.getField():org.phoenixctms.ctsms.domain.InputField to org.phoenixctms.ctsms.vo.InputFieldOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		InputField field = source.getField();
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();

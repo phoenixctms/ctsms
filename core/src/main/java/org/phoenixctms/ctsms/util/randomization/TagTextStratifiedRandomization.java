@@ -36,7 +36,6 @@ public class TagTextStratifiedRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class TagTextStratifiedRandomization extends Randomization {
 		return RandomizationMode.TAG_TEXT_STRATIFIED;
 	}
 
-	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId, StratificationRandomizationList randomizationList) { // long trialId,
+	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId, StratificationRandomizationList randomizationList) {
 		Set<Long> selectionSetValueIds = getInputFieldSelectionSetValueIdMap(randomizationList.getSelectionSetValues()).keySet();
 		return CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTextStratificationTagValuesCount(trial.getId(), false, selectionSetValueIds, excludeListEntryId));
 	}
@@ -93,14 +92,10 @@ public class TagTextStratifiedRandomization extends Randomization {
 		StratificationRandomizationList randomizationList = getStratificationRandomizationList(listEntry.getTrial(), listEntry);
 		ProbandListEntryTagValue tagValue = getRandomizationTagValue(listEntry);
 		String code = tagValue.getValue().getStringValue();
-		//if (!CommonUtil.isEmptyString(code)) {
 		try {
 			return randomizationListCodeDao.findByTrialRandomizationListCode(null, randomizationList.getId(), code).iterator().next();
 		} catch (NoSuchElementException e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_LIST_CODE_NOT_FOUND, code);
 		}
-		//} else {
-		//	throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_EMPTY);			
-		//}
 	}
 }

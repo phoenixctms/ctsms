@@ -26,7 +26,6 @@ public class ProbandStatusTypeDaoImpl
 	protected Collection<ProbandStatusType> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long typeId) {
 		org.hibernate.Criteria statusTypeCriteria = this.getSession().createCriteria(ProbandStatusType.class);
 		statusTypeCriteria.setCacheable(true);
-		// CriteriaUtil.applyVisibleIdCriterion("visible", statusTypeCriteria, visible, typeId);
 		if (person != null) {
 			if (typeId != null) {
 				statusTypeCriteria.add(Restrictions.or(Restrictions.eq("person", person.booleanValue()), Restrictions.idEq(typeId.longValue())));

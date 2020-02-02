@@ -208,16 +208,12 @@ public final class SearchResultExcelDefaultSettings {
 		PROBAND_VO_FIELD_COLUMNS.add("animalName");
 		PROBAND_VO_FIELD_COLUMNS.add("alias");
 		PROBAND_VO_FIELD_COLUMNS.add("department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
-		// PROBAND_VO_FIELD_COLUMNS.add("available");
-		// PROBAND_VO_FIELD_COLUMNS.add("recruitmentForOtherTrialsAllowed");
 		PROBAND_VO_FIELD_COLUMNS.add("citizenship");
 		PROBAND_VO_FIELD_COLUMNS.add("dateOfBirth");
 		PROBAND_VO_FIELD_COLUMNS.add("age");
 		PROBAND_VO_FIELD_COLUMNS.add("gender" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		PROBAND_VO_FIELD_COLUMNS.add("category" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		PROBAND_VO_FIELD_COLUMNS.add("comment");
-		// PROBAND_VO_FIELD_COLUMNS.add("autoDelete");
-		// PROBAND_VO_FIELD_COLUMNS.add("autoDeleteDeadline");
 		MASS_MAIL_VO_FIELD_COLUMNS.add("id");
 		MASS_MAIL_VO_FIELD_COLUMNS.add("deferredDelete");
 		MASS_MAIL_VO_FIELD_COLUMNS.add("name");

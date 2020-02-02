@@ -122,12 +122,6 @@ public class ProbandContactDetailValueDaoImpl
 				typeCriteria.add(Restrictions.eq("phone", phone.booleanValue()));
 			}
 		}
-		// if (email != null) {
-		// criteriaMap.createCriteria("type").add(Restrictions.eq("email", email.booleanValue()));
-		// }
-		// if (phone != null) {
-		// criteriaMap.createCriteria("type").add(Restrictions.eq("phone", phone.booleanValue()));
-		// }
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return probandContactDetailValueCriteria.list();
 	}
@@ -179,9 +173,6 @@ public class ProbandContactDetailValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandContactDetailValue loadProbandContactDetailValueFromProbandContactDetailValueOutVO(ProbandContactDetailValueOutVO probandContactDetailValueOutVO) {
-		// TODO implement loadProbandContactDetailValueFromProbandContactDetailValueOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandContactDetailValueFromProbandContactDetailValueOutVO(ProbandContactDetailValueOutVO) not yet implemented.");
 		ProbandContactDetailValue probandContactDetailValue = this.load(probandContactDetailValueOutVO.getId());
 		if (probandContactDetailValue == null) {
 			probandContactDetailValue = ProbandContactDetailValue.Factory.newInstance();
@@ -208,7 +199,6 @@ public class ProbandContactDetailValueDaoImpl
 			ProbandContactDetailValue target,
 			boolean copyIfNull) {
 		super.probandContactDetailValueInVOToEntity(source, target, copyIfNull);
-		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		Long typeId = source.getTypeId();
 		Long probandId = source.getProbandId();
 		if (typeId != null) {
@@ -264,7 +254,6 @@ public class ProbandContactDetailValueDaoImpl
 			ProbandContactDetailValue target,
 			boolean copyIfNull) {
 		super.probandContactDetailValueOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		ContactDetailTypeVO typeVO = source.getType();
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -306,9 +295,7 @@ public class ProbandContactDetailValueDaoImpl
 	public void toProbandContactDetailValueInVO(
 			ProbandContactDetailValue source,
 			ProbandContactDetailValueInVO target) {
-		// TODO verify behavior of toProbandContactDetailValueInVO
 		super.toProbandContactDetailValueInVO(source, target);
-		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
 		ContactDetailType type = source.getType();
 		Proband proband = source.getProband();
 		if (type != null) {
@@ -341,10 +328,6 @@ public class ProbandContactDetailValueDaoImpl
 			ProbandContactDetailValue source,
 			ProbandContactDetailValueOutVO target) {
 		super.toProbandContactDetailValueOutVO(source, target);
-		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.ContactDetailType to org.phoenixctms.ctsms.vo.ContactDetailTypeVO
 		ContactDetailType type = source.getType();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();

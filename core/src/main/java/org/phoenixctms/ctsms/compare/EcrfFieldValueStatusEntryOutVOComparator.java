@@ -33,12 +33,9 @@ public class EcrfFieldValueStatusEntryOutVOComparator implements Comparator {
 		} else if (a instanceof ECRFFieldStatusEntryOutVO && b instanceof ECRFFieldValueOutVO) {
 			modifiedTimestampA = ((ECRFFieldStatusEntryOutVO) a).getModifiedTimestamp();
 			modifiedTimestampB = ((ECRFFieldValueOutVO) b).getModifiedTimestamp();
-			// } else {
-			// return 0;
 		}
 		if (modifiedTimestampA != null && modifiedTimestampB != null) {
 			int modifiedTimestampComparison = modifiedTimestampA.compareTo(modifiedTimestampB);
-			// return modifiedTimestampComparison;
 			if (modifiedTimestampComparison != 0) {
 				return modifiedTimestampComparison * tsDesc;
 			}

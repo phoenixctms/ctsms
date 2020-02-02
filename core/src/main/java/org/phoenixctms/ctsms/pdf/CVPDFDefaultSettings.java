@@ -24,9 +24,9 @@ public final class CVPDFDefaultSettings {
 	public static final float BLOCKS_RIGHT_MARGIN = PAGE_RIGHT_MARGIN + X_FRAME_INDENT;
 	public static final float Y_FRAME_UPPER_INDENT_SIGNATURE = 38.0f;
 	public static final float Y_FRAME_LOWER_INDENT_SIGNATURE = 3.0f;
-	public static final float X_FRAME_INDENT_SIGNATURE = 7.0f; // 24.0f;
+	public static final float X_FRAME_INDENT_SIGNATURE = 7.0f;
 	public static final float SIGNATURE_LINE_WIDTH = 0.3f;
-	public static final float SIGNATURE_LINE_LENGTH = 175.0f; // 250.0f;
+	public static final float SIGNATURE_LINE_LENGTH = 175.0f;
 	public static final float Y_OFFSET_SIGNATURE_ANNOTATION = 2.0f;
 	public static final float DATE_LABEL_WIDTH = 35.0f;
 	public static final float DATE_LINE_LENGTH = 100.0f;

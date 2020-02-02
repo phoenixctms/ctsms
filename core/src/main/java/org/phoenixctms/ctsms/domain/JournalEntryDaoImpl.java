@@ -196,7 +196,6 @@ public class JournalEntryDaoImpl
 					Restrictions.eq("systemMessage", false),
 					Restrictions.and(Restrictions.eq("systemMessage", true), Restrictions.eq("systemMessageModule", module))));
 			journalCriteria.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
-			// criteriaMap.createCriteria("category", CriteriaSpecification.LEFT_JOIN).add(Restrictions.or(Restrictions.eq("module", module), Restrictions.isNull("module")));
 			if (id != null) {
 				switch (module) {
 					case INVENTORY_JOURNAL:
@@ -230,7 +229,6 @@ public class JournalEntryDaoImpl
 				}
 			}
 		}
-		// CriteriaUtil.applyPSFVO(criteriaMap, psf);
 	}
 
 	private org.hibernate.Criteria createJournalEntryCriteria(String alias) {
@@ -480,8 +478,6 @@ public class JournalEntryDaoImpl
 				Restrictions.eq("trialEcrfField.trial.id", trailId.longValue())));
 		journalCriteria.addOrder(Order.asc("id"));
 		return CriteriaUtil.listDistinctRoot(journalCriteria, this);
-		//journalCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY); //loaded in memory anyway.
-		//return journalCriteria.list();
 	}
 
 	@Override
@@ -1296,16 +1292,7 @@ public class JournalEntryDaoImpl
 	public void toJournalEntryOutVO(
 			JournalEntry source,
 			JournalEntryOutVO target) {
-		// TODO verify behavior of toJournalEntryOutVO
 		super.toJournalEntryOutVO(source, target);
-		// WARNING! No conversion for target.category (can't convert source.getCategory():org.phoenixctms.ctsms.domain.JournalEntryCategory to org.phoenixctms.ctsms.vo.JournalEntryCategoryVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.inventory (can't convert source.getInventory():org.phoenixctms.ctsms.domain.Inventory to org.phoenixctms.ctsms.vo.InventoryOutVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.criteria (can't convert source.getCriteria():org.phoenixctms.ctsms.domain.Criteria to org.phoenixctms.ctsms.vo.CriteriaOutVO
 		JournalCategory category = source.getCategory();
 		Inventory inventory = source.getInventory();
 		Staff staff = source.getStaff();

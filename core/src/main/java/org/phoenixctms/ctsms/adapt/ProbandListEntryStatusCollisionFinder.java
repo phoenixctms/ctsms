@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.vo.ProbandListEntryInVO;
 
-public class ProbandListEntryStatusCollisionFinder extends BlockingProbandListStatusCollisionFinder<ProbandListEntryInVO, ProbandListEntry> {// ProbandListStatusEntryCollisionFinderBase<ProbandListStatusEntryInVO>{
+public class ProbandListEntryStatusCollisionFinder extends BlockingProbandListStatusCollisionFinder<ProbandListEntryInVO, ProbandListEntry> {
 
 	private ProbandListEntryDao probandListEntryDao;
 	private ProbandDao probandDao;

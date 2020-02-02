@@ -12,7 +12,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -127,8 +126,6 @@ public class BankIdentificationDaoImpl
 	 * a new, blank entity is created
 	 */
 	private BankIdentification loadBankIdentificationFromBankIdentificationVO(BankIdentificationVO bankIdentificationVO) {
-		// // TODO implement loadBankIdentificationFromBankIdentificationVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankIdentificationFromBankIdentificationVO(BankIdentificationVO) not yet implemented.");
 		BankIdentification bankIdentification = null;
 		Long id = bankIdentificationVO.getId();
 		if (id != null) {

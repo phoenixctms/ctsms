@@ -249,10 +249,6 @@ public class LecturerDaoImpl
 			Lecturer source,
 			LecturerOutVO target) {
 		super.toLecturerOutVO(source, target);
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.lecturer (can't convert source.getLecturer():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.competence (can't convert source.getCompetence():org.phoenixctms.ctsms.domain.LecturerCompetence to org.phoenixctms.ctsms.vo.LecturerCompetenceVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		Course course = source.getCourse();
 		Staff staff = source.getStaff();
 		LecturerCompetence competence = source.getCompetence();

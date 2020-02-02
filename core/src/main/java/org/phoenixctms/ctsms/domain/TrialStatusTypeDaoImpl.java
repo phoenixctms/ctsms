@@ -72,8 +72,6 @@ public class TrialStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TrialStatusType loadTrialStatusTypeFromTrialStatusTypeVO(TrialStatusTypeVO trialStatusTypeVO) {
-		// TODO implement loadTrialStatusTypeFromTrialStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialStatusTypeFromTrialStatusTypeVO(TrialStatusTypeVO) not yet implemented.");
 		TrialStatusType trialStatusType = null;
 		Long id = trialStatusTypeVO.getId();
 		if (id != null) {
@@ -113,7 +111,6 @@ public class TrialStatusTypeDaoImpl
 			TrialStatusType source,
 			TrialStatusTypeVO target) {
 		super.toTrialStatusTypeVO(source, target);
-		// WARNING! No conversion for target.actions (can't convert source.getActions():org.phoenixctms.ctsms.domain.TrialStatusAction to org.phoenixctms.ctsms.vo.TrialStatusActionVO
 		target.setName(L10nUtil.getTrialStatusTypeName(Locales.USER, source.getNameL10nKey()));
 		target.setActions(toTrialStatusActionVOCollection(source.getActions()));
 	}

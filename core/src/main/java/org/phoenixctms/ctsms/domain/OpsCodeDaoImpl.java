@@ -110,8 +110,6 @@ public class OpsCodeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private OpsCode loadOpsCodeFromOpsCodeVO(OpsCodeVO opsCodeVO) {
-		// TODO implement loadOpsCodeFromOpsCodeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsCodeFromOpsCodeVO(OpsCodeVO) not yet implemented.");
 		Long id = opsCodeVO.getId();
 		OpsCode opsCode = null;
 		if (id != null) {
@@ -143,11 +141,6 @@ public class OpsCodeDaoImpl
 			boolean copyIfNull) {
 		super.opsCodeVOToEntity(source, target, copyIfNull);
 		OpsSystVO systematicsVO = source.getSystematics();
-		// if (systematicsVO != null) {
-		// target.setSystematics(this.getOpsSystDao().opsSystVOToEntity(systematicsVO));
-		// } else if (copyIfNull) {
-		// target.setSystematics(null);
-		// }
 		if (systematicsVO != null) {
 			OpsSyst systematics = this.getOpsSystDao().opsSystVOToEntity(systematicsVO);
 			target.setSystematics(systematics);
@@ -177,7 +170,6 @@ public class OpsCodeDaoImpl
 			OpsCode source,
 			OpsCodeVO target) {
 		super.toOpsCodeVO(source, target);
-		// WARNING! No conversion for target.systematics (can't convert source.getSystematics():org.phoenixctms.ctsms.domain.OpsSyst to org.phoenixctms.ctsms.vo.OpsSystVO
 		OpsSyst systematics = source.getSystematics();
 		if (systematics != null) {
 			target.setSystematics(this.getOpsSystDao().toOpsSystVO(systematics));

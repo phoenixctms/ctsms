@@ -69,7 +69,7 @@ public class CriterionGraph extends GraphCycle1Helper<Criterion, CriterionOutVO,
 
 	@Override
 	protected boolean limitAInstances() {
-		return LIMIT_A_INSTANCES; // false;
+		return LIMIT_A_INSTANCES;
 	}
 
 	@Override
@@ -88,8 +88,7 @@ public class CriterionGraph extends GraphCycle1Helper<Criterion, CriterionOutVO,
 	}
 
 	@Override
-	protected void toVORemainingFields(Criterion source, CriterionOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) { // , HashMap<Class,HashMap<Long,Object>>
-																																// deferredVoMap) {
+	protected void toVORemainingFields(Criterion source, CriterionOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		criterionDaoImpl.toCriterionOutVOBase(source, target);
 		CriterionProperty property = criterionPropertyDao.findByNameL10nKey(source.getPropertyNameL10nKey());
 		CriterionRestriction restriction = criterionRestrictionDao.findByRestriction(source.getRestriction());

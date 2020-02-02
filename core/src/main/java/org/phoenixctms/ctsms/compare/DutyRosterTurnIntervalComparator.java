@@ -8,7 +8,6 @@ public class DutyRosterTurnIntervalComparator extends IntervalComparatorBase<Dut
 
 	public DutyRosterTurnIntervalComparator(boolean intDesc) {
 		super(intDesc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

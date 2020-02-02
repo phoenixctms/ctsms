@@ -237,7 +237,6 @@ public class CriteriaDaoImpl
 			Criteria source,
 			CriteriaInstantVO target) {
 		super.toCriteriaInstantVO(source, target);
-		// WARNING! No conversion for target.criterions (can't convert source.getCriterions():org.phoenixctms.ctsms.domain.Criterion to org.phoenixctms.ctsms.vo.CriterionInstantVO
 		target.setCriterions(toCriterionInstantVOCollection(source.getCriterions()));
 	}
 

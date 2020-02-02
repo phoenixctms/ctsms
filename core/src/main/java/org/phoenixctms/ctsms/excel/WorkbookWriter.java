@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+
 import jxl.WorkbookSettings;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import org.phoenixctms.ctsms.util.L10nUtil;
-import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 
 public abstract class WorkbookWriter implements ExcelWriter, ExcelOutput {
 
@@ -86,11 +86,11 @@ public abstract class WorkbookWriter implements ExcelWriter, ExcelOutput {
 	protected abstract void updateExcelVO();
 
 	@Override
-	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception { // WritableWorkbook workbook) throws Exception {
+	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception {
 		Iterator<SpreadSheetWriter> spreadSheetWriterIt = getSpreadSheetWriters().iterator();
 		int sheetIndex = 0;
 		while (spreadSheetWriterIt.hasNext()) {
-			applySpreadsheetSettings(spreadSheetWriterIt.next().writeSpreadSheet(workbook), sheetIndex); // workbook);
+			applySpreadsheetSettings(spreadSheetWriterIt.next().writeSpreadSheet(workbook), sheetIndex);
 			sheetIndex++;
 		}
 	}

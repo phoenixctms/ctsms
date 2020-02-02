@@ -25,9 +25,6 @@ public class ProbandLetterPDFBlock {
 	private Date now;
 	private BlockType type;
 
-	// public ProbandLetterPDFBlock(boolean newLetter) {
-	// this.type = newLetter ? BlockType.NEW_LETTER : BlockType.NEW_PAGE;
-	// }
 	public ProbandLetterPDFBlock(BlockType type) {
 		this.type = type;
 	}
@@ -47,19 +44,6 @@ public class ProbandLetterPDFBlock {
 	}
 
 	private String getBodyGenderSpecificSalutation() {
-		// if (address != null && address.getProband().getGender() != null) {
-		// switch (address.getProband().getGender().getSex()) {
-		// case MALE:
-		// case TRANSGENDER_MALE:
-		// return L10nUtil.getProbandLetterPDFLabel(Locales.PROBAND_LETTER_PDF, ProbandLetterPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL);
-		// case FEMALE:
-		// case TRANSGENDER_FEMALE:
-		// return L10nUtil.getProbandLetterPDFLabel(Locales.PROBAND_LETTER_PDF, ProbandLetterPDFLabelCodes.BODY_FEMALE_SALUTATION, PDFUtil.DEFAULT_LABEL);
-		// default:
-		// break;
-		// }
-		// }
-		// return "";
 		if (address != null) {
 			return CommonUtil.getGenderSpecificSalutation(address.getProband(),
 					L10nUtil.getReimbursementsPDFLabel(Locales.PROBAND_LETTER_PDF, ReimbursementsPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
@@ -107,46 +91,12 @@ public class ProbandLetterPDFBlock {
 	}
 
 	private String getProbandName(boolean withTitles, boolean withFirstName) {
-		// StringBuilder sb = new StringBuilder();
-		// // ProbandOutVO proband;
 		if (address != null) {
 			return CommonUtil.getProbandName(address.getProband(), withTitles, withFirstName,
 					L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 					L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 					L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME));
-			// if (proband.isDecrypted()) {
-			// if (!proband.isBlinded()) {
-			// if (withTitles) {
-			// CommonUtil.appendString(sb, proband.getPrefixedTitle1(), null);
-			// CommonUtil.appendString(sb, proband.getPrefixedTitle2(), " ");
-			// CommonUtil.appendString(sb, proband.getPrefixedTitle3(), " ");
-			// if (withFirstName) {
-			// CommonUtil.appendString(sb, proband.getFirstName(), " ");
-			// }
-			// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-			// CommonUtil.appendString(sb, proband.getPostpositionedTitle1(), ", ");
-			// CommonUtil.appendString(sb, proband.getPostpositionedTitle2(), ", ");
-			// CommonUtil.appendString(sb, proband.getPostpositionedTitle3(), ", ");
-			// } else {
-			// if (withFirstName) {
-			// CommonUtil.appendString(sb, proband.getFirstName(), null);
-			// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-			// } else {
-			// CommonUtil.appendString(sb, proband.getLastName(), null, "?");
-			// }
-			// }
-			// } else {
-			// if (proband.getId() > 0) {
-			// sb.append(MessageFormat.format(L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME), Long.toString(proband.getId())));
-			// } else {
-			// sb.append(L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME));
-			// }
-			// }
-			// } else {
-			// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
-			// }
 		}
-		// return sb.toString();
 		return "";
 	}
 

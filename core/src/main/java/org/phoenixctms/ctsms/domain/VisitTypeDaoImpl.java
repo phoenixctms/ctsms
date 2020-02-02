@@ -36,8 +36,6 @@ public class VisitTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private VisitType loadVisitTypeFromVisitTypeVO(VisitTypeVO visitTypeVO) {
-		// TODO implement loadVisitTypeFromVisitTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadVisitTypeFromVisitTypeVO(VisitTypeVO) not yet implemented.");
 		VisitType visitType = null;
 		Long id = visitTypeVO.getId();
 		if (id != null) {

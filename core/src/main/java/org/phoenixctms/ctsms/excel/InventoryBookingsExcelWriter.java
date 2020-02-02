@@ -23,13 +23,6 @@ import jxl.write.WritableSheet;
 
 public class InventoryBookingsExcelWriter extends WorkbookWriter {
 
-	// public static String getCityNamesColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	//
-	// public static String getCvAddressBlockColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.CV_ADDRESS_BLOCK_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
 	private InventoryBookingsExcelVO excelVO;
 	private DepartmentVO probandDepartment;
 	private DepartmentVO courseDepartment;
@@ -37,24 +30,8 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	private String calendar;
 	private Date from;
 	private Date to;
-	// private TrialOutVO trial;
 	private static final String INVENTORY_BOOKINGS_EXCEL_FILENAME_PREFIX = "inventory_bookings_";
 
-	// public static String getEmailContactDetailsColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.EMAIL_CONTACT_DETAILS_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	//
-	// public static String getPhoneContactDetailsColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.PHONE_CONTACT_DETAILS_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	//
-	// public static String getStreetsColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
-	//
-	// public static String getZipCodesColumnName() {
-	// return L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
-	// }
 	protected InventoryBookingsExcelWriter() {
 		super();
 	}
@@ -103,7 +80,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 					.append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.FROM_TO_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
 		}
 		footer.getLeft().clear();
-		// footer.getLeft().append(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.VERSION_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));
 		temp = excelVO.getFileName();
 		if (!CommonUtil.isEmptyString(temp)) {
 			footer.getLeft().append(
@@ -121,7 +97,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 					L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.DATE_REQUESTING_USER_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp,
 							CommonUtil.formatDate(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now, ExcelUtil.EXCEL_DATE_PATTERN,
 									L10nUtil.getLocale(Locales.USER))));
-			// (new SimpleDateFormat(ExcelUtil.EXCEL_DATE_PATTERN)).format(excelVO.getContentTimestamp() != null ? excelVO.getContentTimestamp() : now)));
 		}
 	}
 
@@ -251,9 +226,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		this.excelVO = excelVO;
 	}
 
-	// public TrialOutVO getTrial() {
-	// return trial;
-	// }
 	public void setFrom(Date from) {
 		this.from = from;
 	}
@@ -281,10 +253,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		this.trialDepartment = trialDepartment;
 	}
 
-	// public void setTrial(TrialOutVO trial) {
-	// this.trial = trial;
-	// setSpreadSheetName(CommonUtil.trialOutVOToString(trial));
-	// }
 	public void setVOs(Collection VOs) {
 		getSpreadSheetWriters().get(0).setVOs(VOs);
 	}
@@ -293,7 +261,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	protected void updateExcelVO() {
 		excelVO.setContentTimestamp(now);
 		excelVO.setContentType(CoreUtil.getExcelMimeType());
-		// excelVO.setTrial(trial);
 		excelVO.setProbandDepartment(probandDepartment);
 		excelVO.setCourseDepartment(courseDepartment);
 		excelVO.setTrialDepartment(trialDepartment);
@@ -318,14 +285,6 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 			fileName.append(CommonUtil.getSafeFilename(calendar, "_"));
 			fileName.append("_");
 		}
-		// if (from != null) {
-		// fileName.append(CommonUtil.formatDate(from, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
-		// fileName.append("_");
-		// }
-		// if (to != null) {
-		// fileName.append(CommonUtil.formatDate(to, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
-		// fileName.append("_");
-		// }
 		fileName.append(CommonUtil.formatDate(now, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
 		fileName.append(".");
 		fileName.append(CoreUtil.EXCEL_FILENAME_EXTENSION);

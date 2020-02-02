@@ -67,8 +67,6 @@ public class AspAtcCodeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private AspAtcCode loadAspAtcCodeFromAspAtcCodeVO(AspAtcCodeVO aspAtcCodeVO) {
-		// TODO implement loadAspAtcCodeFromAspAtcCodeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadAspAtcCodeFromAspAtcCodeVO(AspAtcCodeVO) not yet implemented.");
 		AspAtcCode aspAtcCode = this.load(aspAtcCodeVO.getId());
 		if (aspAtcCode == null) {
 			aspAtcCode = AspAtcCode.Factory.newInstance();

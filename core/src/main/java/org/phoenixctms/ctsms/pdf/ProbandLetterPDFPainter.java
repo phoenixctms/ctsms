@@ -57,12 +57,6 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 
 	@Override
 	public void drawPage(PDPageContentStream contentStream) throws Exception {
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LETTER_PDF,
-		// ProbandLetterPDFDefaultSettings.PAGE_LEFT_MARGIN), Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.PROBAND_LETTER_PDF,
-		// ProbandLetterPDFDefaultSettings.PAGE_LOWER_MARGIN), pageWidth - Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.PROBAND_LETTER_PDF,
-		// ProbandLetterPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.PROBAND_LETTER_PDF,
-		// ProbandLetterPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN - Settings.getFloat(ProbandLetterPDFSettingCodes.PAGE_LOWER_MARGIN,
-		// Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
 	@Override
@@ -163,16 +157,13 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 					Iterator<ProbandAddressOutVO> addressIt = addressVOs.iterator();
 					while (addressIt.hasNext()) {
 						ProbandAddressOutVO addressVO = addressIt.next();
-						// blocks.add(new ProbandLetterPDFBlock(true));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.NEW_LETTER));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.ADDRESS));
 						blocks.add(new ProbandLetterPDFBlock(now, BlockType.FIRST_PAGE_DATE));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.SALUTATION));
-						// blocks.add(new ProbandLetterPDFBlock(false));
 						blocks.add(new ProbandLetterPDFBlock(BlockType.NEW_PAGE));
 						blocks.add(new ProbandLetterPDFBlock(now, BlockType.SECOND_PAGE_DATE));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.PROBAND_ID));
-						// blocks.add(new ProbandLetterPDFBlock(false));
 						blocks.add(new ProbandLetterPDFBlock(BlockType.NEW_PAGE));
 						blocks.add(new ProbandLetterPDFBlock(now, BlockType.SECOND_PAGE_DATE));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.PROBAND_ID));

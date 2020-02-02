@@ -20,8 +20,6 @@ public class TrialStatusActionDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TrialStatusAction loadTrialStatusActionFromTrialStatusActionVO(TrialStatusActionVO trialStatusActionVO) {
-		// TODO implement loadTrialStatusActionFromTrialStatusActionVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialStatusActionFromTrialStatusActionVO(TrialStatusActionVO) not yet implemented.");
 		TrialStatusAction trialStatusAction = null;
 		Long id = trialStatusActionVO.getId();
 		if (id != null) {

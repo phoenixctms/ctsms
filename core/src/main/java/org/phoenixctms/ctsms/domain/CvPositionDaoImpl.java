@@ -154,7 +154,6 @@ public class CvPositionDaoImpl
 	 */
 	@Override
 	public CvPosition cvPositionPDFVOToEntity(CvPositionPDFVO cvPositionPDFVO) {
-		// TODO verify behavior of cvPositionPDFVOToEntity
 		CvPosition entity = this.loadCvPositionFromCvPositionPDFVO(cvPositionPDFVO);
 		this.cvPositionPDFVOToEntity(cvPositionPDFVO, entity, true);
 		return entity;
@@ -168,7 +167,6 @@ public class CvPositionDaoImpl
 			CvPositionPDFVO source,
 			CvPosition target,
 			boolean copyIfNull) {
-		// TODO verify behavior of cvPositionPDFVOToEntity
 		super.cvPositionPDFVOToEntity(source, target, copyIfNull);
 	}
 
@@ -256,10 +254,7 @@ public class CvPositionDaoImpl
 	 * a new, blank entity is created
 	 */
 	private CvPosition loadCvPositionFromCvPositionPDFVO(CvPositionPDFVO cvPositionPDFVO) {
-		// TODO implement loadCvPositionFromCvPositionPDFVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadCvPositionFromCvPositionPDFVO(CvPositionPDFVO) not yet implemented.");
-		/* A typical implementation looks like this: CvPosition cvPosition = this.load(cvPositionPDFVO.getId()); if (cvPosition == null) { cvPosition =
-		 * CvPosition.Factory.newInstance(); } return cvPosition; */
 	}
 
 	/**
@@ -308,10 +303,6 @@ public class CvPositionDaoImpl
 			CvPosition source,
 			CvPositionOutVO target) {
 		super.toCvPositionOutVO(source, target);
-		// WARNING! No conversion for target.institution (can't convert source.getInstitution():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.section (can't convert source.getSection():org.phoenixctms.ctsms.domain.CvSection to org.phoenixctms.ctsms.vo.CvSectionVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		CvSection section = source.getSection();
 		Staff institution = source.getInstitution();
 		Staff staff = source.getStaff();
@@ -335,7 +326,6 @@ public class CvPositionDaoImpl
 	 */
 	@Override
 	public CvPositionPDFVO toCvPositionPDFVO(final CvPosition entity) {
-		// TODO verify behavior of toCvPositionPDFVO
 		return super.toCvPositionPDFVO(entity);
 	}
 
@@ -346,7 +336,6 @@ public class CvPositionDaoImpl
 	public void toCvPositionPDFVO(
 			CvPosition source,
 			CvPositionPDFVO target) {
-		// TODO verify behavior of toCvPositionPDFVO
 		super.toCvPositionPDFVO(source, target);
 		CvSection section = source.getSection();
 		if (section != null) {
@@ -356,7 +345,7 @@ public class CvPositionDaoImpl
 		Date start = source.getStart();
 		Date stop = source.getStop();
 		DateFormat cvPositionDateFormat = Settings.getSimpleDateFormat(CVPDFSettingCodes.POSITION_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.POSITION_DATE_PATTERN,
-				Locales.CV_PDF); // CoreUtil.getDateFormat(Settings.getCvPositionDatePattern());
+				Locales.CV_PDF);
 		if (start != null && stop != null) {
 			sb.append(L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.POSITION_FROM_TO, CVPDFDefaultSettings.POSITION_FROM_TO_LABEL, cvPositionDateFormat.format(start),
 					cvPositionDateFormat.format(stop)));

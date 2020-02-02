@@ -50,8 +50,6 @@ public class ProbandGroupDaoImpl
 		}
 		probandGroupCriteria.addOrder(Order.asc("trial"));
 		probandGroupCriteria.addOrder(Order.asc("title"));
-		// probandGroupCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return probandGroupCriteria.list();
 		return CriteriaUtil.listDistinctRoot(probandGroupCriteria, this, "trial.id", "title");
 	}
 
@@ -112,8 +110,6 @@ public class ProbandGroupDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandGroup loadProbandGroupFromProbandGroupInVO(ProbandGroupInVO probandGroupInVO) {
-		// TODO implement loadProbandGroupFromProbandGroupInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandGroupFromProbandGroupInVO(ProbandGroupInVO) not yet implemented.");
 		ProbandGroup probandGroup = null;
 		Long id = probandGroupInVO.getId();
 		if (id != null) {
@@ -131,8 +127,6 @@ public class ProbandGroupDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandGroup loadProbandGroupFromProbandGroupOutVO(ProbandGroupOutVO probandGroupOutVO) {
-		// TODO implement loadProbandGroupFromProbandGroupOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandGroupFromProbandGroupOutVO(ProbandGroupOutVO) not yet implemented.");
 		ProbandGroup probandGroup = this.load(probandGroupOutVO.getId());
 		if (probandGroup == null) {
 			probandGroup = ProbandGroup.Factory.newInstance();
@@ -250,8 +244,6 @@ public class ProbandGroupDaoImpl
 			ProbandGroup source,
 			ProbandGroupOutVO target) {
 		super.toProbandGroupOutVO(source, target);
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		if (trial != null) {

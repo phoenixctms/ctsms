@@ -46,7 +46,6 @@ public class MedicationCollisionFinder extends CollisionFinder<MedicationInVO, M
 					CommonUtil.dateToTimestamp(in.getStart()),
 					CommonUtil.dateToTimestamp(in.getStop()));
 		}
-		// .findByProbandCodeInterval(in.getProbandId(), in.getCodeId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()));
 	}
 
 	@Override

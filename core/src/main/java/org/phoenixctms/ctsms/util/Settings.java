@@ -78,11 +78,6 @@ public final class Settings {
 	private static String inventoryBookingsExcelSettingsBundleBasename;
 	private static String dateFormatsBundleBasename;
 
-	// private final static ArrayList<String> CLASS_PATH_ELEMENTS = new ArrayList<String>();
-	// static {
-	// CLASS_PATH_ELEMENTS.add("");
-	// CLASS_PATH_ELEMENTS.addAll(Arrays.asList(System.getProperty("java.class.path", ".").split(System.getProperty("path.separator"))));
-	// }
 	private static String checkDirectory(String externalFileDataDir) throws IOException, IllegalArgumentException {
 		String directory;
 		File file = new File(externalFileDataDir);
@@ -344,10 +339,6 @@ public final class Settings {
 		return checkDirectory(CommonUtil.getValue(key, getBundle(bundle), defaultValue));
 	}
 
-	//	public static String getDocumentRootReplacement() {
-	//		return MessageFormat.format(Settings.getString(SettingCodes.HTTP_DOCUMENT_ROOT_REPLACEMENT, Bundle.SETTINGS, DefaultSettings.HTTP_DOCUMENT_ROOT_REPLACEMENT),
-	//				getHttpBaseUrl());
-	//	}
 	public static ECRFFieldStatusQueue getEcrfFieldStatusQueue(String key, Bundle bundle, ECRFFieldStatusQueue defaultValue) {
 		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
 		if (value != null && value.length() > 0) {
@@ -432,27 +423,6 @@ public final class Settings {
 		return checkImageFileName(CommonUtil.getValue(key, getBundle(bundle), defaultValue), null);
 	}
 
-	// public static String getImageFilename(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
-	// String fileName = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
-	// IllegalArgumentException e = null;
-	// Iterator<String> it = CLASS_PATH_ELEMENTS.iterator();
-	// while (it.hasNext()) {
-	// try {
-	// return checkImageFileName(fileName, it.next());
-	// } catch (IllegalArgumentException exc) {
-	// e = exc;
-	// if (exc.getCause() != null) {
-	// throw exc;
-	// }
-	// // } catch (IOException e) {
-	// // exception = e;
-	// }
-	// }
-	// if (e != null) {
-	// throw e;
-	// }
-	// return "";
-	// }
 	public static String getInstanceName() {
 		return MessageFormat
 				.format(Settings.getString(SettingCodes.INSTANCE_NAME, Bundle.SETTINGS, DefaultSettings.INSTANCE_NAME), CommonUtil.LOCAL_HOST_NAME, getHttpDomainName());
@@ -470,34 +440,6 @@ public final class Settings {
 		return checkJsFileName(CommonUtil.getValue(key, getBundle(bundle), defaultValue), null);
 	}
 
-	// public static InputStreamReader getJsFile(String key, Bundle bundle, String defaultValue) throws IOException {
-	// String fileName = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
-	// ClassPathResource resource = new ClassPathResource("/" + fileName);
-	// return new InputStreamReader(resource.getInputStream());
-	// //resource.getInputStream()
-	// //byte[] data = CommonUtil.inputStreamToByteArray(resource.getInputStream());
-	// }
-	// public static String getJsFilename(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
-	// String fileName = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
-	// IllegalArgumentException e = null;
-	// Iterator<String> it = CLASS_PATH_ELEMENTS.iterator();
-	// while (it.hasNext()) {
-	// try {
-	// return checkJsFileName(fileName, it.next());
-	// } catch (IllegalArgumentException exc) {
-	// e = exc;
-	// if (exc.getCause() != null) {
-	// throw exc;
-	// }
-	// // } catch (IOException e) {
-	// // exception = e;
-	// }
-	// }
-	// if (e != null) {
-	// throw e;
-	// }
-	// return "";
-	// }
 	public static long getLong(String key, Bundle bundle, long defaultValue) {
 		return CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 	}
@@ -510,52 +452,10 @@ public final class Settings {
 		return checkPDFFontName(CommonUtil.getValue(key, getBundle(bundle), defaultValue), key, null);
 	}
 
-	// public static String getPDFFontName(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
-	// String fontName = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
-	// IllegalArgumentException e = null;
-	// Iterator<String> it = CLASS_PATH_ELEMENTS.iterator();
-	// while (it.hasNext()) {
-	// try {
-	// return checkPDFFontName(fontName, key, it.next());
-	// } catch (IllegalArgumentException exc) {
-	// e = exc;
-	// if (exc.getCause() != null) {
-	// throw exc;
-	// }
-	// // } catch (IOException e) {
-	// // exception = e;
-	// }
-	// }
-	// if (e != null) {
-	// throw e;
-	// }
-	// return "";
-	// }
 	public static String getPDFTemplateFilename(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
 		return checkPDFTemplateFileName(CommonUtil.getValue(key, getBundle(bundle), defaultValue), null);
 	}
 
-	// public static String getPDFTemplateFilename(String key, Bundle bundle, String defaultValue) throws IllegalArgumentException, IOException {
-	// String fontName = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
-	// IllegalArgumentException e = null;
-	// Iterator<String> it = CLASS_PATH_ELEMENTS.iterator();
-	// while (it.hasNext()) {
-	// try {
-	// return checkPDFTemplateFileName(fontName, it.next());
-	// } catch (IllegalArgumentException exc) {
-	// e = exc;
-	// if (exc.getCause() != null) {
-	// throw exc;
-	// }
-	// // } catch (IOException e) {
-	// // exception = e;
-	// }
-	// }
-	// if (e != null) {
-	// throw e;
-	// }
-	// return "";
-	// }
 	public static Pattern getRegexp(String key, Bundle bundle, String defaultValue) {
 		String pattern = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 		if (pattern != null && pattern.length() > 0) {

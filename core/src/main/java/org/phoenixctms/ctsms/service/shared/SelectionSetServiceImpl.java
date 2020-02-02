@@ -524,7 +524,6 @@ public class SelectionSetServiceImpl
 	protected Collection<ProbandListStatusTypeVO> handleGetAllProbandListStatusTypes(AuthenticationVO auth, Boolean person)
 			throws Exception {
 		ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
-		// Collection probandStates = probandListStatusTypeDao.loadAllSorted(0, 0);
 		Collection probandStates = probandListStatusTypeDao.findByPerson(person);
 		probandListStatusTypeDao.toProbandListStatusTypeVOCollection(probandStates);
 		return probandStates;
@@ -898,7 +897,7 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<DBModuleVO> handleGetDBModules(AuthenticationVO auth)
 			throws Exception {
-		Collection<DBModuleVO> result; // = new ArrayList<SexVO>();
+		Collection<DBModuleVO> result;
 		DBModule[] dbModules = DBModule.values();
 		if (dbModules != null) {
 			result = new ArrayList<DBModuleVO>(dbModules.length);
@@ -969,7 +968,7 @@ public class SelectionSetServiceImpl
 
 	@Override
 	protected Collection<ECRFValidationStatusVO> handleGetEcrfValidationStates(AuthenticationVO auth) throws Exception {
-		Collection<ECRFValidationStatusVO> result; // = new ArrayList<ExportStatusVO>();
+		Collection<ECRFValidationStatusVO> result;
 		ECRFValidationStatus[] validationStates = ECRFValidationStatus.values();
 		if (validationStates != null) {
 			result = new ArrayList<ECRFValidationStatusVO>(validationStates.length);
@@ -985,7 +984,7 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<EventImportanceVO> handleGetEventImportances(AuthenticationVO auth)
 			throws Exception {
-		Collection<EventImportanceVO> result; // = new ArrayList<EventImportanceVO>();
+		Collection<EventImportanceVO> result;
 		EventImportance[] eventImportances = EventImportance.values();
 		if (eventImportances != null) {
 			result = new ArrayList<EventImportanceVO>(eventImportances.length);
@@ -1000,7 +999,7 @@ public class SelectionSetServiceImpl
 
 	@Override
 	protected Collection<JobStatusVO> handleGetJobStates(AuthenticationVO auth) throws Exception {
-		Collection<JobStatusVO> result; // = new ArrayList<ExportStatusVO>();
+		Collection<JobStatusVO> result;
 		JobStatus[] jobStates = JobStatus.values();
 		if (jobStates != null) {
 			result = new ArrayList<JobStatusVO>(jobStates.length);
@@ -1104,7 +1103,7 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<InputFieldTypeVO> handleGetInputFieldTypes(AuthenticationVO auth)
 			throws Exception {
-		Collection<InputFieldTypeVO> result; // = new ArrayList<InputFieldTypeVO>();
+		Collection<InputFieldTypeVO> result;
 		InputFieldType[] inputFieldTypes = InputFieldType.values();
 		if (inputFieldTypes != null) {
 			result = new ArrayList<InputFieldTypeVO>(inputFieldTypes.length);
@@ -1200,7 +1199,7 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<JournalModuleVO> handleGetJournalModules(
 			AuthenticationVO auth) throws Exception {
-		Collection<JournalModuleVO> result; // = new ArrayList<SexVO>();
+		Collection<JournalModuleVO> result;
 		JournalModule[] journalModules = JournalModule.values();
 		if (journalModules != null) {
 			result = new ArrayList<JournalModuleVO>(journalModules.length);
@@ -1337,7 +1336,7 @@ public class SelectionSetServiceImpl
 
 	@Override
 	protected Collection<PaymentMethodVO> handleGetPaymentMethods(AuthenticationVO auth) throws Exception {
-		Collection<PaymentMethodVO> result; // = new ArrayList<ExportStatusVO>();
+		Collection<PaymentMethodVO> result;
 		PaymentMethod[] paymentMethods = PaymentMethod.values();
 		if (paymentMethods != null) {
 			result = new ArrayList<PaymentMethodVO>(paymentMethods.length);
@@ -1383,8 +1382,7 @@ public class SelectionSetServiceImpl
 		if (categoryId != null) {
 			CheckIDUtil.checkProbandCategoryId(categoryId, probandCategoryDao);
 		}
-		Collection categories = probandCategoryDao.findByPersonAnimalId(person, animal, // true,
-				categoryId);
+		Collection categories = probandCategoryDao.findByPersonAnimalId(person, animal, categoryId);
 		probandCategoryDao.toProbandCategoryVOCollection(categories);
 		return categories;
 	}

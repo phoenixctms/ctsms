@@ -295,7 +295,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			boolean checkIpRanges = Settings.getBoolean(SettingCodes.ENABLE_HOST_BASED_AUTHORISATION, Bundle.SETTINGS, DefaultSettings.ENABLE_HOST_BASED_AUTHORISATION);
 			Map<String, Integer> argIndexMap = AssociationPath.getArgumentIndexMap(method);
 			Iterator<Permission> permissionsIt = permissions.iterator();
-			HashMap<String, Boolean> disjunctPermissionErrorMap = new HashMap<String, Boolean>(); // true;
+			HashMap<String, Boolean> disjunctPermissionErrorMap = new HashMap<String, Boolean>();
 			while (permissionsIt.hasNext()) {
 				Permission permission = permissionsIt.next();
 				if (permission.getParameterGetter() != null) {
@@ -482,15 +482,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = false;
 									}
 									break;
-								// case INPUT_FIELD_DOCUMENT_ACTIVE:
-								// if (((FileModule) setterRestrictionValues.get(0)) == FileModule.INPUT_FIELD_DOCUMENT) {
-								// write = true;
-								// parameterValues = new Object[1];
-								// parameterValues[0] = true;
-								// } else {
-								// write = false;
-								// }
-								// break;
 								case MASS_MAIL_DOCUMENT_ACTIVE:
 									if (FileModule.MASS_MAIL_DOCUMENT.equals((setterRestrictionValues.get(0)))) {
 										write = true;
@@ -524,7 +515,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			Iterator<String> disjunctionGroupsIt = disjunctPermissionErrorMap.keySet().iterator();
 			while (disjunctionGroupsIt.hasNext()) {
 				String disjunctionGroup = disjunctionGroupsIt.next();
-				if (disjunctPermissionErrorMap.get(disjunctionGroup)) { // && disjunctPermissionCount > 0) {
+				if (disjunctPermissionErrorMap.get(disjunctionGroup)) {
 					String[] serviceMethodNameParameter = DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP.split(disjunctionGroup, -1);
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_DISJUNCTIVE_RESTRICTION_NOT_SATISFIED, (Object[]) serviceMethodNameParameter);
 				}
@@ -1735,12 +1726,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					if (parameterValue != null) {
 						jobModule = CheckIDUtil.checkJobId((Long) parameterValue, jobDao).getType().getModule();
 						switch (jobModule) {
-							//					case TRIAL_JOB:
-							//						return DBModule.TRIAL_DB;
-							//					case PROBAND_JOB:
-							//						return DBModule.PROBAND_DB;
-							//					case INPUT_FIELD_JOB:
-							//						return DBModule.INPUT_FIELD_DB;
 							case INVENTORY_CRITERIA_JOB:
 								return DBModule.INVENTORY_DB;
 							case STAFF_CRITERIA_JOB:

@@ -45,7 +45,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 
 public final class CryptoUtil {
 
-	private static final String SALT_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM; // "SHA1PRNG";
+	private static final String SALT_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private static final int PBE_KEY_ITERATIONS = 1; // 1000;
 	private static final String PBE_KEY_ALGORITHM = "PBKDF2WithHmacSHA1";
 	private static final String SYMMETRIC_ALGORITHM = "AES";
@@ -109,11 +109,6 @@ public final class CryptoUtil {
 		}
 		SecretKeyFactory factory = SecretKeyFactory.getInstance(PBE_KEY_ALGORITHM);
 		PBEKey pbeKey = (PBEKey) factory.generateSecret(new PBEKeySpec(password.toCharArray(), salt, PBE_KEY_ITERATIONS, SYMMETRIC_KEY_LENGTH));
-		// int rounds = PBE_KEY_ITERATIONS;
-		// PBEKey pbeKey = (PBEKey) factory.generateSecret(new PBEKeySpec(password.toCharArray(), salt, rounds, SYMMETRIC_KEY_LENGTH));
-		// if ((rounds = Settings.getInt(SettingCodes.PBE_KEY_ITERATIONS, Bundle.SETTINGS, DefaultSettings.PBE_KEY_ITERATIONS)) > 1) {
-		// factory.generateSecret(new PBEKeySpec(password.toCharArray(), salt, rounds - 1, SYMMETRIC_KEY_LENGTH));
-		// }
 		return new SecretKeySpec(pbeKey.getEncoded(), SYMMETRIC_ALGORITHM);
 	}
 
@@ -170,13 +165,7 @@ public final class CryptoUtil {
 	public static Object decryptValue(byte[] iv, byte[] encryptedValue) throws Exception {
 		return CoreUtil.deserialize(decrypt(iv, encryptedValue));
 	}
-	//	private static Object decryptValue(byte[] iv, byte[] encryptedValue, Department department, String plainDepartmentPassword) throws Exception {
-	//		return decryptValue(iv,encryptedValue,getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
-	//	}
 
-	//	static Object decryptValue(byte[] iv, byte[] encryptedValue, SecretKey departmentKey) throws Exception {
-	//		return CoreUtil.deserialize(decrypt(getDecryptionCipher(iv,departmentKey), encryptedValue));
-	//	}
 	public static Object decryptValue(byte[] iv, byte[] salt, String password, byte[] encryptedValue) throws Exception {
 		return CoreUtil.deserialize(decrypt(iv, salt, password, encryptedValue));
 	}
@@ -204,10 +193,6 @@ public final class CryptoUtil {
 		return new CipherText(cipher.getIV(), encrypt(cipher, plainText));
 	}
 
-	//	static CipherText encrypt(byte[] iv,byte[] plainText, SecretKey departmentKey) throws Exception {
-	//		Cipher cipher = getEncryptionCipher(iv,departmentKey);
-	//		return new CipherText(cipher.getIV(), encrypt(cipher, plainText));
-	//	}
 	private static byte[] encrypt(Cipher cipher, byte[] plainText) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
 		byte[] cipherText = new byte[cipher.getOutputSize(plainText.length)];
 		int ctLength = cipher.update(plainText, 0, plainText.length, cipherText, 0);
@@ -288,24 +273,7 @@ public final class CryptoUtil {
 		Cipher cipher = getEncryptionCipher();
 		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
 	}
-	//	static CipherText encryptValue(Serializable value, SecretKey departmentKey) throws Exception {
-	//		Cipher cipher = getEncryptionCipher(departmentKey);
-	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
-	//	}
-	//	static CipherText encryptValue((byte[] iv,Serializable value, SecretKey departmentKey) throws Exception {
-	//		Cipher cipher = getEncryptionCipher(iv,departmentKey);
-	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
-	//	}
 
-	//	public static CipherText encryptValue(Serializable value, Department department, String plainDepartmentPassword) throws Exception {
-	//		Cipher cipher = getEncryptionCipher(getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
-	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
-	//	}
-	//	
-	//	public static CipherText encryptValue(byte[] iv,Serializable value, Department department, String plainDepartmentPassword) throws Exception {
-	//		Cipher cipher = getEncryptionCipher(iv,getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)));
-	//		return new CipherText(cipher.getIV(), encrypt(cipher, CoreUtil.serialize(value)));
-	//	}
 	private static Cipher getDecryptionCipher(byte[] iv) throws Exception {
 		return getDecryptionCipher(iv, getDepartmentKey());
 	}
@@ -407,9 +375,6 @@ public final class CryptoUtil {
 		return encryptHashForSearch(departmentKey, getMD5DigestForSearch(plainText));
 	}
 
-	//	public static byte[] hashForSearch(Serializable value, Department department, String plainDepartmentPassword) throws Exception {
-	//		return encryptHashForSearch(getDepartmentKey(decryptDepartmentKey(department, plainDepartmentPassword)), getMD5DigestForSearch(CoreUtil.serialize(value)));
-	//	}
 	private static byte[] hashPassword(byte[] salt, String password) throws Exception {
 		return createPBEKey(salt, password).getEncoded();
 	}

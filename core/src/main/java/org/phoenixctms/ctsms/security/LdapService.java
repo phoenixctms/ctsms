@@ -10,16 +10,15 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapTemplate;
-
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.LdapEntryVO;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapTemplate;
 
 public class LdapService {
 
@@ -63,7 +62,7 @@ public class LdapService {
 	}
 
 	private String getAuthFilter(Object... args) {
-		return MessageFormat.format(authFilterFormat, args); // "(uid=john.doe)"
+		return MessageFormat.format(authFilterFormat, args);
 	}
 
 	private String getBase(Object... args) {
@@ -71,7 +70,7 @@ public class LdapService {
 	}
 
 	private String getSearchFilter(Object... args) {
-		return MessageFormat.format(searchFilterFormat, args); // "(uid=john.doe)"
+		return MessageFormat.format(searchFilterFormat, args);
 	}
 
 	public List<LdapEntryVO> search(final Integer limit, String... filterArgs) {

@@ -20,9 +20,6 @@ public class ProbandListStatusLogLevelDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListStatusLogLevel loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(ProbandListStatusLogLevelVO probandListStatusLogLevelVO) {
-		// TODO implement loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusLogLevelFromProbandListStatusLogLevelVO(ProbandListStatusLogLevelVO) not yet implemented.");
 		ProbandListStatusLogLevel probandListStatusLogLevel = null;
 		Long id = probandListStatusLogLevelVO.getId();
 		if (id != null) {

@@ -30,13 +30,9 @@ public class FieldKeyHelper {
 		graph = rootGraph;
 	}
 
-	//Pattern getterMethodNameRegexp, boolean lowerCaseFieldNames
 	public FieldKeyHelper append(Accessor getter, int index, MethodTransfilter transfilter, String associationPathSeparator) throws Exception {
 		FieldKeyHelper newHelper = new FieldKeyHelper(associationPath);
 		if (graph != null) {
-			//Method method = getter.getMethod();
-			//method.setAccessible(true);
-			//newHelper.graph = (new ArrayList((Collection) method.invoke(graph))).get(index);
 			newHelper.graph = getter.getCollectionValue(graph).get(index);
 		}
 		newHelper.getIndexKeyChain().addAll(getIndexKeyChain());
@@ -49,9 +45,6 @@ public class FieldKeyHelper {
 	public void append(Accessor getter, MethodTransfilter transfilter, String associationPathSeparator) throws Exception {
 		CommonUtil.appendString(associationPath, getter.getFieldName(transfilter), associationPathSeparator);
 		if (graph != null) {
-			//Method method = getter.getMethod();
-			//method.setAccessible(true);
-			//graph = method.invoke(graph);
 			graph = getter.getReferenceValue(graph);
 		}
 	}
@@ -59,9 +52,6 @@ public class FieldKeyHelper {
 	public FieldKeyHelper append(Accessor getter, Object key, MethodTransfilter transfilter, String associationPathSeparator) throws Exception {
 		FieldKeyHelper newHelper = new FieldKeyHelper(associationPath);
 		if (graph != null) {
-			//Method method = getter.getMethod();
-			//method.setAccessible(true);
-			//newHelper.graph = ((Map) method.invoke(graph)).get(key);
 			newHelper.graph = getter.getMapValue(graph).get(key);
 		}
 		newHelper.getIndexKeyChain().addAll(getIndexKeyChain());
@@ -72,9 +62,6 @@ public class FieldKeyHelper {
 	}
 
 	public int getCollectionSize(Accessor getter) throws Exception {
-		//Method method = getter.getMethod();
-		//method.setAccessible(true);
-		//Collection collection = ((Collection) method.invoke(graph));
 		List collection = getter.getCollectionValue(graph);
 		if (collection != null) {
 			return collection.size();
@@ -91,9 +78,6 @@ public class FieldKeyHelper {
 	}
 
 	public Set getKeys(Accessor getter) throws Exception {
-		//Method method = getter.getMethod();
-		//method.setAccessible(true);
-		//Map map = ((Map) method.invoke(graph));
 		Map map = getter.getMapValue(graph);
 		if (map != null) {
 			return map.keySet();

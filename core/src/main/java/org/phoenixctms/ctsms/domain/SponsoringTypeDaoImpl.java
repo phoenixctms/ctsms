@@ -41,8 +41,6 @@ public class SponsoringTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private SponsoringType loadSponsoringTypeFromSponsoringTypeVO(SponsoringTypeVO sponsoringTypeVO) {
-		// TODO implement loadSponsoringTypeFromSponsoringTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadSponsoringTypeFromSponsoringTypeVO(SponsoringTypeVO) not yet implemented.");
 		SponsoringType sponsoringType = null;
 		Long id = sponsoringTypeVO.getId();
 		if (id != null) {

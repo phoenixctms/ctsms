@@ -53,10 +53,9 @@ public class MedicationDaoImpl
 	private static final String getMedicationName(MedicationOutVO medication) {
 		if (medication != null) {
 			AspVO aspVO = medication.getAsp();
-			// Collection<AspSubstanceVO> substancesVO;
 			if (aspVO != null) {
 				return MessageFormat.format(MEDICATION_ASP_NAME, aspVO.getName());
-			} else { // if ((substancesVO = medication.getSubstances()) != null) { // && substancesVO.size() > 0) {
+			} else {
 				return MessageFormat.format(MEDICATION_SUBSTANCES_NAME, CommonUtil.aspSubstanceVOCollectionToString(medication.getSubstances()));
 			}
 		}
@@ -100,17 +99,6 @@ public class MedicationDaoImpl
 	}
 
 	public static ArrayList<Long> toAspSubstanceIdCollection(Collection<AspSubstance> substances) { // lazyload persistentset prevention
-		// ArrayList<Long> result;
-		// if (substances != null && substances.size() > 0) {
-		// result = new ArrayList<Long>(substances.size());
-		// Iterator<AspSubstance> it = substances.iterator();
-		// while (it.hasNext()) {
-		// result.add(it.next().getId());
-		// }
-		// } else {
-		// result = new ArrayList<Long>();
-		// }
-		// return result;
 		ArrayList<Long> result = new ArrayList<Long>(substances.size());
 		Iterator<AspSubstance> it = substances.iterator();
 		while (it.hasNext()) {
@@ -146,9 +134,7 @@ public class MedicationDaoImpl
 		} else { // saved records without start stop
 			medicationCriteria.add(Restrictions.isNull("start"));
 		}
-		// if (probandId != null) {
 		medicationCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
-		// }
 		if (diagnosisId != null) {
 			medicationCriteria.add(Restrictions.eq("diagnosis.id", diagnosisId.longValue()));
 		} else {
@@ -172,11 +158,8 @@ public class MedicationDaoImpl
 	@Override
 	protected Collection<String> handleFindDoseUnits(String doseUnitPrefix, Integer limit) throws Exception {
 		org.hibernate.Criteria medicationCriteria = createMedicationCriteria();
-		// medicationCriteria.setCacheable(true);
 		CategoryCriterion.apply(medicationCriteria, new CategoryCriterion(doseUnitPrefix, "doseUnit", MatchMode.START));
 		medicationCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("doseUnit", ""), Restrictions.isNull("doseUnit"))));
-		// aspAtcCodeCriteria.add(Restrictions.eq("revision",
-		// Settings.getString(SettingCodes.ASP_REVISION, Bundle.SETTINGS, DefaultSettings.ASP_REVISION)));
 		medicationCriteria.addOrder(Order.asc("doseUnit"));
 		medicationCriteria.setProjection(Projections.distinct(Projections.property("doseUnit")));
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.MEDICATION_DOSE_UNIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -205,8 +188,6 @@ public class MedicationDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Medication loadMedicationFromMedicationInVO(MedicationInVO medicationInVO) {
-		// TODO implement loadMedicationFromMedicationInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMedicationFromMedicationInVO(MedicationInVO) not yet implemented.");
 		Long id = medicationInVO.getId();
 		Medication medication = null;
 		if (id != null) {
@@ -224,8 +205,6 @@ public class MedicationDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Medication loadMedicationFromMedicationOutVO(MedicationOutVO medicationOutVO) {
-		// TODO implement loadMedicationFromMedicationOutVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMedicationFromMedicationOutVO(MedicationOutVO) not yet implemented.");
 		Medication medication = this.load(medicationOutVO.getId());
 		if (medication == null) {
 			medication = Medication.Factory.newInstance();
@@ -315,22 +294,12 @@ public class MedicationDaoImpl
 			throw new RuntimeException(e);
 		}
 	}
-	// private HashSet<AspSubstance> toAspSubstanceSet(Collection<AspSubstanceVO> aspSubstances) { // lazyload persistentset prevention
-	// AspSubstanceDao aspSubstanceDao = this.getAspSubstanceDao();
-	// HashSet<AspSubstance> result = new HashSet<AspSubstance>(aspSubstances.size());
-	// Iterator<AspSubstanceVO> it = aspSubstances.iterator();
-	// while (it.hasNext()) {
-	// result.add(aspSubstanceDao.load(it.next().getId()));
-	// }
-	// return result;
-	// }
 
 	/**
 	 * @inheritDoc
 	 */
 	@Override
 	public Medication medicationOutVOToEntity(MedicationOutVO medicationOutVO) {
-		// TODO verify behavior of medicationOutVOToEntity
 		Medication entity = this.loadMedicationFromMedicationOutVO(medicationOutVO);
 		this.medicationOutVOToEntity(medicationOutVO, entity, true);
 		return entity;
@@ -347,11 +316,9 @@ public class MedicationDaoImpl
 		super.medicationOutVOToEntity(source, target, copyIfNull);
 		ProbandOutVO probandVO = source.getProband();
 		AspVO aspVO = source.getAsp();
-		// Collection substances = source.getSubstances();
 		DiagnosisOutVO diagnosisVO = source.getDiagnosis();
 		ProcedureOutVO procedureVO = source.getProcedure();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		// VariablePeriodVO dosePeriodVO = source.getDosePeriod();
 		if (procedureVO != null) {
 			Procedure procedure = this.getProcedureDao().procedureOutVOToEntity(procedureVO);
 			target.setProcedure(procedure);
@@ -396,10 +363,6 @@ public class MedicationDaoImpl
 				asp.removeMedications(target);
 			}
 		}
-		// if (copyIfNull || substances.size() > 0) {
-		// this.getAspSubstanceDao().aspSubstanceVOToEntityCollection(substances); // copyifnull!!
-		// target.setSubstances((Collection<AspSubstance>) substances);
-		// }
 		Collection substances = source.getSubstances();
 		if (substances.size() > 0) {
 			substances = new ArrayList(substances); //prevent changing VO
@@ -408,11 +371,6 @@ public class MedicationDaoImpl
 		} else if (copyIfNull) {
 			target.getSubstances().clear();
 		}
-		// if (dosePeriodVO != null) {
-		// target.setDosePeriod(dosePeriodVO.getPeriod());
-		// } else if (copyIfNull) {
-		// target.setDosePeriod(null);
-		// }
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
@@ -440,31 +398,6 @@ public class MedicationDaoImpl
 		return result;
 	}
 
-	// private ArrayList<AspSubstanceVO> toAspSubstancesVOCollection(Collection<AspSubstance> substances) { // lazyload
-	// // persistentset
-	// // prevention
-	// // ArrayList<AspSubstanceVO> result;
-	// // if (substances != null && substances.size() > 0) {
-	// // AspSubstanceDao aspSubstanceDao = this.getAspSubstanceDao();
-	// // result = new ArrayList<AspSubstanceVO>(substances.size());
-	// // Iterator<AspSubstance> it = substances.iterator();
-	// // while (it.hasNext()) {
-	// // result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
-	// // }
-	// // } else {
-	// // result = new ArrayList<AspSubstanceVO>();
-	// // }
-	// // return result;
-	//
-	// AspSubstanceDao aspSubstanceDao = this.getAspSubstanceDao();
-	// ArrayList<AspSubstanceVO> result = new ArrayList<AspSubstanceVO>(substances.size());
-	// Iterator<AspSubstance> it = substances.iterator();
-	// while (it.hasNext()) {
-	// result.add(aspSubstanceDao.toAspSubstanceVO(it.next()));
-	// }
-	// x
-	// return result;
-	// }
 	private ArrayList<AspSubstanceVO> toAspSubstanceVOCollection(Collection<AspSubstance> substances) { // lazyload persistentset prevention
 		// related to http://forum.andromda.org/viewtopic.php?t=4288
 		AspSubstanceDao aspSubstanceDao = this.getAspSubstanceDao();
@@ -527,11 +460,6 @@ public class MedicationDaoImpl
 			Medication source,
 			MedicationOutVO target) {
 		super.toMedicationOutVO(source, target);
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.diagnosis (can't convert source.getDiagnosis():org.phoenixctms.ctsms.domain.Diagnosis to org.phoenixctms.ctsms.vo.DiagnosisOutVO
-		// WARNING! No conversion for target.asp (can't convert source.getAsp():org.phoenixctms.ctsms.domain.Asp to org.phoenixctms.ctsms.vo.AspVO
-		// WARNING! No conversion for target.substances (can't convert source.getSubstances():org.phoenixctms.ctsms.domain.AspSubstance to org.phoenixctms.ctsms.vo.AspSubstanceVO
 		Asp asp = source.getAsp();
 		Diagnosis diagnosis = source.getDiagnosis();
 		Procedure procedure = source.getProcedure();
@@ -553,7 +481,6 @@ public class MedicationDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		// target.setDosePeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getDosePeriod()));
 		try {
 			if (!CoreUtil.isPassDecryption()) {
 				throw new Exception();

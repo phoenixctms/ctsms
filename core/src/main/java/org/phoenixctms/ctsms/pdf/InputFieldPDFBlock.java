@@ -118,7 +118,7 @@ public abstract class InputFieldPDFBlock {
 		if (comment == null) {
 			comment = "";
 		}
-		return getInputFieldCommentLabel(comment); // L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.INPUT_FIELD_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
+		return getInputFieldCommentLabel(comment);
 	}
 
 	protected abstract String getInputFieldCommentLabel(String comment);
@@ -130,8 +130,7 @@ public abstract class InputFieldPDFBlock {
 		} else {
 			name = inputField.getNameL10nKey();
 		}
-		return getInputFieldNameLabel(name, Long.toString(getPosition())); // L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.INPUT_FIELD_NAME, PDFUtil.DEFAULT_LABEL,
-		// name);
+		return getInputFieldNameLabel(name, Long.toString(getPosition()));
 	}
 
 	protected abstract String getInputFieldNameLabel(String name, String position);
@@ -155,8 +154,7 @@ public abstract class InputFieldPDFBlock {
 		if (isOptional()) {
 			return getInputFieldTitleOptionalLabel(title, Long.toString(getPosition()));
 		} else {
-			return getInputFieldTitleLabel(title, Long.toString(getPosition())); // L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.INPUT_FIELD_TITLE,
-			// PDFUtil.DEFAULT_LABEL, title);
+			return getInputFieldTitleLabel(title, Long.toString(getPosition()));
 		}
 	}
 
@@ -174,8 +172,7 @@ public abstract class InputFieldPDFBlock {
 		if (validationErrorMessage == null) {
 			validationErrorMessage = "";
 		}
-		return getInputFieldValidationErrorMessageLabel(validationErrorMessage); // L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.INPUT_FIELD_TITLE,
-		// PDFUtil.DEFAULT_LABEL, title);
+		return getInputFieldValidationErrorMessageLabel(validationErrorMessage);
 	}
 
 	protected abstract String getInputFieldValidationErrorMessageLabel(String validationErrorMessage);
@@ -212,9 +209,6 @@ public abstract class InputFieldPDFBlock {
 				user = modifiedUser.getName();
 			}
 			return getModifiedLabel(user, getModifiedTimestampFormat().format(modifiedTimestamp));
-			// } else if (modifiedTimestamp != null) {
-			//
-			// } else {
 		}
 		return "";
 	}
@@ -343,7 +337,6 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract SimpleDateFormat getTimeValueFormat();
 
-	// protected abstract boolean isShowValidationErrorMessages();
 	protected abstract String getTimeValueFormatPattern();
 
 	protected abstract Color getValidationErrorMessageTextColor();
@@ -449,8 +442,7 @@ public abstract class InputFieldPDFBlock {
 						modifiedLabel,
 						x + getXFrameIndent(),
 						y1,
-						PDFUtil.Alignment.TOP_LEFT); // ,
-				// cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent());
+						PDFUtil.Alignment.TOP_LEFT);
 				y1 -= getYFrameIndent();
 			}
 		}
@@ -471,7 +463,7 @@ public abstract class InputFieldPDFBlock {
 				if (value != null) {
 					string = numberFormat.format(value);
 				} else {
-					string = (isShowPresetValues() ? getIntegerValueFormatPattern() : null); // numberFormat.toString(); // .toLocalizedPattern();
+					string = (isShowPresetValues() ? getIntegerValueFormatPattern() : null);
 					isPresetColor = true;
 				}
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
@@ -483,7 +475,7 @@ public abstract class InputFieldPDFBlock {
 				if (value != null) {
 					string = numberFormat.format(value);
 				} else {
-					string = (isShowPresetValues() ? getFloatValueFormatPattern() : null); // numberFormat.toString(); // .toLocalizedPattern();
+					string = (isShowPresetValues() ? getFloatValueFormatPattern() : null);
 					isPresetColor = true;
 				}
 				string = CommonUtil.formatDecimal(string, getDecimalSeparator());
@@ -496,7 +488,7 @@ public abstract class InputFieldPDFBlock {
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {
-					string = (isShowPresetValues() ? getDateValueFormatPattern() : null); // dateFormat.toString(); // .toLocalizedPattern();
+					string = (isShowPresetValues() ? getDateValueFormatPattern() : null);
 					isPresetColor = true;
 				}
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
@@ -508,7 +500,7 @@ public abstract class InputFieldPDFBlock {
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {
-					string = (isShowPresetValues() ? getTimestampValueFormatPattern() : null); // dateFormat.toString(); // .toLocalizedPattern();
+					string = (isShowPresetValues() ? getTimestampValueFormatPattern() : null);
 					isPresetColor = true;
 				}
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
@@ -520,7 +512,7 @@ public abstract class InputFieldPDFBlock {
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {
-					string = (isShowPresetValues() ? getTimeValueFormatPattern() : null); // dateFormat.toString(); // .toLocalizedPattern();
+					string = (isShowPresetValues() ? getTimeValueFormatPattern() : null);
 					isPresetColor = true;
 				}
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
@@ -661,8 +653,6 @@ public abstract class InputFieldPDFBlock {
 				renderFrame(height, contentStream, cursor);
 				break;
 			default:
-				// throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_INPUT_FIELD_TYPE, DefaultMessages.UNSUPPORTED_INPUT_FIELD_TYPE,
-				// new Object[] { fieldType.toString() }));
 				height = 0.0f;
 				break;
 		}
@@ -677,8 +667,6 @@ public abstract class InputFieldPDFBlock {
 		Float horizontalSelectionItemWidth = getHorizontalSelectionItemWidth();
 		boolean isPresetColor = isPreset() || blank;
 		Set<Long> selectionSetValueIds = getSelectionValueIds(blank);
-		// Map<Long, String> selectionSetValueMap = getSelectionSetValueMap();
-		// if (selectionSetValueMap.size() > 0) {
 		Iterator<Entry<Long, String>> it = getSelectionSetValueMap().entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Long, String> selectionSetValue = it.next();
@@ -771,21 +759,11 @@ public abstract class InputFieldPDFBlock {
 				}
 			}
 		}
-		// y1 -= getYFrameIndent();
 		return y - y1;
-		// } else {
-		// return 0.0f;
-		// }
 	}
 
 	private float renderSketchImage(float x, float y, PDPageContentStream contentStream, InputFieldPDFBlockCursor cursor) throws Exception {
 		PDFUtil.renderImage(contentStream, ximage, x, y, Alignment.TOP_CENTER);
-		// PDFUtil.renderFrame(contentStream, getFrameColor(),
-		// x,
-		// y,
-		// ximage.getWidthPoints(),
-		// ximage.getHeightPoints(),
-		// PDFUtil.Alignment.TOP_CENTER, getValueFrameLineWidth());
 		return ximage.getHeightPoints();
 	}
 
@@ -820,7 +798,6 @@ public abstract class InputFieldPDFBlock {
 				x + getXFrameIndent(),
 				y,
 				PDFUtil.Alignment.TOP_LEFT,
-				isInputFieldLongTitle() ? (cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent()) : (getXFieldColumnIndent() - getXFrameIndent())); // - 2.0f *
-		// getXFrameIndent());
+				isInputFieldLongTitle() ? (cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent()) : (getXFieldColumnIndent() - getXFrameIndent()));
 	}
 }

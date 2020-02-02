@@ -63,7 +63,6 @@ public class NotificationDaoImpl
 
 	private final static VOIDComparator RECIPIENT_VO_ID_COMPARATOR = new VOIDComparator<NotificationRecipientVO>(false);
 	private final static String TEMPLATE_ENCODING = "UTF-8";
-	// private final static VelocityStringUtils STRING_UTILS = new VelocityStringUtils();
 	private final static InputFieldValueStringAdapterBase ECRF_INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		private final static String SELECTION_SET_VALUES_SEPARATOR = ", ";
@@ -125,8 +124,6 @@ public class NotificationDaoImpl
 		@Override
 		protected String getSelectionSetValuesSeparator() {
 			return SELECTION_SET_VALUES_SEPARATOR;
-			// return L10nUtil.getString(Locales.NOTIFICATION, MessageCodes.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR,
-			// DefaultMessages.NOTIFICATION_INPUT_FIELD_VALUE_SELECTION_SET_VALUES_SEPARATOR);
 		}
 
 		@Override
@@ -336,14 +333,11 @@ public class NotificationDaoImpl
 						velocityEngine.evaluate(new VelocityContext(messageParameters), result, messageVslFile.getName(), new InputStreamReader(stream, TEMPLATE_ENCODING));
 						return result.toString();
 					} catch (IOException e) {
-						// e.printStackTrace();
 					} finally {
 						stream.close();
 					}
 				} catch (FileNotFoundException e) {
-					// e.printStackTrace();
 				} catch (SecurityException e) {
-					// e.printStackTrace();
 				}
 			}
 			return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, messageVslFileName, TEMPLATE_ENCODING, messageParameters);
@@ -521,11 +515,7 @@ public class NotificationDaoImpl
 		course.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (lecturers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, lecturers);
-			// }
 			return notification;
 		} else {
 			course.removeNotifications(notification);
@@ -701,11 +691,7 @@ public class NotificationDaoImpl
 		messageParameters.put(NotificationMessageTemplateParameters.ECRF_INPUT_FIELD_VALUE_ADAPTER, ECRF_INPUT_FIELD_VALUE_ADAPTER);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			ecrfFieldStatusEntry.removeNotifications(notification);
@@ -730,11 +716,7 @@ public class NotificationDaoImpl
 		ecrfStatusEntry.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			ecrfStatusEntry.removeNotifications(notification);
@@ -814,20 +796,14 @@ public class NotificationDaoImpl
 		if (identity == null) {
 			department = user.getDepartment();
 			notification.setDepartment(department);
-			// } else {
-			// createNotificationRecipient(notification, identity);
 		}
 		notification.setPassword(password);
 		password.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (identity == null) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			if (identity != null) {
 				createNotificationRecipient(notification, identity);
 			}
-			// }
 			return notification;
 		} else {
 			password.removeNotifications(notification);
@@ -912,11 +888,7 @@ public class NotificationDaoImpl
 		timelineEvent.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			timelineEvent.removeNotifications(notification);
@@ -939,11 +911,7 @@ public class NotificationDaoImpl
 		trial.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			trial.removeNotifications(notification);
@@ -976,11 +944,7 @@ public class NotificationDaoImpl
 		notification.setTrialTag(trialTag);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			trial.removeNotifications(notification);
@@ -1024,11 +988,7 @@ public class NotificationDaoImpl
 		visitScheduleItem.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			visitScheduleItem.removeNotifications(notification);
@@ -1058,11 +1018,7 @@ public class NotificationDaoImpl
 		probandStatusEntry.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
-			// if (trialMembers.size() == 0) {
-			// addDepartmentRecipients(notification, department, notificationType);
-			// } else {
 			createNotificationRecipients(notification, trialMembers);
-			// }
 			return notification;
 		} else {
 			visitScheduleItem.removeNotifications(notification);
@@ -1123,12 +1079,10 @@ public class NotificationDaoImpl
 		if (dropped != null) {
 			criteriaMap.createCriteria("recipients").add(Restrictions.eq("dropped", dropped.booleanValue()));
 		}
-		// if ((psf != null && (psf.getFilters().size() > 0 || (!CommonUtil.isEmptyString(psf.getSortField()) && !"id".equals(psf.getSortField()))))
-		// || (sent != null || dropped != null) && recipientId == null) {
 		if ((psf != null) || (sent != null || dropped != null) && recipientId == null) {
 			return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 		} else {
-			CriteriaUtil.applyPSFVO(criteriaMap, psf); // disticnt because if sent or dropped is passed
+			CriteriaUtil.applyPSFVO(criteriaMap, psf); // distinct because if sent or dropped is passed
 			return notificationCriteria.list();
 		}
 	}
@@ -1182,18 +1136,7 @@ public class NotificationDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Notification loadNotificationFromNotificationVO(NotificationVO notificationVO) {
-		// TODO implement loadNotificationFromNotificationVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadNotificationFromNotificationVO(NotificationVO) not yet implemented.");
-		// Notification notification = null;
-		// Long id = notificationVO.getId();
-		// if (id != null) {
-		// notification = this.load(id);
-		// }
-		// if (notification == null)
-		// {
-		// notification = Notification.Factory.newInstance();
-		// }
-		// return notification;
 	}
 
 	/**
@@ -1335,7 +1278,6 @@ public class NotificationDaoImpl
 		if (type != null) {
 			target.setType(this.getNotificationTypeDao().toNotificationTypeVO(type));
 		}
-		// target.setRecipients(toNotificationRecipientVOCollection(source.getRecipients()));
 		if (department != null) {
 			target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
 		} else {
@@ -1349,7 +1291,7 @@ public class NotificationDaoImpl
 			Iterator<NotificationRecipient> it = source.getRecipients().iterator();
 			while (it.hasNext()) {
 				NotificationRecipient recipient = it.next();
-				if (identity.equals(recipient.getStaff())) { // recipient.equals(identity)) {
+				if (identity.equals(recipient.getStaff())) {
 					sent = recipient.isSent();
 					dropped = recipient.isDropped();
 					break;

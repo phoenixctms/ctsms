@@ -10,7 +10,6 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String AUDIT_TRAIL_HEAD_FORMAT = "audit_trail_head_format";
 	public static final String AUDIT_TRAIL_ROW_FORMAT = "audit_trail_row_format";
 	public static final String AUDIT_TRAIL_ROW_COLORS = "audit_trail_row_colors";
-	// public final static String AUDIT_TRAIL_VO_FIELD_COLUMNS = "audit_trail_vo_field_columns";
 	public static final String AUDIT_TRAIL_WRITEHEAD = "audit_trail_writehead";
 	public static final String AUDIT_TRAIL_APPEND_HEADER_FOOTER = "audit_trail_append_header_footer";
 	public static final String ECRF_FIELD_STATUS_AUTOSIZE = "ecrf_field_status_autosize";
@@ -19,7 +18,6 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String ECRF_FIELD_STATUS_HEAD_FORMAT = "ecrf_field_status_head_format";
 	public static final String ECRF_FIELD_STATUS_ROW_FORMAT = "ecrf_field_status_row_format";
 	public static final String ECRF_FIELD_STATUS_ROW_COLORS = "ecrf_field_status_row_colors";
-	// public final static String ECRF_FIELD_STATUS_VO_FIELD_COLUMNS = "ecrf_field_status_vo_field_columns";
 	public static final String ECRF_FIELD_STATUS_WRITEHEAD = "ecrf_field_status_writehead";
 	public static final String ECRF_FIELD_STATUS_APPEND_HEADER_FOOTER = "ecrf_field_status_append_header_footer";
 	public static final String ECRF_FIELD_STATUS_QUEUES = "ecrf_field_status_queues";

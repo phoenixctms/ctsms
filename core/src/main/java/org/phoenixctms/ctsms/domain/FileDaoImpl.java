@@ -87,9 +87,6 @@ public class FileDaoImpl
 					case PROBAND_DOCUMENT:
 						criteria.add(Restrictions.eq("proband.id", id.longValue()));
 						break;
-					// case INPUT_FIELD_DOCUMENT:
-					// fileCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
-					// break;
 					case MASS_MAIL_DOCUMENT:
 						criteria.add(Restrictions.eq("massMail.id", id.longValue()));
 						break;
@@ -369,7 +366,6 @@ public class FileDaoImpl
 		Long courseId = source.getCourseId();
 		Long trialId = source.getTrialId();
 		Long probandId = source.getProbandId();
-		// Long inputFieldId = source.getInputFieldId();
 		Long massMailId = source.getMassMailId();
 		if (inventoryId != null) {
 			Inventory inventory = this.getInventoryDao().load(inventoryId);
@@ -426,17 +422,6 @@ public class FileDaoImpl
 				proband.removeFiles(target);
 			}
 		}
-		// if (inputFieldId != null) {
-		// InputField inputField = this.getInputFieldDao().load(inputFieldId);
-		// target.setInputField(inputField);
-		// inputField.addFiles(target);
-		// } else if (copyIfNull) {
-		// InputField inputField = target.getInputField();
-		// target.setInputField(null);
-		// if (inputField != null) {
-		// inputField.removeFiles(target);
-		// }
-		// }
 		if (massMailId != null) {
 			MassMail massMail = this.getMassMailDao().load(massMailId);
 			target.setMassMail(massMail);
@@ -503,7 +488,6 @@ public class FileDaoImpl
 		CourseOutVO courseVO = source.getCourse();
 		TrialOutVO trialVO = source.getTrial();
 		ProbandOutVO probandVO = source.getProband();
-		// InputFieldOutVO inputFieldVO = source.getInputField();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		MassMailOutVO massMailVO = source.getMassMail();
 		if (contentTypeVO != null) {
@@ -566,17 +550,6 @@ public class FileDaoImpl
 				proband.removeFiles(target);
 			}
 		}
-		// if (inputFieldVO != null) {
-		// InputField inputField = this.getInputFieldDao().inputFieldOutVOToEntity(inputFieldVO);
-		// target.setInputField(inputField);
-		// inputField.addFiles(target);
-		// } else if (copyIfNull) {
-		// InputField inputField = target.getInputField();
-		// target.setInputField(null);
-		// if (inputField != null) {
-		// inputField.removeFiles(target);
-		// }
-		// }
 		if (massMailVO != null) {
 			MassMail massMail = this.getMassMailDao().massMailOutVOToEntity(massMailVO);
 			target.setMassMail(massMail);
@@ -755,28 +728,6 @@ public class FileDaoImpl
 		if (id != null) {
 			org.hibernate.Criteria fileCriteria = createFileCriteria();
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
-			// fileCriteria.add(Restrictions.eq("module", module));
-			// switch (module) {
-			// case INVENTORY_DOCUMENT:
-			// fileCriteria.add(Restrictions.eq("inventory.id", id.longValue()));
-			// break;
-			// case STAFF_DOCUMENT:
-			// fileCriteria.add(Restrictions.eq("staff.id", id.longValue()));
-			// break;
-			// case COURSE_DOCUMENT:
-			// fileCriteria.add(Restrictions.eq("course.id", id.longValue()));
-			// break;
-			// case TRIAL_DOCUMENT:
-			// fileCriteria.add(Restrictions.eq("trial.id", id.longValue()));
-			// break;
-			// case PROBAND_DOCUMENT:
-			// fileCriteria.add(Restrictions.eq("proband.id", id.longValue()));
-			// break;
-			// // case INPUT_FIELD_DOCUMENT:
-			// // fileCriteria.add(Restrictions.eq("inputField.id", id.longValue()));
-			// // break;
-			// default:
-			// }
 			applyModuleIdCriterions(fileCriteria, module, id);
 			if (useParentPath) {
 				fileCriteria.add(Restrictions.like("logicalPath", parentLogicalFolder, MatchMode.START));
@@ -787,9 +738,6 @@ public class FileDaoImpl
 			if (publicFile != null) {
 				fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 			}
-			// if (image != null) {
-			// fileCriteria.createCriteria("contentType", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("image", image.booleanValue()));
-			// }
 			applyContentTypeCriterions(fileCriteria, image, null);
 			CriteriaUtil.applyPSFVO(criteriaMap, f);
 			fileCriteria.setProjection(Projections.distinct(Projections.property("logicalPath")));
@@ -946,8 +894,6 @@ public class FileDaoImpl
 			File source,
 			FileContentOutVO target) {
 		super.toFileContentOutVO(source, target);
-		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		MimeType contentType = source.getContentType();
 		User modifiedUser = source.getModifiedUser();
 		if (contentType != null) {
@@ -1016,7 +962,6 @@ public class FileDaoImpl
 		Course course = source.getCourse();
 		Trial trial = source.getTrial();
 		Proband proband = source.getProband();
-		// InputField inputField = source.getInputField();
 		MassMail massMail = source.getMassMail();
 		if (inventory != null) {
 			target.setInventoryId(inventory.getId());
@@ -1033,9 +978,6 @@ public class FileDaoImpl
 		if (proband != null) {
 			target.setProbandId(proband.getId());
 		}
-		// if (inputField != null) {
-		// target.setInputFieldId(inputField.getId());
-		// }
 		if (massMail != null) {
 			target.setMassMailId(massMail.getId());
 		}
@@ -1064,22 +1006,13 @@ public class FileDaoImpl
 	public void toFileOutVO(
 			File source,
 			FileOutVO target) {
-		// TODO verify behavior of toFileOutVO
 		super.toFileOutVO(source, target);
-		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.inventory (can't convert source.getInventory():org.phoenixctms.ctsms.domain.Inventory to org.phoenixctms.ctsms.vo.InventoryOutVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		MimeType contentType = source.getContentType();
 		Inventory inventory = source.getInventory();
 		Staff staff = source.getStaff();
 		Course course = source.getCourse();
 		Trial trial = source.getTrial();
 		Proband proband = source.getProband();
-		// InputField inputField = source.getInputField();
 		User modifiedUser = source.getModifiedUser();
 		MassMail massMail = source.getMassMail();
 		if (contentType != null) {
@@ -1100,9 +1033,6 @@ public class FileDaoImpl
 		if (proband != null) {
 			target.setProband(this.getProbandDao().toProbandOutVO(proband));
 		}
-		// if (inputField != null) {
-		// target.setInputField(this.getInputFieldDao().toInputFieldOutVO(inputField));
-		// }
 		if (massMail != null) {
 			target.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
 		}
@@ -1144,10 +1074,7 @@ public class FileDaoImpl
 	public void toFileStreamOutVO(
 			File source,
 			FileStreamOutVO target) {
-		// TODO verify behavior of toFileStreamOutVO
 		super.toFileStreamOutVO(source, target);
-		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		MimeType contentType = source.getContentType();
 		User modifiedUser = source.getModifiedUser();
 		if (contentType != null) {

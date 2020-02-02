@@ -46,9 +46,6 @@ public class TeamMemberDaoImpl
 			org.hibernate.Criteria staffCriteria = teamMemberCriteria.createCriteria("staff");
 			staffCriteria.add(Restrictions.eq("allocatable", allocatable.booleanValue()));
 		}
-		// if (allocatable != null) {
-		// criteriaMap.createCriteria("staff").add(Restrictions.eq("allocatable", allocatable.booleanValue()));
-		// }
 		if (roleId != null) {
 			teamMemberCriteria.add(Restrictions.eq("role.id", roleId.longValue()));
 		}
@@ -82,8 +79,6 @@ public class TeamMemberDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TeamMember loadTeamMemberFromTeamMemberInVO(TeamMemberInVO teamMemberInVO) {
-		// TODO implement loadTeamMemberFromTeamMemberInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberFromTeamMemberInVO(TeamMemberInVO) not yet implemented.");
 		TeamMember teamMember = null;
 		Long id = teamMemberInVO.getId();
 		if (id != null) {
@@ -101,8 +96,6 @@ public class TeamMemberDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TeamMember loadTeamMemberFromTeamMemberOutVO(TeamMemberOutVO teamMemberOutVO) {
-		// TODO implement loadTeamMemberFromTeamMemberOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberFromTeamMemberOutVO(TeamMemberOutVO) not yet implemented.");
 		TeamMember teamMember = this.load(teamMemberOutVO.getId());
 		if (teamMember == null) {
 			teamMember = TeamMember.Factory.newInstance();
@@ -264,10 +257,6 @@ public class TeamMemberDaoImpl
 			TeamMember source,
 			TeamMemberOutVO target) {
 		super.toTeamMemberOutVO(source, target);
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.role (can't convert source.getRole():org.phoenixctms.ctsms.domain.TeamMemberRole to org.phoenixctms.ctsms.vo.TeamMemberRoleVO
 		Trial trial = source.getTrial();
 		Staff staff = source.getStaff();
 		TeamMemberRole role = source.getRole();

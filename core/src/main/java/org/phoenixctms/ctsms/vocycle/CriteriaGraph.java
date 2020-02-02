@@ -88,8 +88,7 @@ public class CriteriaGraph extends GraphCycleNHelper<Criteria, CriteriaOutVO, Cr
 	}
 
 	@Override
-	protected void toVORemainingFields(Criteria source, CriteriaOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) { // , HashMap<Class,HashMap<Long,Object>> deferredVoMap)
-																																// {
+	protected void toVORemainingFields(Criteria source, CriteriaOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		criteriaDaoImpl.toCriteriaOutVOBase(source, target);
 		User modifiedUser = source.getModifiedUser();
 		if (modifiedUser != null) {

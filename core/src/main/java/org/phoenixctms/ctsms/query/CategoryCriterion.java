@@ -70,11 +70,10 @@ public class CategoryCriterion {
 			} else {
 				restriction = Restrictions.ilike(categoryCriterion.field, categoryCriterion.prefix, categoryCriterion.matchMode);
 			}
-		} else if (EmptyPrefixModes.NON_EMPTY_ROWS.equals(categoryCriterion.emptyPrefixMode)) { // (categoryCriterion.notEmpty) {
+		} else if (EmptyPrefixModes.NON_EMPTY_ROWS.equals(categoryCriterion.emptyPrefixMode)) {
 			restriction = Restrictions.not(Restrictions.or(Restrictions.eq(categoryCriterion.field, ""), Restrictions.isNull(categoryCriterion.field)));
 		} else if (EmptyPrefixModes.EMPTY_ROWS.equals(categoryCriterion.emptyPrefixMode)) {
 			restriction = Restrictions.or(Restrictions.eq(categoryCriterion.field, ""), Restrictions.isNull(categoryCriterion.field));
-			// } else if (EmptyPrefixModes.ALL_ROWS.equals(categoryCriterion.emptyPrefixMode)) {
 		}
 		return restriction;
 	}
@@ -82,7 +81,6 @@ public class CategoryCriterion {
 	private String prefix;
 	private String field;
 	private MatchMode matchMode;
-	// private boolean notEmpty; // true: return non-empty rows only for an empty search term
 	private EmptyPrefixModes emptyPrefixMode;
 	private boolean caseSensitive;
 

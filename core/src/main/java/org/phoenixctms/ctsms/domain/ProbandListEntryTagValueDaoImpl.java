@@ -71,25 +71,6 @@ public class ProbandListEntryTagValueDaoImpl
 				ServiceUtil.PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_VALUE_ALIAS,
 				CriteriaSpecification.LEFT_JOIN,
 				Restrictions.eq(ServiceUtil.PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_VALUE_ALIAS + ".listEntry.id", probandListEntryId.longValue()));
-		// criteriaMap.createCriteria("ecrfField", CriteriaSpecification.LEFT_JOIN);
-		// listEntryTagValueCriteria.add(Restrictions.or(Restrictions.eq("listEntry.id", probandListEntryId.longValue()),
-		// Restrictions.isNull("listEntry")));
-		// correlated - slow:
-		// DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, null, probandListEntryId, null);
-		// // DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldValueImpl.class, "ecrfFieldValue1"); // IMPL!!!!
-		// // subQuery.setProjection(Projections.max("id"));
-		// // subQuery.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// // subQuery.add(Restrictions.eqProperty("ecrfField.id", "ecrfField0.id"));
-		// subQuery.add(Restrictions.or(Restrictions.isNull("index"),
-		// Restrictions.eqProperty("index", ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".index")));
-		// ecrfFieldValueCriteria.add(Restrictions.or(
-		// Restrictions.isNull("listEntry"),
-		// Restrictions.and(
-		// Restrictions.eq("listEntry.id", probandListEntryId.longValue()),
-		// Subqueries.propertyIn("id", subQuery)
-		// )
-		// ));
-		// System.out.println(CriteriaUtil.criteriaToSql(listEntryTagCriteria));
 		return listEntryTagCriteria;
 	}
 
@@ -110,9 +91,6 @@ public class ProbandListEntryTagValueDaoImpl
 	@Override
 	protected Collection<Map> handleFindByListEntryJs(Long probandListEntryId, boolean sort, Boolean js, PSFVO psf) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createProbandListEntryTagCriteria(probandListEntryId);
-		//		if (active != null) {
-		//			ecrfFieldCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		//		}
 		if (js != null) {
 			if (js) {
 				listEntryTagCriteria.add(Restrictions.and(Restrictions.ne("jsVariableName", ""), Restrictions.isNotNull("jsVariableName")));
@@ -176,9 +154,6 @@ public class ProbandListEntryTagValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(ProbandListEntryTagValueInVO probandListEntryTagValueInVO) {
-		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueInVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueInVO(ProbandListEntryTagValueInVO) not yet implemented.");
 		ProbandListEntryTagValue probandListEntryTagValue = null;
 		Long id = probandListEntryTagValueInVO.getId();
 		if (id != null) {
@@ -196,11 +171,8 @@ public class ProbandListEntryTagValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO) {
-		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(ProbandListEntryTagValueJsonVO) not yet implemented.");
-		/* A typical implementation looks like this: ProbandListEntryTagValue probandListEntryTagValue = this.load(probandListEntryTagValueJsonVO.getId()); if
-		 * (probandListEntryTagValue == null) { probandListEntryTagValue = ProbandListEntryTagValue.Factory.newInstance(); } return probandListEntryTagValue; */
 	}
 
 	/**
@@ -209,9 +181,6 @@ public class ProbandListEntryTagValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntryTagValue loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(ProbandListEntryTagValueOutVO probandListEntryTagValueOutVO) {
-		// TODO implement loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryTagValueFromProbandListEntryTagValueOutVO(ProbandListEntryTagValueOutVO) not yet implemented.");
 		ProbandListEntryTagValue probandListEntryTagValue = this.load(probandListEntryTagValueOutVO.getId());
 		if (probandListEntryTagValue == null) {
 			probandListEntryTagValue = ProbandListEntryTagValue.Factory.newInstance();
@@ -273,9 +242,6 @@ public class ProbandListEntryTagValueDaoImpl
 					Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH)));
 		}
 		value.setBooleanValue(source.getBooleanValue());
-		// if (copyIfNull || source.getBooleanValue() != null) {
-		// value.setBooleanValue(booleanValueIn)
-		// }
 		if (copyIfNull || source.getLongValue() != null) {
 			value.setLongValue(source.getLongValue());
 		}
@@ -305,7 +271,6 @@ public class ProbandListEntryTagValueDaoImpl
 	 */
 	@Override
 	public ProbandListEntryTagValue probandListEntryTagValueJsonVOToEntity(ProbandListEntryTagValueJsonVO probandListEntryTagValueJsonVO) {
-		// TODO verify behavior of probandListEntryTagValueJsonVOToEntity
 		ProbandListEntryTagValue entity = this.loadProbandListEntryTagValueFromProbandListEntryTagValueJsonVO(probandListEntryTagValueJsonVO);
 		this.probandListEntryTagValueJsonVOToEntity(probandListEntryTagValueJsonVO, entity, true);
 		return entity;
@@ -319,7 +284,6 @@ public class ProbandListEntryTagValueDaoImpl
 			ProbandListEntryTagValueJsonVO source,
 			ProbandListEntryTagValue target,
 			boolean copyIfNull) {
-		// TODO verify behavior of probandListEntryTagValueJsonVOToEntity
 		super.probandListEntryTagValueJsonVOToEntity(source, target, copyIfNull);
 	}
 
@@ -383,9 +347,6 @@ public class ProbandListEntryTagValueDaoImpl
 					Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH)));
 		}
 		value.setBooleanValue(source.getBooleanValue());
-		// if (copyIfNull || source.getBooleanValue() != null) {
-		// value.setBooleanValue(booleanValueIn)
-		// }
 		if (copyIfNull || source.getLongValue() != null) {
 			value.setLongValue(source.getLongValue());
 		}
@@ -414,34 +375,7 @@ public class ProbandListEntryTagValueDaoImpl
 		}
 	}
 
-	// private ArrayList<Long> toInputFieldSelectionSetValueIdCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload persistentset prevention
-	// ArrayList<Long> result;
-	// if (selectionValues != null && selectionValues.size() > 0) {
-	// result = new ArrayList<Long>(selectionValues.size());
-	// Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
-	// while (it.hasNext()) {
-	// result.add(it.next().getId());
-	// }
-	// } else {
-	// result = new ArrayList<Long>();
-	// }
-	// return result;
-	// }
 	private ArrayList<InputFieldSelectionSetValueJsonVO> toInputFieldSelectionSetValueJsonVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
-		// persistentset
-		// prevention
-		// ArrayList<InputFieldSelectionSetValueJsonVO> result;
-		// if (selectionValues != null && selectionValues.size() > 0) {
-		// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
-		// result = new ArrayList<InputFieldSelectionSetValueJsonVO>(selectionValues.size());
-		// Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
-		// while (it.hasNext()) {
-		// result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueJsonVO(it.next()));
-		// }
-		// } else {
-		// result = new ArrayList<InputFieldSelectionSetValueJsonVO>();
-		// }
-		// return result;
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ArrayList<InputFieldSelectionSetValueJsonVO> result = new ArrayList<InputFieldSelectionSetValueJsonVO>(selectionValues.size());
 		Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
@@ -453,20 +387,6 @@ public class ProbandListEntryTagValueDaoImpl
 	}
 
 	private ArrayList<InputFieldSelectionSetValueOutVO> toInputFieldSelectionSetValueOutVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
-		// persistentset
-		// prevention
-		// ArrayList<InputFieldSelectionSetValueOutVO> result;
-		// if (selectionValues != null && selectionValues.size() > 0) {
-		// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
-		// result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValues.size());
-		// Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
-		// while (it.hasNext()) {
-		// result.add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(it.next()));
-		// }
-		// } else {
-		// result = new ArrayList<InputFieldSelectionSetValueOutVO>();
-		// }
-		// return result;
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ArrayList<InputFieldSelectionSetValueOutVO> result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValues.size());
 		Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
@@ -532,7 +452,6 @@ public class ProbandListEntryTagValueDaoImpl
 	 */
 	@Override
 	public ProbandListEntryTagValueJsonVO toProbandListEntryTagValueJsonVO(final ProbandListEntryTagValue entity) {
-		// TODO verify behavior of toProbandListEntryTagValueJsonVO
 		return super.toProbandListEntryTagValueJsonVO(entity);
 	}
 
@@ -601,9 +520,6 @@ public class ProbandListEntryTagValueDaoImpl
 			ProbandListEntryTagValue source,
 			ProbandListEntryTagValueOutVO target) {
 		super.toProbandListEntryTagValueOutVO(source, target);
-		// WARNING! No conversion for target.listEntry (can't convert source.getListEntry():org.phoenixctms.ctsms.domain.ProbandListEntry to
-		// org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO
-		// WARNING! No conversion for target.tag (can't convert source.getTag():org.phoenixctms.ctsms.domain.ProbandListEntryTag to org.phoenixctms.ctsms.vo.ProbandListEntryTagVO
 		ProbandListEntry listEntry = source.getListEntry();
 		ProbandListEntryTag tag = source.getTag();
 		User modifiedUser = source.getModifiedUser();

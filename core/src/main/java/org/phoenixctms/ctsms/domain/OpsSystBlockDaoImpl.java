@@ -33,8 +33,6 @@ public class OpsSystBlockDaoImpl
 		opsSystBlockCriteria.setCacheable(true);
 		CategoryCriterion.apply(opsSystBlockCriteria, new CategoryCriterion(preferredRubricLabelInfix, "preferredRubricLabel", MatchMode.ANYWHERE));
 		opsSystBlockCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("preferredRubricLabel", ""), Restrictions.isNull("preferredRubricLabel"))));
-		// opsSystBlockCriteria.add(Restrictions.eq("revision", Settings.getString(SettingCodes.OPS_SYSTEMATICS_REVISION, Bundle.SETTINGS,
-		// DefaultSettings.OPS_SYSTEMATICS_REVISION)));
 		opsSystBlockCriteria.addOrder(Order.asc("preferredRubricLabel"));
 		opsSystBlockCriteria.setProjection(Projections.distinct(Projections.property("preferredRubricLabel")));
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.OPS_SYST_BLOCK_PREFERRED_RUBRIC_LABEL_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -48,8 +46,6 @@ public class OpsSystBlockDaoImpl
 	 * a new, blank entity is created
 	 */
 	private OpsSystBlock loadOpsSystBlockFromOpsSystBlockVO(OpsSystBlockVO opsSystBlockVO) {
-		// TODO implement loadOpsSystBlockFromOpsSystBlockVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystBlockFromOpsSystBlockVO(OpsSystBlockVO) not yet implemented.");
 		Long id = opsSystBlockVO.getId();
 		OpsSystBlock opsSystBlock = null;
 		if (id != null) {

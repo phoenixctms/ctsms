@@ -60,15 +60,6 @@ public class EcrfSignature extends EntitySignature {
 		addFieldToMap(FIELDS_WHITELIST_MAP, EcrfFieldValues.class, "statusEntries");
 		addFieldToMap(FIELDS_WHITELIST_MAP, EcrfFieldValues.class, "proband");
 		addFieldToMap(FIELDS_WHITELIST_MAP, EcrfFieldValues.class, "ecrf");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "name");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "title");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "description");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "visit");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "group");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, Visit.class, "title");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, Visit.class, "token");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ProbandGroup.class, "title");
-		// addFieldToMap(FIELDS_WHITELIST_MAP, ProbandGroup.class, "token");
 		addFieldToMap(FIELDS_WHITELIST_MAP, ECRF.class, "title");
 		addFieldToMap(FIELDS_WHITELIST_MAP, ECRFFieldValue.class, "index");
 		addFieldToMap(FIELDS_WHITELIST_MAP, ECRFFieldValue.class, "value");

@@ -12,7 +12,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -111,8 +110,6 @@ public class StreetDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Street loadStreetFromStreetVO(StreetVO streetVO) {
-		// TODO implement loadStreetFromStreetVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStreetFromStreetVO(StreetVO) not yet implemented.");
 		Street street = null;
 		Long id = streetVO.getId();
 		if (id != null) {

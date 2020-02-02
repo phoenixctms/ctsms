@@ -447,7 +447,6 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
-			//cal = new GregorianCalendar(cal.get(GregorianCalendar.YEAR), cal.get(GregorianCalendar.MONTH), cal.get(GregorianCalendar.DAY_OF_MONTH), cal.get(GregorianCalendar.HOUR), cal.get(GregorianCalendar.MINUTE), cal.get(GregorianCalendar.SECOND));
 			cal.set(Calendar.MILLISECOND, 0);
 			return cal.getTime();
 		}
@@ -655,7 +654,6 @@ public final class DateCalc {
 			result += b;
 		}
 		return result;
-		// return (a % b) + (a < 0 ? b : 0);
 	}
 
 	private static boolean storeHoliday(int year, GregorianCalendar cal, Holiday holiday, HashMap<Date, HolidayVO> holidayMap) {

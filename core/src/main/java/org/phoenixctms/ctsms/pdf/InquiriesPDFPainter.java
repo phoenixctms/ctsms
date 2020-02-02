@@ -38,8 +38,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	private Collection<ProbandOutVO> probandVOs;
 	private HashMap<Long, Collection<TrialOutVO>> trialVOMap;
 	private HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap;
-	// private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap;
-	// private HashMap<Long, SignatureVO> signatureVOMap;
 	private HashMap<Long, InputFieldImageVO> imageVOMap;
 	private boolean blank;
 	private float pageWidth;
@@ -57,8 +55,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	private PDFJpeg checkboxCheckedPresetImage;
 	private PDFJpeg radioOnPresetImage;
 	private PDFJpeg selectboxCheckedPresetImage;
-	// private PDFont fontE;
-	// private PDFont fontF;
 	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
 	private static final String INQUIRIES_PDF_FILENAME_PREFIX = "inquiries_";
 
@@ -72,16 +68,10 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	}
 
 	private void drawBlock(PDPageContentStream contentStream, InquiriesPDFBlock block) throws Exception {
-		if (// BlockType.NEW_LIST_ENTRY.equals(block.getType())
-		BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
-			// || BlockType.ECRF_SIGNATURE.equals(block.getType())) {
+		if (BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
 			cursor.setCategoryY(cursor.getBlockY());
-			// cursor.setIndexY(cursor.getBlockY());
 		} else if (BlockType.NEW_CATEGORY.equals(block.getType())) {
 			cursor.setCategoryY(cursor.getBlockY());
-			// cursor.setIndexY(cursor.getBlockY());
-			// } else if (BlockType.NEW_INDEX.equals(block.getType())) {
-			// cursor.setIndexY(cursor.getBlockY());
 		}
 		cursor.setBlocks(block);
 		cursor.setBlockY(cursor.getBlockY() - block.renderBlock(contentStream, cursor));
@@ -98,14 +88,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		if (cursor.getProbandTrialBlock() != null) {
 			(new InquiriesPDFBlock(cursor.getProbandTrialBlock(), BlockType.PAGE_TITLE, true)).renderBlock(contentStream, cursor);
 		}
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.INQUIRIES_PDF,
-		// InquiriesPDFDefaultSettings.PAGE_LEFT_MARGIN),
-		// Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LOWER_MARGIN), pageWidth -
-		// Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_LEFT_MARGIN) -
-		// Settings.getFloat(InquiriesPDFSettingCodes.PAGE_RIGHT_MARGIN,
-		// Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN - Settings.getFloat(InquiriesPDFSettingCodes.PAGE_LOWER_MARGIN,
-		// Bundle.INQUIRIES_PDF,
-		// InquiriesPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
 	@Override
@@ -113,23 +95,17 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		InquiriesPDFBlock block = blocks.get(blockIndex);
 		if (BlockType.INPUT_FIELD.equals(block.getType())
 				|| BlockType.NEW_CATEGORY.equals(block.getType())) {
-			// || BlockType.NEW_INDEX.equals(block.getType())) {
 			drawBlock(contentStream, new InquiriesPDFBlock(cursor.getProbandTrialBlock(), true));
 		}
 		if (BlockType.INPUT_FIELD.equals(block.getType())) {
 			drawBlock(contentStream, new InquiriesPDFBlock(cursor.getCategoryBlock(), true));
-			// drawBlock(contentStream, new InquiriesPDFBlock(cursor.getIndexBlock(), true));
 		}
 	}
 
 	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 		InquiriesPDFBlock block = blocks.get(blockIndex - 1);
-		// if (BlockType.NEW_INDEX.equals(block.getType())) {
-		// (new InquiriesPDFBlock(BlockType.END_OF_SECTION)).renderBlock(contentStream, cursor);
-		// } else
 		if (BlockType.INPUT_FIELD.equals(block.getType())) {
-			// drawBlock(contentStream, new InquiriesPDFBlock(BlockType.END_OF_INDEX, true));
 			drawBlock(contentStream, new InquiriesPDFBlock(BlockType.END_OF_CATEGORY, true));
 		}
 	}
@@ -169,13 +145,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	public PDRectangle getDefaultPageSize() {
 		return DEFAULT_PAGE_SIZE;
 	}
-	// public PDFont getFontE() {
-	// return fontE;
-	// }
-	//
-	// public PDFont getFontF() {
-	// return fontF;
-	// }
 
 	public PDFont getFontA() {
 		return fontA;
@@ -259,8 +228,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		fontB = PDFUtil.loadFont(Settings.getPDFFontName(InquiriesPDFSettingCodes.FONT_B, Bundle.INQUIRIES_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontC = PDFUtil.loadFont(Settings.getPDFFontName(InquiriesPDFSettingCodes.FONT_C, Bundle.INQUIRIES_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontD = PDFUtil.loadFont(Settings.getPDFFontName(InquiriesPDFSettingCodes.FONT_D, Bundle.INQUIRIES_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontE = PDFUtil.loadFont(Settings.getPDFFontName(InquiriesPDFSettingCodes.FONT_E, Bundle.INQUIRIES_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontF = PDFUtil.loadFont(Settings.getPDFFontName(InquiriesPDFSettingCodes.FONT_F, Bundle.INQUIRIES_PDF, null), doc, DEFAULT_BASE_FONT);
 	}
 
 	@Override
@@ -300,8 +267,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 				selectionItemImageWidth, selectionItemImageHeight, quality, dpi, bgColor);
 		if (valueVOMap != null && imageVOMap != null
 				&& Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
-			// Integer width = Settings.getIntNullable(InquiriesPDFSettingCodes.IMAGE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.IMAGE_WIDTH);
-			// Integer height = Settings.getIntNullable(InquiriesPDFSettingCodes.IMAGE_HEIGHT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.IMAGE_HEIGHT);
 			Iterator<HashMap<Long, Collection<InquiryValueOutVO>>> probandMapIt = valueVOMap.values().iterator();
 			while (probandMapIt.hasNext()) {
 				Iterator<Collection<InquiryValueOutVO>> trialMapIt = probandMapIt.next().values().iterator();
@@ -309,42 +274,21 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 					Iterator<InquiryValueOutVO> valuesIt = trialMapIt.next().iterator();
 					while (valuesIt.hasNext()) {
 						putSketchImage(valuesIt.next(), doc);
-						// ECRFFieldValueOutVO value = valuesIt.next();
-						// InputFieldOutVO field = value.getEcrfField().getField();
-						// InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
-						// Long x =
-						// if (inputFieldImage != null) {
-						// images.put(
-						// value.getId(),
-						// );
-						// }
 					}
 				}
 			}
-			// Iterator<InputFieldImageVO> it = imageVOMap.values().iterator();
-			// while (it.hasNext()) {
-			// InputFieldImageVO inputFieldImage = it.next();
-			// images.put(inputFieldImage.getId(),
-			// PDFJpeg.prepareInputFieldImage(doc, inputFieldImage,
-			// cursor.getBlockWidth() - 2.0f * Settings.getFloat(InquiriesPDFSettingCodes.X_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_FRAME_INDENT),
-			// quality, dpi, bgColor));
-			// }
 		}
 	}
 
 	@Override
 	public boolean nextBlockFitsOnPage() throws Exception {
 		InquiriesPDFBlock block = blocks.get(blockIndex);
-		if (blockIndex > 0 && BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) { // BlockType.NEW_LIST_ENTRY.equals(block.getType()) ||
+		if (blockIndex > 0 && BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
 			return false;
 		} else {
 			float height = block.getHeight(cursor);
 			if (BlockType.NEW_CATEGORY.equals(block.getType())) {
-				height += blocks.get(blockIndex + 1).getHeight(cursor); // + blocks.get(blockIndex + 2).getHeight(cursor);
-				// } else if (BlockType.NEW_INDEX.equals(block.getType())) {
-				// height += blocks.get(blockIndex + 1).getHeight(cursor);
-				// } else if (BlockType.END_OF_INDEX.equals(block.getType())) {
-				// return true;
+				height += blocks.get(blockIndex + 1).getHeight(cursor);
 			} else if (BlockType.END_OF_CATEGORY.equals(block.getType())) {
 				return true;
 			}
@@ -360,9 +304,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 			Iterator<ProbandOutVO> probandIt = probandVOs.iterator();
 			while (probandIt.hasNext()) {
 				ProbandOutVO probandVO = probandIt.next();
-				// blocks.add(new InquiriesPDFBlock(listEntryVO));
 				Collection<TrialOutVO> trialVOs = trialVOMap.get(probandVO == null ? null : probandVO.getId());
-				if (trialVOs != null) { // && ecrfVOs.size() > 0) {
+				if (trialVOs != null) {
 					Iterator<TrialOutVO> trialIt = trialVOs.iterator();
 					while (trialIt.hasNext()) {
 						TrialOutVO trialVO = trialIt.next();
@@ -373,44 +316,26 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 							if (valueVOs != null && valueVOs.size() > 0) {
 								boolean first = true;
 								String previousCategory = null;
-								// Long previousIndex = null;
 								Iterator<InquiryValueOutVO> valueIt = valueVOs.iterator();
 								while (valueIt.hasNext()) {
 									InquiryValueOutVO valueVO = valueIt.next();
 									String category = valueVO.getInquiry().getCategory();
-									// Long index = valueVO.getIndex();
 									if (first) {
 										blocks.add(new InquiriesPDFBlock(category));
-										// blocks.add(new InquiriesPDFBlock(section, index));
 										first = false;
 									} else {
 										if (previousCategory == null ? category == null : previousCategory.equals(category)) {
-											// if (previousIndex == null ? index == null : previousIndex.equals(index)) {
-											// } else {
-											// blocks.add(new InquiriesPDFBlock(BlockType.END_OF_INDEX, false));
-											// blocks.add(new InquiriesPDFBlock(section, index));
-											// }
 										} else {
-											// blocks.add(new InquiriesPDFBlock(BlockType.END_OF_INDEX, false));
 											blocks.add(new InquiriesPDFBlock(BlockType.END_OF_CATEGORY, false));
 											blocks.add(new InquiriesPDFBlock(category));
-											// blocks.add(new InquiriesPDFBlock(section, index));
 										}
 									}
 									blocks.add(new InquiriesPDFBlock(valueVO, getSketchImage(valueVO), blank));
 									previousCategory = category;
-									// previousIndex = index;
 								}
-								// blocks.add(new InquiriesPDFBlock(BlockType.END_OF_INDEX, false));
 								blocks.add(new InquiriesPDFBlock(BlockType.END_OF_CATEGORY, false));
 							}
 						}
-						// SignatureVO signatureVO;
-						// if (signatureVOMap != null && statusEntryVO != null && (signatureVO = signatureVOMap.get(statusEntryVO.getId())) != null) {
-						// blocks.add(new InquiriesPDFBlock(signatureVO));
-						// } else {
-						// blocks.add(new InquiriesPDFBlock(BlockType.ECRF_SIGNATURE, false));
-						// }
 					}
 				}
 			}
@@ -441,8 +366,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 								Settings.getBoolean(InquiriesPDFSettingCodes.SHOW_SKETCH_REGIONS, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SHOW_SKETCH_REGIONS),
 								!blank,
 								cursor.getBlockIndentedWidth(false),
-								// - 2.0f
-								// * Settings.getFloat(InquiriesPDFSettingCodes.X_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_FRAME_INDENT),
 								quality, dpi, bgColor));
 				return true;
 			}
@@ -467,8 +390,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		fontB = null;
 		fontC = null;
 		fontD = null;
-		// fontE = null;
-		// fontF = null;
 		checkboxCheckedImage = null;
 		checkboxCheckedPresetImage = null;
 		checkboxUncheckedImage = null;
@@ -478,9 +399,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		selectboxCheckedImage = null;
 		selectboxCheckedPresetImage = null;
 		selectboxUncheckedImage = null;
-		// signatureValidImage = null;
-		// signatureInvalidImage = null;
-		// signatureAvailableImage = null;
 		images.clear();
 		updateInquiriesPDFVO();
 	}
@@ -507,7 +425,6 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.pageHeight = pageHeight;
 		cursor.setBlockY(pageHeight - Settings.getFloat(InquiriesPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
 		cursor.setCategoryY(cursor.getBlockY());
-		// cursor.setIndexY(cursor.getBlockY());
 	}
 
 	@Override
@@ -531,14 +448,12 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	@Override
 	public void startNewPage() {
-		super.startNewPage(!hasNextBlock() || BlockType.NEW_PROBAND_TRIAL.equals(blocks.get(blockIndex).getType())); // BlockType.NEW_LIST_ENTRY.equals(blocks.get(blockIndex).getType())
-		// ||
+		super.startNewPage(!hasNextBlock() || BlockType.NEW_PROBAND_TRIAL.equals(blocks.get(blockIndex).getType()));
 		cursor.setBlockY(pageHeight - Settings.getFloat(InquiriesPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
 		cursor.setBlockX(Settings.getFloat(InquiriesPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 		cursor.setBlockWidth(pageWidth - Settings.getFloat(InquiriesPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
 				- Settings.getFloat(InquiriesPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 		cursor.setCategoryY(cursor.getBlockY());
-		// cursor.setIndexY(cursor.getBlockY());
 	}
 
 	@Override
@@ -560,7 +475,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 			while (probandIt.hasNext()) {
 				ProbandOutVO probandVO = probandIt.next();
 				Collection<TrialOutVO> trialVOs = trialVOMap.get(probandVO == null ? null : probandVO.getId());
-				if (trialVOs != null) { // && ecrfVOs.size() > 0) {
+				if (trialVOs != null) {
 					Iterator<TrialOutVO> trialIt = trialVOs.iterator();
 					while (trialIt.hasNext()) {
 						TrialOutVO trialVO = trialIt.next();

@@ -307,17 +307,14 @@ public class CourseServiceImpl
 		Iterator<Course> precedingCoursesIt = course.getPrecedingCourses().iterator();
 		while (precedingCoursesIt.hasNext()) {
 			Course precedingCourse = precedingCoursesIt.next();
-			precedingCourse.removeRenewals(course); // .setRenewal(null);
-			// CoreUtil.modifyVersion(precedingCourse, precedingCourse.getVersion(), now, user);
+			precedingCourse.removeRenewals(course);
 			courseDao.update(precedingCourse);
-			// CourseOutVO precedingCourseVO = courseDao.toCourseOutVO(precedingCourse);
-			// logSystemMessage(precedingCourse, result, now, user, SystemMessageCodes.COURSE_DELETED_RENEWAL_REMOVED, result, null, journalEntryDao);
 		}
 		course.getPrecedingCourses().clear();
 		Iterator<Course> renewalsIt = course.getRenewals().iterator();
 		while (renewalsIt.hasNext()) {
 			Course renewal = renewalsIt.next();
-			renewal.removePrecedingCourses(course); // .setRenewal(null);
+			renewal.removePrecedingCourses(course);
 			CoreUtil.modifyVersion(renewal, renewal.getVersion(), now, user);
 			courseDao.update(renewal);
 			logSystemMessage(renewal, result, now, user, SystemMessageCodes.COURSE_DELETED_PRECEDING_COURSE_REMOVED, result, null, journalEntryDao);
@@ -486,11 +483,6 @@ public class CourseServiceImpl
 				CourseOutVO renewal = renewalsIt.next();
 				logSystemMessage(courseDao.load(renewal.getId()), result, now, user, SystemMessageCodes.COURSE_MARKED_FOR_DELETION, result, original, journalEntryDao);
 			}
-			// Iterator<CourseOutVO> renewalsIt = original.getRenewals().iterator();
-			// while (renewalsIt.hasNext()) {
-			// CourseOutVO renewal = renewalsIt.next();
-			// logSystemMessage(courseDao.load(renewal.getId()), result, now, user, SystemMessageCodes.COURSE_MARKED_FOR_DELETION, result, original, journalEntryDao);
-			// }
 		} else {
 			Course course = CheckIDUtil.checkCourseId(courseId, courseDao, LockMode.PESSIMISTIC_WRITE);
 			result = courseDao.toCourseOutVO(course, maxInstances, maxPrecedingCoursesDepth, maxRenewalsDepth);
@@ -548,7 +540,7 @@ public class CourseServiceImpl
 			AuthenticationVO auth, Long courseParticipationStatusEntryId, Boolean isRelevantForCourseAppointments) throws Exception {
 		CourseParticipationStatusEntry courseParticipationStatusEntry = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId,
 				this.getCourseParticipationStatusEntryDao());
-		Collection collidingDutyRosterTurns = new HashSet(); // ArrayList();
+		Collection collidingDutyRosterTurns = new HashSet();
 		Long staffId = courseParticipationStatusEntry.getStaff().getId();
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 		Iterator<InventoryBooking> it = this.getInventoryBookingDao()
@@ -568,7 +560,7 @@ public class CourseServiceImpl
 		CourseParticipationStatusEntry courseParticipationStatusEntry = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId,
 				this.getCourseParticipationStatusEntryDao());
 		Long staffId = courseParticipationStatusEntry.getStaff().getId();
-		Collection collidingStaffStatusEntries = new HashSet(); // new ArrayList();
+		Collection collidingStaffStatusEntries = new HashSet();
 		StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
 		Iterator<InventoryBooking> it = this.getInventoryBookingDao()
 				.findByCourseSorted(courseParticipationStatusEntry.getCourse().getId(), isRelevantForCourseAppointments, false).iterator();
@@ -847,11 +839,8 @@ public class CourseServiceImpl
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
 		CourseCertificatePDFVO result = painter.getPdfVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		logSystemMessage(courseParticipation.getCourse(), participantVO.getCourse(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), user,
 				SystemMessageCodes.COURSE_CERTIFICATE_PDF_RENDERED, result, null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -870,11 +859,8 @@ public class CourseServiceImpl
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
 		CourseCertificatePDFVO result = painter.getPdfVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		logSystemMessage(course, courseVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.COURSE_CERTIFICATES_PDF_RENDERED, result, null,
 				this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -894,11 +880,8 @@ public class CourseServiceImpl
 		(new PDFImprinter(painter, painter)).render();
 		CourseParticipantListPDFVO result = painter.getPdfVO();
 		if (!blank) {
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			logSystemMessage(course, courseVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.COURSE_PARTICIPANT_LIST_RENDERED, result, null,
 					this.getJournalEntryDao());
-			// result.setDocumentDatas(documentDataBackup);
 		}
 		return result;
 	}

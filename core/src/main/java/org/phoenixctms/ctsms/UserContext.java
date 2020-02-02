@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 
-public class UserContext extends VOCacheContext {// implements Principal {
+public class UserContext extends VOCacheContext {
 
 	private static final long serialVersionUID = 1L;
 	private User user;
@@ -143,7 +143,6 @@ public class UserContext extends VOCacheContext {// implements Principal {
 		return user;
 	}
 
-	// public boolean isPassDecryption() {
 	public boolean isTrustedHost() {
 		if (isTrustedHost == null) {
 			isTrustedHost = CoreUtil.checkHostIp(host);

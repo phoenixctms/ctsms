@@ -332,12 +332,6 @@ public class HyperlinkDaoImpl
 			Hyperlink source,
 			HyperlinkOutVO target) {
 		super.toHyperlinkOutVO(source, target);
-		// WARNING! No conversion for target.category (can't convert source.getCategory():org.phoenixctms.ctsms.domain.HyperlinkCategory to org.phoenixctms.ctsms.vo.HyperlinkCategoryVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.inventory (can't convert source.getInventory():org.phoenixctms.ctsms.domain.Inventory to org.phoenixctms.ctsms.vo.InventoryOutVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		HyperlinkCategory category = source.getCategory();
 		Inventory inventory = source.getInventory();
 		Staff staff = source.getStaff();

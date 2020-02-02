@@ -117,19 +117,10 @@ public abstract class PDFPainterBase implements PDFContentPainter {
 
 	protected void startNewPage(boolean resetTemplate, boolean resetPageCount) {
 		pageNum++;
-		// if (resetTemplate) {
-		// templatePageNum = 1;
-		// totalPageCounts.add(templatePageNum);
-		// } else {
-		// templatePageNum++;
-		// totalPageCounts.set(totalPageCounts.size() - 1, templatePageNum);
-		// }
 		if (resetTemplate) {
 			templatePageNum = 1;
-			// totalPageCounts.add(templatePageNum);
 		} else {
 			templatePageNum++;
-			// totalPageCounts.set(totalPageCounts.size() - 1, templatePageNum);
 		}
 		if (resetPageCount) {
 			totalPageCounts.add(1);

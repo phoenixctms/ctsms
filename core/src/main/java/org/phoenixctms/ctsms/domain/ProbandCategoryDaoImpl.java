@@ -31,7 +31,6 @@ public class ProbandCategoryDaoImpl
 	@Override
 	protected Collection<ProbandCategory> handleFindByPersonAnimalId(Boolean person, Boolean animal, Long categoryId) {
 		org.hibernate.Criteria categoryCriteria = createCategoryCriteria();
-		// CriteriaUtil.applyVisibleIdCriterion("visible", categoryCriteria, visible, categoryId);
 		if (person != null) {
 			if (categoryId != null) {
 				categoryCriteria.add(Restrictions.or(Restrictions.eq("person", person.booleanValue()), Restrictions.idEq(categoryId.longValue())));
@@ -52,7 +51,6 @@ public class ProbandCategoryDaoImpl
 	@Override
 	protected ProbandCategory handleFindPreset(boolean signup, boolean person) throws Exception {
 		org.hibernate.Criteria categoryCriteria = createCategoryCriteria();
-		// categoryCriteria.add(Restrictions.eq("visible", true));
 		categoryCriteria.add(Restrictions.eq("signup", signup));
 		categoryCriteria.add(Restrictions.eq("preset", true));
 		if (person) {
@@ -62,12 +60,6 @@ public class ProbandCategoryDaoImpl
 		}
 		categoryCriteria.setMaxResults(1);
 		return (ProbandCategory) categoryCriteria.uniqueResult();
-		// List result = categoryCriteria.list();
-		// if (result.size() > 0) {
-		// return (ProbandCategory) result.iterator().next();
-		// } else {
-		// return null;
-		// }
 	}
 
 	/**

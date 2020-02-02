@@ -142,7 +142,6 @@ public class KeyValueString extends GraphEnumerator {
 			}
 		} else {
 			try {
-				//xreturn (String) AssociationPath.invoke("get" + CoreUtil.capitalizeFirstChar(field, true), vo, false);
 				return (String) AssociationPath.invoke(transfilter.reverseTransform(field), vo, false);
 			} catch (Exception e) {
 			}
@@ -224,20 +223,16 @@ public class KeyValueString extends GraphEnumerator {
 				}
 				if (DateCalc.isTime((Date) value)) {
 					return CommonUtil.formatDate((Date) value, timePattern, L10nUtil.getLocale(locale));
-					// return (new SimpleDateFormat(timePattern, L10nUtil.getLocale(locale))).format(value);
 				} else if (DateCalc.isDatetime((Date) value)) {
 					return CommonUtil.formatDate((Date) value, datetimePattern, L10nUtil.getLocale(locale));
-					// return (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(locale))).format(value);
 				} else {
 					return CommonUtil.formatDate((Date) value, datePattern, L10nUtil.getLocale(locale));
-					// return (new SimpleDateFormat(datePattern, L10nUtil.getLocale(locale))).format(value);
 				}
 			} else if (valueClass.equals(Timestamp.class)) { // should not be used by any out vo
 				if (value == null) {
 					return "";
 				}
 				return CommonUtil.formatDate((Date) value, datetimePattern, L10nUtil.getLocale(locale));
-				// return (new SimpleDateFormat(datetimePattern, L10nUtil.getLocale(locale))).format(value);
 			} else if (valueClass.equals(Object.class)) {
 				if (value == null) {
 					return "";

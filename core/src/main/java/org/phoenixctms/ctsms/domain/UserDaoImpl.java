@@ -118,8 +118,6 @@ public class UserDaoImpl
 	 * a new, blank entity is created
 	 */
 	private User loadUserFromUserInVO(UserInVO userInVO) {
-		// TODO implement loadUserFromUserInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserInVO(UserInVO) not yet implemented.");
 		User user = null;
 		Long id = userInVO.getId();
 		if (id != null) {
@@ -137,10 +135,7 @@ public class UserDaoImpl
 	 * a new, blank entity is created
 	 */
 	private User loadUserFromUserOutVO(UserOutVO userOutVO) {
-		// TODO implement loadUserFromUserOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserOutVO(UserOutVO) not yet implemented.");
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
-		/* A typical implementation looks like this: User user = this.load(userOutVO.getId()); if (user == null) { user = User.Factory.newInstance(); } return user; */
 	}
 
 	/**
@@ -264,7 +259,6 @@ public class UserDaoImpl
 	 */
 	@Override
 	public User userOutVOToEntity(UserOutVO userOutVO) {
-		// TODO verify behavior of userOutVOToEntity
 		User entity = this.loadUserFromUserOutVO(userOutVO);
 		this.userOutVOToEntity(userOutVO, entity, true);
 		return entity;
@@ -278,7 +272,6 @@ public class UserDaoImpl
 			UserOutVO source,
 			User target,
 			boolean copyIfNull) {
-		// TODO verify behavior of userOutVOToEntity
 		super.userOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO identityVO = source.getIdentity();
 		AuthenticationTypeVO authMethodVO = source.getAuthMethod();
@@ -306,7 +299,6 @@ public class UserDaoImpl
 	public void toUserSettingsInVO(
 			User source,
 			UserSettingsInVO target) {
-		// TODO verify behavior of toUserSettingsInVO
 		super.toUserSettingsInVO(source, target);
 	}
 
@@ -314,7 +306,6 @@ public class UserDaoImpl
 	 * {@inheritDoc}
 	 */
 	public UserSettingsInVO toUserSettingsInVO(final User entity) {
-		// TODO verify behavior of toUserSettingsInVO
 		return super.toUserSettingsInVO(entity);
 	}
 
@@ -322,7 +313,6 @@ public class UserDaoImpl
 	 * {@inheritDoc}
 	 */
 	public User userSettingsInVOToEntity(UserSettingsInVO userSettingsInVO) {
-		// TODO verify behavior of userSettingsInVOToEntity
 		User entity = this.loadUserFromUserSettingsInVO(userSettingsInVO);
 		this.userSettingsInVOToEntity(userSettingsInVO, entity, true);
 		return entity;
@@ -336,7 +326,6 @@ public class UserDaoImpl
 			UserSettingsInVO source,
 			User target,
 			boolean copyIfNull) {
-		// TODO verify behavior of userSettingsInVOToEntity
 		super.userSettingsInVOToEntity(source, target, copyIfNull);
 	}
 
@@ -346,8 +335,6 @@ public class UserDaoImpl
 	 * a new, blank entity is created
 	 */
 	private User loadUserFromUserSettingsInVO(UserSettingsInVO userSettingsInVO) {
-		// TODO implement loadUserFromUserSettingsInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserSettingsInVO(UserSettingsInVO) not yet implemented.");
 		User user = null;
 		Long id = userSettingsInVO.getId();
 		if (id != null) {

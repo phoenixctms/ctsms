@@ -1,7 +1,6 @@
 package org.phoenixctms.ctsms.js;
 
 import jdk.nashorn.api.scripting.JSObject;
-//import sun.org.mozilla.javascript.internal.Scriptable;
 
 @SuppressWarnings("restriction")
 public class ValidationError {
@@ -55,49 +54,6 @@ public class ValidationError {
 		series = convertToBoolean(msg.getMember(SERIES));
 		index = convertToLong(msg.getMember(INDEX));
 		output = convertToString(msg.getMember(OUTPUT));
-		// // TODO Auto-generated constructor stub
-		// // scriptable.get("output");
-		// // if (msg != null) {
-		// // for (Object o : msg.getIds()) {
-		// // int index = (Integer) o;
-		// // String x = (String) msg.get(index, null);
-		// // System.out.println(x);
-		// // }
-		// // }
-		// // Integer i = (Integer) msg.get(ECRF_FIELD_ID, null);
-		// // ecrfFieldId = (i != null ? new Long(i) : null);
-		// // i = (Integer) msg.get(INQUIRY_ID, null);
-		// // inquiryId = (i != null ? new Long(i) : null);
-		// // i = (Integer) msg.get(TAG_ID, null);
-		// // tagId = (i != null ? new Long(i) : null);
-		// // series = (Boolean) msg.get(SERIES, null);
-		// // i = (Integer) msg.get(INDEX, null);
-		// // index = (i != null ? new Long(i) : null);
-		// // output = (String) msg.get(OUTPUT, null);
-		// ecrfFieldId = convertToLong(msg.get(ECRF_FIELD_ID, null));
-		// inquiryId = convertToLong(msg.get(INQUIRY_ID, null));
-		// tagId = convertToLong(msg.get(TAG_ID, null));
-		// series = convertToBoolean(msg.get(SERIES, null));
-		// index = convertToLong(msg.get(INDEX, null));
-		// output = convertToString(msg.get(OUTPUT, null));
-		// //// try {
-		// //// ecrfFieldId = Long.pnew Long((Integer) msg.get(ECRF_FIELD_ID, null));
-		// //// } catch (Exception e) {
-		// //// }
-		// // try {
-		// // inquiryId = new Long((Integer) msg.get(INQUIRY_ID, null));
-		// // } catch (Exception e) {
-		// // }
-		// // try {
-		// // tagId = new Long((Integer) msg.get(TAG_ID, null));
-		// // } catch (Exception e) {
-		// // }
-		// // series = (Boolean) msg.get(SERIES, null);
-		// // try {
-		// // index = new Long((Integer) msg.get(INDEX, null));
-		// // } catch (Exception e) {
-		// // }
-		// // output = (String) msg.get(OUTPUT, null);
 	}
 
 	public Long getEcrfFieldId() {

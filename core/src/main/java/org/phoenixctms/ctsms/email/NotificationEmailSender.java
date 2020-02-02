@@ -64,7 +64,6 @@ public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 		}
 		mimeMessageHelper.setFrom(Settings.getEmailNotificationFromAddress(), Settings.getEmailNotificationFromName());
 		StaffOutVO recipientVO = staffDao.toStaffOutVO(recipient);
-		//int toCount = 0;
 		Iterator<StaffContactDetailValue> contactsIt = recipient.getContactDetailValues().iterator();
 		while (contactsIt.hasNext()) {
 			StaffContactDetailValue contact = contactsIt.next();
@@ -72,10 +71,8 @@ public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 			if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
 				mimeMessageHelper.addTo(contact.getValue(),
 						MessageFormat.format(EMAIL_TO_PERSONAL_NAME, recipientVO.getName(), L10nUtil.getContactDetailTypeName(Locales.NOTIFICATION, contactType.getNameL10nKey())));
-				//toCount++;
 			}
 		}
-		//return toCount;
 	}
 
 	public void setStaffDao(StaffDao staffDao) {

@@ -49,7 +49,7 @@ public class IcdSystDaoImpl
 				if (detail != null && detail.length() > 0) {
 					search.append(detail);
 				}
-				org.hibernate.Criteria icdSystCriteria = createIcdSystCriteria(); // createIcdSystCriteria();
+				org.hibernate.Criteria icdSystCriteria = createIcdSystCriteria();
 				icdSystCriteria.setCacheable(true);
 				icdSystCriteria.add(Restrictions.eq("revision", revision));
 				org.hibernate.Criteria categoriesCriteria = icdSystCriteria.createCriteria("categories");
@@ -153,8 +153,6 @@ public class IcdSystDaoImpl
 	 * a new, blank entity is created
 	 */
 	private IcdSyst loadIcdSystFromIcdSystVO(IcdSystVO icdSystVO) {
-		// TODO implement loadIcdSystFromIcdSystVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystFromIcdSystVO(IcdSystVO) not yet implemented.");
 		Long id = icdSystVO.getId();
 		IcdSyst icdSyst = null;
 		if (id != null) {
@@ -170,13 +168,6 @@ public class IcdSystDaoImpl
 		IcdSyst icdSyst = get(icdSystId);
 		this.getHibernateTemplate().deleteAll(icdSyst.getAlphaIds()); // constraint error if used by diagnosis
 		icdSyst.getAlphaIds().clear();
-		// Long alphaIdsIt = icdSyst.getAlphaIds().iterator();
-		// while (alphaIdsIt.hasNext()) {
-		// Long alphaId = alphaIdsIt.next();
-		// alphaId.setSystematics(null);
-		// this.getHibernateTemplate().update(alphaId);
-		// }
-		// opsSyst.getAlphaIds().clear();
 		Iterator<IcdSystCategory> it = icdSyst.getCategories().iterator();
 		while (it.hasNext()) {
 			this.getHibernateTemplate().deleteAll(it.next().getModifiers());
@@ -226,8 +217,6 @@ public class IcdSystDaoImpl
 			IcdSyst source,
 			IcdSystVO target) {
 		super.toIcdSystVO(source, target);
-		// WARNING! No conversion for target.blocks (can't convert source.getBlocks():org.phoenixctms.ctsms.domain.IcdSystBlock to org.phoenixctms.ctsms.vo.IcdSystBlockVO
-		// WARNING! No conversion for target.categories (can't convert source.getCategories():org.phoenixctms.ctsms.domain.IcdSystCategory to org.phoenixctms.ctsms.vo.IcdSystCategoryVO
 		target.setBlocks(toIcdSystBlockVOCollection(source.getBlocks()));
 		target.setCategories(toIcdSystCategoryVOCollection(source.getCategories()));
 	}

@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
+
 import jxl.CellView;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import org.phoenixctms.ctsms.util.CommonUtil;
 
 public class SpreadSheetWriter {
 
@@ -164,8 +164,7 @@ public class SpreadSheetWriter {
 		return maxIndexedColumnIndex;
 	}
 
-	public WritableSheet writeSpreadSheet(WritableWorkbook workbook) throws Exception { // WritableSheet spreadSheet) throws Exception { //,WritableWorkbook workbook) throws
-		// Exception {
+	public WritableSheet writeSpreadSheet(WritableWorkbook workbook) throws Exception {
 		WritableSheet spreadSheet = workbook.getSheet(spreadSheetName); // The sheet with the specified name, or null if it is not found
 		if (spreadSheet == null) {
 			spreadSheet = workbook.createSheet(spreadSheetName, workbook.getNumberOfSheets());

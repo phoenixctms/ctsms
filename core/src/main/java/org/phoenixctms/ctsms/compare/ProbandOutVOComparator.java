@@ -9,23 +9,6 @@ public class ProbandOutVOComparator extends AlphanumComparatorBase implements Co
 	@Override
 	public int compare(ProbandOutVO a, ProbandOutVO b) {
 		if (a != null && b != null) {
-			// int lastnameComparison = comp(a.getLastName(), b.getLastName());
-			// if (lastnameComparison != 0) {
-			// return lastnameComparison;
-			// } else {
-			// int firstNameComparison = comp(a.getFirstName(), b.getFirstName());
-			// if (firstNameComparison != 0) {
-			// return firstNameComparison;
-			// } else {
-			// if (a.getId() > b.getId()) {
-			// return 1;
-			// } else if (a.getId() < b.getId()) {
-			// return -1;
-			// } else {
-			// return 0;
-			// }
-			// }
-			// }
 			if (a.isPerson() && b.isPerson()) {
 				int lastnameComparison = comp(a.getLastName(), b.getLastName());
 				if (lastnameComparison != 0) {

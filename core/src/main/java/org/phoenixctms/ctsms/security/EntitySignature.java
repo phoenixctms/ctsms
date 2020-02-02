@@ -103,11 +103,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 					ProbandContactParticulars personParticulars = proband.getPersonParticulars();
 					if (personParticulars != null) {
 						if (proband.isBlinded()) {
-							// if (!CommonUtil.isEmptyString(personParticulars.getAlias())) {
 							return new Serializable[] { proband.getId(), personParticulars.getAlias() };
-							// } else {
-							// return new Serializable[] { proband.getId(), personParticulars.getGender(), personParticulars.getEncryptedDateOfBirth() };
-							// }
 						} else {
 							return new Serializable[] { proband.getId(), personParticulars.getEncryptedFirstName(), personParticulars.getEncryptedLastName(),
 									personParticulars.getEncryptedDateOfBirth() };
@@ -119,11 +115,7 @@ public abstract class EntitySignature extends GraphEnumerator {
 					AnimalContactParticulars animalParticulars = proband.getAnimalParticulars();
 					if (animalParticulars != null) {
 						if (proband.isBlinded()) {
-							// if (!CommonUtil.isEmptyString(animalParticulars.getAlias())) {
 							return new Serializable[] { proband.getId(), animalParticulars.getAlias() };
-							// } else {
-							// return new Serializable[] { proband.getId(), animalParticulars.getGender(), animalParticulars.getDateOfBirth() };
-							// }
 						} else {
 							return new Serializable[] { proband.getId(), animalParticulars.getAnimalName(), animalParticulars.getDateOfBirth() };
 						}
@@ -159,13 +151,9 @@ public abstract class EntitySignature extends GraphEnumerator {
 				try {
 					return (Serializable) entity;
 				} catch (ClassCastException e) {
-					// System.out.println("ERROR casting: " + entityClass.toString());
 				}
 			}
 		}
-		// if (entity != null) {
-		// System.out.println("ignored: " + entityClass.toString());
-		// }
 		return null;
 	}
 
@@ -255,8 +243,6 @@ public abstract class EntitySignature extends GraphEnumerator {
 		appendProperties(signatureClass, entitySignatures, entity, getterChain, null, depth,
 				PROPERTY_METHOD_TRANSFILTER,
 				PROPERTY_COLLECTION_VALUES_COMPARATOR,
-				//ENTITY_GETTER_METHOD_NAME_REGEXP,
-				//ENTITY_GETTER_METHOD_NAME_EXCLUSION_REGEXP,
 				true, null, true, true, true, PROPERTY_ASSOCIATION_PATH_SEPARATOR);
 		return entitySignatures;
 	}
@@ -295,7 +281,6 @@ public abstract class EntitySignature extends GraphEnumerator {
 		Signature signature = getSignature();
 		signature.initSign(CoreUtil.getUserContext().getPrivateKey());
 		updateSignature(entity, getEntitySignatures(signatureClass, entity.getClass(), depth), signature, CoreUtil.getUser(), now, comment);
-		//FileUtils.writeStringToFile(new java.io.File("d:\\ctsms\\sign_" + now.getTime() + ".txt"),comment.toString());
 		return signature.sign();
 	}
 
@@ -314,7 +299,6 @@ public abstract class EntitySignature extends GraphEnumerator {
 			while (indexesKeysIt.hasNext()) {
 				ArrayList<Object> indexesKeys = indexesKeysIt.next();
 				String key = entitySignature.getKey(indexesKeys);
-				//System.out.println(key);
 				Serializable value = entitySignature.getValue(entity, indexesKeys);
 				if (indexesKeys.size() > 0) {
 					deferredCollectionMapFieldMap.put(key, value);
@@ -369,7 +353,6 @@ public abstract class EntitySignature extends GraphEnumerator {
 		Signature signature = getSignature();
 		signature.initVerify(CryptoUtil.getPublicKey(signee.getKeyPair().getPublicKey()));
 		updateSignature(entity, getEntitySignatures(signatureClass, entity.getClass(), depth), signature, signee, timestamp, comment);
-		//FileUtils.writeStringToFile(new java.io.File("d:\\ctsms\\verify_" + timestamp.getTime() + ".txt"),comment.toString());
 		return signature.verify(signatureData);
 	}
 

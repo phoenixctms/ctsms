@@ -7,8 +7,6 @@ public interface MassMailMessageTemplateParameters {
 	public static final String MASS_MAIL_PREFIX = "mail" + TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR;
 	public static final String TRIAL_PREFIX = "trial" + TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR;
 	public static final String PROBAND_PREFIX = "proband" + TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR;
-	// public static final String TRIAL = "trial";
-	// public static final String PROBAND = "proband";
 	public static final String TRIAL_TAG_VALUES = TRIAL_PREFIX + "tagvalues";
 	public static final String PROBAND_LIST_ENTRY_OUT_VO_PREFIX = "listentry" + TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR;
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES = PROBAND_LIST_ENTRY_OUT_VO_PREFIX + "tagvalues";

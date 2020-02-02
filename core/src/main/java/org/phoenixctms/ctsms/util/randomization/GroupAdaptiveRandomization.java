@@ -75,17 +75,15 @@ public class GroupAdaptiveRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
-	private HashMap<Long, Long> getGroupSizes(Long excludeListEntryId, Collection<ProbandGroup> probandGroups) { // long trialId,
+	private HashMap<Long, Long> getGroupSizes(Long excludeListEntryId, Collection<ProbandGroup> probandGroups) {
 		HashMap<Long, Long> result = new HashMap<Long, Long>();
 		Iterator<ProbandGroup> it = probandGroups.iterator();
 		while (it.hasNext()) {
 			ProbandGroup group = it.next();
 			result.put(group.getId(), probandListEntryDao.getTrialGroupStratificationTagValuesCount(null, group.getId(), null, excludeListEntryId));
 		}
-		// result.put(null, probandListEntryDao.getTrialGroupCount(trialId, null, excludeListEntryId));
 		return result;
 	}
 
@@ -121,7 +119,7 @@ public class GroupAdaptiveRandomization extends Randomization {
 	protected ProbandGroup randomizeProbandGroup(Trial trial, ProbandListEntry exclude) throws Exception {
 		Collection<ProbandGroup> probandGroups = getRandomizationGroups(trial);
 		HashMap<Long, ProbandGroup> probandGroupMap = getProbandGroupIdMap(probandGroups);
-		Set<Entry<Long, Long>> groupSizes = getGroupSizes(exclude != null ? exclude.getId() : null, probandGroups).entrySet(); // trialId
+		Set<Entry<Long, Long>> groupSizes = getGroupSizes(exclude != null ? exclude.getId() : null, probandGroups).entrySet();
 		Iterator<Entry<Long, Long>> it = groupSizes.iterator();
 		long dividend = 0l;
 		HashMap<Long, Long> divisors = new HashMap<Long, Long>();
@@ -137,7 +135,6 @@ public class GroupAdaptiveRandomization extends Randomization {
 		TreeMap<ProbandGroup, Double> pMap = new TreeMap<ProbandGroup, Double>(ID_COMPARATOR);
 		while (it.hasNext()) {
 			Entry<Long, Long> groupSize = it.next();
-			// double p = (1.0d + ((double) otherGroupSizes.get(it.next().getKey()))) / (((double) groupSizes.size()) + ((double) d));
 			double p = ((double) divisors.get(groupSize.getKey())) / ((double) dividend);
 			pMap.put(probandGroupMap.get(groupSize.getKey()), p);
 		}

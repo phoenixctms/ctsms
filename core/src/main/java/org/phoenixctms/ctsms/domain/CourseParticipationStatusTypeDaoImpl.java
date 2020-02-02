@@ -111,7 +111,6 @@ public class CourseParticipationStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private CourseParticipationStatusType loadCourseParticipationStatusTypeFromCourseParticipationStatusTypeVO(CourseParticipationStatusTypeVO courseParticipationStatusTypeVO) {
-		// throw new UnsupportedOperationException("out value object to recursive entity not supported");
 		CourseParticipationStatusType courseParticipationStatusType = null;
 		Long id = courseParticipationStatusTypeVO.getId();
 		if (id != null) {

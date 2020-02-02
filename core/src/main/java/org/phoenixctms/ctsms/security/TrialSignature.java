@@ -41,27 +41,5 @@ public class TrialSignature extends EntitySignature {
 	@Override
 	protected boolean isFieldOmitted(Class graph, String field) {
 		return fieldMapContains(FIELDS_BLACKLIST_MAP, graph, field);
-		// if (Signature.class.isAssignableFrom(graph)) {
-		// return true;
-		// } else if (Notification.class.isAssignableFrom(graph)) {
-		// return true;
-		// } else if (JournalEntry.class.isAssignableFrom(graph)) {
-		// return true;
-		// } else if (DutyRosterTurn.class.isAssignableFrom(graph)) {
-		// return true;
-		// } else if (ECRFFieldValue.class.isAssignableFrom(graph)) {
-		// return true;
-		// } else if (ECRFStatusEntry.class.isAssignableFrom(graph)) {
-		// return true;
-		// }
-		// return false;
-		//		if (Trial.class.isAssignableFrom(graph)) {
-		//			if ("signatures".equals(field) ||
-		//					"notifications".equals(field) ||
-		//					"journalEntries".equals(field)) {
-		//				return true;
-		//			}
-		//		}
-		//		return false;
 	}
 }

@@ -193,9 +193,7 @@ public class StaffDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Staff loadStaffFromStaffImageOutVO(StaffImageOutVO staffImageOutVO) {
-		// TODO implement loadStaffFromStaffImageOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStaffFromStaffImageOutVO(StaffImageOutVO) not yet implemented.");
-		/* A typical implementation looks like this: Staff staff = this.load(staffImageOutVO.getId()); if (staff == null) { staff = Staff.Factory.newInstance(); } return staff; */
 	}
 
 	/**
@@ -222,12 +220,6 @@ public class StaffDaoImpl
 	 */
 	private Staff loadStaffFromStaffOutVO(StaffOutVO staffOutVO) {
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
-		// Staff staff = this.load(staffOutVO.getId());
-		// if (staff == null)
-		// {
-		// staff = Staff.Factory.newInstance();
-		// }
-		// return staff;
 	}
 
 	/**
@@ -305,7 +297,6 @@ public class StaffDaoImpl
 	 */
 	@Override
 	public Staff staffImageOutVOToEntity(StaffImageOutVO staffImageOutVO) {
-		// TODO verify behavior of staffImageOutVOToEntity
 		Staff entity = this.loadStaffFromStaffImageOutVO(staffImageOutVO);
 		this.staffImageOutVOToEntity(staffImageOutVO, entity, true);
 		return entity;
@@ -319,7 +310,6 @@ public class StaffDaoImpl
 			StaffImageOutVO source,
 			Staff target,
 			boolean copyIfNull) {
-		// TODO verify behavior of staffImageOutVOToEntity
 		super.staffImageOutVOToEntity(source, target, copyIfNull);
 	}
 

@@ -33,7 +33,6 @@ public class GroupListRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -44,8 +43,7 @@ public class GroupListRandomization extends Randomization {
 	@Override
 	protected void checkTrialRandomizationInput(Trial trial, TrialInVO trialIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(trialIn.getRandomizationList())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_REQUIRED); // ,L10nUtil.getRandomizationModeName(Locales.USER,
-			// trialIn.getRandomization().name()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_REQUIRED);
 		}
 		if (trial != null) {
 			splitProbandGroupTokens(trialIn.getRandomizationList(), getProbandGroupTokenMap(getRandomizationGroups(trial)), null);
@@ -57,17 +55,12 @@ public class GroupListRandomization extends Randomization {
 		return getRandomizationListGroups(trial);
 	}
 
-	//	@Override
-	//	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
-	//			String randomizationList, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
-	//		return sanitizeRandomizationListCodesInput(randomizationList, codes);
-	//	}
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.GROUP_LIST;
 	}
 
-	private int getTotalGroupsSize(Long excludeListEntryId, Collection<ProbandGroup> probandGroups) { // long trialId,
+	private int getTotalGroupsSize(Long excludeListEntryId, Collection<ProbandGroup> probandGroups) {
 		int result = 0;
 		Iterator<ProbandGroup> it = probandGroups.iterator();
 		while (it.hasNext()) {

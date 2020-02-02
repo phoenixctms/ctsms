@@ -88,8 +88,6 @@ public class ProbandListStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListStatusType loadProbandListStatusTypeFromProbandListStatusTypeVO(ProbandListStatusTypeVO probandListStatusTypeVO) {
-		// TODO implement loadProbandListStatusTypeFromProbandListStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListStatusTypeFromProbandListStatusTypeVO(ProbandListStatusTypeVO) not yet implemented.");
 		ProbandListStatusType probandListStatusType = null;
 		Long id = probandListStatusTypeVO.getId();
 		if (id != null) {
@@ -158,8 +156,6 @@ public class ProbandListStatusTypeDaoImpl
 			ProbandListStatusType source,
 			ProbandListStatusTypeVO target) {
 		super.toProbandListStatusTypeVO(source, target);
-		// WARNING! No conversion for target.logLevels (can't convert source.getLogLevels():org.phoenixctms.ctsms.domain.ProbandListStatusLogLevel to
-		// org.phoenixctms.ctsms.vo.ProbandListStatusLogLevelVO
 		target.setName(L10nUtil.getProbandListStatusTypeName(Locales.USER, source.getNameL10nKey()));
 		target.setLogLevels(toProbandListStatusLogLevelVOCollection(source.getLogLevels()));
 	}

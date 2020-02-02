@@ -73,11 +73,6 @@ public class AlphaIdDaoImpl
 			boolean copyIfNull) {
 		super.alphaIdVOToEntity(source, target, copyIfNull);
 		IcdSystVO systematicsVO = source.getSystematics();
-		// if (systematicsVO != null) {
-		// target.setSystematics(this.getIcdSystDao().icdSystVOToEntity(systematicsVO));
-		// } else if (copyIfNull) {
-		// target.setSystematics(null);
-		// }
 		if (systematicsVO != null) {
 			IcdSyst systematics = this.getIcdSystDao().icdSystVOToEntity(systematicsVO);
 			target.setSystematics(systematics);
@@ -149,8 +144,6 @@ public class AlphaIdDaoImpl
 	 * a new, blank entity is created
 	 */
 	private AlphaId loadAlphaIdFromAlphaIdVO(AlphaIdVO alphaIdVO) {
-		// TODO implement loadAlphaIdFromAlphaIdVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadAlphaIdFromAlphaIdVO(AlphaIdVO) not yet implemented.");
 		Long id = alphaIdVO.getId();
 		AlphaId alphaId = null;
 		if (id != null) {

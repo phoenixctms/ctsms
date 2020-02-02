@@ -167,8 +167,6 @@ public class SignatureDaoImpl
 			Signature source,
 			SignatureVO target) {
 		super.toSignatureVO(source, target);
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.signee (can't convert source.getSignee():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		User signee = source.getSignee();
 		Trial trial = source.getTrial();
 		ECRFStatusEntry ecrfStatusEntry = source.getEcrfStatusEntry();

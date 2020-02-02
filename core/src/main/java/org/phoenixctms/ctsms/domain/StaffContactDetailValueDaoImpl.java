@@ -54,12 +54,6 @@ public class StaffContactDetailValueDaoImpl
 				typeCriteria.add(Restrictions.eq("phone", phone.booleanValue()));
 			}
 		}
-		//		if (email != null) {
-		//			criteriaMap.createCriteria("type").add(Restrictions.eq("email", email.booleanValue()));
-		//		}
-		//		if (phone != null) {
-		//			criteriaMap.createCriteria("type").add(Restrictions.eq("phone", phone.booleanValue()));
-		//		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return staffContactDetailValueCriteria.list();
 	}
@@ -244,9 +238,6 @@ public class StaffContactDetailValueDaoImpl
 			StaffContactDetailValue source,
 			StaffContactDetailValueOutVO target) {
 		super.toStaffContactDetailValueOutVO(source, target);
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.ContactDetailType to org.phoenixctms.ctsms.vo.ContactDetailVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
 		ContactDetailType type = source.getType();
 		Staff staff = source.getStaff();
 		User modifiedUser = source.getModifiedUser();

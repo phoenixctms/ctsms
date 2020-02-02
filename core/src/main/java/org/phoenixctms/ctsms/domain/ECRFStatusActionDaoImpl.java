@@ -31,8 +31,6 @@ public class ECRFStatusActionDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFStatusAction loadECRFStatusActionFromECRFStatusActionVO(ECRFStatusActionVO eCRFStatusActionVO) {
-		// TODO implement loadECRFStatusActionFromECRFStatusActionVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFStatusActionFromECRFStatusActionVO(ECRFStatusActionVO) not yet implemented.");
 		ECRFStatusAction ecrfStatusAction = null;
 		Long id = eCRFStatusActionVO.getId();
 		if (id != null) {

@@ -40,49 +40,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	private static final boolean LIMIT_INSTANCES = true;
 	private static final boolean LIMIT_PARENTS_DEPTH = true;
 	private static final boolean LIMIT_CHILDREN_DEPTH = true;
-	// private static final String getInitials(ProbandOutVO proband) {
-	// StringBuilder sb = new StringBuilder();
-	// if (proband != null) {
-	// if (proband.isDecrypted()) {
-	// String firstName = proband.getFirstName();
-	// if (firstName != null && firstName.trim().length() > 0) {
-	// sb.append(firstName.trim().substring(0, 1));
-	// }
-	// String lastName = proband.getLastName();
-	// if (lastName != null && lastName.trim().length() > 0) {
-	// sb.append(lastName.trim().substring(0, 1));
-	// }
-	// } else {
-	// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
-	// }
-	// }
-	// return sb.toString();
-	// }
-	//
-	//
-	// private static final String getProbandName(ProbandOutVO proband, boolean withTitles) {
-	// StringBuilder sb = new StringBuilder();
-	// if (proband != null) {
-	// if (proband.isDecrypted()) {
-	// if (withTitles) {
-	// CommonUtil.appendString(sb, proband.getPrefixedTitle1(), null);
-	// CommonUtil.appendString(sb, proband.getPrefixedTitle2(), " ");
-	// CommonUtil.appendString(sb, proband.getPrefixedTitle3(), " ");
-	// CommonUtil.appendString(sb, proband.getFirstName(), " ");
-	// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-	// CommonUtil.appendString(sb, proband.getPostpositionedTitle1(), ", ");
-	// CommonUtil.appendString(sb, proband.getPostpositionedTitle2(), ", ");
-	// CommonUtil.appendString(sb, proband.getPostpositionedTitle3(), ", ");
-	// } else {
-	// CommonUtil.appendString(sb, proband.getFirstName(), null);
-	// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-	// }
-	// } else {
-	// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
-	// }
-	// }
-	// return sb.toString();
-	// }
 	private final static int DEFAULT_MAX_INSTANCES = 1;
 	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
 	private final static int DEFAULT_PARENTS_DEPTH = Integer.MAX_VALUE >> 1;
@@ -167,7 +124,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 
 	@Override
 	protected int getMaxInstances() {
-		return maxInstances; // Settings.getInt(SettingCodes.COURSEOUTVO_MAX_INSTANCES,Bundle.SETTINGS,DefaultSettings.COURSEOUTVO_MAX_INSTANCES);
+		return maxInstances;
 	}
 
 	@Override
@@ -216,12 +173,10 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	@Override
 	protected void throwGraphLoopException(Proband entity) throws ServiceException {
 		throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GRAPH_LOOP, entity.getId().toString());
-		// ,
-		// xCommonUtil.probandOutVOToString(probandDao.toProbandOutVO(entity)));
 	}
 
 	@Override
-	protected void toVORemainingFields(Proband source, ProbandOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) { // , HashMap<Class,HashMap<Long,Object>> deferredVoMap) {
+	protected void toVORemainingFields(Proband source, ProbandOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
 		probandDaoImpl.toProbandOutVOBase(source, target);
 		Department department = source.getDepartment();
 		ProbandCategory category = source.getCategory();
@@ -243,8 +198,8 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 		if (privacyConsentStatus != null) {
 			target.setPrivacyConsentStatus(privacyConsentStatusTypeDao.toPrivacyConsentStatusTypeVO(privacyConsentStatus));
 		}
-		target.setParentsCount(probandDaoImpl.getParentsCount(source.getId())); // source.getPrecedingCourses().size());
-		target.setChildrenCount(probandDaoImpl.getChildrenCount(source.getId())); // source.getRenewals().Xsize());
+		target.setParentsCount(probandDaoImpl.getParentsCount(source.getId()));
+		target.setChildrenCount(probandDaoImpl.getChildrenCount(source.getId()));
 		if (source.isPerson()) {
 			ProbandContactParticulars personParticulars = source.getPersonParticulars();
 			if (personParticulars != null) {
@@ -263,7 +218,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 							personParticulars.getEncryptedPostpositionedTitle2()));
 					target.setPostpositionedTitle3((String) CryptoUtil.decryptValue(personParticulars.getPostpositionedTitle3Iv(),
 							personParticulars.getEncryptedPostpositionedTitle3()));
-					// target.setDateOfBirth((Date) CryptoUtil.decryptValue(personParticulars.getDateOfBirthIv(), personParticulars.getEncryptedDateOfBirth()));
 					target.setCitizenship((String) CryptoUtil.decryptValue(personParticulars.getCitizenshipIv(), personParticulars.getEncryptedCitizenship()));
 					target.setDecrypted(true);
 				} catch (Exception e) {
@@ -275,11 +229,7 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 					target.setPostpositionedTitle1(null);
 					target.setPostpositionedTitle2(null);
 					target.setPostpositionedTitle3(null);
-					// target.setDateOfBirth(null);
 					target.setCitizenship(null);
-					// target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
-					// target.setAge(personParticulars.getYearOfBirth() != null ? CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1))
-					// .getTime()) : null);
 					target.setDecrypted(false);
 				}
 				target.setYearOfBirth(personParticulars.getYearOfBirth() != null ? CommonUtil.safeLongToInt(personParticulars.getYearOfBirth()) : null);
@@ -321,7 +271,6 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 				target.setGender(L10nUtil.createSexVO(Locales.USER, animalParticulars.getGender()));
 				target.setComment(animalParticulars.getComment());
 				target.setAlias(animalParticulars.getAlias());
-				// target.setCitizenship(personParticulars.getCitizenship());
 				target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
 				target.setYearOfBirth(CommonUtil.getYearOfBirth(target.getDateOfBirth()));
 				target.setDecrypted(true);

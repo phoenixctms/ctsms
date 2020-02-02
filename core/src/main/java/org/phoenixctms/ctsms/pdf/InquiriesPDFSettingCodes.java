@@ -2,7 +2,6 @@ package org.phoenixctms.ctsms.pdf;
 
 public interface InquiriesPDFSettingCodes {
 
-	// public final static String POSITION_DATE_PATTERN = "position_date_pattern"; // "yyyy";
 	public final static String TEMPLATE_FILE_NAME = "template_file_name";
 	public final static String FONT_A = "font_a";
 	public final static String FONT_B = "font_b";
@@ -21,14 +20,11 @@ public interface InquiriesPDFSettingCodes {
 	public final static String BLOCKS_LOWER_MARGIN = "blocks_lower_margin";
 	public final static String BLOCKS_LEFT_MARGIN = "blocks_left_margin";
 	public final static String BLOCKS_RIGHT_MARGIN = "blocks_right_margin";
-	// public static final String SHOW_VALIDATION_ERROR_MESSAGES = "show_validation_error_messages";
 	public static final String MULTI_LINE_TEXT_MIN_HEIGHT = "multi_line_text_min_height";
 	public static final String FIELD_FRAME_LINE_WIDTH = "field_frame_line_width";
 	public static final String VALUE_FRAME_LINE_WIDTH = "value_frame_line_width";
-	// public static final String SECTION_FRAME_LINE_WIDTH = "section_frame_line_width";
 	public static final String INDEX_FRAME_LINE_WIDTH = "index_frame_line_width";
 	public static final String HEAD_FRAME_LINE_WIDTH = "head_frame_line_width";
-	// public static final String SIGNATURE_FRAME_LINE_WIDTH = "signature_frame_line_width";
 	public static final String PAGE_TITLE_Y = "page_title_y";
 	public static final String Y_HEADLINE_INDENT = "y_headline_indent";
 	public static final String X_HEAD_COLUMN_INDENT = "x_head_column_indent";
@@ -84,10 +80,6 @@ public interface InquiriesPDFSettingCodes {
 	public static final String SKETCH_IMAGE_BG_COLOR = "sketch_image_bg_color";
 	public static final String RENDER_SKETCH_IMAGES = "render_sketch_images";
 	public final static String SHOW_SKETCH_REGIONS = "show_sketch_regions";
-	// public final static String BLOCK_FRAME_LINE_WIDTH = "block_frame_line_width";
-	// public final static String PAGE_FRAME_LINE_WIDTH = "page_frame_line_width";
-	// public final static String X_COLUMN_INDENT_PHOTO = "x_column_indent_photo";
-	// public final static String SPACER_HEIGHT = "spacer_height";
 	public static final String LONG_TITLE_LENGTH = "long_title_length";
 	public static final String SHOW_MODIFIED_LABEL = "show_modified_label";
 	public static final String PAINTER_CLASS = "painter_class";

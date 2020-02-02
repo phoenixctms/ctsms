@@ -108,7 +108,6 @@ public class JournalServiceImpl
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUE_DELETED);
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED);
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_CREATED);
-		// ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_UPDATED);
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_DELETED);
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.ECRF_JOURNAL_EXPORTED);
 		ECRF_TRIAL_JOURNAL_ENTRY_SYSTEM_MESSAGE_CODES.add(SystemMessageCodes.STAFF_DELETED_TEAM_MEMBER_DELETED);
@@ -131,47 +130,40 @@ public class JournalServiceImpl
 	private static JournalEntry logSystemMessage(Course course, CourseOutVO courseVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(course, now, modified, systemMessageCode, new Object[] { CommonUtil.courseOutVOToString(courseVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.COURSE_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Criteria criteria, CriteriaOutVO criteriaVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(criteria, now, modified, systemMessageCode, new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(InputField inputField, InputFieldOutVO inputFieldVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(inputField, now, modified, systemMessageCode, new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.INPUT_FIELD_JOURNAL,
-		// null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Inventory inventory, InventoryOutVO inventoryVO, Timestamp now, User modified, String systemMessageCode, Object result,
 			Object original, JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(inventory, now, modified, systemMessageCode, new Object[] { CommonUtil.inventoryOutVOToString(inventoryVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL,
-		// null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Staff staff, StaffOutVO staffVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(staff, now, modified, systemMessageCode, new Object[] { CommonUtil.staffOutVOToString(staffVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
-	// private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	// JournalEntryDao journalEntryDao) throws Exception {
-	// return journalEntryDao.addSystemMessage(trial, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
-	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.TRIAL_JOURNAL, null)) });
-	// }
 	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
 			return null;
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static String x(String test, String regexp, String repl) {
@@ -179,9 +171,7 @@ public class JournalServiceImpl
 		Pattern pattern = Pattern.compile(regexp);
 		Matcher matcher = pattern.matcher(test);
 		while (matcher.find()) {
-			//test =  matcher.group(1).replaceAll("(.))", "$1\u0336");
 			matcher.appendReplacement(stringBuffer, matcher.group(1).replaceAll("(.)", repl));
-			//System.out.println(matcher.group(1).replaceAll("(.)", repl));
 		}
 		matcher.appendTail(stringBuffer);
 		return stringBuffer.toString();
@@ -261,7 +251,7 @@ public class JournalServiceImpl
 	}
 
 	private void checkJournalModuleId(JournalModule module, Long id) throws ServiceException {
-		if (id != null) { // module != null
+		if (id != null) {
 			switch (module) {
 				case INVENTORY_JOURNAL:
 					CheckIDUtil.checkInventoryId(id, this.getInventoryDao());
@@ -399,7 +389,6 @@ public class JournalServiceImpl
 		JournalExcelWriter writer = ExcelWriterFactory.createJournalExcelWriter(JournalModule.ECRF_JOURNAL, !CoreUtil.isPassDecryption());
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		writer.setTrial(this.getTrialDao().toTrialOutVO(trial));
-		// Pattern ecrfJournalEntryTitleRegExp = Settings.getRegexp(SettingCodes.ECRF_JOURNAL_ENTRY_TITLE_REGEXP, Bundle.SETTINGS, DefaultSettings.ECRF_JOURNAL_ENTRY_TITLE_REGEXP);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Collection<JournalEntry> journalEntries = journalEntryDao.findEcrfJournal(trialId, true);
 		ArrayList<JournalEntryOutVO> journalEntryVOs = new ArrayList<JournalEntryOutVO>(journalEntries.size());
@@ -497,8 +486,6 @@ public class JournalServiceImpl
 		(new ExcelExporter(writer, writer)).write();
 		JournalExcelVO result = writer.getExcelVO();
 		if (id != null) {
-			// byte[] documentDataBackup = result.getDocumentDatas();
-			// result.setDocumentDatas(null);
 			JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 			Timestamp now = CommonUtil.dateToTimestamp(result.getContentTimestamp());
 			switch (module) {
@@ -531,7 +518,6 @@ public class JournalServiceImpl
 					break;
 				default:
 			}
-			// result.setDocumentDatas(documentDataBackup);
 		}
 		return result;
 	}

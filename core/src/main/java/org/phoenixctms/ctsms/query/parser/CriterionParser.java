@@ -59,7 +59,6 @@ import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 
 public abstract class CriterionParser extends ExpressionParser<CriterionInstantVO> {
 
-	// Operators
 	private static final HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, OperandConfiguration> OPERATORS = new HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, OperandConfiguration>();
 	static {
 		OPERATORS.put(org.phoenixctms.ctsms.enumeration.CriterionTie.AND, new OperandConfiguration(5, Associativity.LEFT,
@@ -84,10 +83,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				SelectValueType.VALUE_TYPE));
 	}
 	private final static String GET_DAO_METHOD_PREFIX = "get";
-	// private PermissionProfileDao permissionProfileDao;
-	// private AuthenticationTypeDao authenticationTypeDao;
-	// private boolean obfuscateCriterions;
-	// private boolean resolveProperties;
 	private final static boolean PRETTY_PRINT_SHOW_POSITION_NUMBERS = true;
 	private final static String PRETTY_PRINT_INDENTATION = "  ";
 	private final static String PRETTY_PRINT_EMPTY_VALUE = "";
@@ -156,33 +151,16 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	private SurveyStatusTypeDao surveyStatusTypeDao;
 	private TeamMemberRoleDao teamMemberRoleDao;
 	private TrialTagDao trialTagDao;
-	// private InputFieldTypeDao inputFieldTypeDao;
 	private ProbandCategoryDao probandCategoryDao;
 	private PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao;
 	private AddressTypeDao addressTypeDao;
 	private InquiryDao inquiryDao;
-	// private InputFieldDao inputFieldDao;
 	private InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao;
 	private ProbandListEntryTagDao probandListEntryTagDao;
 	private ProbandTagDao probandTagDao;
 	private ECRFFieldDao ecrfFieldDao;
 
 	protected CriterionParser() {
-		// this.tieMap = QueryUtil.createCriterionTieMap(criterionTieDao);
-		// this.tieNameMap = QueryUtil.createCriterionTieNameMap(criterionTieDao);
-		// if (criterionPropertyDao != null) {
-		// this.propertyMap = QueryUtil.createCriterionPropertyMap(null, criterionPropertyDao);
-		// } else {
-		// this.propertyMap = new HashMap<Long, CriterionProperty>();
-		// }
-		// if (criterionRestrictionDao != null) {
-		// this.restrictionMap = QueryUtil.createCriterionRestrictionMap(criterionRestrictionDao);
-		// this.restrictionNameMap = QueryUtil.createCriterionRestrictionNameMap(criterionRestrictionDao);
-		// } else {
-		// this.restrictionMap = new HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
-		// this.restrictionNameMap = new HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String>();
-		// }
-		// this.obfuscateCriterions = obfuscateCriterions;
 	}
 
 	public AddressTypeDao getAddressTypeDao() {
@@ -395,7 +373,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		}
 		if (maxPosition != null && maxPosition > 0) {
 			return maxPosition.toString().length();
-			// return ((int) Math.floor(Math.log10(maxPosition))) + 1;
 		}
 		return 1;
 	}
@@ -422,33 +399,21 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 
 	private HashMap<Long, CriterionProperty> getPropertyMap() {
 		if (propertyMap == null) {
-			// if (resolveProperties) {
 			propertyMap = QueryUtil.createCriterionPropertyMap(null, criterionPropertyDao);
-			// } else {
-			// propertyMap = new HashMap<Long, CriterionProperty>();
-			// }
 		}
 		return propertyMap;
 	}
 
 	private HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> getRestrictionMap() {
 		if (restrictionMap == null) {
-			// if (resolveProperties) {
 			restrictionMap = QueryUtil.createCriterionRestrictionMap(criterionRestrictionDao);
-			// } else {
-			// restrictionMap = new HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
-			// }
 		}
 		return restrictionMap;
 	}
 
 	private HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> getRestrictionNameMap() {
 		if (restrictionNameMap == null) {
-			// if (resolveProperties) {
 			restrictionNameMap = QueryUtil.createCriterionRestrictionNameMap(criterionRestrictionDao);
-			// } else {
-			// restrictionNameMap = new HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String>();
-			// }
 		}
 		return restrictionNameMap;
 	}
@@ -462,12 +427,10 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				CriterionInstantVO token = it.next();
 				if (token != null) {
 					if (isLeftParenthesis(token)) {
-						// if (result.length() > 0) result.append(" ");
 						result.append(QueryUtil.getSetExpressionTieName(
 								org.phoenixctms.ctsms.enumeration.CriterionTie.LEFT_PARENTHESIS,
 								getTieNameMap()));
 					} else if (isRightParenthesis(token)) {
-						// if (result.length() > 0) result.append(" ");
 						result.append(QueryUtil.getSetExpressionTieName(
 								org.phoenixctms.ctsms.enumeration.CriterionTie.RIGHT_PARENTHESIS,
 								getTieNameMap()));
@@ -792,7 +755,6 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 							throw e;
 						}
 					} else {
-						// result.append("...");
 						criterionValue = getCriterionValueString(token, property);
 					}
 				}

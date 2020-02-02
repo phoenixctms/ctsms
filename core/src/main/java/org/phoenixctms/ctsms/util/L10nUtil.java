@@ -453,12 +453,6 @@ public final class L10nUtil {
 		return l10nKey;
 	}
 
-	//	public static String getDepartmentL10nKey(String l10nKey, InventoryOutVO inventory) {
-	//		if (inventory != null) {
-	//			return getDepartmentL10nKey(l10nKey,inventory.getDepartment());
-	//		}
-	//		return l10nKey;
-	//	}
 	public static String getDepartmentL10nKey(String l10nKey, StaffOutVO staff) {
 		if (staff != null) {
 			return getDepartmentL10nKey(l10nKey, staff.getDepartment());

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public final class InventoryBookingsExcelDefaultSettings {
 
-	// public static final int GRAPH_MAX_STAFF_INSTANCES = 10;
 	public static final String TEMPLATE_FILE_NAME = null;
 	public static final boolean AUTOSIZE = true;
 	public static final int VO_GRAPH_RECURSION_DEPTH = 2;
@@ -16,12 +15,6 @@ public final class InventoryBookingsExcelDefaultSettings {
 	public static final boolean ROW_COLORS = true;
 	public final static ArrayList<String> VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final boolean WRITEHEAD = true;
-	// public static final boolean SHOW_TAGS = false;
-	// public static final boolean SHOW_ADDRESSES = false;
-	// public static final boolean SHOW_CONTACT_DETAILS = false;
-	// public static final boolean SHOW_CV_ADDRESS_BLOCK = false;
-	// public static final boolean AGGREGATE_ADDRESSES = false;
-	// public static final boolean AGGREGATE_CONTACT_DETAILS = false;
 	public static final boolean APPEND_HEADER_FOOTER = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;

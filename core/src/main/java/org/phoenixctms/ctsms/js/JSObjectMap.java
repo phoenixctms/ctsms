@@ -8,17 +8,16 @@ import jdk.nashorn.api.scripting.AbstractJSObject;
 
 //http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
 @SuppressWarnings("restriction")
-public class JSObjectMap extends AbstractJSObject implements Map<String,Object> {
+public class JSObjectMap extends AbstractJSObject implements Map<String, Object> {
 
-	public final Map<String,Object> map;
+	public final Map<String, Object> map;
 
-	public JSObjectMap(Map<String,Object> map) {
+	public JSObjectMap(Map<String, Object> map) {
 		this.map = map;
 	}
 
 	@Override
 	public Object call(Object thiz, Object... args) {
-		// System.out.println("call");
 		return super.call(thiz, args);
 	}
 
@@ -38,13 +37,12 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 	}
 
 	@Override
-	public Set<Entry<String,Object>> entrySet() {
+	public Set<Entry<String, Object>> entrySet() {
 		return map.entrySet();
 	}
 
 	@Override
 	public Object eval(String s) {
-		//System.out.println("eval");
 		return super.eval(s);
 	}
 
@@ -55,36 +53,27 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 
 	@Override
 	public String getClassName() {
-		//System.out.println("getClassName");
 		return super.getClassName();
 	}
 
 	@Override
 	public Object getMember(String name) {
 		return map.get(name);
-		//        System.out.println("getMember " + name);
-		//        return name.equals("length") ? arrayValues.size() : arrayValues.get(Integer.valueOf(name));
 	}
 
 	@Override
 	public Object getSlot(int index) {
 		return map.get(Integer.toString(index));
-		//System.out.println("getSlot");
-		//return arrayValues.get(index);
 	}
 
 	@Override
 	public boolean hasMember(String name) {
 		return map.containsKey(name);
-		//System.out.println("hasMember");
-		//return super.hasMember(name);
 	}
 
 	@Override
 	public boolean hasSlot(int slot) {
 		return map.containsKey(Integer.toString(slot));
-		//        System.out.println("hasSlot");
-		//        return super.hasSlot(slot);
 	}
 
 	@Override
@@ -104,13 +93,11 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 
 	@Override
 	public boolean isInstance(Object instance) {
-		//System.out.println("isInstance");
 		return super.isInstance(instance);
 	}
 
 	@Override
 	public boolean isInstanceOf(Object clazz) {
-		//System.out.println("isINstanceOf");
 		return super.isInstanceOf(clazz);
 	}
 
@@ -122,13 +109,10 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 	@Override
 	public Set<String> keySet() {
 		return map.keySet();
-		//System.out.println("keySet");
-		//return arrayValues.keySet().stream().map(k -> "" + k).collect(Collectors.toSet());
 	}
 
 	@Override
 	public Object newObject(Object... args) {
-		//System.out.println("new Object");
 		return super.newObject(args);
 	}
 
@@ -151,21 +135,18 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 
 	@Override
 	public void removeMember(String name) {
-		//System.out.println("removeMember");
 		map.remove(name);
 		super.removeMember(name);
 	}
 
 	@Override
 	public void setMember(String name, Object value) {
-		//System.out.println("setMember");
 		map.put(name, value);
 		super.setMember(name, value);
 	}
 
 	@Override
 	public void setSlot(int index, Object value) {
-		//System.out.println("setSlot");
 		map.put(Integer.toString(index), value);
 		super.setSlot(index, value);
 	}
@@ -188,7 +169,5 @@ public class JSObjectMap extends AbstractJSObject implements Map<String,Object> 
 	@Override
 	public Collection<Object> values() {
 		return map.values();
-		//System.out.println("values");
-		//return arrayValues.values();
 	}
 }

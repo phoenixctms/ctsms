@@ -120,8 +120,6 @@ public class OpsSystDaoImpl
 	 * a new, blank entity is created
 	 */
 	private OpsSyst loadOpsSystFromOpsSystVO(OpsSystVO opsSystVO) {
-		// TODO implement loadOpsSystFromOpsSystVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystFromOpsSystVO(OpsSystVO) not yet implemented.");
 		Long id = opsSystVO.getId();
 		OpsSyst opsSyst = null;
 		if (id != null) {
@@ -174,13 +172,6 @@ public class OpsSystDaoImpl
 		OpsSyst opsSyst = get(opsSystId);
 		this.getHibernateTemplate().deleteAll(opsSyst.getCodes()); // constraint error if used by procedure
 		opsSyst.getCodes().clear();
-		// Long codesIt = opsSyst.getCodes().iterator();
-		// while (codesIt.hasNext()) {
-		// Long code = codesIt.next();
-		// code.setSystematics(null);
-		// this.getHibernateTemplate().update(code);
-		// }
-		// opsSyst.getCodes().clear();
 		Iterator<OpsSystCategory> it = opsSyst.getCategories().iterator();
 		while (it.hasNext()) {
 			this.getHibernateTemplate().deleteAll(it.next().getModifiers());
@@ -230,8 +221,6 @@ public class OpsSystDaoImpl
 			OpsSyst source,
 			OpsSystVO target) {
 		super.toOpsSystVO(source, target);
-		// WARNING! No conversion for target.blocks (can't convert source.getBlocks():org.phoenixctms.ctsms.domain.OpsSystBlock to org.phoenixctms.ctsms.vo.OpsSystBlockVO
-		// WARNING! No conversion for target.categories (can't convert source.getCategories():org.phoenixctms.ctsms.domain.OpsSystCategory to org.phoenixctms.ctsms.vo.OpsSystCategoryVO
 		target.setBlocks(toOpsSystBlockVOCollection(source.getBlocks()));
 		target.setCategories(toOpsSystCategoryVOCollection(source.getCategories()));
 	}

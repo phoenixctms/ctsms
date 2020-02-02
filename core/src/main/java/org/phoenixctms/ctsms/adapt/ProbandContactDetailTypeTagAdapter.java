@@ -85,7 +85,6 @@ public class ProbandContactDetailTypeTagAdapter extends TagAdapter<Proband, Cont
 
 	@Override
 	protected Collection<ContactDetailType> findTagsIncludingId(Proband root, Long tagId) {
-		// return contactDetailTypeDao.findByStaffProbandAnimalId(null, root.isPerson() ? true : null, !root.isPerson() ? true : null, tagId);
 		if (root != null) {
 			if (root.isPerson()) {
 				return contactDetailTypeDao.findByStaffProbandAnimalId(null, true, null, tagId);

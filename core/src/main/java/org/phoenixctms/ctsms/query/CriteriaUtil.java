@@ -55,9 +55,8 @@ public final class CriteriaUtil {
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
 	}
 
-	private static <T> void addReminderItem(ArrayList<T> resultSet, ReminderEntityAdapter reminderItem, Date reminderStart, Boolean notify) { // , boolean checkDismissed) {
+	private static <T> void addReminderItem(ArrayList<T> resultSet, ReminderEntityAdapter reminderItem, Date reminderStart, Boolean notify) {
 		if (!reminderItem.isDismissable() || !reminderItem.isRecurrenceDismissed(reminderStart)) {// !(reminderItem.isDismissed() && reminderStart.compareTo(new
-			// Date(reminderItem.getDismissedTimestamp().getTime())) <= 0)) {
 			if (notify != null) {
 				if (notify.booleanValue() == reminderItem.isNotify()) {
 					resultSet.add((T) reminderItem.getItem());
@@ -605,12 +604,6 @@ public final class CriteriaUtil {
 				}
 				return result;
 			} else {
-				// criteria.setProjection(null);
-				// return new ArrayList(new LinkedHashSet(criteria.list()));
-				// sorting via psf mandatory...
-				// criteria.setProjection(null);
-				// criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-				// return criteria.list();
 				return listDistinctRoot(criteria, dao);
 			}
 		}
@@ -634,7 +627,7 @@ public final class CriteriaUtil {
 				if (reminderItem.isActive()) {
 					Date nextRecurrence = reminderItem.getNextRecurrence(from, true);
 					if (nextRecurrence.compareTo(to) <= 0) {
-						addReminderItem(resultSet, reminderItem, nextRecurrence, notify); // , true);
+						addReminderItem(resultSet, reminderItem, nextRecurrence, notify);
 					}
 				}
 			}
@@ -691,7 +684,7 @@ public final class CriteriaUtil {
 					Date reminderStart = reminderItem.getReminderStart(today, false, consistentReminderPeriod, consistentReminderPeriodDays);
 					if (today.compareTo(reminderStart) >= 0
 							&& (includeAlreadyPassed || today.compareTo(reminderItem.getNextRecurrence(today, false)) <= 0)) {
-						addReminderItem(resultSet, reminderItem, reminderStart, notify); // , true);
+						addReminderItem(resultSet, reminderItem, reminderStart, notify);
 					}
 				}
 			}

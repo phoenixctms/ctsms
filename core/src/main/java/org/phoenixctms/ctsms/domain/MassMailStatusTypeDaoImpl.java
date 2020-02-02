@@ -59,8 +59,6 @@ public class MassMailStatusTypeDaoImpl
 	}
 
 	private MassMailStatusType loadMassMailStatusTypeFromMassMailStatusTypeVO(MassMailStatusTypeVO massMailStatusTypeVO) {
-		// TODO implement loadMassMailStatusTypeFromMassMailStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailStatusTypeFromMassMailStatusTypeVO(MassMailStatusTypeVO) not yet implemented.");
 		MassMailStatusType massMailStatusType = null;
 		Long id = massMailStatusTypeVO.getId();
 		if (id != null) {

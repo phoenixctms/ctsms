@@ -66,8 +66,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	private PDFJpeg signatureValidImage;
 	private PDFJpeg signatureInvalidImage;
 	private PDFJpeg signatureAvailableImage;
-	// private PDFont fontE;
-	// private PDFont fontF;
 	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
 	private static final String ECRF_PDF_FILENAME_PREFIX = "ecrf_";
 
@@ -81,9 +79,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	}
 
 	private void drawBlock(PDPageContentStream contentStream, EcrfPDFBlock block) throws Exception {
-		if (// BlockType.NEW_LIST_ENTRY.equals(block.getType())
-		BlockType.NEW_ECRF.equals(block.getType())) {
-			// || BlockType.ECRF_SIGNATURE.equals(block.getType())) {
+		if (BlockType.NEW_ECRF.equals(block.getType())) {
 			cursor.setSectionY(cursor.getBlockY());
 			cursor.setIndexY(cursor.getBlockY());
 		} else if (BlockType.NEW_SECTION.equals(block.getType())) {
@@ -107,12 +103,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		if (cursor.getEcrfBlock() != null) {
 			(new EcrfPDFBlock(cursor.getEcrfBlock(), BlockType.PAGE_TITLE, true)).renderBlock(contentStream, cursor);
 		}
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(EcrfPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LEFT_MARGIN),
-		// Settings.getFloat(EcrfPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LOWER_MARGIN), pageWidth -
-		// Settings.getFloat(EcrfPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_LEFT_MARGIN) -
-		// Settings.getFloat(EcrfPDFSettingCodes.PAGE_RIGHT_MARGIN,
-		// Bundle.ECRF_PDF, EcrfPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN - Settings.getFloat(EcrfPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.ECRF_PDF,
-		// EcrfPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
 	@Override
@@ -138,9 +128,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	@Override
 	public void drawPageBreakOldPage(PDPageContentStream contentStream) throws Exception {
 		EcrfPDFBlock block = blocks.get(blockIndex - 1);
-		// if (BlockType.NEW_INDEX.equals(block.getType())) {
-		// (new EcrfPDFBlock(BlockType.END_OF_SECTION)).renderBlock(contentStream, cursor);
-		// } else
 		if (BlockType.INPUT_FIELD.equals(block.getType())
 				|| BlockType.AUDIT_TRAIL_VALUE.equals(block.getType())
 				|| BlockType.FIELD_STATUS_ENTRY.equals(block.getType())) {
@@ -182,13 +169,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return DEFAULT_PAGE_SIZE;
 	}
 
-	// public PDFont getFontE() {
-	// return fontE;
-	// }
-	//
-	// public PDFont getFontF() {
-	// return fontF;
-	// }
 	private ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId) {
 		if (statusEntryVOMap != null) {
 			HashMap<Long, ECRFStatusEntryVO> ecrfMap = statusEntryVOMap.get(listEntryId);
@@ -309,14 +289,10 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	@Override
 	public void loadFonts(PDDocument doc) throws Exception {
-		// PDStream pdStream = new PDStream(doc);
-		// pdStream.
 		fontA = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_A, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontB = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_B, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontC = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_C, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
 		fontD = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_D, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontE = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_E, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
-		// fontF = PDFUtil.loadFont(Settings.getPDFFontName(EcrfPDFSettingCodes.FONT_F, Bundle.ECRF_PDF, null), doc, DEFAULT_BASE_FONT);
 	}
 
 	@Override
@@ -366,8 +342,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				PDFUtil.loadImage(Settings.getImageFilename(EcrfPDFSettingCodes.SIGNATURE_AVAILABLE_IMAGE_FILE_NAME, Bundle.ECRF_PDF, null)),
 				signatureImageWidth, signatureImageHeight, quality, dpi, bgColor);
 		if (imageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
-			// Integer width = Settings.getIntNullable(EcrfPDFSettingCodes.IMAGE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.IMAGE_WIDTH);
-			// Integer height = Settings.getIntNullable(EcrfPDFSettingCodes.IMAGE_HEIGHT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.IMAGE_HEIGHT);
 			if (valueVOMap != null) {
 				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> listEntryMapIt = valueVOMap.values().iterator();
 				while (listEntryMapIt.hasNext()) {
@@ -376,15 +350,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 						Iterator<ECRFFieldValueOutVO> valuesIt = ecrfMapIt.next().iterator();
 						while (valuesIt.hasNext()) {
 							putSketchImage(valuesIt.next(), doc);
-							// ECRFFieldValueOutVO value = valuesIt.next();
-							// InputFieldOutVO field = value.getEcrfField().getField();
-							// InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
-							// Long x =
-							// if (inputFieldImage != null) {
-							// images.put(
-							// value.getId(),
-							// );
-							// }
 						}
 					}
 				}
@@ -398,21 +363,13 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 					}
 				}
 			}
-			// Iterator<InputFieldImageVO> it = imageVOMap.values().iterator();
-			// while (it.hasNext()) {
-			// InputFieldImageVO inputFieldImage = it.next();
-			// images.put(inputFieldImage.getId(),
-			// PDFJpeg.prepareInputFieldImage(doc, inputFieldImage,
-			// cursor.getBlockWidth() - 2.0f * Settings.getFloat(EcrfPDFSettingCodes.X_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_FRAME_INDENT),
-			// quality, dpi, bgColor));
-			// }
 		}
 	}
 
 	@Override
 	public boolean nextBlockFitsOnPage() throws Exception {
 		EcrfPDFBlock block = blocks.get(blockIndex);
-		if (blockIndex > 0 && BlockType.NEW_ECRF.equals(block.getType())) { // BlockType.NEW_LIST_ENTRY.equals(block.getType()) ||
+		if (blockIndex > 0 && BlockType.NEW_ECRF.equals(block.getType())) {
 			return false;
 		} else {
 			float height = 0.0f;
@@ -426,18 +383,12 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				}
 			} else if (BlockType.NEW_INDEX.equals(block.getType())) {
 				height += blocks.get(blockIndex + 1).getHeight(cursor);
-				//				if (cursor.getBlockY() > Settings.getFloat(EcrfPDFSettingCodes.SECTION_INDEX_PAGE_BREAK_LOWER_MARGIN, Bundle.ECRF_PDF,
-				//						EcrfPDFDefaultSettings.SECTION_INDEX_PAGE_BREAK_LOWER_MARGIN)) {
-				//					height += blocks.get(blockIndex + 1).getHeight(cursor);
-				//				} else {
-				//					return false;
-				//				}
 			} else if (BlockType.END_OF_INDEX.equals(block.getType())) {
 				return true;
 			} else if (BlockType.END_OF_SECTION.equals(block.getType())) {
 				return true;
 			}
-			height += block.getHeight(cursor); // little inaccurate for NEW_SECTION and NEW_INDEX: always presumes a non-emtpy sectionlabel, indexlabel,
+			height += block.getHeight(cursor);
 			return (cursor.getBlockY() - height) > Settings.getFloat(EcrfPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.ECRF_PDF,
 					EcrfPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
 		}
@@ -450,24 +401,17 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 			Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
 			while (listEntryIt.hasNext()) {
 				ProbandListEntryOutVO listEntryVO = listEntryIt.next();
-				// blocks.add(new EcrfPDFBlock(listEntryVO));
 				Collection<ECRFOutVO> ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-				if (ecrfVOs != null) { // && ecrfVOs.size() > 0) {
+				if (ecrfVOs != null) {
 					Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
 					while (ecrfIt.hasNext()) {
 						ECRFOutVO ecrfVO = ecrfIt.next();
 						ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO.getId());
 						SignatureVO signatureVO = ((signatureVOMap != null && statusEntryVO != null) ? signatureVOMap.get(statusEntryVO.getId()) : null);
-						// if (signatureVOMap != null && statusEntryVO != null && (signatureVO = signatureVOMap.get(statusEntryVO.getId())) != null) {
-						// blocks.add(new EcrfPDFBlock(signatureVO));
-						// } else {
-						// blocks.add(new EcrfPDFBlock(BlockType.ECRF_SIGNATURE, false));
-						// }
 						blocks.add(new EcrfPDFBlock(listEntryVO, ecrfVO, statusEntryVO, signatureVO, now, blank));
 						if (listEntryTagValuesVOMap != null) {
 							Collection<ProbandListEntryTagValueOutVO> tagValueVOs = listEntryTagValuesVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
 							if (tagValueVOs != null) {
-								// listEntryTagValueVO
 								Iterator<ProbandListEntryTagValueOutVO> tagValueVOsIt = tagValueVOs.iterator();
 								while (tagValueVOsIt.hasNext()) {
 									ProbandListEntryTagValueOutVO tagValueVO = tagValueVOsIt.next();
@@ -525,12 +469,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 								blocks.add(new EcrfPDFBlock(BlockType.END_OF_SECTION, false));
 							}
 						}
-						// SignatureVO signatureVO;
-						// if (signatureVOMap != null && statusEntryVO != null && (signatureVO = signatureVOMap.get(statusEntryVO.getId())) != null) {
-						// blocks.add(new EcrfPDFBlock(signatureVO));
-						// } else {
-						// blocks.add(new EcrfPDFBlock(BlockType.ECRF_SIGNATURE, false));
-						// }
 					}
 				}
 			}
@@ -561,8 +499,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 								Settings.getBoolean(EcrfPDFSettingCodes.SHOW_SKETCH_REGIONS, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_SKETCH_REGIONS),
 								!blank,
 								cursor.getBlockIndentedWidth(false),
-								// - 2.0f
-								// * Settings.getFloat(EcrfPDFSettingCodes.X_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_FRAME_INDENT),
 								quality, dpi, bgColor));
 				return true;
 			}
@@ -594,8 +530,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 								Settings.getBoolean(EcrfPDFSettingCodes.SHOW_SKETCH_REGIONS, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_SKETCH_REGIONS),
 								!blank,
 								cursor.getBlockIndentedWidth(false),
-								// - 2.0f
-								// * Settings.getFloat(EcrfPDFSettingCodes.X_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_FRAME_INDENT),
 								quality, dpi, bgColor));
 				return true;
 			}
@@ -619,8 +553,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		fontB = null;
 		fontC = null;
 		fontD = null;
-		// fontE = null;
-		// fontF = null;
 		checkboxCheckedImage = null;
 		checkboxCheckedPresetImage = null;
 		checkboxUncheckedImage = null;
@@ -699,7 +631,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	@Override
 	public void startNewPage() {
-		super.startNewPage(!hasNextBlock() || BlockType.NEW_ECRF.equals(blocks.get(blockIndex).getType())); // BlockType.NEW_LIST_ENTRY.equals(blocks.get(blockIndex).getType()) ||
+		super.startNewPage(!hasNextBlock() || BlockType.NEW_ECRF.equals(blocks.get(blockIndex).getType()));
 		cursor.setBlockY(pageHeight - Settings.getFloat(EcrfPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.BLOCKS_UPPER_MARGIN));
 		cursor.setBlockX(Settings.getFloat(EcrfPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 		cursor.setBlockWidth(pageWidth - Settings.getFloat(EcrfPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
@@ -725,7 +657,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 			while (listEntryIt.hasNext()) {
 				ProbandListEntryOutVO listEntryVO = listEntryIt.next();
 				Collection<ECRFOutVO> ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-				if (ecrfVOs != null) { // && ecrfVOs.size() > 0) {
+				if (ecrfVOs != null) {
 					Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
 					while (ecrfIt.hasNext()) {
 						ECRFOutVO ecrfVO = ecrfIt.next();
@@ -757,17 +689,6 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				fileName.append("_");
 			}
 		}
-		// if (pdfVO.getStatusEntries().size() == 1) {
-		// ECRFStatusEntryVO statusEntryVO = pdfVO.getStatusEntries().iterator().next();
-		// if (statusEntryVO.getEcrf() != null) {
-		// fileName.append(statusEntryVO.getEcrf().getId());
-		// fileName.append("_");
-		// }
-		// if (statusEntryVO.getListEntry() != null) {
-		// fileName.append(statusEntryVO.getListEntry().getId());
-		// fileName.append("_");
-		// }
-		// }
 		fileName.append(CommonUtil.formatDate(now, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
 		fileName.append(".");
 		fileName.append(CoreUtil.PDF_FILENAME_EXTENSION);

@@ -33,7 +33,7 @@ public abstract class GraphEnumerator {
 							&& !transfilter.exclude(methods[i])) {
 						Class[] parameterTypes = methods[i].getParameterTypes();
 						if (parameterTypes != null && parameterTypes.length == 0) {
-							GraphEnumerator property = getInstance(clazz, new Accessor(methods[i], AccessorType.REFERENCE), getterChain, transfilter, associationPathSeparator); // ,
+							GraphEnumerator property = getInstance(clazz, new Accessor(methods[i], AccessorType.REFERENCE), getterChain, transfilter, associationPathSeparator);
 							if (!property.isFieldExcluded(graph, property.fieldName, excludedFieldMap) && (!omitFields || !property.isFieldOmitted(graph, property.fieldName))) {
 								if (!property.isTerminalType(passThrough)) {
 									if (Collection.class.isAssignableFrom(property.returnType)) {

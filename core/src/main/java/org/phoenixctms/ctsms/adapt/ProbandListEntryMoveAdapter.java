@@ -24,7 +24,6 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 public class ProbandListEntryMoveAdapter extends MoveAdapter<Trial, ProbandListEntry, ProbandListEntryOutVO> {
 
 	private TrialDao trialDao;
-	// private ProbandDao probandDao;
 	private ProbandListEntryDao probandListEntryDao;
 	private JournalEntryDao journalEntryDao;
 	private static final String ENUMERATED_PROBAND_LIST_ENTRY_NAME = "{0}. {1}";
@@ -34,7 +33,6 @@ public class ProbandListEntryMoveAdapter extends MoveAdapter<Trial, ProbandListE
 		this.journalEntryDao = journalEntryDao;
 		this.probandListEntryDao = probandListEntryDao;
 		this.trialDao = trialDao;
-		// this.probandDao = probandDao;
 	}
 
 	@Override

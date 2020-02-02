@@ -76,7 +76,6 @@ public class ProbandAddressTypeTagAdapter extends TagAdapter<Proband, AddressTyp
 
 	@Override
 	protected Collection<AddressType> findTagsIncludingId(Proband root, Long tagId) {
-		// return addressTypeDao.findByStaffProbandId(null, true, tagId);
 		if (root != null) {
 			if (root.isPerson()) {
 				return addressTypeDao.findByStaffProbandAnimalId(null, true, null, tagId);

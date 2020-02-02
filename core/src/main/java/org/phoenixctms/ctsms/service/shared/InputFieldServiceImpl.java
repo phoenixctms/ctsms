@@ -187,9 +187,6 @@ public class InputFieldServiceImpl
 
 	private void checkAddSelectionSetValueInput(InputFieldSelectionSetValueInVO selectionSetValueIn) throws ServiceException {
 		InputField inputField = CheckIDUtil.checkInputFieldId(selectionSetValueIn.getFieldId(), this.getInputFieldDao());
-		// if (inputField.isLocalized()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_ADD_SELECTION_SET_VALUES_TO_LOCALIZED_INPUT_FIELD);
-		// }
 		checkSelectionSetValueInput(inputField, selectionSetValueIn);
 	}
 
@@ -414,7 +411,7 @@ public class InputFieldServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS);
 		}
 		String value = selectionSetValueIn.getValue();
-		if (value != null) {// && value.length() > 0) {
+		if (value != null) {
 			if ((new InputFieldSelectionSetValueValueCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS);
 			}
@@ -521,9 +518,6 @@ public class InputFieldServiceImpl
 
 	private void checkUpdateInputFieldInput(InputFieldInVO modifiedInputField, InputField originalInputField) throws ServiceException {
 		checkInputFieldInput(modifiedInputField);
-		// if (originalInputField.isLocalized()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_UPDATE_LOCALIZED_INPUT_FIELD);
-		// }
 		checkInputFieldInputFieldTypeChanged(modifiedInputField.getId(), originalInputField.getFieldType(), modifiedInputField.getFieldType());
 		checkInputFieldUserTimeZoneChanged(modifiedInputField.getId(), originalInputField.isUserTimeZone(), modifiedInputField.getUserTimeZone());
 		if (!originalInputField.getNameL10nKey().equals(modifiedInputField.getName())
@@ -541,15 +535,6 @@ public class InputFieldServiceImpl
 						ServiceUtil.checkProbandLocked(inquiryValue.getProband());
 					}
 				}
-				// Iterator<InputFieldSelectionSetValue> selectionSetValueIt = this.getInputFieldSelectionSetValueDao().find.getSelectionSetValue().iterator();
-				// while (selectionSetValueIt.hasNext()) {
-				// InputFieldSelectionSetValue selectionSetValue = selectionSetValueIt.next();
-				// Iterator<Stratum> strataIt = selectionSetValue.getStratas().iterator();
-				// while (strataIt.hasNext()) {
-				// Stratum stratum = strataIt.next();
-				// ServiceUtil.checkTrialLocked(stratum.getTrial());
-				// }
-				// }
 				Iterator<ProbandListEntryTag> listEntryTagsIt = originalInputField.getListEntryTags().iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = listEntryTagsIt.next();
@@ -575,10 +560,6 @@ public class InputFieldServiceImpl
 					}
 				}
 				ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
-				// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
-				// if (valuesLockedEcrfCount > 0) {
-				// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(), valuesLockedEcrfCount);
-				// }
 			}
 		}
 	}
@@ -590,11 +571,7 @@ public class InputFieldServiceImpl
 		if (!inputField.equals(originalSelectionSetValue.getField())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_INPUT_FIELD_CHANGED);
 		}
-		// if (originalSelectionSetValue.isLocalized()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_UPDATE_LOCALIZED_SELECTION_SET_VALUE);
-		// }
 		checkSelectionSetValueInput(inputField, selectionSetValueIn);
-		// InputField inputField = originalSelectionSetValue.getField();
 		if (!originalSelectionSetValue.getValue().equals(selectionSetValueIn.getValue())) {
 			if (checkProbandTrialLocked) {
 				Iterator<Inquiry> inquiriesIt = inputField.getInquiries().iterator();
@@ -610,11 +587,6 @@ public class InputFieldServiceImpl
 						}
 					}
 				}
-				// Iterator<Stratum> strataIt = originalSelectionSetValue.getStratas().iterator();
-				// while (strataIt.hasNext()) {
-				// Stratum stratum = strataIt.next();
-				// ServiceUtil.checkTrialLocked(stratum.getTrial());
-				// }
 				Iterator<ProbandListEntryTag> listEntryTagsIt = inputField.getListEntryTags().iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = listEntryTagsIt.next();
@@ -644,11 +616,6 @@ public class InputFieldServiceImpl
 							ServiceUtil.checkProbandLocked(fieldValue.getListEntry().getProband());
 						}
 						ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
-						// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
-						// if (valuesLockedEcrfCount > 0) {
-						// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
-						// valuesLockedEcrfCount);
-						// }
 					}
 				}
 			}
@@ -672,9 +639,6 @@ public class InputFieldServiceImpl
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		InputFieldSelectionSetValue selectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, selectionSetValueDao);
-		// if (selectionSetValue.isLocalized()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_LOCALIZED_SELECTION_SET_VALUE);
-		// }
 		InputFieldSelectionSetValueOutVO result = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
 		if (inputField == null) {
 			inputField = selectionSetValue.getField();
@@ -763,11 +727,6 @@ public class InputFieldServiceImpl
 							ServiceUtil.checkTrialLocked(fieldValue.getListEntry().getTrial());
 							ServiceUtil.checkProbandLocked(fieldValue.getListEntry().getProband());
 						}
-						// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
-						// if (valuesLockedEcrfCount > 0) {
-						// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
-						// valuesLockedEcrfCount);
-						// }
 						ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
 						logSystemMessage(fieldValue.getListEntry().getProband(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_DELETED, result, null,
 								journalEntryDao);
@@ -797,7 +756,7 @@ public class InputFieldServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(inputField, now, user);
-		inputField = inputFieldDao.create(inputField);// 2011-09-12//
+		inputField = inputFieldDao.create(inputField);
 		InputFieldOutVO result = inputFieldDao.toInputFieldOutVO(inputField);
 		ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_CREATED, result, null, this.getJournalEntryDao());
 		return result;
@@ -844,7 +803,6 @@ public class InputFieldServiceImpl
 			inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);
 			CoreUtil.modifyVersion(originalInputField, inputField, now, user);
 			inputFieldDao.update(inputField);
-			// Hibernate.initialize(inputField);
 			update = true;
 		} else {
 			checkAddInputFieldInput(modifiedInputField);
@@ -852,11 +810,7 @@ public class InputFieldServiceImpl
 			original = null;
 			inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);
 			CoreUtil.modifyVersion(inputField, now, user);
-			// inputField = inputFieldDao.create(inputField);
 			inputField = inputFieldDao.create(inputField, LockMode.PESSIMISTIC_WRITE); // required here, as load(..,lockMode) will not work with created entities
-			// inputFieldDao.evict(inputField);
-			// inputField = ServiceUtil.checkInputFieldId(inputField.getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-			// inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
 			update = false;
 		}
 		InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
@@ -956,7 +910,6 @@ public class InputFieldServiceImpl
 			AuthenticationVO auth, InputFieldValueVO dummyInputFieldValue) throws Exception {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = CheckIDUtil.checkInputFieldId(dummyInputFieldValue.getFieldId(), inputFieldDao);
-		// InputFieldOutVO inputFieldVO = this.getInputFieldDao().toInputFieldOutVO(inputField);
 		ServiceUtil.checkInputFieldTextValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getTextValue(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getBooleanValue(), inputFieldDao);
@@ -968,8 +921,6 @@ public class InputFieldServiceImpl
 		ServiceUtil.checkInputFieldInkValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getInkValues(), inputFieldDao);
 		ServiceUtil.checkInputFieldSelectionSetValues(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getSelectionValueIds(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// User user = CoreUtil.getUser();
 	}
 
 	@Override
@@ -992,7 +943,6 @@ public class InputFieldServiceImpl
 		newInputField.setFloatLowerLimit(originalInputField.getFloatLowerLimit());
 		newInputField.setFloatPreset(originalInputField.getFloatPreset());
 		newInputField.setFloatUpperLimit(originalInputField.getFloatUpperLimit());
-		// newInputField.setId(null);
 		newInputField.setLongLowerLimit(originalInputField.getLongLowerLimit());
 		newInputField.setLongPreset(originalInputField.getLongPreset());
 		newInputField.setLongUpperLimit(originalInputField.getLongUpperLimit());
@@ -1015,7 +965,6 @@ public class InputFieldServiceImpl
 		newInputField.setTimePreset(originalInputField.getTimePreset());
 		newInputField.setTitleL10nKey(originalInputField.getTitleL10nKey());
 		newInputField.setValidationErrorMsgL10nKey(originalInputField.getValidationErrorMsgL10nKey());
-		// newInputField.setVersion(out.getVersion());
 		newInputField.setLearn(originalInputField.getLearn());
 		newInputField.setStrict(originalInputField.getStrict());
 		newInputField.setWidth(originalInputField.getWidth());
@@ -1027,13 +976,10 @@ public class InputFieldServiceImpl
 		CoreUtil.modifyVersion(newInputField, now, user);
 		newInputField = inputFieldDao.create(newInputField);
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
-		// HashMap<Class, HashMap<Long, Object>> voMap = new HashMap<Class, HashMap<Long, Object>>(); // avoid quadratic runtime with journal
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Iterator<InputFieldSelectionSetValue> originalInputFieldSelectionSetValuesIt = originalInputField.getSelectionSetValues().iterator();
 		while (originalInputFieldSelectionSetValuesIt.hasNext()) {
 			InputFieldSelectionSetValue originalInputFieldSelectionSetValue = originalInputFieldSelectionSetValuesIt.next();
-			// InputFieldSelectionSetValueOutVO originalInputFieldSelectionSetValueVO = new InputFieldSelectionSetValueOutVO();
-			// inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(originalInputFieldSelectionSetValue, originalInputFieldSelectionSetValueVO, voMap);
 			InputFieldSelectionSetValueOutVO originalInputFieldSelectionSetValueVO = inputFieldSelectionSetValueDao
 					.toInputFieldSelectionSetValueOutVO(originalInputFieldSelectionSetValue);
 			InputFieldSelectionSetValue newInputFieldSelectionSetValue = InputFieldSelectionSetValue.Factory.newInstance();
@@ -1047,8 +993,6 @@ public class InputFieldServiceImpl
 			newInputField.addSelectionSetValues(newInputFieldSelectionSetValue);
 			CoreUtil.modifyVersion(newInputFieldSelectionSetValue, now, user);
 			newInputFieldSelectionSetValue = inputFieldSelectionSetValueDao.create(newInputFieldSelectionSetValue);
-			// InputFieldSelectionSetValueOutVO newInputFieldSelectionSetValueVO = new InputFieldSelectionSetValueOutVO();
-			// inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(newInputFieldSelectionSetValue, newInputFieldSelectionSetValueVO, voMap);
 			InputFieldSelectionSetValueOutVO newInputFieldSelectionSetValueVO = inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(newInputFieldSelectionSetValue);
 			ServiceUtil.logSystemMessage(newInputFieldSelectionSetValue.getField(), newInputFieldSelectionSetValueVO.getField(), now, user,
 					SystemMessageCodes.SELECTION_SET_VALUE_CLONED, newInputFieldSelectionSetValueVO,
@@ -1073,9 +1017,6 @@ public class InputFieldServiceImpl
 				|| this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, null) > 0
 				|| this.getECRFFieldDao().getCountByField(inputFieldId) > 0)) {
 			InputField originalInputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
-			// if (originalInputField.isLocalized()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_LOCALIZED_INPUT_FIELD);
-			// }
 			InputFieldOutVO original = inputFieldDao.toInputFieldOutVO(originalInputField);
 			inputFieldDao.evict(originalInputField);
 			InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao, LockMode.PESSIMISTIC_WRITE);
@@ -1090,11 +1031,7 @@ public class InputFieldServiceImpl
 			ServiceUtil.logSystemMessage(inputField, result, now, user, SystemMessageCodes.INPUT_FIELD_MARKED_FOR_DELETION, result, original, journalEntryDao);
 		} else {
 			InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-			// if (inputField.isLocalized()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_LOCALIZED_INPUT_FIELD);
-			// }
 			result = inputFieldDao.toInputFieldOutVO(inputField);
-			// if (deleteCascade) {
 			boolean checkProbandTrialLocked = Settings.getBoolean(SettingCodes.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED, Bundle.SETTINGS,
 					DefaultSettings.UPDATE_INPUT_FIELD_CHECK_PROBAND_TRIAL_LOCKED);
 			InquiryDao inquiryDao = this.getInquiryDao();
@@ -1142,11 +1079,6 @@ public class InputFieldServiceImpl
 				if (checkProbandTrialLocked) {
 					ServiceUtil.checkTrialLocked(trial);
 				}
-				// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfField.getEcrf().getId(), null, true, null, null, null); // row lock order
-				// if (valuesLockedEcrfCount > 0) {
-				// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(ecrfField.getEcrf()).getUniqueName(),
-				// valuesLockedEcrfCount);
-				// }
 				ServiceUtil.checkLockedEcrfs(ecrfField.getEcrf(), ecrfStatusEntryDao, ecrfDao);
 				trial.removeEcrfFields(ecrfField);
 				ecrfField.getEcrf().removeEcrfFields(ecrfField);
@@ -1196,7 +1128,6 @@ public class InputFieldServiceImpl
 				journalEntryDao.remove(journalEntry);
 			}
 			inputField.getJournalEntries().clear();
-			// }
 			inputFieldDao.remove(inputField);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.INPUT_FIELD_DELETED, result, null, journalEntryDao);
 		}
@@ -1213,9 +1144,6 @@ public class InputFieldServiceImpl
 				|| this.getInputFieldValueDao().getCount(selectionSetValueId) > 0)) {
 			InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 			InputFieldSelectionSetValue originalSelectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, selectionSetValueDao);
-			// if (originalSelectionSetValue.isLocalized()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_LOCALIZED_SELECTION_SET_VALUE);
-			// }
 			InputFieldSelectionSetValueOutVO original = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(originalSelectionSetValue);
 			selectionSetValueDao.evict(originalSelectionSetValue);
 			InputFieldSelectionSetValue selectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, selectionSetValueDao);

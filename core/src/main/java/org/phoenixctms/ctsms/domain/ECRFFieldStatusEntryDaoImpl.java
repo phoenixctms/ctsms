@@ -80,7 +80,6 @@ public class ECRFFieldStatusEntryDaoImpl
 			org.hibernate.Criteria probandListEntryCriteria,
 			Long probandListEntryId, Long ecrfFieldId) {
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldStatusEntryImpl.class, "ecrfFieldStatusEntry1"); // IMPL!!!!
-		// subQuery.setProjection(Projections.max("id"));
 		if (probandListEntryId == null) {
 			if (probandListEntryCriteria == null) {
 				probandListEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", "probandListEntry0");
@@ -321,20 +320,11 @@ public class ECRFFieldStatusEntryDaoImpl
 	@Override
 	protected long handleGetCount(ECRFFieldStatusQueue queue, Long probandListEntryId, boolean last, Boolean initial, Boolean updated, Boolean proposed, Boolean resolved)
 			throws Exception {
-		// protected long handleGetCount(ECRFFieldStatusQueue queue, Long probandListEntryId, boolean last, Boolean resolved) throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
 		if (queue != null) {
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		//ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
-		//		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0"); // , CriteriaSpecification.INNER_JOIN);
-		//		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		//		if (index != null) {
-		//			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		//		} else {
-		//			ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		//		}
 		if (initial != null || updated != null || proposed != null || resolved != null) {
 			org.hibernate.Criteria statusCriteria = ecrfFieldStatusEntryCriteria.createCriteria("status");
 			if (initial != null) {
@@ -351,7 +341,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			}
 		}
 		if (last) {
-			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, null, null, queue, probandListEntryId, null); // ecrfFieldId);
+			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, null, null, queue, probandListEntryId, null);
 		}
 		return (Long) ecrfFieldStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -365,14 +355,8 @@ public class ECRFFieldStatusEntryDaoImpl
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
-		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0"); // , CriteriaSpecification.INNER_JOIN);
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (initial != null || updated != null || proposed != null || resolved != null) {
 			org.hibernate.Criteria statusCriteria = ecrfFieldStatusEntryCriteria.createCriteria("status");
 			if (initial != null) {
@@ -389,7 +373,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			}
 		}
 		if (last) {
-			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, ecrfFieldCriteria, null, queue, probandListEntryId, null); // ecrfFieldId);
+			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, ecrfFieldCriteria, null, queue, probandListEntryId, null);
 		}
 		return (Long) ecrfFieldStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -410,17 +394,10 @@ public class ECRFFieldStatusEntryDaoImpl
 				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 			}
 		}
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (last) {
 			// uncorrelated - fast:
 			// value with max id only:
@@ -481,8 +458,6 @@ public class ECRFFieldStatusEntryDaoImpl
 				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 			}
 		}
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
@@ -492,11 +467,6 @@ public class ECRFFieldStatusEntryDaoImpl
 				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
 			}
 		}
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (last) {
 			// uncorrelated - fast:
 			// value with max id only:
@@ -514,19 +484,13 @@ public class ECRFFieldStatusEntryDaoImpl
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
-		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0"); // , CriteriaSpecification.INNER_JOIN);
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		if (section != null && section.length() > 0) {
 			ecrfFieldCriteria.add(Restrictions.eq("section", section));
 		} else {
 			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
 		}
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (initial != null || updated != null || proposed != null || resolved != null) {
 			org.hibernate.Criteria statusCriteria = ecrfFieldStatusEntryCriteria.createCriteria("status");
 			if (initial != null) {
@@ -543,7 +507,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			}
 		}
 		if (last) {
-			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, ecrfFieldCriteria, null, queue, probandListEntryId, null); // ecrfFieldId);
+			applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, ecrfFieldCriteria, null, queue, probandListEntryId, null);
 		}
 		return (Long) ecrfFieldStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -589,17 +553,10 @@ public class ECRFFieldStatusEntryDaoImpl
 				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 			}
 		}
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		}
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (last) {
 			// uncorrelated - fast:
 			// value with max id only:
@@ -609,34 +566,10 @@ public class ECRFFieldStatusEntryDaoImpl
 		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
 		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// if (sort) { // after applyPSFVO
-		// ecrfFieldStatusEntryCriteria.addOrder(Order.asc("index"));
-		// ecrfFieldStatusEntryCriteria.addOrder(Order.desc("id"));
-		// }
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldStatusEntryCriteria);
 		}
 		return ecrfFieldStatusEntryCriteria.list();
-		// org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria(null);
-		// if (queue != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
-		// }
-		// if (trialId != null || probandListEntryId != null) {
-		// org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", null);
-		// if (trialId != null) {
-		// listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		// }
-		// if (probandListEntryId != null) {
-		// listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-		// }
-		// }
-		// if (ecrfId != null) {
-		// org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField");
-		// ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		// }
-		// SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldStatusEntry.class, ecrfFieldStatusEntryCriteria);
-		// CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// return ecrfFieldStatusEntryCriteria.list();
 	}
 
 	@Override
@@ -656,8 +589,6 @@ public class ECRFFieldStatusEntryDaoImpl
 				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 			}
 		}
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
@@ -667,11 +598,6 @@ public class ECRFFieldStatusEntryDaoImpl
 				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
 			}
 		}
-		// if (index != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("index", index.longValue()));
-		// } else {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("index"));
-		// }
 		if (last) {
 			// uncorrelated - fast:
 			// value with max id only:
@@ -681,39 +607,10 @@ public class ECRFFieldStatusEntryDaoImpl
 		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
 		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// if (sort) { // after applyPSFVO
-		// ecrfFieldStatusEntryCriteria.addOrder(Order.asc("index"));
-		// ecrfFieldStatusEntryCriteria.addOrder(Order.desc("id"));
-		// }
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldStatusEntryCriteria);
 		}
 		return ecrfFieldStatusEntryCriteria.list();
-		// org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria(null);
-		// if (queue != null) {
-		// ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
-		// }
-		// if (trialId != null || probandListEntryId != null) {
-		// org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", null);
-		// if (trialId != null) {
-		// listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		// }
-		// if (probandListEntryId != null) {
-		// listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-		// }
-		// }
-		// if (ecrfId != null) {
-		// org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField");
-		// ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		// if (section != null && section.length() > 0) {
-		// ecrfFieldCriteria.add(Restrictions.eq("section", section));
-		// } else {
-		// ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
-		// }
-		// }
-		// SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldStatusEntry.class, ecrfFieldStatusEntryCriteria);
-		// CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// return ecrfFieldStatusEntryCriteria.list();
 	}
 
 	/**
@@ -722,9 +619,6 @@ public class ECRFFieldStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldStatusEntry loadECRFFieldStatusEntryFromECRFFieldStatusEntryInVO(ECRFFieldStatusEntryInVO eCRFFieldStatusEntryInVO) {
-		// TODO implement loadECRFFieldStatusEntryFromECRFFieldStatusEntryInVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldStatusEntryFromECRFFieldStatusEntryInVO(ECRFFieldStatusEntryInVO) not yet implemented.");
 		ECRFFieldStatusEntry ecrfFieldStatusEntry = null;
 		Long id = eCRFFieldStatusEntryInVO.getId();
 		if (id != null) {
@@ -742,9 +636,6 @@ public class ECRFFieldStatusEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRFFieldStatusEntry loadECRFFieldStatusEntryFromECRFFieldStatusEntryOutVO(ECRFFieldStatusEntryOutVO eCRFFieldStatusEntryOutVO) {
-		// TODO implement loadECRFFieldStatusEntryFromECRFFieldStatusEntryOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFieldStatusEntryFromECRFFieldStatusEntryOutVO(ECRFFieldStatusEntryOutVO) not yet implemented.");
 		ECRFFieldStatusEntry eCRFFieldStatusEntry = this.load(eCRFFieldStatusEntryOutVO.getId());
 		if (eCRFFieldStatusEntry == null) {
 			eCRFFieldStatusEntry = ECRFFieldStatusEntry.Factory.newInstance();
@@ -767,7 +658,6 @@ public class ECRFFieldStatusEntryDaoImpl
 	public void toECRFFieldStatusEntryInVO(
 			ECRFFieldStatusEntry source,
 			ECRFFieldStatusEntryInVO target) {
-		// TODO verify behavior of toECRFFieldStatusEntryInVO
 		super.toECRFFieldStatusEntryInVO(source, target);
 		ECRFFieldStatusType status = source.getStatus();
 		ProbandListEntry listEntry = source.getListEntry();
@@ -799,12 +689,6 @@ public class ECRFFieldStatusEntryDaoImpl
 			ECRFFieldStatusEntry source,
 			ECRFFieldStatusEntryOutVO target) {
 		super.toECRFFieldStatusEntryOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.ecrfField (can't convert source.getEcrfField():org.phoenixctms.ctsms.domain.ECRFField to org.phoenixctms.ctsms.vo.ECRFFieldOutVO
-		// WARNING! No conversion for target.listEntry (can't convert source.getListEntry():org.phoenixctms.ctsms.domain.ProbandListEntry to
-		// org.phoenixctms.ctsms.vo.ProbandListEntryOutVO
-		// WARNING! No conversion for target.status (can't convert source.getStatus():org.phoenixctms.ctsms.domain.ECRFFieldStatusType to
-		// org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO
 		ECRFFieldStatusType status = source.getStatus();
 		ProbandListEntry listEntry = source.getListEntry();
 		ECRFField ecrfField = source.getEcrfField();

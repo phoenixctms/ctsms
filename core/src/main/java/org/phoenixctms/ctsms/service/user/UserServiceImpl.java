@@ -232,7 +232,6 @@ public class UserServiceImpl
 			}
 			checkActivityCount(userId, journalEntryDao);
 			result = userDao.toUserOutVO(user, maxInstances);
-			// if (deleteCascade) {
 			NotificationDao notificationDao = this.getNotificationDao();
 			NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 			Iterator<JournalEntry> journalEntriesIt = user.getJournalEntries().iterator();
@@ -269,10 +268,6 @@ public class UserServiceImpl
 				dataTableColumnDao.remove(tableColumn);
 			}
 			user.getTableColumns().clear();
-			// ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
-			// } else {
-			// checkActivityCount(userId, journalEntryDao);
-			// }
 			StaffDao staffDao = this.getStaffDao();
 			Staff identity = user.getIdentity();
 			if (identity != null) {

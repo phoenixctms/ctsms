@@ -41,8 +41,6 @@ public class TrialTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TrialType loadTrialTypeFromTrialTypeVO(TrialTypeVO trialTypeVO) {
-		// TODO implement loadTrialTypeFromTrialTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTypeFromTrialTypeVO(TrialTypeVO) not yet implemented.");
 		TrialType trialType = null;
 		Long id = trialTypeVO.getId();
 		if (id != null) {

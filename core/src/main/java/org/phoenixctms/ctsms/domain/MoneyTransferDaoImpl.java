@@ -169,17 +169,9 @@ public class MoneyTransferDaoImpl
 		} else if (trialId != null) {
 			trialCriteria = criteriaMap.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
-		//		Criteria probandCriteria = null;
-		//		if (probandDepartmentId != null) {
-		//			probandCriteria = criteriaMap.createCriteria("proband", CriteriaSpecification.LEFT_JOIN);
-		//		} else if (probandId != null) {
-		//			probandCriteria = criteriaMap.createCriteria("proband", CriteriaSpecification.INNER_JOIN);
-		//		}
-		//if (probandDepartmentId != null || probandId != null) {
 		if (probandDepartmentId != null || probandId != null || person != null) {
 			Criteria probandCriteria = criteriaMap.createCriteria("proband", CriteriaSpecification.INNER_JOIN);
 			if (probandDepartmentId != null) {
-				//probandCriteria.add(Restrictions.or(Restrictions.isNull("moneyTransfer.proband"), Restrictions.eq("department.id", probandDepartmentId.longValue())));
 				probandCriteria.add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
 			}
 			if (probandId != null) {
@@ -229,7 +221,7 @@ public class MoneyTransferDaoImpl
 	protected long handleGetCostTypeCount(Long probandId, Long trialId, String costType) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria(null);
 		applyCostTypeCriterions(moneyTransferCriteria, probandId, trialId);
-		CategoryCriterion.apply(moneyTransferCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.EMPTY_ROWS)); // , true));
+		CategoryCriterion.apply(moneyTransferCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.EMPTY_ROWS));
 		// return (Long) moneyTransferCriteria.setProjection(Projections.countDistinct("costType")).uniqueResult();
 		// postgres: count(distinct f1) yields the number of distinct ***non-null*** values of f1
 		moneyTransferCriteria.setProjection(Projections.distinct(Projections.property("costType")));
@@ -269,7 +261,6 @@ public class MoneyTransferDaoImpl
 	@Override
 	protected long handleGetCount(Long trialId, Long probandId, Long bankAccountId, PaymentMethod method, String costType, Boolean paid) throws Exception {
 		org.hibernate.Criteria moneyTransferCriteria = createMoneyTransferCriteria("moneyTransfer");
-		//moneyTransferCriteria.add(Restrictions.isNull("trial.id"));
 		if (trialId != null) {
 			moneyTransferCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
@@ -295,8 +286,6 @@ public class MoneyTransferDaoImpl
 	 * a new, blank entity is created
 	 */
 	private MoneyTransfer loadMoneyTransferFromMoneyTransferInVO(MoneyTransferInVO moneyTransferInVO) {
-		// TODO implement loadMoneyTransferFromMoneyTransferInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMoneyTransferFromMoneyTransferInVO(MoneyTransferInVO) not yet implemented.");
 		MoneyTransfer moneyTransfer = null;
 		Long id = moneyTransferInVO.getId();
 		if (id != null) {
@@ -314,8 +303,6 @@ public class MoneyTransferDaoImpl
 	 * a new, blank entity is created
 	 */
 	private MoneyTransfer loadMoneyTransferFromMoneyTransferOutVO(MoneyTransferOutVO moneyTransferOutVO) {
-		// TODO implement loadMoneyTransferFromMoneyTransferOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMoneyTransferFromMoneyTransferOutVO(MoneyTransferOutVO) not yet implemented.");
 		MoneyTransfer moneyTransfer = this.load(moneyTransferOutVO.getId());
 		if (moneyTransfer == null) {
 			moneyTransfer = MoneyTransfer.Factory.newInstance();
@@ -409,8 +396,6 @@ public class MoneyTransferDaoImpl
 			MoneyTransfer target,
 			boolean copyIfNull) {
 		super.moneyTransferOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.method (can't convert source.getMethod():org.phoenixctms.ctsms.vo.PaymentMethodVO to org.phoenixctms.ctsms.enumeration.PaymentMethod
-		// No conversion for target.exportStatus (can't convert source.getExportStatus():org.phoenixctms.ctsms.vo.ExportStatusVO to org.phoenixctms.ctsms.enumeration.ExportStatus
 		BankAccountOutVO bankAccountVO = source.getBankAccount();
 		ProbandOutVO probandVO = source.getProband();
 		TrialOutVO trialVO = source.getTrial();
@@ -516,11 +501,6 @@ public class MoneyTransferDaoImpl
 			MoneyTransfer source,
 			MoneyTransferOutVO target) {
 		super.toMoneyTransferOutVO(source, target);
-		// WARNING! No conversion for target.method (can't convert source.getMethod():org.phoenixctms.ctsms.enumeration.PaymentMethod to org.phoenixctms.ctsms.vo.PaymentMethodVO
-		// WARNING! No conversion for target.exportStatus (can't convert source.getExportStatus():org.phoenixctms.ctsms.enumeration.ExportStatus to org.phoenixctms.ctsms.vo.ExportStatusVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.bankAccount (can't convert source.getBankAccount():org.phoenixctms.ctsms.domain.BankAccount to org.phoenixctms.ctsms.vo.BankAccountOutVO
 		BankAccount bankAccount = source.getBankAccount();
 		Proband proband = source.getProband();
 		Trial trial = source.getTrial();
@@ -538,7 +518,6 @@ public class MoneyTransferDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		target.setMethod(L10nUtil.createPaymentMethodVO(Locales.USER, source.getMethod()));
-		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 		try {
 			if (!CoreUtil.isPassDecryption()) {
 				throw new Exception();

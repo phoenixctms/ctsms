@@ -38,17 +38,6 @@ public class StratificationRandomizationListDaoImpl
 	private final static InputFieldSelectionSetValueOutVOComparator SELECTION_SET_VALUE_COMPARATOR = new InputFieldSelectionSetValueOutVOComparator();
 
 	public static ArrayList<Long> toInputFieldSelectionSetValueIdCollection(Collection<InputFieldSelectionSetValue> selectionSetValues) { // lazyload persistentset prevention
-		// ArrayList<Long> result;
-		// if (substances != null && substances.size() > 0) {
-		// result = new ArrayList<Long>(substances.size());
-		// Iterator<AspSubstance> it = substances.iterator();
-		// while (it.hasNext()) {
-		// result.add(it.next().getId());
-		// }
-		// } else {
-		// result = new ArrayList<Long>();
-		// }
-		// return result;
 		ArrayList<Long> result = new ArrayList<Long>(selectionSetValues.size());
 		Iterator<InputFieldSelectionSetValue> it = selectionSetValues.iterator();
 		while (it.hasNext()) {
@@ -76,8 +65,6 @@ public class StratificationRandomizationListDaoImpl
 			stratificationRandomizationListCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); // support filter by selection set value
-		// CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		// return stratificationRandomizationListCriteria.list();
 	}
 
 	@Override
@@ -101,7 +88,7 @@ public class StratificationRandomizationListDaoImpl
 		// }
 		// }
 		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
-			org.hibernate.Criteria selectionSetValuesCriteria = stratificationRandomizationListCriteria.createCriteria("selectionSetValues", // "selectionSetValues0",
+			org.hibernate.Criteria selectionSetValuesCriteria = stratificationRandomizationListCriteria.createCriteria("selectionSetValues",
 					CriteriaSpecification.INNER_JOIN);
 			selectionSetValuesCriteria.add(Restrictions.in("id", selectionSetValueIds));
 			ProjectionList proj = Projections.projectionList();
@@ -118,23 +105,6 @@ public class StratificationRandomizationListDaoImpl
 				result.add(this.load((Long) ((Object[]) it.next())[0]));
 			}
 			return result;
-			// ArrayList<StratificationRandomizationList> result = new ArrayList<StratificationRandomizationList>();
-			// Iterator it = CriteriaUtil.listDistinctRoot(stratificationRandomizationListCriteria, this).iterator();
-			// while (it.hasNext()) {
-			// StratificationRandomizationList randomizationList = (StratificationRandomizationList) it.next();
-			// HashSet<Long> randomizationListSelectionSetValueIds = new HashSet<Long>();
-			// Iterator<InputFieldSelectionSetValue> randomizationListSelectionSetValuesIt = randomizationList.getSelectionSetValues().iterator();
-			// while (randomizationListSelectionSetValuesIt.hasNext()) {
-			// randomizationListSelectionSetValueIds.add(randomizationListSelectionSetValuesIt.next().getId());
-			// }
-			// if (randomizationListSelectionSetValueIds.equals(selectionSetValueIds)) {
-			// result.add(randomizationList);
-			// }
-			// // if (randomizationListSelectionSetValueIds.removeAll(selectionSetValueIds) && randomizationListSelectionSetValueIds.size() == 0) {
-			// // result.add(randomizationList);
-			// // }
-			// }
-			// return result;
 		} else {
 			return stratificationRandomizationListCriteria.list();
 		}
@@ -156,11 +126,6 @@ public class StratificationRandomizationListDaoImpl
 	 */
 	private StratificationRandomizationList loadStratificationRandomizationListFromStratificationRandomizationListInVO(
 			StratificationRandomizationListInVO stratificationRandomizationListInVO) {
-		// TODO implement loadStratificationRandomizationListFromStratificationRandomizationListInVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStratificationRandomizationListFromStratificationRandomizationListInVO(StratificationRandomizationListInVO)
-		// not yet
-		// implemented.");
 		Long id = stratificationRandomizationListInVO.getId();
 		StratificationRandomizationList stratificationRandomizationList = null;
 		if (id != null) {
@@ -179,11 +144,6 @@ public class StratificationRandomizationListDaoImpl
 	 */
 	private StratificationRandomizationList loadStratificationRandomizationListFromStratificationRandomizationListOutVO(
 			StratificationRandomizationListOutVO stratificationRandomizationListOutVO) {
-		// TODO implement loadStratificationRandomizationListFromStratificationRandomizationListOutVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadStratificationRandomizationListFromStratificationRandomizationListOutVO(StratificationRandomizationListOutVO)
-		// not
-		// yet implemented.");
 		StratificationRandomizationList stratificationRandomizationList = this.get(stratificationRandomizationListOutVO.getId());
 		if (stratificationRandomizationList == null) {
 			stratificationRandomizationList = StratificationRandomizationList.Factory.newInstance();
@@ -302,7 +262,6 @@ public class StratificationRandomizationListDaoImpl
 	 */
 	@Override
 	public StratificationRandomizationListInVO toStratificationRandomizationListInVO(final StratificationRandomizationList entity) {
-		// TODO verify behavior of toStratificationRandomizationListInVO
 		return super.toStratificationRandomizationListInVO(entity);
 	}
 
@@ -313,7 +272,6 @@ public class StratificationRandomizationListDaoImpl
 	public void toStratificationRandomizationListInVO(
 			StratificationRandomizationList source,
 			StratificationRandomizationListInVO target) {
-		// TODO verify behavior of toStratificationRandomizationListInVO
 		super.toStratificationRandomizationListInVO(source, target);
 	}
 
@@ -332,12 +290,7 @@ public class StratificationRandomizationListDaoImpl
 	public void toStratificationRandomizationListOutVO(
 			StratificationRandomizationList source,
 			StratificationRandomizationListOutVO target) {
-		// TODO verify behavior of toStratificationRandomizationListOutVO
 		super.toStratificationRandomizationListOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.selectionSetValues (can't convert source.getSelectionSetValues():org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue to
-		// org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		if (trial != null) {

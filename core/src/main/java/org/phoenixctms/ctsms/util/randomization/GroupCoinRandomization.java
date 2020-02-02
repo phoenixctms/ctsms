@@ -24,7 +24,6 @@ public class GroupCoinRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	private ProbandGroup getRandomGroup(Trial trial, Collection<ProbandGroup> groups) throws Exception {

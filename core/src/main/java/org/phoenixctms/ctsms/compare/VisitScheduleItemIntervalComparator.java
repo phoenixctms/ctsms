@@ -8,7 +8,6 @@ public class VisitScheduleItemIntervalComparator extends IntervalComparatorBase<
 
 	public VisitScheduleItemIntervalComparator(boolean intDesc) {
 		super(intDesc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

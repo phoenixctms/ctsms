@@ -423,9 +423,6 @@ public class DutyRosterTurnDaoImpl
 			DutyRosterTurn source,
 			DutyRosterTurnOutVO target) {
 		super.toDutyRosterTurnOutVO(source, target);
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.staff (can't convert source.getStaff():org.phoenixctms.ctsms.domain.Staff to org.phoenixctms.ctsms.vo.StaffOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		Staff staff = source.getStaff();
 		Trial trial = source.getTrial();
 		VisitScheduleItem visitScheduleItem = source.getVisitScheduleItem();

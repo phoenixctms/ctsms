@@ -39,9 +39,9 @@ public final class ReimbursementsPDFDefaultSettings {
 	public static final float PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH = 0.0f;
 	public static final float Y_FRAME_UPPER_INDENT_SIGNATURE = 38.0f;
 	public static final float Y_FRAME_LOWER_INDENT_SIGNATURE = 3.0f;
-	public static final float X_FRAME_INDENT_SIGNATURE = 7.0f; // 24.0f;
+	public static final float X_FRAME_INDENT_SIGNATURE = 7.0f;
 	public static final float SIGNATURE_LINE_WIDTH = 0.3f;
-	public static final float SIGNATURE_LINE_LENGTH = 175.0f; // 250.0f;
+	public static final float SIGNATURE_LINE_LENGTH = 175.0f;
 	public static final float Y_OFFSET_SIGNATURE_ANNOTATION = 2.0f;
 	public static final float DATE_LABEL_WIDTH = 35.0f;
 	public static final float DATE_LINE_LENGTH = 100.0f;
@@ -51,7 +51,7 @@ public final class ReimbursementsPDFDefaultSettings {
 	public static final float X_TRIAL_TAG_NAME_WIDTH = 160.0f;
 	public static final int COPIES = 1;
 	public static final float ADDRESS_Y = 680.0f;
-	public static final float PAYMENT_TABLE_ROW_HEIGHT_LIMIT = 220.0f; // 300.0f;
+	public static final float PAYMENT_TABLE_ROW_HEIGHT_LIMIT = 220.0f;
 	public final static float Y_TOTALS_INDENT = 10.0f;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;

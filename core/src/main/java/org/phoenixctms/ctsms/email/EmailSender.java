@@ -10,7 +10,6 @@ import javax.mail.Address;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
@@ -57,7 +56,6 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 					mimeMessage.setContent(multipart);
 				}
 				storeMessage(mimeMessage, entity, recipient, now);
-				// return mimeMessage;
 			}
 			return mimeMessage;
 		}

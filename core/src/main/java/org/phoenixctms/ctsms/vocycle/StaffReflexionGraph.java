@@ -27,55 +27,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 
 public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO> {
 
-	// private static final String getStaffName(StaffOutVO staff, boolean withTitles) {
-	// StringBuilder sb = new StringBuilder();
-	// if (staff != null) {
-	// if (staff.isPerson()) {
-	// if (withTitles) {
-	// CommonUtil.appendString(sb, staff.getPrefixedTitle1(), null);
-	// CommonUtil.appendString(sb, staff.getPrefixedTitle2(), " ");
-	// CommonUtil.appendString(sb, staff.getPrefixedTitle3(), " ");
-	// CommonUtil.appendString(sb, staff.getFirstName(), " ");
-	// CommonUtil.appendString(sb, staff.getLastName(), " ", "?");
-	// CommonUtil.appendString(sb, staff.getPostpositionedTitle1(), ", ");
-	// CommonUtil.appendString(sb, staff.getPostpositionedTitle2(), ", ");
-	// CommonUtil.appendString(sb, staff.getPostpositionedTitle3(), ", ");
-	// } else {
-	// CommonUtil.appendString(sb, staff.getFirstName(), null);
-	// CommonUtil.appendString(sb, staff.getLastName(), " ", "?");
-	// }
-	// } else {
-	// sb.append(staff.getOrganisationName());
-	// }
-	// }
-	// return sb.toString();
-	// }
-	//
-	// private static final String getStaffInitials(StaffOutVO staff) {
-	// StringBuilder sb = new StringBuilder();
-	// if (staff != null) {
-	//
-	//
-	// if (staff.isPerson()) {
-	// String firstName = staff.getFirstName();
-	// if (firstName != null && firstName.trim().length() > 0) {
-	// sb.append(firstName.trim().substring(0, 1).toUpperCase());
-	// }
-	// String lastName = staff.getLastName();
-	// if (lastName != null && lastName.trim().length() > 0) {
-	// sb.append(lastName.trim().substring(0, 1).toUpperCase());
-	// }
-	// } else {
-	// String organisationName = staff.getOrganisationName();
-	// if (organisationName != null && organisationName.trim().length() > 0) {
-	// sb.append(organisationName.trim().substring(0, 3).toUpperCase());
-	// }
-	// }
-	//
-	//
-	// }
-	// return sb.toString();
-	// }
 	private static final boolean LIMIT_INSTANCES = true;
 	private static final boolean LIMIT_PARENTS_DEPTH = true;
 	private static final boolean LIMIT_CHILDREN_DEPTH = true;
@@ -251,6 +202,6 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 		target.setName(CommonUtil.getStaffName(target, false, true));
 		target.setNameWithTitles(CommonUtil.getStaffName(target, true, true));
 		target.setNameSortable(CommonUtil.getNameSortable(target));
-		target.setChildrenCount(staffDaoImpl.getChildrenCount(source.getId())); // source.getChildren().Xsize());
+		target.setChildrenCount(staffDaoImpl.getChildrenCount(source.getId()));
 	}
 }

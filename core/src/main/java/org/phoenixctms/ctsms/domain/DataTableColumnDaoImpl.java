@@ -30,7 +30,6 @@ public class DataTableColumnDaoImpl
 	 */
 	protected Collection<DataTableColumn> handleFindByUserTableColumn(Long userId, String tableName, String columnName) {
 		org.hibernate.Criteria tableColumnCriteria = createDataTableColumnCriteria();
-		//tableColumnCriteria.setCacheable(true);
 		tableColumnCriteria.add(Restrictions.eq("user.id", userId.longValue()));
 		if (tableName != null) {
 			tableColumnCriteria.add(Restrictions.eq("tableName", tableName));
@@ -48,7 +47,6 @@ public class DataTableColumnDaoImpl
 	public void toDataTableColumnVO(
 			DataTableColumn source,
 			DataTableColumnVO target) {
-		// TODO verify behavior of toDataTableColumnVO
 		super.toDataTableColumnVO(source, target);
 	}
 
@@ -56,7 +54,6 @@ public class DataTableColumnDaoImpl
 	 * {@inheritDoc}
 	 */
 	public DataTableColumnVO toDataTableColumnVO(final DataTableColumn entity) {
-		// TODO verify behavior of toDataTableColumnVO
 		return super.toDataTableColumnVO(entity);
 	}
 
@@ -66,16 +63,6 @@ public class DataTableColumnDaoImpl
 	 * a new, blank entity is created
 	 */
 	private DataTableColumn loadDataTableColumnFromDataTableColumnVO(DataTableColumnVO dataTableColumnVO) {
-		// TODO implement loadDataTableColumnFromDataTableColumnVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadDataTableColumnFromDataTableColumnVO(DataTableColumnVO) not yet implemented.");
-		/* A typical implementation looks like this:
-		DataTableColumn dataTableColumn = this.get(dataTableColumnVO.getId());
-		if (dataTableColumn == null)
-		{
-		    dataTableColumn = DataTableColumn.Factory.newInstance();
-		}
-		return dataTableColumn;
-		*/
 		return DataTableColumn.Factory.newInstance();
 	}
 
@@ -83,7 +70,6 @@ public class DataTableColumnDaoImpl
 	 * {@inheritDoc}
 	 */
 	public DataTableColumn dataTableColumnVOToEntity(DataTableColumnVO dataTableColumnVO) {
-		// TODO verify behavior of dataTableColumnVOToEntity
 		DataTableColumn entity = this.loadDataTableColumnFromDataTableColumnVO(dataTableColumnVO);
 		this.dataTableColumnVOToEntity(dataTableColumnVO, entity, true);
 		return entity;
@@ -97,14 +83,12 @@ public class DataTableColumnDaoImpl
 			DataTableColumnVO source,
 			DataTableColumn target,
 			boolean copyIfNull) {
-		// TODO verify behavior of dataTableColumnVOToEntity
 		super.dataTableColumnVOToEntity(source, target, copyIfNull);
 	}
 
 	@Override
 	protected long handleGetCount(Long userId, String tableName, String columnName) throws Exception {
 		org.hibernate.Criteria tableColumnCriteria = createDataTableColumnCriteria();
-		//tableColumnCriteria.setCacheable(true);
 		tableColumnCriteria.add(Restrictions.eq("user.id", userId.longValue()));
 		if (tableName != null) {
 			tableColumnCriteria.add(Restrictions.eq("tableName", tableName));

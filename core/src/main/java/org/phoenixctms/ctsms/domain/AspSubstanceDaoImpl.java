@@ -105,15 +105,6 @@ public class AspSubstanceDaoImpl
 						DefaultSettings.ASP_SUBSTANCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
 				aspSubstanceCriteria);
 		if (MATCH_ASP_NAME || MATCH_ASP_REGISTRATION_NUMBER || MATCH_ATC_CODE_CODE) {
-			// ProjectionList projectionList = Projections.projectionList().add(Projections.id());
-			// projectionList.add(Projections.property("name"));
-			// List aspSubstances = aspSubstanceCriteria.setProjection(Projections.distinct(projectionList)).list();
-			// Iterator it = aspSubstances.iterator();
-			// ArrayList result = new ArrayList(aspSubstances.size());
-			// while (it.hasNext()) {
-			// result.add(this.load((Long) ((Object[]) it.next())[0]));
-			// }
-			// return result;
 			return CriteriaUtil.listDistinctRoot(aspSubstanceCriteria, this, "name");
 		} else {
 			return aspSubstanceCriteria.list();

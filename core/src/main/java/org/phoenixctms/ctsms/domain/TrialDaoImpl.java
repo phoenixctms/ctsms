@@ -63,7 +63,6 @@ public class TrialDaoImpl
 				criteria,
 				DBModule.TRIAL_DB,
 				psf,
-				// this.getSession(),
 				this.getSessionFactory(),
 				this.getCriterionTieDao(),
 				this.getCriterionPropertyDao(),
@@ -127,7 +126,6 @@ public class TrialDaoImpl
 		DetachedCriteria valuesSubQuery = DetachedCriteria.forClass(InquiryValueImpl.class, "inquiryValue"); // IMPL!!!!
 		valuesSubQuery.setProjection(Projections.rowCount());
 		valuesSubQuery.add(Restrictions.eq("proband.id", probandId.longValue()));
-		// if (active != null || activeSignup != null) {
 		DetachedCriteria inquiriesSubQuery = valuesSubQuery.createCriteria("inquiry", "inquiry0", CriteriaSpecification.INNER_JOIN);
 		inquiriesSubQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
 		if (active != null) {
@@ -145,7 +143,6 @@ public class TrialDaoImpl
 		if (activeSignup != null) {
 			inquiriesSubQuery.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
 		}
-		// }
 		trialCriteria.add(
 				Restrictions.or(
 						Subqueries.lt(0l, valuesSubQuery),
@@ -181,8 +178,6 @@ public class TrialDaoImpl
 		}
 		CategoryCriterion.apply(payoffCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		trialCriteria.addOrder(Order.asc("name"));
-		// trialCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return trialCriteria.list();
 		return CriteriaUtil.listDistinctRoot(trialCriteria, this, "name");
 	}
 
@@ -206,18 +201,8 @@ public class TrialDaoImpl
 								ignoreSignupInquiries ? Subqueries.lt(0l, subQuery)
 										: Restrictions.and(
 												Restrictions.eq("signupInquiries", true),
-												Subqueries.lt(0l, subQuery)
-										// Restrictions.sizeGt("inquiries", 0)
-										),
+												Subqueries.lt(0l, subQuery)),
 								Restrictions.eq("trialStatus.inquiryValueInputEnabled", true))));
-		// if (probandList != null) {
-		// trialCriteria.add(Restrictions.eq("signupProbandList", probandList.booleanValue()));
-		// }
-		// if (inquiries != null) {
-		// trialCriteria.add(Restrictions.eq("signupInquiries", inquiries.booleanValue()));
-		// statusCriteria.add(Restrictions.eq("inquiryValueInputEnabled", true));
-		// trialCriteria.add(Restrictions.sizeGt("inquiries", 0));
-		// }
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return trialCriteria.list();
 	}
@@ -252,8 +237,6 @@ public class TrialDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Trial loadTrialFromTrialOutVO(TrialOutVO trialOutVO) {
-		// TODO implement loadTrialFromTrialOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialFromTrialOutVO(TrialOutVO) not yet implemented.");
 		Trial trial = this.load(trialOutVO.getId());
 		if (trial == null) {
 			trial = Trial.Factory.newInstance();
@@ -262,8 +245,6 @@ public class TrialDaoImpl
 	}
 
 	private Trial loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO trialRandomizationListVO) {
-		// TODO implement loadTrialFromTrialRandomizationListVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialFromTrialRandomizationListVO(TrialRandomizationListVO) not yet implemented.");
 		Trial trial = this.load(trialRandomizationListVO.getId());
 		if (trial == null) {
 			trial = Trial.Factory.newInstance();

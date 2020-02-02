@@ -16,7 +16,7 @@ import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 
-public class ProbandListStatusEntryCollisionFinder extends BlockingProbandListStatusCollisionFinder<ProbandListStatusEntryInVO, ProbandListStatusEntry> {// ProbandListStatusEntryCollisionFinderBase<ProbandListStatusEntryInVO>{
+public class ProbandListStatusEntryCollisionFinder extends BlockingProbandListStatusCollisionFinder<ProbandListStatusEntryInVO, ProbandListStatusEntry> {
 
 	private ProbandListEntryDao probandListEntryDao;
 	private ProbandListStatusEntryDao probandListStatusEntryDao;
@@ -34,7 +34,6 @@ public class ProbandListStatusEntryCollisionFinder extends BlockingProbandListSt
 		Proband proband = listEntry.getProband();
 		probandDao.lock(proband, LockMode.PESSIMISTIC_WRITE);
 		return proband;
-		// return ServiceUtil.checkProbandId(listEntry.getProband().getId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 	}
 
 	@Override

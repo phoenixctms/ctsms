@@ -394,14 +394,6 @@ public class ProbandAddressDaoImpl
 			ProbandAddress target,
 			boolean copyIfNull) {
 		super.probandAddressInVOToEntity(source, target, copyIfNull);
-		// No conversion for target.countryName (can't convert source.getCountryName():java.lang.String to byte[]
-		// No conversion for target.zipCode (can't convert source.getZipCode():java.lang.String to byte[]
-		// No conversion for target.cityName (can't convert source.getCityName():java.lang.String to byte[]
-		// No conversion for target.streetName (can't convert source.getStreetName():java.lang.String to byte[]
-		// No conversion for target.houseNumber (can't convert source.getHouseNumber():java.lang.String to byte[]
-		// No conversion for target.entrance (can't convert source.getEntrance():java.lang.String to byte[]
-		// No conversion for target.doorNumber (can't convert source.getDoorNumber():java.lang.String to byte[]
-		// No conversion for target.careOf (can't convert source.getCareOf():java.lang.String to byte[]
 		Long typeId = source.getTypeId();
 		Long probandId = source.getProbandId();
 		if (typeId != null) {
@@ -493,14 +485,6 @@ public class ProbandAddressDaoImpl
 			ProbandAddress target,
 			boolean copyIfNull) {
 		super.probandAddressOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.countryName (can't convert source.getCountryName():java.lang.String to byte[]
-		// No conversion for target.zipCode (can't convert source.getZipCode():java.lang.String to byte[]
-		// No conversion for target.cityName (can't convert source.getCityName():java.lang.String to byte[]
-		// No conversion for target.streetName (can't convert source.getStreetName():java.lang.String to byte[]
-		// No conversion for target.houseNumber (can't convert source.getHouseNumber():java.lang.String to byte[]
-		// No conversion for target.entrance (can't convert source.getEntrance():java.lang.String to byte[]
-		// No conversion for target.doorNumber (can't convert source.getDoorNumber():java.lang.String to byte[]
-		// No conversion for target.careOf (can't convert source.getCareOf():java.lang.String to byte[]
 		AddressTypeVO typeVO = source.getType();
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -595,14 +579,6 @@ public class ProbandAddressDaoImpl
 			ProbandAddress source,
 			ProbandAddressInVO target) {
 		super.toProbandAddressInVO(source, target);
-		// WARNING! No conversion for target.countryName (can't convert source.getCountryName():byte[] to java.lang.String
-		// WARNING! No conversion for target.zipCode (can't convert source.getZipCode():byte[] to java.lang.String
-		// WARNING! No conversion for target.cityName (can't convert source.getCityName():byte[] to java.lang.String
-		// WARNING! No conversion for target.streetName (can't convert source.getStreetName():byte[] to java.lang.String
-		// WARNING! No conversion for target.houseNumber (can't convert source.getHouseNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.entrance (can't convert source.getEntrance():byte[] to java.lang.String
-		// WARNING! No conversion for target.doorNumber (can't convert source.getDoorNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.careOf (can't convert source.getCareOf():byte[] to java.lang.String
 		AddressType type = source.getType();
 		Proband proband = source.getProband();
 		if (type != null) {
@@ -640,19 +616,7 @@ public class ProbandAddressDaoImpl
 	public void toProbandAddressOutVO(
 			ProbandAddress source,
 			ProbandAddressOutVO target) {
-		// TODO verify behavior of toProbandAddressOutVO
 		super.toProbandAddressOutVO(source, target);
-		// WARNING! No conversion for target.countryName (can't convert source.getCountryName():byte[] to java.lang.String
-		// WARNING! No conversion for target.zipCode (can't convert source.getZipCode():byte[] to java.lang.String
-		// WARNING! No conversion for target.cityName (can't convert source.getCityName():byte[] to java.lang.String
-		// WARNING! No conversion for target.streetName (can't convert source.getStreetName():byte[] to java.lang.String
-		// WARNING! No conversion for target.houseNumber (can't convert source.getHouseNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.entrance (can't convert source.getEntrance():byte[] to java.lang.String
-		// WARNING! No conversion for target.doorNumber (can't convert source.getDoorNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.careOf (can't convert source.getCareOf():byte[] to java.lang.String
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.AddressType to org.phoenixctms.ctsms.vo.AddressTypeVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		AddressType type = source.getType();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();

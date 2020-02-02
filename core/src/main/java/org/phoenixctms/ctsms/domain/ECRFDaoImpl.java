@@ -194,43 +194,6 @@ public class ECRFDaoImpl
 		}
 	}
 
-	// private Long getCount(Long probandListEntryId, Long visitId, Boolean active, Long ecrfStatusTypeId, String property, Boolean value) throws Exception {
-	//
-	// ProbandListEntry listEntry = this.getProbandListEntryDao().load(probandListEntryId);
-	// Long trialId = listEntry.getTrial().getId();
-	// Long groupId = (listEntry.getGroup() != null ? listEntry.getGroup().getId() : null);
-	// org.hibernate.Criteria ecrfCriteria = createEcrfCriteria("ecrf0");
-	// if (visitId != null) {
-	// ecrfCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
-	// } else {
-	// ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-	// }
-	// if (groupId != null) {
-	// ecrfCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-	// Restrictions.isNull("group.id")
-	// ));
-	// }
-	// if (active != null) {
-	// ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
-	// }
-	// if (ecrfStatusTypeId != null || value != null) {
-	// org.hibernate.Criteria ecrfStatusEntryCriteria = ecrfCriteria.createCriteria("ecrfStatusEntries", "statusEntries",
-	// CriteriaSpecification.LEFT_JOIN,
-	// Restrictions.and(
-	// Restrictions.eqProperty("statusEntries.ecrf.id", "ecrf0.id"),
-	// Restrictions.eq("statusEntries.listEntry.id", probandListEntryId.longValue())
-	// ));
-	// org.hibernate.Criteria ecrfStatusTypeCriteria = ecrfStatusEntryCriteria.createCriteria("status",CriteriaSpecification.LEFT_JOIN);
-	// if (ecrfStatusTypeId != null) {
-	// ecrfStatusTypeCriteria.add(Restrictions.idEq(ecrfStatusTypeId.longValue()));
-	// }
-	// if (value != null) {
-	// ecrfStatusTypeCriteria.add(Restrictions.eq(property, value.booleanValue()));
-	// }
-	//
-	// }
-	// return (Long) ecrfCriteria.setProjection(Projections.rowCount()).uniqueResult();
-	// }
 	@Override
 	protected Collection<ECRF> handleFindByListEntryActiveSorted(Long probandListEntryId, Boolean active, boolean sort, PSFVO psf) throws Exception {
 		ProbandListEntry listEntry = this.getProbandListEntryDao().load(probandListEntryId);
@@ -241,7 +204,6 @@ public class ECRFDaoImpl
 		if (groupId != null) {
 			// http://stackoverflow.com/questions/4334970/hibernate-cannot-simultaneously-fetch-multiple-bags
 			Criteria ecrfFieldCriteria = ecrfCriteria.createCriteria("ecrfFields", CriteriaSpecification.LEFT_JOIN);
-			// ecrfFieldCriteria.setFetchMode("fieldValues", FetchMode.EAGER);
 			Criteria ecrfFieldValueCriteria = ecrfFieldCriteria.createCriteria("fieldValues", "ecrfFieldValues", CriteriaSpecification.LEFT_JOIN);
 			if (active != null) {
 				ecrfCriteria.add(Restrictions.or(
@@ -257,13 +219,9 @@ public class ECRFDaoImpl
 						Restrictions.eq("ecrfFieldValues.listEntry.id", probandListEntryId.longValue())));
 			}
 		} else {
-			// if (active != null) {
-			// ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
-			// }
 			if (active != null) {
 				// http://stackoverflow.com/questions/4334970/hibernate-cannot-simultaneously-fetch-multiple-bags
 				Criteria ecrfFieldCriteria = ecrfCriteria.createCriteria("ecrfFields", CriteriaSpecification.LEFT_JOIN);
-				// ecrfFieldCriteria.setFetchMode("fieldValues", FetchMode.EAGER);
 				Criteria ecrfFieldValueCriteria = ecrfFieldCriteria.createCriteria("fieldValues", "ecrfFieldValues", CriteriaSpecification.LEFT_JOIN);
 				ecrfCriteria.add(Restrictions.or(
 						Restrictions.eq("active", active.booleanValue()),
@@ -277,7 +235,6 @@ public class ECRFDaoImpl
 			}
 			psf.setSortField("position");
 			psf.setSortOrder(true);
-			// ecrfCriteria.addOrder(Order.asc("position"));
 		}
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 	}
@@ -289,14 +246,6 @@ public class ECRFDaoImpl
 		if (trialId != null) {
 			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		// if (groupId != null) {
-		// ecrfCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-		// Restrictions.isNull("group.id")));
-		// }
-		// if (visitId != null) {
-		// ecrfCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		// Restrictions.isNull("visit.id")));
-		// }
 		if (active != null) {
 			ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
@@ -307,7 +256,6 @@ public class ECRFDaoImpl
 			visitCriteria.addOrder(Order.asc("token"));
 			Criteria groupCriteria = ecrfCriteria.createCriteria("group", CriteriaSpecification.LEFT_JOIN);
 			groupCriteria.addOrder(Order.asc("token"));
-			// ecrfCriteria.addOrder(Order.asc("position"));
 			ecrfCriteria.addOrder(Order.asc("position"));
 		}
 		return ecrfCriteria.list();
@@ -324,18 +272,8 @@ public class ECRFDaoImpl
 		} else {
 			ecrfCriteria.add(Restrictions.isNull("group.id"));
 		}
-		// Restrictions.isNull("group.id")));
-		// if (visitId != null) {
-		// ecrfCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
-		// Restrictions.isNull("visit.id")));
-		// }
-		// if (active != null) {
-		// ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		// }
-		// if (sort) {
 		ecrfCriteria.addOrder(Order.asc("trial"));
 		ecrfCriteria.addOrder(Order.asc("position"));
-		// }
 		return ecrfCriteria.list();
 	}
 
@@ -361,8 +299,6 @@ public class ECRFDaoImpl
 		if (sort) {
 			ecrfCriteria.addOrder(Order.asc("trial"));
 			ecrfCriteria.addOrder(Order.asc("group"));
-			// Criteria groupCriteria = ecrfCriteria.createCriteria("group", CriteriaSpecification.LEFT_JOIN);
-			// groupCriteria.addOrder(Order.asc("token"));
 			ecrfCriteria.addOrder(Order.asc("position"));
 		}
 		return ecrfCriteria.list();
@@ -390,11 +326,6 @@ public class ECRFDaoImpl
 		} else {
 			ecrfCriteria.add(Restrictions.isNull("group.id"));
 		}
-		// if (visitId != null) {
-		// ecrfCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
-		// } else {
-		// ecrfCriteria.add(Restrictions.isNull("visit.id"));
-		// }
 		ecrfCriteria.add(Restrictions.eq("position", position.longValue()));
 		return ecrfCriteria.list();
 	}
@@ -410,11 +341,6 @@ public class ECRFDaoImpl
 		} else {
 			ecrfCriteria.add(Restrictions.isNull("group.id"));
 		}
-		// if (visitId != null) {
-		// ecrfCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
-		// } else {
-		// ecrfCriteria.add(Restrictions.isNull("visit.id"));
-		// }
 		ecrfCriteria.setProjection(Projections.max("position"));
 		return (Long) ecrfCriteria.uniqueResult();
 	}
@@ -475,33 +401,12 @@ public class ECRFDaoImpl
 		return (Long) ecrfCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
-	// @Override
-	// protected long handleGetCountDone(Long probandListEntryId, Long visitId, Boolean active, Boolean done) throws Exception {
-	// return getCount(probandListEntryId, visitId, active, null, "done", done);
-	// }
-	//
-	// @Override
-	// protected long handleGetCountReview(Long probandListEntryId, Long visitId, Boolean active, Boolean review) throws Exception {
-	// return getCount(probandListEntryId, visitId, active, null, "review", review);
-	// }
-	//
-	// @Override
-	// protected long handleGetCountValidated(Long probandListEntryId, Long visitId, Boolean active, Boolean validated) throws Exception {
-	// return getCount(probandListEntryId, visitId, active, null, "validated", validated);
-	// }
-	//
-	// @Override
-	// protected long handleGetCountVerified(Long probandListEntryId, Long visitId, Boolean active, Boolean verified) throws Exception {
-	// return getCount(probandListEntryId, visitId, active, null, "verified", verified);
-	// }
 	/**
 	 * Retrieves the entity object that is associated with the specified value object
 	 * from the object store. If no such entity object exists in the object store,
 	 * a new, blank entity is created
 	 */
 	private ECRF loadECRFFromECRFInVO(ECRFInVO eCRFInVO) {
-		// TODO implement loadECRFFromECRFInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFromECRFInVO(ECRFInVO) not yet implemented.");
 		ECRF ecrf = null;
 		Long id = eCRFInVO.getId();
 		if (id != null) {
@@ -519,8 +424,6 @@ public class ECRFDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ECRF loadECRFFromECRFOutVO(ECRFOutVO eCRFOutVO) {
-		// TODO implement loadECRFFromECRFOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadECRFFromECRFOutVO(ECRFOutVO) not yet implemented.");
 		ECRF ecrf = this.load(eCRFOutVO.getId());
 		if (ecrf == null) {
 			ecrf = ECRF.Factory.newInstance();
@@ -572,10 +475,6 @@ public class ECRFDaoImpl
 			ECRF source,
 			ECRFOutVO target) {
 		super.toECRFOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.visit (can't convert source.getVisit():org.phoenixctms.ctsms.domain.Visit to org.phoenixctms.ctsms.vo.VisitOutVO
-		// WARNING! No conversion for target.group (can't convert source.getGroup():org.phoenixctms.ctsms.domain.ProbandGroup to org.phoenixctms.ctsms.vo.ProbandGroupOutVO
 		Trial trial = source.getTrial();
 		Visit visit = source.getVisit();
 		ProbandGroup group = source.getGroup();

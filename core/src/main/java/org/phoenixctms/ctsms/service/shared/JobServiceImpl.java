@@ -84,7 +84,7 @@ public class JobServiceImpl extends JobServiceBase {
 			Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(inputField, now, modified, systemMessageCode, new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) }); // !CommonUtil.getUseJournalEncryption(JournalModule.INPUT_FIELD_JOURNAL, null))});
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
 	}
 
 	private static JournalEntry logSystemMessage(Criteria criteria, CriteriaOutVO criteriaVO, Timestamp now, User modified, String systemMessageCode, Object result,
@@ -103,7 +103,7 @@ public class JobServiceImpl extends JobServiceBase {
 	}
 
 	private void checkJobModuleId(JobModule module, Long id) throws ServiceException {
-		if (id != null) { // module != null &&
+		if (id != null) {
 			switch (module) {
 				case TRIAL_JOB:
 					CheckIDUtil.checkTrialId(id, this.getTrialDao());
@@ -164,7 +164,7 @@ public class JobServiceImpl extends JobServiceBase {
 
 	private void checkJobFile(byte[] data, String mimeType, String fileName, JobType type) throws ServiceException {
 		if (data == null || data.length == 0) {
-			if (type.isInputFile()) { // || type.isOutputFile()) {
+			if (type.isInputFile()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_REQUIRED);
 			} else {
 				if (mimeType != null) {
@@ -205,7 +205,6 @@ public class JobServiceImpl extends JobServiceBase {
 		switch (type.getModule()) {
 			case TRIAL_JOB:
 				CheckIDUtil.checkTrialId(jobIn.getTrialId(), this.getTrialDao());
-				//ServiceUtil.checkTrialLocked(CheckIDUtil.checkTrialId(job.getTrialId(), this.getTrialDao()));
 				if (numIdsSet(jobIn) > 1) {
 					// no other references must be set...
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_TRIAL_ONLY_ALLOWED);
@@ -213,7 +212,6 @@ public class JobServiceImpl extends JobServiceBase {
 				break;
 			case PROBAND_JOB:
 				CheckIDUtil.checkProbandId(jobIn.getProbandId(), this.getProbandDao());
-				//ServiceUtil.checkTrialLocked(CheckIDUtil.checkTrialId(job.getTrialId(), this.getTrialDao()));
 				if (numIdsSet(jobIn) > 1) {
 					// no other references must be set...
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_PROBAND_ONLY_ALLOWED);
@@ -221,7 +219,6 @@ public class JobServiceImpl extends JobServiceBase {
 				break;
 			case INPUT_FIELD_JOB:
 				CheckIDUtil.checkInputFieldId(jobIn.getInputFieldId(), this.getInputFieldDao());
-				//ServiceUtil.checkTrialLocked(CheckIDUtil.checkTrialId(job.getTrialId(), this.getTrialDao()));
 				if (numIdsSet(jobIn) > 1) {
 					// no other references must be set...
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_INPUT_FIELD_ONLY_ALLOWED);

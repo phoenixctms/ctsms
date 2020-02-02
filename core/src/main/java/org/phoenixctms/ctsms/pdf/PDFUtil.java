@@ -43,25 +43,25 @@ public final class PDFUtil {
 	private final static String LINE_BREAK_REGEXP_PATTERN = "(" + Pattern.quote(PDF_LINE_BREAK) + ")|(\\n)|(\\r)";
 	private final static Pattern LINE_BREAK_REGEXP = Pattern.compile(LINE_BREAK_REGEXP_PATTERN);
 	private final static float TINY_FONT_SIZE = 6.0f;
-	private final static float TINY_FONT_LINE_SPACING = 2.0f; // 1.0f;
+	private final static float TINY_FONT_LINE_SPACING = 2.0f;
 	private final static float TINY_FONT_TEXT_DECORATION_LINE_WIDTH = 0.2f;
 	private final static float SMALL_FONT_SIZE = 8.0f;
-	private final static float SMALL_FONT_LINE_SPACING = 2.6666f; // 1.3333f;
+	private final static float SMALL_FONT_LINE_SPACING = 2.6666f;
 	private final static float SMALL_FONT_TEXT_DECORATION_LINE_WIDTH = SMALL_FONT_SIZE / 10.0f;
 	private final static float MEDIUM_FONT_SIZE = 10.0f;
-	private final static float MEDIUM_FONT_LINE_SPACING = 3.333f; // 2.0f;
+	private final static float MEDIUM_FONT_LINE_SPACING = 3.333f;
 	private final static float MEDIUM_FONT_TEXT_DECORATION_LINE_WIDTH = MEDIUM_FONT_SIZE / 10.0f;
 	private final static float BIG_FONT_SIZE = 13.0f;
-	private final static float BIG_FONT_LINE_SPACING = 4.3333f; // 3.0f;
+	private final static float BIG_FONT_LINE_SPACING = 4.3333f;
 	private final static float BIG_FONT_TEXT_DECORATION_LINE_WIDTH = BIG_FONT_SIZE / 10.0f;
 	private final static float LARGE_FONT_SIZE = 18.0f;
-	private final static float LARGE_FONT_LINE_SPACING = 6.0f; // 4.0f;
+	private final static float LARGE_FONT_LINE_SPACING = 6.0f;
 	private final static float LARGE_FONT_TEXT_DECORATION_LINE_WIDTH = LARGE_FONT_SIZE / 10.0f;
 	private final static float SIZE11_FONT_SIZE = 11.0f;
-	private final static float SIZE11_FONT_LINE_SPACING = 3.5f; // 2.0f;
+	private final static float SIZE11_FONT_LINE_SPACING = 3.5f;
 	private final static float SIZE11_FONT_TEXT_DECORATION_LINE_WIDTH = SIZE11_FONT_SIZE / 10.0f;
 	private final static float SIZE12_FONT_SIZE = 12.0f;
-	private final static float SIZE12_FONT_LINE_SPACING = 4.1f; // 2.0f;
+	private final static float SIZE12_FONT_LINE_SPACING = 4.1f;
 	private final static float SIZE12_FONT_TEXT_DECORATION_LINE_WIDTH = SIZE12_FONT_SIZE / 10.0f;
 	private final static float STRIKE_THROUGH_DECORATION_LINE_OFFSET = 0.44f;
 	private final static float UNDERLINE_DECORATION_LINE_OFFSET = -0.15f;
@@ -189,7 +189,6 @@ public final class PDFUtil {
 	}
 
 	public static PDFont loadFont(String fontFileName, PDDocument doc, PDFont defaultBaseFont) throws IOException {
-		// public static PDFont loadFont(String fontFileName, PDDocument doc, PDFont defaultBaseFont, PDStream pdStream) throws IOException {
 		PDFont font = null;
 		if (fontFileName != null && fontFileName.length() > 0) {
 			font = PDType1Font.getStandardFont(fontFileName);
@@ -200,13 +199,6 @@ public final class PDFUtil {
 		} else {
 			font = defaultBaseFont;
 		}
-		// if (font != null && pdStream != null) {
-		// if (font instanceof PDType1Font) {
-		// ((PDType1Font) font).setToUnicode(pdStream.getCOSObject());
-		// } else if (font instanceof PDTrueTypeFont) {
-		// ((PDTrueTypeFont) font).setToUnicode(pdStream.getCOSObject());
-		// }
-		// }
 		return font;
 	}
 
@@ -217,19 +209,6 @@ public final class PDFUtil {
 		return null;
 	}
 
-	// public static PDFJpeg prepareCroppedImage(PDDocument doc, byte[] data, float width, float height, int compressionQualityPercent, int dpi,
-	// org.phoenixctms.ctsms.enumeration.Color bgColor) {
-	// if (doc != null && data != null && data.length > 0) {
-	// BufferedImage image;
-	// try {
-	// image = PDFJpeg.createCroppedImage(data, width, height, dpi, bgColor);
-	// return new PDFJpeg(doc, image, compressionQualityPercent / 100.0f, dpi);
-	// } catch (Exception e) {
-	// }
-	// }
-	// return null;
-	// }
-	//
 	public static void renderFrame(PDPageContentStream contentStream, org.phoenixctms.ctsms.enumeration.Color color, float x, float y, float width, float height, Alignment align,
 			float lineWidth) throws IOException {
 		renderFrame(contentStream, color, x, y, width, height, align, lineWidth, LineStyle.SOLID);
@@ -421,7 +400,7 @@ public final class PDFUtil {
 			}
 		}
 		float lineSpacing = getLineSpacing(fontSize);
-		float lineHeight = getLineHeight(font, fontSize); // glyphUnitsToPoints(font.getFontDescriptor().getFontBoundingBox().getHeight(),size);
+		float lineHeight = getLineHeight(font, fontSize);
 		float totalHeight = (lineHeight + lineSpacing) * wrappedLines.size();
 		if (contentStream != null) {
 			float left = x;
@@ -674,7 +653,7 @@ public final class PDFUtil {
 	}
 
 	private static void setLineDashPattern(PDPageContentStream contentStream, LineStyle lineStyle) throws IOException {
-		if (contentStream != null) { // && lineStyle != null) {
+		if (contentStream != null) {
 			float[] pattern;
 			float phase;
 			switch (lineStyle) {
@@ -687,9 +666,7 @@ public final class PDFUtil {
 					phase = 0.0f;
 					break;
 			}
-			// if (pattern != null) {
 			contentStream.setLineDashPattern(pattern, phase);
-			// }
 		}
 	}
 

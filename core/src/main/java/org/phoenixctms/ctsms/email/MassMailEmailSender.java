@@ -115,7 +115,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		return MessageFormat.format(ServiceUtil.BEACON_IMAGE_HTML_ELEMENT, Settings.getHttpBaseUrl(), CommonUtil.BEACON_PATH, beacon, CommonUtil.GIF_FILENAME_EXTENSION);
 	}
 
-	// public final static boolean STRICT_EMAIL_ADRESSES = false;
 	private MassMailRecipientDao massMailRecipientDao;
 	private TrialDao trialDao;
 	private ECRFDao eCRFDao;
@@ -192,7 +191,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				if (massMail.getTrial() != null) {
 					trials.add(massMail.getTrial());
 				} else {
-					// trials = trialDao.findBySignup(massMail.getDepartment().getId(), true, null);
 					Iterator<Trial> trialIt = trialDao.findByInquiryValuesProbandSorted(null, recipient.getProband().getId(), INQUIRIES_ACTIVE, INQUIRIES_ACTIVE_SIGNUP).iterator();
 					while (trialIt.hasNext()) {
 						Trial trial = trialIt.next();
@@ -201,15 +199,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						}
 					}
 				}
-				// if (trials.size() > 0) {
 				InquiriesPDFVO inquiriesPDF = ServiceUtil.renderInquiries(recipient.getProband(), recipientVO.getProband(),
 						trials, INQUIRIES_ACTIVE,
 						INQUIRIES_ACTIVE_SIGNUP, INQUIRIES_BLANK, trialDao, inquiryDao, inquiryValueDao, inputFieldDao, inputFieldSelectionSetValueDao,
 						userDao);
-				// InquiriesPDFVO inquiriesPDF = ServiceUtil.renderInquiriesSignup(recipient.getProband(), recipientVO.getProband(),
-				// trials,
-				// INQUIRIES_ACTIVE_SIGNUP, trialDao, inquiryDao, inquiryValueDao, inputFieldDao, inputFieldSelectionSetValueDao,
-				// userDao);
 				if (inquiriesPDF.getTrials().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(inquiriesPDF.getDocumentDatas());
@@ -220,10 +213,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				} else {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_INQUIRIES_ATTACHMENT);
 				}
-				// }
 			}
 			if (massMail.isAttachProbandListEntryTags()) {
-				// MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 				ProbandListEntryTagsPDFVO probandListEntryTagsPDF = ServiceUtil.renderProbandListEntryTags(recipient.getProband(), massMail.getTrial(),
 						PROBAND_LIST_ENTRY_TAGS_BLANK,
 						probandListEntryDao, probandListEntryTagDao, probandListEntryTagValueDao,
@@ -347,10 +338,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				}
 				stream = CryptoUtil.createDecryptionStream(recipient.getMimeMessageDataIv(), new ByteArrayInputStream(recipient.getEncryptedMimeMessageData()));
 				return mailSender.createMimeMessage(stream);
-				// } catch (MessagingException e) {
-				// throw new RuntimeException(e);
-				// } catch (Exception e) {
-				// throw new Exception("xxx");
 			} finally {
 				if (stream != null) {
 					try {
@@ -369,8 +356,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		if (!Settings.getBoolean(SettingCodes.SEND_MASS_MAILS, Bundle.SETTINGS, DefaultSettings.SEND_MASS_MAILS)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SENDING_MASS_MAILS_DISABLED);
 		}
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// int toCount = 0;
 		MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ProbandOutVO probandVO = recipientVO.getProband();
 		if (probandVO != null && !probandVO.getDeferredDelete()) {
@@ -392,14 +377,13 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			}
 			Locales locale = L10nUtil.getLocales(massMailVO.getLocale());
 			String subject = ServiceUtil.getMassMailSubject(massMailVO.getSubjectFormat(), locale, massMailVO.getMaleSalutation(), massMailVO.getFemaleSalutation(), probandVO,
-					massMailVO.getTrial(), // recipientVO.getTrial() != null ? recipientVO.getTrial() : massMailVO.getTrial(),
-					massMailVO.getProbandListStatus());
+					massMailVO.getTrial(), massMailVO.getProbandListStatus());
 			if (!CommonUtil.isEmptyString(subject)) {
 				mimeMessageHelper.setSubject(subject);
 			} else {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
 			}
-			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), now, null, trialTagValueDao, probandListEntryDao, // recipientVO.getTrial()
+			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), now, null, trialTagValueDao, probandListEntryDao,
 					probandListEntryTagValueDao, inventoryBookingDao,
 					probandTagValueDao,
 					probandContactDetailValueDao,
@@ -428,7 +412,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						if (contactVO.isDecrypted()) {
 							mimeMessageHelper.addTo(contactVO.getValue(),
 									MessageFormat.format(EMAIL_TO_PERSONAL_NAME, probandVO.getName(), L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
-							// toCount++;
 						} else {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_CONTACT_DETAIL_VALUE);
 						}
@@ -444,7 +427,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
 						mimeMessageHelper.addTo(contact.getValue(),
 								MessageFormat.format(EMAIL_TO_PERSONAL_NAME, physicianVO.getName(), L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
-						// toCount++;
 					}
 				}
 			}
@@ -462,7 +444,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 								mimeMessageHelper.addTo(contact.getValue(),
 										MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
 												L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
-								// toCount++;
 							}
 						}
 					}
@@ -528,7 +509,6 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DELETED_OR_MARKED_FOR_DELETION);
 		}
-		// return toCount;
 	}
 
 	private String resolveMailAddress(MassMailRecipient recipient, String address, boolean reply) throws Exception {
@@ -790,28 +770,15 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 
 	@Override
 	protected void storeMessage(MimeMessage mimeMessage, MassMail entity, MassMailRecipient recipient, Date now) throws Exception {
-		// byte[] mimeMessageData = null;
-		// byte[] mimeMessageIv = null;
-		// try {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		mimeMessage.writeTo(buffer);
 		recipient.setMimeMessageSize(buffer.size());
 		buffer.reset();
 		CipherStream cipherStream = CryptoUtil.createEncryptionStream(buffer);
 		recipient.setMimeMessageDataIv(cipherStream.getIv());
-		// recipient.setMimeMessageSize(mimeMessage.getSize());
 		mimeMessage.writeTo(cipherStream);
 		cipherStream.close();
 		recipient.setEncryptedMimeMessageData(buffer.toByteArray());
 		recipient.setMimeMessageTimestamp(CommonUtil.dateToTimestamp(now));
-		// recipient.setMimeMessageSize(buffer.size());
-		// } catch (Exception e) {
-		// throw new RuntimeException(e);
-		// }
-		// recipient.setMimeMessageSize(buffer.size());
-		// recipient.setEncryptedMimeMessageData(mimeMessageData);
-		// recipient.setMimeMessageDataIv(mimeMessageIv);
-		// CoreUtil.modifyVersion(entity, recipient., now, CoreUtil.getUser());
-		// massMailRecipientDao.update(recipient);
 	}
 }

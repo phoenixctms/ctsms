@@ -113,6 +113,5 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
-		//target.setExportStatus(L10nUtil.createExportStatusVO(Locales.USER, source.getExportStatus()));
 	}
 }

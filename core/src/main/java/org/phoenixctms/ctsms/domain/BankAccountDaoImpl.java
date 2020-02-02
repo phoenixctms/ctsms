@@ -249,12 +249,6 @@ public class BankAccountDaoImpl
 			BankAccount target,
 			boolean copyIfNull) {
 		super.bankAccountInVOToEntity(source, target, copyIfNull);
-		// No conversion for target.accountHolderName (can't convert source.getAccountHolderName():java.lang.String to byte[]
-		// No conversion for target.accountNumber (can't convert source.getAccountNumber():java.lang.String to byte[]
-		// No conversion for target.bankCodeNumber (can't convert source.getBankCodeNumber():java.lang.String to byte[]
-		// No conversion for target.iban (can't convert source.getIban():java.lang.String to byte[]
-		// No conversion for target.bic (can't convert source.getBic():java.lang.String to byte[]
-		// No conversion for target.bankName (can't convert source.getBankName():java.lang.String to byte[]
 		Long probandId = source.getProbandId();
 		if (probandId != null) {
 			Proband proband = this.getProbandDao().load(probandId);
@@ -328,12 +322,6 @@ public class BankAccountDaoImpl
 			BankAccount target,
 			boolean copyIfNull) {
 		super.bankAccountOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.accountHolderName (can't convert source.getAccountHolderName():java.lang.String to byte[]
-		// No conversion for target.accountNumber (can't convert source.getAccountNumber():java.lang.String to byte[]
-		// No conversion for target.bankCodeNumber (can't convert source.getBankCodeNumber():java.lang.String to byte[]
-		// No conversion for target.iban (can't convert source.getIban():java.lang.String to byte[]
-		// No conversion for target.bic (can't convert source.getBic():java.lang.String to byte[]
-		// No conversion for target.bankName (can't convert source.getBankName():java.lang.String to byte[]
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (probandVO != null) {
@@ -446,8 +434,6 @@ public class BankAccountDaoImpl
 	 * a new, blank entity is created
 	 */
 	private BankAccount loadBankAccountFromBankAccountInVO(BankAccountInVO bankAccountInVO) {
-		// TODO implement loadBankAccountFromBankAccountInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankAccountFromBankAccountInVO(BankAccountInVO) not yet implemented.");
 		BankAccount bankAccount = null;
 		Long id = bankAccountInVO.getId();
 		if (id != null) {
@@ -465,8 +451,6 @@ public class BankAccountDaoImpl
 	 * a new, blank entity is created
 	 */
 	private BankAccount loadBankAccountFromBankAccountOutVO(BankAccountOutVO bankAccountOutVO) {
-		// TODO implement loadBankAccountFromBankAccountOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadBankAccountFromBankAccountOutVO(BankAccountOutVO) not yet implemented.");
 		BankAccount bankAccount = this.load(bankAccountOutVO.getId());
 		if (bankAccount == null) {
 			bankAccount = BankAccount.Factory.newInstance();
@@ -490,12 +474,6 @@ public class BankAccountDaoImpl
 			BankAccount source,
 			BankAccountInVO target) {
 		super.toBankAccountInVO(source, target);
-		// WARNING! No conversion for target.accountHolderName (can't convert source.getAccountHolderName():byte[] to java.lang.String
-		// WARNING! No conversion for target.accountNumber (can't convert source.getAccountNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.bankCodeNumber (can't convert source.getBankCodeNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.iban (can't convert source.getIban():byte[] to java.lang.String
-		// WARNING! No conversion for target.bic (can't convert source.getBic():byte[] to java.lang.String
-		// WARNING! No conversion for target.bankName (can't convert source.getBankName():byte[] to java.lang.String
 		Proband proband = source.getProband();
 		if (proband != null) {
 			target.setProbandId(proband.getId());
@@ -528,14 +506,6 @@ public class BankAccountDaoImpl
 			BankAccount source,
 			BankAccountOutVO target) {
 		super.toBankAccountOutVO(source, target);
-		// WARNING! No conversion for target.accountHolderName (can't convert source.getAccountHolderName():byte[] to java.lang.String
-		// WARNING! No conversion for target.accountNumber (can't convert source.getAccountNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.bankCodeNumber (can't convert source.getBankCodeNumber():byte[] to java.lang.String
-		// WARNING! No conversion for target.iban (can't convert source.getIban():byte[] to java.lang.String
-		// WARNING! No conversion for target.bic (can't convert source.getBic():byte[] to java.lang.String
-		// WARNING! No conversion for target.bankName (can't convert source.getBankName():byte[] to java.lang.String
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();
 		if (proband != null) {

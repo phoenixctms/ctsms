@@ -120,7 +120,7 @@ public class Authenticator {
 						PasswordInVO localPassword = new PasswordInVO();
 						ServiceUtil.applyLogonLimitations(localPassword, lastPassword);
 						lastPassword = ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(localPassword), user, now, lastPassword, auth.getPassword(),
-								userContext.getPlainDepartmentPassword(), passwordDao); // , this.getJournalEntryDao());
+								userContext.getPlainDepartmentPassword(), passwordDao);
 						userContext.setLastPassword(lastPassword);
 						userContext.setPlainPassword(auth.getPassword());
 						PasswordOutVO passwordVO = passwordDao.toPasswordOutVO(lastPassword);

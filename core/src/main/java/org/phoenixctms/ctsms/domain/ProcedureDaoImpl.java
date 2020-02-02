@@ -113,9 +113,7 @@ public class ProcedureDaoImpl
 		} else { // saved records without start stop
 			procedureCriteria.add(Restrictions.isNull("start"));
 		}
-		// if (probandId != null) {
 		procedureCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
-		// }
 		if (codeId != null) {
 			procedureCriteria.add(Restrictions.eq("code.id", codeId.longValue()));
 		}
@@ -137,8 +135,6 @@ public class ProcedureDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Procedure loadProcedureFromProcedureInVO(ProcedureInVO procedureInVO) {
-		// TODO implement loadProcedureFromProcedureInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProcedureFromProcedureInVO(ProcedureInVO) not yet implemented.");
 		Long id = procedureInVO.getId();
 		Procedure procedure = null;
 		if (id != null) {
@@ -156,8 +152,6 @@ public class ProcedureDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Procedure loadProcedureFromProcedureOutVO(ProcedureOutVO procedureOutVO) {
-		// TODO implement loadProcedureFromProcedureOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProcedureFromProcedureOutVO(ProcedureOutVO) not yet implemented.");
 		Procedure procedure = this.load(procedureOutVO.getId());
 		if (procedure == null) {
 			procedure = Procedure.Factory.newInstance();
@@ -186,11 +180,6 @@ public class ProcedureDaoImpl
 		super.procedureInVOToEntity(source, target, copyIfNull);
 		Long codeId = source.getCodeId();
 		Long probandId = source.getProbandId();
-		// if (codeId != null) {
-		// target.setCode(this.getOpsCodeDao().load(codeId));
-		// } else if (copyIfNull) {
-		// target.setCode(null);
-		// }
 		if (codeId != null) {
 			OpsCode opsCode = this.getOpsCodeDao().load(codeId);
 			target.setCode(opsCode);
@@ -247,11 +236,6 @@ public class ProcedureDaoImpl
 		OpsCodeVO codeVO = source.getCode();
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		// if (codeVO != null) {
-		// target.setCode(this.getOpsCodeDao().opsCodeVOToEntity(codeVO));
-		// } else if (copyIfNull) {
-		// target.setCode(null);
-		// }
 		if (codeVO != null) {
 			OpsCode opsCode = this.getOpsCodeDao().opsCodeVOToEntity(codeVO);
 			target.setCode(opsCode);
@@ -338,9 +322,6 @@ public class ProcedureDaoImpl
 			Procedure source,
 			ProcedureOutVO target) {
 		super.toProcedureOutVO(source, target);
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.code (can't convert source.getCode():org.phoenixctms.ctsms.domain.OpsCode to org.phoenixctms.ctsms.vo.OpsCodeVO
 		OpsCode code = source.getCode();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();

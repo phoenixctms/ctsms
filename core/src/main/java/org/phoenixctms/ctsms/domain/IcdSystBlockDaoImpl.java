@@ -33,8 +33,6 @@ public class IcdSystBlockDaoImpl
 		icdSystBlockCriteria.setCacheable(true);
 		CategoryCriterion.apply(icdSystBlockCriteria, new CategoryCriterion(preferredRubricLabelInfix, "preferredRubricLabel", MatchMode.ANYWHERE));
 		icdSystBlockCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("preferredRubricLabel", ""), Restrictions.isNull("preferredRubricLabel"))));
-		// icdSystBlockCriteria.add(Restrictions.eq("revision", Settings.getString(SettingCodes.ICD_SYSTEMATICS_REVISION, Bundle.SETTINGS,
-		// DefaultSettings.ICD_SYSTEMATICS_REVISION)));
 		icdSystBlockCriteria.addOrder(Order.asc("preferredRubricLabel"));
 		icdSystBlockCriteria.setProjection(Projections.distinct(Projections.property("preferredRubricLabel")));
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.ICD_SYST_BLOCK_PREFERRED_RUBRIC_LABEL_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -69,8 +67,6 @@ public class IcdSystBlockDaoImpl
 	 * a new, blank entity is created
 	 */
 	private IcdSystBlock loadIcdSystBlockFromIcdSystBlockVO(IcdSystBlockVO icdSystBlockVO) {
-		// TODO implement loadIcdSystBlockFromIcdSystBlockVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystBlockFromIcdSystBlockVO(IcdSystBlockVO) not yet implemented.");
 		Long id = icdSystBlockVO.getId();
 		IcdSystBlock icdSystBlock = null;
 		if (id != null) {

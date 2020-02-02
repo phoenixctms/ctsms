@@ -33,7 +33,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import jdk.nashorn.api.scripting.JSObject;
 
-//import sun.org.mozilla.javascript.internal.Scriptable;
 @SuppressWarnings("restriction")
 public class FieldCalculation {
 
@@ -41,7 +40,6 @@ public class FieldCalculation {
 	private final static String FIELD_CALCULATION_JS_FILE_NAME = "fieldCalculation.js";
 	private final static String SPRINTF_JS_FILE_NAME = "sprintf.js";
 	private final static String JS_JODA_JS_FILE_NAME = "js-joda.min.js";
-	// private final static String TIME_JS_FILE_NAME = "time.js";
 	private final static String JS_JODA_TIMEZONE_JS_FILE_NAME = "js-joda-timezone.min.js";
 	private final static String STRIP_COMMENTS_JS_FILE_NAME = "strip-comments.js";
 	private final static String JQUERY_BASE64_JS_FILE_NAME = "jquery.base64.js";
@@ -64,75 +62,25 @@ public class FieldCalculation {
 	private final static boolean FIELD_CALCULATION_ENCODE_BASE64 = false;
 	private final static String INIT_INPUT_FIELD_VARIABLES = "initInputFieldVariables";
 	private final static String UPDATE_INPUT_FIELD_VARIABLES = "updateInputFieldVariables";
-	//private final static CompiledScript SCRIPT;
-	//private final static Bindings BINDINGS;
-	// static {
-	// try {
-	// createEngine();
-	// //SCRIPT = compile();
-	// //BINDINGS = SCRIPT.getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-	// // BINDINGS = SCRIPT.getEngine()
-	// // BINDINGS = newBindings();
-	// } catch (Exception e) {
-	// throw new RuntimeException(e);
-	// }
-	// }
 
-	//	private static CompiledScript compile() throws ScriptException, IOException {
-	//		ScriptEngine engine = CoreUtil.getJsEngine();
-	//		Compilable compilingEngine = (Compilable) engine;
-	//		return compilingEngine.compile(getJsFiles(
-	//				ENV_JS_FILE_NAME,
-	//				SPRINTF_JS_FILE_NAME,
-	//				JSON2_JS_FILE_NAME,
-	//				DATE_JS_FILE_NAME,
-	//				TIME_JS_FILE_NAME,
-	//				STRIP_COMMENTS_JS_FILE_NAME,
-	//				JQUERY_BASE64_JS_FILE_NAME,
-	//				REST_API_JS_FILE_NAME,
-	//				LOCATION_DISTANCE_JS_FILE_NAME,
-	//				FIELD_CALCULATION_JS_FILE_NAME));
-	//	}
 	private static Invocable createEngine() throws ScriptException, IOException {
 		ScriptEngine engine = CoreUtil.getJsEngine();
-		//engine.put(ScriptEngine.FILENAME, FIELD_CALCULATION_JS_FILE_NAME);
-		//ScriptContext context = engine.getContext();
-		//context.setAttribute("window", file.getParent(), ScriptContext.ENGINE_SCOPE);//$NON-NLS-1$
-		//context.setAttribute("items", this.items.toArray(), ScriptContext.ENGINE_SCOPE); //$NON-NLS-1$
-		//context.setAttribute("baseDir", file.getParent(), ScriptContext.ENGINE_SCOPE);//$NON-NLS-1$
-		// context.setBindings(new Bindings(ScriptEngine.FILENAME, FIELD_CALCULATION_JS_FILE_NAME),ScriptContext.ENGINE_SCOPE));
-		// try {
-		// engine.eval(new FileReader(ENV_JS_FILE_NAME));
-		// engine.eval(new FileReader(SPRINTF_JS_FILE_NAME));
-		// engine.eval(new FileReader(DATE_JS_FILE_NAME));
-		// engine.eval(new FileReader(TIME_JS_FILE_NAME));
-		// engine.eval(new FileReader(STRIP_COMMENTS_JS_FILE_NAME));
-		// engine.eval(new FileReader(JQUERY_BASE64_JS_FILE_NAME));
-		// engine.eval(new FileReader(REST_API_SHIM_JS_FILE_NAME));
-		// engine.eval(new FileReader(LOCATION_DISTANCE_SHIM_JS_FILE_NAME));
-		// engine.eval(new FileReader(FIELD_CALCULATION_JS_FILE_NAME));
 		engine.eval(getJsFile(ENV_JS_FILE_NAME));
 		updateEnv(engine);
 		engine.eval(getJsFile(SPRINTF_JS_FILE_NAME));
 		engine.eval(getJsFile(JSON2_JS_FILE_NAME));
-		engine.eval(getJsFile(JS_JODA_JS_FILE_NAME)); // DATE_JS_FILE_NAME));
-		// engine.eval(getJsFile(TIME_JS_FILE_NAME));
+		engine.eval(getJsFile(JS_JODA_JS_FILE_NAME));
 		engine.eval(getJsFile(JS_JODA_TIMEZONE_JS_FILE_NAME));
 		engine.eval(getJsFile(STRIP_COMMENTS_JS_FILE_NAME));
 		engine.eval(getJsFile(JQUERY_BASE64_JS_FILE_NAME));
 		engine.eval(getJsFile(REST_API_JS_FILE_NAME));
 		engine.eval(getJsFile(LOCATION_DISTANCE_JS_FILE_NAME));
 		engine.eval(getJsFile(FIELD_CALCULATION_JS_FILE_NAME));
-		// } catch (FileNotFoundException e) {
-		// e.printStackTrace();
-		// }
 		return (Invocable) engine;
 	}
 
 	private static String encode(Object src) {
-		String json = JsUtil.inputFieldVariableValueToJson(src); // ,
-		// CoreUtil.getUserContext().getDateFormat(),
-		// CoreUtil.getUserContext().getDecimalSeparator());
+		String json = JsUtil.inputFieldVariableValueToJson(src);
 		if (FIELD_CALCULATION_ENCODE_BASE64) {
 			return JsUtil.encodeBase64(json, false);
 		}
@@ -150,16 +98,7 @@ public class FieldCalculation {
 	private static InputStreamReader getJsFile(String fileName) throws IOException {
 		ClassPathResource resource = new ClassPathResource("/" + fileName);
 		return new InputStreamReader(resource.getInputStream());
-		//resource.getInputStream()
-		//byte[] data = CommonUtil.inputStreamToByteArray(resource.getInputStream());
 	}
-	//	private static MultiStreamReader getJsFiles(String... fileNames) throws IOException {
-	//		ClassPathResource[] resources = new ClassPathResource[fileNames.length];
-	//		for (int i = 0; i < fileNames.length; i++) {
-	//			resources[i] = new ClassPathResource("/" + fileNames[i]);
-	//		}
-	//		return new MultiStreamReader(resources);
-	//	}
 
 	private final static void updateEnv(ScriptEngine engine) throws ScriptException {
 		StringBuilder sb = new StringBuilder();
@@ -180,20 +119,8 @@ public class FieldCalculation {
 		}
 		engine.eval(sb.toString());
 	}
-	//	private static Bindings newBindings() throws ScriptException {
-	//		//Bindings bindings = SCRIPT.getEngine().createBindings();
-	//		SCRIPT.eval(BINDINGS);
-	//		//return bindings;
-	//	}
 
 	private Invocable invocable;
-	// private static Long getJsMap() {
-	// NativeObject nobj = new NativeObject();
-	// for (Map.Entry<String, String> entry : map.entrySet()) {
-	// nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
-	// }
-	// }
-	//private Bindings bindings;
 	private HashMap<String, Object> args;
 
 	public FieldCalculation() throws ScriptException, IOException {
@@ -217,37 +144,12 @@ public class FieldCalculation {
 			}
 		}
 		return result;
-		// //Scriptable msgs = null;
-		// //try {
-		// // SCRIPT.eval(SCRIPT.getEngine().createBindings());
-		// // SCRIPT.getEngine().getBindings(GLOBAL).
-		// // ((NativeObject)bindings.get(function)).callc.call(this, args...)
-		// Scriptable msgs = (Scriptable) invocable.invokeFunction(function, new JsMap(args));
-		// //SCRIPT.getEngine().g.get(function);
-		// // Scriptable msgs = (Scriptable) SCRIPT.getEngine().get(function)).invokeFunction(function, new JsMap(args));
-		// // } catch (NoSuchMethodException e) {
-		// // // TODO Auto-generated catch block
-		// // // e.printStackTrace();
-		// // }
-		// ArrayList<ValidationError> result = new ArrayList<ValidationError>();
-		// if (msgs != null) {
-		// for (Object o : msgs.getIds()) {
-		// int index = (Integer) o;
-		// result.add(new ValidationError((Scriptable) msgs.get(index, null)));
-		// // array[index] = msgs.get(index, null);
-		// }
-		// // while (it.hasNext()) {
-		// // result.add(new ValidationError((NativeObject) it.next()));
-		// // }
-		// }
-		// return result;
 	}
 
 	public void reset() throws ScriptException {
 		args.clear();
 		args.put(AJAX_OPERATION_SUCCESS, true);
 		args.put(AJAX_FIELD_DELTA_ERROR_MESSAGE_ID, DUMMY_ERROR_MESSAGE_ID);
-		//bindings = newBindings();
 	}
 
 	public void setActiveUser(UserOutVO user) {

@@ -184,8 +184,6 @@ public class JobDaoImpl
 			Job source,
 			JobFileVO target) {
 		super.toJobFileVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
 		MimeType contentType = source.getContentType();
 		User modifiedUser = source.getModifiedUser();
 		target.setHasFile(source.getFileSize() != null && source.getFileSize() > 0l);
@@ -227,8 +225,6 @@ public class JobDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Job loadJobFromJobFileVO(JobFileVO jobFileVO) {
-		// TODO implement loadJobFromJobFileVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobFileVO(JobFileVO) not yet implemented.");
 		Job job = this.get(jobFileVO.getId());
 		if (job == null) {
 			job = Job.Factory.newInstance();
@@ -301,15 +297,6 @@ public class JobDaoImpl
 				target.setEncryptedFileName(null);
 				target.setFileNameHash(null);
 			}
-			//		} else {
-			//			target.setFileName(null);
-			//			target.setFileNameIv(null);
-			//			target.setEncryptedFileName(null);
-			//			target.setFileNameHash(null);
-			//			target.setContentType(null);
-			//			target.setData(null);
-			//			target.setDataIv(null);
-			//			target.setFileSize(null);
 		}
 	}
 
@@ -355,8 +342,6 @@ public class JobDaoImpl
 			} else {
 				target.setDatas(source.getData());
 			}
-			//		} else {
-			//			target.setFileName(null);
 		}
 	}
 
@@ -373,8 +358,6 @@ public class JobDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Job loadJobFromJobAddVO(JobAddVO jobAddVO) {
-		// TODO implement loadJobFromJobAddVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobAddVO(JobAddVO) not yet implemented.");
 		return Job.Factory.newInstance();
 	}
 
@@ -513,12 +496,6 @@ public class JobDaoImpl
 			Job source,
 			JobOutVO target) {
 		super.toJobOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.JobType to org.phoenixctms.ctsms.vo.JobTypeVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.criteria (can't convert source.getCriteria():org.phoenixctms.ctsms.domain.Criteria to org.phoenixctms.ctsms.vo.CriteriaOutVO
-		// WARNING! No conversion for target.inputField (can't convert source.getInputField():org.phoenixctms.ctsms.domain.InputField to org.phoenixctms.ctsms.vo.InputFieldOutVO
 		User modifiedUser = source.getModifiedUser();
 		JobType type = source.getType();
 		Trial trial = source.getTrial();
@@ -560,8 +537,6 @@ public class JobDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Job loadJobFromJobOutVO(JobOutVO jobOutVO) {
-		// TODO implement loadJobFromJobOutVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobOutVO(JobOutVO) not yet implemented.");
 		Job job = this.get(jobOutVO.getId());
 		if (job == null) {
 			job = Job.Factory.newInstance();
@@ -707,15 +682,6 @@ public class JobDaoImpl
 				target.setEncryptedFileName(null);
 				target.setFileNameHash(null);
 			}
-			//		} else {
-			//			target.setFileName(null);
-			//			target.setFileNameIv(null);
-			//			target.setEncryptedFileName(null);
-			//			target.setFileNameHash(null);
-			//			target.setContentType(null);
-			//			target.setData(null);
-			//			target.setDataIv(null);
-			//			target.setFileSize(null);
 		}
 	}
 
@@ -725,8 +691,6 @@ public class JobDaoImpl
 		 * a new, blank entity is created
 		 */
 	private Job loadJobFromJobUpdateVO(JobUpdateVO jobUpdateVO) {
-		// TODO implement loadJobFromJobUpdateVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobFromJobUpdateVO(JobUpdateVO) not yet implemented.");
 		Job job = this.get(jobUpdateVO.getId());
 		if (job == null) {
 			job = Job.Factory.newInstance();
@@ -758,8 +722,6 @@ public class JobDaoImpl
 			} else {
 				target.setDatas(source.getData());
 			}
-			//		} else {
-			//			target.setFileName(null);
 		}
 	}
 

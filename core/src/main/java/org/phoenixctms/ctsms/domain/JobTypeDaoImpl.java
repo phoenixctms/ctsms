@@ -34,8 +34,6 @@ public class JobTypeDaoImpl
 		}
 		if (trialId != null) {
 			typeCriteria.add(Restrictions.or(Restrictions.isNull("trial.id"), Restrictions.eq("trial.id", trialId.longValue())));
-			//} else {
-			//	typeCriteria.add(Restrictions.isNull("trial.id"));
 		}
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
 		return typeCriteria.list();
@@ -48,7 +46,6 @@ public class JobTypeDaoImpl
 			JobType source,
 			JobTypeVO target) {
 		super.toJobTypeVO(source, target);
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
 		Trial trial = source.getTrial();
 		if (trial != null) {
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
@@ -61,7 +58,6 @@ public class JobTypeDaoImpl
 	 * {@inheritDoc}
 	 */
 	public JobTypeVO toJobTypeVO(final JobType entity) {
-		// TODO verify behavior of toJobTypeVO
 		return super.toJobTypeVO(entity);
 	}
 
@@ -71,8 +67,6 @@ public class JobTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private JobType loadJobTypeFromJobTypeVO(JobTypeVO jobTypeVO) {
-		// TODO implement loadJobTypeFromJobTypeVO
-		//throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadJobTypeFromJobTypeVO(JobTypeVO) not yet implemented.");
 		JobType jobType = null;
 		Long id = jobTypeVO.getId();
 		if (id != null) {
@@ -88,7 +82,6 @@ public class JobTypeDaoImpl
 	 * {@inheritDoc}
 	 */
 	public JobType jobTypeVOToEntity(JobTypeVO jobTypeVO) {
-		// TODO verify behavior of jobTypeVOToEntity
 		JobType entity = this.loadJobTypeFromJobTypeVO(jobTypeVO);
 		this.jobTypeVOToEntity(jobTypeVO, entity, true);
 		return entity;
@@ -102,7 +95,6 @@ public class JobTypeDaoImpl
 			JobTypeVO source,
 			JobType target,
 			boolean copyIfNull) {
-		// TODO verify behavior of jobTypeVOToEntity
 		super.jobTypeVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		if (trialVO != null) {

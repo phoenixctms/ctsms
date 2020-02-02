@@ -41,7 +41,7 @@ public class ProbandListEntryDaoImpl
 	private static Criteria applyStratificationTagValuesCriterions(org.hibernate.Criteria listEntryCriteria, Set<Long> selectionSetValueIds) {
 		org.hibernate.Criteria tagValuesCriteria = listEntryCriteria.createCriteria("tagValues", CriteriaSpecification.INNER_JOIN);
 		tagValuesCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("stratification", true));
-		org.hibernate.Criteria selectionValuesCriteria = tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues", // "selectionValues0",
+		org.hibernate.Criteria selectionValuesCriteria = tagValuesCriteria.createCriteria("value", CriteriaSpecification.INNER_JOIN).createCriteria("selectionValues",
 				CriteriaSpecification.INNER_JOIN);
 		selectionValuesCriteria.add(Restrictions.in("id", selectionSetValueIds));
 		ProjectionList proj = Projections.projectionList();
@@ -74,21 +74,15 @@ public class ProbandListEntryDaoImpl
 		}
 		if (probandId != null || person != null) {
 			Criteria probandCriteria = criteriaMap.createCriteria("proband", CriteriaSpecification.INNER_JOIN);
-			// Criteria probandCriteria = listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN); //org.hibernate.QueryException: duplicate association path:
-			// proband
 			if (probandId != null) {
 				probandCriteria.add(Restrictions.idEq(probandId.longValue()));
 			}
 			if (person != null) {
 				probandCriteria.add(Restrictions.eq("person", person.booleanValue()));
 			}
-			// listEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		if (!total) {
 			criteriaMap.createCriteria("lastStatus.status", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("count", true));
-			// listEntryCriteria.createCriteria("lastStatus", CriteriaSpecification.INNER_JOIN).createCriteria("status", CriteriaSpecification.INNER_JOIN)
-			// .add(Restrictions.eq("count", true));
-			// istEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return listEntryCriteria.list();
@@ -115,11 +109,6 @@ public class ProbandListEntryDaoImpl
 		listEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		listEntryCriteria.setMaxResults(1);
 		return (ProbandListEntry) listEntryCriteria.uniqueResult();
-		// Iterator<ProbandListEntry> it = listEntryCriteria.list().iterator();
-		// if (it.hasNext()) {
-		// return it.next();
-		// }
-		// return null;
 	}
 
 	@Override
@@ -187,7 +176,6 @@ public class ProbandListEntryDaoImpl
 				subQuery.setProjection(Projections.max("id"));
 				statusEntryCriteria.add(Subqueries.propertyEq("id", subQuery));
 			} else {
-				// listEntryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
 				distinctRoot = true;
 			}
 		}
@@ -216,7 +204,6 @@ public class ProbandListEntryDaoImpl
 		if (!total) {
 			listEntryCriteria.createCriteria("lastStatus", CriteriaSpecification.INNER_JOIN).createCriteria("status", CriteriaSpecification.INNER_JOIN)
 					.add(Restrictions.eq("count", true));
-			// istEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		return (Long) listEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -369,8 +356,6 @@ public class ProbandListEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntry loadProbandListEntryFromProbandListEntryInVO(ProbandListEntryInVO probandListEntryInVO) {
-		// TODO implement loadProbandListEntryFromProbandListEntryInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryFromProbandListEntryInVO(ProbandListEntryInVO) not yet implemented.");
 		ProbandListEntry probandListEntry = null;
 		Long id = probandListEntryInVO.getId();
 		if (id != null) {
@@ -388,15 +373,7 @@ public class ProbandListEntryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandListEntry loadProbandListEntryFromProbandListEntryOutVO(ProbandListEntryOutVO probandListEntryOutVO) {
-		// TODO implement loadProbandListEntryFromProbandListOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandListEntryFromProbandListOutVO(ProbandListOutVO) not yet implemented.");
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
-		// ProbandListEntry probandListEntry = this.load(probandListEntryOutVO.getId());
-		// if (probandListEntry == null)
-		// {
-		// probandListEntry = ProbandListEntry.Factory.newInstance();
-		// }
-		// return probandListEntry;
 	}
 
 	/**

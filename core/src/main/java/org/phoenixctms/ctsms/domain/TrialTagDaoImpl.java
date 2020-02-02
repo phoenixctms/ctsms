@@ -9,7 +9,6 @@ package org.phoenixctms.ctsms.domain;
 import java.util.Collection;
 
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -57,8 +56,6 @@ public class TrialTagDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TrialTag loadTrialTagFromTrialTagVO(TrialTagVO trialTagVO) {
-		// TODO implement loadTrialTagFromTrialTagVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTrialTagFromTrialTagVO(TrialTagVO) not yet implemented.");
 		TrialTag trialTag = null;
 		Long id = trialTagVO.getId();
 		if (id != null) {

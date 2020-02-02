@@ -24,7 +24,7 @@ public class PasswordPolicy {
 		SMALL_LETTERS, CAPITAL_LETTERS, DIGITS, UMLAUTS, WHITESPACES, ALT_SYMBOLS, SYMBOLS
 	}
 
-	private final static String STRING_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM; // "SHA1PRNG";
+	private final static String STRING_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static HashMap<CharacterClasses, Character[]> CHARACTER_CLASSES = new HashMap<CharacterClasses, Character[]>();
 	private final static HashMap<CharacterClasses, String> CHARACTER_CLASS_L10NKEYS = new HashMap<CharacterClasses, String>();
 	private final static HashMap<CharacterClasses, String> CHARACTER_CLASS_NAME_DEFAULTS = new HashMap<CharacterClasses, String>();
@@ -204,7 +204,7 @@ public class PasswordPolicy {
 	}
 
 	private static Character getRandomCharacter(Character[] characters, SecureRandom random) {
-		return characters[random.nextInt(characters.length)]; // - 1)];
+		return characters[random.nextInt(characters.length)];
 	}
 
 	private static int minimum(int a, int b, int c) {
@@ -368,7 +368,7 @@ public class PasswordPolicy {
 					}
 				}
 			}
-			selected = candidates.get(random.nextInt(candidates.size())); // - 1));
+			selected = candidates.get(random.nextInt(candidates.size()));
 			used.put(selected, used.get(selected) + 1);
 			resultChars.add(randomChars.get(selected));
 		}

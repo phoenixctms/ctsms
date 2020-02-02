@@ -35,7 +35,6 @@ public class TagSelectListRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -45,10 +44,6 @@ public class TagSelectListRandomization extends Randomization {
 		}
 	}
 
-	// @Override
-	// protected void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException {
-	// checkProbandGroupToken(probandGroupIn.getToken());
-	// }
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
 		checkRandomizeProbandListEntryTag(trial);
@@ -59,8 +54,7 @@ public class TagSelectListRandomization extends Randomization {
 	@Override
 	protected void checkTrialRandomizationInput(Trial trial, TrialInVO trialIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(trialIn.getRandomizationList())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_REQUIRED); // ,L10nUtil.getRandomizationModeName(Locales.USER,
-			// trialIn.getRandomization().name()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LIST_REQUIRED);
 		}
 		if (trial != null) {
 			splitInputFieldSelectionSetValueValues(trialIn.getRandomizationList(), getInputFieldSelectionSetValueValueMap(getRandomizationInputFieldSelectionSetValues(trial)),
@@ -73,17 +67,12 @@ public class TagSelectListRandomization extends Randomization {
 		return getRandomizationListInputFieldSelectionSetValueValues(trial);
 	}
 
-	//	@Override
-	//	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
-	//			String randomizationList, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
-	//		return sanitizeRandomizationListCodesInput(randomizationList, codes);
-	//	}
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_SELECT_LIST;
 	}
 
-	private int getTotalValuesSize(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) { // long trialId,
+	private int getTotalValuesSize(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) {
 		int result = 0;
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();
 		while (it.hasNext()) {

@@ -296,11 +296,6 @@ public class TrialServiceImpl
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.INVENTORY_JOURNAL, null)) });
 	}
 
-	// private static JournalEntry logSystemMessage(Proband proband, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	// JournalEntryDao journalEntryDao) throws Exception {
-	// return journalEntryDao.addSystemMessage(proband, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) }, systemMessageCode,
-	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
-	// }
 	private static JournalEntry logSystemMessage(MassMail massMail, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return journalEntryDao.addSystemMessage(massMail, now, modified, systemMessageCode, new Object[] { CommonUtil.trialOutVOToString(trialVO) },
@@ -349,14 +344,10 @@ public class TrialServiceImpl
 	private ECRFFieldStatusEntryOutVO addEcrfFieldStatusEntry(ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry, ECRFStatusEntry statusEntry, ECRFFieldStatusQueue queue,
 			Timestamp now, User user,
 			boolean logTrial,
-			boolean logProband, boolean action
-	// ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
-	// JournalEntryDao journalEntryDao
-	) throws Exception {
+			boolean logProband, boolean action) throws Exception {
 		Object[] resultItems = checkAddEcrfFieldStatusEntryInput(newEcrfFieldStatusEntry, statusEntry, queue, now, user, action);
 		ECRFFieldStatusEntry lastStatus = (ECRFFieldStatusEntry) resultItems[0];
 		statusEntry = (ECRFStatusEntry) resultItems[1];
-		// ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntryDao.eCRFFieldStatusEntryInVOToEntity(newEcrfFieldStatusEntry);
 		fieldStatus.setQueue(queue);
@@ -370,8 +361,6 @@ public class TrialServiceImpl
 					result, null, journalEntryDao);
 		}
 		if (logTrial) {
-			// ServiceUtil.logSystemMessage(fieldStatus.getListEntry().getTrial(), result.getListEntry().getTrial(), now, user,
-			// SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
 			ServiceUtil.logSystemMessage(fieldStatus.getListEntry().getTrial(), result.getListEntry().getProband(), now, user,
 					SystemMessageCodes.ECRF_FIELD_STATUS_ENTRY_CREATED, result, null, journalEntryDao);
 		}
@@ -380,11 +369,8 @@ public class TrialServiceImpl
 
 	private Object[] addEcrfStatusEntry(ECRF ecrf, ProbandListEntry listEntry, ECRFStatusType statusType, Long probandListStatusTypeId, Timestamp now, User user)
 			throws Exception {
-		// ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
-		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		checkAddEcrfStatusEntry(ecrf, listEntry, statusType, user);
 		ECRFStatusEntry statusEntry = ECRFStatusEntry.Factory.newInstance();
-		//statusEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		statusEntry.setValidationStatus(ECRFValidationStatus.NOT_VALIDATED);
 		statusEntry.setStatus(statusType);
 		statusEntry.setEcrf(ecrf);
@@ -395,7 +381,7 @@ public class TrialServiceImpl
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		statusEntry = ecrfStatusEntryDao.create(statusEntry);
-		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user); // null,
+		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user);
 		ECRFStatusEntryVO result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_STATUS_ENTRY_CREATED, result, null,
 				journalEntryDao);
@@ -415,8 +401,8 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO newProbandListEntry, boolean createProband, boolean signup, // ProbandListStatusType statusType,
-			Randomization randomization, Trial trial, Timestamp now, User user) throws Exception {
+	private ProbandListEntryOutVO addProbandListEntry(ProbandListEntryInVO newProbandListEntry, boolean createProband, boolean signup, Randomization randomization, Trial trial,
+			Timestamp now, User user) throws Exception {
 		checkProbandListEntryInput(newProbandListEntry, createProband, signup, now);
 		ProbandDao probandDao = this.getProbandDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -426,10 +412,8 @@ public class TrialServiceImpl
 			if (!CommonUtil.isEmptyString(trial.getProbandAliasFormat())) {
 				newProband.setAlias(getNewProbandAlias(trial, user));
 			}
-			// newProband.setAnimalName(value);
 			newProband.setBlinded(true);
 			newProband.setCategoryId(this.getProbandCategoryDao().findPreset(signup, trial.getType().isPerson()).getId());
-			// newProband.setComment(value);
 			newProband.setDepartmentId(user.getDepartment().getId());
 			newProband.setPerson(trial.getType().isPerson());
 			proband = ServiceUtil.createProband(newProband,
@@ -451,8 +435,6 @@ public class TrialServiceImpl
 			proband = listEntry.getProband();
 		}
 		ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(signup, proband.isPerson()).iterator().next();
-		// Trial trial = listEntry.getTrial();
-		//listEntry.setExportStatus(ExportStatus.NOT_EXPORTED);
 		boolean randomized = false;
 		if (randomization != null) {
 			if (RandomizationType.GROUP.equals(randomization.getType())) {
@@ -483,7 +465,7 @@ public class TrialServiceImpl
 			}
 		}
 		ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
-		if (statusType != null && statusType.isInitial()) { // && !statusType.isReasonRequired()) {
+		if (statusType != null && statusType.isInitial()) {
 			if (statusType.isSignup() && !trial.isSignupProbandList()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_DISABLED);
 			}
@@ -534,19 +516,15 @@ public class TrialServiceImpl
 		if (randomization != null) {
 			logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_CREATED, result, null,
 					randomization.getRandomizationInfoVO(), journalEntryDao);
-			// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
 			logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_CREATED, result, null,
 					randomization.getRandomizationInfoVO(), journalEntryDao);
 		} else {
 			ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
-			// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
 			ServiceUtil.logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_CREATED, result, null, journalEntryDao);
 		}
 		if (probandListStatusEntryVO != null) {
 			ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, probandListStatusEntryVO, null,
 					journalEntryDao);
-			// ServiceUtil
-			// .logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, probandListStatusEntryVO, null, journalEntryDao);
 			ServiceUtil
 					.logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_CREATED, probandListStatusEntryVO, null, journalEntryDao);
 		}
@@ -619,21 +597,18 @@ public class TrialServiceImpl
 			throws Exception {
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		Long id = ecrfFieldValueIn.getId();
-		// ECRFFieldValue ecrfFieldValue;
 		ECRFFieldValueOutVO result = null;
 		ECRFFieldValueJsonVO resultJs = null;
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// ECRFFieldOutVO ecrfFieldVO = this.getECRFFieldDao().toECRFFieldOutVO(ecrfField);
-		checkEcrfFieldValueIndex(ecrfField, ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId(), ecrfFieldValueIn.getIndex()); // , ecrfFieldVO);
+		checkEcrfFieldValueIndex(ecrfField, ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId(), ecrfFieldValueIn.getIndex());
 		ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
 		boolean isAuditTrail = ecrfField.isAuditTrail() && ecrfStatusEntry.getStatus().isAuditTrail();
 		if (id == null) {
-			// if (!ecrfField.isDisabled() || ecrfField.isSeries()) {
 			if (ecrfField.isDisabled()) {
 				ecrfFieldValueIn = ServiceUtil.createPresetEcrfFieldInValue(ecrfField, listEntry.getId(), ecrfFieldValueIn.getIndex(), this.getInputFieldSelectionSetValueDao());
 			}
 			checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
-			checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField); // , ecrfFieldVO);
+			checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 			ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
 			ECRFFieldValue ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
@@ -654,18 +629,10 @@ public class TrialServiceImpl
 				ServiceUtil.logSystemMessage(listEntry.getProband(), result.getListEntry().getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_VALUE_CREATED, result, null,
 						journalEntryDao);
 			}
-			// ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getEcrfField().getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_VALUE_CREATED, result, null,
-			// journalEntryDao);
 			if (logTrial) {
 				ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_FIELD_VALUE_CREATED, result, null,
 						journalEntryDao);
 			}
-			// } else {
-			// result = ServiceUtil.createPresetEcrfFieldOutValue(ecrfFieldVO, listEntryVO, ecrfFieldValueIn.getIndex());
-			// if (outJsEcrfFieldValues != null && !CommonUtil.isEmptyString(ecrfField.getJsVariableName())) {
-			// resultJs = ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, ecrfFieldValueIn.getIndex(), this.getInputFieldSelectionSetValueDao());
-			// }
-			// }
 		} else {
 			ECRFFieldValue originalEcrfFieldValue = null;
 			if (!CheckIDUtil.checkEcrfFieldValueId(id, ecrfFieldValueDao).equals( // modified check when new record was created meanwhile
@@ -677,7 +644,7 @@ public class TrialServiceImpl
 					&& (!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
 							|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), force))) {
 				checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
-				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField); // , ecrfFieldVO); // access original associations before evict
+				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 				ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
 				ECRFFieldValueOutVO original = null;
@@ -733,15 +700,6 @@ public class TrialServiceImpl
 				sectionIndexMap.put(ecrfField.getSection(), indexes);
 			}
 		}
-		// if (sectionIndexMap != null && ecrfFieldValueIn.getIndex() != null) {
-		// if (sectionIndexMap.containsKey(result.getEcrfField().getSection())) {
-		// sectionIndexMap.get(result.getEcrfField().getSection()).add(ecrfFieldValueIn.getIndex());
-		// } else {
-		// LinkedHashSet<Long> indexes = new LinkedHashSet<Long>();
-		// indexes.add(ecrfFieldValueIn.getIndex());
-		// sectionIndexMap.put(result.getEcrfField().getSection(), indexes);
-		// }
-		// }
 		if (outEcrfFieldValues != null) {
 			outEcrfFieldValues.add(result);
 		}
@@ -755,7 +713,6 @@ public class TrialServiceImpl
 			boolean logProband, ArrayList<ProbandListEntryTagValueOutVO> tagValues, ArrayList<ProbandListEntryTagValueJsonVO> jsTagValues) throws Exception {
 		ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 		Long id = probandListEntryTagValueIn.getId();
-		// ProbandListEntryTagValue listEntryTagValue;
 		ProbandListEntryTagValueOutVO result = null;
 		ProbandListEntryTagValueJsonVO resultJs = null;
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -781,8 +738,6 @@ public class TrialServiceImpl
 				ServiceUtil.logSystemMessage(listEntry.getProband(), result.getTag().getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_CREATED, result, null,
 						journalEntryDao);
 			}
-			// ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getTag().getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_CREATED, result, null,
-			// journalEntryDao);
 			if (logTrial) {
 				ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_CREATED, result,
 						null,
@@ -815,9 +770,6 @@ public class TrialServiceImpl
 							original,
 							journalEntryDao);
 				}
-				// ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getTag().getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_UPDATED, result,
-				// original,
-				// journalEntryDao);
 				if (logTrial) {
 					ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_UPDATED,
 							result,
@@ -857,14 +809,10 @@ public class TrialServiceImpl
 			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(), null,
 					listEntry.getProband().getId(), null, null);
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
-			// } else {
 		}
 		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
 		probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
 		probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
-		// ProbandAddressDao addressDao = this.getProbandAddressDao();
-		// Collection probandAddresses = addressDao.findByProband(listEntry.getProband().getId(), null, null, null, null);
-		// addressDao.toProbandAddressOutVOCollection(probandAddresses);
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 		Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues = ServiceUtil.getProbandListEntryTagJsonValues(
@@ -874,14 +822,12 @@ public class TrialServiceImpl
 		HashMap<String, Long> fieldMaxPositionMap = null;
 		HashMap<String, Long> fieldMinPositionMap = null;
 		HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
-		// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		if (addSeries) {
 			maxSeriesIndexMap = new HashMap<String, Long>();
 			fieldMaxPositionMap = new HashMap<String, Long>();
 			fieldMinPositionMap = new HashMap<String, Long>();
 			seriesEcrfFieldMap = new HashMap<String, Set<ECRFField>>();
-			// seriesEcrfFieldJsMap = new HashMap<String, Set<ECRFField>>();
 			ServiceUtil.initSeriesEcrfFieldMaps(
 					this.getECRFFieldDao().findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, true, null),
 					listEntryVO.getId(),
@@ -890,37 +836,27 @@ public class TrialServiceImpl
 					fieldMaxPositionMap,
 					fieldMinPositionMap,
 					seriesEcrfFieldMap,
-					// seriesEcrfFieldJsMap,
 					ecrfFieldValueDao);
 		}
-		// Collection values = ecrfFieldValueDao.findByListEntryEcrfJs(listEntry.getId(), ecrf.getId(), true, null, null);
 		Collection<ECRFFieldValueJsonVO> jsValues = ServiceUtil.getEcrfFieldJsonValues(
 				ecrfFieldValueDao.findByListEntryEcrfJsField(listEntry.getId(), ecrf.getId(), true, true, null, null),
 				maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 				false, ecrfFieldValueDao, inputFieldSelectionSetValueDao);
-		// ecrfFieldValueDao.toECRFFieldValueJsonVOCollection(jsValues);
 		FieldCalculation fieldCalculation = new FieldCalculation();
-		// fieldCalculation.setProband(listEntryVO.getProband());
-		// fieldCalculation.setTrial(listEntryVO.getTrial());
 		fieldCalculation.setProbandListEntry(listEntryVO);
 		fieldCalculation.setActiveUser(userVO);
 		fieldCalculation.setLocale(Locales.AUDIT_TRAIL);
-		// fieldCalculation.setProbandAddresses(probandAddresses);
 		fieldCalculation.setProbandListEntryTagValues(probandListEntryTagValues);
 		fieldCalculation.setVisitScheduleItems(visitScheduleItems);
 		fieldCalculation.setProbandGroups(probandGroups);
 		fieldCalculation.setECRFFieldInputFieldVariableValues(jsValues);
 		Exception scriptException = null;
-		// ValidationError firstError = null;
 		int errorCount = 0;
 		HashMap<Long, HashMap<Long, ValidationError>> validationErrorMap = new HashMap<Long, HashMap<Long, ValidationError>>();
 		try {
 			Iterator<ValidationError> it = fieldCalculation.initInputFieldVariables().iterator();
 			while (it.hasNext()) {
 				ValidationError msg = it.next();
-				// if (firstError == null) {
-				// firstError = msg;
-				// }
 				if (validationErrorMap.containsKey(msg.getEcrfFieldId())) {
 					validationErrorMap.get(msg.getEcrfFieldId()).put(msg.getIndex(), msg);
 				} else {
@@ -934,7 +870,7 @@ public class TrialServiceImpl
 			scriptException = e;
 		}
 		Iterator<Map> ecrfFieldValuesIt = ecrfFieldValueDao.findByListEntryEcrfJsField(listEntry.getId(), ecrf.getId(), true, null, null, null).iterator();
-		while (ecrfFieldValuesIt.hasNext()) { // && (maxMissingCount == null || missingCount < maxMissingCount)) {
+		while (ecrfFieldValuesIt.hasNext()) {
 			Map<String, Object> entities = ecrfFieldValuesIt.next();
 			ECRFFieldValue ecrfFieldValue = (ECRFFieldValue) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS);
 			ECRFField ecrfField;
@@ -973,7 +909,7 @@ public class TrialServiceImpl
 			} else {
 				ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(ECRFFieldStatusQueue.VALIDATION, listEntry.getId(),
 						ecrfField.getId(), index);
-				if (lastStatus != null && lastStatus.getStatus().getTransitions().contains(this.getECRFFieldStatusTypeDao().getValidationSuccess())) { // ) {
+				if (lastStatus != null && lastStatus.getStatus().getTransitions().contains(this.getECRFFieldStatusTypeDao().getValidationSuccess())) {
 					// or write always?
 					newEcrfFieldStatusEntry.setStatusId(this.getECRFFieldStatusTypeDao().getValidationSuccess().getId());
 				} else {
@@ -982,7 +918,6 @@ public class TrialServiceImpl
 			}
 			addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, statusEntry, ECRFFieldStatusQueue.VALIDATION, now, user, false, false, true);
 		}
-		// if (statusEntry != null) {
 		statusEntry.setValidationTimestamp(now);
 		if (scriptException != null) {
 			statusEntry.setValidationStatus(ECRFValidationStatus.FAILED);
@@ -1000,7 +935,6 @@ public class TrialServiceImpl
 					DefaultMessages.ECRF_VALIDATION_OK_NO_ERROR_RESPONSE));
 		}
 		this.getECRFStatusEntryDao().update(statusEntry);
-		// }
 		return errorCount;
 	}
 
@@ -1025,7 +959,6 @@ public class TrialServiceImpl
 					}
 				}
 				InputFieldSelectionSetValue selectionSetValue = randomization.getRandomizedInputFieldSelectionSetValue(trial, originalProbandListEntry);
-				// randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
 				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
 				tagIn.getSelectionValueIds().clear();
 				tagIn.getSelectionValueIds().add(selectionSetValue.getId());
@@ -1044,7 +977,6 @@ public class TrialServiceImpl
 					}
 				}
 				String textValue = randomization.getRandomizedInputFieldTextValue(trial, originalProbandListEntry);
-				// randomizationTag = this.getProbandListEntryTagDao().findByTrialFieldStratificationRandomize(trial.getId(), null, null, true).iterator().next();
 				tagIn = ServiceUtil.createPresetProbandListEntryTagInValue(randomizationTag, probandListEntry.getId(), this.getInputFieldSelectionSetValueDao());
 				tagIn.setTextValue(textValue);
 				if (originalTagValue != null) {
@@ -1086,7 +1018,6 @@ public class TrialServiceImpl
 			User user, boolean action)
 			throws Exception {
 		// referential checks
-		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry listEntry = CheckIDUtil.checkProbandListEntryId(ecrfFieldStatusEntryIn.getListEntryId(), this.getProbandListEntryDao(), LockMode.PESSIMISTIC_WRITE);
 		ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldStatusEntryIn.getEcrfFieldId(), this.getECRFFieldDao());
 		ECRFFieldStatusType state = CheckIDUtil.checkEcrfFieldStatusTypeId(ecrfFieldStatusEntryIn.getStatusId(), this.getECRFFieldStatusTypeDao());
@@ -1108,12 +1039,8 @@ public class TrialServiceImpl
 			if (ecrfStatusEntry == null) {
 				ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
 				this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
-				// ecrf = ServiceUtil.checkEcrfId(ecrf.getId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE); // lock order, field updates
 				Object[] resultItems = addEcrfStatusEntry(ecrf, listEntry, statusType, null, now, user);
 				ecrfStatusEntry = (ECRFStatusEntry) resultItems[0];
-				// statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
-				// } else {
-				// statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 			}
 		}
 		if (ecrfStatusEntry.getStatus().isFieldStatusLockdown()) {
@@ -1125,40 +1052,12 @@ public class TrialServiceImpl
 					L10nUtil.getProbandListStatusTypeName(Locales.USER, listEntry.getLastStatus().getStatus().getNameL10nKey()));
 		}
 		checkEcrfFieldStatusIndex(ecrfField, listEntry.getId(), ecrfField.getId(), ecrfFieldStatusEntryIn.getIndex());
-		// InputFieldDao inputFieldDao = this.getInputFieldDao();
-		// if (!ecrfField.isSeries()) {
-		// if (ecrfFieldStatusEntryIn.getIndex() != null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// } else {
-		// if (ecrfFieldStatusEntryIn.getIndex() == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(listEntry.getId(), ecrfField.getId());
-		// if (maxIndex == null) {
-		// if (!ecrfFieldStatusEntryIn.getIndex().equals(0l)) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// } else {
-		// if (ecrfFieldStatusEntryIn.getIndex() < 0l) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_LESS_THAN_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// } else if (ecrfFieldStatusEntryIn.getIndex() > (maxIndex + 1l)) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_GAP,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
-		// }
-		// }
-		// }
 		if (!action
 				&& (state.isResolved() && Settings.getEcrfFieldStatusQueueList(SettingCodes.RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES, Bundle.SETTINGS,
-						DefaultSettings.RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES).contains(state.getQueue()))) { // !state.isInitial() &&
+						DefaultSettings.RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES).contains(state.getQueue()))) {
 			checkTeamMemberResolve(listEntry.getTrial(), user);
 		}
 		ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(queue, listEntry.getId(), ecrfField.getId(), ecrfFieldStatusEntryIn.getIndex());
-		// ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
 		Boolean system = (action ? null : false);
 		boolean validState = false;
 		if (lastStatus == null) {
@@ -1186,18 +1085,11 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_NEW_ECRF_FIELD_STATUS_TYPE,
 						L10nUtil.getEcrfFieldStatusTypeName(Locales.USER, state.getNameL10nKey()));
 			}
-			// if (ecrfFieldStatusEntryIn.get.get.getRealTimestamp().compareTo(lastStatus.getRealTimestamp()) < 0) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_REAL_DATE_LESS_THAN_LAST_DATE);
-			// }
 		}
 		String comment = ecrfFieldStatusEntryIn.getComment();
 		if (CommonUtil.isEmptyString(comment) && state.isCommentRequired()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_COMMENT_REQUIRED);
 		}
-		// if ((new ProbandListStatusEntryCollisionFinder(probandDao, probandListEntryDao, probandListStatusEntryDao)).collides(probandListStatusEntryIn)) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED,
-		// CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(probandListEntry.getProband())));
-		// }
 		return new Object[] { lastStatus, ecrfStatusEntry };
 	}
 
@@ -1207,7 +1099,7 @@ public class TrialServiceImpl
 
 	private void checkAddEcrfStatusEntry(ECRF ecrf, ProbandListEntry listEntry, ECRFStatusType statusType, User user) throws ServiceException {
 		if (!ecrf.getTrial().equals(listEntry.getTrial())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_STATUS_ENTRY_DIFFERENT_TRIALS); // , statusType.getNameL10nKey());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_STATUS_ENTRY_DIFFERENT_TRIALS);
 		}
 		ServiceUtil.checkTrialLocked(listEntry.getTrial());
 		if (!listEntry.getTrial().getStatus().isEcrfValueInputEnabled()) {
@@ -1219,7 +1111,6 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
 					L10nUtil.getProbandListStatusTypeName(Locales.USER, listEntry.getLastStatus().getStatus().getNameL10nKey()));
 		}
-		// ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
 		boolean validState = false;
 		Iterator<ECRFStatusType> statesIt = this.getECRFStatusTypeDao().findInitialStates().iterator();
 		while (statesIt.hasNext()) {
@@ -1254,36 +1145,6 @@ public class TrialServiceImpl
 		checkProbandListEntryTagInput(listTagIn, trial, field);
 	}
 
-	// private void checkEcrfFieldValueInputIndex(ECRFFieldValueInVO ecrfFieldValueIn, ECRFField ecrfField) throws ServiceException { // , ECRFFieldOutVO ecrfFieldVO
-	// // InputFieldOutVO inputFieldVO = ecrfFieldVO.getField();
-	// InputFieldDao inputFieldDao = this.getInputFieldDao();
-	// if (!ecrfField.isSeries()) {
-	// if (ecrfFieldValueIn.getIndex() != null) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_NULL,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// } else {
-	// if (ecrfFieldValueIn.getIndex() == null) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(ecrfFieldValueIn.getListEntryId(), ecrfFieldValueIn.getEcrfFieldId());
-	// if (maxIndex == null) {
-	// if (!ecrfFieldValueIn.getIndex().equals(0l)) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_ZERO,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// }
-	// } else {
-	// if (ecrfFieldValueIn.getIndex() < 0l) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-	// } else if (ecrfFieldValueIn.getIndex() > (maxIndex + 1l)) {
-	// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_GAP,
-	// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
-	// }
-	// }
-	// }
-	// }
 	private ArrayList<RandomizationListCodeInVO> checkAddTrialInput(TrialInVO trialIn, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
 		checkTrialInput(trialIn);
 		TrialStatusTypeDao trialStatusTypeDao = this.getTrialStatusTypeDao();
@@ -1299,10 +1160,6 @@ public class TrialServiceImpl
 		if (!validState) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_TRIAL_STATUS_TYPE, L10nUtil.getTrialStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
-		// //entering signed:
-		// if (hasTrialStatusAction(state, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL)) {
-		// checkTeamMemberSign(trial, user);
-		// }
 		return Randomization.checkTrialInput(null, trialIn, codes, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(),
 				this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
@@ -1328,22 +1185,13 @@ public class TrialServiceImpl
 		if (statusEntry == null) {
 			ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
 			this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
-			// ecrf = ServiceUtil.checkEcrfId(ecrf.getId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE); // lock order, field updates
 			Object[] resultItems = addEcrfStatusEntry(ecrf, listEntry, statusType, null, now, user);
 			statusEntry = (ECRFStatusEntry) resultItems[0];
-			// statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
-			// } else {
-			// statusEntryVO = this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
 		}
-		// listEntryVO = statusEntryVO.getListEntry();
 		if (statusEntry.getStatus().isValueLockdown()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS,
 					L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
 		}
-		// if (statusEntry.getStatus().isAuditTrail()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_AUDIT_TRAIL_ENABLED_FOR_ECRF_STATUS,
-		// L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
-		// }
 		if (listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isEcrfValueInputEnabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
 					L10nUtil.getProbandListStatusTypeName(Locales.USER, listEntry.getLastStatus().getStatus().getNameL10nKey()));
@@ -1358,9 +1206,6 @@ public class TrialServiceImpl
 			if (hasJsValueExpression || hasJsOutputExpression) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
 			}
-			// if (!) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
-			// }
 		} else {
 			if (!JS_VARIABLE_NAME_REGEXP.matcher(ecrfFieldIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_INVALID, ecrfFieldIn.getJsVariableName());
@@ -1382,11 +1227,6 @@ public class TrialServiceImpl
 		if ((new EcrfFieldPositionCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
 		}
-		// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfFieldIn.getEcrfId(), null, true, null, null, null); // row lock order
-		// if (valuesLockedEcrfCount > 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, this.getECRFDao().toECRFOutVO(this.getECRFDao().load(ecrfFieldIn.getEcrfId())).getName(),
-		// valuesLockedEcrfCount);
-		// }
 	}
 
 	private void checkEcrfFieldStatusIndex(ECRFField ecrfField, Long probandListEntryId, Long ecrfFieldId, Long index) throws ServiceException {
@@ -1417,28 +1257,6 @@ public class TrialServiceImpl
 				}
 			}
 		}
-		// InputFieldDao inputFieldDao = this.getInputFieldDao();
-		// if (!ecrfField.isSeries()) {
-		// if (index != null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// // allow creating field status even w/o saved value
-		// } else {
-		// if (index == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// if (index < 0l) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INDEX_LESS_THAN_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// ECRFFieldValue value = this.getECRFFieldValueDao().getByListEntryEcrfFieldIndex(probandListEntryId, ecrfFieldId, index);
-		// if (value == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_NO_VALUE,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// }
 	}
 
 	private void checkEcrfFieldValueIndex(ECRFField ecrfField, Long probandListEntryId, Long ecrfFieldId, Long index) throws ServiceException {
@@ -1472,12 +1290,9 @@ public class TrialServiceImpl
 	}
 
 	private void checkEcrfFieldValueInput(ECRFFieldValueInVO ecrfFieldValueIn, ECRFStatusEntry ecrfStatusEntry, ECRFField ecrfField) throws ServiceException {
-		// ProbandListEntry listEntry
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = ecrfField.getField();
 		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
-		// InputField inputField = ServiceUtil.checkInputFieldId(ecrfField.getField().getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-		// InputFieldOutVO inputFieldVO = ecrfFieldVO.getField();
 		ServiceUtil.checkInputFieldTextValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getTextValue(), inputFieldDao, this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getBooleanValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldLongValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getLongValue(), inputFieldDao);
@@ -1507,7 +1322,6 @@ public class TrialServiceImpl
 				}
 			}
 		}
-		// (ecrfFieldValueIn.getId() == null || !ecrfField.isAuditTrail()) &&
 		if ((new EcrfFieldValueCollisionFinder(this.getProbandListEntryDao(), this.getECRFFieldValueDao())).collides(ecrfFieldValueIn)) {
 			if (ecrfFieldValueIn.getIndex() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_ALREADY_EXISTS,
@@ -1521,8 +1335,6 @@ public class TrialServiceImpl
 
 	private void checkEcrfFieldValueInputUnlockedForFieldStatus(ECRFFieldValueInVO ecrfFieldValueIn, ECRFStatusEntry statusEntry, ECRFField ecrfField) throws Exception {
 		if (statusEntry.getStatus().isValueLockdown()) {
-			// ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(null, listEntry.getId(), ecrfField.getId(), index);
-			// if (lastStatus != null) {
 			if (ecrfFieldValueIn.getId() == null && ecrfField.isSeries()
 					&& getEcrfSectionUnlockValue(statusEntry.getListEntry().getId(), ecrfFieldValueIn.getIndex(), ecrfField.getEcrf().getId(), ecrfField.getSection())) {
 				return;
@@ -1535,7 +1347,6 @@ public class TrialServiceImpl
 						return;
 					}
 				}
-				// }
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS,
 						L10nUtil.getEcrfStatusTypeName(Locales.USER, statusEntry.getStatus().getNameL10nKey()));
 			}
@@ -1582,7 +1393,7 @@ public class TrialServiceImpl
 		if (statusEntry == null) {
 			ProbandListEntryOutVO listEntryVO = this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry);
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_ECRF_STATUS_ENTRY, this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
-					CommonUtil.trialOutVOToString(listEntryVO.getTrial()), Long.toString(listEntryVO.getProband().getId())); // CommonUtil.probandOutVOToString(listEntryVO.getProband()));
+					CommonUtil.trialOutVOToString(listEntryVO.getTrial()), Long.toString(listEntryVO.getProband().getId()));
 		}
 		return statusEntry;
 	}
@@ -1620,7 +1431,6 @@ public class TrialServiceImpl
 
 	private void checkMissingEcrfFieldValuesDeeply(ProbandListEntry listEntry, ECRF ecrf) throws Exception {
 		checkMissingEcrfFieldValues(listEntry, ecrf);
-		// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		Integer maxMissingCount = Settings.getIntNullable(SettingCodes.MAX_MISSING_ECRF_FIELD_VALUES, Bundle.SETTINGS, DefaultSettings.MAX_MISSING_ECRF_FIELD_VALUES);
 		if (maxMissingCount == null || maxMissingCount > 0) {
 			ServiceException firstException = null;
@@ -1634,12 +1444,10 @@ public class TrialServiceImpl
 				ECRFField ecrfField;
 				if (ecrfFieldValue == null) {
 					ecrfField = (ECRFField) entities.get(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS);
-					if (!ecrfField.isSeries() && !ecrfField.isOptional()) { // !ecrfField.isDisabled() &&
+					if (!ecrfField.isSeries() && !ecrfField.isOptional()) {
 						try {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_MISSING,
-									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField()))
-							// ecrfFieldDao.toECRFFieldOutVO(ecrfField).getField().getName()
-							);
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
 						} catch (ServiceException e) {
 							missingCount++;
 							if (firstException == null) {
@@ -1656,11 +1464,9 @@ public class TrialServiceImpl
 					}
 				} else {
 					ecrfField = ecrfFieldValue.getEcrfField();
-					// if (!ecrfField.isDisabled()) {
 					InputField inputField = ecrfField.getField();
 					InputFieldValue value = ecrfFieldValue.getValue();
 					try {
-						// Long inputFieldVO = inputFieldDao.toInputFieldOutVO(ecrfField.getField());
 						ServiceUtil.checkInputFieldTextValue(inputField, ecrfField.isOptional(), value.getStringValue(), inputFieldDao,
 								this.getInputFieldSelectionSetValueDao());
 						ServiceUtil.checkInputFieldBooleanValue(inputField, ecrfField.isOptional(), value.getBooleanValue() == null ? false
@@ -1690,7 +1496,6 @@ public class TrialServiceImpl
 							errorMessagesMap.put(ecrfField.getId(), indexErrorMap);
 						}
 					}
-					// }
 				}
 			}
 			if (firstException != null) {
@@ -1733,16 +1538,16 @@ public class TrialServiceImpl
 			Proband proband = CheckIDUtil.checkProbandId(probandListEntryIn.getProbandId(), probandDao);
 			ServiceUtil.checkProbandLocked(proband);
 			if (proband.isPerson() && !trial.getType().isPerson()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_NOT_ANIMAL, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_NOT_ANIMAL, proband.getId().toString());
 			} else if (!proband.isPerson() && trial.getType().isPerson()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_NOT_PERSON, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_NOT_PERSON, proband.getId().toString());
 			}
 			if ((new ProbandListEntryProbandCollisionFinder(trialDao, probandListEntryDao)).collides(probandListEntryIn)) {
 				throw L10nUtil
-						.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
+						.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, proband.getId().toString());
 			}
 			if (now != null && (new ProbandListEntryStatusCollisionFinder(probandDao, trialDao, probandListEntryDao, now)).collides(probandListEntryIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, proband.getId().toString()); // CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, proband.getId().toString());
 			}
 		}
 		if (signup) {
@@ -1803,8 +1608,6 @@ public class TrialServiceImpl
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = listEntryTag.getField();
 		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
-		// InputField inputField = ServiceUtil.checkInputFieldId(listEntryTag.getField().getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-		// InputFieldOutVO inputFieldVO = this.getInputFieldDao().toInputFieldOutVO(listEntryTag.getField());
 		ServiceUtil.checkInputFieldTextValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getTextValue(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getBooleanValue(), inputFieldDao);
@@ -1933,11 +1736,10 @@ public class TrialServiceImpl
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX + 1) {
-					throw new IllegalArgumentException(); // "{" + PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + "} or {" + PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX + "}
-															// required");
+					throw new IllegalArgumentException();
 				}
 			} catch (IllegalArgumentException e) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN); // ,e.getMessage());
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN);
 			}
 		}
 		if ((trialIn.getSignupProbandList() || trialIn.getSignupInquiries()) && CommonUtil.isEmptyString(trialIn.getSignupDescription())) {
@@ -2093,17 +1895,7 @@ public class TrialServiceImpl
 		if (!modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_TRIAL_CHANGED);
 		}
-		if (// !modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())
-			// || !originalEcrf.getName().equals(modifiedEcrf.getName())
-			// ||
-		!originalEcrf.getTitle().equals(modifiedEcrf.getTitle())
-		// || !((originalEcrf.getDescription() == null && modifiedEcrf.getDescription() == null) || (originalEcrf.getDescription() != null
-		// && modifiedEcrf.getDescription() != null && originalEcrf.getDescription().equals(modifiedEcrf.getDescription())))
-		// || !((modifiedEcrf.getVisitId() == null && originalEcrf.getVisit() == null) || (modifiedEcrf.getVisitId() != null && originalEcrf.getVisit() != null && modifiedEcrf
-		// .getVisitId().equals(originalEcrf.getVisit().getId())))
-		// || !((modifiedEcrf.getGroupId() == null && originalEcrf.getGroup() == null) || (modifiedEcrf.getGroupId() != null && originalEcrf.getGroup() != null && modifiedEcrf
-		// .getGroupId().equals(originalEcrf.getGroup().getId())))
-		) {
+		if (!originalEcrf.getTitle().equals(modifiedEcrf.getTitle())) {
 			ServiceUtil.checkLockedEcrfs(originalEcrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		}
 	}
@@ -2156,7 +1948,7 @@ public class TrialServiceImpl
 		}
 		ServiceUtil.checkTrialLocked(trial);
 		checkInquiryInput(inquiryIn);
-		if (!field.equals(originalInquiry.getField()) && this.getInquiryValueDao().getCount(originalInquiry.getId()) > 0) { // originalInquiry.getInquiryValues().Xsize() > 0) {
+		if (!field.equals(originalInquiry.getField()) && this.getInquiryValueDao().getCount(originalInquiry.getId()) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_INPUT_FIELD_CHANGED);
 		}
 	}
@@ -2169,8 +1961,7 @@ public class TrialServiceImpl
 		}
 		ServiceUtil.checkTrialLocked(trial);
 		checkProbandListEntryTagInput(listTagIn, trial, field);
-		if (!field.equals(originalProbandListEntryTag.getField()) && this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) { // originalProbandListEntryTag.getTagValues().Xsize()
-			// > 0) {
+		if (!field.equals(originalProbandListEntryTag.getField()) && this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_CHANGED);
 		}
 	}
@@ -2245,7 +2036,6 @@ public class TrialServiceImpl
 
 	private ArrayList<ECRFFieldStatusEntryOutVO> clearEcrfFieldStatusEntries(ProbandListEntry listEntry, Collection<ECRFFieldStatusEntry> statusEntries,
 			Timestamp now, User user) throws Exception {
-		// ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ArrayList<ECRFFieldStatusEntryOutVO> result = new ArrayList<ECRFFieldStatusEntryOutVO>(statusEntries.size());
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
@@ -2301,12 +2091,6 @@ public class TrialServiceImpl
 			result.setEcrfStatusEntryCount(ecrfStatusEntryDao.getCount(listEntryVO.getId(), null, null, null, null, null, null, null));
 		}
 		if (ecrfDetail) {
-			// result.setEcrfValidatedCount(0l);
-			// result.setEcrfReviewCount(0l);
-			// result.setEcrfVerifiedCount(0l);
-			// result.setBlank(true);
-			// result.setUnresolvedValidationLastFieldStatusCount(0l);
-			// result.setUnresolvedQueryLastFieldStatusCount(0l);
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			Iterator<ECRF> it = ecrfDao.findByTrialGroupVisitActiveSorted(listEntryVO.getTrial().getId(),
@@ -2316,18 +2100,8 @@ public class TrialServiceImpl
 						from, to,
 						ecrfStatusEntryDao, ecrfStatusTypeDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
 				if (ecrfProgress != null) {
-					// result.setBlank(result.getBlank() && (ecrfProgress.getStatus() == null));
 					result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
 					if (ecrfProgress.getStatus() != null) {
-						// if (ecrfProgress.getStatus().getValidated()) {
-						// result.setEcrfValidatedCount(result.getEcrfValidatedCount() + 1l);
-						// }
-						// if (ecrfProgress.getStatus().getReview()) {
-						// result.setEcrfReviewCount(result.getEcrfReviewCount() + 1l);
-						// }
-						// if (ecrfProgress.getStatus().getVerified()) {
-						// result.setEcrfVerifiedCount(result.getEcrfVerifiedCount() + 1l);
-						// }
 						if (ecrfProgress.getStatus().getDone()) {
 							result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
 						}
@@ -2338,24 +2112,10 @@ public class TrialServiceImpl
 					result.setCharge(result.getCharge() + ecrfProgress.getCharge());
 					result.setEcrfFieldStatusQueueCounts(ServiceUtil.addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),
 							ecrfProgress.getEcrfFieldStatusQueueCounts()));
-					// result.setUnresolvedValidationLastFieldStatusCount(result.getUnresolvedValidationLastFieldStatusCount()
-					// + ecrfProgress.getUnresolvedValidationLastFieldStatusCount());
-					// result.setUnresolvedQueryLastFieldStatusCount(result.getUnresolvedQueryLastFieldStatusCount() + ecrfProgress.getUnresolvedQueryLastFieldStatusCount());
 					result.getEcrfs().add(ecrfProgress);
 				}
 			}
 		} else {
-			// result.setBlank(this.getECRFStatusEntryDao().getCount(listEntryVO.getId(), null, null, null) == 0l);
-			// result.setEcrfCount(ecrfDao.getCount(probandListEntryId, null, true, null, null, null));
-			// result.setDoneEcrfCount(ecrfDao.getCount(probandListEntryId, null, true, null, true, null));
-			// result.setEcrfTotalCount(ecrfDao.getCount(probandListEntryId, null, true, null));
-			// this.getECRFStatusEntryDao().getCount(probandListEntryId, ecrfId, ecrfStatusTypeId, validated, review, verified, done, valueLockdown, fieldStatusLockdown)
-			// result.setEcrfValidatedCount(ecrfDao.getCountValidated(probandListEntryId, null, true, true));
-			// result.setEcrfReviewCount(ecrfDao.getCountReview(probandListEntryId, null, true, true));
-			// result.setEcrfVerifiedCount(ecrfDao.getCountVerified(probandListEntryId, null, true, true));
-			// result.setEcrfDoneCount(ecrfDao.getCountDone(probandListEntryId, null, true, true));
-			// result.setUnresolvedValidationLastFieldStatusCount(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.VALIDATION, listEntryVO.getId(), true, false));
-			// result.setUnresolvedQueryLastFieldStatusCount(ecrfFieldStatusEntryDao.getCount(ECRFFieldStatusQueue.QUERY, listEntryVO.getId(), true, false));
 			if (from == null && to == null) {
 				ServiceUtil.populateEcrfFieldStatusEntryCount(result.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfFieldStatusEntryDao);
 			}
@@ -2375,19 +2135,6 @@ public class TrialServiceImpl
 						result.setEcrfOverdueCount(result.getEcrfOverdueCount() + 1l);
 					}
 					result.setCharge(result.getCharge() + ecrfProgress.getCharge());
-					// ECRFProgressVO ecrfProgress = new ECRFProgressVO();
-					// // result.setEcrf(ecrfVO);
-					// // result.setListEntry(listEntryVO);
-					// ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrf.getId(), listEntryVO.getId());
-					// if (statusEntry != null) {
-					// ECRFStatusTypeVO status = ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus());
-					// ecrfProgress.setStatus(status);
-					// if (status.getDone()) {
-					// result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
-					// }
-					// } else {
-					// ecrfProgress.setStatus(null);
-					// }
 					result.getEcrfs().add(ecrfProgress);
 				}
 			}
@@ -2395,16 +2142,6 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	// private SignatureVO getVerifiedEcrfSignatureVO(Signature signature) throws Exception {
-	// SignatureVO result = this.getSignatureDao().toSignatureVO(signature);
-	// StringBuilder comment = new StringBuilder();
-	// result.setVerificationTimestamp(new Date());
-	// result.setValid(EcrfSignature.verify(signature, comment, this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao()));
-	// result.setVerified(true);
-	// result.setComment(comment.toString());
-	// result.setDescription(EntitySignature.getDescription(result));
-	// return result;
-	// }
 	private ECRFFieldOutVO deleteEcrfFieldHelper(ECRF ecrf, Long ecrfFieldId, boolean deleteCascade, boolean checkTrialLocked, boolean checkEcrfLocked,
 			Timestamp now, User user) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -2434,9 +2171,8 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private void execEcrfStatusActions(ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception { // ECRFStatusType oldStatus,
+	private void execEcrfStatusActions(ECRFStatusEntry statusEntry, Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
 		ECRFStatusType newState = statusEntry.getStatus();
-		// if (oldStatus == null || !oldStatus.equals(newState)) {
 		ArrayList<ECRFStatusAction> sortedActions = new ArrayList<ECRFStatusAction>(newState.getActions());
 		Collections.sort(sortedActions, new EcrfStatusActionComparator());
 		Iterator<ECRFStatusAction> sortedActionsIt = sortedActions.iterator();
@@ -2444,9 +2180,6 @@ public class TrialServiceImpl
 		ECRF ecrf = statusEntry.getEcrf();
 		Integer scheduleValidationLimit = Settings.getIntNullable(SettingCodes.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT, Bundle.SETTINGS,
 				DefaultSettings.ECRF_FIELD_VALUES_SCHEDULE_VALIDATION_LIMIT);
-		// InputFieldDao inputFieldDao = this.getInputFieldDao();
-		// ECRFDao ecrfDao = this.getECRFDao();
-		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		while (sortedActionsIt.hasNext()) {
 			ECRFStatusAction ecrfStatusAction = sortedActionsIt.next();
 			switch (ecrfStatusAction.getAction()) {
@@ -2482,10 +2215,7 @@ public class TrialServiceImpl
 				case EXPORT_VALUES:
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
 				case SCHEDULE_VALIDATE_VALUES:
-					// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
-					// statusEntry.setValidationTimestamp(now);
 					statusEntry.setValidationStatus(ECRFValidationStatus.PENDING);
-					// statusEntry.setValidationResponseMsg(null);
 					this.getECRFStatusEntryDao().update(statusEntry);
 					break;
 				case VALIDATE_VALUES:
@@ -2498,7 +2228,6 @@ public class TrialServiceImpl
 					}
 					break;
 				case NOTIFY_ECRF_STATUS:
-					// throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
 					this.getNotificationDao().addNotification(statusEntry, now, null);
 					break;
 				case CANCEL_NOTIFICATIONS:
@@ -2517,14 +2246,12 @@ public class TrialServiceImpl
 					checkUnresolvedEcrfFieldStatus(listEntry, ecrf);
 					break;
 				case SIGN_ECRF:
-					// checkTeamMemberSign(listEntry.getTrial(), user);
 					this.getSignatureDao().addEcrfSignature(statusEntry, now);
 					break;
 				default:
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
 			}
 		}
-		// }
 	}
 
 	private void execTrialStatusActions(TrialStatusType oldStatus, Trial trial, Date now, User user) throws Exception {
@@ -2539,7 +2266,6 @@ public class TrialServiceImpl
 					case EXPORT_PROBAND_LIST:
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_TRIAL_STATUS_ACTION, trialStatusAction.getAction());
 					case SIGN_TRIAL:
-						// checkTeamMemberSign(trial, user);
 						this.getSignatureDao().addTrialSignature(trial, CommonUtil.dateToTimestamp(now));
 						break;
 					case CLEAR_PROBAND_LIST:
@@ -2585,13 +2311,11 @@ public class TrialServiceImpl
 			HashMap<String, Long> fieldMaxPositionMap = null;
 			HashMap<String, Long> fieldMinPositionMap = null;
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
-			// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
 			if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 				maxSeriesIndexMap = new HashMap<String, Long>();
 				fieldMaxPositionMap = new HashMap<String, Long>();
 				fieldMinPositionMap = new HashMap<String, Long>();
 				seriesEcrfFieldMap = new HashMap<String, Set<ECRFField>>();
-				// seriesEcrfFieldJsMap = new HashMap<String, Set<ECRFField>>();
 				ServiceUtil.initSeriesEcrfFieldMaps(
 						ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrf.getId(), section, true, true, null, null),
 						listEntryVO.getId(),
@@ -2600,7 +2324,6 @@ public class TrialServiceImpl
 						fieldMaxPositionMap,
 						fieldMinPositionMap,
 						seriesEcrfFieldMap,
-						// seriesEcrfFieldJsMap,
 						ecrfFieldValueDao);
 			}
 			result.setPageValues(ServiceUtil.getEcrfFieldValues(listEntryVO, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
@@ -2608,14 +2331,13 @@ public class TrialServiceImpl
 					ecrfFieldDao,
 					ecrfFieldValueDao,
 					this.getECRFFieldStatusEntryDao(),
-					this.getECRFFieldStatusTypeDao())); // this.getInputFieldSelectionSetValueDao()
+					this.getECRFFieldStatusTypeDao()));
 			if (jsValues) {
 				if (addSeries && CommonUtil.isEmptyString(fieldQuery)) {
 					maxSeriesIndexMap.clear();
 					fieldMaxPositionMap.clear();
 					fieldMinPositionMap.clear();
 					seriesEcrfFieldMap.clear();
-					// seriesEcrfFieldJsMap.clear();
 					ServiceUtil.initSeriesEcrfFieldMaps(
 							(loadAllJsValues ? ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, true, null)
 									: ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrf.getId(), section, true, true, true, null)),
@@ -2625,12 +2347,10 @@ public class TrialServiceImpl
 							fieldMaxPositionMap,
 							fieldMinPositionMap,
 							seriesEcrfFieldMap,
-							// seriesEcrfFieldJsMap,
 							ecrfFieldValueDao);
 				}
 				if (loadAllJsValues) {
 					result.setJsValues(ServiceUtil.getEcrfFieldJsonValues(
-							// ecrfFieldValueDao.findByListEntryEcrfSectionJs(listEntryVO.getId(), ecrf.getId(), section, true, true, null),
 							ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, true, null, null),
 							maxSeriesIndexMap, fieldMaxPositionMap,
 							fieldMinPositionMap, seriesEcrfFieldMap,
@@ -2671,9 +2391,6 @@ public class TrialServiceImpl
 						this.getProbandListEntryTagValueDao(), this.getRandomizationListCodeDao());
 				switch (randomization.getType()) {
 					case GROUP:
-						// if (groupId != null) {
-						// throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_NOT_NULL);
-						// }
 						break;
 					case TAG_SELECT:
 						break;
@@ -2750,7 +2467,6 @@ public class TrialServiceImpl
 				newEcrfField.setReasonForChangeRequired(auditTrail);
 				newEcrfField.setNotify(false);
 				newEcrfField.setSeries(series);
-				// newEcrfField.s
 				newEcrfField.setEcrfId(ecrf.getId());
 				newEcrfField.setTrialId(ecrf.getTrial().getId());
 				try {
@@ -2841,7 +2557,6 @@ public class TrialServiceImpl
 			AuthenticationVO auth, Long trialId, boolean randomize, Long groupId, Long rating, Long ratingMax, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
-		// ProbandListStatusType statusType = this.getProbandListStatusTypeDao().findInitialStates(false).iterator().next();
 		Long position = this.getProbandListEntryDao().findMaxPosition(trialId);
 		if (position == null) {
 			position = CommonUtil.LIST_INITIAL_POSITION;
@@ -2878,7 +2593,7 @@ public class TrialServiceImpl
 				newProbandListEntry.setRating(rating);
 				newProbandListEntry.setRatingMax(ratingMax);
 				try {
-					result.add(addProbandListEntry(newProbandListEntry, false, false, randomization, trial, now, user)); // statusType
+					result.add(addProbandListEntry(newProbandListEntry, false, false, randomization, trial, now, user));
 					shuffleInfo.getResultIds().add(probandId);
 				} catch (ServiceException e) {
 					// ignore; due to existent proband....
@@ -2899,7 +2614,7 @@ public class TrialServiceImpl
 		Trial trial = CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao());
 		Randomization randomization = getRandomization(trial, randomize != null ? randomize : signup && trial.isSignupRandomize(),
 				newProbandListEntry.getGroupId());
-		return addProbandListEntry(newProbandListEntry, createProband, signup, randomization, trial, now, user); // statusType
+		return addProbandListEntry(newProbandListEntry, createProband, signup, randomization, trial, now, user);
 	}
 
 	@Override
@@ -3092,7 +2807,6 @@ public class TrialServiceImpl
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
 			CoreUtil.modifyVersion(originalEcrf, ecrf, now, user);
 			ecrfDao.update(ecrf);
-			// Hibernate.initialize(inputField);
 			update = true;
 		} else {
 			checkAddEcrfInput(modifiedEcrf);
@@ -3100,11 +2814,7 @@ public class TrialServiceImpl
 			original = null;
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
 			CoreUtil.modifyVersion(ecrf, now, user);
-			// ecrf = ecrfDao.create(ecrf);
 			ecrf = ecrfDao.create(ecrf, LockMode.PESSIMISTIC_WRITE); // required here, as load(..,lockMode) will not work with created entities
-			// inputFieldDao.evict(inputField);
-			// inputField = ServiceUtil.checkInputFieldId(inputField.getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-			// inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
 			update = false;
 		}
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -3255,7 +2965,6 @@ public class TrialServiceImpl
 				} else if (!trial.equals(nextTrial)) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUES_FOR_DIFFERENT_TRIALS);
 				}
-				// InquiryOutVO inquiryVO = inquiryDao.toInquiryOutVO(inquiry);
 				InputField inputField = inquiry.getField();
 				try {
 					ServiceUtil.checkInputFieldTextValue(inputField, inquiry.isOptional(), inquiryValueIn.getTextValue(), inputFieldDao, inputFieldSelectionSetValueDao);
@@ -3328,17 +3037,11 @@ public class TrialServiceImpl
 		ECRFOutVO originalEcrfVO = ecrfDao.toECRFOutVO(originalEcrf);
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
-		// if (trialId != null) {
-		// trial = ServiceUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
-		// } else {
-		// trial = ServiceUtil.checkTrialId(originalEcrf.getTrial().getId(), trialDao, LockMode.PESSIMISTIC_WRITE);
-		// }
 		ServiceUtil.checkTrialLocked(trial);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRF newEcrf = ECRF.Factory.newInstance();
 		newEcrf.setActive(originalEcrf.isActive());
-		// newEcrf.setDeferredDelete(originalEcrf.isDeferredDelete());
 		newEcrf.setDescription(originalEcrf.getDescription());
 		newEcrf.setDisabled(originalEcrf.isDisabled());
 		newEcrf.setEnableBrowserFieldCalculation(originalEcrf.isEnableBrowserFieldCalculation());
@@ -3403,7 +3106,6 @@ public class TrialServiceImpl
 		ECRFOutVO result;
 		if (!force && (defer
 				|| this.getECRFStatusEntryDao().getCount(null, ecrfId, null, null, null, null, null, null) > 0)) {
-			// || this.getECRFFieldValueDao().getCount(ecrfId, section)) {
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
 			Trial trial = originalEcrf.getTrial();
 			ServiceUtil.checkTrialLocked(trial);
@@ -3433,7 +3135,6 @@ public class TrialServiceImpl
 			if (visit != null) {
 				visit.removeEcrfs(ecrf);
 			}
-			// if (deleteCascade) {
 			boolean checkProbandLocked = Settings.getBoolean(SettingCodes.REMOVE_ECRF_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
 					DefaultSettings.REMOVE_ECRF_CHECK_PROBAND_LOCKED);
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
@@ -3462,7 +3163,6 @@ public class TrialServiceImpl
 				ServiceUtil.removeEcrfStatusEntry(ecrfStatusEntry, true, signatureDao, ecrfStatusEntryDao, notificationDao, notificationRecipientDao);
 			}
 			ecrf.getEcrfStatusEntries().clear();
-			// }
 			ecrfDao.remove(ecrf);
 			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.ECRF_DELETED, result, null, journalEntryDao);
 		}
@@ -3471,7 +3171,6 @@ public class TrialServiceImpl
 
 	@Override
 	protected ECRFFieldOutVO handleDeleteEcrfField(AuthenticationVO auth, Long ecrfFieldId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
-		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFFieldOutVO result;
@@ -3505,7 +3204,6 @@ public class TrialServiceImpl
 	protected ECRFFieldStatusEntryOutVO handleDeleteEcrfFieldStatusEntry(
 			AuthenticationVO auth, Long ecrfFieldStatusEntryId) throws Exception {
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ECRFFieldStatusEntry fieldStatus = CheckIDUtil.checkEcrfFieldStatusEntryId(ecrfFieldStatusEntryId, ecrfFieldStatusEntryDao);
 		ProbandListEntry listEntry = fieldStatus.getListEntry();
 		this.getProbandListEntryDao().lock(listEntry, LockMode.PESSIMISTIC_WRITE);
@@ -3534,16 +3232,12 @@ public class TrialServiceImpl
 		}
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		// if (!fieldStatus.getStatus().isInitial() && fieldStatus.getStatus().isResolved()) {
 		if (fieldStatus.getStatus().isResolved()
 				&& Settings.getEcrfFieldStatusQueueList(SettingCodes.RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES, Bundle.SETTINGS,
 						DefaultSettings.RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES).contains(fieldStatus.getStatus().getQueue())) {
 			checkTeamMemberResolve(listEntry.getTrial(), user);
 		}
 		ECRFFieldStatusEntryOutVO result = ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO(fieldStatus);
-		// if (!result.isDecrypted()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
-		// }
 		listEntry.removeEcrfFieldStatusEntries(fieldStatus);
 		fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
 		ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND,
@@ -3586,7 +3280,7 @@ public class TrialServiceImpl
 			field.removeInquiries(inquiry);
 			ServiceUtil.removeInquiry(inquiry, true, Settings.getBoolean(SettingCodes.REMOVE_INQUIRY_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
 					DefaultSettings.REMOVE_INQUIRY_CHECK_PROBAND_LOCKED), now, user, true, true, this.getInquiryValueDao(), this.getInputFieldValueDao(),
-					journalEntryDao, inquiryDao); // ,
+					journalEntryDao, inquiryDao);
 			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.INQUIRY_DELETED, result, null, journalEntryDao);
 		}
 		return result;
@@ -3603,7 +3297,6 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// if (deleteCascade) {
 		ECRFDao ecrfDao = this.getECRFDao();
 		EcrfPositionCollisionFinder ecrfPositionCollisionFinder = new EcrfPositionCollisionFinder(this.getTrialDao(), ecrfDao);
 		Iterator<ECRF> ecrfsIt = probandGroup.getEcrfs().iterator();
@@ -3651,7 +3344,6 @@ public class TrialServiceImpl
 			visitScheduleItemDao.remove(visitScheduleItem);
 		}
 		probandGroup.getVisitScheduleItems().clear();
-		// }
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		Iterator<ProbandListEntry> probandListEntriesIt = probandGroup.getProbandListEntries().iterator();
 		while (probandListEntriesIt.hasNext()) {
@@ -3724,29 +3416,9 @@ public class TrialServiceImpl
 			AuthenticationVO auth, Long probandListEntryId) throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao);
-		// Trial trial = probandListEntry.getTrial(); //locking not required, as uniqueness cannot be harmed by deleting stuff
-		// ServiceUtil.checkTrialId(probandListEntry.getTrial().getId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
-		// Proband proband = probandListEntry.getProband();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return removeProbandListEntry(probandListEntry, now, user, true);
-		// ServiceUtil.checkProbandLocked(proband);
-		// ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// User user = CoreUtil.getUser();
-		// JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// ProbandGroup group = probandListEntry.getGroup();
-		// trial.removeProbandListEntries(probandListEntry);
-		// if (group != null) {
-		// group.removeProbandListEntries(probandListEntry);
-		// }
-		// proband.removeTrialParticipations(probandListEntry);
-		// ServiceUtil.removeProbandListEntry(probandListEntry, deleteCascade, now, user, true, true, this.getProbandListStatusEntryDao(), this.getProbandListEntryTagValueDao(),
-		// this.getECRFFieldValueDao(), this.getSignatureDao(), this.getECRFStatusEntryDao(), this.getInputFieldValueDao(), journalEntryDao, probandListEntryDao,
-		// this.getNotificationDao(), this.getNotificationRecipientDao());
-		// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
-		// logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
-		// return result;
 	}
 
 	@Override
@@ -3761,16 +3433,6 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InputField field = probandListEntryTag.getField();
-		// StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
-		// Long randomizationListsIt = stratificationRandomizationListDao.findyb().iterator();
-		// while (randomizationListsIt.hasNext()) {
-		// StratificationRandomizationList randomizationList = randomizationListsIt.next();
-		// StratificationRandomizationListOutVO randomizationListVO = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
-		// logSystemMessage(trial, result, now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_DELETED_STRATIFICATION_RANDOMIZATION_LIST_DELETED, randomizationListVO, null,
-		// journalEntryDao);
-		// trial.removeRandomizationListss(randomizationList);
-		// ServiceUtil.removeStratificationRandomizationList(randomizationList,true,stratificationRandomizationListDao);
-		// }
 		trial.removeListEntryTags(probandListEntryTag);
 		field.removeListEntryTags(probandListEntryTag);
 		ServiceUtil.removeProbandListEntryTag(probandListEntryTag, true, Settings.getBoolean(SettingCodes.REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
@@ -3793,9 +3455,6 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_NOT_LAST_ENTRY);
 		}
 		ProbandListStatusEntryOutVO result = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
-		// if (!result.isDecrypted()) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY);
-		// }
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		listEntry.setLastStatus(null);
@@ -3808,8 +3467,6 @@ public class TrialServiceImpl
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(listEntry.getProband(), result.getListEntry().getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_DELETED, result, null,
 				journalEntryDao);
-		// ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_DELETED, result,
-		// null,journalEntryDao);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_DELETED, result, null,
 				journalEntryDao);
 		return result;
@@ -3896,7 +3553,6 @@ public class TrialServiceImpl
 		} else {
 			Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
 			result = trialDao.toTrialOutVO(trial);
-			// if (deleteCascade) {
 			boolean checkProbandLocked = Settings.getBoolean(SettingCodes.REMOVE_TRIAL_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
 					DefaultSettings.REMOVE_TRIAL_CHECK_PROBAND_LOCKED);
 			NotificationDao notificationDao = this.getNotificationDao();
@@ -4029,8 +3685,6 @@ public class TrialServiceImpl
 				if (visit != null) {
 					visit.removeEcrfs(ecrf);
 				}
-				// ecrf.getEcrfFields() empty
-				// ecrf.getEcrfStatusEntries() empty
 				ecrfDao.remove(ecrf);
 			}
 			trial.getEcrfs().clear();
@@ -4191,24 +3845,6 @@ public class TrialServiceImpl
 			}
 			trial.getMassMails().clear();
 			ServiceUtil.removeNotifications(trial.getNotifications(), notificationDao, notificationRecipientDao);
-			// MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-			// Iterator<MassMailRecipient> massMailReceiptsIt = trial.getMassMailReceipts().iterator();
-			// while (massMailReceiptsIt.hasNext()) {
-			// MassMailRecipient recipient = massMailReceiptsIt.next(); // massMailRecipientDao.load(massMailReceiptsIt.next().getId(),
-			// // LockMode.PESSIMISTIC_WRITE);
-			// massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
-			// MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-			// MassMail massMail = recipient.getMassMail();
-			//
-			// recipient.setTrial(null);
-			// CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, trial.getModifiedUser() );
-			// massMailRecipientDao.update(recipient);
-			// MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-			// logSystemMessage(massMail, result, now, user, SystemMessageCodes.TRIAL_DELETED_MASS_MAIL_RECIPIENT_UPDATED, recipientVO, original, journalEntryDao);
-			//
-			// }
-			// trial.getMassMailReceipts().clear();
-			// }
 			trialDao.remove(trial);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.TRIAL_DELETED, result, null, journalEntryDao);
 		}
@@ -4242,7 +3878,6 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// if (deleteCascade) {
 		ECRFDao ecrfDao = this.getECRFDao();
 		Iterator<ECRF> ecrfsIt = visit.getEcrfs().iterator();
 		while (ecrfsIt.hasNext()) {
@@ -4280,7 +3915,6 @@ public class TrialServiceImpl
 			visitScheduleItemDao.remove(visitScheduleItem);
 		}
 		visit.getVisitScheduleItems().clear();
-		// }
 		trial.removeVisits(visit);
 		visit.setTrial(null);
 		visitDao.remove(visit);
@@ -4356,9 +3990,6 @@ public class TrialServiceImpl
 		boolean passDecryption = CoreUtil.isPassDecryption();
 		ECRFFieldStatusQueue[] queues = Settings.getEcrfFieldStatusQueueList(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_QUEUES, Bundle.AUDIT_TRAIL_EXCEL,
 				AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_QUEUES).toArray(new ECRFFieldStatusQueue[0]);
-		// ECRFFieldStatusQueue[] queues = new ECRFFieldStatusQueue[] {
-		// ECRFFieldStatusQueue.VALIDATION,ECRFFieldStatusQueue.QUERY, ECRFFieldStatusQueue.ANNOTATION
-		// };
 		AuditTrailExcelWriter writer = ExcelWriterFactory.createAuditTrailExcelWriter(!passDecryption, queues);
 		writer.setTrial(trialVO);
 		writer.setListEntry(listEntryVO);
@@ -4374,24 +4005,19 @@ public class TrialServiceImpl
 			}
 			fieldValueVOs.add(fieldValueVO);
 		}
-		// Collections.sort(fieldValues, new XTeamMemberOutVOComparator());
 		writer.setVOs(fieldValueVOs);
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		for (int i = 0; i < queues.length; i++) {
 			Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queues[i], trialId, probandListEntryId, ecrfId, false, true, null);
 			ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(statusEntries);
-			// Collections.sort(statusEntries, new XTeamMemberOutVOComparator());
 			writer.setVOs(queues[i], statusEntries);
 		}
 		User user = CoreUtil.getUser();
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
 		AuditTrailExcelVO result = writer.getExcelVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.AUDIT_TRAIL_EXPORTED, result,
 				null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -4705,7 +4331,6 @@ public class TrialServiceImpl
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
 		ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
 		ProbandTagValueDao probandTagValueDao = this.getProbandTagValueDao();
-		// InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ArrayList<ProbandListEntryOutVO> VOs = new ArrayList<ProbandListEntryOutVO>(probandListEntries.size());
@@ -4791,7 +4416,7 @@ public class TrialServiceImpl
 				if (listEntryTagValueMap.containsKey(listEntryTagVO.getId())) {
 					listEntryTagValueVO = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(listEntryTagValueMap.get(listEntryTagVO.getId()));
 				} else {
-					listEntryTagValueVO = ServiceUtil.createPresetProbandListEntryTagOutValue(probandListEntryVO, listEntryTagVO, null); // inputFieldSelectionSetValueDao
+					listEntryTagValueVO = ServiceUtil.createPresetProbandListEntryTagOutValue(probandListEntryVO, listEntryTagVO, null);
 				}
 				if (showAllProbandListEntryTags || listEntryTagVO.isExcelValue()) {
 					Object fieldValue = null;
@@ -4872,7 +4497,7 @@ public class TrialServiceImpl
 				if (inquiryValueMap.containsKey(inquiryVO.getId())) {
 					inquiryValueVO = inquiryValueDao.toInquiryValueOutVO(inquiryValueMap.get(inquiryVO.getId()));
 				} else {
-					inquiryValueVO = ServiceUtil.createPresetInquiryOutValue(probandListEntryVO.getProband(), inquiryVO, null); // inputFieldSelectionSetValueDao
+					inquiryValueVO = ServiceUtil.createPresetInquiryOutValue(probandListEntryVO.getProband(), inquiryVO, null);
 				}
 				if (showAllInquiries || inquiryVO.isExcelValue()) {
 					Object fieldValue = null;
@@ -4984,11 +4609,8 @@ public class TrialServiceImpl
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
 		ProbandListExcelVO result = writer.getExcelVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.PROBAND_LIST_EXPORTED, result,
 				null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -5021,11 +4643,8 @@ public class TrialServiceImpl
 				this.getProbandAddressDao(),
 				this.getAddressTypeDao(),
 				this.getUserDao());
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 				SystemMessageCodes.REIMBURSEMENTS_EXPORTED, result, null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -5049,8 +4668,7 @@ public class TrialServiceImpl
 		boolean aggregateContactDetails = Settings.getBoolean(TeamMembersExcelSettingCodes.AGGREGATE_CONTACT_DETAILS, Bundle.TEAM_MEMBERS_EXCEL,
 				TeamMembersExcelDefaultSettings.AGGREGATE_CONTACT_DETAILS);
 		StaffTagDao staffTagDao = this.getStaffTagDao();
-		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList(); // staffTagDao.findByVisibleIdExcel(null, null,
-		// true)
+		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList();
 		staffTagDao.toStaffTagVOCollection(staffTags);
 		AddressTypeDao addressTypeDao = this.getAddressTypeDao();
 		Collection addressTypes = showAddresses ? addressTypeDao.findByStaffProbandAnimalId(true, null, null, null) : new ArrayList();
@@ -5168,7 +4786,7 @@ public class TrialServiceImpl
 					fieldValue.append(addressOutVO.getCityName());
 					fieldRow.put(fieldKey, fieldValue.toString());
 				} else {
-					fieldKey = addressOutVO.getType().getName(); // aggregateAddresses ? ProbandListExcelWriter.getAddressesColumnName() : addressOutVO.getType().getName();
+					fieldKey = addressOutVO.getType().getName();
 					if (fieldRow.containsKey(fieldKey)) {
 						fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));
 					} else {
@@ -5190,9 +4808,9 @@ public class TrialServiceImpl
 				StringBuilder fieldValue;
 				if (aggregateContactDetails) {
 					if (contactDetailOutVO.getType().isEmail()) {
-						fieldKey = TeamMembersExcelWriter.getEmailContactDetailsColumnName(); // ProbandListExcelWriter
+						fieldKey = TeamMembersExcelWriter.getEmailContactDetailsColumnName();
 					} else if (contactDetailOutVO.getType().isPhone()) {
-						fieldKey = TeamMembersExcelWriter.getPhoneContactDetailsColumnName(); // ProbandListExcelWriter
+						fieldKey = TeamMembersExcelWriter.getPhoneContactDetailsColumnName();
 					} else {
 						continue;
 					}
@@ -5221,11 +4839,8 @@ public class TrialServiceImpl
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
 		TeamMembersExcelVO result = writer.getExcelVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.TEAM_MEMBERS_EXPORTED, result,
 				null, this.getJournalEntryDao());
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -5261,8 +4876,6 @@ public class TrialServiceImpl
 				this.getProbandListStatusEntryDao(),
 				this.getProbandAddressDao(),
 				this.getUserDao());
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
 				ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
@@ -5274,7 +4887,6 @@ public class TrialServiceImpl
 				break;
 			default:
 		}
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -5282,9 +4894,6 @@ public class TrialServiceImpl
 	protected String handleGenerateRandomizationList(AuthenticationVO auth, Long trialId, RandomizationMode mode, Integer n) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
-		// if (trial.getRandomization() == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.RANDOMIZATION_NOT_DEFINED_FOR_TRIAL);
-		// }
 		Randomization randomization = Randomization.getInstance(mode, trialDao, this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
 				this.getRandomizationListCodeDao());
@@ -5332,11 +4941,10 @@ public class TrialServiceImpl
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		ProbandGroup probandGroup = probandListEntry.getGroup();
 		if (probandGroup != null) {
-			Collection collidingProbandStatusEntries = new HashSet(); // new ArrayList();
+			Collection collidingProbandStatusEntries = new HashSet();
 			Long probandId = probandListEntry.getProband().getId();
 			ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
-			Iterator<VisitScheduleItem> it = probandGroup.getVisitScheduleItems().iterator(); // this.getVisitScheduleItemDao().findByTrialGroupVisit(probandListEntry.getTrial().getId(),
-			// probandGroup.getId(), null).iterator();
+			Iterator<VisitScheduleItem> it = probandGroup.getVisitScheduleItems().iterator();
 			while (it.hasNext()) {
 				VisitScheduleItem visitScheduleItem = it.next();
 				collidingProbandStatusEntries
@@ -5364,7 +4972,7 @@ public class TrialServiceImpl
 		} else {
 			ProbandGroup probandGroup = visitScheduleItem.getGroup();
 			if (probandGroup != null) {
-				collidingProbandStatusEntries = new HashSet(); // new ArrayList();
+				collidingProbandStatusEntries = new HashSet();
 				Iterator<ProbandListEntry> it = probandGroup.getProbandListEntries().iterator();
 				while (it.hasNext()) {
 					ProbandListEntry probandListEntry = it.next();
@@ -5585,8 +5193,6 @@ public class TrialServiceImpl
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
 		return this.getECRFFieldStatusEntryDao().getCount(queue, probandListEntryId, ecrfFieldId, index, last, initial, updated, proposed, resolved);
-		// TODO Auto-generated method stub xx
-		// return 0;
 	}
 
 	@Override
@@ -5657,37 +5263,8 @@ public class TrialServiceImpl
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao);
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
-		// ECRFFieldOutVO ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ServiceUtil.checkEcrfFieldId(ecrfFieldId, ecrfFieldDao));
-		// InputFieldDao inputFieldDao = this.getInputFieldDao();
 		ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, ecrfFieldDao);
-		// xx
 		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, ecrfFieldId, index);
-		// if (ecrfField.isSeries()) {
-		// if (index == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(probandListEntryId, ecrfFieldId);
-		// if (maxIndex == null) {
-		// if (index != 0l) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// } else {
-		// if (index < 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// } else if (index > (maxIndex + 1l)) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_GAP,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
-		// }
-		// }
-		// } else {
-		// if (index != null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// }
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		Iterator<ECRFFieldValue> it = ecrfFieldValueDao.findByListEntryEcrfFieldIndex(probandListEntryId, ecrfFieldId, index, false, true, null).iterator();
@@ -5716,40 +5293,9 @@ public class TrialServiceImpl
 	protected ECRFFieldValuesOutVO handleGetEcrfFieldValue(AuthenticationVO auth, Long probandListEntryId, Long ecrfFieldId, Long index, boolean auditTrail, boolean sort,
 			PSFVO psf)
 			throws Exception {
-		// ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
-		// ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
-		// ECRFFieldOutVO ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ServiceUtil.checkEcrfFieldId(ecrfFieldId, ecrfFieldDao));
-		// InputFieldDao inputFieldDao = this.getInputFieldDao();
 		ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
-		// xx
 		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, ecrfFieldId, index);
-		// if (ecrfField.isSeries()) {
-		// if (index == null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(probandListEntryId, ecrfFieldId);
-		// if (maxIndex == null) {
-		// if (index != 0l) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// } else {
-		// if (index < 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// } else if (index > (maxIndex + 1l)) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_GAP,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())), maxIndex + 1l);
-		// }
-		// }
-		// } else {
-		// if (index != null) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NOT_NULL,
-		// CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
-		// }
-		// }
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		Iterator<ECRFFieldValue> it = ecrfFieldValueDao.findByListEntryEcrfFieldIndex(probandListEntryId, ecrfFieldId, index, auditTrail, sort, psf).iterator();
@@ -5763,13 +5309,6 @@ public class TrialServiceImpl
 					result.getJsValues().add(ecrfFieldValueDao.toECRFFieldValueJsonVO(ecrfFieldValue)); // always return a js value?
 				}
 			}
-			// } else if (!auditTrail && psf == null) {
-			// result.getPageValues().add(
-			// ServiceUtil.createPresetEcrfFieldOutValue(ecrfFieldDao.toECRFFieldOutVO(ecrfField), probandListEntryDao.toProbandListEntryOutVO(listEntry), index, null,
-			// this.getECRFFieldStatusEntryDao()));
-			// if (!CommonUtil.isEmptyString(ecrfField.getJsVariableName())) {
-			// result.getJsValues().add(ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, index, this.getInputFieldSelectionSetValueDao()));
-			// }
 		}
 		return result;
 	}
@@ -5879,15 +5418,10 @@ public class TrialServiceImpl
 
 	@Override
 	protected Long handleGetEcrfFieldValuesSectionMaxIndex(AuthenticationVO auth, Long ecrfId, String section, Long probandListEntryId) throws Exception {
-		// ECRF ecrf =
 		CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		if (probandListEntryId != null) {
-			// ProbandListEntry listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		}
-		// if (!ecrf.getTrial().equals(listEntry.getTrial())) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
-		// }
 		if (this.getECRFFieldDao().getCount(null, ecrfId, section, true, null) == 0l) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_NO_FIELDS, section);
 		}
@@ -5896,16 +5430,9 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ECRFOutVO> handleGetEcrfList(AuthenticationVO auth, Long trialId, Boolean active, boolean sort, PSFVO psf) throws Exception {
-		// Collection<Map> test = this.getECRFFieldValueDao().findByListEntryEcrfActiveJs(3800331l, 3800200l, null, true, null, null);
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
-		// if (groupId != null) {
-		// ServiceUtil.checkProbandGroupId(groupId, this.getProbandGroupDao());
-		// }
-		// if (visitId != null) {
-		// ServiceUtil.checkVisitId(visitId, this.getVisitDao());
-		// }
 		ECRFDao ecrfDao = this.getECRFDao();
 		Collection ecrfs = ecrfDao.findByTrialActiveSorted(trialId, active, sort, psf);
 		ecrfDao.toECRFOutVOCollection(ecrfs);
@@ -5923,7 +5450,6 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ECRFOutVO> handleGetEcrfList(AuthenticationVO auth, Long trialId, Long groupId, Long visitId, Boolean active, boolean sort, PSFVO psf) throws Exception {
-		// Collection<Map> test = this.getECRFFieldValueDao().findByListEntryEcrfActiveJs(3800331l, 3800200l, null, true, null, null);
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -5999,15 +5525,6 @@ public class TrialServiceImpl
 	protected ECRFStatusEntryVO handleGetEcrfStatusEntry(AuthenticationVO auth, Long ecrfId, Long probandListEntryId) throws Exception {
 		ECRFStatusEntry statusEntry = checkEcrfStatusEntry(ecrfId, probandListEntryId);
 		return this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
-		// ServiceUtil.checkEcrfId(ecrfId, this.getECRFDao());
-		// ServiceUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
-		//
-		// ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
-		// ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrfId, probandListEntryId);
-		// if (statusEntry != null) {
-		// return ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
-		// }
-		// return null;
 	}
 
 	@Override
@@ -6048,33 +5565,6 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	// @Override
-	// protected InquiryValuesOutVO handleGetInquiryValues(
-	// AuthenticationVO auth, Long trialId, Boolean active,
-	// boolean sort, PSFVO psf) throws Exception {
-	// Trial trial = ServiceUtil.checkTrialId(trialId, this.getTrialDao());
-	// InquiryDao inquiryDao = this.getInquiryDao();
-	// InquiryValuesOutVO result = new InquiryValuesOutVO();
-	// Collection inquiries = inquiryDao.findByTrialActiveJs(trialId, active, sort, null, psf);
-	// inquiryDao.toInquiryOutVOCollection(inquiries);
-	// result.setPageValues(ServiceUtil.getInquiryValues(null, inquiries, inquiryDao, this.getInquiryValueDao()));
-	// result.setJsValues(ServiceUtil.getInquiryJsonValues(trialId, null, inquiryDao, this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao()));
-	// return result;
-	// }
-	//
-	// @Override
-	// protected InquiryValuesOutVO handleGetInquiryValues(
-	// AuthenticationVO auth, Long trialId, String category, Boolean active,
-	// boolean sort, PSFVO psf) throws Exception {
-	// Trial trial = ServiceUtil.checkTrialId(trialId, this.getTrialDao());
-	// InquiryDao inquiryDao = this.getInquiryDao();
-	// InquiryValuesOutVO result = new InquiryValuesOutVO();
-	// Collection inquiries = inquiryDao.findByTrialCategoryActiveJs(trialId, category, active, sort, null, psf);
-	// inquiryDao.toInquiryOutVOCollection(inquiries);
-	// result.setPageValues(ServiceUtil.getInquiryValues(null, inquiries, inquiryDao, this.getInquiryValueDao()));
-	// result.setJsValues(ServiceUtil.getInquiryJsonValues(trialId, null, inquiryDao, this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao()));
-	// return result;
-	// }
 	@Override
 	protected Collection<String> handleGetInquiryCategories(AuthenticationVO auth, Long trialId,
 			String categoryPrefix, Boolean active, Boolean signupActive, Integer limit) throws Exception {
@@ -6152,7 +5642,7 @@ public class TrialServiceImpl
 		Iterator<Inquiry> inquiriesIt = inquiryDao.findByTrialActiveJs(trialId, active, signupActive, sort, null, psf).iterator();
 		while (inquiriesIt.hasNext()) {
 			Inquiry inquiry = inquiriesIt.next();
-			result.getPageValues().add(ServiceUtil.createPresetInquiryOutValue(null, inquiryDao.toInquiryOutVO(inquiry), null)); // inputFieldSelectionSetValueDao
+			result.getPageValues().add(ServiceUtil.createPresetInquiryOutValue(null, inquiryDao.toInquiryOutVO(inquiry), null));
 			if (!loadAllJsValues && !CommonUtil.isEmptyString(inquiry.getJsVariableName())
 					&& Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 							DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
@@ -6181,7 +5671,7 @@ public class TrialServiceImpl
 		Iterator<Inquiry> inquiriesIt = inquiryDao.findByTrialCategoryActiveJs(trialId, category, active, signupActive, sort, null, psf).iterator();
 		while (inquiriesIt.hasNext()) {
 			Inquiry inquiry = inquiriesIt.next();
-			result.getPageValues().add(ServiceUtil.createPresetInquiryOutValue(null, inquiryDao.toInquiryOutVO(inquiry), null)); // inputFieldSelectionSetValueDao
+			result.getPageValues().add(ServiceUtil.createPresetInquiryOutValue(null, inquiryDao.toInquiryOutVO(inquiry), null));
 			if (!loadAllJsValues && !CommonUtil.isEmptyString(inquiry.getJsVariableName())
 					&& Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 							DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
@@ -6814,8 +6304,6 @@ public class TrialServiceImpl
 		result.setEcrfOverdueCount(0l);
 		result.setCharge(0.0f);
 		result.setEcrfStatusEntryCount(0l);
-		// Collection listEntries = trial.getProbandListEntries();
-		// probandListEntryDao.toProbandListEntryOutVOCollection(listEntries);
 		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartment(trialId, probandDepartmentId).iterator();
 		while (listEntriesIt.hasNext()) {
 			ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next());
@@ -7076,12 +6564,6 @@ public class TrialServiceImpl
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
-		// if (probandGroupId != null) {
-		// ServiceUtil.checkProbandGroupId(probandGroupId, this.getProbandGroupDao());
-		// }
-		// if (visitId != null) {
-		// ServiceUtil.checkVisitId(visitId, this.getVisitDao());
-		// }
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		Collection visitScheduleItems = visitScheduleItemDao.findByTrialSorted(trialId, sort, psf);
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
@@ -7232,7 +6714,7 @@ public class TrialServiceImpl
 				this.getProbandListEntryTagValueDao(),
 				this.getSignatureDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter(); //new EcrfPDFPainter();
+		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setEcrfVOMap(ecrfVOMap);
 		painter.setValueVOMap(valueVOMap);
@@ -7246,8 +6728,6 @@ public class TrialServiceImpl
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
 		ECRFPDFVO result = painter.getPdfVO();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), listEntryVO.getProband(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), user,
 				SystemMessageCodes.ECRF_PDF_RENDERED,
 				result, null, journalEntryDao);
@@ -7255,7 +6735,6 @@ public class TrialServiceImpl
 				SystemMessageCodes.ECRF_PDF_RENDERED,
 				result, null,
 				journalEntryDao);
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -7272,7 +6751,6 @@ public class TrialServiceImpl
 		if (probandListEntryId != null) {
 			listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao);
 		}
-		// ECRFDao ecrfDao = this.getECRFDao();
 		ECRF ecrf = null;
 		if (ecrfId != null) {
 			ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
@@ -7283,8 +6761,6 @@ public class TrialServiceImpl
 				this.getInputFieldSelectionSetValueDao(), this.getECRFStatusEntryDao(), this.getECRFFieldStatusEntryDao(), this.getECRFFieldStatusTypeDao(),
 				this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getSignatureDao(), this.getUserDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		if (listEntry != null) {
 			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 			ServiceUtil.logSystemMessage(listEntry.getTrial(), listEntryVO.getProband(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
@@ -7310,7 +6786,6 @@ public class TrialServiceImpl
 						journalEntryDao);
 			}
 		}
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -7330,8 +6805,6 @@ public class TrialServiceImpl
 				this.getProbandListEntryDao(), this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(),
 				this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(), this.getUserDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		if (trial != null) {
 			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 					SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_PDF_RENDERED,
@@ -7342,7 +6815,6 @@ public class TrialServiceImpl
 						: SystemMessageCodes.PROBAND_LIST_ENTRY_TAGS_PDF_RENDERED,
 				result, null,
 				journalEntryDao);
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -7371,8 +6843,6 @@ public class TrialServiceImpl
 				this.getProbandDao(), this.getTrialDao(), this.getMoneyTransferDao(), this.getTrialTagValueDao(),
 				this.getBankAccountDao(), this.getProbandAddressDao(), this.getUserDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		// byte[] documentDataBackup = result.getDocumentDatas();
-		// result.setDocumentDatas(null);
 		if (trialVO != null) {
 			if (probandVO != null) {
 				ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
@@ -7392,7 +6862,6 @@ public class TrialServiceImpl
 					SystemMessageCodes.REIMBURSEMENTS_PDF_NO_TRIAL_RENDERED, result, null,
 					journalEntryDao);
 		}
-		// result.setDocumentDatas(documentDataBackup);
 		return result;
 	}
 
@@ -7604,10 +7073,6 @@ public class TrialServiceImpl
 		ECRFDao ecrfDao = this.getECRFDao();
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
-		// long valuesLockedEcrfCount = this.getECRFStatusEntryDao().getCount(null, ecrfId, null, true, null, null, null); // row lock order
-		// if (valuesLockedEcrfCount > 0) {
-		// throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, ecrfDao.toECRFOutVO(ecrf).getName(), valuesLockedEcrfCount);
-		// }
 		ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		Collection<ECRFField> ecrfFields = ecrfFieldDao.findByEcrfSectionPosition(ecrfId, oldSection, null);
@@ -7777,16 +7242,12 @@ public class TrialServiceImpl
 			logSystemMessage(probandListEntry.getProband(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_UPDATED, result,
 					original,
 					randomization.getRandomizationInfoVO(), journalEntryDao);
-			// ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
-			// journalEntryDao);
 			logSystemMessage(probandListEntry.getTrial(), result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_RANDOMIZED_AND_UPDATED, result,
 					original,
 					randomization.getRandomizationInfoVO(), journalEntryDao);
 		} else {
 			ServiceUtil.logSystemMessage(probandListEntry.getProband(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
 					journalEntryDao);
-			// ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
-			// journalEntryDao);
 			ServiceUtil.logSystemMessage(probandListEntry.getTrial(), result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_UPDATED, result, original,
 					journalEntryDao);
 		}
@@ -7936,9 +7397,6 @@ public class TrialServiceImpl
 		this.getTrialStatusTypeDao().evict(originalTrialStatusType);
 		trialDao.evict(originalTrial);
 		Trial trial = trialDao.trialInVOToEntity(modifiedTrial);
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// User user = CoreUtil.getUser();
-		// restart random:
 		if (modifiedTrial.getRandomization() == null) {
 			trial.setRandom(null);
 		} else if (original.getRandomization() == null) {
@@ -8042,7 +7500,6 @@ public class TrialServiceImpl
 			if (!original.getListEntry().getProband().getDecrypted()) {
 				continue; // support cron jobs with different department users, so each will not raise/close even if there are edit checks for PII
 			}
-			// CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 			boolean noMissingValues = false;
 			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES)) {
 				try {
@@ -8131,22 +7588,7 @@ public class TrialServiceImpl
 
 	private void notifyEcrfFieldStatus(ECRFStatusEntry statusEntry, ECRFFieldStatusEntry lastStatus, ECRFFieldStatusEntry newStatus, ECRFFieldStatusQueue queue, Date now)
 			throws Exception {
-		// if (lastStatus != null) {
-		// ServiceUtil.cancelNotifications(lastStatus.getNotifications(), this.getNotificationDao(),
-		// org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_);
-		// }
-		//
-		// if (ECRFFieldStatusQueue.QUERY.equals(newStatus.getQueue())) {
-		//
-		// }
-		//
-		// if (Arrays.asList(Settings.getEcrfFieldStatusQueueList(SettingCodes.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES, Bundle.SETTINGS,
-		// DefaultSettings.NOTIFICATION_ECRF_FIELD_STATUS_QUEUES)).contains(queue)) {
-		//
-		// this.getNotificationDao().addNotification(newStatus,now,null);
-		// }
 		if (newStatus != null
-				// && (newStatus.getStatus().isInitial() || newStatus.getStatus().isResolved())
 				&& (newStatus.getEcrfField().isNotify() || (statusEntry != null && statusEntry.getStatus().isReview()
 						&& Settings.getEcrfFieldStatusQueueList(SettingCodes.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES, Bundle.SETTINGS,
 								DefaultSettings.NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES)
@@ -8157,7 +7599,6 @@ public class TrialServiceImpl
 						org.phoenixctms.ctsms.enumeration.NotificationType.NEW_ECRF_FIELD_STATUS);
 			}
 			Map messageParameters = CoreUtil.createEmptyTemplateModel();
-			// new ECRFFieldStatusQueue[0]
 			messageParameters.put(NotificationMessageTemplateParameters.INDEX_FIELD_LOG,
 					ServiceUtil.getIndexFieldLog(newStatus.getListEntry().getId(),
 							newStatus.getEcrfField().getId(), newStatus.getIndex(), false, true, false, true, ECRFFieldStatusQueue.values(),
@@ -8216,7 +7657,6 @@ public class TrialServiceImpl
 				probandListEntryDao,
 				this.getNotificationDao(), this.getNotificationRecipientDao());
 		ServiceUtil.logSystemMessage(proband, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
-		// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
 		ServiceUtil.logSystemMessage(trial, result.getProband(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
 		return result;
 	}
@@ -8241,7 +7681,6 @@ public class TrialServiceImpl
 			if (!loadPageResult) {
 				ecrfFieldValues = new ArrayList<ECRFFieldValueOutVO>(ecrfFieldValuesIn.size());
 			}
-			// jsEcrfFieldValues = new ArrayList<ECRFFieldValueJsonVO>(ecrfFieldValuesIn.size());
 			Iterator<ECRFFieldValueInVO> ecrfFieldValuesInIt = ecrfFieldValuesIn.iterator();
 			while (ecrfFieldValuesInIt.hasNext()) {
 				ecrfFieldValueIn = ecrfFieldValuesInIt.next();
@@ -8274,7 +7713,6 @@ public class TrialServiceImpl
 					if (statusEntry == null) {
 						ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
 						this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
-						// ecrf = ServiceUtil.checkEcrfId(ecrf.getId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE); // lock order, field updates
 						Object[] resultItems = addEcrfStatusEntry(ecrf, listEntry, statusType, null, now, user);
 						statusEntry = (ECRFStatusEntry) resultItems[0];
 						statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
@@ -8282,22 +7720,6 @@ public class TrialServiceImpl
 						statusEntryVO = this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
 					}
 					listEntryVO = statusEntryVO.getListEntry();
-					// if (statusEntryVO.getStatus().getValueLockdown()) {
-					// // ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(null, listEntry.getId(), ecrfField.getId(), index);
-					// // if (lastStatus == null) {
-					// throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS,
-					// statusEntryVO.getStatus().getName());
-					// // } else {
-					// // ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
-					// // for (int i = 0; i < queues.length; i++) {
-					// // lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(queues[i], listEntry.getId(), ecrfField.getId(), index);
-					// // if (lastStatus != null && lastStatus.getStatus().isValueLockdown()) {
-					// // throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_FIELD_STATUS,
-					// // L10nUtil.getEcrfFieldStatusTypeName(Locales.USER, lastStatus.getStatus().getNameL10nKey()));
-					// // }
-					// // }
-					// // }
-					// }
 					if (listEntryVO.getLastStatus() != null && !listEntryVO.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
 								listEntryVO.getLastStatus().getStatus().getName());
@@ -8321,39 +7743,13 @@ public class TrialServiceImpl
 					}
 				}
 			}
-			// HashMap<String, Long> maxSeriesIndexMap = null;
-			// HashMap<String, Set<ECRFField>> seriesEcrfFieldMap = null;
-			// HashMap<String, Set<ECRFField>> seriesEcrfFieldJsMap = null;
-			// if (addSeries) {
-			// maxSeriesIndexMap = new HashMap<String, Long>();
-			// seriesEcrfFieldMap = new HashMap<String, Set<ECRFField>>();
-			// seriesEcrfFieldJsMap = new HashMap<String, Set<ECRFField>>();
-			// ServiceUtil.initSeriesEcrfFieldMaps(
-			// this.getECRFFieldDao().findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, null, null),
-			// listEntry.getId(),
-			// ecrf.getId(),
-			// maxSeriesIndexMap,
-			// seriesEcrfFieldMap,
-			// seriesEcrfFieldJsMap,
-			// this.getECRFFieldValueDao()
-			// );
-			// }
-			// if (firstException == null) {
 			Iterator<Entry<String, LinkedHashSet<Long>>> sectionIndexMapIt = sectionIndexMap.entrySet().iterator();
 			while (sectionIndexMapIt.hasNext()) {
 				Entry<String, LinkedHashSet<Long>> sectionIndexes = sectionIndexMapIt.next();
 				String section = sectionIndexes.getKey();
 				Iterator<Long> indexesIt = sectionIndexes.getValue().iterator();
-				// boolean sectionAddSeries = false;
-				// Long maxSeriesIndex = null;
 				while (indexesIt.hasNext()) {
 					Long index = indexesIt.next();
-					// if (!sectionAddSeries
-					// && maxSeriesIndexMap != null
-					// && (maxSeriesIndex = maxSeriesIndexMap.get(section)) != null
-					// && maxSeriesIndex.equals(index)) {
-					// sectionAddSeries = true;
-					// }
 					Iterator<ECRFFieldValueInVO> missingSeriesInIt = ServiceUtil.createPresetEcrfFieldInValues(listEntry.getId(), ecrf.getId(), section, index,
 							this.getECRFFieldDao(),
 							this.getECRFFieldValueDao(), this.getInputFieldSelectionSetValueDao()).iterator();
@@ -8382,30 +7778,6 @@ public class TrialServiceImpl
 						}
 					}
 				}
-				// if (sectionAddSeries) {
-				// Set<ECRFField> seriesEcrfFields = seriesEcrfFieldMap.get(section);
-				// if (seriesEcrfFields != null && seriesEcrfFields.size() > 0) {
-				// ECRFFieldValueOutVO ecrfFieldValueVO = null;
-				// Iterator<ECRFField> seriesEcrfFieldsIt = seriesEcrfFields.iterator();
-				// while (seriesEcrfFieldsIt.hasNext()) {
-				// ECRFField seriesEcrfField = seriesEcrfFieldsIt.next();
-				// ecrfFieldValueVO = ServiceUtil
-				// .createPresetEcrfFieldOutValue(this.getECRFFieldDao().toECRFFieldOutVO(seriesEcrfField), listEntryVO, maxSeriesIndex + 1l);
-				// ecrfFieldValues.add(ecrfFieldValueVO);
-				// }
-				// }
-				// seriesEcrfFields = seriesEcrfFieldJsMap.get(section);
-				// if (seriesEcrfFields != null && seriesEcrfFields.size() > 0) {
-				// ECRFFieldValueJsonVO ecrfFieldValueVO = null;
-				// Iterator<ECRFField> seriesEcrfFieldsIt = seriesEcrfFields.iterator();
-				// while (seriesEcrfFieldsIt.hasNext()) {
-				// ECRFField seriesEcrfField = seriesEcrfFieldsIt.next();
-				// ecrfFieldValueVO = ServiceUtil.createPresetEcrfFieldJsonValue(seriesEcrfField, maxSeriesIndex + 1l, this.getInputFieldSelectionSetValueDao());
-				// jsEcrfFieldValues.add(ecrfFieldValueVO);
-				// }
-				// }
-				// }
-				// }
 			}
 			if (firstException != null) {
 				firstException.setData(errorMessagesMap);
@@ -8436,7 +7808,7 @@ public class TrialServiceImpl
 		statusEntry.setStatus(statusType);
 		CoreUtil.modifyVersion(statusEntry, version.longValue(), now, user);
 		ecrfStatusEntryDao.update(statusEntry);
-		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user); // originalEcrfStatusType,
+		execEcrfStatusActions(statusEntry, probandListStatusTypeId, now, user);
 		result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 		ServiceUtil.logSystemMessage(listEntry.getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_STATUS_ENTRY_UPDATED, result, original,
 				journalEntryDao);

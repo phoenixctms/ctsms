@@ -30,7 +30,6 @@ public interface SystemMessageCodes {
 	public final static String COURSE_DELETED = "course_deleted";
 	public final static String COURSE_DELETED_PARTICIPATION_DELETED = "course_deleted_participation_deleted";
 	public final static String COURSE_DELETED_LECTURER_DELETED = "course_deleted_lecturer_deleted";
-	// public final static String COURSE_DELETED_RENEWAL_REMOVED = "course_deleted_renewal_removed";
 	public final static String COURSE_DELETED_PRECEDING_COURSE_REMOVED = "course_deleted_preceding_course_removed";
 	public final static String COURSE_DELETED_BOOKING_UPDATED = "course_deleted_booking_updated";
 	public final static String COURSE_DELETED_INSTITUTION_COURSE_REMOVED = "course_deleted_institution_course_removed";
@@ -281,7 +280,6 @@ public interface SystemMessageCodes {
 	public final static String ECRF_FIELD_VALUE_DELETED = "ecrf_field_value_deleted";
 	public final static String ECRF_FIELD_VALUES_CLEARED = "ecrf_field_values_cleared";
 	public final static String ECRF_FIELD_STATUS_ENTRY_CREATED = "ecrf_field_status_entry_created";
-	// public final static String ECRF_FIELD_STATUS_ENTRY_UPDATED = "ecrf_field_status_entry_updated";
 	public final static String ECRF_FIELD_STATUS_ENTRY_DELETED = "ecrf_field_status_entry_deleted";
 	public final static String INPUT_FIELD_CREATED = "input_field_created";
 	public final static String INPUT_FIELD_UPDATED = "input_field_updated";

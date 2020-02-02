@@ -318,8 +318,6 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 		if (timelineEvent != null) {
 			Date start = timelineEvent.getStart();
 			Date stop = timelineEvent.getStop();
-			// CommonUtil.formatDate(, ExcelUtil.EXCEL_DATE_PATTERN,L10nUtil.getLocale(Locales.USER))
-			// SimpleDateFormat timelineEventDateFormat = new SimpleDateFormat(ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
 			if (start != null && stop != null) {
 				return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.TIMELINE_EVENT_FROM_TO_FIELD_VALUE, ExcelUtil.DEFAULT_LABEL,
 						timelineEvent.getTitle(),
@@ -425,7 +423,7 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 		} else {
 			fileName = new StringBuilder(SEARCH_RESULT_EXCEL_FILENAME_PREFIX);
 		}
-		if (criteria != null && criteria.getCriterions().size() == 1) { // getCriterionsCount()
+		if (criteria != null && criteria.getCriterions().size() == 1) {
 			fileName.append(criteria.getCriterions().iterator().next().getPropertyId());
 			fileName.append("_");
 		}

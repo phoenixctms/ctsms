@@ -144,7 +144,6 @@ public class InventoryBookingDaoImpl
 			if (staffId != null) {
 				Criteria participationCriteria = courseCriteria.createCriteria("participations", CriteriaSpecification.LEFT_JOIN);
 				participationCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
-				// bookingCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
 				distinctRoot = true;
 			}
 		} else {
@@ -652,11 +651,6 @@ public class InventoryBookingDaoImpl
 			InventoryBooking source,
 			InventoryBookingOutVO target) {
 		super.toInventoryBookingOutVO(source, target);
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.inventory (can't convert source.getInventory():org.phoenixctms.ctsms.domain.Inventory to org.phoenixctms.ctsms.vo.InventoryOutVO
-		// WARNING! No conversion for target.course (can't convert source.getCourse():org.phoenixctms.ctsms.domain.Course to org.phoenixctms.ctsms.vo.CourseOutVO
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
 		Inventory inventory = source.getInventory();
 		Staff onBehalfOf = source.getOnBehalfOf();
 		Course course = source.getCourse();

@@ -65,7 +65,6 @@ public class InputFieldDaoImpl
 			if (!CommonUtil.isEmptyString(inputFieldProperty)) {
 				inputFieldCriteria.add(Restrictions.not(Restrictions.isEmpty(inputFieldProperty)));
 			}
-			//fieldCriteria.add(Restrictions.eq("localized", false));
 			if (!CommonUtil.isEmptyString(fieldNameInfix)) {
 				CategoryCriterion.apply(inputFieldCriteria, new CategoryCriterion(fieldNameInfix, "nameL10nKey", MatchMode.ANYWHERE));
 			}
@@ -319,7 +318,6 @@ public class InputFieldDaoImpl
 	 */
 	@Override
 	public InputField inputFieldOutVOToEntity(InputFieldOutVO inputFieldOutVO) {
-		// TODO verify behavior of inputFieldOutVOToEntity
 		InputField entity = this.loadInputFieldFromInputFieldOutVO(inputFieldOutVO);
 		this.inputFieldOutVOToEntity(inputFieldOutVO, entity, true);
 		return entity;
@@ -333,9 +331,7 @@ public class InputFieldDaoImpl
 			InputFieldOutVO source,
 			InputField target,
 			boolean copyIfNull) {
-		// TODO verify behavior of inputFieldOutVOToEntity
 		super.inputFieldOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.fieldType (can't convert source.getFieldType():org.phoenixctms.ctsms.vo.InputFieldTypeVO to InputFieldType
 	}
 
 	/**
@@ -357,8 +353,6 @@ public class InputFieldDaoImpl
 	 * a new, blank entity is created
 	 */
 	private InputField loadInputFieldFromInputFieldInVO(InputFieldInVO inputFieldInVO) {
-		// TODO implement loadInputFieldFromInputFieldInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldFromInputFieldInVO(InputFieldInVO) not yet implemented.");
 		InputField inputField = null;
 		Long id = inputFieldInVO.getId();
 		if (id != null) {
@@ -376,10 +370,7 @@ public class InputFieldDaoImpl
 	 * a new, blank entity is created
 	 */
 	private InputField loadInputFieldFromInputFieldOutVO(InputFieldOutVO inputFieldOutVO) {
-		// TODO implement loadInputFieldFromInputFieldOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldFromInputFieldOutVO(InputFieldOutVO) not yet implemented.");
-		/* A typical implementation looks like this: InputField inputField = this.load(inputFieldOutVO.getId()); if (inputField == null) { inputField =
-		 * InputField.Factory.newInstance(); } return inputField; */
 	}
 
 	/**
@@ -387,7 +378,6 @@ public class InputFieldDaoImpl
 	 */
 	@Override
 	public InputFieldImageVO toInputFieldImageVO(final InputField entity) {
-		// TODO verify behavior of toInputFieldImageVO
 		return super.toInputFieldImageVO(entity);
 	}
 
@@ -398,10 +388,7 @@ public class InputFieldDaoImpl
 	public void toInputFieldImageVO(
 			InputField source,
 			InputFieldImageVO target) {
-		// TODO verify behavior of toInputFieldImageVO
 		super.toInputFieldImageVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.contentType (can't convert source.getContentType():org.phoenixctms.ctsms.domain.MimeType to org.phoenixctms.ctsms.vo.MimeTypeVO
 		MimeType contentType = source.getContentType();
 		User modifiedUser = source.getModifiedUser();
 		target.setHasImage(source.getFileSize() != null && source.getFileSize() > 0l);
@@ -431,19 +418,11 @@ public class InputFieldDaoImpl
 			InputFieldInVO target) {
 		super.toInputFieldInVO(source, target);
 		MimeType contentType = source.getContentType();
-		// if (source.isLocalized()) {
-		// target.setTextPreset(L10nUtil.getInputFieldTextPreset(Locales.USER, source.getTextPresetL10nKey()));
-		// target.setName(L10nUtil.getInputFieldName(Locales.USER, source.getNameL10nKey()));
-		// target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
-		// target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getCommentL10nKey()));
-		// target.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(Locales.USER, source.getValidationErrorMsgL10nKey()));
-		// } else {
 		target.setTextPreset(source.getTextPresetL10nKey());
 		target.setName(source.getNameL10nKey());
 		target.setTitle(source.getTitleL10nKey());
 		target.setComment(source.getCommentL10nKey());
 		target.setValidationErrorMsg(source.getValidationErrorMsgL10nKey());
-		// }
 		target.setDatas(source.getData());
 		if (contentType != null) {
 			target.setMimeType(contentType.getMimeType());
@@ -455,7 +434,6 @@ public class InputFieldDaoImpl
 	 */
 	@Override
 	public InputFieldOutVO toInputFieldOutVO(final InputField entity) {
-		// TODO verify behavior of toInputFieldOutVO
 		return super.toInputFieldOutVO(entity);
 	}
 

@@ -65,13 +65,7 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	@Override
 	public void drawPage(PDPageContentStream contentStream) throws Exception {
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN),
-		// Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LOWER_MARGIN), pageWidth -
-		// Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(CVPDFSettingCodes.PAGE_RIGHT_MARGIN,
-		// Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN - Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF,
-		// CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 		if (cursor.getStaff() != null) {
-			// CVPDFBlock block = blocks.get(blockIndex - 1);
 			PDFUtil.renderTextLine(
 					contentStream,
 					fontA,
@@ -86,16 +80,6 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 	@Override
 	protected void drawPageNumber(PDFImprinter writer, PDPage page, int pageNumber, int totalPages) throws IOException {
 		PDPageContentStream contentStream = writer.openContentStream(page);
-		// PDFUtil.renderTextLine(
-		// contentStream,
-		// fontA,
-		// PDFUtil.FontSize.TINY,
-		// Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR),
-		// L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.PAGE_NUMBER, "", pageNumber, totalPages),
-		// Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN)
-		// + (pageWidth - Settings.getFloat(CVPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(
-		// CVPDFSettingCodes.PAGE_RIGHT_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_RIGHT_MARGIN)) / 2.0f,
-		// Settings.getFloat(CVPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.PAGE_LOWER_MARGIN), PDFUtil.Alignment.BOTTOM_CENTER);
 		PDFUtil.renderTextLine(
 				contentStream,
 				fontA,
@@ -246,7 +230,7 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 						blocks.add(new CVPDFBlock(staffVO, addressVOMap.get(staffVO.getId())));
 					}
 				} else {
-					if (addressVOMap != null) { // && ximage != null) {
+					if (addressVOMap != null) {
 						blocks.add(new CVPDFBlock(staffVO, addressVOMap.get(staffVO.getId()), ximage));
 					}
 				}

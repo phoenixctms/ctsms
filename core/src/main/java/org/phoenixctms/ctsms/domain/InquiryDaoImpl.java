@@ -100,7 +100,6 @@ public class InquiryDaoImpl
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = inquiryCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = inquiryCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			// fieldCriteria.add(Restrictions.eq("localized", false));
 			inquiryCriteria.add(Restrictions.or(
 					(new CategoryCriterion(nameInfix, "category", MatchMode.ANYWHERE)).getRestriction(),
 					Restrictions.or(
@@ -137,8 +136,6 @@ public class InquiryDaoImpl
 			}
 		}
 		applySortOrders(inquiryCriteria);
-		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return inquiryCriteria.list();
 		return inquiryCriteria.list();
 	}
 
@@ -156,8 +153,6 @@ public class InquiryDaoImpl
 					.createCriteria("trialParticipations", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		applySortOrders(inquiryCriteria);
-		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return inquiryCriteria.list();
 		return CriteriaUtil.listDistinctRoot(inquiryCriteria, this, "trial.id", "category", "position");
 	}
 
@@ -181,8 +176,6 @@ public class InquiryDaoImpl
 			inquiryCriteria.createCriteria("inquiryValues", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
 		applySortOrders(inquiryCriteria);
-		// inquiryCriteria.setResultTransformer(org.hibernate.Criteria.DISTINCT_ROOT_ENTITY);
-		// return inquiryCriteria.list();
 		return CriteriaUtil.listDistinctRoot(inquiryCriteria, this, "trial.id", "category", "position");
 	}
 
@@ -496,8 +489,6 @@ public class InquiryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Inquiry loadInquiryFromInquiryInVO(InquiryInVO inquiryInVO) {
-		// TODO implement loadInquiryFromInquiryInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromInquiryInVO(InquiryInVO) not yet implemented.");
 		Inquiry inquiry = null;
 		Long id = inquiryInVO.getId();
 		if (id != null) {
@@ -515,8 +506,6 @@ public class InquiryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Inquiry loadInquiryFromInquiryOutVO(InquiryOutVO inquiryOutVO) {
-		// TODO implement loadInquiryFromInquiryOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromInquiryOutVO(InquiryOutVO) not yet implemented.");
 		Inquiry inquiry = this.load(inquiryOutVO.getId());
 		if (inquiry == null) {
 			inquiry = Inquiry.Factory.newInstance();
@@ -530,8 +519,6 @@ public class InquiryDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Inquiry loadInquiryFromLightInquiryOutVO(LightInquiryOutVO lightInquiryOutVO) {
-		// TODO implement loadInquiryFromLightInquiryOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInquiryFromLightInquiryOutVO(LightInquiryOutVO) not yet implemented.");
 		Inquiry inquiry = this.load(lightInquiryOutVO.getId());
 		if (inquiry == null) {
 			inquiry = Inquiry.Factory.newInstance();
@@ -582,9 +569,6 @@ public class InquiryDaoImpl
 			Inquiry source,
 			InquiryOutVO target) {
 		super.toInquiryOutVO(source, target);
-		// WARNING! No conversion for target.trial (can't convert source.getTrial():org.phoenixctms.ctsms.domain.Trial to org.phoenixctms.ctsms.vo.TrialOutVO
-		// WARNING! No conversion for target.field (can't convert source.getField():org.phoenixctms.ctsms.domain.InputField to org.phoenixctms.ctsms.vo.InputFieldOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		Trial trial = source.getTrial();
 		InputField field = source.getField();
 		User modifiedUser = source.getModifiedUser();

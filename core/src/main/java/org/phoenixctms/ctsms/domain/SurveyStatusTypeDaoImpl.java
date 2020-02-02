@@ -41,8 +41,6 @@ public class SurveyStatusTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private SurveyStatusType loadSurveyStatusTypeFromSurveyStatusTypeVO(SurveyStatusTypeVO surveyStatusTypeVO) {
-		// TODO implement loadSurveyStatusTypeFromSurveyStatusTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadSurveyStatusTypeFromSurveyStatusTypeVO(SurveyStatusTypeVO) not yet implemented.");
 		SurveyStatusType surveyStatusType = null;
 		Long id = surveyStatusTypeVO.getId();
 		if (id != null) {

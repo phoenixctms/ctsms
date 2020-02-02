@@ -18,24 +18,9 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
 public class PDFJpeg extends PDJpeg {
 
-	// private final static String IMAGE_FORMAT = "jpg";
-	private static final int DEFAULT_USER_SPACE_UNIT_DPI = 72; // PDPage.java
+	private static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
 	private final static Color IMAGE_BG_COLOR = Color.WHITE;
 
-	// public static PDFJpeg createCropped(byte[] data, float width, float height, int dpi, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
-	// return ImageIO.read(new ByteArrayInputStream(CommonUtil.cropConvertImage(data, pointsToPixel(width, dpi), pointsToPixel(height, dpi), IMAGE_FORMAT,
-	// bgColor == null ? IMAGE_BG_COLOR : CommonUtil.convertColor(bgColor))));
-	// }
-	//
-	// public static BufferedImage createScaledImage(byte[] data, float width, float height, int dpi, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
-	// return ImageIO.read(new ByteArrayInputStream(CommonUtil.scaleConvertImage(data, pointsToPixel(width, dpi), pointsToPixel(height, dpi), IMAGE_FORMAT,
-	// bgColor == null ? IMAGE_BG_COLOR : CommonUtil.convertColor(bgColor))));
-	// }
-	//
-	// public static BufferedImage scaleImage(Image image, float width, float height, int dpi, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
-	// return ImageIO.read(new ByteArrayInputStream(CommonUtil.scaleConvertImage(data, pointsToPixel(width, dpi), pointsToPixel(height, dpi), IMAGE_FORMAT,
-	// bgColor == null ? IMAGE_BG_COLOR : CommonUtil.convertColor(bgColor))));
-	// }
 	public static Image createImage(byte[] data, org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		if (data != null && data.length > 0) {
 			try {
@@ -68,17 +53,11 @@ public class PDFJpeg extends PDJpeg {
 
 	private static float pixelToPoints(int pixel, int dpi) {
 		return (pixel) * ((float) DEFAULT_USER_SPACE_UNIT_DPI / (float) dpi);
-		// return (float) (((double) pixel) * ((double) DEFAULT_USER_SPACE_UNIT_DPI / (double) dpi));
 	}
 
 	private static int pointsToPixel(float points, int dpi) {
 		return (int) (points * ((float) dpi / (float) DEFAULT_USER_SPACE_UNIT_DPI));
-		// return (int) (((double) points) * ((double) dpi / (double) DEFAULT_USER_SPACE_UNIT_DPI));
 	}
-	// private static float pointsToPixelF(float points, int dpi) {
-	// return (points * ((float) dpi / (float) DEFAULT_USER_SPACE_UNIT_DPI));
-	// // return (int) (((double) points) * ((double) dpi / (double) DEFAULT_USER_SPACE_UNIT_DPI));
-	// }
 
 	public static PDFJpeg prepareImage(PDDocument doc, Image image, int compressionQualityPercent, int dpi) {
 		if (doc != null && image != null) {
@@ -90,12 +69,6 @@ public class PDFJpeg extends PDJpeg {
 		return null;
 	}
 
-	// public static PDFJpeg prepareCroppedImage(PDDocument doc, byte[] data, float width, float height, int compressionQualityPercent, int dpi,
-	// org.phoenixctms.ctsms.enumeration.Color bgColor) {
-	// Image image = createImage(data,bgColor);
-	// scaleImage(image,width,height,dpi);
-	// return prepareImage(doc,image,compressionQualityPercent,dpi);
-	// }
 	public static PDFJpeg prepareScaledImage(PDDocument doc, byte[] data, float width, float height, int compressionQualityPercent, int dpi,
 			org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		Image image = createImage(data, bgColor);
@@ -117,42 +90,26 @@ public class PDFJpeg extends PDJpeg {
 		} else {
 			image = PDFJpeg.createImage(width, height, bgColor);
 		}
-		// if (image != null) {
 		ArrayList<byte[]> inkValues = new ArrayList<byte[]>();
 		if (renderRegions) {
 			Iterator<InputFieldSelectionSetValueOutVO> it = field.getSelectionSetValues().iterator();
 			while (it.hasNext()) {
 				inkValues.add(it.next().getInkRegions());
 			}
-			// try {
-			// Iterator<InputFieldSelectionSetValueOutVO> it = field.getSelectionSetValues().iterator();
-			// while (it.hasNext()) {
-			// image.drawInk(it.next().getInkRegions());
-			// }
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
 		}
 		if (renderValue && inkValue != null) {
 			inkValues.add(inkValue);
-			// try {
-			// image.drawInk(inkValue);
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
 		}
 		if (image != null) {
 			if (inkValues.size() > 0) { // speedup..
 				try {
 					image.drawInk(inkValues.toArray(new byte[][] {}));
 				} catch (Exception e) {
-					// e.printStackTrace();
 				}
 			}
 			try {
 				image.crop(width, height);
 			} catch (Exception e) {
-				// e.printStackTrace();
 			}
 			if (maxWidth != null && pixelToPoints(image.getImage().getWidth(), dpi) > maxWidth) {
 				scaleImage(image, maxWidth, 0.0f, dpi);
@@ -175,12 +132,10 @@ public class PDFJpeg extends PDJpeg {
 
 	private PDFJpeg(PDDocument doc, BufferedImage bi) throws IOException {
 		super(doc, bi);
-		// TODO Auto-generated constructor stub
 	}
 
 	private PDFJpeg(PDDocument doc, BufferedImage bi, float compressionQuality) throws IOException {
 		super(doc, bi, compressionQuality);
-		// TODO Auto-generated constructor stub
 	}
 
 	private PDFJpeg(PDDocument doc, Image image, float compressionQuality, int dpi)
@@ -191,12 +146,10 @@ public class PDFJpeg extends PDJpeg {
 
 	private PDFJpeg(PDDocument doc, InputStream is) throws IOException {
 		super(doc, is);
-		// TODO Auto-generated constructor stub
 	}
 
 	private PDFJpeg(PDStream jpeg) {
 		super(jpeg);
-		// TODO Auto-generated constructor stub
 	}
 
 	public float getHeightPoints() {

@@ -174,6 +174,6 @@ public class InventoryReflexionGraph extends ReflexionCycleHelper<Inventory, Inv
 		if (owner != null) {
 			target.setOwner(staffDao.toStaffOutVO(owner));
 		}
-		target.setChildrenCount(inventoryDaoImpl.getChildrenCount(source.getId())); // source.getChildren().Xsize());
+		target.setChildrenCount(inventoryDaoImpl.getChildrenCount(source.getId()));
 	}
 }

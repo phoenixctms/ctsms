@@ -362,9 +362,6 @@ public class ProbandStatusEntryDaoImpl
 			ProbandStatusEntry source,
 			ProbandStatusEntryOutVO target) {
 		super.toProbandStatusEntryOutVO(source, target);
-		// WARNING! No conversion for target.type (can't convert source.getType():org.phoenixctms.ctsms.domain.ProbandStatusType to org.phoenixctms.ctsms.vo.ProbandStatusTypeVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
 		ProbandStatusType type = source.getType();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();
@@ -378,9 +375,6 @@ public class ProbandStatusEntryDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		try {
-			// if (!CoreUtil.isPassDecryption()) {
-			// throw new Exception();
-			// }
 			target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
 			target.setDecrypted(true);
 		} catch (Exception e) {

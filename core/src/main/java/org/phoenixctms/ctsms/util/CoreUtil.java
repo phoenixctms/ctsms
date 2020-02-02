@@ -85,7 +85,6 @@ public final class CoreUtil {
 		DECIMAL_SEPARATORS.add(".");
 		DECIMAL_SEPARATORS.add(",");
 	}
-	// private static final String HEX_DIGITS = "0123456789ABCDEF";
 	private static final String DAO_LOAD_METHOD_NAME = "load";
 	private static final String DAO_TRANSFORM_METHOD_PREFIX = "to";
 	private static HashMap<Class, HashSet<String>> journalExcludedOutVOFieldMap = new HashMap<Class, HashSet<String>>();
@@ -108,7 +107,6 @@ public final class CoreUtil {
 		addExcludedField(auditTrailExcludedOutVOFieldMap, ECRFFieldValueOutVO.class, "changeComment");
 		addExcludedField(auditTrailExcludedOutVOFieldMap, ECRFFieldValueOutVO.class, "reasonForChange");
 		addExcludedField(auditTrailExcludedOutVOFieldMap, ECRFFieldValueOutVO.class, "id");
-		// addExcludedField(auditTrailExcludedOutVOFieldMap, ECRFFieldValueOutVO.class, "listEntry");
 	}
 	private final static String VALUE_OBJECTS_PACKAGE_NAME = "org.phoenixctms.ctsms.vo";
 	private final static String ENTITIES_PACKAGE_NAME = "org.phoenixctms.ctsms.domain";
@@ -150,8 +148,6 @@ public final class CoreUtil {
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setProbandAddressWireTransfer");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setMoneyTransferPaid");
 		PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.ProbandService.setAllMoneyTransfersPaid");
-		// PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.MassMailService.addMassMailRecipient");
-		// PASS_DECRYPTION_REALMS.add("org.phoenixctms.ctsms.service.proband.MassMailService.resetMassMailRecipient");
 	}
 	public final static HashSet<String> VO_VERSION_EQUALS_EXCLUDES = new HashSet<String>();
 	static {
@@ -266,10 +262,6 @@ public final class CoreUtil {
 			if (it.next().equals(timeZone)) {
 				return true;
 			}
-			// String timeZoneIDSuffix = "/" + timeZoneID;
-			// if (availableTimeZoneID.equals(timeZoneID) || availableTimeZoneID.endsWith(timeZoneIDSuffix)) {
-			// return true;
-			// }
 		}
 		return false;
 	}
@@ -338,8 +330,6 @@ public final class CoreUtil {
 		boolean normalizeMultiLineSeparator = Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_NORMALIZE_MULTI_LINE_SEPARATOR, Bundle.SETTINGS,
 				DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_NORMALIZE_MULTI_LINE_SEPARATOR);
 		String indent = Settings.getString(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_INDENT, Bundle.SETTINGS, DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_INDENT);
-		// String indentChangeSeparator = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_INDENT_CHANGE_SEPARATOR, Bundle.SETTINGS,
-		// DefaultSettings.JOURNAL_ENTRY_COMMENT_INDENT_CHANGE_SEPARATOR);
 		String datetimePattern = Settings.getString(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_DATETIME_PATTERN, Bundle.SETTINGS,
 				DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_DATETIME_PATTERN);
 		String datePattern = Settings.getString(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_DATE_PATTERN);
@@ -348,7 +338,6 @@ public final class CoreUtil {
 				DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_SKIP_EMPTY_FIELDS);
 		boolean skipFieldsWithoutLocalization = Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION, Bundle.SETTINGS,
 				DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION);
-		// int oldIndentation = 0;
 		ArrayList<String> referenceFields = new ArrayList<String>();
 		ArrayList<String> deferredCollectionMapFields = new ArrayList<String>();
 		Iterator<KeyValueString> voFieldIt = voFields.iterator();
@@ -412,8 +401,6 @@ public final class CoreUtil {
 		boolean normalizeMultiLineSeparator = Settings.getBoolean(SettingCodes.JOURNAL_ENTRY_COMMENT_NORMALIZE_MULTI_LINE_SEPARATOR, Bundle.SETTINGS,
 				DefaultSettings.JOURNAL_ENTRY_COMMENT_NORMALIZE_MULTI_LINE_SEPARATOR);
 		String indent = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_INDENT, Bundle.SETTINGS, DefaultSettings.JOURNAL_ENTRY_COMMENT_INDENT);
-		// String indentChangeSeparator = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_INDENT_CHANGE_SEPARATOR, Bundle.SETTINGS,
-		// DefaultSettings.JOURNAL_ENTRY_COMMENT_INDENT_CHANGE_SEPARATOR);
 		String datetimePattern = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.JOURNAL_ENTRY_COMMENT_DATETIME_PATTERN);
 		String datePattern = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.JOURNAL_ENTRY_COMMENT_DATE_PATTERN);
 		String timePattern = Settings.getString(SettingCodes.JOURNAL_ENTRY_COMMENT_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.JOURNAL_ENTRY_COMMENT_TIME_PATTERN);
@@ -421,7 +408,6 @@ public final class CoreUtil {
 				DefaultSettings.JOURNAL_ENTRY_COMMENT_SKIP_EMPTY_FIELDS);
 		boolean skipFieldsWithoutLocalization = Settings.getBoolean(SettingCodes.JOURNAL_ENTRY_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION, Bundle.SETTINGS,
 				DefaultSettings.JOURNAL_ENTRY_COMMENT_SKIP_FIELDS_WITHOUT_LOCALIZATION);
-		// int oldIndentation = 0;
 		ArrayList<String> referenceFields = new ArrayList<String>();
 		ArrayList<String> deferredCollectionMapFields = new ArrayList<String>();
 		Iterator<KeyValueString> voFieldIt = voFields.iterator();
@@ -487,7 +473,6 @@ public final class CoreUtil {
 	private static String formatDumpLine(String key, String value, String lineFormat, String multiLineHeadFormat, String multiLineTailFormat,
 			String indentation, String indent, String lineSeparator, boolean normalizeLineSeparator) {
 		if (CommonUtil.isMultiLineString(value)) {
-			// if (indent.length() > 0 || normalizeLineSeparator) {
 			StringBuilder result = new StringBuilder(MessageFormat.format(multiLineHeadFormat, indentation, key, lineSeparator));
 			String[] lines = CommonUtil.splitMultiLineString(value, true);
 			for (int i = 0; i < lines.length; i = i + 2) {
@@ -501,16 +486,12 @@ public final class CoreUtil {
 				}
 			}
 			return result.toString();
-			// } else {
-			// return MessageFormat.format(multiLineFormat, indentation, key, value);
-			// }
 		} else {
 			return MessageFormat.format(lineFormat, indentation, key, value);
 		}
 	}
 
 	public static String getAuditTrailChangeCommentContent(Object vo, Object original, boolean excludeEncryptedFields) throws Exception {
-		// System.out.println((new Date()).toString() + " getSystemMessageCommentContent START");
 		if (vo != null) { // department password change message sets a null user for journal comment...
 			boolean enumerateEntities = Settings.getBoolean(SettingCodes.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_ENTITIES, Bundle.SETTINGS,
 					DefaultSettings.AUDIT_TRAIL_CHANGE_COMMENT_ENUMERATE_ENTITIES);
@@ -531,16 +512,6 @@ public final class CoreUtil {
 			if (original != null) {
 				if (vo.getClass().equals(original.getClass())) {
 					String originalDump = dumpAuditTrailVo(voFields, original, enumerateEntities, excludeEncryptedFields);
-					// // Compute diff. Get the Patch object. Patch is the container for computed deltas.
-					// Patch patch = DiffUtils.diff(originalList, voList);
-					//
-					// for (Delta delta: patch.getDeltas()) {
-					// if (result.length() > 0) {
-					// result.append(separator);
-					// }
-					// delta.
-					// result.append(delta);
-					// }
 					diff_match_patch diff = new diff_match_patch();
 					LinkedList<Diff> diffs = diff.diff_main(originalDump, voDump, true);
 					diff.diff_cleanupSemantic(diffs);
@@ -627,14 +598,7 @@ public final class CoreUtil {
 	}
 
 	public static Object getEnumerationItem(String enumName, String enumItemName) throws Exception {
-		//
 		return Class.forName(CoreUtil.getEnumerationClassName(enumName)).getMethod("fromString", String.class).invoke(null, enumItemName);
-		// } catch (ClassNotFoundException e) {
-		// throw e;
-		// } catch (Exception e) {
-		//
-		// }
-		// return null;
 	}
 
 	public static String getEnumerationValueObjectName(String enumName) {
@@ -668,8 +632,6 @@ public final class CoreUtil {
 
 	public static String getHost() {
 		return getUserContext().getHost();
-		// UserContext userContext = CoreUtil.getUserContext();
-		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
 	public static Dimension getImageDimension(byte[] imageData) {
@@ -711,8 +673,6 @@ public final class CoreUtil {
 
 	public static Password getLastPassword() {
 		return getUserContext().getLastPassword();
-		// UserContext userContext = CoreUtil.getUserContext();
-		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
 	public static <E> long getNewVersionChecked(E original, long modifiedVersion) throws Exception {
@@ -725,23 +685,12 @@ public final class CoreUtil {
 			return originalVersion + 1l;
 		} else {
 			if (modifiedVersion != 0l) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO); // or null");
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_VERSION_NOT_ZERO);
 			}
 			return 0l;
 		}
 	}
 
-	// public static String getHex(byte[] data) {
-	// if (data == null) {
-	// return null;
-	// }
-	// final StringBuilder hex = new StringBuilder(2 * data.length);
-	// for (final byte b : data) {
-	// hex.append(HEX_DIGITS.charAt((b & 0xF0) >> 4)).append(
-	// HEX_DIGITS.charAt((b & 0x0F)));
-	// }
-	// return hex.toString();
-	// }
 	public static String getOutVOClassNameFromEntityName(String entityName) {
 		return getValueObjectClassNameFromEntityName(entityName, OUT_VO_CLASS_SUFFIX);
 	}
@@ -816,38 +765,6 @@ public final class CoreUtil {
 		return result.toString();
 	}
 
-	// public static String mergeVslTemplate1(String vslFileName, String contextEntityName, Object contextEntity) {
-	// //if (messageVslFileName != null && messageVslFileName.length() > 0) {
-	// VelocityEngine velocityEngine = new VelocityEngine();
-	// //ve.setProperty(VelocityEngine..RUNTIME_LOG_LOGSYSTEM, this);
-	//
-	// velocityEngine.setProperty(VelocityEngine.RESOURCE_MANAGER_CLASS, "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-	//
-	// velocityEngine.init();
-	// VelocityContext context = new VelocityContext();
-	//
-	// context.put( contextEntityName, contextEntity );
-	//
-	// Template template = null;
-	// //try {
-	// template = velocityEngine.getTemplate(vslFileName);
-	// // } catch (ResourceNotFoundException e) {
-	// // // couldn't find the template
-	// // } catch (ParseErrorException e) {
-	// // // syntax error: problem parsing the template
-	// // } catch (MethodInvocationException e) {
-	// // // something invoked in the template
-	// // // threw an exception
-	// // //} catch (Exception e) {
-	// //
-	// // }
-	//
-	// StringWriter stringWriter = new StringWriter();
-	// template.merge( context, stringWriter );
-	//
-	// return stringWriter.toString();
-	// //}
-	// }
 	public static <T> ArrayList<T> getSubList(List<T> list, int offset, int count) {
 		if (list != null && offset >= 0 && count >= 0) {
 			ArrayList<T> result = new ArrayList<T>(count);
@@ -867,14 +784,10 @@ public final class CoreUtil {
 		while (it.hasNext()) {
 			locales.add(CommonUtil.localeFromString(it.next()));
 		}
-		// if (locales.size() == 0) {
-		// locales.add(Locale.getDefault());
-		// }
 		return locales;
 	}
 
 	public static String getSystemMessageCommentContent(Object vo, Object original, boolean excludeEncryptedFields) throws Exception {
-		// System.out.println((new Date()).toString() + " getSystemMessageCommentContent START");
 		if (vo != null) { // department password change message sets a null user for journal comment...
 			boolean enumerateEntities = Settings.getBoolean(SettingCodes.JOURNAL_ENTRY_COMMENT_ENUMERATE_ENTITIES, Bundle.SETTINGS,
 					DefaultSettings.JOURNAL_ENTRY_COMMENT_ENUMERATE_ENTITIES);
@@ -892,16 +805,6 @@ public final class CoreUtil {
 			if (original != null) {
 				if (vo.getClass().equals(original.getClass())) {
 					String originalDump = dumpJournalVo(voFields, original, enumerateEntities, excludeEncryptedFields);
-					// // Compute diff. Get the Patch object. Patch is the container for computed deltas.
-					// Patch patch = DiffUtils.diff(originalList, voList);
-					//
-					// for (Delta delta: patch.getDeltas()) {
-					// if (result.length() > 0) {
-					// result.append(separator);
-					// }
-					// delta.
-					// result.append(delta);
-					// }
 					diff_match_patch diff = new diff_match_patch();
 					LinkedList<Diff> diffs = diff.diff_main(originalDump, voDump, true);
 					diff.diff_cleanupSemantic(diffs);
@@ -943,13 +846,8 @@ public final class CoreUtil {
 		return result;
 	}
 
-	// public static ArrayList<TimeZone> getTimeZones(int timeZoneOffset) {
-	// return getTimeZones(TimeZone.getAvailableIDs(timeZoneOffset));
-	// }
 	public static User getUser() {
 		return getUserContext().getUser();
-		// UserContext userContext = CoreUtil.getUserContext();
-		// return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
 	}
 
 	public static UserContext getUserContext() {
@@ -982,12 +880,7 @@ public final class CoreUtil {
 		return checkClassExists(getEnumerationClassName(name));
 	}
 
-	// public static boolean valueObjectClassExists(String entityName) {
-	// return classExists(getValueObjectClassNameFromEntityName(entityName,OUT_VO_CLASS_SUFFIX))
-	// || classExists(getValueObjectClassNameFromEntityName(entityName,VO_CLASS_SUFFIX));
-	// }
 	public static boolean isPassDecryption() {
-		// return false;
 		UserContext userContext = getUserContext();
 		if (CommonUtil.isEmptyString(userContext.getRealm())) {
 			// skip trusted host check when using dbtool:
@@ -1026,7 +919,6 @@ public final class CoreUtil {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		ObjectOutputStream objectStream = new ObjectOutputStream(buffer);
 		objectStream.writeObject(value);
-		// buffer.flush();
 		objectStream.close();
 		return buffer.toByteArray();
 	}
@@ -1040,34 +932,8 @@ public final class CoreUtil {
 			}
 		}
 		getUserContext().setUser(user);
-		// CoreUtil.setUserContext(new UserContext(user,null,null));
 	}
 
-	// public static void applyLocaleContext(Locales locale) {
-	//
-	// CoreUtil.getUserContext().applyLocaleContext(locale);
-	// //UserContext userContext = CoreUtil.getUserContext();
-	// //return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
-	//
-	// }
-	//
-	// public static void clearLocaleContext() {
-	//
-	// CoreUtil.getUserContext().clearLocaleContext();
-	// //UserContext userContext = CoreUtil.getUserContext();
-	// //return (User) userDao.searchUniqueUsername(UserDao.TRANSFORM_NONE, userContext.getUsername());
-	//
-	// }
-	// public static Object getFirstArgOfType(Object[] args,Class type) {
-	// if (args != null) {
-	// for (int i = 0; i < args.length; i++) {
-	// if (args[i] != null && args[i].getClass().equals(type)) { // instanceof AuthenticationVO) {
-	// return args[i];
-	// }
-	// }
-	// }
-	// return null;
-	// }
 	public static String toXML(Object obj, boolean excludeEncryptedFields) throws Exception {
 		XStream xstream = new XStream();
 		if (excludeEncryptedFields) {
@@ -1110,12 +976,9 @@ public final class CoreUtil {
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
 						new Object[] { job.getType().getModule().toString() }));
 		}
-		//'{0} --xyz="{}" --id={} --user="{}" --password="{}" --job={}'
 		try {
-			//return (new ProcessBuilder("\"" + Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL) + "\" --ie")).start();
 			String username = auth.getUsername() != null ? auth.getUsername().trim() : "";
 			String password = auth.getPassword() != null ? auth.getPassword().trim() : "";
-			//String emailRecipients = job.getEmailRecipients() != null ? job.getEmailRecipients().trim() : "";
 			String command = MessageFormat.format(job.getType().getCommandFormat(),
 					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
 					Long.toString(id),
@@ -1123,20 +986,12 @@ public final class CoreUtil {
 					password,
 					new String(Base64.encodeBase64((username + "\n" + password).getBytes(CommonUtil.BASE64_CHARSET), false, false)),
 					Long.toString(job.getId()),
-					null, //new String(Base64.encodeBase64(emailRecipients.getBytes(CommonUtil.BASE64_CHARSET), false, false)),
-					null,
+					null, null,
 					null,
 					null,
 					Settings.getString(SettingCodes.ECRF_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_PROCESS_PL));
-			//ProcessBuilder processBuilder = new ProcessBuilder(command);
-			//processBuilder.environment().clear();
-			//processBuilder.
-			//return processBuilder.start();
 			Process process = Runtime.getRuntime().exec(command);
-			//, new String[] {
-			//		BundleControl.PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE + "=" + System.getenv(BundleControl.PROPERTIES_PATH_ENVIRONMENT_PROPERTIES_VARIABLE)
-			//});
 			if (blocking) {
 				process.waitFor();
 			}

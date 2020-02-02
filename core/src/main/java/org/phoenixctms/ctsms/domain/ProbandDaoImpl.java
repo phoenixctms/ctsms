@@ -563,7 +563,6 @@ public class ProbandDaoImpl
 		}
 		probandCriteria.add(Subqueries.eq(0l, subQuery));
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
-		// return probandCriteria.list();
 	}
 
 	@Override
@@ -583,9 +582,6 @@ public class ProbandDaoImpl
 			PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
-		// probandCriteria.add(Restrictions.eq("person", true));
-		// probandCriteria.add(Restrictions.eq("blinded", false));
-		// probandCriteria.add(Restrictions.isNotNull("autoDeleteDeadline"));
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Proband.class, probandCriteria);
 		if (departmentId != null) {
 			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
@@ -661,10 +657,7 @@ public class ProbandDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Proband loadProbandFromProbandImageOutVO(ProbandImageOutVO probandImageOutVO) {
-		// TODO implement loadProbandFromProbandImageOutVO
 		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandFromProbandImageOutVO(ProbandImageOutVO) not yet implemented.");
-		/* A typical implementation looks like this: Proband proband = this.load(probandImageOutVO.getId()); if (proband == null) { proband = Proband.Factory.newInstance(); }
-		 * return proband; */
 	}
 
 	/**
@@ -690,8 +683,6 @@ public class ProbandDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Proband loadProbandFromProbandOutVO(ProbandOutVO probandOutVO) {
-		// TODO implement loadProbandFromProbandOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandFromProbandOutVO(ProbandOutVO) not yet implemented.");
 		Proband proband = this.load(probandOutVO.getId());
 		if (proband == null) {
 			proband = Proband.Factory.newInstance();
@@ -776,9 +767,6 @@ public class ProbandDaoImpl
 			if (copyIfNull || source.getFileName() != null) {
 				animalParticulars.setFileName(source.getFileName());
 			}
-			// if (copyIfNull || source.getShowCv() != false) {
-			// personParticulars.setShowCv(source.getShowCv());
-			// }
 			if (copyIfNull || source.getFileTimestamp() != null) {
 				animalParticulars.setFileTimestamp((source.getFileTimestamp() == null ? null : new Timestamp(source.getFileTimestamp().getTime())));
 			}
@@ -806,7 +794,6 @@ public class ProbandDaoImpl
 	 */
 	@Override
 	public Proband probandImageOutVOToEntity(ProbandImageOutVO probandImageOutVO) {
-		// TODO verify behavior of probandImageOutVOToEntity
 		Proband entity = this.loadProbandFromProbandImageOutVO(probandImageOutVO);
 		this.probandImageOutVOToEntity(probandImageOutVO, entity, true);
 		return entity;
@@ -820,7 +807,6 @@ public class ProbandDaoImpl
 			ProbandImageOutVO source,
 			Proband target,
 			boolean copyIfNull) {
-		// TODO verify behavior of probandImageOutVOToEntity
 		super.probandImageOutVOToEntity(source, target, copyIfNull);
 	}
 
@@ -898,12 +884,9 @@ public class ProbandDaoImpl
 				personParticulars.setGender(source.getGender());
 			}
 			if (source.getDateOfBirth() != null) {
-				// GregorianCalendar dateOfBirth = new GregorianCalendar();
-				// dateOfBirth.setTime(source.getDateOfBirth());
-				// particulars.setYearOfBirth(dateOfBirth.get(GregorianCalendar.YEAR));
 				personParticulars.setYearOfBirth(new Long(CommonUtil.getYearOfBirth(source.getDateOfBirth())));
 			} else if (copyIfNull) {
-				personParticulars.setYearOfBirth(null); // 0L);
+				personParticulars.setYearOfBirth(null);
 			}
 			if (source.getLastName() != null) {
 				int probandLastNameIndexLength = Settings.getInt(SettingCodes.PROBAND_LAST_NAME_INDEX_LENGTH, Bundle.SETTINGS, DefaultSettings.PROBAND_LAST_NAME_INDEX_LENGTH);
@@ -1005,10 +988,6 @@ public class ProbandDaoImpl
 				animalParticulars.setAlias(source.getAlias());
 			}
 		}
-		// if (copyIfNull || source.getChildIds().size() > 0)
-		// {
-		// target.setChildren(toProbandSet(source.getChildIds()));
-		// }
 	}
 
 	/**
@@ -1016,9 +995,6 @@ public class ProbandDaoImpl
 	 */
 	@Override
 	public Proband probandOutVOToEntity(ProbandOutVO probandOutVO) {
-		// Proband entity = this.loadProbandFromProbandOutVO(probandOutVO);
-		// this.probandOutVOToEntity(probandOutVO, entity, true);
-		// return entity;
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
@@ -1082,12 +1058,9 @@ public class ProbandDaoImpl
 				personParticulars.setGender(source.getGender().getSex());
 			}
 			if (source.getDateOfBirth() != null) {
-				// GregorianCalendar dateOfBirth = new GregorianCalendar();
-				// dateOfBirth.setTime(source.getDateOfBirth());
-				// particulars.setYearOfBirth(dateOfBirth.get(GregorianCalendar.YEAR));
 				personParticulars.setYearOfBirth(new Long(CommonUtil.getYearOfBirth(source.getDateOfBirth())));
 			} else if (copyIfNull) {
-				personParticulars.setYearOfBirth(null); // 0L);
+				personParticulars.setYearOfBirth(null);
 			}
 			if (source.getLastName() != null) {
 				int probandLastNameIndexLength = Settings.getInt(SettingCodes.PROBAND_LAST_NAME_INDEX_LENGTH, Bundle.SETTINGS, DefaultSettings.PROBAND_LAST_NAME_INDEX_LENGTH);
@@ -1193,17 +1166,6 @@ public class ProbandDaoImpl
 	}
 
 	private ArrayList<Long> toProbandIdCollection(Collection<Proband> probands) { // lazyload persistentset prevention
-		// ArrayList<Long> result;
-		// if (courses != null && courses.size() > 0) {
-		// result = new ArrayList<Long>(courses.size());
-		// Iterator<Course> it = courses.iterator();
-		// while (it.hasNext()) {
-		// result.add(it.next().getId());
-		// }
-		// } else {
-		// result = new ArrayList<Long>();
-		// }
-		// return result;
 		ArrayList<Long> result = new ArrayList<Long>(probands.size());
 		Iterator<Proband> it = probands.iterator();
 		while (it.hasNext()) {
@@ -1314,7 +1276,6 @@ public class ProbandDaoImpl
 				target.setFileTimestamp(animalParticulars.getFileTimestamp());
 				target.setHeight(animalParticulars.getHeight());
 				target.setWidth(animalParticulars.getWidth());
-				// target.setShowCv(animalParticulars.getShowCv() == null ? false : animalParticulars.getShowCv().booleanValue());
 				target.setHasImage(animalParticulars.getFileSize() != null && animalParticulars.getFileSize() > 0l);
 				if (contentType != null) {
 					target.setContentType(this.getMimeTypeDao().toMimeTypeVO(contentType));
@@ -1409,65 +1370,6 @@ public class ProbandDaoImpl
 			ProbandOutVO target) {
 		(new ProbandReflexionGraph(this, this.getProbandCategoryDao(), this.getDepartmentDao(), this.getStaffDao(), this.getPrivacyConsentStatusTypeDao(), this.getUserDao()))
 				.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
-		// super.toProbandOutVO(source, target);
-		// Department department = source.getDepartment();
-		// ProbandCategory category = source.getCategory();
-		// User modifiedUser = source.getModifiedUser();
-		// PrivacyConsentStatusType privacyConsentStatus = source.getPrivacyConsentStatus();
-		// if (department != null) {
-		// target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
-		// }
-		// if (category != null) {
-		// target.setCategory(this.getProbandCategoryDao().toProbandCategoryVO(category));
-		// }
-		// if (modifiedUser != null) {
-		// target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
-		// }
-		// if (privacyConsentStatus != null) {
-		// target.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().toPrivacyConsentStatusTypeVO(privacyConsentStatus));
-		// }
-		// ProbandContactParticulars particulars = source.getParticulars();
-		// if (particulars != null) {
-		// try {
-		// if (!CoreUtil.isPassDecryption()) {
-		// throw new Exception();
-		// }
-		// target.setPrefixedTitle1((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle1Iv(), particulars.getEncryptedPrefixedTitle1()));
-		// target.setPrefixedTitle2((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle2Iv(), particulars.getEncryptedPrefixedTitle2()));
-		// target.setPrefixedTitle3((String) CryptoUtil.decryptValue(particulars.getPrefixedTitle3Iv(), particulars.getEncryptedPrefixedTitle3()));
-		// target.setFirstName((String) CryptoUtil.decryptValue(particulars.getFirstNameIv(), particulars.getEncryptedFirstName()));
-		// target.setLastName((String) CryptoUtil.decryptValue(particulars.getLastNameIv(), particulars.getEncryptedLastName()));
-		// target.setPostpositionedTitle1((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle1Iv(), particulars.getEncryptedPostpositionedTitle1()));
-		// target.setPostpositionedTitle2((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle2Iv(), particulars.getEncryptedPostpositionedTitle2()));
-		// target.setPostpositionedTitle3((String) CryptoUtil.decryptValue(particulars.getPostpositionedTitle3Iv(), particulars.getEncryptedPostpositionedTitle3()));
-		// target.setDateOfBirth((Date) CryptoUtil.decryptValue(particulars.getDateOfBirthIv(), particulars.getEncryptedDateOfBirth()));
-		// target.setCitizenship((String) CryptoUtil.decryptValue(particulars.getCitizenshipIv(), particulars.getEncryptedCitizenship()));
-		// target.setComment((String) CryptoUtil.decryptValue(particulars.getCommentIv(), particulars.getEncryptedComment()));
-		// target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
-		// target.setAge(CommonUtil.getAge(target.getDateOfBirth()));
-		// target.setDecrypted(true);
-		// } catch (Exception e) {
-		// target.setPrefixedTitle1(null);
-		// target.setPrefixedTitle2(null);
-		// target.setPrefixedTitle3(null);
-		// target.setFirstName(null);
-		// target.setLastName(null);
-		// target.setPostpositionedTitle1(null);
-		// target.setPostpositionedTitle2(null);
-		// target.setPostpositionedTitle3(null);
-		// target.setDateOfBirth(null);
-		// target.setCitizenship(null);
-		// target.setComment(null);
-		// target.setYearOfBirth(CommonUtil.safeLongToInt(particulars.getYearOfBirth()));
-		// target.setAge(CommonUtil.getAge((new GregorianCalendar(target.getYearOfBirth(), GregorianCalendar.JULY, 1)).getTime()));
-		// target.setDecrypted(false);
-		// }
-		// target.setGender(L10nUtil.createSexVO(Locales.USER, particulars.getGender()));
-		// target.setName(getProbandName(target, false));
-		// target.setNameWithTitles(getProbandName(target, true));
-		// target.setInitials(getInitials(target));
-		// target.setHasImage(particulars.getFileSize() != null && particulars.getFileSize() > 0l);
-		// }
 	}
 
 	@Override

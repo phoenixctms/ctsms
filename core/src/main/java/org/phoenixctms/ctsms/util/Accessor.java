@@ -60,7 +60,7 @@ public class Accessor {
 		throw new IllegalArgumentException();
 	}
 
-	public String getFieldName(MethodTransfilter transformer) { //Pattern getterMethodNameRegexp, boolean lowerCaseFieldNames) {
+	public String getFieldName(MethodTransfilter transformer) {
 		return transformer.transform(method.getName());
 	}
 
@@ -88,9 +88,6 @@ public class Accessor {
 		throw new IllegalArgumentException();
 	}
 
-	//	public Method getMethod1() {
-	//		return method;
-	//	}
 	public Class getReturnType() {
 		return method.getReturnType();
 	}

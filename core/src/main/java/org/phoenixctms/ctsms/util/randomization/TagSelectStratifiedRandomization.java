@@ -36,7 +36,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,10 +45,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 		}
 	}
 
-	// @Override
-	// protected void checkProbandGroupTokenInput(Trial trial, ProbandGroupInVO probandGroupIn) throws ServiceException {
-	// checkProbandGroupToken(probandGroupIn.getToken());
-	// }
 	@Override
 	protected void checkStratificationRandomizationListRandomizationListInput(Trial trial, StratificationRandomizationListInVO randomizationListIn) throws ServiceException {
 		checkRandomizeProbandListEntryTag(trial);
@@ -62,11 +57,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 		return getRandomizationListInputFieldSelectionSetValueValues(trial);
 	}
 
-	//	@Override
-	//	protected ArrayList<RandomizationListCodeInVO> checkRandomizationListCodesInput(
-	//			String randomizationList, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
-	//		return sanitizeRandomizationListCodesInput(randomizationList, codes);
-	//	}
 	@Override
 	protected RandomizationMode getRandomizationMode() {
 		return RandomizationMode.TAG_SELECT_STRATIFIED;
@@ -100,7 +90,6 @@ public class TagSelectStratifiedRandomization extends Randomization {
 		InputFieldSelectionSetValue value = null;
 		if (valueValues.size() > 0) {
 			int totalValuesSize = getTotalValuesSize(exclude != null ? exclude.getId() : null, values, randomizationList);
-			// int totalGroupsSize = getTotalGroupsSize(exclude != null ? exclude.getId() : null, probandGroups, randomizationList);
 			String valueValue = valueValues.get(totalValuesSize % valueValues.size());
 			value = valueMap.get(valueValue);
 			randomizationInfo.setTotalSize(totalValuesSize);

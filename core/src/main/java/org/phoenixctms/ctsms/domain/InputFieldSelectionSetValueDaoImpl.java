@@ -53,7 +53,6 @@ public class InputFieldSelectionSetValueDaoImpl
 			if (!CommonUtil.isEmptyString(inputFieldProperty)) {
 				fieldCriteria.add(Restrictions.not(Restrictions.isEmpty(inputFieldProperty)));
 			}
-			//fieldCriteria.add(Restrictions.eq("localized", false));
 			if (!CommonUtil.isEmptyString(nameInfix)) {
 				selectionSetValueCriteria.add(Restrictions.or(
 						(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
@@ -294,7 +293,6 @@ public class InputFieldSelectionSetValueDaoImpl
 	 */
 	@Override
 	public InputFieldSelectionSetValue inputFieldSelectionSetValueJsonVOToEntity(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO) {
-		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(inputFieldSelectionSetValueJsonVO);
 		this.inputFieldSelectionSetValueJsonVOToEntity(inputFieldSelectionSetValueJsonVO, entity, true);
 		return entity;
@@ -308,7 +306,6 @@ public class InputFieldSelectionSetValueDaoImpl
 			InputFieldSelectionSetValueJsonVO source,
 			InputFieldSelectionSetValue target,
 			boolean copyIfNull) {
-		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		super.inputFieldSelectionSetValueJsonVOToEntity(source, target, copyIfNull);
 	}
 
@@ -317,7 +314,6 @@ public class InputFieldSelectionSetValueDaoImpl
 	 */
 	@Override
 	public InputFieldSelectionSetValue inputFieldSelectionSetValueOutVOToEntity(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO) {
-		// TODO verify behavior of inputFieldSelectionSetValueOutVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(inputFieldSelectionSetValueOutVO);
 		this.inputFieldSelectionSetValueOutVOToEntity(inputFieldSelectionSetValueOutVO, entity, true);
 		return entity;
@@ -331,7 +327,6 @@ public class InputFieldSelectionSetValueDaoImpl
 			InputFieldSelectionSetValueOutVO source,
 			InputFieldSelectionSetValue target,
 			boolean copyIfNull) {
-		// TODO verify behavior of inputFieldSelectionSetValueOutVOToEntity
 		super.inputFieldSelectionSetValueOutVOToEntity(source, target, copyIfNull);
 	}
 
@@ -340,7 +335,6 @@ public class InputFieldSelectionSetValueDaoImpl
 	 */
 	@Override
 	public InputFieldSelectionSetValue lightInputFieldSelectionSetValueOutVOToEntity(LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO) {
-		// TODO verify behavior of lightInputFieldSelectionSetValueOutVOToEntity
 		InputFieldSelectionSetValue entity = this.loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(lightInputFieldSelectionSetValueOutVO);
 		this.lightInputFieldSelectionSetValueOutVOToEntity(lightInputFieldSelectionSetValueOutVO, entity, true);
 		return entity;
@@ -354,7 +348,6 @@ public class InputFieldSelectionSetValueDaoImpl
 			LightInputFieldSelectionSetValueOutVO source,
 			InputFieldSelectionSetValue target,
 			boolean copyIfNull) {
-		// TODO verify behavior of inputFieldSelectionSetValueJsonVOToEntity
 		super.lightInputFieldSelectionSetValueOutVOToEntity(source, target, copyIfNull);
 	}
 
@@ -364,9 +357,6 @@ public class InputFieldSelectionSetValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(InputFieldSelectionSetValueInVO inputFieldSelectionSetValueInVO) {
-		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueInVO(InputFieldSelectionSetValueInVO) not yet implemented.");
 		InputFieldSelectionSetValue inputFieldSelectionSetValue = null;
 		Long id = inputFieldSelectionSetValueInVO.getId();
 		if (id != null) {
@@ -384,11 +374,8 @@ public class InputFieldSelectionSetValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(InputFieldSelectionSetValueJsonVO inputFieldSelectionSetValueJsonVO) {
-		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO(InputFieldSelectionSetValueJsonVO) not yet implemented.");
-		/* A typical implementation looks like this: InputFieldSelectionSetValue inputFieldSelectionSetValue = this.load(inputFieldSelectionSetValueJsonVO.getId()); if
-		 * (inputFieldSelectionSetValue == null) { inputFieldSelectionSetValue = InputFieldSelectionSetValue.Factory.newInstance(); } return inputFieldSelectionSetValue; */
 	}
 
 	/**
@@ -397,21 +384,13 @@ public class InputFieldSelectionSetValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(InputFieldSelectionSetValueOutVO inputFieldSelectionSetValueOutVO) {
-		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO
 		throw new UnsupportedOperationException("out value object to recursive entity not supported");
-		// throw new
-		// UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueOutVO(InputFieldSelectionSetValueOutVO) not yet implemented.");
-		/* A typical implementation looks like this: InputFieldSelectionSetValue inputFieldSelectionSetValue = this.load(inputFieldSelectionSetValueOutVO.getId()); if
-		 * (inputFieldSelectionSetValue == null) { inputFieldSelectionSetValue = InputFieldSelectionSetValue.Factory.newInstance(); } return inputFieldSelectionSetValue; */
 	}
 
 	private InputFieldSelectionSetValue loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(
 			LightInputFieldSelectionSetValueOutVO lightInputFieldSelectionSetValueOutVO) {
-		// TODO implement loadInputFieldSelectionSetValueFromInputFieldSelectionSetValueJsonVO
 		throw new UnsupportedOperationException(
 				"org.phoenixctms.ctsms.domain.loadInputFieldSelectionSetValueFromLightInputFieldSelectionSetValueOutVO(LightInputFieldSelectionSetValueOutVO) not yet implemented.");
-		/* A typical implementation looks like this: InputFieldSelectionSetValue inputFieldSelectionSetValue = this.load(inputFieldSelectionSetValueJsonVO.getId()); if
-		 * (inputFieldSelectionSetValue == null) { inputFieldSelectionSetValue = InputFieldSelectionSetValue.Factory.newInstance(); } return inputFieldSelectionSetValue; */
 	}
 
 	/**
@@ -434,11 +413,7 @@ public class InputFieldSelectionSetValueDaoImpl
 		if (field != null) {
 			target.setFieldId(field.getId());
 		}
-		// if (source.isLocalized()) {
-		// target.setName(L10nUtil.getInputFieldSelectionSetValueName(Locales.USER, source.getNameL10nKey()));
-		// } else {
 		target.setName(source.getNameL10nKey());
-		// }
 		target.setInkRegions(source.getInkRegion());
 	}
 

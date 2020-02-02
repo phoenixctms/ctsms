@@ -330,12 +330,12 @@ public class CVPDFBlock {
 										* Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CVPDFSettingCodes.Y_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_FRAME_INDENT);
 				height += cursor.getBlockY() - height - Math.min(y1, y2);
-				y1 = cursor.getBlockY(); // - Settings.getFloat(CVPDFSettingCodes.Y_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_IMAGE_INDENT);
+				y1 = cursor.getBlockY();
 				PDFUtil.renderImage(contentStream, ximage, cursor.getBlockX() + cursor.getBlockWidth(), y1, Alignment.TOP_RIGHT);
 				if (ximage != null) {
 					y1 -= ximage.getHeightPoints();
 				}
-				height = Math.max(height, cursor.getBlockY() - y1); // + Settings.getFloat(CVPDFSettingCodes.Y_IMAGE_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.Y_IMAGE_INDENT));
+				height = Math.max(height, cursor.getBlockY() - y1);
 				PDFUtil.renderFrame(
 						contentStream,
 						Settings.getColor(CVPDFSettingCodes.FRAME_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.FRAME_COLOR),

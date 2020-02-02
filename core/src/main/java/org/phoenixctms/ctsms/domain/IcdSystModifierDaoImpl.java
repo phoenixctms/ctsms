@@ -41,8 +41,6 @@ public class IcdSystModifierDaoImpl
 	 * a new, blank entity is created
 	 */
 	private IcdSystModifier loadIcdSystModifierFromIcdSystModifierVO(IcdSystModifierVO icdSystModifierVO) {
-		// TODO implement loadIcdSystModifierFromIcdSystModifierVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadIcdSystModifierFromIcdSystModifierVO(IcdSystModifierVO) not yet implemented.");
 		Long id = icdSystModifierVO.getId();
 		IcdSystModifier icdSystModifier = null;
 		if (id != null) {

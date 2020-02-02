@@ -14,11 +14,9 @@ public class EcrfFieldValueCollisionFinder extends CollisionFinder<ECRFFieldValu
 	private ProbandListEntryDao probandListEntryDao;
 	private ECRFFieldValueDao ecrfFieldValueDao;
 
-	// private ECRFFieldDao ecrfFieldDao;
-	public EcrfFieldValueCollisionFinder(ProbandListEntryDao probandListEntryDao, ECRFFieldValueDao ecrfFieldValueDao) { // , ECRFFieldDao ecrfFieldDao) {
+	public EcrfFieldValueCollisionFinder(ProbandListEntryDao probandListEntryDao, ECRFFieldValueDao ecrfFieldValueDao) {
 		this.ecrfFieldValueDao = ecrfFieldValueDao;
 		this.probandListEntryDao = probandListEntryDao;
-		// this.ecrfFieldDao = ecrfFieldDao;
 	}
 
 	@Override
@@ -36,8 +34,6 @@ public class EcrfFieldValueCollisionFinder extends CollisionFinder<ECRFFieldValu
 	@Override
 	protected ECRFFieldValue getCollidingItem(
 			ECRFFieldValueInVO in, ProbandListEntry root) throws ServiceException {
-		// ECRFField ecrfField = ServiceUtil.checkEcrfFieldId(in.getEcrfFieldId(), ecrfFieldDao);
-		// in.getIndex() != null ? new Long(in.getIndex()) : null
 		return ecrfFieldValueDao.getByListEntryEcrfFieldIndex(in.getListEntryId(), in.getEcrfFieldId(), in.getIndex());
 	}
 

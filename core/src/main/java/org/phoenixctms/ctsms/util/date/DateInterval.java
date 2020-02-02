@@ -162,28 +162,22 @@ public class DateInterval {
 					if (durationB >= 0) {
 						if (intervalBStart.compareTo(intervalAStart) <= 0) {
 							if (intervalBStop.compareTo(intervalAStop) >= 0) { // duration contains interval entirely
-								// return durationA;
 								result.add(intervalB);
 							} else if (intervalBStop.after(intervalAStart)) { // duration overlaps interval at intervalstart
-								// return CommonUtil.dateDeltaSecs(intervalAStart, intervalBStop);
 								result.add(new DateInterval(intervalB.start, intervalA.stop));
 							} else { // duration doesn't overlap and is entirely before interval
-								// return 0;
 								result.add(intervalB);
 								result.add(intervalA);
 							}
 						} else if (intervalBStart.before(intervalAStop)) {
 							if (intervalBStop.compareTo(intervalAStop) >= 0) { // duration overlaps interval at intervalend
-								// return CommonUtil.dateDeltaSecs(intervalBStart, intervalAStop);
 								result.add(new DateInterval(intervalA.start, intervalB.stop));
 							} else if (intervalBStop.after(intervalAStart)) { // duration is contained within interval entirely
-								// return durationB;
 								result.add(intervalA);
 							} else { // not possible
 								throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INVALID_DATE_INTERVAL, DefaultMessages.INVALID_DATE_INTERVAL));
 							}
 						} else { // duration doesn't overlap and is entirely after interval
-							// return 0;
 							result.add(intervalA);
 							result.add(intervalB);
 						}
@@ -192,30 +186,23 @@ public class DateInterval {
 					}
 				} else if (intervalBStart == null && intervalBStop != null) {
 					if (intervalBStop.compareTo(intervalAStop) >= 0) { // duration contains interval entirely
-						// return durationA;
 						result.add(intervalB);
 					} else if (intervalBStop.after(intervalAStart)) { // duration overlaps interval at intervalstart
-						// return CommonUtil.dateDeltaSecs(intervalAStart, intervalBStop);
 						result.add(new DateInterval(null, intervalA.stop));
 					} else { // duration doesn't overlap and is entirely before interval
-						// return 0;
 						result.add(intervalB);
 						result.add(intervalA);
 					}
 				} else if (intervalBStart != null && intervalBStop == null) {
 					if (intervalBStart.compareTo(intervalAStart) <= 0) { // duration contains interval entirely
-						// return durationA;
 						result.add(intervalB);
 					} else if (intervalBStart.before(intervalAStop)) { // duration overlaps interval at intervalend
-						// return CommonUtil.dateDeltaSecs(intervalBStart, intervalAStop);
 						result.add(new DateInterval(intervalA.start, null));
 					} else { // duration doesn't overlap and is entirely after interval
-						// return 0;
 						result.add(intervalA);
 						result.add(intervalB);
 					}
 				} else {
-					// return durationA;
 					result.add(intervalB);
 				}
 			} else {
@@ -227,14 +214,11 @@ public class DateInterval {
 				if (durationB >= 0) {
 					if (intervalBStart.before(intervalAStop)) {
 						if (intervalBStop.compareTo(intervalAStop) >= 0) {
-							// return CommonUtil.dateDeltaSecs(intervalBStart, intervalAStop);
 							result.add(new DateInterval(null, intervalB.stop));
 						} else {
-							// return durationB;
 							result.add(intervalA);
 						}
 					} else {
-						// return 0;
 						result.add(intervalA);
 						result.add(intervalB);
 					}
@@ -242,7 +226,6 @@ public class DateInterval {
 					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INVALID_DATE_INTERVAL, DefaultMessages.INVALID_DATE_INTERVAL));
 				}
 			} else if (intervalBStart == null && intervalBStop != null) {
-				// return Long.MAX_VALUE;
 				if (intervalBStop.before(intervalAStop)) {
 					result.add(intervalA);
 				} else {
@@ -250,15 +233,12 @@ public class DateInterval {
 				}
 			} else if (intervalBStart != null && intervalBStop == null) {
 				if (intervalBStart.before(intervalAStop)) {
-					// return CommonUtil.dateDeltaSecs(intervalBStart, intervalAStop);
 					result.add(new DateInterval(null, null));
 				} else {
-					// return 0;
 					result.add(intervalA);
 					result.add(intervalB);
 				}
 			} else {
-				// return Long.MAX_VALUE;
 				result.add(intervalB);
 			}
 		} else if (intervalAStart != null && intervalAStop == null) {
@@ -267,15 +247,12 @@ public class DateInterval {
 				if (durationB >= 0) {
 					if (intervalBStart.compareTo(intervalAStart) <= 0) {
 						if (intervalBStop.after(intervalAStart)) {
-							// return CommonUtil.dateDeltaSecs(intervalAStart, intervalBStop);
 							result.add(new DateInterval(intervalB.start, null));
 						} else {
-							// return 0;
 							result.add(intervalB);
 							result.add(intervalA);
 						}
 					} else {
-						// return durationB;
 						result.add(intervalA);
 					}
 				} else {
@@ -283,26 +260,21 @@ public class DateInterval {
 				}
 			} else if (intervalBStart == null && intervalBStop != null) {
 				if (intervalBStop.after(intervalAStart)) {
-					// return CommonUtil.dateDeltaSecs(intervalAStart, intervalBStop);
 					result.add(new DateInterval(null, null));
 				} else {
-					// return 0;
 					result.add(intervalB);
 					result.add(intervalA);
 				}
 			} else if (intervalBStart != null && intervalBStop == null) {
-				// return Long.MAX_VALUE;
 				if (intervalBStart.before(intervalAStart)) {
 					result.add(intervalB);
 				} else {
 					result.add(intervalA);
 				}
 			} else {
-				// return Long.MAX_VALUE;
 				result.add(intervalB);
 			}
 		} else {
-			// return Long.MAX_VALUE;
 			result.add(intervalA);
 		}
 		return result;

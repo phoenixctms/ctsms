@@ -107,11 +107,6 @@ public class DiagnosisDaoImpl
 		super.diagnosisInVOToEntity(source, target, copyIfNull);
 		Long codeId = source.getCodeId();
 		Long probandId = source.getProbandId();
-		// if (codeId != null) {
-		// target.setCode(this.getAlphaIdDao().load(codeId));
-		// } else if (copyIfNull) {
-		// target.setCode(null);
-		// }
 		if (codeId != null) {
 			AlphaId alphaId = this.getAlphaIdDao().load(codeId);
 			target.setCode(alphaId);
@@ -168,11 +163,6 @@ public class DiagnosisDaoImpl
 		AlphaIdVO codeVO = source.getCode();
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		// if (codeVO != null) {
-		// target.setCode(this.getAlphaIdDao().alphaIdVOToEntity(codeVO));
-		// } else if (copyIfNull) {
-		// target.setCode(null);
-		// }
 		if (codeVO != null) {
 			AlphaId alphaId = this.getAlphaIdDao().alphaIdVOToEntity(codeVO);
 			target.setCode(alphaId);
@@ -239,9 +229,7 @@ public class DiagnosisDaoImpl
 		} else { // saved records without start stop
 			diagnosisCriteria.add(Restrictions.isNull("start"));
 		}
-		// if (probandId != null) {
 		diagnosisCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
-		// }
 		if (codeId != null) {
 			diagnosisCriteria.add(Restrictions.eq("code.id", codeId.longValue()));
 		}
@@ -263,8 +251,6 @@ public class DiagnosisDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Diagnosis loadDiagnosisFromDiagnosisInVO(DiagnosisInVO diagnosisInVO) {
-		// TODO implement loadDiagnosisFromDiagnosisInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadDiagnosisFromDiagnosisInVO(DiagnosisInVO) not yet implemented.");
 		Long id = diagnosisInVO.getId();
 		Diagnosis diagnosis = null;
 		if (id != null) {
@@ -282,8 +268,6 @@ public class DiagnosisDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Diagnosis loadDiagnosisFromDiagnosisOutVO(DiagnosisOutVO diagnosisOutVO) {
-		// TODO implement loadDiagnosisFromDiagnosisOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadDiagnosisFromDiagnosisOutVO(DiagnosisOutVO) not yet implemented.");
 		Diagnosis diagnosis = this.load(diagnosisOutVO.getId());
 		if (diagnosis == null) {
 			diagnosis = Diagnosis.Factory.newInstance();
@@ -338,9 +322,6 @@ public class DiagnosisDaoImpl
 			Diagnosis source,
 			DiagnosisOutVO target) {
 		super.toDiagnosisOutVO(source, target);
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.code (can't convert source.getCode():org.phoenixctms.ctsms.domain.AlphaId to org.phoenixctms.ctsms.vo.AlphaIdVO
 		AlphaId code = source.getCode();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();

@@ -34,7 +34,6 @@ public class TagTextListRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class TagTextListRandomization extends Randomization {
 		return RandomizationMode.TAG_TEXT_LIST;
 	}
 
-	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId) { // long trialId,
+	private int getTotalNonEmptyTextsSize(Trial trial, Long excludeListEntryId) {
 		return CommonUtil.safeLongToInt(probandListEntryDao.getTrialRandomizeTextStratificationTagValuesCount(trial.getId(), false, null, excludeListEntryId));
 	}
 

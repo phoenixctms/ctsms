@@ -36,8 +36,6 @@ public class TeamMemberRoleDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TeamMemberRole loadTeamMemberRoleFromTeamMemberRoleVO(TeamMemberRoleVO teamMemberRoleVO) {
-		// TODO implement loadTeamMemberRoleFromTeamMemberRoleVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTeamMemberRoleFromTeamMemberRoleVO(TeamMemberRoleVO) not yet implemented.");
 		TeamMemberRole teamMemberRole = null;
 		Long id = teamMemberRoleVO.getId();
 		if (id != null) {

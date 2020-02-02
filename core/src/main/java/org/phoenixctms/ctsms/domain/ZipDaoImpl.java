@@ -12,7 +12,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -88,8 +87,6 @@ public class ZipDaoImpl
 	 * a new, blank entity is created
 	 */
 	private Zip loadZipFromZipVO(ZipVO zipVO) {
-		// TODO implement loadZipFromZipVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadZipFromZipVO(ZipVO) not yet implemented.");
 		Zip zip = null;
 		Long id = zipVO.getId();
 		if (id != null) {

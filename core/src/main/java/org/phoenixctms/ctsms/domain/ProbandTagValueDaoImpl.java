@@ -103,8 +103,6 @@ public class ProbandTagValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandTagValue loadProbandTagValueFromProbandTagValueInVO(ProbandTagValueInVO probandTagValueInVO) {
-		// TODO implement loadProbandTagValueFromProbandTagValueInVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagValueFromProbandTagValueInVO(ProbandTagValueInVO) not yet implemented.");
 		ProbandTagValue probandTagValue = null;
 		Long id = probandTagValueInVO.getId();
 		if (id != null) {
@@ -122,8 +120,6 @@ public class ProbandTagValueDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandTagValue loadProbandTagValueFromProbandTagValueOutVO(ProbandTagValueOutVO probandTagValueOutVO) {
-		// TODO implement loadProbandTagValueFromProbandTagValueOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagValueFromProbandTagValueOutVO(ProbandTagValueOutVO) not yet implemented.");
 		ProbandTagValue probandTagValue = this.load(probandTagValueOutVO.getId());
 		if (probandTagValue == null) {
 			probandTagValue = ProbandTagValue.Factory.newInstance();
@@ -150,7 +146,6 @@ public class ProbandTagValueDaoImpl
 			ProbandTagValue target,
 			boolean copyIfNull) {
 		super.probandTagValueInVOToEntity(source, target, copyIfNull);
-		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		Long tagId = source.getTagId();
 		Long probandId = source.getProbandId();
 		if (tagId != null) {
@@ -200,7 +195,6 @@ public class ProbandTagValueDaoImpl
 			ProbandTagValue target,
 			boolean copyIfNull) {
 		super.probandTagValueOutVOToEntity(source, target, copyIfNull);
-		// No conversion for target.value (can't convert source.getValue():java.lang.String to byte[]
 		ProbandTagVO tagVO = source.getTag();
 		ProbandOutVO probandVO = source.getProband();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
@@ -253,7 +247,6 @@ public class ProbandTagValueDaoImpl
 			ProbandTagValue source,
 			ProbandTagValueInVO target) {
 		super.toProbandTagValueInVO(source, target);
-		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
 		ProbandTag tag = source.getTag();
 		Proband proband = source.getProband();
 		if (tag != null) {
@@ -284,12 +277,7 @@ public class ProbandTagValueDaoImpl
 	public void toProbandTagValueOutVO(
 			ProbandTagValue source,
 			ProbandTagValueOutVO target) {
-		// TODO verify behavior of toProbandTagValueOutVO
 		super.toProbandTagValueOutVO(source, target);
-		// WARNING! No conversion for target.value (can't convert source.getValue():byte[] to java.lang.String
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.proband (can't convert source.getProband():org.phoenixctms.ctsms.domain.Proband to org.phoenixctms.ctsms.vo.ProbandOutVO
-		// WARNING! No conversion for target.tag (can't convert source.getTag():org.phoenixctms.ctsms.domain.ProbandTag to org.phoenixctms.ctsms.vo.ProbandTagVO
 		ProbandTag tag = source.getTag();
 		Proband proband = source.getProband();
 		User modifiedUser = source.getModifiedUser();

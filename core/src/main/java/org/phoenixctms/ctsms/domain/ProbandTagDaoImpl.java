@@ -29,7 +29,6 @@ public class ProbandTagDaoImpl
 		if (excel != null) {
 			probandTagCriteria.add(Restrictions.eq("excel", excel.booleanValue()));
 		}
-		// CriteriaUtil.applyVisibleIdCriterion("visible", tagCriteria, visible, tagId);
 		if (person != null) {
 			if (tagId != null) {
 				probandTagCriteria.add(Restrictions.or(Restrictions.eq("person", person.booleanValue()), Restrictions.idEq(tagId.longValue())));
@@ -53,8 +52,6 @@ public class ProbandTagDaoImpl
 	 * a new, blank entity is created
 	 */
 	private ProbandTag loadProbandTagFromProbandTagVO(ProbandTagVO probandTagVO) {
-		// TODO implement loadProbandTagFromProbandTagVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadProbandTagFromProbandTagVO(ProbandTagVO) not yet implemented.");
 		ProbandTag probandTag = null;
 		Long id = probandTagVO.getId();
 		if (id != null) {

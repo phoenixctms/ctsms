@@ -45,7 +45,6 @@ public class ReimbursementsPDFBlock {
 		MONEY_TRANSFER_TABLE_HEAD,
 		BANK_ACCOUNT_TABLE_ROW,
 		PAYMENT_METHOD_TABLE_ROW,
-		// COMPLETE_INSTRUCTION,
 		SIGNATURE_TOTAL,
 		SPACER,
 	}
@@ -136,11 +135,6 @@ public class ReimbursementsPDFBlock {
 		this.type = type;
 	}
 
-	// public ReimbursementsPDFBlock(TrialOutVO trial, ProbandOutVO proband) {
-	// this.trial = trial;
-	// this.proband = proband;
-	// this.type = BlockType.SECOND_PAGE_SUBJECT;
-	// }
 	private String getBankAccount() {
 		StringBuilder sb = new StringBuilder();
 		if (byBankAccountSummaryDetail != null) {
@@ -150,14 +144,10 @@ public class ReimbursementsPDFBlock {
 					sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.ACCOUNT_HOLDER_NAME_NA_LABEL, PDFUtil.DEFAULT_LABEL));
 					sb.append(PDFUtil.PDF_LINE_BREAK);
 					sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BANK_NAME_NA_LABEL, PDFUtil.DEFAULT_LABEL));
-					// if (!CommonUtil.isEmptyString(bankAccount.getBic())) {
 					sb.append(PDFUtil.PDF_LINE_BREAK);
 					sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BIC_NA_LABEL, PDFUtil.DEFAULT_LABEL));
-					// }
-					// if (!CommonUtil.isEmptyString(bankAccount.getIban())) {
 					sb.append(PDFUtil.PDF_LINE_BREAK);
 					sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.IBAN_NA_LABEL, PDFUtil.DEFAULT_LABEL));
-					// }
 				} else {
 					sb.append(L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.ACCOUNT_HOLDER_NAME_LABEL, PDFUtil.DEFAULT_LABEL,
 							bankAccount.getAccountHolderName()));
@@ -193,19 +183,6 @@ public class ReimbursementsPDFBlock {
 	}
 
 	private String getBodyGenderSpecificSalutation() {
-		// if (proband != null && proband.getGender() != null) {
-		// switch (proband.getGender().getSex()) {
-		// case MALE:
-		// case TRANSGENDER_MALE:
-		// return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL);
-		// case FEMALE:
-		// case TRANSGENDER_FEMALE:
-		// return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_FEMALE_SALUTATION, PDFUtil.DEFAULT_LABEL);
-		// default:
-		// break;
-		// }
-		// }
-		// return "";
 		return CommonUtil.getGenderSpecificSalutation(proband,
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
 				L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, ReimbursementsPDFLabelCodes.BODY_FEMALE_SALUTATION, PDFUtil.DEFAULT_LABEL));
@@ -270,44 +247,10 @@ public class ReimbursementsPDFBlock {
 
 	private String getProbandName(boolean withTitles, boolean withFirstName) {
 		StringBuilder sb = new StringBuilder();
-		// if (proband != null) {
 		return CommonUtil.getProbandName(proband, withTitles, withFirstName,
 				L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
 				L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
 				L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME));
-		// if (proband.isDecrypted()) {
-		// if (!proband.isBlinded()) {
-		// if (withTitles) {
-		// CommonUtil.appendString(sb, proband.getPrefixedTitle1(), null);
-		// CommonUtil.appendString(sb, proband.getPrefixedTitle2(), " ");
-		// CommonUtil.appendString(sb, proband.getPrefixedTitle3(), " ");
-		// if (withFirstName) {
-		// CommonUtil.appendString(sb, proband.getFirstName(), " ");
-		// }
-		// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-		// CommonUtil.appendString(sb, proband.getPostpositionedTitle1(), ", ");
-		// CommonUtil.appendString(sb, proband.getPostpositionedTitle2(), ", ");
-		// CommonUtil.appendString(sb, proband.getPostpositionedTitle3(), ", ");
-		// } else {
-		// if (withFirstName) {
-		// CommonUtil.appendString(sb, proband.getFirstName(), null);
-		// CommonUtil.appendString(sb, proband.getLastName(), " ", "?");
-		// } else {
-		// CommonUtil.appendString(sb, proband.getLastName(), null, "?");
-		// }
-		// }
-		// } else {
-		// if (proband.getId() > 0) {
-		// sb.append(MessageFormat.format(L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME), Long.toString(proband.getId())));
-		// } else {
-		// sb.append(L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME));
-		// }
-		// }
-		// } else {
-		// sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME));
-		// }
-		// }
-		// return sb.toString();
 	}
 
 	private String getSignatureLabel() {
@@ -351,14 +294,6 @@ public class ReimbursementsPDFBlock {
 			return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, key, PDFUtil.DEFAULT_LABEL);
 		}
 		return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, l10nKey, PDFUtil.DEFAULT_LABEL);
-		// if (trial != null && trial.getDepartment() != null) {
-		// String l10nKey = baseL10nKey + '_' + trial.getDepartment().getNameL10nKey();
-		// if (L10nUtil.containsReimbursementsPdfLabel(Locales.REIMBURSEMENTS_PDF, l10nKey)) {
-		// return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, l10nKey, PDFUtil.DEFAULT_LABEL);
-		// }
-		// // result = L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, baseL10nKey + '_' + trial.getDepartment().getNameL10nKey(), "");
-		// }
-		// return L10nUtil.getReimbursementsPDFLabel(Locales.REIMBURSEMENTS_PDF, baseL10nKey, PDFUtil.DEFAULT_LABEL);
 	}
 
 	public BlockType getType() {
@@ -769,10 +704,7 @@ public class ReimbursementsPDFBlock {
 				x2 = cursor.getBlockX()
 						+ cursor.getBlockWidth()
 						- Settings.getFloat(ReimbursementsPDFSettingCodes.X_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT); // -
-				// Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH,
-				// Bundle.REIMBURSEMENTS_PDF,
-				// ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_AMOUNT_COLUMN_WIDTH);
+								ReimbursementsPDFDefaultSettings.X_PAYMENT_TABLE_FRAME_INDENT);
 				if (it != null) {
 					while (it.hasNext()) {
 						MoneyTransferByCostTypeSummaryDetailVO costTypeDetail = (MoneyTransferByCostTypeSummaryDetailVO) it.next();
@@ -797,8 +729,7 @@ public class ReimbursementsPDFBlock {
 									y2 -= PDFUtil.renderMultilineText(
 											contentStream,
 											cursor.getFontF(),
-											PDFUtil.FontSize.SMALL, // TINY,
-											Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF,
+											PDFUtil.FontSize.SMALL, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF,
 													ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 											commentsIt.next(),
 											x1,
@@ -810,11 +741,9 @@ public class ReimbursementsPDFBlock {
 													- x1);
 								}
 							}
-							// if (costTypeDetail.getTotal() != null) {
 							y3 -= PDFUtil.renderTextLine(contentStream, cursor.getFontD(), PDFUtil.FontSize.MEDIUM, Settings.getColor(
 									ReimbursementsPDFSettingCodes.PAYMENT_TABLE_TEXT_COLOR, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_TEXT_COLOR),
 									getAmount(costTypeDetail.getTotal()), x2, y3, PDFUtil.Alignment.TOP_RIGHT);
-							// }
 							y2 = Math.min(y2, y3)
 									- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
 											ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
@@ -864,26 +793,20 @@ public class ReimbursementsPDFBlock {
 							ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
 					y = Math.min(y, y1);
 				}
-				// y -= Settings.getFloat(ReimbursementsPDFSettingCodes.Y_PAYMENT_TABLE_FRAME_INDENT, Bundle.REIMBURSEMENTS_PDF,
-				// ReimbursementsPDFDefaultSettings.Y_PAYMENT_TABLE_FRAME_INDENT);
 				height = cursor.getBlockY() - y;
 				if (firstTableRow) {
 					PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockX() + cursor.getBlockWidth(),
-							cursor.getBlockY(), // height,
-							// PDFUtil.Alignment.TOP_LEFT,
-							Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+							cursor.getBlockY(), Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 									ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				}
 				PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
-						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockX(), cursor.getBlockY() - height, // height,
-						// PDFUtil.Alignment.TOP_LEFT,
+						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockX(), cursor.getBlockY() - height,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY(),
-						cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY() - height, // height,
-						// PDFUtil.Alignment.TOP_LEFT,
+						cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY() - height,
 						Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				PDFUtil.renderLine(
@@ -919,18 +842,12 @@ public class ReimbursementsPDFBlock {
 				if (lastTableRow) {
 					PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 							ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY() - height,
-							cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY() - height, // height,
-							// PDFUtil.Alignment.TOP_LEFT,
+							cursor.getBlockX() + cursor.getBlockWidth(), cursor.getBlockY() - height,
 							Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 									ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				}
-				// PDFUtil.renderFrame(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
-				// ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockWidth(), height,
-				// PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-				// ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
 				break;
 			case SIGNATURE_TOTAL:
-				// case COMPLETE_INSTRUCTION:
 				y = cursor.getBlockY()
 						- Settings.getFloat(ReimbursementsPDFSettingCodes.Y_TOTALS_INDENT, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.Y_TOTALS_INDENT);
 				y -= PDFUtil.renderMultilineText(
@@ -1026,8 +943,6 @@ public class ReimbursementsPDFBlock {
 						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), y, cursor.getBlockWidth(), y - y1,
 						PDFUtil.Alignment.TOP_LEFT, Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
 								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
-				// break;
-				// y = cursor.getBlockY()
 				y = y1 - Settings.getFloat(ReimbursementsPDFSettingCodes.Y_FRAME_UPPER_INDENT_SIGNATURE, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.Y_FRAME_UPPER_INDENT_SIGNATURE);
 				x = cursor.getBlockX()

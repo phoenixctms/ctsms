@@ -22,9 +22,6 @@ public interface InputFieldPDFBlockCursor {
 
 	public PDFont getFontB();
 
-	// public PDFont getFontE();
-	//
-	// public PDFont getFontF();
 	public PDFont getFontC();
 
 	public PDFont getFontD();
@@ -40,9 +37,4 @@ public interface InputFieldPDFBlockCursor {
 	public PDFJpeg getSelectboxCheckedPresetImage();
 
 	public PDFJpeg getSelectboxUncheckedImage();
-	// public void setBlockWidth(float blockWidth);
-	//
-	// public void setBlockX(float blockX);
-	//
-	// public void setBlockY(float blockY);
 }

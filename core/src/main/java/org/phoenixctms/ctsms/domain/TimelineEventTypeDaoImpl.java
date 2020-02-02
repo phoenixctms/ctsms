@@ -36,8 +36,6 @@ public class TimelineEventTypeDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TimelineEventType loadTimelineEventTypeFromTimelineEventTypeVO(TimelineEventTypeVO timelineEventTypeVO) {
-		// TODO implement loadTimelineEventTypeFromTimelineEventTypeVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadTimelineEventTypeFromTimelineEventTypeVO(TimelineEventTypeVO) not yet implemented.");
 		TimelineEventType timelineEventType = null;
 		Long id = timelineEventTypeVO.getId();
 		if (id != null) {

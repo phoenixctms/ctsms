@@ -75,12 +75,6 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
  */
 public class MassMailServiceImpl
 		extends MassMailServiceBase {
-	// private final static String VELOCITY_LOG_TAG = "massmail";
-	// private static JournalEntry logSystemMessage(Proband proband, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
-	// JournalEntryDao journalEntryDao) throws Exception {
-	// return journalEntryDao.addSystemMessage(proband, now, user, systemMessageCode, new Object[] { CommonUtil.massMailOutVOToString(massMailVO) },
-	// new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
-	// }
 
 	private static JournalEntry logSystemMessage(Trial trial, MassMailOutVO massMailVO, Timestamp now, User user, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -195,15 +189,6 @@ public class MassMailServiceImpl
 			if (massMailIn.getAttachTrialFiles()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE);
 			}
-			// if (massMailIn.getAttachProbandListEntryTags()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_NOT_FALSE);
-			// }
-			// if (massMailIn.getAttachEcrfs()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_ECRFS_NOT_FALSE);
-			// }
-			// if (massMailIn.getAttachReimbursementsPdf()) {
-			// throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_REIMBURSEMENTS_PDF_NOT_FALSE);
-			// }
 		}
 		if (!massMailIn.getAttachTrialFiles() && massMailIn.getTrialFilesLogicalPath() != null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_NOT_NULL);
@@ -380,7 +365,6 @@ public class MassMailServiceImpl
 		} else {
 			MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, massMailDao, LockMode.PESSIMISTIC_WRITE);
 			result = massMailDao.toMassMailOutVO(massMail);
-			// if (deleteCascade) {
 			boolean checkProbandLocked = Settings.getBoolean(SettingCodes.REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
 					DefaultSettings.REMOVE_MASS_MAIL_CHECK_PROBAND_LOCKED);
 			MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
@@ -397,11 +381,6 @@ public class MassMailServiceImpl
 					proband.removeMassMailReceipts(recipient);
 					recipient.setProband(null);
 				}
-				// Trial trial = recipient.getTrial();
-				// if (trial != null) {
-				// trial.removeMassMailReceipts(recipient);
-				// recipient.setTrial(null);
-				// }
 				recipient.setMassMail(null);
 				massMailRecipientDao.remove(recipient);
 			}
@@ -586,7 +565,6 @@ public class MassMailServiceImpl
 				L10nUtil.getLocales(massMailIn.getLocale()),
 				massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null,
-				// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) :
 				massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null,
 				massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
 						.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null);
@@ -596,7 +574,6 @@ public class MassMailServiceImpl
 	protected String handleGetText(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws Exception {
 		return ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null,
-				// trialId != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(trialId)) : null,
 				new Timestamp(System.currentTimeMillis()),
 				null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
@@ -611,13 +588,6 @@ public class MassMailServiceImpl
 
 	@Override
 	protected long handleProcessMassMails(AuthenticationVO auth, Long departmentId, PSFVO psf) throws Exception {
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// User user = CoreUtil.getUser();
-		// MassMailRecipientInVO newRecipient = new MassMailRecipientInVO();
-		// newRecipient.setMassMailId(6514744l);
-		// newRecipient.setProbandId(6472770l);
-		// MassMailRecipientOutVO test = ServiceUtil.addMassMailRecipients(newRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getMassMailRecipientDao(),
-		// this.getJournalEntryDao());
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -631,14 +601,11 @@ public class MassMailServiceImpl
 		HashSet<MassMail> massMails = new HashSet<MassMail>();
 		Iterator<MassMailRecipient> recipientsIt = massMailRecipientDao.findPending(null, departmentId, user.getDepartment().getId(), now, true, psf).iterator();
 		while (recipientsIt.hasNext()) {
-			MassMailRecipient recipient = recipientsIt.next(); // massMailRecipientDao.load(recipientsIt.next().getId(),
-			// LockMode.PESSIMISTIC_WRITE);
+			MassMailRecipient recipient = recipientsIt.next();
 			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 			if (!ServiceUtil.isMassMailRecipientPending(recipient)) {
 				continue;
 			}
-			// MassMail massMail = this.getMassMailDao().load(6514744l);
-			// MassMailRecipient recipient = this.getMassMailRecipientDao().load(6524156l);
 			MassMail massMail = recipient.getMassMail();
 			boolean sent = false;
 			boolean cancelled = false;
@@ -648,7 +615,6 @@ public class MassMailServiceImpl
 				if (toCount > 0) {
 					sent = true;
 					if (delayMillis > 0) {
-						//Thread.currentThread();
 						Thread.sleep(delayMillis);
 					}
 				} else {
@@ -659,7 +625,6 @@ public class MassMailServiceImpl
 			} catch (Throwable t) {
 				recipient.setErrorMessage(t.getMessage());
 				if (delayMillis > 0) {
-					//Thread.currentThread();
 					Thread.sleep(delayMillis);
 				}
 			}
@@ -671,7 +636,6 @@ public class MassMailServiceImpl
 			CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), user);
 			this.getMassMailRecipientDao().update(recipient);
 			this.getMassMailRecipientDao().commitAndResumeTransaction();
-			// EncryptedEmailVO result = this.getMassMailRecipientDao().toEncryptedEmailVO(recipient);
 			totalEmailCount += toCount;
 			massMails.add(massMail);
 		}
@@ -689,7 +653,6 @@ public class MassMailServiceImpl
 						CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
 						massMailDao.update(massMail);
 						MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
-						// ServiceUtil.logSystemMessage(massMail, massMailVO, now, user, SystemMessageCodes.MASS_MAIL_LOCKED, massMailVO, original, journalEntryDao);
 						journalEntryDao.addSystemMessage(massMail, now, user, SystemMessageCodes.MASS_MAIL_LOCKED,
 								new Object[] { Long.toString(massMailRecipientDao.getCount(massMail.getId(), null, false)) },
 								new Object[] { CoreUtil.getSystemMessageCommentContent(massMailVO, original,
@@ -706,9 +669,6 @@ public class MassMailServiceImpl
 	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
-		// if (recipient.getTimesProcessed() == 0l) {
-		// x
-		// }
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		ServiceUtil.resetMassMailRecipient(recipient, original);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -733,8 +693,6 @@ public class MassMailServiceImpl
 		MassMailOutVO original = massMailDao.toMassMailOutVO(originalMassMail);
 		massMailDao.evict(originalMassMail);
 		MassMail massMail = massMailDao.massMailInVOToEntity(modifiedMassMail);
-		// Timestamp now = new Timestamp(System.currentTimeMillis());
-		// User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalMassMail, massMail, now, user);
 		massMailDao.update(massMail);
 		MassMailOutVO result = massMailDao.toMassMailOutVO(massMail);
@@ -758,7 +716,6 @@ public class MassMailServiceImpl
 		MassMail massMail = recipient.getMassMail();
 		ServiceUtil.checkMassMailLocked(massMail);
 		Proband proband = recipient.getProband();
-		// Trial trial = recipient.getTrial();
 		if (proband != null) {
 			ServiceUtil.checkProbandLocked(proband);
 		}
@@ -769,9 +726,6 @@ public class MassMailServiceImpl
 		if (proband != null) {
 			proband.removeMassMailReceipts(recipient);
 		}
-		// if (trial != null) {
-		// trial.removeMassMailReceipts(recipient);
-		// }
 		massMailRecpeintDao.remove(recipient);
 		if (proband != null) {
 			ServiceUtil.logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_DELETED, result, null, journalEntryDao);
@@ -779,7 +733,6 @@ public class MassMailServiceImpl
 		} else {
 			ServiceUtil.logSystemMessage(massMail, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_DELETED, result, null, journalEntryDao);
 		}
-		// ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_DELETED, result, null, journalEntryDao);
 		return result;
 	}
 

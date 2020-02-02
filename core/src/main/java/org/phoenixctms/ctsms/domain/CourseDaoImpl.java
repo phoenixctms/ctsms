@@ -476,17 +476,6 @@ public class CourseDaoImpl
 	}
 
 	private ArrayList<Long> toCourseIdCollection(Collection<Course> courses) { // lazyload persistentset prevention
-		// ArrayList<Long> result;
-		// if (courses != null && courses.size() > 0) {
-		// result = new ArrayList<Long>(courses.size());
-		// Iterator<Course> it = courses.iterator();
-		// while (it.hasNext()) {
-		// result.add(it.next().getId());
-		// }
-		// } else {
-		// result = new ArrayList<Long>();
-		// }
-		// return result;
 		ArrayList<Long> result = new ArrayList<Long>(courses.size());
 		Iterator<Course> it = courses.iterator();
 		while (it.hasNext()) {

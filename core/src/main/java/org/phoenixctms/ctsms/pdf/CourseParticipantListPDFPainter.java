@@ -64,13 +64,6 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 
 	@Override
 	public void drawPage(PDPageContentStream contentStream) throws Exception {
-		// PDFUtil.renderFrame(contentStream, FRAME_COLOR, Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_LEFT_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-		// CourseParticipantListPDFDefaultSettings.PAGE_LEFT_MARGIN), Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-		// CourseParticipantListPDFDefaultSettings.PAGE_LOWER_MARGIN), pageWidth - Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_LEFT_MARGIN,
-		// Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_LEFT_MARGIN) - Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_RIGHT_MARGIN,
-		// Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_RIGHT_MARGIN), pageHeight - PAGE_UPPER_MARGIN -
-		// Settings.getFloat(CourseParticipantListPDFSettingCodes.PAGE_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PAGE_LOWER_MARGIN),
-		// PDFUtil.Alignment.BOTTOM_LEFT, PAGE_FRAME_LINE_WIDTH);
 	}
 
 	@Override

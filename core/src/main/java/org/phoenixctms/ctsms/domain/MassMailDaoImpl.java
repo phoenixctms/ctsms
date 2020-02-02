@@ -52,7 +52,6 @@ public class MassMailDaoImpl
 				criteria,
 				DBModule.MASS_MAIL_DB,
 				psf,
-				// this.getSession(),
 				this.getSessionFactory(),
 				this.getCriterionTieDao(),
 				this.getCriterionPropertyDao(),
@@ -135,8 +134,6 @@ public class MassMailDaoImpl
 	}
 
 	private MassMail loadMassMailFromMassMailOutVO(MassMailOutVO massMailOutVO) {
-		// TODO implement loadMassMailFromMassMailOutVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadMassMailFromMassMailOutVO(MassMailOutVO) not yet implemented.");
 		MassMail massMail = this.load(massMailOutVO.getId());
 		if (massMail == null) {
 			massMail = MassMail.Factory.newInstance();

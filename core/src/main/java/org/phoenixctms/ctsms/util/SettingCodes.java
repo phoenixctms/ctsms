@@ -6,15 +6,12 @@ public interface SettingCodes {
 	public static final String INLAND = "inland";
 	public final static String USE_EXTERNAL_FILE_DATA_DIR = "use_external_file_data_dir";
 	public final static String EXTERNAL_FILE_DATA_DIR = "external_file_data_dir";
-	//public final static String HTTP_DOCUMENT_ROOT = "http_document_root";
-	//public final static String HTTP_DOCUMENT_ROOT_REPLACEMENT = "http_document_root_replacement";
 	public final static String EMAIL_DOMAIN_NAME = "email_domain_name";
 	public final static String HTTP_DOMAIN_NAME = "http_domain_name";
 	public final static String HTTP_BASE_URL = "http_base_url";
 	public final static String HTTP_HOST = "http_host";
 	public final static String HTTP_SCHEME = "http_scheme";
 	public final static String INSTANCE_NAME = "instance_name";
-	// public final static String PBE_KEY_ITERATIONS = "pbe_key_iterations";
 	public final static String EXTERNAL_FILE_SIZE_LIMIT = "external_file_size_limit";
 	public final static String EXTERNAL_FILE_CONTENT_SIZE_LIMIT = "external_file_content_size_limit";
 	public final static String EXTERNAL_FILE_CONTENT_STREAM_THRESHOLD = "external_file_content_stream_threshold";
@@ -27,7 +24,6 @@ public interface SettingCodes {
 	public static final String NIGHT_INTERVAL_STOP_MINUTE = "night_interval_stop_minute";
 	public static final String APPLICATION_VERSION = "application_version";
 	public static final String APPLICATION_NAME = "application_name";
-	// public static final String APPLICATION_SITE = "application_site";
 	public static final String APPLICATION_ABBREVIATION = "application_abbreviation";
 	public static final String SQL_UNION_KEYWORD = "sql_union_keyword";
 	public static final String SQL_INTERSECT_KEYWORD = "sql_intersect_keyword";
@@ -251,15 +247,6 @@ public interface SettingCodes {
 	public static final String REMOVE_TRIAL_CHECK_PROBAND_LOCKED = "remove_trial_check_proband_locked";
 	public static final String UNIQUE_ECRF_NAMES = "unique_ecrf_names";
 	public static final String SIGNATURE_DESCRIPTION_DATETIME_PATTERN = "signature_description_datetime_pattern";
-	// public static final String FIELD_CALCULATION_JS_FILE_NAME = "field_calculation_js_file_name";
-	// public static final String SPRINTF_JS_FILE_NAME = "sprintf_js_file_name";
-	// public static final String ENV_JS_FILE_NAME = "env_js_file_name";
-	// public static final String DATE_JS_FILE_NAME = "date_js_file_name";
-	// public static final String TIME_JS_FILE_NAME = "time_js_file_name";
-	// public static final String STRIP_COMMENTS_JS_FILE_NAME = "strip_comments_js_file_name";
-	// public static final String JQUERY_BASE64_JS_FILE_NAME = "jquery_base64_js_file_name";
-	// public static final String REST_API_SHIM_JS_FILE_NAME = "rest_api_shim_js_file_name";
-	// public static final String LOCATION_DISTANCE_SHIM_JS_FILE_NAME = "location_distance_shim_js_file_name";
 	public static final String INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = "inquiry_values_enable_browser_field_calculation";
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = "proband_list_entry_tag_values_enable_browser_field_calculation";
 	public static final String ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = "ecrf_field_values_enable_browser_field_calculation";
@@ -268,7 +255,6 @@ public interface SettingCodes {
 	public static final String RESOLVE_ECRF_FIELD_STATUS_RESTRICTION_QUEUES = "resolve_ecrf_field_status_restriction_queues";
 	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";
 	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
-	// public static final String ECRF_JOURNAL_ENTRY_TITLE_REGEXP = "ecrf_journal_entry_title_regexp";
 	public static final String ECRF_CHARGE_DUE_ANNUAL = "ecrf_charge_due_annual";
 	public static final String ECRF_CHARGE_DUE_PERIOD = "ecrf_charge_due_period";
 	public static final String ECRF_CHARGE_DUE_PERIOD_DAYS = "ecrf_charge_due_period_days";

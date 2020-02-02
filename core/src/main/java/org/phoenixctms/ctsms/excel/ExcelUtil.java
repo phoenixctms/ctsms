@@ -44,16 +44,15 @@ public final class ExcelUtil {
 	public final static String DEFAULT_LABEL = "<label>";
 	public final static String EXCEL_LINE_BREAK = "\n";
 	public final static String EXCEL_HEADER_FOOTER_LINE_BREAK = "\n";
-	public final static String EXCEL_DATE_PATTERN = "dd.MM.yyyy"; // "yyyy-MM-dd";
-	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm"; // HH:mm:ss"; // "yyyy-MM-dd HH:mm:ss";
-	public final static String EXCEL_TIME_PATTERN = "HH:mm"; // "HH:mm";
-	public final static String EXCEL_DECIMAL_SEPARATOR = null; // ".";
-	public final static String COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR = AssociationPath.ASSOCIATION_PATH_SEPARATOR;// ".";
+	public final static String EXCEL_DATE_PATTERN = "dd.MM.yyyy";
+	public final static String EXCEL_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
+	public final static String EXCEL_TIME_PATTERN = "HH:mm";
+	public final static String EXCEL_DECIMAL_SEPARATOR = null;
+	public final static String COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR = AssociationPath.ASSOCIATION_PATH_SEPARATOR;
 	public final static boolean COLUMN_NAME_LOWER_CASE_FIELD_NAMES = false;
 	// http://office.microsoft.com/en-us/excel-help/excel-specifications-and-limits-HP005199291.aspx
-	private final static int EXCEL_MAX_CELL_TEXT_LENGTH = 32737; // 1024;
+	private final static int EXCEL_MAX_CELL_TEXT_LENGTH = 32737;
 	private final static HashMap<Color, Colour> COLOR_MAPPING = new HashMap<Color, Colour>();
-	// private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 	static {
 		// http://jexcelapi.sourceforge.net/resources/javadocs/2_6_10/docs/jxl/format/Colour.html
 		COLOR_MAPPING.put(Color.LIGHTYELLOW, Colour.VERY_LIGHT_YELLOW);
@@ -105,7 +104,6 @@ public final class ExcelUtil {
 	}
 
 	private static WritableCell createCell(Class returnType, int c, int r, Object value, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
-		// WritableCell cell;
 		if (returnType != null) {
 			if (returnType.equals(String.class)) {
 				if (f.isOverrideFormat()) {
@@ -277,27 +275,6 @@ public final class ExcelUtil {
 					}
 					return new jxl.write.DateTime(c, r, toGMT((Date) value), DateTime.GMT);
 				}
-				// } else if (returnType.equals(Timestamp.class)) { // should not be used by any out vo
-				// if (f.isOverrideFormat()) {
-				// WritableCellFormat cellFormat;
-				// if (value != null && DateCalc.isTime((Date) value)) {
-				// cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_TIME_PATTERN), f, cellFormats);
-				// } else if (value == null || DateCalc.isDatetime((Date) value)) {
-				// cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_TIME_PATTERN), f, cellFormats);
-				// } else {
-				// cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_PATTERN), f, cellFormats);
-				// }
-				// //WritableCellFormat cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_TIME_PATTERN), f, cellFormats);
-				// if (value == null) {
-				// return new jxl.write.Blank(c, r, cellFormat);
-				// }
-				// return new jxl.write.DateTime(c, r, toGMT((Date) value), cellFormat, DateTime.GMT);
-				// } else {
-				// if (value == null) {
-				// return new jxl.write.Blank(c, r);
-				// }
-				// return new jxl.write.DateTime(c, r, toGMT((Date) value), DateTime.GMT);
-				// }
 			} else if (returnType.equals(VariablePeriod.class)) {
 				if (f.isOverrideFormat()) {
 					WritableCellFormat cellFormat = getRowCellFormat(NumberFormats.TEXT, f, cellFormats);
@@ -551,19 +528,6 @@ public final class ExcelUtil {
 		}
 	}
 
-	// private static Date toGMT(Date date) {
-	// //http://stackoverflow.com/questions/7695859/how-to-convert-a-data-from-1-timezone-to-another-timezone
-	// GregorianCalendar gmt = new GregorianCalendar(); // default timezone
-	// gmt.set(Calendar.YEAR, date.getYear() + 1900);
-	// gmt.set(Calendar.MONTH, date.getMonth());
-	// gmt.set(Calendar.DAY_OF_MONTH, date.getDate());
-	// gmt.set(Calendar.HOUR_OF_DAY, date.getHours());
-	// gmt.set(Calendar.MINUTE, date.getMinutes());
-	// gmt.set(Calendar.SECOND, date.getSeconds());
-	// gmt.setTimeZone(GMT);
-	// return new Date(gmt.get(Calendar.YEAR) - 1900, gmt.get(Calendar.MONTH), gmt.get(Calendar.DAY_OF_MONTH), gmt.get(Calendar.HOUR_OF_DAY), gmt.get(Calendar.MINUTE),
-	// gmt.get(Calendar.SECOND));
-	// }
 	public static Date toGMT(final Date base) {
 		// http://stackoverflow.com/questions/8579082/jxl-and-timezone-writing-an-excel
 		try {
@@ -571,7 +535,6 @@ public final class ExcelUtil {
 			final String date = DATE_FORMATTER_FROM_CURRENT.format(base);
 			return DATE_FORMATTER_TO_GMT.parse(date);
 		} catch (ParseException e) {
-			// log.error( "Date parsing failed. Conversion to GMT wasn't performed.", e );
 			return base;
 		}
 		// seem to be the only solution

@@ -20,8 +20,6 @@ public class OpsSystModifierDaoImpl
 	 * a new, blank entity is created
 	 */
 	private OpsSystModifier loadOpsSystModifierFromOpsSystModifierVO(OpsSystModifierVO opsSystModifierVO) {
-		// TODO implement loadOpsSystModifierFromOpsSystModifierVO
-		// throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadOpsSystModifierFromOpsSystModifierVO(OpsSystModifierVO) not yet implemented.");
 		Long id = opsSystModifierVO.getId();
 		OpsSystModifier opsSystModifier = null;
 		if (id != null) {

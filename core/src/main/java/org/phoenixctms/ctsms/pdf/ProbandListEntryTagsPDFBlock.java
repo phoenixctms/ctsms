@@ -24,27 +24,15 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 
 	public enum BlockType {
-		// NEW_PAGE,
-		// NEW_LIST_ENTRY,
 		PAGE_TITLE, NEW_LIST_ENTRY, INPUT_FIELD,
-		// ECRF_SIGNATURE,
-		// SPACER,
 	}
 
 	private ProbandListEntryTagValueOutVO value;
 	private ProbandListEntryOutVO listEntry;
-	// private ECRFOutVO ecrf;
-	// private ECRFStatusEntryVO statusEntry;
-	// private SignatureVO signature;
-	// private String section;
-	// private Long index;
 	private BlockType type;
 	private boolean inserted = false;
 	private Date now;
 
-	// public EcrfPDFBlock() {
-	// type = BlockType.SPACER;
-	// }
 	public ProbandListEntryTagsPDFBlock(BlockType type, boolean inserted) {
 		super();
 		this.type = type;
@@ -56,17 +44,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return value.getTag().getTitleL10nKey();
 	}
 
-	// public EcrfPDFBlock(ProbandListEntryOutVO listEntry) {
-	// super();
-	// this.listEntry = listEntry;
-	// this.type = BlockType.NEW_LIST_ENTRY;
-	// }
 	public ProbandListEntryTagsPDFBlock(ProbandListEntryOutVO listEntry, Date now, boolean blank) {
 		super();
 		this.listEntry = listEntry;
-		// this.ecrf = ecrf;
-		// this.statusEntry = statusEntry;
-		// this.signature = signature;
 		this.now = now;
 		this.blank = blank;
 		this.type = BlockType.NEW_LIST_ENTRY;
@@ -76,11 +56,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		super(block);
 		value = block.value;
 		listEntry = block.listEntry;
-		// ecrf = block.ecrf;
-		// statusEntry = block.statusEntry;
-		// signature = block.signature;
-		// section = block.section;
-		// index = block.index;
 		this.type = type;
 		now = block.now;
 		this.inserted = inserted;
@@ -90,9 +65,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		this(block, block.type, inserted);
 	}
 
-	// public EcrfPDFBlock(BlockType type) {
-	// this.type = type;
-	// }
 	public ProbandListEntryTagsPDFBlock(ProbandListEntryTagValueOutVO value, PDFJpeg ximage, boolean blank) {
 		super(value.getTag().getField(), ximage, blank);
 		this.value = value;
@@ -103,23 +75,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	protected boolean getBooleanValue() {
 		return value.getBooleanValue();
 	}
-	// public EcrfPDFBlock(SignatureVO signature) {
-	// super();
-	// this.signature = signature;
-	// this.type = BlockType.ECRF_SIGNATURE;
-	// }
-	// public ProbandListEntryTagsPDFBlock(String section) {
-	// super();
-	// this.section = section;
-	// this.type = BlockType.NEW_SECTION;
-	// }
 
-	// public EcrfPDFBlock(String section, Long index) {
-	// super();
-	// this.section = section;
-	// this.index = index;
-	// this.type = BlockType.NEW_INDEX;
-	// }
 	@Override
 	protected String getComment() {
 		return value.getTag().getComment();
@@ -190,9 +146,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
 	}
 
-	// public Long getIndex() {
-	// return index;
-	// }
 	@Override
 	protected String getInputFieldNameLabel(String name, String position) {
 		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_NAME, PDFUtil.DEFAULT_LABEL, name,
@@ -265,9 +218,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return value.getModifiedUser();
 	}
 
-	// public String getSection() {
-	// return section;
-	// }
 	@Override
 	protected float getMultiLineTextMinHeight() {
 		return Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.MULTI_LINE_TEXT_MIN_HEIGHT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -285,16 +235,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 				ProbandListEntryTagsPDFDefaultSettings.PRESET_TEXT_COLOR);
 	}
 
-	// private String getStatusUser() {
-	// if (statusEntry != null && statusEntry.getModifiedUser() != null) {
-	// if (statusEntry.getModifiedUser().getIdentity() != null) {
-	// return CommonUtil.staffOutVOToString(statusEntry.getModifiedUser().getIdentity());
-	// } else {
-	// return CommonUtil.userOutVOToString(statusEntry.getModifiedUser());
-	// }
-	// }
-	// return "";
-	// }
 	@Override
 	protected boolean getRenderSketchImages() {
 		return Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -367,11 +307,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return type;
 	}
 
-	// @Override
-	// protected boolean isShowValidationErrorMessages() {
-	// return Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.SHOW_VALIDATION_ERROR_MESSAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-	// ProbandListEntryTagsPDFDefaultSettings.SHOW_VALIDATION_ERROR_MESSAGES);
-	// }
 	@Override
 	protected Color getValidationErrorMessageTextColor() {
 		return Settings.getColor(ProbandListEntryTagsPDFSettingCodes.VALIDATION_ERROR_MESSAGE_TEXT_COLOR, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -474,15 +409,11 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	public float renderBlock(PDPageContentStream contentStream, ProbandListEntryTagsPDFBlockCursor cursor) throws Exception {
-		// if (contentStream != null) {
-		// System.out.println("rendering block " + type);
-		// }
 		float x;
 		float y;
 		float y1;
 		float height1;
 		float height2;
-		// float height3;
 		float height;
 		float width;
 		PDFJpeg ximage;
@@ -536,25 +467,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 				}
 				y1 = y;
 				y -= getYFrameIndent();
-				// height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-				// L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.TRIAL_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
-				// x + getXFrameIndent(),
-				// y,
-				// Alignment.TOP_LEFT,
-				// Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT)
-				// - getXFrameIndent());
-				// x += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				// ProbandListEntryTagsPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
-				// height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.MEDIUM, getTextColor(),
-				// L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.TRIAL_NAME, PDFUtil.DEFAULT_LABEL,
-				// trial.getName(),
-				// trial.getTitle()),
-				// x + getXFrameIndent(),
-				// y,
-				// Alignment.TOP_LEFT,
-				// width - getXFrameIndent()), height1);
-				// x += width;
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
 						L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.PROBAND_NAME_LABEL, PDFUtil.DEFAULT_LABEL),
 						x + getXFrameIndent(),
@@ -616,7 +528,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 								Alignment.TOP_LEFT,
 								width - getXFrameIndent()),
 						height2);
-				//
 				x = cursor.getBlockX();
 				y -= Math.max(height1, height2) + getYFrameIndent();
 				height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
@@ -715,13 +626,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						contentStream,
 						getFrameColor(),
 						cursor.getBlockX(),
-						// + (cursor.hasSection() ? Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-						// ProbandListEntryTagsPDFDefaultSettings.X_BOX_FRAME_INDENT) : 0.0f),
 						y1,
-						cursor.getBlockWidth(), // .getIndexWidth(),
-						y1 - y,
-						// - Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-						// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
+						cursor.getBlockWidth(), y1 - y,
 						Alignment.TOP_LEFT,
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.HEAD_FRAME_LINE_WIDTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 								ProbandListEntryTagsPDFDefaultSettings.HEAD_FRAME_LINE_WIDTH));
@@ -729,47 +635,6 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 						ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
 				height = cursor.getBlockY() - y;
 				break;
-			// case NEW_CATEGORY:
-			// height = 0.0f;
-			// if (cursor.hasCategory()) {
-			// if (!inserted) {
-			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-			// height += PDFUtil.renderTextLine(
-			// contentStream,
-			// cursor.getFontB(),
-			// FontSize.BIG,
-			// getTextColor(),
-			// cursor.getCategoryLabel(),
-			// cursor.getBlockX(),
-			// cursor.getBlockY()
-			// - Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-			// Alignment.TOP_LEFT);
-			// }
-			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-			// }
-			// break;
-			//
-			// case END_OF_CATEGORY:
-			// height = 0.0f;
-			// if (cursor.hasCategory()) {
-			// // PDFUtil.renderFrame(contentStream,
-			// // getFrameColor(),
-			// // cursor.getBlockX(),
-			// // cursor.getSectionY(),
-			// // cursor.getSectionWidth(),
-			// // cursor.getSectionY() - cursor.getBlockY(),
-			// // // + Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT),
-			// // Alignment.TOP_LEFT,
-			// // Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.SECTION_FRAME_LINE_WIDTH, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.SECTION_FRAME_LINE_WIDTH));
-			// height += Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-			// ProbandListEntryTagsPDFDefaultSettings.Y_BOX_FRAME_INDENT);
-			// }
-			// break;
 			case INPUT_FIELD:
 				height = renderInputFieldBlock(contentStream, cursor) +
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.Y_BOX_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,

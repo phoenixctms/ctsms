@@ -139,9 +139,6 @@ public class UserPermissionProfileDaoImpl
 			UserPermissionProfile source,
 			UserPermissionProfileOutVO target) {
 		super.toUserPermissionProfileOutVO(source, target);
-		// WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.user (can't convert source.getUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-		// WARNING! No conversion for target.profile (can't convert source.getProfile():org.phoenixctms.ctsms.enumeration.PermissionProfile to org.phoenixctms.ctsms.vo.PermissionProfileVO
 		User user = source.getUser();
 		User modifiedUser = source.getModifiedUser();
 		if (user != null) {

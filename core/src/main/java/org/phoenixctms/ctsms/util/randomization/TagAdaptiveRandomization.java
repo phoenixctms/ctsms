@@ -75,7 +75,6 @@ public class TagAdaptiveRandomization extends Randomization {
 			RandomizationListCodeDao randomizationListCodeDao) {
 		super(trialDao, probandGroupDao, probandListEntryDao, stratificationRandomizationListDao, probandListEntryTagDao, inputFieldSelectionSetValueDao,
 				probandListEntryTagValueDao, randomizationListCodeDao);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -106,14 +105,13 @@ public class TagAdaptiveRandomization extends Randomization {
 		return RandomizationType.TAG_SELECT;
 	}
 
-	private HashMap<Long, Long> getValueSizes(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) { // long trialId,
+	private HashMap<Long, Long> getValueSizes(Long excludeListEntryId, Collection<InputFieldSelectionSetValue> values) {
 		HashMap<Long, Long> result = new HashMap<Long, Long>();
 		Iterator<InputFieldSelectionSetValue> it = values.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValue value = it.next();
 			result.put(value.getId(), probandListEntryDao.getTrialRandomizeSelectStratificationTagValuesCount(null, value.getId(), null, excludeListEntryId));
 		}
-		// result.put(null, probandListEntryDao.getTrialGroupCount(trialId, null, excludeListEntryId));
 		return result;
 	}
 
@@ -121,7 +119,7 @@ public class TagAdaptiveRandomization extends Randomization {
 	protected InputFieldSelectionSetValue randomizeInputFieldSelectionSetValue(Trial trial, ProbandListEntry exclude) throws Exception {
 		Collection<InputFieldSelectionSetValue> values = getRandomizationInputFieldSelectionSetValues(trial);
 		HashMap<Long, InputFieldSelectionSetValue> valueMap = getInputFieldSelectionSetValueIdMap(values);
-		Set<Entry<Long, Long>> valueSizes = getValueSizes(exclude != null ? exclude.getId() : null, values).entrySet(); // trialId
+		Set<Entry<Long, Long>> valueSizes = getValueSizes(exclude != null ? exclude.getId() : null, values).entrySet();
 		Iterator<Entry<Long, Long>> it = valueSizes.iterator();
 		long dividend = 0l;
 		HashMap<Long, Long> divisors = new HashMap<Long, Long>();
@@ -137,7 +135,6 @@ public class TagAdaptiveRandomization extends Randomization {
 		TreeMap<InputFieldSelectionSetValue, Double> pMap = new TreeMap<InputFieldSelectionSetValue, Double>(ID_COMPARATOR);
 		while (it.hasNext()) {
 			Entry<Long, Long> valueSize = it.next();
-			// double p = (1.0d + ((double) otherGroupSizes.get(it.next().getKey()))) / (((double) groupSizes.size()) + ((double) d));
 			double p = ((double) divisors.get(valueSize.getKey())) / ((double) dividend);
 			pMap.put(valueMap.get(valueSize.getKey()), p);
 		}
