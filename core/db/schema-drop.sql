@@ -314,6 +314,9 @@
     alter table MAINTENANCE_SCHEDULE_ITEM 
         drop constraint MAINTENANCE_SCHEDULE_ITEM_TYPE_FKC;
 
+    alter table MAINTENANCE_SCHEDULE_ITEM 
+        drop constraint MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_PROXY_FKC;
+
     alter table MASS_MAIL 
         drop constraint MASS_MAIL_MODIFIED_USER_FKC;
 

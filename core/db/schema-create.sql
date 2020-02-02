@@ -837,6 +837,7 @@
         COMPANY_CONTACT_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
         TYPE_FK BIGINT not null,
+        RESPONSIBLE_PERSON_PROXY_FK BIGINT,
         primary key (ID)
     );
 
@@ -2678,6 +2679,11 @@
         add constraint MAINTENANCE_SCHEDULE_ITEM_TYPE_FKC 
         foreign key (TYPE_FK) 
         references MAINTENANCE_TYPE;
+
+    alter table MAINTENANCE_SCHEDULE_ITEM 
+        add constraint MAINTENANCE_SCHEDULE_ITEM_RESPONSIBLE_PERSON_PROXY_FKC 
+        foreign key (RESPONSIBLE_PERSON_PROXY_FK) 
+        references STAFF;
 
     alter table MASS_MAIL 
         add constraint MASS_MAIL_MODIFIED_USER_FKC 
