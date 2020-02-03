@@ -549,8 +549,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			booleans = WebUtil.getBooleans(false, false);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS,
-			// DefaultSettings.INPUT_FIELD_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}

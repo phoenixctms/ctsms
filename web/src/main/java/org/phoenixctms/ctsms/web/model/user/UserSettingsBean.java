@@ -72,11 +72,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 		if (in == null) {
 			in = new UserSettingsInVO();
 		}
-		//if (out != null) {
 		copyUserOutToIn(in, out);
-		//		} else {
-		//			initUserDefaultValues(in, WebUtil.getUser());
-		//		}
 	}
 
 	@Override
@@ -97,7 +93,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -187,12 +183,10 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 
 	@Override
 	protected void initSpecificSets() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public boolean isCreateable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

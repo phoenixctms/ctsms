@@ -63,8 +63,6 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		InventoryBookingInVO backup = new InventoryBookingInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -74,7 +72,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 			addEvent();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -132,7 +130,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -154,7 +152,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 		try {
 			calendars = WebUtil.getServiceLocator().getInventoryService().getCalendars(WebUtil.getAuthentication(),
 					null, null, null, null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -240,7 +238,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getInventoryService().getInventoryBooking(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -281,7 +279,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 			updateEvent();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

@@ -208,8 +208,7 @@ public final class IndexResource {
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else {
 				returnTypeNode = createVOReturnTypeNode(returnType, method.getGenericReturnType());
-				if (FilePDFVO.class.equals(returnType)
-				) {
+				if (FilePDFVO.class.equals(returnType)) {
 					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
 				}
 				if (queryParams.size() > 0) {
@@ -366,11 +365,10 @@ public final class IndexResource {
 	private static String getBasePath(HttpServletRequest request) {
 		StringBuffer url = new StringBuffer(WebUtil.getBaseUrl(request));
 		url.append(request.getContextPath()).append("/").append(WebUtil.REST_API_PATH);
-		// return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/" + WebUtil.REST_API_PATH;
 		return url.toString();
 	}
 
-	public static JsonObject getResourceIndexNode(Class<?> resourceClass, HttpServletRequest request) throws Exception { // String basePath) throws Exception {
+	public static JsonObject getResourceIndexNode(Class<?> resourceClass, HttpServletRequest request) throws Exception {
 		String basePath = getBasePath(request);
 		AbstractResource resource = IntrospectionModeller.createResource(resourceClass);
 		JsonObject classNode = new JsonObject();
@@ -478,7 +476,7 @@ public final class IndexResource {
 		while (classesIt.hasNext()) {
 			Class<?> resourceClass = classesIt.next();
 			if (isAnnotatedResourceClass(resourceClass)) {
-				classesNode.add(getResourceIndexNode(resourceClass, request)); // basePath));
+				classesNode.add(getResourceIndexNode(resourceClass, request));
 			}
 		}
 		return new ResourceIndex(rootNode);

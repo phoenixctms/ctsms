@@ -18,9 +18,6 @@ public class ECRFSectionProgressConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
-		// if (submittedValue.trim().equals(CommonUtil.NO_SELECTION_VALUE)) {
-		// return null;
-		// } else {
 		// http://stackoverflow.com/questions/9147119/avoid-extra-db-reads-in-the-getasobject-method-of-converter-class-by-caching-dat
 		Iterator<SelectItem> it = new SelectItemsIterator(facesContext, component);
 		while (it.hasNext()) {
@@ -37,9 +34,7 @@ public class ECRFSectionProgressConverter implements Converter {
 				}
 			}
 		}
-		// System.out.println("section progress for " + submittedValue + " not found");
 		return null;
-		// }
 	}
 
 	@Override

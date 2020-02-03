@@ -82,7 +82,6 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getInventoryId() != null) {
 		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
@@ -90,9 +89,7 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
-		// if (in.getTypeId() != null) {
 		InventoryStatusTypeVO statusType = WebUtil.getInventoryStatusType(in.getTypeId());
 		if (statusType != null) {
 			if (appended) {
@@ -101,8 +98,6 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 			sb.append(statusType.getName());
 			appended = true;
 		}
-		// }
-		// if (in.getAddresseeId() != null) {
 		StaffOutVO addressee = WebUtil.getStaff(in.getAddresseeId(), null, null, null);
 		if (addressee != null) {
 			if (appended) {
@@ -111,7 +106,6 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 			sb.append(CommonUtil.staffOutVOToString(addressee));
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getComment())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

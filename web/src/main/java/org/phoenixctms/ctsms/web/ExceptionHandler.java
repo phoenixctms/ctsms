@@ -71,12 +71,9 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 					WebUtil.appendRefererParameter(url, request, "&");
 					if (!context.getExternalContext().isResponseCommitted()) {
 						context.getExternalContext().redirect(url.toString());
-						//redirected = true;
 					}
 				}
 			} catch (IOException | IllegalStateException e) {
-				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
-				//ioException.printStackTrace();
 			}
 		} else if (authenticationExceptionEventContext != null) {
 			AuthenticationException authenticationException = (AuthenticationException) authenticationExceptionEventContext.getException();
@@ -102,12 +99,9 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 						}
 						context = FacesContext.getCurrentInstance();
 						context.getExternalContext().redirect(url.toString());
-						//redirected = true;
 					}
 				}
 			} catch (IOException | IllegalStateException e) {
-				//System.out.println(ioException.getClass().toString() + ": " + ioException.getMessage());
-				//ioException.printStackTrace();
 			}
 		}
 		getWrapped().handle();

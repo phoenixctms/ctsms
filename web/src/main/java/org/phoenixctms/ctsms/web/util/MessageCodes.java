@@ -315,7 +315,6 @@ public interface MessageCodes {
 	public static final String CREATE_NEW_USER = "create_new_user";
 	public static final String TRIAL_TITLE = "trial_title";
 	public static final String CREATE_NEW_TRIAL = "create_new_trial";
-	// public static final String PROBAND_TITLE = "proband_title";
 	public static final String PROBAND_PERSON_TITLE = "proband_person_title";
 	public static final String PROBAND_ANIMAL_TITLE = "proband_animal_title";
 	public static final String CREATE_NEW_PROBAND = "create_new_proband";
@@ -470,11 +469,8 @@ public interface MessageCodes {
 	public static final String OFFSET_TIME_ZONE_LABEL = "offset_time_zone_label";
 	public static final String SET_NEW_PASSWORD_TITLE = "set_new_password_title";
 	public static final String CHANGE_SETTINGS_MENU_ITEM_LABEL = "change_settings_menu_item_label";
-	// public static final String USER_LOCKED_LABEL = "user_locked_label";
-	// public static final String NO_PASSWORD_SET_YET = "no_password_set_yet";
 	public static final String LOCAL_USER_CAN_LOGIN = "local_user_can_login";
 	public static final String LDAP_USER_CAN_LOGIN = "ldap_user_can_login";
-	// public static final String NO_PERMISSION_PROFILES_SET_YET = "no_permission_profiles_set_yet";
 	public static final String EDITING_ACTIVE_USER = "editing_active_user";
 	public static final String EDITING_ACTIVE_USER_IDENTITY = "editing_active_user_identity";
 	public static final String RECENT_ENTITIES_MENU_LABEL = "recent_entities_menu_label";
@@ -781,11 +777,9 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_ALPHA_ID = "criterion_item_tip_alpha_id_alpha_id";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_PRIMARY_CODE = "criterion_item_tip_alpha_id_primary_code";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_REVISION = "criterion_item_tip_alpha_id_revision";
-	// public static final String CRITERION_ITEM_TIP_ASP_NAME = "criterion_item_tip_asp_name";
 	public static final String CRITERION_ITEM_TIP_ASP_ATC_CODES = "criterion_item_tip_asp_atc_codes";
 	public static final String CRITERION_ITEM_TIP_ASP_REGISTRATION_NUMBER = "criterion_item_tip_asp_registration_number";
 	public static final String CRITERION_ITEM_TIP_ASP_REVISION = "criterion_item_tip_asp_revision";
-	// public static final String CRITERION_ITEM_TIP_ASP_SUBSTANCE_ATC_CODE = "criterion_item_tip_asp_substance_atc_code";
 	public static final String CRITERION_ITEM_TIP_ASP_SUBSTANCE_REVISION = "criterion_item_tip_asp_substance_revision";
 	public static final String CRITERION_ITEM_TIP_ASP_ATC_CODE_REVISION = "criterion_item_tip_asp_atc_code_revision";
 	public static final String CRITERION_ITEM_TIP_TRIAL_NAME = "criterion_item_tip_trial_name";
@@ -849,7 +843,6 @@ public interface MessageCodes {
 	public static final String ADD_REIMBURSEMENT_LABEL = "add_reimbursement_label";
 	public static final String ADD_REIMBURSEMENT_FOR_LABEL = "add_reimbursement_for_label";
 	public static final String ADD_REIMBURSEMENT_COMMENT_VISIT_SCHEDULE_ITEM_LABEL = "add_reimbursement_comment_visit_schedule_item_label";
-	// ALIQUOT_REIMBURSEMENT_LABEL = "aliquot_reimbursement_label";
 	public static final String ADD_REIMBURSEMENT_COMMENT_TOKEN_VISIT_LABEL = "add_reimbursement_comment_token_visit_label";
 	public static final String ADD_REIMBURSEMENT_COMMENT_VISIT_LABEL = "add_reimbursement_comment_visit_label";
 	public static final String ADD_TRAVEL_EXPENSE_COMMENT = "add_travel_expense_comment";

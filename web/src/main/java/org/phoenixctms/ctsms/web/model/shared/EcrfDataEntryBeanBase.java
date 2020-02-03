@@ -154,7 +154,6 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 
 	@Override
 	public boolean isCreateable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -175,8 +174,6 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 			return false;
 		} else if (probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 			return false;
-			// } else if (ecrfStatus != null && ecrfStatus.getStatus().getLockdown()) {
-			// return false;
 		}
 		return true;
 	}

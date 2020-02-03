@@ -22,10 +22,7 @@ public abstract class Paginator {
 	private boolean isShowNavigatorButtons;
 	protected ManagedBeanBase bean;
 	private int fieldsPerRow;
-	// private int maxFieldsPerRow;
-	// private ArrayList<SelectItem> fieldsPerRows;
 
-	// private boolean pagesEnabled;
 	public Paginator() {
 		this(null);
 	}
@@ -38,15 +35,10 @@ public abstract class Paginator {
 		psf = new PSFVO();
 		selectedPage = 0;
 		pageCount = 0;
-		// fieldsPerRows = new ArrayList<SelectItem>();
 		fieldsPerRow = getDefaultFieldsPerRow();
-		// maxFieldsPerRow= getMaxFieldsPerRow();
-		// fieldsPerRows.clear();
 		showPagesMessage = true;
 		isInputFieldForm = true;
 		isShowNavigatorButtons = true;
-		// pagesEnabled = false;
-		// pagesLimit = Settings.getInt(SettingCodes.PAGINATOR_PAGES_LIMIT, Bundle.SETTINGS, DefaultSettings.PAGINATOR_PAGES_LIMIT);
 		pageSize = getDefaultPageSize();
 		psf.setUpdateRowCount(false);
 	}
@@ -73,13 +65,6 @@ public abstract class Paginator {
 
 	protected abstract String getFirstPageButtonLabel();
 
-	// public long getItemsOnPage() {
-	// if ((psf.getFirst() + psf.getPageSize()) > psf.getRowCount()) {
-	// return psf.getRowCount() - psf.getFirst();
-	// } else {
-	// return psf.getPageSize();
-	// }
-	// }
 	protected abstract String getLoadLabel();
 
 	protected int getMaxFieldsPerRow() {
@@ -188,9 +173,6 @@ public abstract class Paginator {
 		return false;
 	}
 
-	// public void setPagesEnabled(boolean pagesEnabled) {
-	// this.pagesEnabled = pagesEnabled;
-	// }
 	public boolean isShowNavigatorButtons() {
 		return isShowNavigatorButtons;
 	}
@@ -213,11 +195,6 @@ public abstract class Paginator {
 
 	public void setSelectedPage(int selectedPage) {
 		this.selectedPage = selectedPage;
-		// try {
-		// this.selectedPage = Integer.parseInt(selectedPage);
-		// } catch (NumberFormatException e) {
-		// System.out.println("cannot convert '" +selectedPage+"' to integer");
-		// }
 	}
 
 	public void setShowNavigatorButtons(boolean isShowNavigatorButtons) {

@@ -51,7 +51,7 @@ public abstract class PickerBeanBase extends ManagedBeanBase {
 			sb.append(",'");
 			sb.append(pickTargetLabel);
 			sb.append("','");
-			sb.append(entityName); // WebUtil.inventoryOutVOToString(inventory));
+			sb.append(entityName);
 			if (hasUpdate) {
 				sb.append("','");
 				sb.append(pickAjaxUpdate);

@@ -83,8 +83,6 @@ public class ProbandStatusBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		ProbandStatusEntryInVO backup = new ProbandStatusEntryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -93,7 +91,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -140,7 +138,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -210,7 +208,6 @@ public class ProbandStatusBean extends ManagedBeanBase {
 
 	@PostConstruct
 	private void init() {
-		// System.out.println("POSTCONSTRUCT: " + this.toString());
 		Long id = WebUtil.getLongParamValue(GetParamNames.PROBAND_STATUS_ENTRY_ID);
 		if (id != null) {
 			this.load(id);
@@ -243,7 +240,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getProbandStatusTypes(WebUtil.getAuthentication(), proband.getPerson() ? true : null, !proband.getPerson() ? true : null, in.getTypeId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -259,7 +256,6 @@ public class ProbandStatusBean extends ManagedBeanBase {
 			statusTypes = new ArrayList<SelectItem>();
 		}
 		loadSelectedType();
-		// proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);
 		if (WebUtil.isProbandLocked(proband)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
@@ -305,7 +301,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -345,7 +341,7 @@ public class ProbandStatusBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

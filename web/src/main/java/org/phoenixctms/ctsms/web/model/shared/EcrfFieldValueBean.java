@@ -141,12 +141,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 	}
 
-	// private Long probandListEntryId;
 	private ProbandListEntryOutVO probandListEntry;
-	// private Long ecrfId;
 	private ECRFOutVO ecrf;
 	private ECRFStatusEntryVO ecrfStatus;
-	// private Collection<ProbandAddressOutVO> probandAddresses;
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<ProbandGroupOutVO> probandGroups;
 	private Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues;
@@ -168,9 +165,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	public EcrfFieldValueBean() {
 		super();
-		// probandListEntryId = null;
 		probandListEntry = null;
-		// ecrfId = null;
 		ecrf = null;
 		ecrfStatus = null;
 		sections = new ArrayList<EcrfFieldSection>();
@@ -240,8 +235,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			@Override
 			protected int getMaxFieldsPerRow() {
 				return MAX_INPUT_FIELDS_PER_ROW;
-				// return Settings.getInt(SettingCodes.ECRF_FIELD_VALUES_MAX_FIELDS_PER_ROW, Bundle.SETTINGS,
-				// DefaultSettings.ECRF_FIELD_VALUES_MAX_FIELDS_PER_ROW);
 			}
 
 			@Override
@@ -298,7 +291,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	public void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
-			// long t = System.currentTimeMillis();
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
 			if (ecrfFieldValuesIn != null && ecrfFieldValuesOut != null && ecrfFieldValuesOut.size() > 0
 					&& jsEcrfFieldValuesOut != null && jsEcrfFieldValuesOut.size() > 0) {
@@ -307,7 +299,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				Collection<VisitScheduleItemOutVO> visitSchedule = null;
 				Collection<ProbandGroupOutVO> groups = null;
 				ArrayList<ECRFFieldValueJsonVO> out = new ArrayList<ECRFFieldValueJsonVO>(jsEcrfFieldValuesOut.size());
-				// prepare ecrfFieldVOsMap of js variables
 				HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap = new HashMap<Long, ECRFFieldOutVO>(ecrfFieldValuesOut.size());
 				HashMap<Long, HashSet<Long>> visibleIndexMap = new HashMap<Long, HashSet<Long>>(ecrfFieldValuesOut.size());
 				Iterator<ECRFFieldValueOutVO> ecrfFieldIt = ecrfFieldValuesOut.iterator();
@@ -326,7 +317,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						}
 					}
 				}
-				// actual user inputs to jsonVOs:
 				copyEcrfFieldValuesInToJson(out, ecrfFieldValuesIn, ecrfFieldVOsMap);
 				// add non visible values from jsEcrfFieldValuesOut:
 				Iterator<ECRFFieldValueJsonVO> jsEcrfFieldValueIt = jsEcrfFieldValuesOut.iterator();
@@ -337,36 +327,18 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						out.add(jsEcrfFieldValue);
 					}
 				}
-				// if (listEntry != null) {
-				// if (probandListEntry != null) {
-				// if (listEntry.getProband().getId() != probandListEntry.getProband().getId()) {
-				// // addresses = loadProbandAddresses(listEntry.getProband().getId());
-				// tagValues = loadTagValues(listEntry);
-				// visitSchedule = loadVisitScheduleItems(listEntry);
-				// } else {
-				// // addresses = probandAddresses;
-				// visitSchedule = visitScheduleItems;
-				// }
-				// } else {
-				// // addresses = loadProbandAddresses(listEntry.getProband().getId());
-				// visitSchedule = loadVisitScheduleItems(listEntry);
-				// }
-				// }
 				if (listEntry != null) {
 					if (probandListEntry != null) {
 						if (listEntry.getId() != probandListEntry.getId()) {
-							// addresses = loadProbandAddresses(listEntry.getProband().getId());
 							tagValues = loadProbandListEntryTagValues(listEntry);
 							visitSchedule = loadVisitScheduleItems(listEntry);
 							groups = loadProbandGroups(probandListEntry);
 						} else {
-							// addresses = probandAddresses;
 							tagValues = probandListEntryTagValues;
 							visitSchedule = visitScheduleItems;
 							groups = probandGroups;
 						}
 					} else {
-						// addresses = loadProbandAddresses(listEntry.getProband().getId());
 						tagValues = loadProbandListEntryTagValues(listEntry);
 						visitSchedule = loadVisitScheduleItems(listEntry);
 						groups = loadProbandGroups(probandListEntry);
@@ -377,11 +349,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				}
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_BASE64.toString(),
-				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getProband() : null), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_TRIAL_BASE64.toString(),
-				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getTrial() : null), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(addresses), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_TAG_VALUES_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(tagValues), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64.toString(),
@@ -391,7 +358,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
-			// t = WebUtil.perfDebug("appendcontext valuebean: ", t);
 		}
 	}
 
@@ -399,9 +365,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	protected String changeAction(Long id) {
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
-		// this.ecrfId = id;
 		this.ecrf = WebUtil.getEcrf(id);
-		// this.probandListEntryId = id;
 		initPages(true);
 		initIn(true, false);
 		initSets();
@@ -458,13 +422,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 	}
 
-	// public void delete() {
-	// actionPostProcess(deleteAction());
-	// }
 	@Override
 	public String deleteAction() {
 		try {
-			// PSFVO psf = paginator.getPsfCopy(true);
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
 			if (CommonUtil.isEmptyString(filterSection)) {
@@ -665,9 +625,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	public void handlePageChange() {
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
-		// paginator.updatePSF();
-		// initIn();
-		// paginator.initPages(false, ecrfId, probandListEntryId);
 		initPages(false);
 		initIn(false, true);
 		updateInputModelsMap();
@@ -678,7 +635,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	public void handlePageSizeChange() {
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
-		// paginator.initPages(false, ecrfId, probandListEntryId);
 		initPages(false);
 		initIn(false, true);
 		updateInputModelsMap();
@@ -736,9 +692,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		// ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, probandListEntryId);
-		// probandListEntry = WebUtil.getProbandListEntry(probandListEntryId);
-		// probandAddresses = loadProbandAddresses(probandListEntry == null ? null : probandListEntry.getProband().getId());
 		probandListEntryTagValues = loadProbandListEntryTagValues(probandListEntry);
 		visitScheduleItems = loadVisitScheduleItems(probandListEntry);
 		probandGroups = loadProbandGroups(probandListEntry);
@@ -746,9 +699,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		updateInputModelModifiedAnnotations();
 	}
 
-	// public boolean isAuditTrail() {
-	// return ecrfStatus == null ? false : ecrfStatus.getStatus().getAuditTrail();
-	// }
 	@Override
 	public boolean isCreateable() {
 		return false;
@@ -768,27 +718,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		return getEditable(false);
 	}
 
-	// public boolean isInputVisible() {
-	// return isCreated() || (!WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry));
-	// }
 	public boolean isReasonForChangeRequired() {
 		return ecrfStatus == null ? false : ecrfStatus.getStatus().getAuditTrail() && ecrfStatus.getStatus().getReasonForChangeRequired();
 	}
 
-	// private Collection<ProbandAddressOutVO> loadProbandAddresses(Long probandId) {
-	// if (Settings.getBoolean(SettingCodes.ENABLE_FIELD_CALCULATION_PROBAND_ADDRESSES_RESPONSE, Bundle.SETTINGS,
-	// DefaultSettings.ENABLE_FIELD_CALCULATION_PROBAND_ADDRESSES_RESPONSE) && probandId != null) {
-	// try {
-	// return WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), probandId, null);
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
-	// return null;
-	// }
 	@Override
 	public boolean isRemovable() {
 		return false;
@@ -825,7 +758,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
-		if (listEntry != null) { // && listEntry.getGroup() == null) {
+		if (listEntry != null) {
 			try {
 				return WebUtil
 						.getServiceLocator()
@@ -885,8 +818,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		jsEcrfFieldValuesOut = null;
 		initIn(true, false);
 		initSets();
-		// Iterator<HashMap<Long, EcrfFieldInputModelList>> indexModelListIt = inputModelsMap.values().iterator();
-		// while (indexModelListIt.hasNext()) {
 		Iterator<EcrfFieldInputModelList> modelListIt = inputModelsMap.values().iterator();
 		while (modelListIt.hasNext()) {
 			Iterator<EcrfFieldInputModel> modelIt = modelListIt.next().iterator();
@@ -894,7 +825,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				modelIt.next().applyPresets();
 			}
 		}
-		// }
 		return RESET_OUTCOME;
 	}
 
@@ -924,7 +854,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	public void setFilterSection(String filterSection) {
 		this.filterSection = filterSection;
-		// this.filterSectionProgress = (filterSection != null ? new ECRFSectionProgressVO() : null);
 	}
 
 	public void setFilterSectionProgress(ECRFSectionProgressVO filterSectionProgress) {
@@ -940,8 +869,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			errorMessagesMap = null;
 		}
 		if (errorMessagesMap != null && errorMessagesMap.size() > 0) {
-			// Iterator<HashMap<Long, EcrfFieldInputModelList>> indexModelListIt = inputModelsMap.values().iterator();
-			// while (indexModelListIt.hasNext()) {
 			Iterator<EcrfFieldInputModelList> modelListIt = inputModelsMap.values().iterator();
 			while (modelListIt.hasNext()) {
 				Iterator<EcrfFieldInputModel> modelIt = modelListIt.next().iterator();
@@ -950,13 +877,11 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					HashMap<Long, String> indexErrorMessagesMap = errorMessagesMap.get(inputModel.getEcrfFieldId());
 					if (indexErrorMessagesMap != null && indexErrorMessagesMap.containsKey(inputModel.getSeriesIndex())) {
 						inputModel.setErrorMessage(indexErrorMessagesMap.get(inputModel.getSeriesIndex()));
-						// break;
 					} else {
 						inputModel.setErrorMessage(null);
 					}
 				}
 			}
-			// }
 		} else {
 			clearInputModelErrorMsgs();
 		}
@@ -1021,7 +946,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					HashMap<Long, ECRFFieldValueOutVO> indexEcrfFieldValuesOutMap = ecrfFieldValuesOutMap.get(inputModel.getEcrfFieldId());
 					if (indexEcrfFieldValuesOutMap != null && indexEcrfFieldValuesOutMap.containsKey(inputModel.getSeriesIndex())) {
 						inputModel.setModifiedAnnotation(indexEcrfFieldValuesOutMap.get(inputModel.getSeriesIndex()));
-						// break;
 					} else {
 						inputModel.setModifiedAnnotation(null);
 					}

@@ -76,7 +76,6 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 
 	@Override
 	public String getStyleClass() {
-		// if (in.getTypeId() != null) {
 		TimelineEventTypeVO eventType = WebUtil.getTimelineEventType(in.getTypeId());
 		if (eventType != null) {
 			StringBuilder sb = new StringBuilder();
@@ -89,14 +88,12 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 			}
 			return sb.toString();
 		}
-		// }
 		return "";
 	}
 
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getTrialId() != null) {
 		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
@@ -104,7 +101,6 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
 		if (!CommonUtil.isEmptyString(in.getTitle())) {
 			if (appended) {

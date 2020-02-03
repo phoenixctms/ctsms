@@ -217,17 +217,9 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		now = new Date();
 		user = WebUtil.getUser(userId, null);
 		if (Messages.getMessageList().isEmpty()) {
-			// if (out == null && userId != null) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PASSWORD_SET_YET);
-			// } else if (out != null && out.getUser().getLocked()) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
-			// } else if (WebUtil.isUserIdLoggedIn(userId)) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
-			// }
 			if (WebUtil.isUserIdLoggedIn(userId)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 			}
-			//UserOutVO user = WebUtil.getUser(userId, null);
 			ArrayList<String> messageCodes = new ArrayList<String>();
 			if (WebUtil.getUserAuthMessages(user, now, messageCodes)) {
 				Iterator<String> it = messageCodes.iterator();

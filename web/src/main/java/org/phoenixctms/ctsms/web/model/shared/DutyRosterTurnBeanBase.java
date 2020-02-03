@@ -96,9 +96,6 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		DutyRosterTurnInVO backup = new DutyRosterTurnInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
-		// Long trialIdBackup = in.getTrialId();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeTrial();
@@ -109,7 +106,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			addEvent();
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -148,7 +145,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -198,7 +195,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			calendars = WebUtil.getServiceLocator().getTrialService().getCalendars(WebUtil.getAuthentication(),
 					null, null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -216,7 +213,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			titles = WebUtil.getServiceLocator().getTrialService().getDutyRosterTurnTitles(WebUtil.getAuthentication(),
 					null, null, null, query, null); // let permission argument override decide...
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -303,7 +300,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 								in.getVisitScheduleItemId(), false);
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			}
 		}
 		if (visitScheduleItemVOs != null) {
@@ -354,7 +351,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().getDutyRosterTurn(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -406,7 +403,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 			updateEvent();
 			addOperationSuccessMessage("dutyRosterScheduleInputMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.setTrialId(trialIdBackup);
 			Messages.addMessageClientId("dutyRosterScheduleInputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

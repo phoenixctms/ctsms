@@ -48,8 +48,6 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 		}
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
-			// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
-			// JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(new ArrayList()), false));
 		}
 	}
 
@@ -75,7 +73,7 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
-		} catch (AuthorisationException|IllegalArgumentException e) {
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;

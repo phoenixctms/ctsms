@@ -67,8 +67,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
 			if (operationSuccess && trialId != null) {
-				// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_VISIT_SCHEDULE_TAB_TITLE_BASE64, JSValues.AJAX_VISIT_SCHEDULE_ITEM_COUNT,
-				// MessageCodes.VISIT_SCHEDULE_TAB_TITLE, MessageCodes.VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT, WebUtil.getVisitScheduleItemCount(in.getTrialId(), null));
 				WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext,
 						JSValues.AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64,
 						JSValues.AJAX_ECRF_FIELD_STATUS_COUNT,
@@ -97,7 +95,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		clearCaches();
 		initIn();
 		initSets();
-		//ColumnManagementBean.resetVisibleMap("ecrffieldstatus_list");
 		return CHANGE_OUTCOME;
 	}
 
@@ -156,9 +153,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		return EcrfFieldValueAuditTrailEagerModel.getCachedAuditTrailModel(statusVO, ecrfFieldAuditTrailLogModelCache);
 	}
 
-	// protected String getDataTableId() {
-	// return "ecrffieldstatus_list";
-	// }
 	public EcrfFieldStatusEntryLogLazyModel getEcrfFieldStatusEntryModel() {
 		return ecrfFieldStatusEntryModel;
 	}
@@ -178,7 +172,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 					WebUtil.getEcrfFieldStatusQueueName(statusVO.getStatus().getQueue()));
 		}
 		return "";
-		//return Messages.getMessage(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, getQueueName(), ecrfFieldStatusEntryModel.getRowCount());
 	}
 
 	public ArrayList<SelectItem> getFilterProbandGroups() {
@@ -232,6 +225,5 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 	public void refresh() {
 		clearCaches();
 		ecrfFieldStatusEntryModel.updateRowCount();
-		//LazyDataModelBase.clearFilters("useractivity_list");
 	}
 }

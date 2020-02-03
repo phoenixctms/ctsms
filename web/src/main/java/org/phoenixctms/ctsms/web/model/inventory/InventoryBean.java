@@ -114,8 +114,6 @@ public class InventoryBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		InventoryInVO backup = new InventoryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -128,7 +126,7 @@ public class InventoryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -178,7 +176,7 @@ public class InventoryBean extends ManagedBeanBase {
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -223,7 +221,7 @@ public class InventoryBean extends ManagedBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -368,8 +366,6 @@ public class InventoryBean extends ManagedBeanBase {
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
 		Long count = (out == null ? null : WebUtil.getInventoryTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_INVENTORY_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_TAG_VALUE_COUNT.toString(),
@@ -416,8 +412,7 @@ public class InventoryBean extends ManagedBeanBase {
 		categories = WebUtil.getVisibleInventoryCategories(in.getCategoryId());
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE))
-			// {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
@@ -511,7 +506,7 @@ public class InventoryBean extends ManagedBeanBase {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -553,7 +548,7 @@ public class InventoryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

@@ -9,14 +9,11 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public abstract class DateTimeConverterBase extends javax.faces.convert.DateTimeConverter {
 
-	// private boolean isConfigured;
 	public DateTimeConverterBase() {
 		super();
-		// isConfigured = false;
 	}
 
 	private void configure(UIComponent component) {
-		// if (!isConfigured) {
 		setLocale(WebUtil.getLocale());
 		Object timeZone = component.getAttributes().get("timeZone");
 		if (timeZone != null) {
@@ -27,8 +24,6 @@ public abstract class DateTimeConverterBase extends javax.faces.convert.DateTime
 			}
 		}
 		setFormat();
-		// isConfigured = true;
-		// }
 	}
 
 	@Override

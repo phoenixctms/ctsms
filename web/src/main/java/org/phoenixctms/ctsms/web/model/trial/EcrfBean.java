@@ -49,9 +49,6 @@ public class EcrfBean extends ManagedBeanBase {
 			ProbandListStatusTypeVO probandListStatus = out.getProbandListStatus();
 			in.setGroupId(probandGroupVO == null ? null : probandGroupVO.getId());
 			in.setId(out.getId());
-			// in.setStart(out.getStart());
-			// in.setStop(out.getStop());
-			// in.setToken(out.getToken());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setVersion(out.getVersion());
 			in.setVisitId(visitVO == null ? null : visitVO.getId());
@@ -74,15 +71,12 @@ public class EcrfBean extends ManagedBeanBase {
 			if (trialId != null) {
 				try {
 					position = WebUtil.getServiceLocator().getTrialService().getEcrfMaxPosition(WebUtil.getAuthentication(), trialId, null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
 			}
 			in.setId(null);
-			// in.setStart(null);
-			// in.setStop(null);
-			// in.setToken(Messages.getString(MessageCodes.VISIT_SCHEDULE_ITEM_TOKEN_PRESET));
 			in.setTrialId(trialId);
 			in.setVersion(null);
 			in.setVisitId(null);
@@ -140,7 +134,7 @@ public class EcrfBean extends ManagedBeanBase {
 				try {
 					return WebUtil.getServiceLocator().getTrialService()
 							.getEcrfList(WebUtil.getAuthentication(), trialId, null, true, psf);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -182,8 +176,6 @@ public class EcrfBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		ECRFInVO backup = new ECRFInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -193,7 +185,7 @@ public class EcrfBean extends ManagedBeanBase {
 			matrix.loadMatrix();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -222,7 +214,7 @@ public class EcrfBean extends ManagedBeanBase {
 			} else {
 				Messages.addLocalizedMessageClientId("cloneEcrfMessages", FacesMessage.SEVERITY_ERROR, MessageCodes.CLONE_ADD_ECRF_TRIAL_ID_REQUIRED);
 			}
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("cloneEcrfMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("cloneEcrfMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -278,7 +270,7 @@ public class EcrfBean extends ManagedBeanBase {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -400,12 +392,11 @@ public class EcrfBean extends ManagedBeanBase {
 		filterVisits = new ArrayList<SelectItem>(visits);
 		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		matrix.initPages();
-		// trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
@@ -461,7 +452,7 @@ public class EcrfBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getEcrf(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -479,7 +470,7 @@ public class EcrfBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveEcrf(WebUtil.getAuthentication(), ecrfId, PositionMovement.DOWN);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -490,7 +481,7 @@ public class EcrfBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveEcrf(WebUtil.getAuthentication(), ecrfId, PositionMovement.FIRST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -501,7 +492,7 @@ public class EcrfBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveEcrf(WebUtil.getAuthentication(), ecrfId, PositionMovement.LAST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -517,7 +508,7 @@ public class EcrfBean extends ManagedBeanBase {
 				initIn();
 				initSets();
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -531,7 +522,7 @@ public class EcrfBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveEcrf(WebUtil.getAuthentication(), ecrfId, PositionMovement.UP);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -549,7 +540,7 @@ public class EcrfBean extends ManagedBeanBase {
 			initSets();
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -592,7 +583,7 @@ public class EcrfBean extends ManagedBeanBase {
 			matrix.loadMatrix();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

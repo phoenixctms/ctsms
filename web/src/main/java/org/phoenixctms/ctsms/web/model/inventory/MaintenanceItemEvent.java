@@ -84,7 +84,6 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getInventoryId() != null) {
 		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
@@ -92,9 +91,7 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
-		// if (in.getTypeId() != null) {
 		MaintenanceTypeVO maintenanceType = WebUtil.getMaintenanceType(in.getTypeId());
 		if (maintenanceType != null) {
 			if (appended) {
@@ -103,7 +100,6 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 			sb.append(maintenanceType.getName());
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getTitle())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

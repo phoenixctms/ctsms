@@ -43,7 +43,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		if (probandId != null && visitScheduleItemId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntryAtVisitScheduleItem(WebUtil.getAuthentication(), probandId, visitScheduleItemId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -73,11 +73,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		RequestContext requestContext = WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64,
 				JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT,
 				MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT, new Long(visitScheduleItemModel.getRowCount()));
-		//		if (operationSuccess && in.getProbandId() != null) {
-		//			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
-		//					MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
-		//					WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
-		//		}
 	}
 
 	@Override
@@ -148,7 +143,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -180,7 +175,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -199,7 +194,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		//addReimbursementBean.setProbandId(probandId);
 		collidingProbandStatusEntryModelCache.clear();
 		statusEntryCache.clear();
 		visitScheduleItemModel.setProbandId(probandId);
@@ -224,12 +218,6 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		if (proband == null || visitScheduleItem == null) {
 			return false;
 		} else {
-			// ProbandListStatusEntryOutVO listStatusEntry = getCachedProbandListStatusEntry(visitScheduleItem);
-			// if (listStatusEntry != null) {
-			// if (!listStatusEntry.getStatus().isCount()) {
-			// return false;
-			// }
-			// }
 			return !WebUtil.isTrialLocked(visitScheduleItem.getTrial()) && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
 		}
 	}

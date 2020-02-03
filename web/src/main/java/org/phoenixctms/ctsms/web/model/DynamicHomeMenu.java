@@ -507,8 +507,6 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 					timelineEventRemindersMenuItem.setUrl("#");
 					timelineEventRemindersMenuItem.setId("timelineEventRemindersMenuItem");
 					subMenu.getChildren().add(timelineEventRemindersMenuItem);
-					// if (WebUtil.resourceExists("/trial/trialTimeline.xhtml")) {
-					// if (WebUtil.resourceExists("/trial/trialTimelineXXX.xhtml")) {
 					MenuItem timelineMenuItem = new MenuItem();
 					timelineMenuItem.setValue(Messages.getString(MessageCodes.TIMELINE_MENU_ITEM_LABEL));
 					timelineMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-timeline");
@@ -516,7 +514,6 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 					timelineMenuItem.setUrl("#");
 					timelineMenuItem.setId("timelineMenuItem");
 					subMenu.getChildren().add(timelineMenuItem);
-					// }
 					if (sessionScopeBean != null) {
 						subMenu.getChildren().add(getDutyRosterScheduleMenuItem());
 					}

@@ -77,20 +77,6 @@ public class TrialSearchBean extends SearchBeanBase {
 		return DBModule.TRIAL_DB;
 	}
 
-	// public String getDutySelfAllocationLockedString(TrialOutVO trial) {
-	// if (trial != null && trial.getDutySelfAllocationLocked()) {
-	// if (trial.getDutySelfAllocationLockedUntil() != null && trial.getDutySelfAllocationLockedFrom() != null) {
-	// return Messages
-	// .getMessage(MessageCodes.DUTY_SELF_ALLOCATION_LOCKED_UNTIL_FROM_LABEL, DateUtil.getDateTimeFormat().format(trial.getDutySelfAllocationLockedUntil()),
-	// DateUtil.getDateTimeFormat().format(trial.getDutySelfAllocationLockedFrom()));
-	// } else if (trial.getDutySelfAllocationLockedUntil() != null) {
-	// return Messages.getMessage(MessageCodes.DUTY_SELF_ALLOCATION_LOCKED_UNTIL_LABEL, DateUtil.getDateTimeFormat().format(trial.getDutySelfAllocationLockedUntil()));
-	// } else if (trial.getDutySelfAllocationLockedFrom() != null) {
-	// return Messages.getMessage(MessageCodes.DUTY_SELF_ALLOCATION_LOCKED_FROM_LABEL, DateUtil.getDateTimeFormat().format(trial.getDutySelfAllocationLockedFrom()));
-	// }
-	// }
-	// return "";
-	// }
 	public boolean getEnableExports() {
 		return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_SEARCH_EXPORTS, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_SEARCH_EXPORTS);
 	}

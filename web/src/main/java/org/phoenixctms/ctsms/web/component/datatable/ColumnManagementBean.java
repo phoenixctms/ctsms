@@ -28,7 +28,7 @@ import org.primefaces.context.RequestContext;
 public class ColumnManagementBean {
 
 	//keep filters when hiding columns:
-	public final static boolean FILTER_INVISIBLE = false; // true;
+	public final static boolean FILTER_INVISIBLE = false;
 	private ConcurrentHashMap<String, Map<String, String>> cache;
 
 	public ColumnManagementBean() {
@@ -88,7 +88,6 @@ public class ColumnManagementBean {
 				savedTableColumns = new HashMap<String, Boolean>();
 				tableColumns = new LinkedHashMap<String, String>();
 			}
-			//if (tableColumns.size() == 0) {
 			DataTable dataTable = (DataTable) WebUtil.findComponentByClientId(dataTableClientId);
 			if (dataTable != null) {
 				Iterator<Column> it = dataTable.getAllColumns().iterator();
@@ -110,7 +109,6 @@ public class ColumnManagementBean {
 					}
 				}
 			}
-			//}
 			cache.put(dataTableClientId, tableColumns); //thread-safe enough.
 			return tableColumns;
 		}
@@ -137,11 +135,10 @@ public class ColumnManagementBean {
 		String dataTableClientId = null;
 		String headerTextEl = null;
 		try {
-			dataTableClientId = column.getNamingContainer().getClientId(); //.getId();
+			dataTableClientId = column.getNamingContainer().getClientId();
 			headerTextEl = getColumnName(column);
 		} catch (Exception e) {
 		}
-		//System.out.println("DataTable.isVisible: " + dataTableClientId + "." + headerTextEl); // + " " + column.getFacets().keySet());
 		if (dataTableClientId != null && dataTableClientId.length() > 0 &&
 				headerTextEl != null && headerTextEl.length() > 0) {
 			Map visibleMap = WebUtil.getSessionScopeBean().getColumnManager().getVisibleMap(":" + dataTableClientId);

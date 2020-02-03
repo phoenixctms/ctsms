@@ -47,7 +47,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="inventory")
+@Api(value = "inventory")
 @Path("/inventory")
 public final class InventoryResource extends ServiceResourceBase {
 
@@ -58,8 +58,7 @@ public final class InventoryResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "inventoryId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InventoryOutVO.class);
 	public final static InventoryListIndex LIST_INDEX = new InventoryListIndex(getListIndexNode(
-			ResourceUtils.getMethodPath(InventoryResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			ResourceUtils.getMethodPath(InventoryResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -88,7 +87,6 @@ public final class InventoryResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -225,7 +223,7 @@ public final class InventoryResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public InventoryListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

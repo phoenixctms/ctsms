@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
-import io.swagger.annotations.Api;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,7 +26,9 @@ import org.phoenixctms.ctsms.web.jersey.resource.PSFUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api(value="shared")
+import io.swagger.annotations.Api;
+
+@Api(value = "shared")
 @Path("/journal")
 public final class JournalResource {
 
@@ -147,8 +147,7 @@ public final class JournalResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
-		return new ResourceIndex(IndexResource.getResourceIndexNode(JournalResource.class, request)); // basePath));
+		return new ResourceIndex(IndexResource.getResourceIndexNode(JournalResource.class, request));
 	}
 
 	@PUT

@@ -62,8 +62,7 @@ public final class InputFieldResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "fieldId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, InputFieldOutVO.class);
 	public final static InputFieldListIndex LIST_INDEX = new InputFieldListIndex(getListIndexNode(
-			ResourceUtils.getMethodPath(InputFieldResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			ResourceUtils.getMethodPath(InputFieldResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -131,7 +130,6 @@ public final class InputFieldResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/image/head")

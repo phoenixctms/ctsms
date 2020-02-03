@@ -151,7 +151,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				holidays = WebUtil.getServiceLocator().getToolsService()
 						.getHolidays(auth, from, to, Settings.getBooleanNullable(SettingCodes.SHOW_HOLIDAYS, Bundle.SETTINGS, DefaultSettings.SHOW_HOLIDAYS));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -168,7 +168,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				staffNaCounts = WebUtil.getServiceLocator().getStaffService()
 						.getCollidingStaffStatusIntervalDayCounts(auth, departmentId, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -185,21 +185,19 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				dutyRoster = WebUtil.getServiceLocator().getTrialService().getDutyRosterInterval(auth, departmentId, statusId, teamMemberStaffId,
 						Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_UNASSIGED_DUTIES, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_UNASSIGED_DUTIES),
 						trialId, calendar, from, to, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 			if (dutyRoster != null) {
 				dutyRoster = new ArrayList(dutyRoster);
 				Collections.sort((ArrayList) dutyRoster, new DutyRosterTurnIntervalScheduleComparator(false));
-				// xCollections.reverse((ArrayList) dutyRoster);
 				boolean showCollisions = (showCollisionsThresholdDays == null ? true
 						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
 								showCollisionsThresholdDays, 1)) <= 0);
 				Iterator<DutyRosterTurnOutVO> it = dutyRoster.iterator();
 				while (it.hasNext()) {
 					DutyRosterTurnOutVO dutyRosterTurn = it.next();
-					// System.out.println(dutyRosterTurn.getStart() + " " + (dutyRosterTurn.getStaff() != null ? dutyRosterTurn.getStaff().getName() : ""));
 					DutyRosterTurnEvent event = new DutyRosterTurnEvent(dutyRosterTurn);
 					event.setCollidingStaffStatusEntryCount(CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(dutyRosterTurn, showCollisions,
 							collidingStaffStatusEntryModelCache).getAllRowCount());
@@ -214,7 +212,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				statusEntries = WebUtil.getServiceLocator().getStaffService()
 						.getStaffStatusEntryInterval(auth, departmentId, staffCategoryId, hideStaffAvailability, from, to, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -238,7 +236,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 								Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_ALL_COURSE_INVENTORY_BOOKINGS, Bundle.SETTINGS,
 										DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_ALL_COURSE_INVENTORY_BOOKINGS) ? null : teamMemberStaffId,
 								departmentId, courseCategoryId, from, to, true, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -256,7 +254,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				visitScheduleItems = WebUtil.getServiceLocator().getTrialService()
 						.getVisitScheduleItemInterval(auth, trialId, departmentId, statusId, visitTypeId, from, to, null, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -274,7 +272,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				timelineEvents = WebUtil.getServiceLocator().getTrialService()
 						.getTimelineInterval(auth, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -289,7 +287,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<CourseOutVO> courses = null;
 			try {
 				courses = WebUtil.getServiceLocator().getCourseService().getCourseInterval(auth, departmentId, courseCategoryId, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -305,7 +303,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				statusEntries = WebUtil.getServiceLocator().getProbandService()
 						.getProbandStatusEntryInterval(auth, departmentId, probandCategoryId, hideProbandAvailability, from, to, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

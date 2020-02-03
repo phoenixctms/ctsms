@@ -37,27 +37,18 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = null;
-		if (operationSuccess && probandListEntry != null) { // && ecrf != null) {
-			// long t = System.currentTimeMillis();
+		if (operationSuccess && probandListEntry != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext,
 					JSValues.AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64,
 					JSValues.AJAX_ECRF_FIELD_STATUS_COUNT,
 					MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT,
 					WebUtil.getEcrfFieldStatusEntryCount(Settings.getEcrfFieldStatusQueue(SettingCodes.ECRF_FIELD_STATUS_QUEUE, Bundle.SETTINGS,
 							DefaultSettings.ECRF_FIELD_STATUS_QUEUE), probandListEntry.getTrial().getId(), null, null, true));
-			// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
-			// MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-			// WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, probandListEntry.getTrial().getId()));
-			// t = WebUtil.perfDebug("appendcontext trialstatusbean: ", t);
 		}
 	}
 
 	@Override
 	protected void changeSpecific(Long id) {
-		// probandMultiPicker.clear();
-		// bulkAddGroupId = null;
-		// shuffle = Settings.getBoolean(SettingCodes.PROBAND_LIST_BULK_ADD_SHUFFLE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_SHUFFLE);
-		// limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
 		this.trialId = id;
 		probandListEntryModel.setTrialId(id);
 		probandListEntryModel.initSets(true);
@@ -107,18 +98,11 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	@PostConstruct
 	private void init() {
-		// initIn();
 		initSets(false);
 	}
 
-	// @Override
-	// protected void initIn() {
-	// // TODO Auto-generated method stub
-	// }
 	@Override
 	protected void initSpecificSets() {
-		// clearCaches(select);
-		// value count caches......
 		trial = WebUtil.getTrial(this.trialId);
 	}
 }

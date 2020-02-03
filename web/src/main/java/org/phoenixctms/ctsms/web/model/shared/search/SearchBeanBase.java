@@ -190,8 +190,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	@Override
 	public String addAction() {
 		CriteriaInVO backup = new CriteriaInVO(criteriaIn);
-		// Long criteriaInIdBackup = criteriaIn.getId();
-		// Long criteriaInVersionBackup = criteriaIn.getVersion();
 		criteriaIn.setId(null);
 		criteriaIn.setVersion(null);
 		try {
@@ -229,7 +227,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT,
 					MessageCodes.CRITERIA_JOURNAL_TAB_TITLE, MessageCodes.CRITERIA_JOURNAL_TAB_TITLE_WITH_COUNT,
 					(out == null || isPicker()) ? null : WebUtil.getJournalCount(JournalModule.CRITERIA_JOURNAL, criteriaIn.getId()));
-			// tabCountMap.get(JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT.toString()));
 		}
 	}
 
@@ -285,7 +282,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Integer index = getIndexAttribute();
 		if (index != null) {
 			CriterionInVO criterionVO = getCriterionIn(index);
-			// criterionVO.setStringValue(query);
 			Collection completeMethodResult = getCompleteMethodResult(criterionVO, query);
 			if (completeMethodResult != null) {
 				try {
@@ -519,9 +515,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return new CriterionIsMoveCriterionDownEnabledList(criterionsIn);
 	}
 
-	// public List<Boolean> getIsPickerList() {
-	// return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap);
-	// }
 	public List<Boolean> getIsMoveCriterionUpEnabled() {
 		return new CriterionIsMoveCriterionUpEnabledList(criterionsIn);
 	}
@@ -595,13 +588,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public String getPositionDigitsPattern() {
 		int digits = Integer.toString(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)).length();
-		// int digits = 1;
-		// try {
-		// digits = ((int) Math.ceil(Math.log10(
-		// Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)
-		// )));
-		// } catch (Exception e) {
-		// }
 		return CommonUtil.repeatString("0", digits);
 	}
 
@@ -895,7 +881,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		updateInstantCriteria(true);
 		initSpecificSets();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.CRITERIA_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.CRITERIA_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
@@ -1017,8 +1003,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 	}
 
-	// public void onSearchTabViewChange(TabChangeEvent event) {
-	// }
 	private boolean moveDown(int criterionIndex) {
 		if (criterionIndex > 0) {
 			CriterionInVO swap = criterionsIn.set(criterionIndex - 1, criterionsIn.get(criterionIndex));
@@ -1205,18 +1189,15 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		updateInstantCriteria();
-		// if (operationSuccess) {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
 			requestContext.addCallbackParam(JSValues.AJAX_PICKER.toString(), isPicker());
 			requestContext.addCallbackParam(JSValues.AJAX_ROOT_ENTITY_CREATED.toString(), out != null);
-			// requestContext.addCallbackParam(JSValues.XAJAX_ROOT_ENTITY_CREATED.toString(),CommonUtil.LIST_INITIAL_POSITION);
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERIA_RESULT_ITEM_LABEL_BASE64.toString(), JsUtil.encodeBase64(getResultItemLabel(), false));
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_TIE_MAP_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(tieVOsMap), false));
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_ROW_COLORS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(getCriterionRowColor()), false));
 			requestContext.addCallbackParam(JSValues.AJAX_INTERMEDIATE_SETS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(intermediateSets), false));
 		}
-		// }
 	}
 }

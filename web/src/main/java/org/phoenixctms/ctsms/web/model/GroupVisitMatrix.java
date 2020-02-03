@@ -70,7 +70,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 			@Override
 			public boolean isPagesEnabled() {
-				// return this.getPages().size() > 0;
 				return this.psf.getRowCount() != null && this.psf.getRowCount() > 0l;
 			}
 		};
@@ -82,7 +81,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 	public void change(Long trialId) {
 		this.trialId = trialId;
 		paginator.initPages(true, trialId);
-		// paginator.setPagesEnabled(paginator.getPages().size() > 0);
 	}
 
 	private void clearMatrix() {
@@ -115,7 +113,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 							SettingCodes.GROUP_VISIT_MATRIX_NO_VISIT_COLOR, Bundle.SETTINGS,
 							DefaultSettings.GROUP_VISIT_MATRIX_NO_VISIT_COLOR));
 		} else {
-			// if (paginator.getItemsOnPage() < getMatrixItemsSum(visitIndex,groupIndex)) {
 			if (paginator.getPsf().getPageSize() < paginator.getPsf().getRowCount()) {
 				return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.GROUP_VISIT_MATRIX_NOT_LOADED_COLOR, Bundle.SETTINGS,
 						DefaultSettings.GROUP_VISIT_MATRIX_NOT_LOADED_COLOR));
@@ -160,28 +157,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 		return sb.toString();
 	}
 
-	// private long getMatrixItemsSum(int visitIndex, int groupIndex) {
-	// VisitOutVO[] visits = getMatrixVisits();
-	// ProbandGroupOutVO[] groups = getMatrixGroups();
-	// long count = 0l;
-	// if (visits != null && groups != null) {
-	// for (int i = 0; i < groups.length; i++) {
-	// for (int j = 0; j < visits.length; j++) {
-	// if (i < groupIndex) {
-	// count += getMatrixItemCount(visits[j], groups[i]);
-	// } else {
-	// if (j <= visitIndex) {
-	// count += getMatrixItemCount(visits[j], groups[i]);
-	// } else {
-	// return count;
-	// }
-	// }
-	//
-	// }
-	// }
-	// }
-	// return count;
-	// }
 	public VisitOutVO[] getMatrixVisits() {
 		return matrixVisits.values().toArray(new VisitOutVO[0]);
 	}
@@ -230,119 +205,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 		loadMatrix();
 	}
 
-	// private void loadMatrix() {
-	// clearMatrix();
-	//
-	// HashMap<String,Object> passThrough = new HashMap<String, Object>();
-	// passThrough.put("itemCount", 0l);
-	// passThrough.put("limit", false);
-	// passThrough.put("error", false);
-	// PSFVO psf = paginator.getPsfCopy();
-	// psf.setSortField(WebUtil.VISIT_TOKEN_PSF_PROPERTY_NAME);
-	// psf.setSortOrder(true);
-	// Collection<VisitOutVO> visitVOs = null;
-	// if (trialId != null) {
-	// try {
-	// visitVOs = WebUtil.getServiceLocator().getTrialService().getVisitList(WebUtil.getAuthentication(), trialId, psf);
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
-	// if (visitVOs != null && visitVOs.size() > 0) {
-	// Iterator<VisitOutVO> visitIt = visitVOs.iterator();
-	// while (visitIt.hasNext() && !((Boolean)passThrough.get("error")) && !((Boolean)passThrough.get("limit"))) {
-	// loadMatrixChunked(passThrough, visitIt.next());
-	// }
-	// } else {
-	// loadMatrixChunked(passThrough, null);
-	// }
-	//
-	// }
-	//
-	// private void loadMatrixChunked( HashMap<String,Object> passThrough, VisitOutVO visitVO) {
-	// PSFVO psf = new PSFVO();
-	// psf.setUpdateRowCount(true);
-	// psf.setFirst(0);
-	// psf.setPageSize(2);
-	// psf.setSortField(WebUtil.VISIT_SCHEDULE_ITEM_GROUP_TOKEN_PSF_PROPERTY_NAME);
-	// psf.setSortOrder(true);
-	// Long visitLimit = Settings.getLongNullable(SettingCodes.VISIT_SCHEDULE_ITEM_MATRIX_VISIT_LIMIT, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_MATRIX_VISIT_LIMIT);
-	// Long groupLimit = Settings.getLongNullable(SettingCodes.VISIT_SCHEDULE_ITEM_MATRIX_GROUP_LIMIT, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_MATRIX_GROUP_LIMIT);
-	// Long itemLimit = Settings.getLongNullable(SettingCodes.VISIT_SCHEDULE_ITEM_MATRIX_ITEM_LIMIT, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_MATRIX_ITEM_LIMIT);
-	// long itemCount = (Long) passThrough.get("itemCount");
-	// boolean limit = (Boolean) passThrough.get("limit");
-	// boolean error = (Boolean) passThrough.get("error");
-	// while (!limit && !error && (psf.getRowCount() == null || psf.getRowCount() > itemCount)) {
-	// Collection<VisitScheduleItemOutVO> visitScheduleItemsChunk = null;
-	// error = true;
-	// if (trialId != null) {
-	// try {
-	// visitScheduleItemsChunk = WebUtil.getServiceLocator().getTrialService().getVisitScheduleItemList(WebUtil.getAuthentication(), trialId, null, (visitVO != null ?
-	// visitVO.getId() : null) , null, psf);
-	// error = false;
-	// psf.setUpdateRowCount(false);
-	// psf.setFirst(psf.getFirst() + psf.getPageSize());
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
-	// if (visitScheduleItemsChunk != null) {
-	// Iterator<VisitScheduleItemOutVO> it = visitScheduleItemsChunk.iterator();
-	// while (it.hasNext()) {
-	// VisitScheduleItemOutVO item = it.next();
-	// Long visitId = (item.getVisit() != null ? item.getVisit().getId() : null);
-	// Long groupId = (item.getGroup() != null ? item.getGroup().getId() : null);
-	// if (itemLimit == null || itemCount < itemLimit) {
-	// if (!matrixVisits.containsKey(visitId)) {
-	// if (visitLimit == null || matrixVisits.keySet().size() < visitLimit) {
-	// matrixVisits.put(visitId, item.getVisit());
-	// } else {
-	// limit = true;
-	// break;
-	// }
-	// }
-	// if (!matrixGroups.containsKey(groupId)) {
-	// if (groupLimit == null || matrixGroups.keySet().size() < groupLimit) {
-	// matrixGroups.put(groupId, item.getGroup());
-	// } else {
-	// limit = true;
-	// break;
-	// }
-	// }
-	// LinkedHashMap<Long, ArrayList<VisitScheduleItemOutVO>> groupMap;
-	// if (!matrixItemMap.containsKey(visitId)) {
-	// groupMap = new LinkedHashMap<Long,ArrayList<VisitScheduleItemOutVO>>();
-	// matrixItemMap.put(visitId, groupMap);
-	// } else {
-	// groupMap = matrixItemMap.get(visitId);
-	// }
-	// ArrayList<VisitScheduleItemOutVO> itemList;
-	// if (!groupMap.containsKey(groupId)) {
-	// itemList = new ArrayList<VisitScheduleItemOutVO>();
-	// groupMap.put(groupId, itemList);
-	// } else {
-	// itemList = groupMap.get(groupId);
-	// }
-	// itemList.add(item);
-	// itemCount++;
-	// } else {
-	// limit = true;
-	// break;
-	// }
-	// }
-	// }
-	// }
-	// passThrough.put("itemCount", itemCount);
-	// passThrough.put("limit", limit);
-	// passThrough.put("error", error);
-	// //return limit || error;
-	// }
 	public void handlePrevPage() {
 		paginator.setToPrevPage();
 		handlePageChange();
@@ -362,9 +224,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	public void loadMatrix() {
 		clearMatrix();
-		// PSFVO psf = paginator.getPsfCopy();
-		// psf.setSortField(WebUtil.VISIT_SCHEDULE_ITEM_VISIT_TOKEN_PSF_PROPERTY_NAME);
-		// psf.setSortOrder(true);
 		Collection<ITEM> items = null;
 		if (trialId != null) {
 			items = getItemsPage(trialId, paginator.getPsf());

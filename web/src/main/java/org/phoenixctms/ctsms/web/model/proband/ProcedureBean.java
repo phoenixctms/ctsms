@@ -78,8 +78,6 @@ public class ProcedureBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		ProcedureInVO backup = new ProcedureInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -89,7 +87,7 @@ public class ProcedureBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -127,7 +125,7 @@ public class ProcedureBean extends ManagedBeanBase {
 			IDVO.transformVoCollection(opsCodeVOs);
 			return (List<IDVO>) opsCodeVOs;
 		} catch (ClassCastException e) {
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -148,7 +146,7 @@ public class ProcedureBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -217,7 +215,7 @@ public class ProcedureBean extends ManagedBeanBase {
 	@Override
 	public String getTitle() {
 		if (out != null) {
-			return Messages.getMessage(MessageCodes.PROCEDURE_TITLE, Long.toString(out.getId()), out.getName(), DateUtil.getDateStartStopString(out.getStart(), out.getStop())); // out.getCode().getText()
+			return Messages.getMessage(MessageCodes.PROCEDURE_TITLE, Long.toString(out.getId()), out.getName(), DateUtil.getDateStartStopString(out.getStart(), out.getStop()));
 		} else {
 			return Messages.getString(MessageCodes.CREATE_NEW_PROCEDURE);
 		}
@@ -302,7 +300,7 @@ public class ProcedureBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -337,7 +335,6 @@ public class ProcedureBean extends ManagedBeanBase {
 	public void setCode(IDVO code) {
 		if (code != null) {
 			this.code = (OpsCodeVO) code.getVo();
-			//in.setCodeId(code.getId());
 		} else {
 			this.code = null;
 		}
@@ -361,7 +358,7 @@ public class ProcedureBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

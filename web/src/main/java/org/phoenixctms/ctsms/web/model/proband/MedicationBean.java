@@ -51,12 +51,9 @@ public class MedicationBean extends ManagedBeanBase {
 			DiagnosisOutVO diagnosisVO = out.getDiagnosis();
 			ProcedureOutVO procedureVO = out.getProcedure();
 			AspVO asp = out.getAsp();
-			// VariablePeriodVO dosePeriodVO = out.getDosePeriod();
 			in.setComment(out.getComment());
 			in.setDoseUnit(out.getDoseUnit());
 			in.setDoseValue(out.getDoseValue());
-			// in.setDosePeriod(dosePeriodVO == null ? null : dosePeriodVO.getPeriod());
-			// in.setDosePeriodDays(out.getDosePeriodDays());
 			in.setDiagnosisId(diagnosisVO == null ? null : diagnosisVO.getId());
 			in.setId(out.getId());
 			in.setProbandId(probandVO == null ? null : probandVO.getId());
@@ -78,10 +75,6 @@ public class MedicationBean extends ManagedBeanBase {
 			in.setComment(Messages.getString(MessageCodes.MEDICATION_COMMENT_PRESET));
 			in.setDoseUnit(Messages.getString(MessageCodes.MEDICATION_DOSE_UNIT_PRESET));
 			in.setDoseValue(Settings.getFloatNullable(SettingCodes.MEDICATION_DOSE_VALUE_PRESET, Bundle.SETTINGS, DefaultSettings.MEDICATION_DOSE_VALUE_PRESET));
-			// in.setDosePeriod(Settings.getVariablePeriod(SettingCodes.MEDICATION_DOSE_PERIOD_PRESET, Bundle.SETTINGS,
-			// DefaultSettings.MEDICATION_DOSE_PERIOD_PRESET));
-			// in.setDosePeriodDays(Settings.getLongNullable(SettingCodes.MEDICATION_DOSE_PERIOD_DAYS_PRESET, Bundle.SETTINGS,
-			// DefaultSettings.MEDICATION_DOSE_PERIOD_DAYS_PRESET));
 			in.setDiagnosisId(null);
 			in.setId(null);
 			in.setProbandId(probandId);
@@ -124,7 +117,7 @@ public class MedicationBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -162,7 +155,7 @@ public class MedicationBean extends ManagedBeanBase {
 			IDVO.transformVoCollection(aspVOs);
 			return (List<IDVO>) aspVOs;
 		} catch (ClassCastException e) {
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -174,7 +167,7 @@ public class MedicationBean extends ManagedBeanBase {
 		Collection<String> units = null;
 		try {
 			units = WebUtil.getServiceLocator().getToolsService().completeMedicationDoseUnit(WebUtil.getAuthentication(), query, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -193,7 +186,7 @@ public class MedicationBean extends ManagedBeanBase {
 			IDVO.transformVoCollection(aspSubstanceVOs);
 			return (List<IDVO>) aspSubstanceVOs;
 		} catch (ClassCastException e) {
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -214,7 +207,7 @@ public class MedicationBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -396,7 +389,7 @@ public class MedicationBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -439,11 +432,6 @@ public class MedicationBean extends ManagedBeanBase {
 		}
 		in.getSubstanceIds().clear();
 		Iterator<AspSubstanceVO> it = substances.iterator();
-		// if (asp != null) {
-		// it = asp.getSubstances().iterator();
-		// } else {
-		// it = substances.iterator();
-		// }
 		while (it.hasNext()) {
 			AspSubstanceVO substance = it.next();
 			if (substance != null) {
@@ -453,21 +441,13 @@ public class MedicationBean extends ManagedBeanBase {
 		if (in.getDoseValue() == null) {
 			in.setDoseUnit(null);
 		}
-		// if (in.getDiagnosisId() != null || in.getProcedureId() != null) {
-		// in.setStart(null);
-		// in.setStop(null);
-		// }
 	}
 
 	public void setAsp(IDVO asp) {
 		if (asp != null) {
 			this.asp = (AspVO) asp.getVo();
-			// in.setAspId(asp.getId());
-			// substances.clear();
-			// substances.addAll(this.asp.getSubstances());
 		} else {
 			this.asp = null;
-			// in.setAspId(null);
 		}
 	}
 
@@ -506,7 +486,7 @@ public class MedicationBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

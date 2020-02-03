@@ -34,7 +34,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="massmail")
+@Api(value = "massmail")
 @Path("/massmailrecipient")
 public final class MassMailRecipientResource {
 
@@ -64,7 +64,6 @@ public final class MassMailRecipientResource {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/mail/attachments/{index}/head")

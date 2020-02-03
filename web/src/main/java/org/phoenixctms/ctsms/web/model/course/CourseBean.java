@@ -106,7 +106,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			VariablePeriodVO validityPeriodVO = null;
 			try {
 				validityPeriodVO = WebUtil.getServiceLocator().getToolsService().getLocalizedVariablePeriod(WebUtil.getAuthentication(), in.getValidityPeriod());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -216,7 +216,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -267,7 +267,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -400,7 +400,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -417,7 +417,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -434,7 +434,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				throw e;
 			}
 		}
@@ -624,8 +624,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
 		Long count = (out == null ? null : WebUtil.getLecturerCount(in.getId(), null));
 		tabCountMap.put(JSValues.AJAX_LECTURER_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_LECTURER_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.LECTURERS_TAB_TITLE, MessageCodes.LECTURERS_TAB_TITLE_WITH_COUNT, count));
@@ -653,7 +651,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		renewalsRoot.getChildren().clear();
 		precedingCoursesRoot.getChildren().clear();
 		if (out != null) {
-			// courseOutVOtoRenewalTreeNode1
 			courseOutVOtoPrecedingCourseTreeNode(out, precedingCoursesRoot, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
@@ -663,7 +660,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
 		}
 		if (out != null) {
-			// courseOutVOtoPrecedingCourseTreeNode1
 			courseOutVOtoRenewalTreeNode(out, renewalsRoot, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH),
@@ -678,7 +674,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionPresetId());
 		loadSelectedSection();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, out.getDeferredDeleteReason());
 		}
 	}
@@ -733,7 +729,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH));
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -799,7 +795,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

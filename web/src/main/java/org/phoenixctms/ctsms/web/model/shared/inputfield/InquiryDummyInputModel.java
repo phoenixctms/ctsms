@@ -17,7 +17,6 @@ public class InquiryDummyInputModel extends InquiryInputModel {
 
 	@Override
 	public Color getFieldColor() {
-		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR));
 		return Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR);
 	}
 

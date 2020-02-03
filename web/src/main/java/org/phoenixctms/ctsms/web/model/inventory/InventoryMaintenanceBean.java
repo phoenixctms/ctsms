@@ -140,8 +140,6 @@ public class InventoryMaintenanceBean extends ManagedBeanBase implements Variabl
 	@Override
 	public String addAction() {
 		MaintenanceScheduleItemInVO backup = new MaintenanceScheduleItemInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {

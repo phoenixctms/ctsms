@@ -39,7 +39,7 @@ public class BeaconServlet extends FileServletBase {
 		if (!WebUtil.isTrustedReferer(request)) {
 			try {
 				WebUtil.getServiceLocator().getToolsService().markMassMailRead(beacon);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException|AuthenticationException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException | AuthenticationException e) {
 			}
 		}
 		return new FileStream() {
@@ -66,7 +66,6 @@ public class BeaconServlet extends FileServletBase {
 
 			@Override
 			public boolean isNotFound() {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		};

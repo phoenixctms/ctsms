@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
-import io.swagger.annotations.Api;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -27,7 +25,9 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import com.google.gson.JsonElement;
 import com.sun.jersey.api.NotFoundException;
 
-@Api(value="shared")
+import io.swagger.annotations.Api;
+
+@Api(value = "shared")
 @Path("/selectionset")
 public final class SelectionSetResource {
 
@@ -51,8 +51,7 @@ public final class SelectionSetResource {
 	};
 	private final static Class<?> SERVICE_INTERFACE = SelectionSetService.class;
 	public final static SelectionSetIndex INDEX = new SelectionSetIndex(getIndexNode(
-			ResourceUtils.getMethodPath(SelectionSetResource.class, "get").replaceFirst("/\\{resource\\}", ""), // "index"),
-			getArgsUriPart("", new AuthenticationVO())));
+			ResourceUtils.getMethodPath(SelectionSetResource.class, "get").replaceFirst("/\\{resource\\}", ""), getArgsUriPart("", new AuthenticationVO())));
 
 	private static ArgsUriPart getArgsUriPart(String resource, AuthenticationVO auth) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, SELECTION_SET_SERVICE_METHOD_NAME_TRANSFORMER);

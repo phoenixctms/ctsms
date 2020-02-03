@@ -73,12 +73,6 @@ public final class WebUtil {
 		private ColorOpacity(final String suffix) {
 			this.suffix = suffix;
 		}
-		// public float alpha() {
-		// if (this.equals(ALPHA100)) {
-		// return 1.0f;
-		// }
-		// return Float.parseFloat(suffix.substring(1))/100.0f;
-		// }
 
 		@Override
 		public String toString() {
@@ -101,7 +95,6 @@ public final class WebUtil {
 	public final static String ID_SEPARATOR_STRING = ",";
 	public final static Pattern ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ID_SEPARATOR_STRING));
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
-	// private final static String BASE64_CHARSET = "UTF8";
 	private final static String REFERER_HEADER_NAME = "Referer";
 	public final static String EVENT_CONTEXT_VIEW_ID = "viewId";
 	public final static String FILE_TITLE_PSF_PROPERTY_NAME = "title";
@@ -123,55 +116,6 @@ public final class WebUtil {
 	public static final String PARENT_NODE_TYPE = "parent";
 	public static final String LEAF_NODE_TYPE = "leaf";
 	public static final String JS_NULL = "null";
-	// public final static String VISIT_SCHEDULE_ITEM_GROUP_TOKEN_PSF_PROPERTY_NAME = "group.token";
-	// public final static String VISIT_SCHEDULE_ITEM_VISIT_TOKEN_PSF_PROPERTY_NAME = "visit.token";
-	// public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
-	// new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
-	// new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
-	// new GsonExclusionStrategy(InventoryOutVO.class, "children"),
-	// new GsonExclusionStrategy(StaffOutVO.class, "children"),
-	// new GsonExclusionStrategy(CourseOutVO.class, "renewals"),
-	// new GsonExclusionStrategy(CourseOutVO.class, "precedingCourses"),
-	// // new GsonExclusionStrategy(InputFieldOutVO.class, "selectionSetValues"),
-	// new GsonExclusionStrategy(InputFieldSelectionSetValueOutVO.class, "field"),
-	// // new GsonExclusionStrategy(CriteriaOutVO.class, "criterions"),
-	// new GsonExclusionStrategy(CriterionOutVO.class, "criteria"),
-	// // new GsonExclusionStrategy(ProbandListEntryOutVO.class, "lastStatus"),
-	// new GsonExclusionStrategy(ProbandListStatusEntryOutVO.class, "listEntry"),
-	// new GsonExclusionStrategy(ProbandOutVO.class, "children"),
-	// new GsonExclusionStrategy(ProbandOutVO.class, "parents"),
-	// };
-	// public static final HashMap<Class, JsonSerializer> GSON_SHORTCUT_SERIALISATIONS = new HashMap<Class, JsonSerializer>();
-	// static {
-	// GSON_SHORTCUT_SERIALISATIONS.put(UserOutVO.class, new JsonSerializer<UserOutVO>() {
-	//
-	// @Override
-	// public JsonElement serialize(UserOutVO src, Type typeOfSrc, JsonSerializationContext context) {
-	// JsonObject object = new JsonObject();
-	// object.addProperty("id", src.getId());
-	// object.addProperty("userName", src.getName());
-	// object.addProperty("staffName", src.getIdentity() != null ? src.getIdentity().getName() : null);
-	// object.addProperty("staffInitials", src.getIdentity() != null ? src.getIdentity().getInitials() : null);
-	// return object;
-	// }
-	// }
-	// );
-	// }
-	// private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
-	// GSON_SHORTCUT_SERIALISATIONS
-	// ).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
-	// .serializeNulls()
-	// .setDateFormat(CommonUtil.INPUT_DATETIME_PATTERN)
-	// .create();
-	// private final static Gson VO_JSON_SERIALIZER = JsUtil.registerGsonTypeAdapters(new GsonBuilder(),
-	// JsUtil.GSON_SHORTCUT_SERIALISATIONS
-	// ).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
-	// .serializeNulls()
-	// .setDateFormat(DateUtil.JSON_DATETIME_PATTERN)
-	// .create();
-	// https://groups.google.com/forum/#!topic/google-gson/u6hq2OVpszc
-	// Yes, it's threadsafe. But then again, a JsonParser has no fields at all, so it doesn't use much memory, anyway. So if it's more work to reuse the same instance, it might not
-	// be worth it.
 	private final static Gson JSON_BEAUTIFIER = new GsonBuilder().setPrettyPrinting()
 			.serializeNulls()
 			.setDateFormat(JsUtil.JSON_DATETIME_PATTERN)
@@ -462,25 +406,6 @@ public final class WebUtil {
 		return url.toString();
 	}
 
-	// public static String decodeBase64(String base64String) {
-	// if (base64String != null && base64String.length() > 0 && Base64.isBase64(base64String)) {
-	// try {
-	// return new String(Base64.decodeBase64(base64String), BASE64_CHARSET);
-	// } catch (UnsupportedEncodingException e) {
-	// }
-	// }
-	// return "";
-	// }
-	//
-	// public static String encodeBase64(String string, boolean urlSafe) { // url safe
-	// if (string != null && string.length() > 0) {
-	// try {
-	// return new String(Base64.encodeBase64(string.getBytes(BASE64_CHARSET), false, urlSafe, Integer.MAX_VALUE));
-	// } catch (UnsupportedEncodingException e) {
-	// }
-	// }
-	// return "";
-	// }
 	public static String escapeHtml(String string) {
 		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(string);
 	}
@@ -564,20 +489,15 @@ public final class WebUtil {
 	}
 
 	public static AddressTypeVO getAddressType(Long addressTypeId) {
-		// AddressTypeVO type = null; // (AddressTypeVO) getSelectionSetServiceCache(AddressTypeVO.class, id);
-		// if (type == null) {
 		if (addressTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getAddressType(getAuthentication(), addressTypeId);
-				// putSelectionSetServiceCache(id, type);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return type;
 	}
 
 	public static ArrayList<SelectItem> getAllContactDetailTypes() {
@@ -595,7 +515,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ContactDetailTypeVO typeVO = it.next();
 				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-				// putSelectionSetServiceCache(typeVO.getId(), typeVO);
 			}
 		} else {
 			types = new ArrayList<SelectItem>();
@@ -618,7 +537,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				CourseCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -641,7 +559,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				CourseParticipationStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -664,7 +581,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				CvSectionVO sectionVO = it.next();
 				cvSections.add(new SelectItem(sectionVO.getId().toString(), sectionVO.getName()));
-				// putSelectionSetServiceCache(sectionVO.getId(), sectionVO);
 			}
 		} else {
 			cvSections = new ArrayList<SelectItem>();
@@ -687,7 +603,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				DepartmentVO departmentVO = it.next();
 				departments.add(new SelectItem(departmentVO.getId().toString(), departmentVO.getName()));
-				// putSelectionSetServiceCache(departmentVO.getId(), departmentVO);
 			}
 		} else {
 			departments = new ArrayList<SelectItem>();
@@ -710,7 +625,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ECRFFieldStatusTypeVO typeVO = it.next();
 				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-				// putSelectionSetServiceCache(typeVO.getId(), typeVO);
 			}
 		} else {
 			types = new ArrayList<SelectItem>();
@@ -733,7 +647,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				InventoryCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -756,7 +669,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				InventoryStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -779,7 +691,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				LecturerCompetenceVO competenceVO = it.next();
 				competences.add(new SelectItem(competenceVO.getId().toString(), competenceVO.getName()));
-				// putSelectionSetServiceCache(competenceVO.getId(), competenceVO);
 			}
 		} else {
 			competences = new ArrayList<SelectItem>();
@@ -802,7 +713,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				MaintenanceTypeVO maintenanceTypeVO = it.next();
 				maintenanceTypes.add(new SelectItem(maintenanceTypeVO.getId().toString(), maintenanceTypeVO.getName()));
-				// putSelectionSetServiceCache(maintenanceTypeVO.getId(), maintenanceTypeVO);
 			}
 		} else {
 			maintenanceTypes = new ArrayList<SelectItem>();
@@ -825,7 +735,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				MassMailStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -848,7 +757,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				MassMailTypeVO massMailTypeVO = it.next();
 				massMailTypes.add(new SelectItem(massMailTypeVO.getId().toString(), massMailTypeVO.getName()));
-				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
 			}
 		} else {
 			massMailTypes = new ArrayList<SelectItem>();
@@ -911,7 +819,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				PrivacyConsentStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -934,7 +841,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ProbandCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -957,7 +863,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ProbandListStatusTypeVO probandListStatusTypeVO = it.next();
 				probandListStatusTypes.add(new SelectItem(probandListStatusTypeVO.getId().toString(), probandListStatusTypeVO.getName()));
-				// putSelectionSetServiceCache(probandListStatusTypeVO.getId(), probandListStatusTypeVO);
 			}
 		} else {
 			probandListStatusTypes = new ArrayList<SelectItem>();
@@ -980,7 +885,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ProbandStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -1003,7 +907,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				SponsoringTypeVO sponsoringTypeVO = it.next();
 				sponsoringTypes.add(new SelectItem(sponsoringTypeVO.getId().toString(), sponsoringTypeVO.getName()));
-				// putSelectionSetServiceCache(sponsoringTypeVO.getId(), sponsoringTypeVO);
 			}
 		} else {
 			sponsoringTypes = new ArrayList<SelectItem>();
@@ -1026,7 +929,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				StaffCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -1049,7 +951,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				StaffStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -1072,7 +973,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				SurveyStatusTypeVO surveyStatusTypeVO = it.next();
 				surveyStatusTypes.add(new SelectItem(surveyStatusTypeVO.getId().toString(), surveyStatusTypeVO.getName()));
-				// putSelectionSetServiceCache(surveyStatusTypeVO.getId(), surveyStatusTypeVO);
 			}
 		} else {
 			surveyStatusTypes = new ArrayList<SelectItem>();
@@ -1095,7 +995,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				TeamMemberRoleVO roleVO = it.next();
 				roles.add(new SelectItem(roleVO.getId().toString(), roleVO.getName()));
-				// putSelectionSetServiceCache(roleVO.getId(), roleVO);
 			}
 		} else {
 			roles = new ArrayList<SelectItem>();
@@ -1118,7 +1017,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				TimelineEventTypeVO eventTypeVO = it.next();
 				timelineEventTypes.add(new SelectItem(eventTypeVO.getId().toString(), eventTypeVO.getName()));
-				// putSelectionSetServiceCache(eventTypeVO.getId(), eventTypeVO);
 			}
 		} else {
 			timelineEventTypes = new ArrayList<SelectItem>();
@@ -1141,7 +1039,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				TrialStatusTypeVO statusTypeVO = it.next();
 				statusTypes.add(new SelectItem(statusTypeVO.getId().toString(), statusTypeVO.getName()));
-				// putSelectionSetServiceCache(statusTypeVO.getId(), statusTypeVO);
 			}
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
@@ -1164,7 +1061,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				TrialTypeVO trialTypeVO = it.next();
 				trialTypes.add(new SelectItem(trialTypeVO.getId().toString(), trialTypeVO.getName()));
-				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
 			}
 		} else {
 			trialTypes = new ArrayList<SelectItem>();
@@ -1187,7 +1083,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				VisitTypeVO visitTypeVO = it.next();
 				visitTypes.add(new SelectItem(visitTypeVO.getId().toString(), visitTypeVO.getName()));
-				// putSelectionSetServiceCache(visitTypeVO.getId(), visitTypeVO);
 			}
 		} else {
 			visitTypes = new ArrayList<SelectItem>();
@@ -1290,7 +1185,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				AuthenticationTypeVO methodVO = it.next();
 				methods.add(new SelectItem(methodVO.getMethod().name(), methodVO.getName()));
-				// putSelectionSetServiceCache(methodVO.getMethod(), methodVO);
 			}
 		} else {
 			methods = new ArrayList<SelectItem>();
@@ -1315,7 +1209,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				HyperlinkCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -1340,7 +1233,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				JobTypeVO typeVO = it.next();
 				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			types = new ArrayList<SelectItem>();
@@ -1365,7 +1257,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				JournalCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -1388,7 +1279,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				AddressTypeVO typeVO = it.next();
 				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-				// putSelectionSetServiceCache(typeVO.getId(), typeVO);
 			}
 		} else {
 			types = new ArrayList<SelectItem>();
@@ -1433,7 +1323,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				AddressTypeVO typeVO = it.next();
 				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-				// putSelectionSetServiceCache(typeVO.getId(), typeVO);
 			}
 		} else {
 			types = new ArrayList<SelectItem>();
@@ -1500,7 +1389,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				BooleanVO booleanVO = it.next();
 				booleans.add(new SelectItem(((Boolean) (inverse ? !booleanVO.getValue() : booleanVO.getValue())).toString(), booleanVO.getName()));
-				// putSelectionSetServiceCache(booleanVO.getValue(), booleanVO);
 			}
 			if (triState) {
 				booleans.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
@@ -1532,20 +1420,15 @@ public final class WebUtil {
 	}
 
 	public static ContactDetailTypeVO getContactDetailType(Long detailTypeId) {
-		// ContactDetailTypeVO type = null; // (ContactDetailTypeVO) getSelectionSetServiceCache(ContactDetailTypeVO.class, id);
-		// if (type == null) {
 		if (detailTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getContactDetailType(getAuthentication(), detailTypeId);
-				// putSelectionSetServiceCache(id, type);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return type;
 	}
 
 	public static CourseOutVO getCourse(Long courseId, Integer maxInstances, Integer maxPrecedingCoursesDepth, Integer maxRenewalsDepth) {
@@ -1561,20 +1444,15 @@ public final class WebUtil {
 	}
 
 	public static CourseCategoryVO getCourseCategory(Long categoryId) {
-		// CourseCategoryVO category = null; // (CourseCategoryVO) getSelectionSetServiceCache(CourseCategoryVO.class, id);
-		// if (category == null) {
 		if (categoryId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getCourseCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return category;
 	}
 
 	public static Boolean getCourseExpired(Date today, CourseInVO course) {
@@ -1706,20 +1584,15 @@ public final class WebUtil {
 	}
 
 	public static CvSectionVO getCvSection(Long sectionId) {
-		// CvSectionVO cvSection = null; // (CvSectionVO) getSelectionSetServiceCache(CvSectionVO.class, id);
-		// if (cvSection == null) {
 		if (sectionId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getCvSection(getAuthentication(), sectionId);
-				// putSelectionSetServiceCache(id, cvSection);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return cvSection;
 	}
 
 	public static ArrayList<SelectItem> getCvSections(Long sectionId) {
@@ -1969,13 +1842,9 @@ public final class WebUtil {
 	}
 
 	public static Long getEcrfCount(Long trialId) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (trialId != null) {
 			try {
 				return getServiceLocator().getTrialService().getEcrfCount(getAuthentication(), trialId, null, null, null);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2124,24 +1993,18 @@ public final class WebUtil {
 	}
 
 	public static ECRFStatusTypeVO getEcrfStatusType(Long statusTypeId) {
-		// TrialStatusTypeVO statusType = null; // (TrialStatusTypeVO) getSelectionSetServiceCache(TrialStatusTypeVO.class, id);
-		// if (statusType == null) {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getEcrfStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return statusType;
 	}
 
 	public static Collection<ECRFStatusTypeVO> getEcrfStatusTypes() {
-		//Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			return getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -2149,16 +2012,6 @@ public final class WebUtil {
 			WebUtil.publishException(e);
 		}
 		return new ArrayList<ECRFStatusTypeVO>();
-		//		if (statusTypeVOs != null) {
-		//			statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
-		//			Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
-		//			while (it.hasNext()) {
-		//				ECRFStatusTypeVO typeVO = it.next();
-		//				statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-		//			}
-		//		} else {
-		//			statusTypes = new ArrayList<SelectItem>();
-		//		}
 	}
 
 	public static String getEmailDomainName() {
@@ -2215,7 +2068,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				EventImportanceVO importanceVO = it.next();
 				importances.add(new SelectItem(importanceVO.getImportance().name(), importanceVO.getName()));
-				// putSelectionSetServiceCache(importanceVO.getImportance(), importanceVO);
 			}
 		} else {
 			importances = new ArrayList<SelectItem>();
@@ -2293,30 +2145,10 @@ public final class WebUtil {
 		return "";
 	}
 
-	//	public static HyperlinkCategoryVO getHyperlinkCategory(Long categoryId) {
-	//		// HyperlinkCategoryVO category = null; // (HyperlinkCategoryVO) getSelectionSetServiceCache(HyperlinkCategoryVO.class, id);
-	//		// if (category == null) {
-	//		if (categoryId != null) {
-	//			try {
-	//				return getServiceLocator().getSelectionSetService().getHyperlinkCategory(getAuthentication(), categoryId);
-	//				// putSelectionSetServiceCache(id, category);
-	//			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-	//			} catch (AuthenticationException e) {
-	//				publishException(e);
-	//			}
-	//		}
-	//		return null;
-	//		// }
-	//		// return category;
-	//	}
 	public static Long getHyperlinkCount(HyperlinkModule module, Long id) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getHyperlinkService().getHyperlinkCount(getAuthentication(), module, id, null);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2326,13 +2158,9 @@ public final class WebUtil {
 	}
 
 	public static Long getJobCount(JobModule module, Long id) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getJobService().getJobCount(getAuthentication(), module, id);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2411,7 +2239,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				InputFieldTypeVO fieldTypeVO = it.next();
 				fieldTypes.add(new SelectItem(fieldTypeVO.getType().name(), fieldTypeVO.getName()));
-				// putSelectionSetServiceCache(fieldTypeVO.getType(), fieldTypeVO);
 			}
 		} else {
 			fieldTypes = new ArrayList<SelectItem>();
@@ -2538,20 +2365,15 @@ public final class WebUtil {
 	}
 
 	public static InventoryCategoryVO getInventoryCategory(Long categoryId) {
-		// InventoryCategoryVO category = null; // (InventoryCategoryVO) getSelectionSetServiceCache(InventoryCategoryVO.class, id);
-		// if (category == null) {
 		if (categoryId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getInventoryCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return category;
 	}
 
 	public static InventoryStatusEntryOutVO getInventoryStatusEntry(Long inventoryStatusEntryId) {
@@ -2579,20 +2401,15 @@ public final class WebUtil {
 	}
 
 	public static InventoryStatusTypeVO getInventoryStatusType(Long statusTypeId) {
-		// InventoryStatusTypeVO statusType = null; // (InventoryStatusTypeVO) getSelectionSetServiceCache(InventoryStatusTypeVO.class, id);
-		// if (statusType == null) {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getInventoryStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return statusType;
 	}
 
 	public static Long getInventoryTagValueCount(Long inventoryId) {
@@ -2608,30 +2425,21 @@ public final class WebUtil {
 	}
 
 	public static JournalCategoryVO getJournalCategory(Long categoryId) {
-		// JournalCategoryVO category = null; // (JournalCategoryVO) getSelectionSetServiceCache(JournalCategoryVO.class, id);
-		// if (category == null) {
 		if (categoryId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getJournalCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return category;
 	}
 
 	public static Long getJournalCount(JournalModule module, Long id) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getJournalService().getJournalCount(getAuthentication(), module, id);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2779,32 +2587,7 @@ public final class WebUtil {
 		}
 		return null;
 	}
-	// public static ArrayList<SelectItem> getSupportedLocales() {
-	// return getLocales(getLocale());
-	// }
 
-	// public static ArrayList<Locale> getLocales() {
-	// Collection<LocaleVO> localeVOs = null;
-	// ArrayList<Locale> locales;
-	// try {
-	// localeVOs = getServiceLocator().getSelectionSetService().getSupportedLocales(getAuthentication());
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// if (localeVOs != null) {
-	// locales = new ArrayList<Locale>(localeVOs.size());
-	// Iterator<LocaleVO> it = localeVOs.iterator();
-	// while (it.hasNext()) {
-	// locales.add(CommonUtil.localeFromString(it.next().getLanguage()));
-	// }
-	// } else {
-	// locales = new ArrayList<Locale>();
-	// }
-	// return locales;
-	// }
 	public static MassMailOutVO getMassMail(Long massMailId) {
 		if (massMailId != null) {
 			try {
@@ -2873,7 +2656,6 @@ public final class WebUtil {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getMassMailStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2954,13 +2736,9 @@ public final class WebUtil {
 	}
 
 	public static Long getMoneyTransferCount(Long probandId, Long bankAccountId) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (probandId != null || bankAccountId != null) {
 			try {
 				return getServiceLocator().getProbandService().getMoneyTransferCount(getAuthentication(), probandId, bankAccountId);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -3125,7 +2903,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				PaymentMethodVO paymentMethodVO = it.next();
 				paymentMethods.add(new SelectItem(paymentMethodVO.getPaymentMethod().name(), paymentMethodVO.getName()));
-				// putSelectionSetServiceCache(paymentMethodVO.getPaymentMethod(), paymentMethodVO);
 			}
 		} else {
 			paymentMethods = new ArrayList<SelectItem>();
@@ -3158,20 +2935,15 @@ public final class WebUtil {
 	}
 
 	public static ProbandCategoryVO getProbandCategory(Long categoryId) {
-		// ProbandCategoryVO category = null; // (ProbandCategoryVO) getSelectionSetServiceCache(ProbandCategoryVO.class, id);
-		// if (category == null) {
 		if (categoryId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getProbandCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return category;
 	}
 
 	public static Long getProbandContactDetailValueCount(Long probandId) {
@@ -3387,20 +3159,15 @@ public final class WebUtil {
 	}
 
 	public static ProbandStatusTypeVO getProbandStatusType(Long statusTypeId) {
-		// ProbandStatusTypeVO statusType = null; // (ProbandStatusTypeVO) getSelectionSetServiceCache(ProbandStatusTypeVO.class, id);
-		// if (statusType == null) {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getProbandStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return statusType;
 	}
 
 	public static Long getProbandTagValueCount(Long probandId) {
@@ -3467,7 +3234,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				RandomizationModeVO modeVO = it.next();
 				modes.add(new SelectItem(modeVO.getMode().name(), modeVO.getName()));
-				// putSelectionSetServiceCache(sexVO.getSex(), sexVO);
 			}
 		} else {
 			modes = new ArrayList<SelectItem>();
@@ -3490,7 +3256,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				JobStatusVO statusVO = it.next();
 				states.add(new SelectItem(statusVO.getJobStatus().name(), statusVO.getName()));
-				// putSelectionSetServiceCache(sexVO.getSex(), sexVO);
 			}
 		} else {
 			states = new ArrayList<SelectItem>();
@@ -3510,13 +3275,6 @@ public final class WebUtil {
 		return "";
 	}
 
-	// public static Object getSelectionSetServiceCache(Class type, Object key) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// return sessionScopeBean.getSelectionSetServiceCache(type, key);
-	// }
-	// return null;
-	// }
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
 		Collection<TrialOutVO> trialVOs = null;
 		ArrayList<SelectItem> trials;
@@ -3541,9 +3299,6 @@ public final class WebUtil {
 		return trials;
 	}
 
-	// public static String getSeriesColors(ArrayList<Color> colors) {
-	// return getSeriesColors(colors, null);
-	// }
 	public static String getRemoteHost() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
@@ -3560,13 +3315,9 @@ public final class WebUtil {
 	}
 
 	public static Long getSelectionSetValueCount(Long inputFieldId) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (inputFieldId != null) {
 			try {
 				return getServiceLocator().getInputFieldService().getSelectionSetValueCount(getAuthentication(), inputFieldId, null);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -3575,7 +3326,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static String getSeriesColors(ArrayList<Color> colors) { // , ColorOpacity alpha) {
+	public static String getSeriesColors(ArrayList<Color> colors) {
 		if (colors != null && colors.size() > 0) {
 			StringBuilder seriesColors = new StringBuilder();
 			Iterator<Color> colorsIt = colors.iterator();
@@ -3583,20 +3334,11 @@ public final class WebUtil {
 				if (seriesColors.length() > 0) {
 					seriesColors.append(",");
 				}
-				// if (alpha == null) {
 				seriesColors.append(colorsIt.next().getValue());
-				// } else {
-				// java.awt.Color rgb = CommonUtil.convertColor(colorsIt.next());
-				// seriesColors.append(String.format("rgba(%d,%d,%d,%f)", rgb.getRed(), rgb.getGreen(), rgb.getBlue(), alpha.alpha()));
-				// }
 			}
 			return seriesColors.toString();
 		}
-		// if (alpha == null) {
 		return Color.BLACK.getValue();
-		// } else {
-		// return String.format("rgba(0,0,0,%f)", alpha.alpha());
-		// }
 	}
 
 	public static ServiceLocator getServiceLocator() {
@@ -3636,7 +3378,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				SexVO sexVO = it.next();
 				sexes.add(new SelectItem(sexVO.getSex().name(), sexVO.getName()));
-				// putSelectionSetServiceCache(sexVO.getSex(), sexVO);
 			}
 		} else {
 			sexes = new ArrayList<SelectItem>();
@@ -3681,20 +3422,15 @@ public final class WebUtil {
 	}
 
 	public static StaffCategoryVO getStaffCategory(Long categoryId) {
-		// StaffCategoryVO category = null; // (StaffCategoryVO) getSelectionSetServiceCache(StaffCategoryVO.class, id);
-		// if (category == null) {
 		if (categoryId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getStaffCategory(getAuthentication(), categoryId);
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return category;
 	}
 
 	public static Long getStaffContactDetailValueCount(Long staffId) {
@@ -3746,20 +3482,15 @@ public final class WebUtil {
 	}
 
 	public static StaffStatusTypeVO getStaffStatusType(Long statusTypeId) {
-		// StaffStatusTypeVO statusType = null; // (StaffStatusTypeVO) getSelectionSetServiceCache(StaffStatusTypeVO.class, id);
-		// if (statusType == null) {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getStaffStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return statusType;
 	}
 
 	public static Long getStaffTagValueCount(Long staffId) {
@@ -3858,20 +3589,15 @@ public final class WebUtil {
 	}
 
 	public static TimelineEventTypeVO getTimelineEventType(Long eventTypeId) {
-		// TimelineEventTypeVO eventType = null; // (TimelineEventTypeVO) getSelectionSetServiceCache(TimelineEventTypeVO.class, id);
-		// if (eventType == null) {
 		if (eventTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getTimelineEventType(getAuthentication(), eventTypeId);
-				// putSelectionSetServiceCache(id, eventType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return eventType;
 	}
 
 	public static TimeZone getTimeZone() {
@@ -3893,49 +3619,11 @@ public final class WebUtil {
 		}
 		return null;
 	}
-	// public static long getTotalEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getTotal();
-	// }
-	// }
-	// return result;
-	// }
 
-	// public static ArrayList<SelectItem> getTimeZones() {
-	// Collection<TimeZoneVO> timeZoneVOs = null;
-	// ArrayList<SelectItem> timeZones;
-	// try {
-	// timeZoneVOs = getServiceLocator().getSelectionSetService().getTimeZones(getAuthentication());
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// if (timeZoneVOs != null) {
-	// timeZones = new ArrayList<SelectItem>(timeZoneVOs.size());
-	// Iterator<TimeZoneVO> it = timeZoneVOs.iterator();
-	// while (it.hasNext()) {
-	// TimeZoneVO timeZone = it.next();
-	// timeZones.add(new SelectItem(timeZone.getTimeZoneID(), timeZone.getName()));
-	// //timeZones.add(CommonUtil.timeZoneFromString(it.next().getTimeZone()));
-	// }
-	// } else {
-	// timeZones = new ArrayList<SelectItem>();
-	// }
-	// return timeZones;
-	// }
 	public static Long getTotalFileCount(FileModule module, Long id) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, null, null);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -4012,12 +3700,9 @@ public final class WebUtil {
 		Long totalInquiryValueCount = 0L;
 		Long totalInquiryCount = 0L;
 		Long trialsWithoutInquiryValuesCount = null;
-		// ProbandOutVO probandVO = getProband(probandId, null, null, null);
 		Collection<TrialOutVO> trialVOs = null;
-		// if (probandVO != null && probandVO.getDepartment() != null) {
 		if (probandId != null) {
 			try {
-				// trialVOs = getServiceLocator().getTrialService().getTrialList(getAuthentication(), trialId, probandVO.getDepartment().getId(), null);
 				trialVOs = getServiceLocator().getProbandService().getInquiryTrials(getAuthentication(), probandId, active, activeSignup);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -4071,32 +3756,17 @@ public final class WebUtil {
 	}
 
 	public static TrialStatusTypeVO getTrialStatusType(Long statusTypeId) {
-		// TrialStatusTypeVO statusType = null; // (TrialStatusTypeVO) getSelectionSetServiceCache(TrialStatusTypeVO.class, id);
-		// if (statusType == null) {
 		if (statusTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getTrialStatusType(getAuthentication(), statusTypeId);
-				// putSelectionSetServiceCache(id, statusType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return statusType;
 	}
 
-	// public static long getUnresolvedEcrfFieldStatusCountSum(Collection<ECRFFieldStatusEntryCountVO> counts) {
-	// long result = 0l;
-	// if (counts != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// result += it.next().getUnresolved();
-	// }
-	// }
-	// return result;
-	// }
 	public static Long getTrialTagValueCount(Long trialId) {
 		if (trialId != null) {
 			try {
@@ -4243,7 +3913,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				VariablePeriodVO periodVO = it.next();
 				variablePeriods.add(new SelectItem(periodVO.getPeriod().name(), periodVO.getName()));
-				// putSelectionSetServiceCache(periodVO.getPeriod(), periodVO);
 			}
 		} else {
 			variablePeriods = new ArrayList<SelectItem>();
@@ -4278,7 +3947,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				CourseCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -4301,7 +3969,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				DepartmentVO departmentVO = it.next();
 				departments.add(new SelectItem(departmentVO.getId().toString(), departmentVO.getName()));
-				// putSelectionSetServiceCache(departmentVO.getId(), departmentVO);
 			}
 		} else {
 			departments = new ArrayList<SelectItem>();
@@ -4324,7 +3991,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				InventoryCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -4347,7 +4013,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				MassMailTypeVO massMailTypeVO = it.next();
 				massMailTypes.add(new SelectItem(massMailTypeVO.getId().toString(), massMailTypeVO.getName()));
-				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
 			}
 		} else {
 			massMailTypes = new ArrayList<SelectItem>();
@@ -4370,7 +4035,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				ProbandCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -4393,7 +4057,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				SponsoringTypeVO sponsoringTypeVO = it.next();
 				sponsoringTypes.add(new SelectItem(sponsoringTypeVO.getId().toString(), sponsoringTypeVO.getName()));
-				// putSelectionSetServiceCache(sponsoringTypeVO.getId(), sponsoringTypeVO);
 			}
 		} else {
 			sponsoringTypes = new ArrayList<SelectItem>();
@@ -4416,7 +4079,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				StaffCategoryVO categoryVO = it.next();
 				categories.add(new SelectItem(categoryVO.getId().toString(), categoryVO.getName()));
-				// putSelectionSetServiceCache(categoryVO.getId(), categoryVO);
 			}
 		} else {
 			categories = new ArrayList<SelectItem>();
@@ -4439,7 +4101,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				SurveyStatusTypeVO surveyStatusTypeVO = it.next();
 				surveyStatusTypes.add(new SelectItem(surveyStatusTypeVO.getId().toString(), surveyStatusTypeVO.getName()));
-				// putSelectionSetServiceCache(surveyStatusTypeVO.getId(), surveyStatusTypeVO);
 			}
 		} else {
 			surveyStatusTypes = new ArrayList<SelectItem>();
@@ -4462,7 +4123,6 @@ public final class WebUtil {
 			while (it.hasNext()) {
 				TrialTypeVO trialTypeVO = it.next();
 				trialTypes.add(new SelectItem(trialTypeVO.getId().toString(), trialTypeVO.getName()));
-				// putSelectionSetServiceCache(trialTypeVO.getId(), trialTypeVO);
 			}
 		} else {
 			trialTypes = new ArrayList<SelectItem>();
@@ -4531,13 +4191,9 @@ public final class WebUtil {
 	}
 
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
-		// Long count = null;
 		if (trialId != null || probandId != null) {
 			try {
 				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId);
-				// count = psf.getRowCount();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -4547,20 +4203,15 @@ public final class WebUtil {
 	}
 
 	public static VisitTypeVO getVisitType(Long visitTypeId) {
-		// VisitTypeVO visitType = null; // (VisitTypeVO) getSelectionSetServiceCache(VisitTypeVO.class, id);
-		// if (visitType == null) {
 		if (visitTypeId != null) {
 			try {
 				return getServiceLocator().getSelectionSetService().getVisitType(getAuthentication(), visitTypeId);
-				// putSelectionSetServiceCache(id, visitType);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
 			}
 		}
 		return null;
-		// }
-		// return visitType;
 	}
 
 	public static String getWindowNameUniqueToken() {
@@ -4590,9 +4241,6 @@ public final class WebUtil {
 		}
 	}
 
-	// public static String inputFieldVariableValueToJson(Object src) {
-	// return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
-	// }
 	public static String inventoryIdToName(Long id) {
 		if (id == null) {
 			return getNoInventoryPickedMessage();
@@ -4629,7 +4277,7 @@ public final class WebUtil {
 
 	public static boolean isDutySelfAllocationLocked(TrialOutVO trial, Date dutyRosterTurnStart, boolean isStaffAssigned) {
 		if (trial != null && dutyRosterTurnStart != null) {
-			if (trial.isDutySelfAllocationLocked() && isStaffAssigned) { // (isStaffAssigned || lockEmpty)) {
+			if (trial.isDutySelfAllocationLocked() && isStaffAssigned) {
 				if (trial.getDutySelfAllocationLockedUntil() == null && trial.getDutySelfAllocationLockedFrom() == null) {
 					return true;
 				} else if (trial.getDutySelfAllocationLockedUntil() != null && trial.getDutySelfAllocationLockedUntil().compareTo(dutyRosterTurnStart) > 0) {
@@ -4854,21 +4502,10 @@ public final class WebUtil {
 		}
 	}
 
-	// public static long perfDebug(String label, long t1) {
-	// long t2 = System.currentTimeMillis();
-	// System.out.println(label + (t2 - t1) + " ms");
-	// return t2;
-	// }
 	public static JsonElement parseJson(String json) {
 		return JSON_PARSER.parse(json);
 	}
 
-	// private static void putSelectionSetServiceCache(Object key, Object value) {
-	// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-	// if (sessionScopeBean != null) {
-	// sessionScopeBean.putSelectionSetServiceCache(key, value);
-	// }
-	// }
 	public static String probandIdToName(Long id) {
 		if (id == null) {
 			return getNoProbandPickedMessage();
@@ -4892,14 +4529,6 @@ public final class WebUtil {
 		}
 	}
 
-	// public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {
-	// Iterator<Entry<Class, JsonSerializer>> it = serialisations.entrySet().iterator();
-	// while (it.hasNext()) {
-	// Entry<Class, JsonSerializer> shortcut = it.next();
-	// builder.registerTypeAdapter(shortcut.getKey(), shortcut.getValue());
-	// }
-	// return builder;
-	// }
 	public static void publishException(Exception e) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(context, e);
@@ -5035,14 +4664,9 @@ public final class WebUtil {
 	}
 
 	public static void testPassword(String passwordToTest) {
-		// SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		// if (sessionScopeBean != null) {
 		if (!getSessionScopeBean().testPassword(passwordToTest)) {
 			throw new IllegalArgumentException(Messages.getString(MessageCodes.WRONG_PASSWORD));
 		}
-		// } else {
-		// throw new IllegalArgumentException(Messages.getString(MessageCodes.XX));
-		// }
 	}
 
 	public static boolean testPicker(CriterionPropertyVO propertyVO) {
@@ -5112,9 +4736,6 @@ public final class WebUtil {
 		}
 	}
 
-	// public static String voToJson(Object src) {
-	// return VO_JSON_SERIALIZER.toJson(src);
-	// }
 	public static String variablePeriodToString(VariablePeriodVO periodVO, Long days) {
 		if (periodVO != null) {
 			if (VariablePeriod.EXPLICIT.equals(periodVO.getPeriod())) {

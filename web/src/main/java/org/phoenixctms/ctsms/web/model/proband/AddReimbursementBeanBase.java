@@ -86,7 +86,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 			initSets(false);
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -204,8 +204,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	public String getAddTravelExpenseLabel() {
 		if (address != null) {
 			return Messages.getMessage(MessageCodes.ADD_TRAVEL_EXPENSE_ADDRESS_LABEL, address.getCivicName());
-			// CommonUtil.clipString(address.getCivicName(), Settings.getInt(SettingCodes.ADD_REIMBURSEMENT_COMMENT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
-			// DefaultSettings.ADD_REIMBURSEMENT_COMMENT_CLIP_MAX_LENGTH)));
 		} else {
 			return Messages.getString(MessageCodes.ADD_TRAVEL_EXPENSE_LABEL);
 		}
@@ -213,9 +211,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 
 	protected abstract String getComment();
 
-	// public String getAliquotReimbursementLabel() {
-	// return "";
-	// }
 	public float getDistance() {
 		return distance;
 	}
@@ -226,36 +221,9 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 
 	protected abstract String getReimbursementTitle();
 
-	// @Override
-	// public String getTitle() {
-	// if (out != null) {
-	// if (out.getTrial() != null) {
-	// if (!CommonUtil.isEmptyString(out.getCostType())) {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TRIAL_COST_TYPE_TITLE, Long.toString(out.getId()), WebUtil.trialOutVOToString(out.getTrial()), out
-	// .getMethod().getName(), out.getCostType(), out.getAmount(), WebUtil.getCurrencySymbol());
-	// } else {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TRIAL_TITLE, Long.toString(out.getId()), WebUtil.trialOutVOToString(out.getTrial()), out.getMethod()
-	// .getName(), out.getAmount(), WebUtil.getCurrencySymbol());
-	// }
-	// } else {
-	// if (!CommonUtil.isEmptyString(out.getCostType())) {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_COST_TYPE_TITLE, Long.toString(out.getId()), out.getMethod().getName(), out.getCostType(),
-	// out.getAmount(), WebUtil.getCurrencySymbol());
-	// } else {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TITLE, Long.toString(out.getId()), out.getMethod().getName(), out.getAmount(),
-	// WebUtil.getCurrencySymbol());
-	// }
-	// }
-	// } else {
-	// return Messages.getString(MessageCodes.CREATE_NEW_MONEY_TRANSFER);
-	// }
-	// }
 	public float getTicketExpenseAmount() {
 		return ticketExpenseAmount;
 	}
-	// public float getTravelExpenseFactor() {
-	// return travelExpenseFactor;
-	// }
 
 	public String getTicketType() {
 		return ticketType;
@@ -298,7 +266,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 			if (in.getProbandId() != null) {
 				try {
 					address = WebUtil.getServiceLocator().getProbandService().getWireTransferProbandAddress(WebUtil.getAuthentication(), in.getProbandId());
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -364,9 +332,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 		this.addReimbursement = addReimbursement;
 	}
 
-	// public void setTravelExpenseFactor(float travelExpenseFactor) {
-	// this.travelExpenseFactor = travelExpenseFactor;
-	// }
 	public void setAddTicketExpense(boolean addTicketExpense) {
 		this.addTicketExpense = addTicketExpense;
 	}
@@ -376,7 +341,6 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 	}
 
 	public void setDistance(float distance) {
-		// System.out.println(distance);
 		this.distance = distance;
 	}
 

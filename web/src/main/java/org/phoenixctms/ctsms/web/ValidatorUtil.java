@@ -16,10 +16,8 @@ public final class ValidatorUtil {
 	static {
 		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":update");
 		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":add");
-		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":bulk"); // Add");
-		// VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":bulkDelete");
+		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":bulk");
 		VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":check");
-		// VALIDATION_REQUIRED_COMPONENT_ID_PREFIXES.add(":addConfirmed");
 	}
 
 	public static boolean skipValidation() {

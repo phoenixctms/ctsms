@@ -27,13 +27,13 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 			if (collidingVisitScheduleItemModelCache.containsKey(probandStatusEntryId)) {
 				model = collidingVisitScheduleItemModelCache.get(probandStatusEntryId);
 			} else {
-				model = new CollidingVisitScheduleItemEagerModel(); // probandStatusEntryId, allProbandGroups);
+				model = new CollidingVisitScheduleItemEagerModel();
 				model.setProbandStatusEntryId(probandStatusEntryId);
 				model.setAllProbandGroups(allProbandGroups);
 				collidingVisitScheduleItemModelCache.put(probandStatusEntryId, model);
 			}
 		} else {
-			model = new CollidingVisitScheduleItemEagerModel(); // allProbandGroups);
+			model = new CollidingVisitScheduleItemEagerModel();
 			model.setAllProbandGroups(allProbandGroups);
 			model.initSets();
 		}
@@ -48,7 +48,7 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 			if (collidingVisitScheduleItemModelCache.containsKey(staffStatusEntryId)) {
 				model = collidingVisitScheduleItemModelCache.get(staffStatusEntryId);
 			} else {
-				model = new CollidingVisitScheduleItemEagerModel(); // staffStatusEntryId);
+				model = new CollidingVisitScheduleItemEagerModel();
 				model.setStaffStatusEntryId(staffStatusEntryId);
 				collidingVisitScheduleItemModelCache.put(staffStatusEntryId, model);
 			}
@@ -68,39 +68,19 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 		resetRows();
 	}
 
-	// public CollidingVisitScheduleItemEagerModel(boolean allProbandGroups) {
-	// super();
-	// this.allProbandGroups = allProbandGroups;
-	// initSets();
-	// }
-	//
-	// public CollidingVisitScheduleItemEagerModel(Long staffStatusEntryId) {
-	// super();
-	// resetRows();
-	// this.staffStatusEntryId = staffStatusEntryId;
-	// // initSets();
-	// }
-	//
-	// public CollidingVisitScheduleItemEagerModel(Long probandStatusEntryId, boolean allProbandGroups) {
-	// super();
-	// resetRows();
-	// this.probandStatusEntryId = probandStatusEntryId;
-	// this.allProbandGroups = allProbandGroups;
-	// initSets();
-	// }
 	@Override
 	protected Collection<VisitScheduleItemOutVO> getEagerResult(PSFVO psf) {
 		if (probandStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getProbandService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), probandStatusEntryId, allProbandGroups);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 		} else if (staffStatusEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), staffStatusEntryId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -126,16 +106,12 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 	}
 
 	private void initSets() {
-		//if (probandStatusEntryId != null) {
 		ProbandStatusEntryOutVO probandStatusEntryVO = WebUtil.getProbandStatusEntry(probandStatusEntryId);
 		if (probandStatusEntryVO != null) {
 			filterTrials = WebUtil.getParticipationTrials(probandStatusEntryVO.getProband().getId());
 		} else {
 			filterTrials = new ArrayList<SelectItem>();
 		}
-		//		} else if(staffStatusEntryId != null) {
-		//
-		//		}
 		filterTrials.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 	}
 

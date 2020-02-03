@@ -136,8 +136,6 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	@Override
 	public String addAction() {
 		UserInVO backup = new UserInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -317,9 +315,6 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		return getTitle(WebUtil.getLongParamValue(GetParamNames.USER_ID) == null);
 	}
 
-	// public ArrayList<SelectItem> getTimeZones() {
-	// return timeZones;
-	// }
 	private String getTitle(boolean operationSuccess) {
 		if (out != null) {
 			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : MessageCodes.USER_TITLE, Long.toString(out.getId()),
@@ -440,7 +435,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 		ArrayList<String> messageCodes = new ArrayList<String>();

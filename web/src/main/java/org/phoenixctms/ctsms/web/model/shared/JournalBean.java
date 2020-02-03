@@ -139,8 +139,6 @@ public class JournalBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		JournalEntryInVO backup = new JournalEntryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {

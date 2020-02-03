@@ -78,8 +78,6 @@ public class DiagnosisBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		DiagnosisInVO backup = new DiagnosisInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -89,7 +87,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -127,7 +125,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 			IDVO.transformVoCollection(alphaIdVOs);
 			return (List<IDVO>) alphaIdVOs;
 		} catch (ClassCastException e) {
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -148,7 +146,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -217,7 +215,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 	@Override
 	public String getTitle() {
 		if (out != null) {
-			return Messages.getMessage(MessageCodes.DIAGNOSIS_TITLE, Long.toString(out.getId()), out.getName(), DateUtil.getDateStartStopString(out.getStart(), out.getStop())); // out.getCode().getText()
+			return Messages.getMessage(MessageCodes.DIAGNOSIS_TITLE, Long.toString(out.getId()), out.getName(), DateUtil.getDateStartStopString(out.getStart(), out.getStop()));
 		} else {
 			return Messages.getString(MessageCodes.CREATE_NEW_DIAGNOSIS);
 		}
@@ -302,7 +300,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -337,7 +335,6 @@ public class DiagnosisBean extends ManagedBeanBase {
 	public void setCode(IDVO code) {
 		if (code != null) {
 			this.code = (AlphaIdVO) code.getVo();
-			//in.setCodeId(code.getId());
 		} else {
 			this.code = null;
 		}
@@ -361,7 +358,7 @@ public class DiagnosisBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

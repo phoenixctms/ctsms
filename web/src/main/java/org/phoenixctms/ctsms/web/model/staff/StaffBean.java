@@ -92,7 +92,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			SexVO genderVO = null;
 			try {
 				genderVO = WebUtil.getServiceLocator().getToolsService().getLocalizedSex(WebUtil.getAuthentication(), in.getGender());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -188,7 +188,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -249,7 +249,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -334,7 +334,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			}
 			out = null;
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -538,7 +538,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			try {
 				StaffImageOutVO staffImage = WebUtil.getServiceLocator().getStaffService().getStaffImage(WebUtil.getAuthentication(), in.getId());
 				count = staffImage.getHasImage() ? 1l : 0l;
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -546,8 +546,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		tabCountMap.put(JSValues.AJAX_STAFF_IMAGE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_IMAGE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_IMAGE_TAB_TITLE, MessageCodes.STAFF_IMAGE_TAB_TITLE_WITH_COUNT, count));
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
 		count = (out == null ? null : WebUtil.getStaffTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_STAFF_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_TAG_VALUE_COUNT.toString(),
@@ -609,7 +607,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_IDENTITY);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
@@ -656,7 +654,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -790,7 +788,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

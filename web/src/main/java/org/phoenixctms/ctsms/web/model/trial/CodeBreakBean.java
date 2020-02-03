@@ -102,10 +102,8 @@ public class CodeBreakBean extends ManagedBeanBase {
 
 	@Override
 	protected String changeAction(Long id) {
-		//DataTable.clearFilters("inventorybooking_list");
 		out = null;
 		this.probandListEntryId = id;
-		// addReimbursementBean.change();
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;

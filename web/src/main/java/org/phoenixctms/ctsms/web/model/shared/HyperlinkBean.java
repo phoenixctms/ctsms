@@ -96,8 +96,6 @@ public class HyperlinkBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		HyperlinkInVO backup = new HyperlinkInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -461,7 +459,6 @@ public class HyperlinkBean extends ManagedBeanBase {
 		if (in.getCategoryId() != null) {
 			try {
 				category = WebUtil.getServiceLocator().getSelectionSetService().getHyperlinkCategory(WebUtil.getAuthentication(), in.getCategoryId());
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

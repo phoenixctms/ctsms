@@ -80,19 +80,16 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 
 	@Override
 	public String getStyleClass() {
-		// if (in.getVisitId() != null) {
 		VisitOutVO visit = WebUtil.getVisit(in.getVisitId());
 		if (visit != null) {
 			return WebUtil.colorToStyleClass(visit.getType().getColor(), COLOR_OPACITY);
 		}
-		// }
 		return "";
 	}
 
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getTrialId() != null) {
 		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
@@ -100,10 +97,8 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
 		ProbandGroupOutVO probandGroup = null;
-		// if (in.getGroupId() != null) {
 		probandGroup = WebUtil.getProbandGroup(in.getGroupId());
 		if (probandGroup != null) {
 			if (appended) {
@@ -112,9 +107,7 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 			sb.append(probandGroup.getToken());
 			appended = true;
 		}
-		// }
 		VisitOutVO visit = null;
-		// if (in.getVisitId() != null) {
 		visit = WebUtil.getVisit(in.getVisitId());
 		if (visit != null) {
 			if (appended) {
@@ -123,7 +116,6 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 			sb.append(visit.getToken());
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getToken())) {
 			if (appended) {
 				sb.append(TOKEN_SEPARATOR_STRING);

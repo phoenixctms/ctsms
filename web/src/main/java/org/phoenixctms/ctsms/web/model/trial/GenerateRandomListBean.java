@@ -113,9 +113,8 @@ public abstract class GenerateRandomListBean extends ManagedBeanBase {
 		randomizationList = null;
 		try {
 			randomizationList = WebUtil.getServiceLocator().getTrialService().generateRandomizationList(WebUtil.getAuthentication(), getTrialId(), getRandomizationMode(), n);
-			// System.out.println("balh");
 			addOperationSuccessMessage(MessageCodes.GENERATE_RANDOMIZATION_LIST_OPERATION_SUCCESSFUL);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

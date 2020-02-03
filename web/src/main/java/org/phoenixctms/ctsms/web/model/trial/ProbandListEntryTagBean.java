@@ -69,7 +69,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			if (trialId != null) {
 				try {
 					position = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagMaxPosition(WebUtil.getAuthentication(), trialId);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -118,8 +118,6 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		ProbandListEntryTagInVO backup = new ProbandListEntryTagInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -128,7 +126,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -160,7 +158,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			}
 			probandListEntryTagModel.updateRowCount();
 			return BULK_ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -213,7 +211,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -359,7 +357,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTag(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -376,7 +374,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntryTag(WebUtil.getAuthentication(), probandListEntryTagId, PositionMovement.DOWN);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -387,7 +385,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntryTag(WebUtil.getAuthentication(), probandListEntryTagId, PositionMovement.FIRST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -398,7 +396,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntryTag(WebUtil.getAuthentication(), probandListEntryTagId, PositionMovement.LAST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -415,7 +413,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 				initIn();
 				initSets();
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -429,7 +427,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntryTag(WebUtil.getAuthentication(), probandListEntryTagId, PositionMovement.UP);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -448,7 +446,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			initSets();
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -501,7 +499,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

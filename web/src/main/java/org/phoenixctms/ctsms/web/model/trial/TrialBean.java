@@ -78,7 +78,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setDutySelfAllocationLockedUntil(null);
 			in.setDutySelfAllocationLockedFrom(null);
 			in.setRandomization(Settings.getRandomizationMode(SettingCodes.TRIAL_RANDOMIZATION_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_PRESET));
-			in.setRandomizationList(null); // Settings.getString(SettingCodes.TRIAL_RANDOMIZATION_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LIST_PRESET));
+			in.setRandomizationList(null);
 		}
 	}
 
@@ -126,15 +126,10 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	@Override
 	public String addAction() {
 		TrialInVO backup = new TrialInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			// if (getTrialStatusTypePasswordRequired()) {
-			// WebUtil.testPassword(password);
-			// }
 			out = WebUtil.getServiceLocator().getTrialService().addTrial(WebUtil.getAuthentication(), in, null);
 			initIn();
 			initSets();
@@ -468,8 +463,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		password = null;
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
 		Long count = (out == null ? null : WebUtil.getTrialTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_TAG_VALUE_COUNT.toString(),
@@ -584,7 +577,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 					trialRandomizationList.getCodeCount());
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
@@ -653,7 +646,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	}
 
 	private Collection<TrialStatusTypeVO> loadAllTrialStatusTypes() {
-		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			return WebUtil.getServiceLocator().getSelectionSetService().getAllTrialStatusTypes(WebUtil.getAuthentication());
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -661,16 +653,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			WebUtil.publishException(e);
 		}
 		return new ArrayList<TrialStatusTypeVO>();
-		// if (statusTypeVOs != null) {
-		// statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
-		// Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
-		// while (it.hasNext()) {
-		// ECRFStatusTypeVO typeVO = it.next();
-		// statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-		// }
-		// } else {
-		// statusTypes = new ArrayList<SelectItem>();
-		// }
 	}
 
 	private void loadSignature() {

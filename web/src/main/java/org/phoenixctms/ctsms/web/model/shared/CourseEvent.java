@@ -72,7 +72,6 @@ public class CourseEvent extends ScheduleEventBase<CourseInVO> {
 
 	@Override
 	public String getStyleClass() {
-		// if (in.getCategoryId() != null) {
 		CourseCategoryVO category = WebUtil.getCourseCategory(in.getCategoryId());
 		if (category != null) {
 			StringBuilder sb = new StringBuilder();
@@ -85,7 +84,6 @@ public class CourseEvent extends ScheduleEventBase<CourseInVO> {
 			}
 			return sb.toString();
 		}
-		// }
 		return "";
 	}
 

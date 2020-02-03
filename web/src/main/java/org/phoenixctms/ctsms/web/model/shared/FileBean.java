@@ -185,7 +185,6 @@ public class FileBean extends ManagedBeanBase {
 	private CourseOutVO course;
 	private TrialOutVO trial;
 	private ProbandOutVO proband;
-	// private InputFieldOutVO inputField;
 	private MassMailOutVO massMail;
 	private FileContentInVO contentIn;
 	private FileStreamInVO streamIn;
@@ -235,8 +234,6 @@ public class FileBean extends ManagedBeanBase {
 			return ERROR_OUTCOME;
 		}
 		FileInVO backup = new FileInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		in.setLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getLogicalPath()));
@@ -621,7 +618,6 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public TreeNode getSelectedFile() {
-		// System.out.println("getselectedfile");
 		return IDVOTreeNode.findNode(fileRoot, this.out);
 	}
 
@@ -683,12 +679,9 @@ public class FileBean extends ManagedBeanBase {
 			if (isCreateable()) {
 				String path = CommonUtil.fixLogicalPathFolderName(in.getLogicalPath());
 				if (ADD_OUTCOME.equals(addAction(false))) {
-					// updateFileFolderTree(module, entityId, false);
-					// updateLogicalFileSystemStats();
 					lastUploadedOut = out;
 					out = null;
 					initIn();
-					// initSets();
 					in.setLogicalPath(path);
 				}
 			}
@@ -812,12 +805,6 @@ public class FileBean extends ManagedBeanBase {
 	public boolean isBulkRemovable() {
 		if (module != null && entityId != null && createSFVO().getFilters().size() > 0) {
 			switch (module) {
-				//				case INVENTORY_DOCUMENT:
-				//					return entityId != null;
-				//				case STAFF_DOCUMENT:
-				//					return entityId != null;
-				//				case COURSE_DOCUMENT:
-				//					return entityId != null;
 				case TRIAL_DOCUMENT:
 					return !WebUtil.isTrialLocked(trial);
 				case PROBAND_DOCUMENT:

@@ -87,7 +87,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		userPermissionProfilesOut = null;
 		try {
 			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -154,13 +154,6 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 
 	private void initSets() {
 		if (Messages.getMessageList().isEmpty()) {
-			// if (!isCreated() && userId != null) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.NO_PERMISSION_PROFILES_SET_YET);
-			// } else if (isCreated() && WebUtil.isUserLocked(userId)) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.USER_LOCKED_LABEL);
-			// } else if (WebUtil.isUserIdLoggedIn(userId)) {
-			// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
-			// }
 			if (WebUtil.isUserIdLoggedIn(userId)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
 			}
@@ -211,7 +204,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		try {
 			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -232,7 +225,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

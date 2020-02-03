@@ -103,7 +103,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 	private StaffMultiPickerModel staffMultiPicker;
 	private Long bulkAddRoleId;
 	private boolean bulkAddAccess;
-	// private boolean bulkAddNotifyTimelineEvent;
 	private ArrayList<SelectItem> availableRoles;
 	private TeamMemberLazyModel teamMemberModel;
 	private HashMap<Long, ShiftDurationSummaryModel> shiftDurationModelCache;
@@ -119,8 +118,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		TeamMemberInVO backup = new TeamMemberInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -130,7 +127,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -150,7 +147,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			if (bulkAddRoleId != null) {
 				Set<Long> ids = this.staffMultiPicker.getSelectionIds();
 				Iterator<TeamMemberOutVO> it = WebUtil.getServiceLocator().getTrialService()
-						.addTeamMembers(WebUtil.getAuthentication(), trialId, bulkAddRoleId, bulkAddAccess, // bulkAddNotifyTimelineEvent,
+						.addTeamMembers(WebUtil.getAuthentication(), trialId, bulkAddRoleId, bulkAddAccess,
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET), ids)
@@ -169,7 +166,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			} else {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_ERROR, MessageCodes.BULK_ADD_TEAM_MEMBER_ROLE_REQUIRED);
 			}
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -197,8 +194,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 		staffMultiPicker.clear();
 		bulkAddRoleId = null;
 		bulkAddAccess = Settings.getBoolean(SettingCodes.TEAM_MEMBER_ACCESS_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ACCESS_PRESET);
-		// bulkAddNotifyTimelineEvent = Settings.getBoolean(SettingCodes.TEAM_MEMBER_NOTIFY_TIMELINE_EVENT_PRESET, Bundle.SETTINGS,
-		// DefaultSettings.TEAM_MEMBER_NOTIFY_TIMELINE_EVENT_PRESET);
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -218,7 +213,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -283,7 +278,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -336,7 +331,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 		Collection<TeamMemberRoleVO> roleVOs = null;
 		try {
 			roleVOs = WebUtil.getServiceLocator().getSelectionSetService().getAvailableTeamMemberRoles(WebUtil.getAuthentication(), in.getTrialId(), in.getRoleId());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -360,9 +355,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 		return bulkAddAccess;
 	}
 
-	// public boolean isBulkAddNotifyTimelineEvent() {
-	// return bulkAddNotifyTimelineEvent;
-	// }
 	@Override
 	public boolean isCreateable() {
 		return (in.getTrialId() == null ? false : !WebUtil.isTrialLocked(trial));
@@ -402,7 +394,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getTeamMember(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -434,9 +426,6 @@ public class TeamMemberBean extends ManagedBeanBase {
 		this.bulkAddAccess = bulkAddAccess;
 	}
 
-	// public void setBulkAddNotifyTimelineEvent(boolean bulkAddNotifyTimelineEvent) {
-	// this.bulkAddNotifyTimelineEvent = bulkAddNotifyTimelineEvent;
-	// }
 	public void setBulkAddRoleId(Long bulkAddRoleId) {
 		this.bulkAddRoleId = bulkAddRoleId;
 	}
@@ -458,7 +447,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

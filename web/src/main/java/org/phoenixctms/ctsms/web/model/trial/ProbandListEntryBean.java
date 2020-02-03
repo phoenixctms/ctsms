@@ -109,10 +109,9 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			} else {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.BULK_ADD_OPERATION_SUCCESSFUL, ids.size(), ids.size());
 			}
-			// probandListEntryModel.initSets(true)
 			probandListEntryModel.updateRowCount();
 			return BULK_ADD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -183,7 +182,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			}
 			probandListEntryModel.updateRowCount();
 			return BULK_DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -223,11 +222,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 
 	@Override
 	public String getMainTabTitle() {
-		// if (in.getProbandId() != null) {
-		// return Messages.getMessage(MessageCodes.PROBAND_LIST_MAIN_TAB_LABEL, WebUtil.probandIdToName(in.getProbandId()));
-		// } else {
-		// return Messages.getString(MessageCodes.PROBAND_LIST_MAIN_TAB_BLANK_LABEL);
-		// }
 		if (out != null) {
 			return Messages.getMessage(MessageCodes.PROBAND_LIST_MAIN_TAB_LABEL, CommonUtil.probandOutVOToString(out.getProband()));
 		} else {
@@ -241,7 +235,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				Collection probandAddresses = null;
 				try {
 					probandAddresses = WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), proband.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -265,7 +259,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				try {
 					probandContactDetailValues = WebUtil.getServiceLocator().getProbandService()
 							.getProbandContactDetailValueList(WebUtil.getAuthentication(), proband.getId(), false, null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -289,7 +283,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -301,7 +295,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				Collection probandListStatusFiltered = new ArrayList<ProbandListStatusEntryOutVO>();
 				try {
 					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, proband.getId(), false, null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -338,7 +332,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				Collection probandStatus = null;
 				try {
 					probandStatus = WebUtil.getServiceLocator().getProbandService().getProbandStatusEntryList(WebUtil.getAuthentication(), proband.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -361,7 +355,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				Collection probandTagValues = null;
 				try {
 					probandTagValues = WebUtil.getServiceLocator().getProbandService().getProbandTagValueList(WebUtil.getAuthentication(), proband.getId(), null);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -454,7 +448,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntry(WebUtil.getAuthentication(), probandListEntryId, PositionMovement.DOWN);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -465,7 +459,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntry(WebUtil.getAuthentication(), probandListEntryId, PositionMovement.FIRST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -476,7 +470,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntry(WebUtil.getAuthentication(), probandListEntryId, PositionMovement.LAST);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -493,7 +487,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				initIn();
 				initSets();
 				Messages.addLocalizedMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -511,7 +505,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			out = WebUtil.getServiceLocator().getTrialService().moveProbandListEntry(WebUtil.getAuthentication(), probandListEntryId, PositionMovement.UP);
 			initIn();
 			initSets();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -529,7 +523,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 			initSets();
 			Messages.addLocalizedMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_INFO, MessageCodes.POSITIONS_UPDATE_SUCCESSFUL, updated.size());
 			return UPDATE_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());

@@ -35,12 +35,11 @@ public class UnsubscribeBean {
 	@PostConstruct
 	private void init() {
 		beacon = WebUtil.getParamValue(GetParamNames.BEACON);
-		// System.out.println("xxx");
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		if (!WebUtil.isTrustedReferer(request)) {
 			try {
 				WebUtil.getServiceLocator().getToolsService().unsubscribeProbandEmail(beacon);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException|AuthenticationException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException | AuthenticationException e) {
 				ex = e;
 			}
 		} else {

@@ -121,8 +121,6 @@ public class InquiryBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		InquiryInVO backup = new InquiryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		try {
@@ -161,7 +159,6 @@ public class InquiryBean extends ManagedBeanBase {
 				} else {
 					Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.BULK_ADD_OPERATION_SUCCESSFUL, ids.size(), ids.size());
 				}
-				// inquiryModel.updateRowCount();
 				initInquiryModel();
 				return BULK_ADD_OUTCOME;
 			} else {
@@ -377,7 +374,7 @@ public class InquiryBean extends ManagedBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.INQUIRY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INQUIRY_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}

@@ -53,7 +53,6 @@ public class BankAccountBean extends ManagedBeanBase {
 
 	public static void initBankAccountDefaultValues(BankAccountInVO in, Long probandId) {
 		if (in != null) {
-			// ProbandOutVO probandVO = WebUtil.getProband(probandId, null, null, null);
 			boolean naPreset = Settings.getBoolean(SettingCodes.BANK_ACCOUNT_NA_PRESET, Bundle.SETTINGS, DefaultSettings.BANK_ACCOUNT_NA_PRESET);
 			in.setAccountHolderName(naPreset ? null : loadAccountHolderName(probandId));
 			in.setAccountNumber(Messages.getString(MessageCodes.ACCOUNT_NUMBER_PRESET));
@@ -88,8 +87,6 @@ public class BankAccountBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		BankAccountInVO backup = new BankAccountInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -99,7 +96,7 @@ public class BankAccountBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -162,7 +159,7 @@ public class BankAccountBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -243,7 +240,6 @@ public class BankAccountBean extends ManagedBeanBase {
 
 	@PostConstruct
 	private void init() {
-		// System.out.println("POSTCONSTRUCT: " + this.toString());
 		Long id = WebUtil.getLongParamValue(GetParamNames.BANK_ACCOUNT_ID);
 		if (id != null) {
 			this.load(id);
@@ -318,7 +314,7 @@ public class BankAccountBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -346,8 +342,6 @@ public class BankAccountBean extends ManagedBeanBase {
 			in.setBic(null);
 			in.setAccountNumber(null);
 			in.setBankCodeNumber(null);
-			//} else if (CommonUtil.isEmptyString(in.getAccountHolderName())) {
-			//	in.setNotify(false);
 		}
 	}
 
@@ -369,7 +363,7 @@ public class BankAccountBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

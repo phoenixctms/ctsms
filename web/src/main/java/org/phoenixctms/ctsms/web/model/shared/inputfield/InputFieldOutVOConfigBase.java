@@ -20,7 +20,6 @@ public abstract class InputFieldOutVOConfigBase extends InputFieldConfig {
 		return inputField == null ? null : inputField.getName();
 	}
 
-	// @Override
 	public String getFieldTitle() {
 		InputFieldOutVO inputField = getInputField();
 		return inputField == null ? null : inputField.getTitle();
@@ -30,7 +29,7 @@ public abstract class InputFieldOutVOConfigBase extends InputFieldConfig {
 	protected boolean isInputFieldType(InputFieldType inputFieldType) {
 		InputFieldOutVO inputField = getInputField();
 		InputFieldTypeVO fieldType = (inputField == null ? null : inputField.getFieldType());
-		if (fieldType != null && fieldType.getType().equals(inputFieldType)) { // fieldType.getType() == inputFieldType) {
+		if (fieldType != null && fieldType.getType().equals(inputFieldType)) {
 			return true;
 		}
 		return false;

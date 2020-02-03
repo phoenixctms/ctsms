@@ -51,8 +51,6 @@ public class CriterionIDVOList extends CriterionListBase<IDVO> {
 			IDVO old = getIDVO(criterionIn, propertyVO);
 			if (value != null) {
 				criterionIn.setLongValue(value.getId());
-				// } else {
-				// criterionIn.setLongValue(null);
 			}
 			return old;
 		}

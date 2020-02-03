@@ -17,14 +17,12 @@ public class RandomizationListCodeLazyModel extends LazyDataModelBase<Randomizat
 
 	@Override
 	protected Collection<RandomizationListCodeOutVO> getLazyResult(PSFVO psf) {
-		//if (trialId != null) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getRandomizationListCodeList(WebUtil.getAuthentication(), trialId, psf);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
-		//}
 		return new ArrayList<RandomizationListCodeOutVO>();
 	}
 

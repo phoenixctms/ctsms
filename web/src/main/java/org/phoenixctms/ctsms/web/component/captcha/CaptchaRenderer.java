@@ -47,10 +47,6 @@ public class CaptchaRenderer extends CoreRenderer {
 	private final static String RESPONSE_FIELD = "recaptcha_response_field";
 	private final static String TOKEN_FIELD = "g-recaptcha-response";
 
-	// private final static String clientIdToJsFnName(String clientId) {
-	// String result = clientId.replaceAll("[^a-zA-Z0-9_]", "_");
-	// return "set" + WordUtils.capitalizeFully(result, '_').replaceAll("_", "");
-	// }
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
 		Captcha captcha = (Captcha) component;
@@ -93,9 +89,6 @@ public class CaptchaRenderer extends CoreRenderer {
 		if (publicKey == null || publicKey.length() == 0) {
 			throw new FacesException("Cannot find public key for catpcha, use PUBLIC_CAPTCHA_KEY property to define one");
 		}
-		// if (publicKey == null) {
-		// throw new FacesException("Cannot find public key for catpcha, use primefaces.PUBLIC_CAPTCHA_KEY context-param to define one");
-		// }
 		if (ReCaptchaVersions.V1.equals(Captcha.RECAPTCHA_VERSION)) {
 			writer.startElement("script", null);
 			writer.writeAttribute("type", "text/javascript", null);
@@ -135,10 +128,6 @@ public class CaptchaRenderer extends CoreRenderer {
 			writer.writeAttribute("async", "async", null);
 			writer.writeAttribute("defer", "defer", null);
 			writer.endElement("script");
-			// startScript(writer, captcha.getClientId(context));
-			// String fnName = clientIdToJsFnName(captcha.getClientId(context));
-			// writer.write("function " + fnName + "(token){alert(token);}");
-			// endScript(writer);
 			writer.startElement("div", null);
 			writer.writeAttribute("class", "g-recaptcha", null);
 			writer.writeAttribute("data-sitekey", publicKey, null);
@@ -148,7 +137,6 @@ public class CaptchaRenderer extends CoreRenderer {
 			if (captcha.getTabindex() != 0) {
 				writer.writeAttribute("data-tabindex", captcha.getTabindex(), null);
 			}
-			// writer.writeAttribute("data-callback", fnName, null);
 			writer.endElement("div");
 		} else {
 			throw new FacesException("reCAPTCHA version not supported");

@@ -74,7 +74,6 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 		DataTable.clearFilters("inventorybooking_list");
 		out = null;
 		this.probandId = id;
-		// addReimbursementBean.change();
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -110,7 +109,6 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 
 	@PostConstruct
 	private void init() {
-		// System.out.println("POSTCONSTRUCT: " + this.toString());
 		Long id = WebUtil.getLongParamValue(GetParamNames.INVENTORY_BOOKING_ID);
 		if (id != null) {
 			this.load(id);
@@ -135,7 +133,6 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 
 	@Override
 	protected void initSets() {
-		//addReimbursementBean.setProbandId(in.getProbandId());
 		collidingInventoryStatusEntryModelCache.clear();
 		collidingProbandStatusEntryModelCache.clear();
 		filterCalendars = WebUtil.getInventoryBookingFilterCalendars(null, null, probandId, null, null);

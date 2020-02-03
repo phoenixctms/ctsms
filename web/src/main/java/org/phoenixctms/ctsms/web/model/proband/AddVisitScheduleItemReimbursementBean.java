@@ -27,11 +27,9 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 	@Override
 	protected String changeAction(Long id) {
 		out = null;
-		// this.probandId = null;
 		this.trialId = null;
 		this.visitScheduleItem = WebUtil.getVisitScheduleItem(id);
 		if (this.visitScheduleItem != null) {
-			// this.probandId = appointment.getProband().getId();
 			this.trialId = visitScheduleItem.getTrial() != null ? visitScheduleItem.getTrial().getId() : null;
 		}
 		initIn();
@@ -87,7 +85,7 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 				reimbursementAmount = visitReimbursementAmount;
 			}
 			visitScheduleItemCount = 1;
-			if (ALIQUOT_VISIT_REIMBURSEMENT && probandId != null && visitScheduleItem != null) { // && !CommonUtil.isEmptyString(visitScheduleItem.getToken())) {
+			if (ALIQUOT_VISIT_REIMBURSEMENT && probandId != null && visitScheduleItem != null) {
 				try {
 					visitScheduleItemCount = CommonUtil.safeLongToInt(WebUtil
 							.getServiceLocator()
@@ -95,8 +93,7 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 							.getVisitScheduleItemCount(WebUtil.getAuthentication(), visitScheduleItem.getTrial().getId(),
 									visitScheduleItem.getGroup() != null ? visitScheduleItem.getGroup().getId() : null,
 									visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId));
-					// count = psf.getRowCount();
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -105,32 +102,15 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 				reimbursementAmount = reimbursementAmount / (visitScheduleItemCount);
 			}
 			addReimbursement = reimbursementAmount > 0.0f;
-			// addTravelExpense = address != null;
 		}
 	}
 
 	@Override
 	public boolean isCreateable() {
-		// return isCreateable(booking);
 		if (in.getProbandId() == null || visitScheduleItem == null) {
 			return false;
 		} else {
-			// ProbandOutVO proband = booking != null ? booking.getProband() : null;
 			return !WebUtil.isTrialLocked(visitScheduleItem.getTrial()) && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
 		}
 	}
-	// public boolean isCreateable(VisitScheduleItemOutVO visitScheduleItem) {
-	// if (proband == null || visitScheduleItem == null) {
-	// return false;
-	// } else {
-	// return !WebUtil.isTrialLocked(visitScheduleItem.getTrial()) && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
-	// }
-	// }
-	// public String getAliquotReimbursementLabel() {
-	// if (visitScheduleItemCount > 1) {
-	// return Messages.getMessage(MessageCodes.ALIQUOT_REIMBURSEMENT_LABEL,visitReimbursementAmount,visitScheduleItemCount);
-	// } else {
-	// super.getAliquotReimbursementLabel();
-	// }
-	// }
 }

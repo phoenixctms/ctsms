@@ -52,9 +52,6 @@ public class InquiryInputModel extends InputModel {
 			inquiryValue.setTimestampValue(inputField.getTimestampPreset());
 			inquiryValue.setInkValues(null);
 			inquiryValue.getSelectionValueIds().clear();
-			// if (isAutocomplete()) {
-			// inquiryValue.setTextValue(autoCompletePresetValue);
-			// } else {
 			inquiryValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 			while (it.hasNext()) {
@@ -63,7 +60,6 @@ public class InquiryInputModel extends InputModel {
 					inquiryValue.getSelectionValueIds().add(selectionValue.getId());
 				}
 			}
-			// }
 		}
 	}
 
@@ -78,9 +74,7 @@ public class InquiryInputModel extends InputModel {
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {
@@ -311,11 +305,6 @@ public class InquiryInputModel extends InputModel {
 		return false;
 	}
 
-	// @Override
-	// public boolean isEditable() {
-	// return true;
-	// // return inquiry != null && !WebUtil.isTrialLocked(inquiry.getTrial());
-	// }
 	@Override
 	public boolean isDummy() {
 		return false;
@@ -354,7 +343,7 @@ public class InquiryInputModel extends InputModel {
 
 	@Override
 	public Object load() {
-		if (inquiryValue != null) { // && inquiryValue.getId() != null) {
+		if (inquiryValue != null) {
 			setErrorMessage(null);
 			try {
 				InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService()
@@ -362,9 +351,7 @@ public class InquiryInputModel extends InputModel {
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
@@ -521,9 +508,7 @@ public class InquiryInputModel extends InputModel {
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {

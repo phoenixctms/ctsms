@@ -38,7 +38,7 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), queue, listEntryId, ecrfFieldId, index, false, false,
 						psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -70,7 +70,4 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-	// public void setQueue(ECRFFieldStatusQueue queue) {
-	// this.queue = queue;
-	// }
 }

@@ -36,7 +36,7 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
 		RequestContext requestContext = null;
-		if (operationSuccess && probandListEntry != null) { // && ecrf != null) {
+		if (operationSuccess && probandListEntry != null) {
 			// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
 			// MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
 			// WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, probandListEntry.getProband().getId()));
@@ -45,10 +45,6 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	@Override
 	protected void changeSpecific(Long id) {
-		// probandMultiPicker.clear();
-		// bulkAddGroupId = null;
-		// shuffle = Settings.getBoolean(SettingCodes.PROBAND_LIST_BULK_ADD_SHUFFLE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_SHUFFLE);
-		// limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
 		this.probandId = id;
 		probandListEntryModel.setProbandId(id);
 		probandListEntryModel.initSets(true);
@@ -97,18 +93,11 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	@PostConstruct
 	private void init() {
-		// initIn();
 		initSets(false);
 	}
 
-	// @Override
-	// protected void initIn() {
-	// // TODO Auto-generated method stub
-	// }
 	@Override
 	protected void initSpecificSets() {
-		// clearCaches(select);
-		// value count caches......
 		proband = WebUtil.getProband(this.probandId, null, null, null);
 		if (probandListEntry != null) {
 			filterProbandGroups = WebUtil.getProbandGroups(probandListEntry.getTrial().getId());

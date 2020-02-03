@@ -190,7 +190,6 @@ public class Captcha extends UIInput {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					// System.out.println(sb.toString());
 					JsonObject response = WebUtil.parseJson(sb.toString()).getAsJsonObject();
 					isValid = response.get("success").getAsBoolean();
 					if (!isValid) {
@@ -205,7 +204,6 @@ public class Captcha extends UIInput {
 				} else {
 					throw new IllegalArgumentException("reCAPTCHA version not supported");
 				}
-				// rd.close();
 			} catch (Exception exception) {
 				throw new FacesException(exception);
 			} finally {

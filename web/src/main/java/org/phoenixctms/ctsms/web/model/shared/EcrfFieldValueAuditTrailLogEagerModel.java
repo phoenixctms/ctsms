@@ -77,11 +77,10 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase<EC
 
 	@Override
 	protected Collection<ECRFFieldValueOutVO> getEagerResult(PSFVO psf) {
-		if (listEntryId != null) { // && ecrfId != null) {
+		if (listEntryId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId, false, new PSFVO(INITIAL_PSF)); // ,
-				// psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId, false, new PSFVO(INITIAL_PSF));
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

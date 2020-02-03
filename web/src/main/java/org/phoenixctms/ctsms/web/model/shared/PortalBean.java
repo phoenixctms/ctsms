@@ -101,17 +101,6 @@ public class PortalBean extends ManagedBeanBase {
 							} else {
 								return "ctsms-icon-flag";
 							}
-							// if (notification.getEcrfFieldStatusEntry().getStatus().getInitial() && !notification.getEcrfFieldStatusEntry().getStatus().getResolved()) {
-							// return "ctsms-icon-flag-red";
-							// } else if (notification.getEcrfFieldStatusEntry().getStatus().getUpdated()) {
-							// return "ctsms-icon-flag-orange";
-							// } else if (notification.getEcrfFieldStatusEntry().getStatus().getProposed()) {
-							// return "ctsms-icon-flag-blue";
-							// } else if (notification.getEcrfFieldStatusEntry().getStatus().getResolved() && !notification.getEcrfFieldStatusEntry().getStatus().getInitial()) {
-							// return "ctsms-icon-flag-green";
-							// } else {
-							// return "ctsms-icon-flag";
-							// }
 						case PROBANDS_DELETED:
 							return "";
 						case TRIAL_TAG_MISSING:
@@ -141,20 +130,13 @@ public class PortalBean extends ManagedBeanBase {
 			if (!notification.isObsolete()) {
 				String nodeStyleClass = notification.getType().getNodeStyleClass();
 				if (!(nodeStyleClass != null && nodeStyleClass.length() > 0)) {
-					// return false;
-					// } else {
 					switch (notification.getType().getType()) {
 						case ECRF_STATUS_UPDATED:
 							return true;
-						// default:
-						// return false;
 					}
 				}
-				// } else {
-				// return "ctsms-strikethrough";
 			}
 		}
-		// return "";
 		return false;
 	}
 
@@ -174,20 +156,6 @@ public class PortalBean extends ManagedBeanBase {
 		return notificationModel;
 	}
 
-	// public Boolean getNotificationSent(NotificationVO notification) {
-	// StaffOutVO identitiy;
-	// if (notification != null && (identitiy = WebUtil.getUserIdentity()) != null) {
-	// Iterator<NotificationRecipientVO> recipientIt = notification.getRecipients().iterator();
-	// while (recipientIt.hasNext()) {
-	// NotificationRecipientVO recipient = recipientIt.next();
-	// if (identitiy.getId() == recipient.getStaff().getId()) {
-	// return recipient.isSent();
-	// }
-	// }
-	// return false;
-	// }
-	// return null;
-	// }
 	public String getOpenEntityJSCall(NotificationVO notification) {
 		if (notification != null) {
 			switch (notification.getType().getType()) {
@@ -227,10 +195,8 @@ public class PortalBean extends ManagedBeanBase {
 				case TRIAL_STATUS_UPDATED:
 					return "openTrial(" + Long.toString(notification.getTrial().getId()) + ")";
 				case ECRF_STATUS_UPDATED:
-					// return "openProband(" + Long.toString(notification.getListEntry().getProband().getId()) + ")";
 					return "openTrial(" + Long.toString(notification.getEcrfStatusEntry().getListEntry().getTrial().getId()) + ")";
 				case NEW_ECRF_FIELD_STATUS:
-					// return "openTrial(" + Long.toString(notification.getEcrfFieldStatusEntry().getListEntry().getTrial().getId()) + ")";
 					return "openEcrfSection(" + Long.toString(notification.getEcrfFieldStatusEntry().getId()) + ","
 							+ Integer.toString(WebUtil.getEcrfSectionHashCode(notification.getEcrfFieldStatusEntry())) + ")";
 				case PROBANDS_DELETED:
@@ -377,7 +343,7 @@ public class PortalBean extends ManagedBeanBase {
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_SHOW, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_SHOW),
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_SENT, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_SENT),
 					Settings.getBooleanNullable(SettingCodes.NOTIFICATIONS_DROPPED, Bundle.SETTINGS, DefaultSettings.NOTIFICATIONS_DROPPED));
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}

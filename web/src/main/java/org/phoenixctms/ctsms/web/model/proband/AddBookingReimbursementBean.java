@@ -19,11 +19,9 @@ public class AddBookingReimbursementBean extends AddReimbursementBeanBase {
 	@Override
 	protected String changeAction(Long id) {
 		out = null;
-		// this.probandId = null;
 		this.trialId = null;
 		this.booking = WebUtil.getInventoryBooking(id);
 		if (this.booking != null) {
-			// this.probandId = booking.getProband().getId();
 			this.trialId = booking.getTrial() != null ? booking.getTrial().getId() : null;
 		}
 		initIn();
@@ -62,17 +60,14 @@ public class AddBookingReimbursementBean extends AddReimbursementBeanBase {
 		if (reset) {
 			reimbursementAmount = 0.0f;
 			addReimbursement = reimbursementAmount > 0.0f;
-			// addTravelExpense = address != null;
 		}
 	}
 
 	@Override
 	public boolean isCreateable() {
-		// return isCreateable(booking);
 		if (in.getProbandId() == null || booking == null) {
 			return false;
 		} else {
-			// ProbandOutVO proband = booking != null ? booking.getProband() : null;
 			return !WebUtil.isTrialLocked(booking.getTrial()) && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
 		}
 	}

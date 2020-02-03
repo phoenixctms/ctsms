@@ -51,9 +51,9 @@ public class UserResource extends ServiceResourceBase {
 	private final static Class<?> SERVICE_INTERFACE = UserService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "userId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, UserOutVO.class);
-	public final static UserListIndex LIST_INDEX = new UserListIndex(getListIndexNode(ResourceUtils.getMethodPath(UserResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
-			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
+	public final static UserListIndex LIST_INDEX = new UserListIndex(
+			getListIndexNode(ResourceUtils.getMethodPath(UserResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+					getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
 

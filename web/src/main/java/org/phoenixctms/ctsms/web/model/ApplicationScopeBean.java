@@ -438,25 +438,9 @@ public class ApplicationScopeBean {
 		return WebUtil.getRemoteHost();
 	}
 
-	// public boolean getProbandGroupsShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_GROUPS_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	//
-	// public boolean getProbandGroupsShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
-	// DefaultSettings.PROBAND_GROUPS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
 	public String getScheduleRightHeaderTemplate() {
 		return Settings.getString(SettingCodes.SCHEDULE_RIGHT_HEADER_TEMPLATE, Bundle.SETTINGS, DefaultSettings.SCHEDULE_RIGHT_HEADER_TEMPLATE);
 	}
-	// public boolean getProbandListShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	// public boolean getProbandListShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
 
 	public String getScheduleTimePattern() {
 		return Settings.getString(SettingCodes.SCHEDULE_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.SCHEDULE_TIME_PATTERN);
@@ -470,9 +454,6 @@ public class ApplicationScopeBean {
 		return DateUtil.getStatusEntryDurationString(duration);
 	}
 
-	// public String getSignatureDescription(SignatureVO signature) {
-	// x
-	// }
 	public String getStringDigest(String string) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		if (string != null) {
@@ -499,14 +480,6 @@ public class ApplicationScopeBean {
 		return result;
 	}
 
-	// public boolean getTrialParticipationsShowInquiryColumn() {
-	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN, Bundle.SETTINGS, DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_INQUIRY_COLUMN);
-	// }
-	//
-	// public boolean getTrialParticipationsShowProbandListEntryTagColumn() {
-	// return Settings.getBoolean(SettingCodes.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN, Bundle.SETTINGS,
-	// DefaultSettings.TRIAL_PARTICIPATIONS_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN);
-	// }
 	public String getUserIdentityString(UserOutVO user) {
 		return WebUtil.getUserIdentityString(user);
 	}

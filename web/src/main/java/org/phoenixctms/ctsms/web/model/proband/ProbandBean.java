@@ -63,7 +63,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			StaffOutVO physicianVO = out.getPhysician();
 			SexVO genderVO = out.getGender();
 			Collection<ProbandOutVO> childrenVOs = out.getChildren();
-			// in.setAvailable(out.getAvailable());
 			in.setPerson(out.getPerson());
 			in.setBlinded(out.getBlinded());
 			in.setCitizenship(out.getCitizenship());
@@ -88,7 +87,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setRating(out.getRating());
 			in.setRatingMax(out.getRatingMax() != null ? out.getRatingMax()
 					: Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
-			// in.setRecruitmentForOtherTrialsAllowed(out.getRecruitmentForOtherTrialsAllowed());
 			ArrayList<Long> childIds = new ArrayList<Long>(childrenVOs.size());
 			Iterator<ProbandOutVO> it = childrenVOs.iterator();
 			while (it.hasNext()) {
@@ -111,28 +109,16 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			result.setPerson(in.getPerson());
 			result.setBlinded(in.getBlinded());
 			result.setAge(CommonUtil.getAge(in.getDateOfBirth()));
-			// result.setAutoDeleteDeadline();
-			// result.setAvailable(in.getAvailable());
-			// result.setCategory(value)
-			// result.setChildren(value);
 			result.setChildrenCount(in.getChildIds().size());
 			result.setCitizenship(in.getCitizenship());
 			result.setComment(in.getComment());
 			result.setDateOfBirth(in.getDateOfBirth());
 			result.setDecrypted(true);
-			// result.setDeferredDelete(value);
-			// result.setDepartment(value)
 			result.setFirstName(in.getFirstName());
 			result.setGender(genderVO);
 			result.setAlias(in.getAlias());
-			// result.setHasImage(value)
-			// result.setId(value)
 			result.setLastName(in.getLastName());
 			result.setAnimalName(in.getAnimalName());
-			// result.setModifiedTimestamp(value)
-			// result.setModifiedUser(value)
-			// result.setParents(value)
-			// result.setParentsCount(value)
 			result.setPostpositionedTitle1(in.getPostpositionedTitle1());
 			result.setPostpositionedTitle2(in.getPostpositionedTitle2());
 			result.setPostpositionedTitle3(in.getPostpositionedTitle3());
@@ -142,9 +128,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			result.setRating(in.getRating());
 			result.setRatingMax(in.getRatingMax() != null ? in.getRatingMax()
 					: Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
-			// result.setPrivacyConsentStatus(value)
-			// result.setRecruitmentForOtherTrialsAllowed(in.isRecruitmentForOtherTrialsAllowed());
-			// result.setVersion(value);
 			result.setYearOfBirth(CommonUtil.getYearOfBirth(in.getDateOfBirth()));
 			result.setDecrypted(true);
 			result.setInitials(CommonUtil.getProbandInitials(result, null, Messages.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME),
@@ -173,7 +156,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			}
 			in.setPerson(Settings.getBoolean(SettingCodes.PROBAND_PERSON_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_PERSON_PRESET));
 			in.setBlinded(Settings.getBoolean(SettingCodes.PROBAND_BLINDED_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_BLINDED_PRESET));
-			// in.setAvailable(Settings.getBoolean(SettingCodes.PROBAND_AVAILABLE_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_AVAILABLE_PRESET));
 			in.setCitizenship(Messages.getString(MessageCodes.PROBAND_CITIZENSHIP_PRESET));
 			in.setComment(Messages.getString(MessageCodes.PROBAND_COMMENT_PRESET));
 			in.setDateOfBirth(null);
@@ -195,8 +177,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			in.setPrefixedTitle3(Messages.getString(MessageCodes.PROBAND_PREFIXED_TITLE3_PRESET));
 			in.setRating(Settings.getLongNullable(SettingCodes.PROBAND_RATING_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_PRESET));
 			in.setRatingMax(Settings.getLongNullable(SettingCodes.PROBAND_RATING_MAX_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_RATING_MAX_PRESET));
-			// in.setRecruitmentForOtherTrialsAllowed(Settings.getBoolean(SettingCodes.PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET, Bundle.SETTINGS,
-			// DefaultSettings.PROBAND_RECRUITMENT_FOR_OTHER_TRIALS_ALLOWED_PRESET));
 			in.setChildIds(new ArrayList<Long>());
 		}
 	}
@@ -236,8 +216,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	@Override
 	public String addAction() {
 		ProbandInVO backup = new ProbandInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -559,9 +537,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		}
 	}
 
-	// public void handleBlindedChange() {
-	// loadProbandCategories();
-	// }
 	@Override
 	public String getWindowName() {
 		return getWindowName(WebUtil.getLongParamValue(GetParamNames.PROBAND_ID) == null);
@@ -622,7 +597,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	@PostConstruct
 	private void init() {
-		// System.out.println("POSTCONSTRUCT: " + this.toString());
 		Long id = WebUtil.getLongParamValue(GetParamNames.PROBAND_ID);
 		if (id != null) {
 			this.load(id);
@@ -658,8 +632,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_IMAGE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_IMAGE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_IMAGE_TAB_TITLE, MessageCodes.PROBAND_IMAGE_TAB_TITLE_WITH_COUNT, count));
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(0);
 		count = (out == null ? null : WebUtil.getProbandTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_TAG_VALUE_COUNT.toString(),
@@ -730,7 +702,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		childrenRoot.getChildren().clear();
 		parentsRoot.getChildren().clear();
 		if (out != null) {
-			// probandOutVOtoChildTreeNode1
 			probandOutVOtoParentTreeNode(out, parentsRoot, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
@@ -740,7 +711,6 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
 		}
 		if (out != null) {
-			// probandOutVOtoParentTreeNode1
 			probandOutVOtoChildTreeNode(out, childrenRoot, new ArrayList<IDVOTreeNode>(),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH),
@@ -750,19 +720,18 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
 		}
 		childrenMultiPicker.setIds(in.getChildIds());
-		// categories = WebUtil.getVisibleProbandCategories(in.getCategoryId());
 		loadProbandCategories();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		loadSelectedCategory();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
-		if (out != null && out.isDeferredDelete()) { // && Settings.getBoolean(SettingCodes.PROBAND_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.PROBAND_DEFERRED_DELETE)) {
+		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
 	}
 
 	public boolean isAutoDelete() {
 		if (out != null && category != null) {
-			return out.getPrivacyConsentStatus().isAutoDelete() && category.isPrivacyConsentControl(); // && category.isDelete();
+			return out.getPrivacyConsentStatus().isAutoDelete() && category.isPrivacyConsentControl();
 		}
 		return false;
 	}
@@ -945,11 +914,8 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		if (!in.getBlinded()) {
 			if (in.getPerson()) {
 				in.setAnimalName(null);
-				// in.setCvOrganisationName(null);
 			} else {
-				// in.setAllocatable(false);
 				in.setCitizenship(null);
-				// in.setEmployee(false);
 				in.setFirstName(null);
 				in.setLastName(null);
 				in.setPostpositionedTitle1(null);
@@ -958,17 +924,11 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 				in.setPrefixedTitle1(null);
 				in.setPrefixedTitle2(null);
 				in.setPrefixedTitle3(null);
-				// in.setCvAcademicTitle(null);
 			}
 			in.setAlias(null);
 		} else {
-			// if (!in.getPerson()) {
-			// in.setAlias(null);
-			// }
 			in.setCitizenship(null);
-			// in.setDateOfBirth(null);
 			in.setFirstName(null);
-			// in.setGender(null);
 			in.setLastName(null);
 			in.setAnimalName(null);
 			in.setPostpositionedTitle1(null);

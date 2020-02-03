@@ -52,7 +52,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		if (trialId != null) {
 			try {
 				position = WebUtil.getServiceLocator().getTrialService().getProbandListEntryMaxPosition(WebUtil.getAuthentication(), trialId);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -83,19 +83,16 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	protected String addAction(boolean randomize, boolean createProband) {
 		ProbandListEntryInVO backup = new ProbandListEntryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals(createProband);
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().addProbandListEntry(WebUtil.getAuthentication(), createProband, false, randomize, in);
 			initIn();
-			// initSets(true, false, false);
 			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -122,7 +119,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		changeSpecific(id);
 		initIn();
 		initSets(true, false, false);
-		//ColumnManagementBean.resetVisibleMap(getDataTableId());
 		return CHANGE_OUTCOME;
 	}
 
@@ -144,7 +140,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -264,7 +260,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getProbandListEntry(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -276,8 +272,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	// public void onTabViewChange(TabChangeEvent event) {
-	// }
 	@Override
 	public String resetAction() {
 		out = null;
@@ -326,7 +320,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 			initSets(false, false, false);
 			addOperationSuccessMessage("probandListEntryMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("probandListEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

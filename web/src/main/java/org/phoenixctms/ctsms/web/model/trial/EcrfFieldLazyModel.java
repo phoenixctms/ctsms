@@ -22,10 +22,10 @@ public class EcrfFieldLazyModel extends LazyDataModelBase<ECRFFieldOutVO> {
 
 	@Override
 	protected Collection<ECRFFieldOutVO> getLazyResult(PSFVO psf) {
-		if (trialId != null || ecrfId != null) { // trialId is always required
+		if (trialId != null || ecrfId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldList(WebUtil.getAuthentication(), trialId, ecrfId, false, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

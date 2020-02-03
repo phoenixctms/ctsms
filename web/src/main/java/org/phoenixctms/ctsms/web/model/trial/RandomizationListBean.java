@@ -79,7 +79,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	private ArrayList<Long> requiredFields;
 	private List<InputFieldSelectionSetValueOutVO> selectionSetValues;
 
-	// private ArrayList<SelectItem> availableTags;
 	public RandomizationListBean() {
 		super();
 		randomizationListModel = new RandomizationListLazyModel();
@@ -90,8 +89,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	@Override
 	public String addAction() {
 		StratificationRandomizationListInVO backup = new StratificationRandomizationListInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -180,9 +177,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		return ERROR_OUTCOME;
 	}
 
-	// public ArrayList<SelectItem> getAvailableTags() {
-	// return availableTags;
-	// }
 	public StratificationRandomizationListInVO getIn() {
 		return in;
 	}
@@ -242,12 +236,10 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	}
 
 	public void handleSelectionSetValueSelect(SelectEvent event) {
-		// System.out.println("select");
 		updateRequiredFields();
 	}
 
 	public void handleSelectionSetValueUnselect(UnselectEvent event) {
-		// System.out.println("unselect");
 		updateRequiredFields();
 	}
 
@@ -454,13 +446,10 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		requiredFields.clear();
 		HashSet<Long> usedFields = new HashSet<Long>();
 		if (stratificationProbandListEntryTagVOs != null) {
-			// if (in != null) {
 			Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
-			// Iterator<InputFieldSelectionSetValueOutVO> it = ProbandListEntryTagValueOutVOStringAdapter.getSelectionSetValuesFromIds(in.getSelectionSetValueIds()).iterator();
 			while (it.hasNext()) {
 				usedFields.add(it.next().getField().getId());
 			}
-			// }
 			Iterator<ProbandListEntryTagOutVO> tagIt = stratificationProbandListEntryTagVOs.iterator();
 			while (tagIt.hasNext()) {
 				InputFieldOutVO field = tagIt.next().getField();

@@ -84,7 +84,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 
 	@Override
 	public String getStyleClass() {
-		// if (in.getInventoryId() != null) {
 		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
@@ -109,7 +108,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			}
 			return sb.toString();
 		}
-		// }
 		return "";
 	}
 
@@ -117,7 +115,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		boolean appended = false;
-		// if (in.getProbandId() != null) {
 		ProbandOutVO proband = WebUtil.getProband(in.getProbandId(), null, null, null);
 		if (proband != null) {
 			if (appended) {
@@ -126,8 +123,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.probandOutVOToString(proband));
 			appended = true;
 		}
-		// }
-		// if (in.getTrialId() != null) {
 		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
 		if (trial != null) {
 			if (appended) {
@@ -136,8 +131,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			appended = true;
 		}
-		// }
-		// if (in.getCourseId() != null) {
 		CourseOutVO course = WebUtil.getCourse(in.getCourseId(), null, null, null);
 		if (course != null) {
 			if (appended) {
@@ -146,8 +139,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.courseOutVOToString(course));
 			appended = true;
 		}
-		// }
-		// if (in.getInventoryId() != null) {
 		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			if (appended) {
@@ -156,7 +147,6 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getComment())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

@@ -83,8 +83,6 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		this.trialId = id;
 		initIn();
 		initSets();
-		//ColumnManagementBean.resetVisibleMap("probandmoneytransfersummary_list");
-		//ColumnManagementBean.resetVisibleMap("probandmoneytransfernoparticipationsummary_list");
 		return CHANGE_OUTCOME;
 	}
 
@@ -307,7 +305,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -325,7 +323,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -337,7 +335,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -364,7 +362,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		if (trialId != null) {
 			try {
 				costTypes = WebUtil.getServiceLocator().getProbandService().getCostTypes(WebUtil.getAuthentication(), null, trialId, null, null, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -431,7 +429,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 				WebUtil.getServiceLocator().getProbandService().setAllMoneyTransfersPaid(WebUtil.getAuthentication(), probandId, trialId, true);
 				initSets();
 				addOperationSuccessMessage("reimbursementsMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				Messages.addMessageClientId("reimbursementsMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessageClientId("reimbursementsMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());

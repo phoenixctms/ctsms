@@ -18,18 +18,10 @@ import org.primefaces.model.ScheduleEvent;
 
 public class StaffNaCountEvent extends ScheduleEventBase<DateCountVO> {
 
-	// private final static String EVENT_STAFF_NA_COUNT_STYLECLASS = "ctsms-schedule-staffnacount-event";
-	// private final static String EVENT_EXCEEDED_STAFF_NA_COUNT_STYLECLASS = "ctsms-schedule-exceeded-staffnacount-event";
 	private final static Color EVENT_COLOR = Color.LIGHTGRAY;
 	private final static Color EXCEEDED_EVENT_COLOR = Color.LIGHTPINK;
 	protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA50;
 
-	// private static void initStaffNaCountDefaultValues(DateCountVO data) {
-	// if (data != null) {
-	// data.setDate(null);
-	// data.setCount(0l);
-	// }
-	// }
 	public StaffNaCountEvent() {
 		super();
 	}

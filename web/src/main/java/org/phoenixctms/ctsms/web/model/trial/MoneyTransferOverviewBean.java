@@ -66,11 +66,10 @@ public class MoneyTransferOverviewBean extends ManagedBeanBase {
 		}
 		filterCostTypes = WebUtil.getMoneyTransferFilterCostTypes(trialMoneyTransferSummaryModel.getDepartmentId(), null, trialMoneyTransferSummaryModel.getProbandDepartmentId(),
 				null);
-		// Collection<PaymentMethodVO> paymentMethodVOs = null;
 		if (paymentMethods == null) {
 			try {
 				paymentMethods = WebUtil.getServiceLocator().getSelectionSetService().getPaymentMethods(WebUtil.getAuthentication());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

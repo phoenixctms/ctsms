@@ -43,71 +43,6 @@ public class IDVOList implements List<IDVO> {
 		}
 	}
 
-	// private ListIterator<IDVO> createListIterator(final int index) {
-	// final List<IDVO> thisList = this;
-	// return new ListIterator<IDVO>() {
-	//
-	// private List<IDVO> list;
-	// private int pos;
-	// {
-	// this.list = thisList;
-	// pos = index;
-	// }
-	//
-	// @Override
-	// public boolean hasNext() {
-	// return (pos < list.size());
-	// }
-	//
-	// @Override
-	// public IDVO next() {
-	// if (!hasNext()) {
-	// throw new NoSuchElementException();
-	// } else {
-	// pos++;
-	// return (list.get(pos - 1));
-	// }
-	// }
-	//
-	// @Override
-	// public void remove() {
-	// throw new UnsupportedOperationException();
-	// }
-	//
-	// @Override
-	// public void add(IDVO e) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public boolean hasPrevious() {
-	// return pos != 0;
-	// }
-	//
-	// @Override
-	// public int nextIndex() {
-	// return pos;
-	// }
-	//
-	// @Override
-	// public IDVO previous() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// @Override
-	// public int previousIndex() {
-	// return pos - 1;
-	// }
-	//
-	// @Override
-	// public void set(IDVO e) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	// };
-	// }
 	private static IDVO VOToIDVO(Object vo) {
 		if (vo != null) {
 			return new IDVO(vo);
@@ -120,7 +55,7 @@ public class IDVOList implements List<IDVO> {
 
 	public IDVOList(List c) {
 		if (c == null) {
-			throw new NullPointerException(); // Messages.getString(MessageCodes.IDVO_LIST_NULL)
+			throw new NullPointerException();
 		}
 		this.backingList = c;
 	}
@@ -207,9 +142,6 @@ public class IDVOList implements List<IDVO> {
 		return VOToIDVO(backingList.get(index));
 	}
 
-	// public List getBackingList() {
-	// return backingList;
-	// }
 	@Override
 	public int indexOf(Object o) {
 		if (o instanceof IDVO) {

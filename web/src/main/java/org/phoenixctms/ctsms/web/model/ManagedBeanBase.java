@@ -114,7 +114,7 @@ public abstract class ManagedBeanBase {
 	public abstract boolean isCreated();
 
 	public boolean isEditable() {
-		return isCreated(); // && isCreateable();
+		return isCreated();
 	}
 
 	public boolean isRemovable() {

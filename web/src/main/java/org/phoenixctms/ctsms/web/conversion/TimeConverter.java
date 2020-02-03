@@ -17,19 +17,5 @@ public class TimeConverter extends DateTimeConverterBase {
 	@Override
 	protected void setFormat() {
 		this.setPattern(CommonUtil.getInputTimePattern(WebUtil.getDateFormat()));
-		// String converterTimePattern = Settings.getString(SettingCodes.CONVERTER_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.CONVERTER_TIME_PATTERN);
-		// if (converterTimePattern != null && converterTimePattern.length() > 0) {
-		// try {
-		// this.setPattern(converterTimePattern);
-		// } catch (ConverterException e) {
-		// setTimeStyleType();
-		// }
-		// } else {
-		// setTimeStyleType();
-		// }
 	}
-	// private void setTimeStyleType() {
-	// this.setTimeStyle(Settings.getString(SettingCodes.CONVERTER_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.CONVERTER_TIME_STYLE));
-	// this.setType(DateUtil.ConverterType.TIME.toString());
-	// }
 }

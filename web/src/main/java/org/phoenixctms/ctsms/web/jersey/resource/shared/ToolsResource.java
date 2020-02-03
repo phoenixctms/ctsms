@@ -67,8 +67,7 @@ public final class ToolsResource {
 	};
 	private final static Class<?> SERVICE_INTERFACE = ToolsService.class;
 	public final static CompleteIndex COMPLETE_INDEX = new CompleteIndex(getCompleteIndexNode(
-			ResourceUtils.getMethodPath(ToolsResource.class, "complete").replaceFirst("/\\{resource\\}", ""), // "completeIndex"),
-			getArgsUriPart("")));
+			ResourceUtils.getMethodPath(ToolsResource.class, "complete").replaceFirst("/\\{resource\\}", ""), getArgsUriPart("")));
 
 	private static ArgsUriPart getArgsUriPart(String resource) {
 		ArgsUriPart args = new ArgsUriPart(SERVICE_INTERFACE, resource, COMPLETE_METHOD_NAME_TRANSFORMER);
@@ -107,7 +106,7 @@ public final class ToolsResource {
 	@Path("complete/{resource}")
 	public Collection complete(@PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		if (AssociationPath.methodExists(ToolsService.class, resource, COMPLETE_METHOD_NAME_TRANSFORMER)) {
-			ArgsUriPart args = getArgsUriPart(resource, auth); // );
+			ArgsUriPart args = getArgsUriPart(resource, auth);
 			try {
 				return (Collection<?>) AssociationPath.invoke(resource,
 						WebUtil.getServiceLocator().getToolsService(),
@@ -156,6 +155,6 @@ public final class ToolsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request)); // basePath));
+		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request));
 	}
 }

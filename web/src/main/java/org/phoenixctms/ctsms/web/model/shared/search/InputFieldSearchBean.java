@@ -44,7 +44,6 @@ import org.primefaces.model.StreamedContent;
 public class InputFieldSearchBean extends SearchBeanBase {
 
 	private InputFieldSearchResultLazyModel inputFieldResultModel;
-	// private ArrayList<SelectItem> filterCategories;
 	private HashMap<Long, Collection<IDVO>> inquiryCache;
 	private HashMap<Long, Collection<IDVO>> listEntryTagCache;
 	private HashMap<Long, Collection<IDVO>> ecrfFieldCache;
@@ -157,9 +156,6 @@ public class InputFieldSearchBean extends SearchBeanBase {
 		}
 	}
 
-	// public ArrayList<SelectItem> getFilterCategories() {
-	// return filterCategories;
-	// }
 	public InputFieldSearchResultLazyModel getInputFieldResultModel() {
 		return inputFieldResultModel;
 	}
@@ -312,26 +308,6 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	@Override
 	protected void initSpecificSets() {
 		clearCaches();
-		// Collection<String> categoryStrings = null;
-		// try {
-		// categoryStrings = WebUtil.getServiceLocator().getSelectionSetService().getInputFieldCategories(WebUtil.getAuthentication(), null, null, null);
-		// } catch (AuthenticationException e) {
-		// WebUtil.publishException(e);
-		// } catch (AuthorisationException e) {
-		// } catch (ServiceException e) {
-		// } catch (IllegalArgumentException e) {
-		// }
-		// if (categoryStrings != null) {
-		// filterCategories = new ArrayList<SelectItem>(categoryStrings.size());
-		// Iterator<String> it = categoryStrings.iterator();
-		// while (it.hasNext()) {
-		// String category = it.next();
-		// filterCategories.add(new SelectItem(category, category));
-		// }
-		// } else {
-		// filterCategories = new ArrayList<SelectItem>();
-		// }
-		// filterCategories.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 	}
 
 	@Override

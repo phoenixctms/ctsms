@@ -144,9 +144,9 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		trialMassMailModel.updateRowCount();
 		randomizationListCodeModel.setTrialId(trialId);
 		randomizationListCodeModel.updateRowCount();
-		shiftDurationModel.reset(now, ShiftDurationSummaryType.TRIAL, null); //trialId);
-		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, null); //trialId);
-		enrollmentChartBean.changeRootEntity(null); // trialId);
+		shiftDurationModel.reset(now, ShiftDurationSummaryType.TRIAL, null);
+		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, null);
+		enrollmentChartBean.changeRootEntity(null);
 	}
 
 	@Override

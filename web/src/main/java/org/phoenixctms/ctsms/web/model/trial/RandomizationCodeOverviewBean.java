@@ -35,22 +35,6 @@ public class RandomizationCodeOverviewBean extends ManagedBeanBase {
 		return WebUtil.getRandomizationCodeTrial(code);
 	}
 
-	//	public String randomizationListCodeToColor(RandomizationListCodeOutVO code) {
-	//		if (user != null) {
-	//			if (user.getLocked()) {
-	//				return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.USER_LOCKED_COLOR, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_COLOR));
-	//			}
-	//			Boolean passwordValid = getPasswordValid(user);
-	//			if (passwordValid != null) {
-	//				if (passwordValid) {
-	//					return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.PASSWORD_VALID_COLOR, Bundle.SETTINGS, DefaultSettings.PASSWORD_VALID_COLOR));
-	//				} else {
-	//					return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.PASSWORD_INVALID_COLOR, Bundle.SETTINGS, DefaultSettings.PASSWORD_INVALID_COLOR));
-	//				}
-	//			}
-	//		}
-	//		return null;
-	//	}
 	@PostConstruct
 	private void init() {
 		initIn();
@@ -85,11 +69,4 @@ public class RandomizationCodeOverviewBean extends ManagedBeanBase {
 		initSets();
 		return LOAD_OUTCOME;
 	}
-	//	public String timelineEventToColor(TimelineEventOutVO timelineEvent) {
-	//		if (timelineEvent != null) {
-	//			return WebUtil.expirationToColor(today, timelineEvent.getStart(), Settings.getTimelineEventDueInColorMap(),
-	//					Settings.getColor(SettingCodes.TIMELINE_EVENT_OVERDUE_COLOR, Bundle.SETTINGS, DefaultSettings.TIMELINE_EVENT_OVERDUE_COLOR));
-	//		}
-	//		return "";
-	//	}
 }

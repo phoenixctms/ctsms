@@ -35,7 +35,6 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.SystemEventListener;
 
-//import org.omnifaces.util.Hacks;
 /**
  * <p>
  * The {@link ResetInputAjaxActionListener} will reset input fields which are not executed during ajax submit, but which
@@ -115,9 +114,8 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 	private static HashSet<Class> SKIP_COMPONENTS = new HashSet<Class>();
 	static {
 		SKIP_COMPONENTS.add(org.primefaces.component.tabview.TabView.class);
-		// SKIP_COMPONENTS.add(org.primefaces.component.datatable.DataTable.class);
 	}
-	private static final Set<VisitHint> VISIT_HINTS = EnumSet.of(VisitHint.SKIP_TRANSIENT, VisitHint.SKIP_UNRENDERED); // , VisitHint.SKIP_ITERATION);
+	private static final Set<VisitHint> VISIT_HINTS = EnumSet.of(VisitHint.SKIP_TRANSIENT, VisitHint.SKIP_UNRENDERED);
 	private static final VisitCallback VISIT_CALLBACK = new VisitCallback() {
 
 		@Override
@@ -135,7 +133,6 @@ public class ResetInputAjaxActionListener extends DefaultPhaseListener implement
 					try {
 						target.visitTree(createVisitContext(facesContext, null, context.getHints()), VISIT_CALLBACK);
 					} catch (Exception e) {
-						// e.printStackTrace();
 					}
 				}
 			}

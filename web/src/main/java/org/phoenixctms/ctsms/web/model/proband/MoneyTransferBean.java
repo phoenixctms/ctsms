@@ -40,8 +40,7 @@ import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @ViewScoped
-public class MoneyTransferBean extends MoneyTransferBeanBase { // extends ManagedBeanBase implements PaymentMethodSelectorListener {
-	// private static final int METHOD_PROPERTY_ID = 1;
+public class MoneyTransferBean extends MoneyTransferBeanBase {
 
 	public static void initMoneyTransferDefaultValues(MoneyTransferInVO in, Long probandId) {
 		if (in != null) {
@@ -63,17 +62,13 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 	}
 
-	// private MoneyTransferInVO in;
-	// private MoneyTransferOutVO out;
 	private Long probandId;
 	private ProbandOutVO proband;
 	private TrialOutVO trial;
 	private ArrayList<SelectItem> filterTrials;
 	private ArrayList<SelectItem> reimbursementTrials;
-	// private ArrayList<SelectItem> bankAccounts;
 	private ArrayList<SelectItem> filterBankAccounts;
 	private ArrayList<SelectItem> filterCostTypes;
-	// private PaymentMethodSelector method;
 	private MoneyTransferLazyModel moneyTransferModel;
 	private MoneyTransferSummaryVO openSummary;
 	private PaymentMethod payOffPaymentMethod;
@@ -82,7 +77,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		super();
 		payOffPaymentMethod = Settings.getPaymentMethod(SettingCodes.PAYOFF_PAYMENT_METHOD, Bundle.SETTINGS, DefaultSettings.PAYOFF_PAYMENT_METHOD);
 		moneyTransferModel = new MoneyTransferLazyModel();
-		// setMethod(new PaymentMethodSelector(this, METHOD_PROPERTY_ID));
 	}
 
 	@Override
@@ -98,7 +92,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 			initSets(false);
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -130,10 +124,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		return CHANGE_OUTCOME;
 	}
 
-	// public List<String> completeCostType(String query) {
-	// in.setCostType(query);
-	// return getCompleteCostTypeList(query);
-	// }
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -148,7 +138,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -156,29 +146,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 		return ERROR_OUTCOME;
 	}
-	// public ArrayList<SelectItem> getBankAccounts() {
-	// return bankAccounts;
-	// }
 
-	// private List<String> getCompleteCostTypeList(String query) {
-	// Collection<String> costTypes = null;
-	// try {
-	// costTypes = WebUtil.getServiceLocator().getProbandService().completeCostTypes(WebUtil.getAuthentication(),
-	// null, in.getTrialId(), null, null, query, null); // let permission argument override decide...
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// if (costTypes != null) {
-	// try {
-	// return ((List<String>) costTypes);
-	// } catch (ClassCastException e) {
-	// }
-	// }
-	// return new ArrayList<String>();
-	// }
 	public ArrayList<SelectItem> getFilterBankAccounts() {
 		return filterBankAccounts;
 	}
@@ -190,52 +158,15 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 	public ArrayList<SelectItem> getFilterTrials() {
 		return filterTrials;
 	}
-	// public MoneyTransferInVO getIn() {
-	// return in;
-	// }
-	//
-	// public PaymentMethodSelector getMethod() {
-	// return method;
-	// }
 
-	// @Override
-	// public String getModifiedAnnotation() {
-	// if (out != null) {
-	// return WebUtil.getModifiedAnnotation(out.getVersion(), out.getModifiedUser(), out.getModifiedTimestamp());
-	// } else {
-	// return super.getModifiedAnnotation();
-	// }
-	// }
 	public MoneyTransferLazyModel getMoneyTransferModel() {
 		return moneyTransferModel;
 	}
 
-	// public void getNewPaymentReference(ActionEvent event) {
-	// try {
-	// in.setReference(WebUtil.getServiceLocator().getProbandService().getNewPaymentReference(WebUtil.getAuthentication(), in));
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
 	public MoneyTransferSummaryVO getOpenSummary() {
 		return openSummary;
 	}
-	// public MoneyTransferOutVO getOut() {
-	// return out;
-	// }
 
-	// @Override
-	// public PaymentMethod getPaymentMethod(int property) {
-	// switch (property) {
-	// case METHOD_PROPERTY_ID:
-	// return this.in.getMethod();
-	// default:
-	// return PaymentMethodSelectorListener.NO_SELECTION_PAYMENT_METHOD;
-	// }
-	// }
 	public StreamedContent getReimbursementsExcelStreamedContent() throws Exception {
 		try {
 			ReimbursementsExcelVO excel = WebUtil.getServiceLocator().getProbandService().exportReimbursements(WebUtil.getAuthentication(), probandId, null, null, null);
@@ -243,7 +174,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -273,7 +204,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -290,55 +221,12 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 	}
 
-	// @Override
-	// public String getTitle() {
-	// if (out != null) {
-	// if (out.getTrial() != null) {
-	// if (!CommonUtil.isEmptyString(out.getCostType())) {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TRIAL_COST_TYPE_TITLE, Long.toString(out.getId()), WebUtil.trialOutVOToString(out.getTrial()), out
-	// .getMethod().getName(), out.getCostType(), out.getAmount(), WebUtil.getCurrencySymbol());
-	// } else {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TRIAL_TITLE, Long.toString(out.getId()), WebUtil.trialOutVOToString(out.getTrial()), out.getMethod()
-	// .getName(), out.getAmount(), WebUtil.getCurrencySymbol());
-	// }
-	// } else {
-	// if (!CommonUtil.isEmptyString(out.getCostType())) {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_COST_TYPE_TITLE, Long.toString(out.getId()), out.getMethod().getName(), out.getCostType(),
-	// out.getAmount(), WebUtil.getCurrencySymbol());
-	// } else {
-	// return Messages.getMessage(MessageCodes.MONEY_TRANSFER_TITLE, Long.toString(out.getId()), out.getMethod().getName(), out.getAmount(),
-	// WebUtil.getCurrencySymbol());
-	// }
-	// }
-	// } else {
-	// return Messages.getString(MessageCodes.CREATE_NEW_MONEY_TRANSFER);
-	// }
-	// }
 	public String getTrialName() {
 		return WebUtil.trialIdToName(in.getTrialId());
 	}
 
-	// public void handleCostTypeSelect(SelectEvent event) {
-	// in.setCostType((String) event.getObject());
-	// }
-	//
-	// public void handleMethodChange() {
-	// if (!isBankAccountVisible()) {
-	// in.setBankAccountId(null);
-	// }
-	// if (!isReferenceVisible()) {
-	// in.setReference(null);
-	// }
-	// if (!isReasonForPaymentVisible()) {
-	// in.setReasonForPayment(null);
-	// }
-	// if (!isVoucherCodeVisible()) {
-	// in.setVoucherCode(null);
-	// }
-	// }
 	@PostConstruct
 	private void init() {
-		// System.out.println("POSTCONSTRUCT: " + this.toString());
 		Long id = WebUtil.getLongParamValue(GetParamNames.MONEY_TRANSFER_ID);
 		if (id != null) {
 			this.load(id);
@@ -373,7 +261,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		openSummary = WebUtil.getProbandOpenReimbursementSummary(null, probandId, payOffPaymentMethod);
 		proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);
 		trial = WebUtil.getTrial(this.in.getTrialId());
-		if (proband != null) { // this bean is postconstructed for soem reason
+		if (proband != null) { // this bean is postconstructed for some reason
 			if (!WebUtil.isProbandPerson(proband)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.PROBAND_NOT_PERSON);
 			} else {
@@ -387,9 +275,6 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		}
 	}
 
-	// public boolean isBankAccountVisible() {
-	// return PaymentMethod.WIRE_TRANSFER.equals(in.getMethod());
-	// }
 	@Override
 	public boolean isCreateable() {
 		return (in.getProbandId() == null ? false : !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband));
@@ -413,21 +298,11 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		return WebUtil.isProbandPerson(proband);
 	}
 
-	// public boolean isReasonForPaymentVisible() {
-	// return isBankAccountVisible();
-	// }
-	//
-	// public boolean isReferenceVisible() {
-	// return isBankAccountVisible();
-	// }
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isProbandLocked(proband) && WebUtil.isProbandPerson(proband);
 	}
 
-	// public boolean isVoucherCodeVisible() {
-	// return PaymentMethod.VOUCHER.equals(in.getMethod());
-	// }
 	@Override
 	public String loadAction() {
 		return loadAction(in.getId());
@@ -444,7 +319,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -463,34 +338,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 		initSets(true);
 		return RESET_OUTCOME;
 	}
-	// private void sanitizeInVals() {
-	// if (!isBankAccountVisible()) {
-	// in.setBankAccountId(null);
-	// }
-	// if (!isReferenceVisible()) {
-	// in.setReference(null);
-	// }
-	// if (!isReasonForPaymentVisible()) {
-	// in.setReasonForPayment(null);
-	// }
-	// if (!isVoucherCodeVisible()) {
-	// in.setVoucherCode(null);
-	// }
-	// }
 
-	// public void setMethod(PaymentMethodSelector method) {
-	// this.method = method;
-	// }
-	//
-	// @Override
-	// public void setPaymentMethod(int property, PaymentMethod paymentMethod) {
-	// switch (property) {
-	// case METHOD_PROPERTY_ID:
-	// this.in.setMethod(paymentMethod);
-	// break;
-	// default:
-	// }
-	// }
 	public void setSelectedMoneyTransfer(IDVO moneyTransfer) {
 		if (moneyTransfer != null) {
 			this.out = (MoneyTransferOutVO) moneyTransfer.getVo();
@@ -510,7 +358,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 			initSets(false);
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -530,7 +378,7 @@ public class MoneyTransferBean extends MoneyTransferBeanBase { // extends Manage
 				initIn();
 				initSets(false);
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

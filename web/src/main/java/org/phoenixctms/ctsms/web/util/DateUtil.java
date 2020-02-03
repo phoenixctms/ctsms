@@ -42,9 +42,8 @@ public final class DateUtil {
 		SECONDS, MINUTES, HOURS, DAYS, MONTHS, YEARS
 	}
 
-	// public final static String JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public final static String JQPLOT_DATE_PATTERN = "%d.%m.%Y";
-	public final static String JQPLOT_JS_DATE_PATTERN = "yyyy-MM-dd HH:mm"; // "dd.MM.yyyy HH:mm"; //"yyyyMMdd";
+	public final static String JQPLOT_JS_DATE_PATTERN = "yyyy-MM-dd HH:mm";
 	private final static String JS_DATE_UTC_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z"; // rfc1123
 
 	public static Date addDayMinuteDelta(Date date, int days, int minutes) {
@@ -132,12 +131,6 @@ public final class DateUtil {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDatePattern(WebUtil.getDateFormat()), locale);
-		// String dateformatDatePattern = Settings.getString(SettingCodes.DATEFORMAT_DATE_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_PATTERN);
-		// if (dateformatDatePattern != null && dateformatDatePattern.length() > 0) {
-		// dateFormat = new SimpleDateFormat(dateformatDatePattern, locale);
-		// } else {
-		// dateFormat = DateFormat.getDateInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE), locale);
-		// }
 		if (isUserTimeZone) {
 			dateFormat.setTimeZone(timeZone);
 		}
@@ -146,19 +139,6 @@ public final class DateUtil {
 
 	public static String getDateStartStopString(Date start, Date stop) {
 		return CommonUtil.getDateStartStopString(start, stop, getDateFormat());
-		// StringBuilder sb = new StringBuilder();
-		// if (start != null) {
-		// sb.append(getDateFormat().format(start));
-		// } else {
-		// sb.append("?");
-		// }
-		// sb.append(" - ");
-		// if (stop != null) {
-		// sb.append(getDateFormat().format(stop));
-		// } else {
-		// sb.append("?");
-		// }
-		// return sb.toString();
 	}
 
 	public static DateFormat getDateTimeFormat() {
@@ -169,13 +149,6 @@ public final class DateUtil {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDateTimePattern(WebUtil.getDateFormat()), locale);
-		// String dateformatDatetimePattern = Settings.getString(SettingCodes.DATEFORMAT_DATETIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATETIME_PATTERN);
-		// if (dateformatDatetimePattern != null && dateformatDatetimePattern.length() > 0) {
-		// dateFormat = new SimpleDateFormat(dateformatDatetimePattern, locale);
-		// } else {
-		// dateFormat = DateFormat.getDateTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_DATE_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_DATE_STYLE),
-		// Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
-		// }
 		if (isUserTimeZone) {
 			dateFormat.setTimeZone(timeZone);
 		}
@@ -547,12 +520,6 @@ public final class DateUtil {
 		Locale locale = WebUtil.getLocale();
 		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputTimePattern(WebUtil.getDateFormat()), locale);
-		// String dateformatTimePattern = Settings.getString(SettingCodes.DATEFORMAT_TIME_PATTERN, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_PATTERN);
-		// if (dateformatTimePattern != null && dateformatTimePattern.length() > 0) {
-		// dateFormat = new SimpleDateFormat(dateformatTimePattern, locale);
-		// } else {
-		// dateFormat = DateFormat.getTimeInstance(Settings.getInt(SettingCodes.DATEFORMAT_TIME_STYLE, Bundle.SETTINGS, DefaultSettings.DATEFORMAT_TIME_STYLE), locale);
-		// }
 		if (isUserTimeZone) {
 			dateFormat.setTimeZone(timeZone);
 		}
@@ -581,7 +548,6 @@ public final class DateUtil {
 
 	public static Date parseJsUTCDate(String date) throws ParseException {
 		return CommonUtil.parseDate(date, JS_DATE_UTC_PATTERN, Locale.ENGLISH);
-		//return (new SimpleDateFormat(JS_DATE_UTC_PATTERN, Locale.ENGLISH)).parse(date);
 	}
 
 	public static Date sanitizeScheduleDate(boolean add, Date date) {

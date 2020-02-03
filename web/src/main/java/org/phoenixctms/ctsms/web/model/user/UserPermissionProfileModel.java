@@ -117,7 +117,6 @@ public class UserPermissionProfileModel implements Map<String, String> {
 			while (userPermissionProfilesIt.hasNext()) {
 				UserPermissionProfileInVO userPermissionProfileIn = new UserPermissionProfileInVO();
 				userPermissionProfileIn.copy(userPermissionProfilesIt.next());
-				// userPermissionProfileIn.setActive(selectedProfile.equals(userPermissionProfileIn.getProfile()));
 				userPermissionProfileIn.setActive(userPermissionProfileIn.getProfile().equals(selectedProfile));
 				result.add(userPermissionProfileIn);
 			}
@@ -130,7 +129,7 @@ public class UserPermissionProfileModel implements Map<String, String> {
 		Collection<PermissionProfileVO> permissionProfileVOs = null;
 		try {
 			permissionProfileVOs = WebUtil.getServiceLocator().getSelectionSetService().getPermissionProfiles(WebUtil.getAuthentication(), null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}

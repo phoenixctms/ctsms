@@ -48,7 +48,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="shared")
+@Api(value = "shared")
 @Path("/search")
 public final class SearchResource {
 
@@ -168,8 +168,7 @@ public final class SearchResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
-		return new ResourceIndex(IndexResource.getResourceIndexNode(SearchResource.class, request)); // basePath));
+		return new ResourceIndex(IndexResource.getResourceIndexNode(SearchResource.class, request));
 	}
 
 	@POST

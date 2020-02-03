@@ -274,7 +274,6 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 			} else {
 				Collection<InquiryValueOutVO> result = new ArrayList<InquiryValueOutVO>();
 				try {
-					// long t1 = System.currentTimeMillis();
 					result = WebUtil
 							.getServiceLocator()
 							.getProbandService()
@@ -282,8 +281,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 									Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null,
 									proband.getId(),
 									columnInquiryInputFieldId);
-					// WebUtil.perfDebug("getInquiryInputFieldValues", t1);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -313,14 +311,11 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 			} else {
 				InquiryValueOutVO result = null;
 				try {
-					// long t1 = System.currentTimeMillis();
 					result = WebUtil.getServiceLocator().getProbandService().getInquiryValue(WebUtil.getAuthentication(), proband.getId(), columnInquiryId)
 							.getPageValues().iterator()
 							.next();
-					// WebUtil.perfDebug("getInquiryValue", t1);
-					// return result;
 				} catch (NoSuchElementException e) {
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -344,7 +339,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 				} else {
 					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), trialId, null, probandId, total, psf);
 				}
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -419,7 +414,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 				try {
 					result = WebUtil.getServiceLocator().getTrialService()
 							.getProbandListEntryTagInputFieldValues(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagInputFieldId);
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -451,7 +446,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 					result = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValue(WebUtil.getAuthentication(), listEntry.getId(), columnProbandListEntryTagId)
 							.getPageValues().iterator().next();
 				} catch (NoSuchElementException e) {
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -483,7 +478,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		if (showProbandListEntryTagColumn && (trialId != null || probandId != null)) {
 			try {
 				probandListEntryTagVOs = WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagList(WebUtil.getAuthentication(), trialId, probandId, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -509,7 +504,6 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 			inquiryValueCache.clear();
 			Collection<InquiryOutVO> inquiryVOs = null;
 			if (showInquiryColumn) {
-				// long t1 = System.currentTimeMillis();
 				if (probandId != null) {
 					try {
 						inquiryVOs = WebUtil
@@ -518,11 +512,10 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 								.getInquiryList(WebUtil.getAuthentication(), trialId,
 										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null,
 										probandId);
-					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						WebUtil.publishException(e);
 					}
-					// WebUtil.perfDebug("getInquiryList", t1);
 				} else if (trialId != null) {
 					try {
 						inquiryVOs = WebUtil
@@ -530,11 +523,10 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 								.getTrialService()
 								.getInquiryList(WebUtil.getAuthentication(), trialId,
 										Settings.getBoolean(SettingCodes.PROBAND_LIST_INQUIRY_ACTIVE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_INQUIRY_ACTIVE), null);
-					} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
 						WebUtil.publishException(e);
 					}
-					// WebUtil.perfDebug("getInquiryList", t1);
 				}
 			}
 			if (inquiryVOs != null) {
@@ -655,20 +647,17 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		this.probandGroup = probandGroup;
 		this.trialId = (probandGroup == null ? null : probandGroup.getTrial().getId());
 		this.probandId = null;
-		// initSets();
 	}
 
 	public void setProbandId(Long probandId) {
 		this.probandId = probandId;
 		this.trialId = null;
 		this.probandGroup = null;
-		// initSets();
 	}
 
 	public void setTrialId(Long trialId) {
 		this.trialId = trialId;
 		this.probandId = null;
 		this.probandGroup = null;
-		// initSets();
 	}
 }

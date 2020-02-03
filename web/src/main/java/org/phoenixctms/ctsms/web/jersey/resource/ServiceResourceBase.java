@@ -23,7 +23,6 @@ import com.sun.jersey.api.NotFoundException;
 
 public abstract class ServiceResourceBase {
 
-	
 	private final static Pattern GET_LIST_METHOD_NAME_REGEXP = Pattern.compile("^get(.+)List$");
 
 	protected final static ArgsUriPart getArgsUriPart(Class<?> serviceInterface, String resource, AuthenticationVO auth, String rootEntityIdMethodParamName,
@@ -34,7 +33,9 @@ public abstract class ServiceResourceBase {
 		args.getOverrides().put("psf", psf);
 		return args;
 	}
+
 	protected abstract AuthenticationVO getAuth();
+
 	protected abstract FileModule getFileModule();
 
 	protected static MethodTransfilter getGetListMethodNameTransformer(final String rootEntityIdMethodParamName, final Class<?> rootOutVo) {
@@ -49,7 +50,6 @@ public abstract class ServiceResourceBase {
 				if (!PSFVO.class.equals(paramTypes[paramTypes.length - 1])) {
 					return true;
 				}
-				// Integer x = AssociationPath.getArgumentIndexMap(method).get(rootEntityIdMethodParamName);
 				if (!(new Integer(1)).equals(AssociationPath.getArgumentIndexMap(method).get(rootEntityIdMethodParamName))) {
 					return true;
 				}

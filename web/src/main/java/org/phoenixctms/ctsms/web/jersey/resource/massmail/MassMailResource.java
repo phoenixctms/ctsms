@@ -43,7 +43,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="massmail")
+@Api(value = "massmail")
 @Path("/massmail")
 public final class MassMailResource extends ServiceResourceBase {
 
@@ -53,8 +53,7 @@ public final class MassMailResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "massMailId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, MassMailOutVO.class);
 	public final static MassMailListIndex LIST_INDEX = new MassMailListIndex(getListIndexNode(
-			ResourceUtils.getMethodPath(MassMailResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			ResourceUtils.getMethodPath(MassMailResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -77,7 +76,6 @@ public final class MassMailResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -178,7 +176,7 @@ public final class MassMailResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public MassMailListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

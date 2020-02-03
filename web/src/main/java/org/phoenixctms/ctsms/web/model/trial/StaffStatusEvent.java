@@ -82,7 +82,6 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getStaffId() != null) {
 		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		if (staff != null) {
 			sb.append(CommonUtil.staffOutVOToString(staff));
@@ -90,9 +89,7 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
-		// if (in.getTypeId() != null) {
 		StaffStatusTypeVO statusType = WebUtil.getStaffStatusType(in.getTypeId());
 		if (statusType != null) {
 			if (appended) {
@@ -101,7 +98,6 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 			sb.append(statusType.getName());
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getComment())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

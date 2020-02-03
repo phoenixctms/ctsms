@@ -67,8 +67,6 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		ProbandListStatusEntryInVO backup = new ProbandListStatusEntryInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
 		sanitizeInVals();
@@ -78,7 +76,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			in.copy(backup);
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -113,7 +111,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -131,7 +129,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			try {
 				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(), false,
 						probandListEntry.getProband().getId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -173,7 +171,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			Collection<ProbandListStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getProbandListStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -225,7 +223,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 				if (out != null && lastStatus != null) {
 					isLastStatus = (out.getId() == lastStatus.getId());
 				}
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -243,7 +241,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 					statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 							.getInitialProbandListStatusTypes(WebUtil.getAuthentication(), false, probandListEntry.getProband().getPerson());
 				}
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -301,7 +299,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 				return ERROR_OUTCOME;
 			}
 			return LOAD_OUTCOME;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessageClientId("probandListStatusEntryMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());

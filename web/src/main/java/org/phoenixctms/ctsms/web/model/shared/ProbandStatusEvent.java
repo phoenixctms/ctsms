@@ -82,7 +82,6 @@ public class ProbandStatusEvent extends ScheduleEventBase<ProbandStatusEntryInVO
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		// if (in.getProbandId() != null) {
 		ProbandOutVO proband = WebUtil.getProband(in.getProbandId(), null, null, null);
 		if (proband != null) {
 			sb.append(CommonUtil.probandOutVOToString(proband));
@@ -90,9 +89,7 @@ public class ProbandStatusEvent extends ScheduleEventBase<ProbandStatusEntryInVO
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
 			}
 		}
-		// }
 		boolean appended = false;
-		// if (in.getTypeId() != null) {
 		ProbandStatusTypeVO statusType = WebUtil.getProbandStatusType(in.getTypeId());
 		if (statusType != null) {
 			if (appended) {
@@ -101,7 +98,6 @@ public class ProbandStatusEvent extends ScheduleEventBase<ProbandStatusEntryInVO
 			sb.append(statusType.getName());
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getComment())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

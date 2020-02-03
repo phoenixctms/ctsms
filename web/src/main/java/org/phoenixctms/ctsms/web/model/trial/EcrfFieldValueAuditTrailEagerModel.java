@@ -15,9 +15,6 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase<ECRFFieldValueOutVO> {
 
-	// private Long listEntryId;
-	// private Long ecrfFieldId;
-	// private Long index;
 	private final static PSFVO INITIAL_PSF = new PSFVO();
 	static {
 		INITIAL_PSF.setSortField(WebUtil.ECRF_FIELD_VALUE_ID_PSF_PROPERTY_NAME);
@@ -51,14 +48,13 @@ public class EcrfFieldValueAuditTrailEagerModel extends EagerDataModelBase<ECRFF
 
 	@Override
 	protected Collection<ECRFFieldValueOutVO> getEagerResult(PSFVO psf) {
-		if (status != null) { // && ecrfId != null) {
+		if (status != null) {
 			try {
-				//return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId,null); //, psf);
 				return WebUtil.getServiceLocator().getTrialService()
 						.getEcrfFieldValue(WebUtil.getAuthentication(), status.getListEntry().getId(), status.getEcrfField().getId(), status.getIndex(), true, false,
 								new PSFVO(INITIAL_PSF))
 						.getPageValues();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

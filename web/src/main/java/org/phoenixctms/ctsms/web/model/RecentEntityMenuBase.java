@@ -80,7 +80,7 @@ public abstract class RecentEntityMenuBase {
 		if (entityModel != null) {
 			String moduleValue = getDbModule().getValue();
 			MenuItem newEntityMenuItem = new MenuItem();
-			newEntityMenuItem.setValue(getOpenNewEntityMenuItemLabel()); // .getDisplayName(true,TimeZone.LONG,userLocale));
+			newEntityMenuItem.setValue(getOpenNewEntityMenuItemLabel());
 			newEntityMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-new");
 			newEntityMenuItem.setOnclick(getOpenNewEntityJsName());
 			newEntityMenuItem.setUrl("#");
@@ -98,7 +98,7 @@ public abstract class RecentEntityMenuBase {
 					journalEntryVOs = WebUtil.getServiceLocator().getJournalService()
 							.getRecent(WebUtil.getAuthentication(), getJournalModule(), user.getId(), null, null, maxRecentEntities,
 									Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_RECENT, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_RECENT));
-				} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}
@@ -117,7 +117,7 @@ public abstract class RecentEntityMenuBase {
 					if (hasEntity(journalEntryVO)) {
 						MenuItem recentEntityMenuItem = new MenuItem();
 						recentEntityMenuItem.setValue(CommonUtil.clipString(getRecentEntityMenuItemLabel(journalEntryVO), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
-								EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
+								EllipsisPlacement.TRAILING));
 						recentEntityMenuItem.setOnclick(MessageFormat.format(getOpenEntityJsName(), Long.toString(getEntityId(journalEntryVO))));
 						String iconClass = getEntityIcon(journalEntryVO);
 						if (iconClass != null && iconClass.length() > 0) {

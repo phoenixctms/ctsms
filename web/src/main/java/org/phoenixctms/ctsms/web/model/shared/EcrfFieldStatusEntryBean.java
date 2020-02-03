@@ -36,16 +36,6 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 					MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT, new Long(ecrfFieldStatusEntryModel.getRowCount()),
 					getQueueName());
 		}
-		//
-		//
-		// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_BASE64, JSValues.AJAX_ECRF_FIELD_STATUS_ENTRY_COUNT,
-		// MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-		// WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
-		// if (operationSuccess && in.getTrialId() != null) {
-		// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
-		// MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-		// WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
-		// }
 	}
 
 	@Override
@@ -58,9 +48,6 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
-	// protected String getDataTableId() {
-	// return "ecrffieldstatus_" + ecrfFieldStatusEntryModel.getQueue().getValue() + "_list";
-	// }
 	public EcrfFieldStatusEntryLazyModel getEcrfFieldStatusEntryModel() {
 		return ecrfFieldStatusEntryModel;
 	}
@@ -78,7 +65,6 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 	public String getTabTitle() {
 		return WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT,
 				new Long(ecrfFieldStatusEntryModel.getRowCount()), getQueueName());
-		//return Messages.getMessage(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, getQueueName(), ecrfFieldStatusEntryModel.getRowCount());
 	}
 
 	@Override

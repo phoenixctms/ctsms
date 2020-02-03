@@ -74,7 +74,6 @@ public class TrialInventoryBookingBean extends InventoryBookingBeanBase {
 		this.trialId = id;
 		initIn();
 		initSets();
-		//ColumnManagementBean.resetVisibleMap("inventorybooking_list");
 		return CHANGE_OUTCOME;
 	}
 

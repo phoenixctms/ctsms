@@ -119,74 +119,7 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 					row[rowSize] = result.size();
 					result.add(row);
 				}
-				//		} else if (fieldsPerRow == 2) {
-				//			ArrayList<MODEL> paddedList = new ArrayList<MODEL>(size);
-				//			MODEL model;
-				//			int j = 0;
-				//			for (int i = 0; i < size; i++) {
-				//				model = get(i);
-				//				if (j == 0) {
-				//					paddedList.add(model);
-				//					j = 1;
-				//				} else if (j == 1) {
-				//					if ((getWidth(get(i - 1)) + getWidth(model)) > widthThreshold) {
-				//						paddedList.add(null);
-				//						paddedList.add(model);
-				//					} else {
-				//						paddedList.add(model);
-				//						j = 0;
-				//					}
-				//				}
-				//			}
-				//			result = new ArrayList<Object[]>((int) Math.ceil(paddedList.size() / 2.0));
-				//			for (int i = 0; i < paddedList.size(); i = i + 2) {
-				//				Object[] row = new Object[4];
-				//				row[0] = paddedList.get(i);
-				//				row[1] = ((i + 1) < paddedList.size() ? paddedList.get(i + 1) : null);
-				//				row[2] = null;
-				//				row[3] = result.size();
-				//				result.add(row);
-				//			}
-				//		} else if (fieldsPerRow == 3) {
-				//			ArrayList<MODEL> paddedList = new ArrayList<MODEL>(size);
-				//			MODEL model;
-				//			int j = 0;
-				//			for (int i = 0; i < size; i++) {
-				//				model = get(i);
-				//				if (j == 0) {
-				//					paddedList.add(model);
-				//					j = 1;
-				//				} else if (j == 1) {
-				//					if ((getWidth(get(i - 1)) + getWidth(model)) > widthThreshold) {
-				//						paddedList.add(null);
-				//						paddedList.add(null);
-				//						paddedList.add(model);
-				//						//j = 1;
-				//					} else {
-				//						paddedList.add(model);
-				//						j = 2;
-				//					}
-				//				} else if (j == 2) {
-				//					if ((getWidth(get(i - 2)) + getWidth(get(i - 1)) + getWidth(model)) > widthThreshold) {
-				//						paddedList.add(null);
-				//						paddedList.add(model);
-				//						j = 1;
-				//					} else {
-				//						paddedList.add(model);
-				//						j = 0;
-				//					}
-				//				}
-				//			}
-				//			result = new ArrayList<Object[]>((int) Math.ceil(paddedList.size() / 3.0));
-				//			for (int i = 0; i < paddedList.size(); i = i + 3) {
-				//				Object[] row = new Object[4];
-				//				row[0] = paddedList.get(i);
-				//				row[1] = ((i + 1) < paddedList.size() ? paddedList.get(i + 1) : null);
-				//				row[2] = ((i + 2) < paddedList.size() ? paddedList.get(i + 2) : null);
-				//				row[3] = result.size();
-				//				result.add(row);
-				//			}
-			} else { // if (fieldsPerRow <= ) {
+			} else {
 				ArrayList<MODEL> paddedList = new ArrayList<MODEL>(size);
 				MODEL model;
 				int j = 0;
@@ -236,31 +169,6 @@ public abstract class InputModelListBase<T, MODEL> implements List<MODEL> {
 		return result;
 	}
 
-	// public List<Object[]> createPaddedListOld(int widthThreshold) {
-	// ArrayList<MODEL> paddedList = new ArrayList<MODEL>(size);
-	// boolean pad;
-	// MODEL model;
-	// for (int i = 0; i < size; i++) {
-	// model = get(i);
-	// pad = ((i % 2 == 1) && ((getWidth(get(i - 1)) + getWidth(model)) > widthThreshold));
-	// if (pad) {
-	// paddedList.add(null);
-	// }
-	// paddedList.add(model);
-	// if (pad) {
-	// paddedList.add(null);
-	// }
-	// }
-	// ArrayList<Object[]> result = new ArrayList<Object[]>((int) Math.ceil(paddedList.size() / 2.0));
-	// for (int i = 0; i < paddedList.size(); i = i + 2) {
-	// Object[] row = new Object[3];
-	// row[0] = paddedList.get(i);
-	// row[1] = ((i < paddedList.size() - 1) ? paddedList.get(i + 1) : null);
-	// row[2] = result.size();
-	// result.add(row);
-	// }
-	// return result;
-	// }
 	@Override
 	public MODEL get(int index) {
 		MODEL model = models.get(index);

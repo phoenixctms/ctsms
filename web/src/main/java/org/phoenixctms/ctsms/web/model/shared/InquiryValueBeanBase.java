@@ -142,13 +142,11 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 			@Override
 			protected int getDefaultFieldsPerRow() {
 				return ((InquiryValueBeanBase) bean).getDefaultFieldsPerRow();
-				// return Settings.getInt(SettingCodes.INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW, Bundle.SETTINGS,DefaultSettings.INQUIRY_VALUES_DEFAULT_FIELDS_PER_ROW);
 			}
 
 			@Override
 			protected int getDefaultPageSize() {
 				return ((InquiryValueBeanBase) bean).getDefaultPageSize();
-				// return Settings.getInt(SettingCodes.INQUIRY_VALUES_DEFAULT_PAGE_SIZE, Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_DEFAULT_PAGE_SIZE);
 			}
 
 			@Override
@@ -164,8 +162,6 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 			@Override
 			protected int getMaxFieldsPerRow() {
 				return MAX_INPUT_FIELDS_PER_ROW;
-				// return Settings.getInt(SettingCodes.INQUIRY_VALUES_MAX_FIELDS_PER_ROW, Bundle.SETTINGS,
-				// DefaultSettings.INQUIRY_VALUES_MAX_FIELDS_PER_ROW);
 			}
 
 			@Override
@@ -176,7 +172,6 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 			@Override
 			protected ArrayList<String> getPageSizeStrings() {
 				return ((InquiryValueBeanBase) bean).getPageSizeStrings();
-				// return Settings.getStringList(SettingCodes.INQUIRY_VALUES_PAGE_SIZES, Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_PAGE_SIZES);
 			}
 		};
 	}

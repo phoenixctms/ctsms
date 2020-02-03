@@ -38,7 +38,6 @@ public abstract class PhotoBeanBase extends ManagedBeanBase {
 			Image image = new Image(imageData, PREVIEW_BG_COLOR);
 			image.scale(CAPTURE_WIDTH, 0);
 			return image.convert(PREVIEW_FORMAT);
-			// return CommonUtil.scaleConvertImage(image, CAPTURE_WIDTH, 0, PREVIEW_FORMAT, PREVIEW_BGCOLOR);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			return null;

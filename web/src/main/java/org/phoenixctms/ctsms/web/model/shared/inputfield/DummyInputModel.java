@@ -47,9 +47,6 @@ public final class DummyInputModel extends InputModel {
 			inputFieldValue.setTimestampValue(inputField.getTimestampPreset());
 			inputFieldValue.setInkValues(null);
 			inputFieldValue.getSelectionValueIds().clear();
-			// if (isAutocomplete()) {
-			// inputFieldValue.setTextValue(autoCompletePresetValue);
-			// } else {
 			inputFieldValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 			while (it.hasNext()) {
@@ -58,7 +55,6 @@ public final class DummyInputModel extends InputModel {
 					inputFieldValue.getSelectionValueIds().add(selectionValue.getId());
 				}
 			}
-			// }
 		}
 	}
 
@@ -84,7 +80,6 @@ public final class DummyInputModel extends InputModel {
 
 	@Override
 	public Color getFieldColor() {
-		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR));
 		return Settings.getColor(SettingCodes.INPUT_MODEL_DUMMY_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_DUMMY_COLOR);
 	}
 

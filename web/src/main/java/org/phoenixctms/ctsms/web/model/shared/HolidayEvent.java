@@ -14,14 +14,6 @@ public class HolidayEvent extends ScheduleEventBase<HolidayVO> {
 	private final static String EVENT_NO_HOLIDAY_STYLECLASS = "ctsms-schedule-no-holiday-event";
 	private final static String HOLIDAY_NAME_SEPARATOR = ", ";
 
-	// private static void initHolidayDefaultValues(HolidayVO data) {
-	// if (data != null) {
-	// data.setDate(null);
-	// data.setHoliday(false);
-	// data.getNameL10nKeys().clear();
-	// data.getNames().clear();
-	// }
-	// }
 	public HolidayEvent() {
 		super();
 	}

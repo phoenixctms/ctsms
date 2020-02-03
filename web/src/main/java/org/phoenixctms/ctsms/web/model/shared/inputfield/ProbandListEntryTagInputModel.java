@@ -52,9 +52,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 			tagValue.setTimestampValue(inputField.getTimestampPreset());
 			tagValue.setInkValues(null);
 			tagValue.getSelectionValueIds().clear();
-			// if (isAutocomplete()) {
-			// tagValue.setTextValue(autoCompletePresetValue);
-			// } else {
 			tagValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 			while (it.hasNext()) {
@@ -63,7 +60,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 					tagValue.getSelectionValueIds().add(selectionValue.getId());
 				}
 			}
-			// }
 		}
 	}
 
@@ -282,11 +278,6 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 		return false;
 	}
 
-	// @Override
-	// public boolean isEditable() {
-	// return true;
-	// // return tag != null && !WebUtil.isTrialLocked(tag.getTrial());
-	// }
 	@Override
 	public boolean isDummy() {
 		return false;
@@ -325,7 +316,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 
 	@Override
 	public Object load() {
-		if (tagValue != null) { // && tagValue.getId() != null) {
+		if (tagValue != null) {
 			setErrorMessage(null);
 			try {
 				ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
@@ -333,9 +324,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
@@ -492,9 +481,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {

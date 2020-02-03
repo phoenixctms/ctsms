@@ -39,18 +39,15 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 16l;
 	private int rowIndex;
 	private String errorMessage;
-	// protected String autoCompletePresetValue1;
 	protected InputFieldOutVO inputField;
 
 	protected InputModel() {
 		errorMessage = null;
-		// autoCompletePresetValue = null;
 		inputField = null;
 	}
 
 	protected void actionPostProcess(Object out) {
 		if (out == null) {
-			// appendRequestContextCallbackArgs(new ArrayList());
 		} else if (out instanceof Collection) {
 			if (((Collection) out).size() > 0) {
 				appendRequestContextCallbackArgs(out);
@@ -105,7 +102,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		if (fieldColor != null || (isEditable() && !isDisabled())) {
 			if (fieldColor != null) {
 				return WebUtil.colorToStyleClass(fieldColor);
-				// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_WARN_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_WARN_COLOR));
 			} else {
 				if (isCreated()) {
 					Color createdColor = Settings.getColor(SettingCodes.INPUT_MODEL_CREATED_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_CREATED_COLOR);
@@ -125,15 +121,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		} else {
 			return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_NOT_EDITABLE_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_NOT_EDITABLE_COLOR));
 		}
-		// if (isCreated()) {
-		// if (isEditable()) {
-		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_CREATED_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_CREATED_COLOR));
-		// } else {
-		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_NOT_EDITABLE_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_NOT_EDITABLE_COLOR));
-		// }
-		// } else {
-		// return WebUtil.colorToStyleClass(Settings.getColor(SettingCodes.INPUT_MODEL_NEW_COLOR, Bundle.SETTINGS, DefaultSettings.INPUT_MODEL_NEW_COLOR));
-		// }
 	}
 
 	public abstract String getComment();
@@ -152,7 +139,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			sb.append("',");
 			sb.append(getSeriesIndex());
 			sb.append(',');
-			// sb.append(isSketch() ? "this" : getWidgetVar()); // this: { sketchpad, ink, ids }
 			sb.append(getWidgetVar());
 			sb.append(",");
 			sb.append(WebUtil.quoteJSString(getOutputId(), true));
@@ -169,7 +155,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract Float getFloatValue();
 
 	public int getHeight() {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Long height = inputField.getHeight();
 			if (height != null) {
@@ -180,7 +165,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public List<String> getInkRegions() throws UnsupportedEncodingException {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			ArrayList<String> inkRegions = new ArrayList<String>(selectionSetValueVOs.size());
@@ -252,7 +236,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract String getReasonForChange();
 
 	public final String getRequiredMessage() {
-		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			if (!this.isOptional()) {
 				return Messages.getMessage(MessageCodes.INPUT_FIELD_REQUIRED_MESSAGE, inputField.getName());
@@ -266,7 +249,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	private final HashMap<String, String> getSelectionSetValueIdToStrokesIdMap() {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			HashMap<String, String> selectionSetValueIdToStrokesIdMap = new HashMap<String, String>(selectionSetValueVOs.size());
@@ -281,7 +263,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public final ArrayList<SelectItem> getSelectionSetValues() {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			ArrayList<SelectItem> selectionSetValues = new ArrayList<SelectItem>(selectionSetValueVOs.size());
@@ -296,7 +277,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	private final HashMap<String, String> getSelectionSetValueStrokesIdToIdMap() {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Collection<InputFieldSelectionSetValueOutVO> selectionSetValueVOs = inputField.getSelectionSetValues();
 			HashMap<String, String> selectionSetValueStrokesIdToIdMap = new HashMap<String, String>(selectionSetValueVOs.size());
@@ -335,7 +315,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public final String getTooltip() {
-		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			String validationErrorMsg = inputField.getValidationErrorMsg();
 			String fieldTypeName;
@@ -376,7 +355,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract String getWidgetVar();
 
 	public int getWidth() {
-		// InputFieldOutVO inputField = getInputField();
 		if (inputField != null) {
 			Long width = inputField.getWidth();
 			if (width != null) {
@@ -399,7 +377,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public abstract boolean isCreated();
 
 	public boolean isDeferredDelete() {
-		// InputFieldOutVO inputField = this.getInputField();
 		if (inputField != null) {
 			return inputField.getDeferredDelete();
 		}
@@ -429,10 +406,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		return !CommonUtil.isEmptyString(getJsVariableName());
 	}
 
-	// public final boolean isJsOutputExpressionEmpty() {
-	// return CommonUtil.isEmptyString(JavaScriptCompressor.compress(getJsOutputExpression()));
-	// }
-	//
 	public final boolean isJsValueExpressionEmpty() {
 		return CommonUtil.isEmptyString(JavaScriptCompressor.compress(getJsValueExpression()));
 	}
@@ -447,11 +420,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	public abstract boolean isShowToolbar();
 
-	// public boolean isShowReasonForChange() {
-	// return isAuditTrail();
-	// }
 	public final boolean isShowTooltip() {
-		return !isCheckBox(); // !(isCheckBox() || isSelect()); // !isCheckBox()
+		return !isCheckBox();
 	}
 
 	public final boolean isStatusCommentEmpty() {
@@ -495,24 +465,6 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	protected void setField(InputFieldOutVO inputField) {
 		this.inputField = inputField;
-		// autoCompletePresetValue = null;
-		// if (inputField != null && isAutocomplete()) {
-		// PSFVO psf = new PSFVO();
-		// psf.setPageSize(1);
-		// psf.setUpdateRowCount(false);
-		// Collection<InputFieldSelectionSetValueOutVO> selectionSetValues = null;
-		// try {
-		// selectionSetValues = WebUtil.getServiceLocator().getInputFieldService().getSelectionSetValueList(WebUtil.getAuthentication(), inputField.getId(), true, psf);
-		// } catch (ServiceException e) {
-		// } catch (AuthenticationException e) {
-		// WebUtil.publishException(e);
-		// } catch (AuthorisationException e) {
-		// } catch (IllegalArgumentException e) {
-		// }
-		// if (selectionSetValues != null && selectionSetValues.size() > 0) {
-		// autoCompletePresetValue = selectionSetValues.iterator().next().getValue();
-		// }
-		// }
 	}
 
 	public abstract void setFloatValue(Float value);

@@ -25,7 +25,7 @@ public class InputFieldImageServlet extends FileServletBase {
 		InputFieldImageVO image = null;
 		try {
 			image = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(inputFieldId);
-		} catch (ServiceException|IllegalArgumentException e) {
+		} catch (ServiceException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -62,7 +62,6 @@ public class InputFieldImageServlet extends FileServletBase {
 
 			@Override
 			public boolean isNotFound() {
-				// TODO Auto-generated method stub
 				return !found;
 			}
 		};

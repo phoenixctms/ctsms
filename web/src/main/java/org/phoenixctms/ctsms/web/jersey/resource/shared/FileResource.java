@@ -39,7 +39,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import io.swagger.annotations.Api;
 
-@Api(value="shared")
+@Api(value = "shared")
 @Path("/file")
 public final class FileResource {
 
@@ -58,7 +58,7 @@ public final class FileResource {
 		FileInVO in = json.getValueAs(FileInVO.class);
 		FileStreamInVO stream = new FileStreamInVO();
 		stream.setStream(input);
-		stream.setMimeType(content.getMediaType().toString()); // .getType());
+		stream.setMimeType(content.getMediaType().toString());
 		stream.setSize(contentDisposition.getSize());
 		stream.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getFileService().addFile(auth, in, stream);
@@ -82,7 +82,6 @@ public final class FileResource {
 				psf);
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/head")
@@ -156,8 +155,7 @@ public final class FileResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
-		return new ResourceIndex(IndexResource.getResourceIndexNode(FileResource.class, request)); // basePath));
+		return new ResourceIndex(IndexResource.getResourceIndexNode(FileResource.class, request));
 	}
 
 	@PUT
@@ -171,7 +169,7 @@ public final class FileResource {
 		FileInVO in = json.getValueAs(FileInVO.class);
 		FileStreamInVO stream = new FileStreamInVO();
 		stream.setStream(input);
-		stream.setMimeType(content.getMediaType().toString()); // .getType());
+		stream.setMimeType(content.getMediaType().toString());
 		stream.setSize(contentDisposition.getSize());
 		stream.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getFileService().updateFile(auth, in, stream);

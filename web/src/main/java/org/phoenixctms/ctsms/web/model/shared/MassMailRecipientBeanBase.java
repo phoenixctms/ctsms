@@ -46,18 +46,15 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 	@Override
 	public String addAction() {
 		MassMailRecipientInVO backup = new MassMailRecipientInVO(in);
-		// Long idBackup = in.getId();
-		// Long versionBackup = in.getVersion();
 		in.setId(null);
 		in.setVersion(null);
-		// sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getMassMailService().addMassMailRecipient(WebUtil.getAuthentication(), in);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -68,14 +65,6 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	// private void sanitizeInVals() {
-	// // if (!in.getAccess()) {
-	// // in.setSign(false);
-	// // in.setResolve(false);
-	// // in.setVerify(false);
-	// // }
-	// // x;
-	// }
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -90,7 +79,7 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -154,9 +143,8 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 		out = null;
 		try {
 			out = WebUtil.getServiceLocator().getMassMailService().getMassMailRecipient(WebUtil.getAuthentication(), id);
-			// massMailRecipientDao.getEmailMessageCache().remove(id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -185,7 +173,7 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

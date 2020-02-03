@@ -80,13 +80,6 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		return null;
 	}
 
-	// public ArrayList<SelectItem> getFilterCostTypes() {
-	// return filterCostTypes;
-	// }
-	//
-	// public Collection<PaymentMethodVO> getPaymentMethods() {
-	// return paymentMethods;
-	// }
 	public EcrfProgressSummaryLazyModel getEcrfProgressSummaryModel() {
 		return ecrfProgressSummaryModel;
 	}
@@ -102,7 +95,6 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 
 	public int getEcrfProgressSummaryOnTimeValue(TrialOutVO trialVO) {
 		TrialECRFProgressSummaryVO trialProgressSummary = getCachedEcrfProgressSummary(trialVO);
-		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfDoneCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
 					* (trialProgressSummary.getEcrfDoneCount() - trialProgressSummary.getEcrfOverdueCount())) / (trialProgressSummary.getEcrfDoneCount()));
@@ -112,7 +104,6 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 
 	public int getEcrfProgressSummaryValue(TrialOutVO trialVO) {
 		TrialECRFProgressSummaryVO trialProgressSummary = getCachedEcrfProgressSummary(trialVO);
-		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfTotalCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * trialProgressSummary
 					.getEcrfDoneCount()) / (trialProgressSummary.getEcrfTotalCount()));
@@ -200,18 +191,6 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 			departments = WebUtil.getVisibleDepartments(user == null ? null : user.getDepartment().getId());
 		}
 		allStatusTypes = WebUtil.getEcrfStatusTypes();
-		// filterCostTypes = WebUtil.getMoneyTransferFilterCostTypes(trialMoneyTransferSummaryModel.getDepartmentId(), null, null, null);
-		// Collection<PaymentMethodVO> paymentMethodVOs = null;
-		// if (paymentMethods == null) {
-		// try {
-		// paymentMethods = WebUtil.getServiceLocator().getSelectionSetService().getPaymentMethods(WebUtil.getAuthentication());
-		// } catch (ServiceException e) {
-		// } catch (AuthenticationException e) {
-		// WebUtil.publishException(e);
-		// } catch (AuthorisationException e) {
-		// } catch (IllegalArgumentException e) {
-		// }
-		// }
 		ecrfProgressSummaryModel.updateRowCount();
 	}
 

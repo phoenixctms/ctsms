@@ -39,20 +39,16 @@ public class EcrfFieldInputModel extends InputModel {
 	protected ECRFFieldValueInVO ecrfFieldValue;
 	protected ECRFFieldOutVO ecrfField;
 	private String modifiedAnnotation;
-	// private long unresolvedEcrfFieldStatusCountSum;
 	private boolean unlockValue;
 	private Color fieldColor;
 	private ECRFFieldStatusEntryOutVO lastUnresolvedFieldStatusEntry;
 
-	// private EcrfFieldInputModelList modelList;
 	public EcrfFieldInputModel(ECRFFieldValueInVO ecrfFieldValue) {
 		super();
 		unlockValue = false;
 		fieldColor = null;
 		lastUnresolvedFieldStatusEntry = null;
-		// unresolvedEcrfFieldStatusCountSum = 0l;
 		setEcrfFieldValue(ecrfFieldValue);
-		// this.modelList = modelList;
 	}
 
 	@Override
@@ -69,9 +65,6 @@ public class EcrfFieldInputModel extends InputModel {
 					: Messages
 							.getString(MessageCodes.ECRF_FIELD_VALUE_REASON_FOR_CHANGE_PRESET));
 			ecrfFieldValue.getSelectionValueIds().clear();
-			// if (isAutocomplete()) {
-			// ecrfFieldValue.setTextValue(autoCompletePresetValue);
-			// } else {
 			ecrfFieldValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
 			while (it.hasNext()) {
@@ -80,7 +73,6 @@ public class EcrfFieldInputModel extends InputModel {
 					ecrfFieldValue.getSelectionValueIds().add(selectionValue.getId());
 				}
 			}
-			// }
 		}
 	}
 
@@ -290,7 +282,7 @@ public class EcrfFieldInputModel extends InputModel {
 
 	@Override
 	public boolean isAuditTrail() {
-		return true; // ecrfField == null ? false : isCreated() && ecrfField.getAuditTrail(); // even when ecrf status does not have audit trail
+		return true;
 	}
 
 	@Override
@@ -323,15 +315,6 @@ public class EcrfFieldInputModel extends InputModel {
 		}
 		return false;
 	}
-	// @Override
-	// public boolean isEditable() {
-	// if (ecrfField != null) {
-	// return !ecrfField.getEcrf().getDisabled();
-	// }
-	// return false;
-	// // return true;
-	// // return ecrfField != null && !WebUtil.isTrialLocked(ecrfField.getTrial()); // todo: add ecrf lock check..
-	// }
 
 	@Override
 	public boolean isDummy() {
@@ -349,7 +332,7 @@ public class EcrfFieldInputModel extends InputModel {
 	@Override
 	public boolean isOptional() {
 		if (ecrfField != null) {
-			return ecrfField.getOptional(); // || (!EcrfFieldValueBean.SAVE_NEW_SERIES && !isCreated() && ecrfField.getSeries());
+			return ecrfField.getOptional();
 		}
 		return false;
 	}
@@ -367,15 +350,6 @@ public class EcrfFieldInputModel extends InputModel {
 		return false;
 	}
 
-	// public boolean isShowReasonForChange() {
-	// return isAuditTrail() && isReasonForChangeRequired();
-	// // if (Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_HIDE_OPTIONAL_REASON_FOR_CHANGE_FIELD, Bundle.SETTINGS,
-	// // DefaultSettings.ECRF_FIELD_VALUES_HIDE_OPTIONAL_REASON_FOR_CHANGE_FIELD)) {
-	// // return isReasonForChangeRequired();
-	// // } else {
-	// // return isAuditTrail();
-	// // }
-	// }
 	@Override
 	public boolean isShowToolbar() {
 		return true;
@@ -387,7 +361,7 @@ public class EcrfFieldInputModel extends InputModel {
 
 	@Override
 	public Object load() {
-		if (ecrfFieldValue != null) { // && ecrfFieldValue.getId() != null) {
+		if (ecrfFieldValue != null) {
 			setErrorMessage(null);
 			setLastFieldStatus(null);
 			try {
@@ -397,10 +371,7 @@ public class EcrfFieldInputModel extends InputModel {
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
 				setLastFieldStatus(out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
-				// return updateModels(values);
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
@@ -518,7 +489,7 @@ public class EcrfFieldInputModel extends InputModel {
 					proposed = true;
 					proposedColor = lastStatus.getColor();
 				}
-				if (lastStatus.isResolved()) { // && !lastStatus.isInitial()) {
+				if (lastStatus.isResolved()) {
 					resolved = true;
 					resolvedColor = lastStatus.getColor();
 				}
@@ -613,47 +584,6 @@ public class EcrfFieldInputModel extends InputModel {
 		}
 	}
 
-	// private Collection<ECRFFieldValueJsonVO> updateModels(ECRFFieldValuesOutVO values) {
-	//
-	// if (modelList != null && values.getPageValues().size() > 1) {
-	// HashMap<Long,HashMap<Long,ECRFFieldValueOutVO>> outMap = new HashMap<Long, HashMap<Long,ECRFFieldValueOutVO>>();
-	// Iterator<ECRFFieldValueOutVO> pageValuesIt = values.getPageValues().iterator();
-	// while (pageValuesIt.hasNext()) {
-	// ECRFFieldValueOutVO out = pageValuesIt.next();
-	// HashMap<Long, ECRFFieldValueOutVO> indexMap;
-	// if (outMap.containsKey(out.getEcrfField().getId())) {
-	// indexMap = outMap.get(out.getEcrfField().getId());
-	// } else {
-	// indexMap = new HashMap<Long,ECRFFieldValueOutVO>();
-	// outMap.put(out.getEcrfField().getId(), indexMap);
-	// }
-	// indexMap.put(out.getIndex(), out);
-	// }
-	//
-	// Iterator<EcrfFieldInputModel> modelsIt = modelList.iterator();
-	// while (modelsIt.hasNext()) {
-	// EcrfFieldInputModel model = modelsIt.next();
-	// HashMap<Long, ECRFFieldValueOutVO> indexMap = outMap.get(model.getEcrfFieldId());
-	// if (indexMap != null) {
-	// ECRFFieldValueOutVO out = indexMap.get(model.getSeriesIndex());
-	// if (out != null) {
-	// ECRFFieldValueInVO in = new ECRFFieldValueInVO();
-	// EcrfFieldValueBean.copyEcrfFieldValueOutToIn(in, out);
-	// model.setEcrfFieldValue(in);
-	// model.setModifiedAnnotation(out);
-	// }
-	// }
-	// }
-	// return values.getJsValues();
-	// } else {
-	// ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
-	// EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
-	// setModifiedAnnotation(out);
-	// // if (isJsVariable()) {
-	// return values.getJsValues();
-	// // }
-	// }
-	// }
 	@Override
 	public Object update() {
 		return update(false);
@@ -678,10 +608,7 @@ public class EcrfFieldInputModel extends InputModel {
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
 				setLastFieldStatus(out);
 				setModifiedAnnotation(out);
-				// if (isJsVariable()) {
 				return values.getJsValues();
-				// }
-				// return updateModels(values);
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {

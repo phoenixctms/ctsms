@@ -56,7 +56,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="staff")
+@Api(value = "staff")
 @Path("/staff")
 public class StaffResource extends ServiceResourceBase {
 
@@ -67,8 +67,7 @@ public class StaffResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "staffId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, StaffOutVO.class);
 	public final static StaffListIndex LIST_INDEX = new StaffListIndex(getListIndexNode(ResourceUtils.getMethodPath(StaffResource.class, "list")
-			.replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			.replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -94,7 +93,6 @@ public class StaffResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -243,7 +241,7 @@ public class StaffResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public StaffListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

@@ -198,7 +198,7 @@ public class SketchPadRenderer extends Renderer {
 			writer.endElement("div");
 			startScript(writer, tooltipId + "_script");
 			writer.write("$(function() {");
-			writer.write("PrimeFaces.cw('Tooltip','" + "widget_" + tooltipId + "',{"); // tooltip.resolveWidgetVar()
+			writer.write("PrimeFaces.cw('Tooltip','" + "widget_" + tooltipId + "',{");
 			writer.write("id:'" + tooltipId + "'");
 			writer.write(",target:'" + targetId + "'");
 			writer.write(",showEffect:'fade'");

@@ -20,10 +20,6 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 		INITIAL_PSF.setSortOrder(false);
 	}
 
-	// private Long listEntryId;
-	// private Long ecrfFieldId;
-	// private Long index;
-	// private ECRFFieldStatusQueue queue;
 	public static EcrfFieldStatusEntryEagerModel getCachedFieldStatusEntryModel(ECRFFieldStatusEntryOutVO status,
 			HashMap<Long, EcrfFieldStatusEntryEagerModel> fieldStatusEntryModelCache) {
 		EcrfFieldStatusEntryEagerModel model;
@@ -49,13 +45,6 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 		resetRows();
 	}
 
-	// public Long getEcrfFieldId() {
-	// return ecrfFieldId;
-	// }
-	//
-	// public Long getIndex() {
-	// return index;
-	// }
 	@Override
 	protected Collection<ECRFFieldStatusEntryOutVO> getEagerResult(PSFVO psf) {
 		if (status != null) {
@@ -65,7 +54,7 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 						.getTrialService()
 						.getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), status.getStatus().getQueue(), status.getListEntry().getId(), status.getEcrfField().getId(),
 								status.getIndex(), false, false, new PSFVO(INITIAL_PSF));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -73,13 +62,6 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 		return new ArrayList<ECRFFieldStatusEntryOutVO>();
 	}
 
-	// public Long getListEntryId() {
-	// return listEntryId;
-	// }
-	//
-	// public ECRFFieldStatusQueue getQueue() {
-	// return queue;
-	// }
 	@Override
 	protected ECRFFieldStatusEntryOutVO getRowElement(Long id) {
 		return WebUtil.getEcrfFieldStatusEntry(id);
@@ -92,19 +74,4 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 	public void setStatus(ECRFFieldStatusEntryOutVO status) {
 		this.status = status;
 	}
-	// public void setEcrfFieldId(Long ecrfFieldId) {
-	// this.ecrfFieldId = ecrfFieldId;
-	// }
-	//
-	// public void setIndex(Long index) {
-	// this.index = index;
-	// }
-	//
-	//
-	// public void setListEntryId(Long listEntryId) {
-	// this.listEntryId = listEntryId;
-	// }
-	// public void setQueue(ECRFFieldStatusQueue queue) {
-	// this.queue = queue;
-	// }
 }

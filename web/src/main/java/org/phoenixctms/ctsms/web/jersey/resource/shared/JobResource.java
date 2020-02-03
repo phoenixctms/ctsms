@@ -203,7 +203,6 @@ public final class JobResource {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/file/head")
@@ -217,15 +216,13 @@ public final class JobResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
-		// String basePath = request.getRequestURL().toString();
-		return new ResourceIndex(IndexResource.getResourceIndexNode(JobResource.class, request)); // basePath));
+		return new ResourceIndex(IndexResource.getResourceIndexNode(JobResource.class, request));
 	}
 
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public JobOutVO updateJob(//@FormDataParam("json") JobUpdateVO in,
-			@FormDataParam("json") FormDataBodyPart json,
+	public JobOutVO updateJob(@FormDataParam("json") FormDataBodyPart json,
 			@FormDataParam("data") FormDataBodyPart content,
 			@FormDataParam("data") FormDataContentDisposition contentDisposition,
 			@FormDataParam("data") final InputStream input) throws Exception {
@@ -242,10 +239,6 @@ public final class JobResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public JobOutVO updateJob(JobUpdateVO in) throws AuthenticationException, AuthorisationException, ServiceException {
-		//		InputFieldImageVO out = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(in.getId());
-		//		in.setDatas(out.getDatas());
-		//		in.setMimeType(out.getContentType().getMimeType());
-		//		in.setFileName(out.getFileName());
 		return WebUtil.getServiceLocator().getJobService().updateJob(auth, in);
 	}
 }

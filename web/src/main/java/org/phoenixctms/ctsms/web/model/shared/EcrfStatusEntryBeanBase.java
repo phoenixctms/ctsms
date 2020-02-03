@@ -119,19 +119,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	private ArrayList<SelectItem> filterVisits;
-	// protected ECRFOutVO ecrf;
-	// protected ProbandListEntryOutVO probandListEntry;
 	protected ProbandListEntryModel probandListEntryModel;
 	protected EcrfLazyModel ecrfModel;
-	// protected EcrfFieldValueBean ecrfFieldValueBean;
 	private HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>> ecrfAuditTrailLogModelCache;
 	private HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>> fieldStatusEntryLogModelCache;
-	// private EcrfFieldValueAuditTrailLazyModel ecrfFieldValueAuditTrailModel;
-	// private EcrfFieldStatusEntryBean ecrfFieldAnnotationStatusEntryBean;
-	// private EcrfFieldStatusEntryBean ecrfFieldValidationStatusEntryBean;
-	// private EcrfFieldStatusEntryBean ecrfFieldQueryStatusEntryBean;
-	// private ECRFFieldOutVO auditTrialEcrfField;
-	// protected ECRFStatusEntryVO ecrfStatus;
 	private Collection<ECRFStatusTypeVO> statusTypes;
 	private Collection<ECRFStatusTypeVO> allStatusTypes;
 	private ArrayList<SelectItem> filterSections;
@@ -150,37 +141,15 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		filterEcrfProgress = null;
 		probandListEntryModel = createProbandListEntryModel();
 		ecrfModel = new EcrfLazyModel();
-		// ecrfFieldValueBean = new EcrfFieldValueBean();
-		// ecrfFieldValueBean.setDeltaErrorMessageId(getDeltaErrorMessageId());
 		ecrfAuditTrailLogModelCache = new HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>();
 		fieldStatusEntryLogModelCache = new HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>();
-		// ecrfFieldValueAuditTrailModel = new EcrfFieldValueAuditTrailLazyModel();
-		// ecrfFieldAnnotationStatusEntryBean = new EcrfFieldStatusEntryBean(ECRFFieldStatusQueue.ANNOTATION);
-		// ecrfFieldValidationStatusEntryBean = new EcrfFieldStatusEntryBean(ECRFFieldStatusQueue.VALIDATION);
-		// ecrfFieldQueryStatusEntryBean = new EcrfFieldStatusEntryBean(ECRFFieldStatusQueue.QUERY);
 		filterVisits = new ArrayList<SelectItem>();
 		filterSections = new ArrayList<SelectItem>();
-		// ecrfStatus = null;
 		statusTypes = new ArrayList<ECRFStatusTypeVO>();
 		allStatusTypes = WebUtil.getEcrfStatusTypes();
 		password = null;
 	}
 
-	// protected void addMessages() {
-	// // sync with EcrfFieldValueBean.editable:
-	// if (WebUtil.isProbandLocked(probandListEntry)) {
-	// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
-	// } else if (WebUtil.isTrialLocked(probandListEntry)) {
-	// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
-	// } else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
-	// Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_TRIAL, probandListEntry.getTrial().getStatus().getName());
-	// } else if (probandListEntry != null && probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
-	// Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_ENTRY, probandListEntry.getLastStatus().getStatus()
-	// .getName());
-	// } else if (ecrfStatus != null && ecrfStatus.getStatus().getValueLockdown()) {
-	// Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.ECRF_FIELD_VALUES_LOCKED_STATUS, ecrfStatus.getStatus().getName());
-	// }
-	// }
 	@Override
 	protected String changeAction(Long id) {
 		DataTable.clearFilters(getProbandListEntryDataTableId());
@@ -189,50 +158,17 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		probandListEntry = null;
 		ecrfStatus = null;
 		probandListEntryModel.clearSelectedColumns();
-		// ecrfModel.setTrialId(null);
-		// ecrfModel.setProbandGroupId(null);
 		ecrfModel.setProbandListEntryId(null);
 		ecrfModel.setActive(true);
 		ecrfModel.updateRowCount();
 		changeSpecific(id);
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
-		// initIn();
 		ecrfFieldValueBean.setFieldQuery(null);
 		initSets(false);
-		//ColumnManagementBean.resetVisibleMap(getProbandListEntryDataTableId());
 		return CHANGE_OUTCOME;
 	}
-	// @Override
-	// protected void appendRequestContextCallbackArgs(boolean operationSuccess) {
-	// RequestContext requestContext = null;
-	// if (operationSuccess && probandListEntry != null) { // && ecrf != null) {
-	// WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
-	// MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-	// WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, probandListEntry.getTrial().getId()));
-	// }
-	// }
 
-	// public void changeAuditTrail() {
-	// Long listEntryId = WebUtil.getLongParamValue(GetParamNames.PROBAND_LIST_ENTRY_ID);
-	// Long ecrfFieldId = WebUtil.getLongParamValue(GetParamNames.ECRF_FIELD_ID);
-	// Long seriesIndex = WebUtil.getLongParamValue(GetParamNames.SERIES_INDEX);
-	//
-	// ecrfFieldValueAuditTrailModel.setListEntryId(listEntryId);
-	// ecrfFieldValueAuditTrailModel.setEcrfFieldId(ecrfFieldId);
-	// ecrfFieldValueAuditTrailModel.setIndex(seriesIndex);
-	// ecrfFieldValueAuditTrailModel.updateRowCount();
-	// ecrfFieldAnnotationStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldAnnotationStatusEntryBean.setIndex(seriesIndex);
-	// ecrfFieldAnnotationStatusEntryBean.changeRootEntity(ecrfFieldId);
-	// ecrfFieldValidationStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldValidationStatusEntryBean.setIndex(seriesIndex);
-	// ecrfFieldValidationStatusEntryBean.changeRootEntity(ecrfFieldId);
-	// ecrfFieldQueryStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldQueryStatusEntryBean.setIndex(seriesIndex);
-	// ecrfFieldQueryStatusEntryBean.changeRootEntity(ecrfFieldId);
-	// auditTrialEcrfField = WebUtil.getEcrfField(ecrfFieldId);
-	// }
 	protected abstract void changeSpecific(Long id);
 
 	private void clearCaches() {
@@ -319,18 +255,13 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public String clearValuesAction() {
-		// String section = WebUtil.getParamValue(GetParamNames.ECRF_SECTION);
-		// ecrfFieldValueBean.clearSection(section);
 		ecrfFieldValueBean.delete();
 		initSpecificSets();
 		password = null;
-		// clearCaches();
 		clearFromCache(ecrf, probandListEntry);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
-		// setFirstFilterSection(true);
 		if (ecrfStatus == null) {
 			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
 			statusTypes = loadEcrfStatusTypes();
@@ -343,14 +274,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			}
 		}
 		signature = loadSignature();
-		// resetAuditTrailModel();
 		addMessages();
 		return UPDATE_OUTCOME;
 	}
 
-	// public ECRFFieldStatusQueue convertToQueue(ECRFFieldStatusQueue queue) {
-	// return queue;
-	// }
 	protected abstract ProbandListEntryModel createProbandListEntryModel();
 
 	public Collection<ECRFStatusTypeVO> getAllStatusTypes() {
@@ -372,40 +299,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		return null;
 	}
-	// public String getAuditTrailFieldLabel() {
-	// if (auditTrialEcrfField != null) {
-	// return getAuditTrailFieldLabel(auditTrialEcrfField.getUniqueName());
-	// }
-	// return null;
-	// }
-	// private String getAuditTrailFieldLabel(String fieldName) {
-	// if (auditTrialEcrfField != null && probandListEntry != null) {
-	// if (ecrfFieldValueAuditTrailModel.getIndex() != null) {
-	// return Messages.getMessage(MessageCodes.ECRF_FIELD_SERIES_INDEX_LABEL, ecrfFieldValueAuditTrailModel.getIndex(), fieldName);
-	// } else {
-	// return Messages.getMessage(MessageCodes.ECRF_FIELD_LABEL, fieldName);
-	// }
-	// }
-	// return null;
-	// }
-	//
-	// public String getAuditTrailFieldShortLabel() {
-	// if (auditTrialEcrfField != null) {
-	// return getAuditTrailFieldLabel(auditTrialEcrfField.getField().getName());
-	// }
-	// return null;
-	// }
-	// public EcrfFieldValueAuditTrailLazyModel getAuditTrailModel() {
-	// return ecrfFieldValueAuditTrailModel;
-	// }
 
-	// public String getAuditTrailProbandName() {
-	// return probandListEntry == null ? WebUtil.getNoProbandPickedMessage() : WebUtil.probandOutVOToString(probandListEntry.getProband());
-	// }
-	//
-	// public ECRFFieldOutVO getAuditTrialEcrfField() {
-	// return auditTrialEcrfField;
-	// }
 	private ECRFProgressVO getCachedEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
 		if (ecrfVO != null && listEntryVO != null) {
 			HashMap<Long, ECRFProgressVO> listEntryEcrfProgressCache;
@@ -419,7 +313,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			if (listEntryEcrfProgressCache.containsKey(ecrfVO.getId())) {
 				ecrfProgressVO = listEntryEcrfProgressCache.get(ecrfVO.getId());
 			} else {
-				ecrfProgressVO = WebUtil.getEcrfProgress(ecrfVO.getId(), listEntryVO.getId(), false); // x true);
+				ecrfProgressVO = WebUtil.getEcrfProgress(ecrfVO.getId(), listEntryVO.getId(), false);
 				listEntryEcrfProgressCache.put(ecrfVO.getId(), ecrfProgressVO);
 			}
 			return ecrfProgressVO;
@@ -433,7 +327,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			if (ecrfProgressSummaryCache.containsKey(listEntryVO.getId())) {
 				ecrfProgressSummaryVO = ecrfProgressSummaryCache.get(listEntryVO.getId());
 			} else {
-				ecrfProgressSummaryVO = WebUtil.getEcrfProgressSummary(listEntryVO.getId(), false, false); // true, true);
+				ecrfProgressSummaryVO = WebUtil.getEcrfProgressSummary(listEntryVO.getId(), false, false);
 				ecrfProgressSummaryCache.put(listEntryVO.getId(), ecrfProgressSummaryVO);
 			}
 			return ecrfProgressSummaryVO;
@@ -462,11 +356,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	// protected abstract String getDeltaErrorMessageId();
-	//
-	// public ECRFOutVO getEcrf() {
-	// return ecrf;
-	// }
 	private long getDoneEcrfCount() {
 		if (probandListEntry != null) {
 			try {
@@ -484,21 +373,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return EcrfFieldValueAuditTrailLogEagerModel.getCachedAuditTrailLogModel(probandListEntry, ecrfVO, ecrfAuditTrailLogModelCache);
 	}
 
-	// public EcrfFieldStatusEntryBean getEcrfFieldAnnotationStatusEntryBean() {
-	// return ecrfFieldAnnotationStatusEntryBean;
-	// }
-	//
-	// public EcrfFieldStatusEntryBean getEcrfFieldQueryStatusEntryBean() {
-	// return ecrfFieldQueryStatusEntryBean;
-	// }
 	protected abstract String getEcrfDataTableId();
-	// public EcrfFieldStatusEntryBean getEcrfFieldValidationStatusEntryBean() {
-	// return ecrfFieldValidationStatusEntryBean;
-	// }
 
-	// public EcrfFieldValueBean getEcrfFieldValueBean() {
-	// return ecrfFieldValueBean;
-	// }
 	public ECRFFieldStatusQueueCountVO getEcrfFieldStatusCount(ECRFOutVO ecrfVO, String queues) {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
 		ECRFFieldStatusQueueCountVO result = null;
@@ -538,16 +414,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				filterEcrfProgress = WebUtil.getEcrfProgress(ecrfId, listEntryId, true);
 			}
 		} else {
-			// if (ecrfId != null) {
-			// try {
-			// sectionStrings = WebUtil.getServiceLocator().getTrialService().getEcrfFieldSections(WebUtil.getAuthentication(), null, ecrfId, null, null);
-			// } catch (AuthenticationException e) {
-			// WebUtil.publishException(e);
-			// } catch (AuthorisationException e) {
-			// } catch (ServiceException e) {
-			// } catch (IllegalArgumentException e) {
-			// }
-			// }
 			filterEcrfProgress = WebUtil.getEcrfProgress(ecrfId, listEntryId, true);
 		}
 		Collection<String> sectionStrings = null;
@@ -614,7 +480,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public int getEcrfProgressSummaryValue(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
-		// if (progressSummary != null && progressSummary.getEcrfDoneCount() > 0l) {
 		if (progressSummary != null && progressSummary.getEcrfTotalCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * progressSummary
 					.getEcrfDoneCount()) / (progressSummary.getEcrfTotalCount()));
@@ -639,11 +504,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_LABEL, sectionProgress.getSavedValueCount(), sectionProgress.getFieldCount());
 			}
 		}
-		return ""; // null;
+		return "";
 	}
-	// public ECRFStatusEntryVO getEcrfStatus() {
-	// return ecrfStatus;
-	// }
 
 	public int getEcrfSectionProgressValue(ECRFSectionProgressVO sectionProgress) {
 		if (sectionProgress != null) {
@@ -665,20 +527,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return Messages.getMessage(MessageCodes.NO_ECRF_STATUS_TYPE_BUTTON_LABEL, getEcrfStatusTypeLabel(statusType));
 	}
 
-	// public String getEcrfStatusTypeLabel(ECRFStatusTypeVO statusType) {
-	// if (statusType != null) {
-	// return statusType.getName();
-	// } else {
-	// return Messages.getString(MessageCodes.NO_ECRF_STATUS_TYPE_LABEL);
-	// }
-	// }
 	public boolean getEcrfStatusTypeConfirmationRequired(ECRFStatusTypeVO statusType) {
 		return Boolean.TRUE.equals(statusTypeContainsAction(statusType, ECRFStatusAction.CLEAR_VALUES));
 	}
 
-	// public ECRFFieldStatusQueueCountVO getFieldStatusCount(ECRFOutVO ecrfVO) {
-	// return getFieldStatusCount(ecrfVO, null);
-	// }
 	public boolean getEcrfStatusTypePasswordRequired(ECRFStatusTypeVO statusType) {
 		if (Settings.getBoolean(SettingCodes.ECRF_STATUS_UPDATE_REQUIRES_PASSWORD, Bundle.SETTINGS,
 				DefaultSettings.ECRF_STATUS_UPDATE_REQUIRES_PASSWORD)) {
@@ -696,7 +548,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT,
 				new Long(EcrfFieldStatusEntryLogEagerModel.getCachedFieldStatusEntryLogModel(queue, probandListEntry, ecrfVO, fieldStatusEntryLogModelCache).getAllRowCount()),
 				WebUtil.getEcrfFieldStatusQueueName(queue));
-		// return Messages.getMessage(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, getQueueName(), ecrfFieldStatusEntryModel.getRowCount());
 	}
 
 	public abstract ArrayList<SelectItem> getFilterProbandGroups();
@@ -708,13 +559,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public ArrayList<SelectItem> getFilterVisits() {
 		return filterVisits;
 	}
-	// public ProbandListEntryOutVO getProbandListEntry() {
-	// return probandListEntry;
-	// }
 
-	// public ECRFSectionProgressVO getNoSelectionSectionProgress() {
-	// return NO_SELECTION_SECTION_PROGRESS;
-	// }
 	public String getPassword() {
 		return password;
 	}
@@ -756,29 +601,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			return null;
 		}
 	}
-	// public Long getSectionUnresolvedEcrfFieldStatusCount(ECRFSectionProgressVO sectionProgress) {
-	// return getSectionUnresolvedEcrfFieldStatusCount(sectionProgress,null);
-	// }
 
-	// public Long getSectionUnresolvedEcrfFieldStatusCount(ECRFSectionProgressVO sectionProgress, ECRFFieldStatusQueue queue) {
-	// Collection<ECRFFieldStatusEntryCountVO> counts;
-	// if (sectionProgress != null && (counts = sectionProgress.getEcrfStatusEntryCounts()) != null) {
-	// if (queue != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// ECRFFieldStatusEntryCountVO count = it.next();
-	// if (queue.equals(count.getQueue())) {
-	// return (count.getTotal() > 0 ? count.getUnresolved() : null);
-	// }
-	// }
-	// } else {
-	// if (WebUtil.getTotalEcrfFieldStatusCountSum(counts) > 0) {
-	// return WebUtil.getUnresolvedEcrfFieldStatusCountSum(counts);
-	// }
-	// }
-	// }
-	// return null;
-	// }
 	public IDVO getSelectedProbandListEntry() {
 		if (probandListEntry != null) {
 			return IDVO.transformVo(probandListEntry);
@@ -816,51 +639,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		return result;
 	}
-	// public long getTotalEcrfFieldStatusCount(ECRFOutVO ecrfVO) {
-	// return getTotalEcrfFieldStatusCount(ecrfVO,null);
-	// }
-	// public long getTotalEcrfFieldStatusCount(ECRFOutVO ecrfVO, ECRFFieldStatusQueue queue) {
-	// ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
-	// Collection<ECRFFieldStatusEntryCountVO> counts;
-	// if (ecrfProgress != null && (counts = ecrfProgress.getEcrfStatusEntryCounts()) != null) {
-	// if (queue != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// ECRFFieldStatusEntryCountVO count = it.next();
-	// if (queue.equals(count.getQueue())) {
-	// return count.getTotal();
-	// }
-	// }
-	// } else {
-	// return WebUtil.getTotalEcrfFieldStatusCountSum(counts);
-	// }
-	// }
-	// return 0l;
-	// }
-	// public Long getUnresolvedEcrfFieldStatusCount(ECRFOutVO ecrfVO) {
-	// return getUnresolvedEcrfFieldStatusCount(ecrfVO, null);
-	// }
 
-	// public Long getUnresolvedEcrfFieldStatusCount(ECRFOutVO ecrfVO, ECRFFieldStatusQueue queue) {
-	// ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
-	// Collection<ECRFFieldStatusEntryCountVO> counts;
-	// if (ecrfProgress != null && (counts = ecrfProgress.getEcrfStatusEntryCounts()) != null) {
-	// if (queue != null) {
-	// Iterator<ECRFFieldStatusEntryCountVO> it = counts.iterator();
-	// while (it.hasNext()) {
-	// ECRFFieldStatusEntryCountVO count = it.next();
-	// if (queue.equals(count.getQueue())) {
-	// return (count.getTotal() > 0 ? count.getUnresolved() : null);
-	// }
-	// }
-	// } else {
-	// if (WebUtil.getTotalEcrfFieldStatusCountSum(counts) > 0) {
-	// return WebUtil.getUnresolvedEcrfFieldStatusCountSum(counts);
-	// }
-	// }
-	// }
-	// return null;
-	// }
 	public HashMap<Long, Long> getSummaryStatusCountMap(ProbandListEntryOutVO listEntryVO) {
 		ECRFProgressSummaryVO progressSummary = getCachedEcrfProgressSummary(listEntryVO);
 		if (progressSummary != null && progressSummary.getEcrfStatusEntryCount() > 0l) {
@@ -884,7 +663,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	// protected abstract void initIn();
 	private long getVerfiedEcrfCount() {
 		if (probandListEntry != null) {
 			try {
@@ -900,37 +678,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public void handleFilterSectionChange() {
 		ecrfFieldValueBean.changeRootEntity(ecrf == null ? null : ecrf.getId());
-		// resetAuditTrailModel();
 		addMessages();
 	}
-	// @Override
-	// public boolean isCreateable() {
-	// // TODO Auto-generated method stub
-	// return false;
-	// }
-	//
-	// @Override
-	// public boolean isCreated() {
-	// return ecrfStatus != null;
-	// }
 
-	// @Override
-	// public boolean isEditable() {
-	// if (probandListEntry == null || ecrf == null) {
-	// return false;
-	// } else if (WebUtil.isTrialLocked(probandListEntry)) {
-	// return false;
-	// } else if (WebUtil.isProbandLocked(probandListEntry)) {
-	// return false;
-	// } else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
-	// return false;
-	// } else if (probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
-	// return false;
-	// // } else if (ecrfStatus != null && ecrfStatus.getStatus().getLockdown()) {
-	// // return false;
-	// }
-	// return true;
-	// }
 	protected void initSets(boolean setFirstSection) {
 		initSpecificSets();
 		password = null;
@@ -942,12 +692,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 		if (ecrfStatus != null) {
 			ecrf = ecrfStatus.getEcrf();
-			// ecrfFieldValueBean.setEcrf(ecrf);
 			probandListEntry = ecrfStatus.getListEntry();
 		}
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
-		// ecrfFieldValueBean.setFilterSection(null);
-		//ecrfFieldValueBean.setFieldQuery(null);
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
@@ -955,13 +702,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			setFirstFilterSection();
 		}
 		ecrfFieldValueBean.changeRootEntity(ecrfId);
-		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
-		// filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-		// if () {
-		// setFirstFilterSection();
-		// }
 		signature = loadSignature();
-		// resetAuditTrailModel();
 		addMessages();
 	}
 
@@ -983,13 +724,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public String loadAction() {
 		initSpecificSets();
 		password = null;
-		// clearCaches();
 		clearFromCache(ecrf, probandListEntry);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-		// setFirstFilterSection(false);
 		ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
 		statusTypes = loadEcrfStatusTypes();
 		ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
@@ -1001,13 +739,11 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfFieldValueBean.load();
 		signature = loadSignature();
-		// resetAuditTrailModel();
 		addMessages();
 		return LOAD_OUTCOME;
 	}
 
 	private Collection<ECRFStatusTypeVO> loadEcrfStatusTypes() {
-		// Collection<ECRFStatusTypeVO> statusTypeVOs = null;
 		try {
 			if (ecrfStatus != null) {
 				return WebUtil.getServiceLocator().getSelectionSetService()
@@ -1020,16 +756,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			WebUtil.publishException(e);
 		}
 		return new ArrayList<ECRFStatusTypeVO>();
-		// if (statusTypeVOs != null) {
-		// statusTypes = new ArrayList<SelectItem>(statusTypeVOs.size());
-		// Iterator<ECRFStatusTypeVO> it = statusTypeVOs.iterator();
-		// while (it.hasNext()) {
-		// ECRFStatusTypeVO typeVO = it.next();
-		// statusTypes.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
-		// }
-		// } else {
-		// statusTypes = new ArrayList<SelectItem>();
-		// }
 	}
 
 	private SignatureVO loadSignature() {
@@ -1045,37 +771,15 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public void refreshEcrfProgress() {
-		// clearCaches();
-		// long t = System.currentTimeMillis();
 		clearFromCache(ecrf, probandListEntry);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
-		// setFirstFilterSection(false);
-		// t = WebUtil.perfDebug("refreshecrfprogress: ", t);
 		appendRequestContextCallbackArgs(true);
 	}
 
-	// private void resetAuditTrailModel() {
-	// Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
-	// ecrfFieldValueAuditTrailModel.setListEntryId(listEntryId);
-	// ecrfFieldValueAuditTrailModel.setEcrfFieldId(null);
-	// ecrfFieldValueAuditTrailModel.setIndex(null);
-	// ecrfFieldValueAuditTrailModel.updateRowCount();
-	// ecrfFieldAnnotationStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldAnnotationStatusEntryBean.setIndex(null);
-	// ecrfFieldAnnotationStatusEntryBean.changeRootEntity(null);
-	// ecrfFieldValidationStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldValidationStatusEntryBean.setIndex(null);
-	// ecrfFieldValidationStatusEntryBean.changeRootEntity(null);
-	// ecrfFieldQueryStatusEntryBean.setListEntryId(listEntryId);
-	// ecrfFieldQueryStatusEntryBean.setIndex(null);
-	// ecrfFieldQueryStatusEntryBean.changeRootEntity(null);
-	// auditTrialEcrfField = null;
-	// }
-	private void setFirstFilterSection() { // boolean update) {
-		if (filterSections != null && filterSections.size() > 0) { // && (update || CommonUtil.isEmptyString(ecrfFieldValueBean.getFilterSection()))) {
+	private void setFirstFilterSection() {
+		if (filterSections != null && filterSections.size() > 0) {
 			Iterator<SelectItem> it = filterSections.iterator();
 			while (it.hasNext()) {
 				Object value = it.next().getValue();
@@ -1101,8 +805,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public void setSelectedEcrf(IDVO ecrf) {
 		if (ecrf != null) {
 			this.ecrf = (ECRFOutVO) ecrf.getVo();
-			// out = null;
-			// this.initIn();
 			ecrfFieldValueBean.setFieldQuery(null);
 			initSets(true);
 		}
@@ -1115,33 +817,18 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		} else {
 			this.probandListEntry = null;
 		}
-		// out = null;
 		ecrf = null;
 		if (this.probandListEntry != null) {
 			ecrfModel.setProbandListEntryId(probandListEntry.getId());
-			// ecrfModel.setTrialId(this.probandListEntry.getTrial().getId());
-			// if (this.probandListEntry.getGroup() != null) {
-			// ecrfModel.setProbandGroupId(this.probandListEntry.getGroup().getId());
-			// } else {
-			// ecrfModel.setProbandGroupId(null);
-			// }
 			filterVisits = WebUtil.getVisits(this.probandListEntry.getTrial().getId());
 			filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		} else {
 			ecrfModel.setProbandListEntryId(null);
-			// ecrfModel.setTrialId(null);
-			// ecrfModel.setProbandGroupId(null);
 			filterVisits.clear();
 		}
 		ecrfModel.updateRowCount();
-		// this.initIn();
 		ecrfFieldValueBean.setFieldQuery(null);
 		initSets(false);
-		// this.probandListEntryTagValueBean.appendRequestContextCallbackArgs(true);
-		// RequestContext requestContext = RequestContext.getCurrentInstance();
-		// if (requestContext != null) {
-		// requestContext.addCallbackParam(JSValues.AJAX_PROBAND_LIST_TAB_TITLE_BASE64.toString(), WebUtil.encodeBase64(getMainTabTitle(), false));
-		// }
 	}
 
 	public void signAllEcrfs() {
@@ -1164,7 +851,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				signed = ecrfStatusEntries.size();
 				if (signed > 0) {
 					initSpecificSets();
-					// clearCaches();
 					Iterator<ECRFStatusEntryVO> it = ecrfStatusEntries.iterator();
 					while (it.hasNext()) {
 						ECRFStatusEntryVO updatedEcrfStatus = it.next();
@@ -1181,16 +867,12 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 						probandListEntry = ecrfStatus.getListEntry();
 						listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 						ecrfId = ecrf == null ? null : ecrf.getId();
-						// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf,
-						// probandListEntry));
 						filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-						// setFirstFilterSection(false);
 						ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 						ecrfFieldValueBean.getPaginator().setToFirstPage();
 						ecrfFieldValueBean.getPaginator().updatePSF();
 						ecrfFieldValueBean.load();
 						signature = loadSignature();
-						// resetAuditTrailModel();
 					}
 					addMessages();
 				}
@@ -1214,8 +896,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	public void signVerifiedEcrfs() { // String ecrfStatusTypeId) {
-		actionPostProcess(signVerifiedEcrfsAction()); // WebUtil.stringToLong(ecrfStatusTypeId)
+	public void signVerifiedEcrfs() {
+		actionPostProcess(signVerifiedEcrfsAction());
 	}
 
 	public String signVerifiedEcrfsAction() {
@@ -1224,24 +906,18 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	@Override
 	public String updateAction() {
-		// long t = System.currentTimeMillis();
 		ecrfFieldValueBean.update();
-		// t = WebUtil.perfDebug("update: ", t);
 		initSpecificSets();
 		password = null;
-		// clearCaches();
 		clearFromCache(ecrf, probandListEntry);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
 		// slow?:
 		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
-		// setFirstFilterSection(false);
 		if (ecrfStatus == null) {
-			// t = WebUtil.perfDebug("filtersections: ", t);
 			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
 			statusTypes = loadEcrfStatusTypes();
-			// t = WebUtil.perfDebug("ecrfstatus: ", t);
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			if (ecrfStatus != null) {
 				ecrf = ecrfStatus.getEcrf();
@@ -1251,15 +927,12 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			}
 		}
 		signature = loadSignature();
-		// t = WebUtil.perfDebug("loadsignature: ", t);
-		// resetAuditTrailModel();
 		addMessages();
-		// t = WebUtil.perfDebug("resetaudittrailmodel: ", t);
 		return UPDATE_OUTCOME;
 	}
 
-	public void updateEcrfStatus() { // String ecrfStatusTypeId) {
-		actionPostProcess(updateEcrfStatusAction()); // WebUtil.stringToLong(ecrfStatusTypeId)
+	public void updateEcrfStatus() {
+		actionPostProcess(updateEcrfStatusAction());
 	}
 
 	public String updateEcrfStatusAction() {
@@ -1274,7 +947,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					.setEcrfStatusEntry(WebUtil.getAuthentication(), ecrfId,
 							listEntryId, ecrfStatus == null ? 0l : ecrfStatus.getVersion(), ecrfStatusTypeId, null);
 			initSpecificSets();
-			// clearCaches();
 			clearFromCache(ecrf, probandListEntry);
 			statusTypes = loadEcrfStatusTypes();
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
@@ -1283,15 +955,12 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			probandListEntry = ecrfStatus.getListEntry();
 			listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			ecrfId = ecrf == null ? null : ecrf.getId();
-			// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 			filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-			// setFirstFilterSection(false);
 			ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 			ecrfFieldValueBean.getPaginator().setToFirstPage();
 			ecrfFieldValueBean.getPaginator().updatePSF();
 			ecrfFieldValueBean.load();
 			signature = loadSignature();
-			// resetAuditTrailModel();
 			addMessages();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
@@ -1311,21 +980,15 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	// public final void updateSection(EcrfFieldSection section) {
-	// actionPostProcess(updateSectionAction(section));
-	// }
 	@Override
 	public String updateSectionAction(EcrfFieldSection section) {
 		ecrfFieldValueBean.updateSection(section);
 		initSpecificSets();
 		password = null;
-		// clearCaches();
 		clearFromCache(ecrf, probandListEntry);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
 		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
-		// setFirstFilterSection(false);
 		if (ecrfStatus == null) {
 			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
 			statusTypes = loadEcrfStatusTypes();
@@ -1338,7 +1001,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			}
 		}
 		signature = loadSignature();
-		// resetAuditTrailModel();
 		addMessages();
 		return UPDATE_OUTCOME;
 	}
@@ -1354,26 +1016,4 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			WebUtil.publishException(e);
 		}
 	}
-	// private void loadEcrfStatusMenuModel() {
-	//
-	// MenuModel ecrfStatusMenuModel = new DefaultMenuModel();
-	// if (statusTypes != null) {
-	// Iterator<ECRFStatusTypeVO> it = statusTypes.iterator();
-	// while (it.hasNext()) {
-	// ECRFStatusTypeVO statusType = it.next();
-	// MenuItem statusTypeMenuItem = new MenuItem();
-	// //identityMenuItem.setValue(CommonUtil.clipString(identity.getNameWithTitles(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
-	// statusTypeMenuItem.setValue(getEcrfStatusTypeButtonLabel(statusType));
-	// "if(" + getEcrfStatusTypePasswordRequired(statusType) + "){ecrfStatusPassword" + statusType.getId() + ".setValue('');ecrfStatus" + statusType.getId() +
-	// "Password.show();}else if("
-	// + getEcrfStatusTypeConfirmationRequired(statusType) + "){ecrfStatus" + statusType.getId() +
-	// "Confirmation.show();}else{updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));}
-	// identityMenuItem.setOnclick(MessageFormat.format("openStaff({0})", Long.toString(identity.getId())));
-	// identityMenuItem.setUrl("#");
-	// identityMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " " + statusType.getNodeStyleClass());
-	// identityMenuItem.setId("ecrfStatusMenuItem" + statusType.getId());
-	// userMenu.getChildren().add(identityMenuItem);
-	// }
-	// }
-	// }
 }

@@ -123,14 +123,12 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	private Long probandListEntryId;
 	private ProbandListEntryOutVO probandListEntry;
-	// private Collection<ProbandAddressOutVO> probandAddresses;
 	private Paginator paginator;
 	private ArrayList<ProbandListEntryTagValueInVO> tagValuesIn;
 	private Collection<ProbandListEntryTagValueOutVO> tagValuesOut;
 	private Collection<ProbandListEntryTagValueJsonVO> jsTagValuesOut;
 	private ProbandListEntryTagInputModelList inputModels;
 	private List<Object[]> paddedInputModels;
-	// private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<ProbandGroupOutVO> probandGroups;
 
 	public ProbandListEntryTagValueBean() {
@@ -139,12 +137,10 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 			@Override
 			protected Long getCount(Long... ids) {
-				// if (ids[0] != null) {
 				ProbandListEntryOutVO probandListEntry = WebUtil.getProbandListEntry(ids[0]);
 				if (probandListEntry != null) {
 					return WebUtil.getProbandListEntryTagCount(probandListEntry.getTrial().getId());
 				}
-				// }
 				return null;
 			}
 
@@ -173,8 +169,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			@Override
 			protected int getMaxFieldsPerRow() {
 				return MAX_INPUT_FIELDS_PER_ROW;
-				// return Settings.getInt(SettingCodes.PROBAND_LIST_ENTRY_TAG_VALUES_MAX_FIELDS_PER_ROW, Bundle.SETTINGS,
-				// DefaultSettings.PROBAND_LIST_ENTRY_TAG_VALUES_MAX_FIELDS_PER_ROW);
 			}
 
 			@Override
@@ -221,30 +215,18 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				if (listEntry != null) {
 					if (probandListEntry != null) {
 						if (listEntry.getProband().getId() != probandListEntry.getProband().getId()) {
-							// addresses = loadProbandAddresses(listEntry.getProband().getId());
-							// visitSchedule = loadVisitScheduleItems(listEntry);
 							groups = loadProbandGroups(probandListEntry);
 						} else {
-							// addresses = probandAddresses;
-							// visitSchedule = visitScheduleItems;
 							groups = probandGroups;
 						}
 					} else {
-						// addresses = loadProbandAddresses(listEntry.getProband().getId());
-						// visitSchedule = loadVisitScheduleItems(listEntry);
 						groups = loadProbandGroups(probandListEntry);
 					}
 				}
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(out), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_BASE64.toString(),
-				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getProband() : null), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_TRIAL_BASE64.toString(),
-				// JsUtil.encodeBase64(JsUtil.voToJson(listEntry != null ? listEntry.getTrial() : null), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(addresses), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
-				// requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
@@ -410,8 +392,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				Settings.getInt(SettingCodes.PROBAND_LIST_TAG_INPUTS_GRID_COLUMNS_THRESHOLD_WIDTH, Bundle.SETTINGS,
 						DefaultSettings.PROBAND_LIST_TAG_INPUTS_GRID_COLUMNS_THRESHOLD_WIDTH));
 		probandListEntry = WebUtil.getProbandListEntry(probandListEntryId);
-		// probandAddresses = loadProbandAddresses(probandListEntry == null ? null : probandListEntry.getProband().getId());
-		// visitScheduleItems = loadVisitScheduleItems(probandListEntry);
 		probandGroups = loadProbandGroups(probandListEntry);
 		updateInputModelModifiedAnnotations();
 	}
@@ -430,9 +410,6 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 	}
 
-	// public boolean isInputVisible() {
-	// return isCreated() || (!WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry));
-	// }
 	@Override
 	public boolean isEditable() {
 		return ((probandListEntryId != null && tagValuesIn.size() > 0 && !WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry)) ? true : false);
@@ -466,39 +443,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 		return ERROR_OUTCOME;
 	}
-	// private Collection<ProbandAddressOutVO> loadProbandAddresses(Long probandId) {
-	// if ( probandId != null) {
-	// try {
-	// return WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), probandId, null);
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
-	// return null;
-	// }
 
-	// private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry) {
-	// if (listEntry != null && listEntry.getGroup() != null) {
-	// try {
-	// return WebUtil
-	// .getServiceLocator()
-	// .getTrialService()
-	// .getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(),
-	// null);
-	// } catch (ServiceException e) {
-	// } catch (AuthenticationException e) {
-	// WebUtil.publishException(e);
-	// } catch (AuthorisationException e) {
-	// } catch (IllegalArgumentException e) {
-	// }
-	// }
-	// return null;
-	// }
 	private Collection<ProbandGroupOutVO> loadProbandGroups(ProbandListEntryOutVO listEntry) {
-		if (listEntry != null) { // && listEntry.getGroup() == null) {
+		if (listEntry != null) {
 			try {
 				return WebUtil
 						.getServiceLocator()

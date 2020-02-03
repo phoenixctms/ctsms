@@ -21,8 +21,6 @@ public class AspAtcCodeConverter extends IDVOConverter {
 		Object vo = (idvo != null ? idvo.getVo() : null);
 		if (vo instanceof AspAtcCodeVO) {
 			AspAtcCodeVO atcCode = (AspAtcCodeVO) vo;
-			// details.put(MessageCodes.CRITERION_ITEM_TIP_ASP_NAME, asp.getName());
-			// details.put(MessageCodes.CRITERION_ITEM_TIP_ASP_SUBSTANCE_ATC_CODE, substance.getAtcCode());
 			details.put(MessageCodes.CRITERION_ITEM_TIP_ASP_ATC_CODE_REVISION, atcCode.getRevision());
 		}
 		return details;

@@ -38,8 +38,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.chart.ChartSeries;
 
-//@ManagedBean
-//@ViewScoped
 public class EnrollmentChartBean extends ManagedBeanBase {
 
 	private Long trialId;
@@ -51,7 +49,6 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 	private Integer maxY;
 	private boolean stacked;
 
-	// protected final static ColorOpacity COLOR_OPACITY = ColorOpacity.ALPHA50;
 	public EnrollmentChartBean() {
 		super();
 		chartModel = new CartesianChartModel();
@@ -93,7 +90,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -118,7 +115,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
@@ -130,13 +127,13 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
 
 	public String getSeriesColors() {
-		return WebUtil.getSeriesColors(seriesColors); // , COLOR_OPACITY);
+		return WebUtil.getSeriesColors(seriesColors);
 	}
 
 	public StreamedContent getSiclExcelStreamedContent() throws Exception {
@@ -146,16 +143,11 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
-		} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			throw e;
 		}
 	}
 
-	// @PostConstruct
-	// private void init() {
-	// initIn();
-	// initSets();
-	// }
 	private void initIn() {
 		stacked = true;
 	}
@@ -171,7 +163,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		try {
 			statusTypes = WebUtil.getServiceLocator().getSelectionSetService()
 					.getAllProbandListStatusTypes(WebUtil.getAuthentication(), trial != null ? trial.getType().getPerson() : null);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -190,7 +182,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		if (trialId != null) {
 			try {
 				probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, false, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

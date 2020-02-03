@@ -118,14 +118,11 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		boolean appended = false;
-		// if (in.getTrialId() != null) {
 		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			appended = true;
 		}
-		// }
-		// if (in.getVisitScheduleItemId() != null) {
 		VisitScheduleItemOutVO visitScheduleItem = WebUtil.getVisitScheduleItem(in.getVisitScheduleItemId());
 		if (visitScheduleItem != null) {
 			if (appended) {
@@ -137,7 +134,6 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			sb.append(visitScheduleItem.getName());
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getTitle())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
@@ -145,7 +141,6 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			sb.append(in.getTitle());
 			appended = true;
 		}
-		// if (in.getStaffId() != null) {
 		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
 		if (staff != null) {
 			if (appended) {
@@ -154,7 +149,6 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			sb.append(CommonUtil.staffOutVOToString(staff));
 			appended = true;
 		}
-		// }
 		if (!CommonUtil.isEmptyString(in.getComment())) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

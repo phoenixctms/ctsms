@@ -527,8 +527,6 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		}
 	}
 
-	// public void onTabViewChange(TabChangeEvent event) {
-	// }
 	public void releaseSelfAllocation() {
 		selfAllocate(false);
 	}

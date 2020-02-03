@@ -98,8 +98,6 @@ public class ProbandRecipientBean extends MassMailRecipientBeanBase {
 
 	@Override
 	protected void initSets() {
-		// now = new Date();
-		// emailMessageCache.clear();
 		massMailRecipientModel.setProbandId(in.getProbandId());
 		massMailRecipientModel.updateRowCount();
 		proband = WebUtil.getProband(this.in.getProbandId(), null, null, null);

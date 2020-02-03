@@ -30,7 +30,6 @@ public class CourseInventoryBookingEvent extends InventoryBookingEvent {
 
 	@Override
 	public String getStyleClass() {
-		// if (in.getCourseId() != null) {
 		CourseOutVO course = WebUtil.getCourse(in.getCourseId(), null, null, null);
 		if (course != null) {
 			StringBuilder sb = new StringBuilder();
@@ -41,7 +40,6 @@ public class CourseInventoryBookingEvent extends InventoryBookingEvent {
 			sb.append(course.getCategory().getNodeStyleClass());
 			return sb.toString();
 		}
-		// }
 		return "";
 	}
 

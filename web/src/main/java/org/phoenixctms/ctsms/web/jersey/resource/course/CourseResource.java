@@ -47,7 +47,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value="course")
+@Api(value = "course")
 @Path("/course")
 public final class CourseResource extends ServiceResourceBase {
 
@@ -58,8 +58,7 @@ public final class CourseResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "courseId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, CourseOutVO.class);
 	public final static CourseListIndex LIST_INDEX = new CourseListIndex(getListIndexNode(
-			ResourceUtils.getMethodPath(CourseResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			ResourceUtils.getMethodPath(CourseResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -85,7 +84,6 @@ public final class CourseResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -223,7 +221,7 @@ public final class CourseResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("list")
-	@ApiOperation(value="list",hidden = true)
+	@ApiOperation(value = "list", hidden = true)
 	public CourseListIndex listIndex() throws Exception {
 		return LIST_INDEX;
 	}

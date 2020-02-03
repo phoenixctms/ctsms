@@ -94,12 +94,11 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 
 	@Override
 	protected Collection<ECRFFieldStatusEntryOutVO> getEagerResult(PSFVO psf) {
-		if (listEntryId != null) { // && ecrfId != null) {
+		if (listEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, null, listEntryId, ecrfId, true, false, new PSFVO(INITIAL_PSF)); // ,
-				// psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, null, listEntryId, ecrfId, true, false, new PSFVO(INITIAL_PSF));
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -131,7 +130,4 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
-	// public void setQueue(ECRFFieldStatusQueue queue) {
-	// this.queue = queue;
-	// }
 }

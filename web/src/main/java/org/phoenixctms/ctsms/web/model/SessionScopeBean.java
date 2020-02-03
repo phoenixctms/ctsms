@@ -110,7 +110,7 @@ public class SessionScopeBean {
 					viewId.append("?");
 				}
 			} else {
-				viewId = new StringBuilder(Urls.PORTAL.value()); // + "?faces-redirect=true";
+				viewId = new StringBuilder(Urls.PORTAL.value());
 				viewId.append("?");
 			}
 		} else {
@@ -145,7 +145,6 @@ public class SessionScopeBean {
 
 	private HashMap<String, HashMap<String, Map<String, String>>> filterMaps;
 	private MaxSizeHashMap<Object, StreamedContent> imageStore;
-	// private HashMap<Class, HashMap<Object, Object>> selectionSetServiceCache;
 	private ArrayList<SelectItem> filterBooleans;
 	private ArrayList<SelectItem> filterInverseBooleans;
 	private ArrayList<SelectItem> filterInputFieldTypes;
@@ -201,7 +200,6 @@ public class SessionScopeBean {
 		auth = new AuthenticationVO();
 		imageStore = new MaxSizeHashMap<Object, StreamedContent>(WebUtil.IMAGE_STORE_MAX_SIZE);
 		columnManager = new ColumnManagementBean();
-		// selectionSetServiceCache = new HashMap<Class, HashMap<Object, Object>>();
 		logon = null;
 		failedAttempts = 0;
 		authenticationFailed = false;
@@ -625,9 +623,6 @@ public class SessionScopeBean {
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	// public String getInputTimePattern() {
-	// return CommonUtil.INPUT_TIME_PATTERN;
-	// }
 	public synchronized MenuModel getInventoryHomeMenuModel() {
 		return DynamicHomeMenu.getInventoryHomeMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -637,7 +632,7 @@ public class SessionScopeBean {
 		if (logon != null) {
 			return CommonUtil.localeFromString(logon.getUser().getLocale());
 		}
-		return Locale.getDefault(); // defaultLocale;
+		return Locale.getDefault();
 	}
 
 	public synchronized String getLocalPassword() {
@@ -704,17 +699,6 @@ public class SessionScopeBean {
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	// public Object getSelectionSetServiceCache(Class type, Object key) {
-	// if (selectionSetServiceCache != null && type != null) {
-	// if (selectionSetServiceCache.containsKey(type)) {
-	// HashMap<Object, Object> cache = selectionSetServiceCache.get(type);
-	// if (cache != null && cache.containsKey(key)) {
-	// return cache.get(key);
-	// }
-	// }
-	// }
-	// return null;
-	// }
 	public synchronized MenuModel getStaffHomeMenuModel() {
 		return DynamicHomeMenu.getStaffHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
@@ -764,10 +748,6 @@ public class SessionScopeBean {
 						result.append(" ");
 					}
 					result.append(Messages.getString(MessageCodes.PASSWORD_EXPIRATION_INFO_RENEWAL_ADVICE));
-					// } else {
-					// if (!announcementShown) {
-					// result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
-					// }
 				}
 			} else if (announcementShown) {
 				result.append(Messages.getString(MessageCodes.ANNOUNCEMENT_INFO_SEPARATOR));
@@ -793,7 +773,7 @@ public class SessionScopeBean {
 		if (logon != null) {
 			return CommonUtil.timeZoneFromString(logon.getUser().getTimeZone());
 		}
-		return TimeZone.getDefault(); // defaultTimeZone;
+		return TimeZone.getDefault();
 	}
 
 	public synchronized MenuModel getTrialEntityMenuModel() {
@@ -900,7 +880,6 @@ public class SessionScopeBean {
 		filterMassMailTypes = null;
 		filterLocales = null;
 		policy = null;
-		// selectionSetServiceCache.clear();
 	}
 
 	public synchronized boolean isAuthenticationFailed() {
@@ -1021,7 +1000,7 @@ public class SessionScopeBean {
 				}
 				TimeZone userTimeZone = getTimeZone();
 				Submenu timeZonesMenu = new Submenu();
-				timeZonesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_TIME_ZONE_LABEL, CommonUtil.timeZoneToDisplayString(userTimeZone, userLocale))); // .getDisplayName(false,TimeZone.LONG,userLocale)));
+				timeZonesMenu.setLabel(Messages.getMessage(MessageCodes.CURRENT_TIME_ZONE_LABEL, CommonUtil.timeZoneToDisplayString(userTimeZone, userLocale)));
 				timeZonesMenu.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-timezone");
 				timeZonesMenu.setId("timeZonesMenu");
 				userMenu.getChildren().add(timeZonesMenu);
@@ -1049,7 +1028,7 @@ public class SessionScopeBean {
 						TimeZoneVO timeZone = timeZonesIt.next();
 						MenuItem timeZoneMenuItem = new MenuItem();
 						timeZoneMenuItem.setValue(CommonUtil.clipString(timeZone.getName(), menuItemLabelClipMaxLength,
-								CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING)); // .getDisplayName(true,TimeZone.LONG,userLocale));
+								CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
 						timeZoneMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.updateTimeZone('" + timeZone.getTimeZoneID()
 								+ "')}"));
 						timeZoneMenuItem.setOncomplete("handleReload(xhr, status, args)");
@@ -1067,7 +1046,7 @@ public class SessionScopeBean {
 					Submenu hemispehreTimeZoneMenu = null;
 					if (timeZoneOffset < 0) {
 						hemispehreTimeZoneMenu = westTimeZonesMenu;
-					} else { // if (timeZoneOffset >= 0) {
+					} else {
 						hemispehreTimeZoneMenu = eastTimeZonesMenu;
 					}
 					hemispehreTimeZoneMenu.getChildren().add(offsetTimeZonesMenu);
@@ -1133,7 +1112,6 @@ public class SessionScopeBean {
 			logoutMenuItem.setValue(CommonUtil.clipString(Messages.getMessage(MessageCodes.LOGOUT_LABEL, logon.getUser().getName()), menuItemLabelClipMaxLength,
 					CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.MID));
 			logoutMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.logout()}")); // empty brackets required here...
-			// logoutMenuItem.setOncomplete("handleLogout(xhr, status, args)");
 			logoutMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-exit");
 			logoutMenuItem.setId("logoutMenuItem");
 			userMenu.getChildren().add(logoutMenuItem);
@@ -1143,7 +1121,7 @@ public class SessionScopeBean {
 	public synchronized String login() {
 		logon = null;
 		auth.setHost(WebUtil.getRemoteHost());
-		String outcome; // = Urls.LOGIN.value();
+		String outcome;
 		try {
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
 			ApplicationScopeBean.registerActiveUser(logon.getUser());
@@ -1209,60 +1187,8 @@ public class SessionScopeBean {
 		try {
 			externalContext.redirect(url.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// WebUtil.appendRefererParameter(url, request, "?");
-		//
-		//
-		//
-		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		// RequestContext requestContext = RequestContext.getCurrentInstance();
-		// if (requestContext != null) {
-		// requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
-		// requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
-		// requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
-		// }
-		// externalContext.invalidateSession();
-		//
-		//
-		//
-		// ajax = false;
-		// // final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		// // externalContext.invalidateSession();
-		// if (ajax) {
-		// RequestContext requestContext = RequestContext.getCurrentInstance();
-		// if (requestContext != null) {
-		// requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), true);
-		// requestContext.addCallbackParam(JSValues.AJAX_LOGGED_OUT.toString(), true);
-		// requestContext.addCallbackParam(JSValues.AJAX_REFERER_BASE64.toString(), redirectUrl);
-		// }
-		// // http://www.icesoft.org/JForum/posts/list/15/7658.page#sthash.XPD8yMMZ.dpbs
-		// new Thread() {
-		//
-		// public void run() {
-		// try {
-		// Thread.sleep(10000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		// externalContext.invalidateSession();
-		// // HttpSession session = (HttpSession) externalContext.getSession(false);
-		// // session.invalidate();
-		// }
-		// }.start();
-		// } else {
-		// ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		// externalContext.invalidateSession();
-		// try {
-		// externalContext.redirect(redirectUrl);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
 	}
 
 	public synchronized StreamedContent putImage(Object key, byte[] image, String mimeType) {
@@ -1290,19 +1216,6 @@ public class SessionScopeBean {
 		getFilterComponentMap().put(id, filterMap);
 	}
 
-	// public void putSelectionSetServiceCache(Object key, Object value) {
-	// if (selectionSetServiceCache != null && value != null) {
-	// Class type = value.getClass();
-	// HashMap<Object, Object> cache;
-	// if (selectionSetServiceCache.containsKey(type)) {
-	// cache = selectionSetServiceCache.get(type);
-	// } else {
-	// cache = new HashMap<Object, Object>();
-	// selectionSetServiceCache.put(type, cache);
-	// }
-	// cache.put(key, value);
-	// }
-	// }
 	public synchronized void setLocalPassword(String localPassword) {
 		auth.setLocalPassword(localPassword);
 	}

@@ -98,8 +98,6 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 		fieldStatusEntryId = WebUtil.stringToLong(WebUtil.getParamValue(GetParamNames.ECRF_FIELD_STATUS_ENTRY_ID));
 	}
 
-	// protected void initIn() {
-	// }
 	private void initSets() {
 		probandListEntry = null;
 		ecrf = null;
@@ -141,7 +139,6 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		} finally {
-			//initIn(true, false);
 			initSets();
 		}
 		return ERROR_OUTCOME;
@@ -150,7 +147,6 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 	@Override
 	public String updateSectionAction(EcrfFieldSection section) {
 		ecrfFieldValueBean.updateSection(section);
-		// initSpecificSets();
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
 		if (ecrfStatus == null) {

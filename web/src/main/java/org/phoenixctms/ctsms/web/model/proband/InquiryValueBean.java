@@ -250,7 +250,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	protected void initSpecificSets() {
 		loadProband();
 		probandAddresses = loadProbandAddresses();
-		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(probandId, true, null, trials, totalCounts); // trialId
+		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(probandId, true, null, trials, totalCounts);
 		if (WebUtil.isProbandLocked(proband)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
@@ -306,10 +306,8 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	}
 
 	private Collection<ProbandAddressOutVO> loadProbandAddresses() {
-		// probandAddresses = null;
 		if (probandId != null) {
 			try {
-				// probandAddresses =
 				return WebUtil.getServiceLocator().getProbandService().getProbandAddressList(WebUtil.getAuthentication(), probandId, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {

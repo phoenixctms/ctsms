@@ -29,14 +29,14 @@ public enum Urls {
 	PORTAL("/portal.jsf"),
 	ERROR("/error.jsf"),
 	UNSUBSCRIBE("/unsubscribe.jsf"),
-	INVENTORY_START(Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)), // "/inventory/inventorySearch.jsf"),
-	STAFF_START(Settings.getString(SettingCodes.STAFF_START_URL, Bundle.SETTINGS, DefaultSettings.STAFF_START_URL)), // "/staff/staffSearch.jsf"),
-	COURSE_START(Settings.getString(SettingCodes.COURSE_START_URL, Bundle.SETTINGS, DefaultSettings.COURSE_START_URL)), // "/course/courseSearch.jsf"),
-	USER_START(Settings.getString(SettingCodes.USER_START_URL, Bundle.SETTINGS, DefaultSettings.USER_START_URL)), // "/user/userSearch.jsf"),
-	TRIAL_START(Settings.getString(SettingCodes.TRIAL_START_URL, Bundle.SETTINGS, DefaultSettings.TRIAL_START_URL)), // "/trial/trialSearch.jsf"),
-	PROBAND_START(Settings.getString(SettingCodes.PROBAND_START_URL, Bundle.SETTINGS, DefaultSettings.PROBAND_START_URL)), // "/proband/probandSearch.jsf"),
-	INPUT_FIELD_START(Settings.getString(SettingCodes.INPUT_FIELD_START_URL, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
-	MASS_MAIL_START(Settings.getString(SettingCodes.MASS_MAIL_START_URL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_START_URL)), // "/inputfield/inputFieldSearch.jsf"),
+	INVENTORY_START(Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)),
+	STAFF_START(Settings.getString(SettingCodes.STAFF_START_URL, Bundle.SETTINGS, DefaultSettings.STAFF_START_URL)),
+	COURSE_START(Settings.getString(SettingCodes.COURSE_START_URL, Bundle.SETTINGS, DefaultSettings.COURSE_START_URL)),
+	USER_START(Settings.getString(SettingCodes.USER_START_URL, Bundle.SETTINGS, DefaultSettings.USER_START_URL)),
+	TRIAL_START(Settings.getString(SettingCodes.TRIAL_START_URL, Bundle.SETTINGS, DefaultSettings.TRIAL_START_URL)),
+	PROBAND_START(Settings.getString(SettingCodes.PROBAND_START_URL, Bundle.SETTINGS, DefaultSettings.PROBAND_START_URL)),
+	INPUT_FIELD_START(Settings.getString(SettingCodes.INPUT_FIELD_START_URL, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_START_URL)),
+	MASS_MAIL_START(Settings.getString(SettingCodes.MASS_MAIL_START_URL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_START_URL)),
 	INVENTORY_SEARCH("/inventory/inventorySearch.jsf"),
 	STAFF_SEARCH("/staff/staffSearch.jsf"),
 	COURSE_SEARCH("/course/courseSearch.jsf"),
@@ -126,7 +126,6 @@ public enum Urls {
 	}
 
 	public static String getHomeViewName(HttpServletRequest request) {
-		// String url = request.getRequestURL().toString();
 		StringBuffer url = request.getRequestURL();
 		if (!CommonUtil.isEmptyString(request.getQueryString())) {
 			url.append('?').append(request.getQueryString());

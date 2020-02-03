@@ -72,8 +72,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "probandId";
 	private static final MethodTransfilter GET_LIST_METHOD_NAME_TRANSFORMER = getGetListMethodNameTransformer(ROOT_ENTITY_ID_METHOD_PARAM_NAME, ProbandOutVO.class);
 	public final static ProbandListIndex LIST_INDEX = new ProbandListIndex(getListIndexNode(
-			ResourceUtils.getMethodPath(ProbandResource.class, "list").replaceFirst("/\\{resource\\}", ""), // "listIndex"),
-			SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
+			ResourceUtils.getMethodPath(ProbandResource.class, "list").replaceFirst("/\\{resource\\}", ""), SERVICE_INTERFACE, GET_LIST_METHOD_NAME_TRANSFORMER,
 			getArgsUriPart(SERVICE_INTERFACE, "", new AuthenticationVO(), ROOT_ENTITY_ID_METHOD_PARAM_NAME, GET_LIST_METHOD_NAME_TRANSFORMER, 0l, new PSFUriPart())));
 	@Context
 	AuthenticationVO auth;
@@ -99,7 +98,6 @@ public final class ProbandResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/files/pdf/head")
@@ -212,7 +210,6 @@ public final class ProbandResource extends ServiceResourceBase {
 		return response.build();
 	}
 
-	// @HEAD
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/image/head")
@@ -224,9 +221,9 @@ public final class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Page<ProbandOutVO> getProbandList(@Context UriInfo uriInfo, @QueryParam("department_id") Long departmentId) // , @QueryParam("proband_id") Long probandId)
+	public Page<ProbandOutVO> getProbandList(@Context UriInfo uriInfo, @QueryParam("department_id") Long departmentId)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf; // = new PSFUriPart(uriInfo,"department_id","proband_id");
+		PSFUriPart psf;
 		return new Page<ProbandOutVO>(WebUtil.getServiceLocator().getProbandService()
 				.getProbandList(auth, null, departmentId, ResourceUtils.LIST_GRAPH_MAX_PROBAND_INSTANCES, psf = new PSFUriPart(uriInfo, "department_id")), psf);
 	}

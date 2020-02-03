@@ -23,11 +23,6 @@ public class ProbandListEntryTagInputModelList extends InputModelListBase<Proban
 
 	@Override
 	protected void setRowIndex(ProbandListEntryTagInputModel model, int index) {
-		// TODO Auto-generated method stub
 		model.setRowIndex(index);
 	}
-	// @Override
-	// public ProbandListEntryTagInputModel get(int index) {
-	// return new ProbandListEntryTagInputModel(valuesIn.get(index));
-	// }
 }

@@ -24,7 +24,7 @@ public class PublicFileServlet extends FileServletBase {
 		FileStreamOutVO stream = null;
 		try {
 			stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream(fileId);
-		} catch (ServiceException|IllegalArgumentException e) {
+		} catch (ServiceException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -61,7 +61,6 @@ public class PublicFileServlet extends FileServletBase {
 
 			@Override
 			public boolean isNotFound() {
-				// TODO Auto-generated method stub
 				return !found;
 			}
 		};

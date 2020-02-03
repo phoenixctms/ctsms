@@ -416,15 +416,6 @@ public class JobBean extends ManagedBeanBase {
 
 	public void handleTypeChange() {
 		loadSelectedType();
-		//		if (out != null) {
-		//			out = null;
-		//			if (!isInputFile()) {
-		//				clearFile();
-		//			}
-		//			if (type != null && !type.isEmailRecipients()) {
-		//				in.setEmailRecipients(null);
-		//			}
-		//		}
 	}
 
 	private void loadSelectedType() {
@@ -432,7 +423,6 @@ public class JobBean extends ManagedBeanBase {
 		if (in.getTypeId() != null) {
 			try {
 				type = WebUtil.getServiceLocator().getSelectionSetService().getJobType(WebUtil.getAuthentication(), in.getTypeId());
-				// putSelectionSetServiceCache(id, category);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -440,13 +430,6 @@ public class JobBean extends ManagedBeanBase {
 		}
 	}
 
-	//	@Override
-	//	public String resetAction() {
-	//		out = null;
-	//		initIn();
-	//		initSets();
-	//		return RESET_OUTCOME;
-	//	}
 	public void setSelectedJob(IDVO job) {
 		if (job != null) {
 			this.out = (JobOutVO) job.getVo();
