@@ -300,10 +300,7 @@ function _highlightText(jq) {
 PrimeFaces.widget.Spinner.prototype.spin = function(step) {
   var newValue = this.value;
   if(jQuery.trim(newValue) == '') {
-        //if(this.cfg.min != undefined)
-        //	newValue = this.cfg.min;
-        //else
-          newValue = 0;
+      newValue = 0;
     } else {
       newValue = newValue + step;
     }
@@ -330,7 +327,7 @@ PrimeFaces.widget.Spinner.prototype.updateValue = function() {
         if(this.cfg.min != undefined)
             this.value = this.cfg.min;
         else
-            this.value = ''; //0;
+            this.value = ''; 
     }
     else {
         if(this.cfg.step)
@@ -351,7 +348,7 @@ PrimeFaces.widget.Spinner.prototype.initValue = function() {
         if(this.cfg.min != undefined)
             this.value = this.cfg.min;
         else
-            this.value = ''; //0;
+            this.value = '';
     }
     else {
         if(this.cfg.prefix)
@@ -605,36 +602,6 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
         PrimeFaces.ajax.AjaxRequest(options);
     }
 };
-
-//PrimeFaces.widget.TabView.prototype.select = function(index) {
-//
-//    var newPanel = this.panelContainer.children().eq(index),
-//    	shouldLoad = this.cfg.dynamic && !this.isLoaded(newPanel);
-//
-//    //update state
-//    this.stateHolder.val(index);
-//    this.cfg.selected = index;
-//
-//    if(shouldLoad) {
-//        this.loadDynamicTab(newPanel);
-//    }
-//    else {
-//        if(this.hasBehavior('tabChange')) {
-//            this.fireTabChangeEvent(newPanel);
-//        }
-//        else {
-//            this.show(newPanel);
-//        }
-//    }
-//
-//    //Call user onTabChange callback
-//    if(this.cfg.onTabChange) {
-//        var result = this.cfg.onTabChange.call(this, index);
-//        if(result == false)
-//            return false;
-//    }
-//    return true;
-//};
 
 PrimeFaces.widget.Dialog.prototype.getTitle = function() {
 
@@ -910,7 +877,6 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
                   PrimeFaces.skinInput(this.input);
 
                   if (this.dropdown.length == 0 && HIGHLIGHT_TEXT_INPUT) {
-                    //setTimeout(_highlightText.bind(null,this.input),highlightDelay);
                 	var jq = this.input;
                 	setTimeout(function(){_highlightText(jq);},highlightDelay);
                   }
@@ -1671,7 +1637,7 @@ PrimeFaces.widget.LineChart = PrimeFaces.widget.BaseWidget.extend({
       this.cfg.seriesDefaults = {};
       var _self = this;
       this.cfg.seriesColors = $.map(this.cfg.seriesColors,function(val, i) {
-    	  return $.jqplot.normalize2rgb(val,0.5); //  + ''
+    	  return $.jqplot.normalize2rgb(val,0.5); 
       });
 
       //axes
@@ -1951,9 +1917,7 @@ if (typeof links !== 'undefined') {
 
   links.Timeline.prototype.getVisibleChartRange = function() {
       return {
-        'extended': this.oldStart == null || this.oldEnd == null || this.oldStart.valueOf() > this.start.valueOf() || this.end.valueOf() > this.oldEnd.valueOf(),
-        //'oldStart': (this.oldStart != null ? new Date(this.oldStart.valueOf()) : null);
-          //'oldEnd': (this.oldEnd != null ? new Date(this.oldEnd.valueOf()) : null);
+          'extended': this.oldStart == null || this.oldEnd == null || this.oldStart.valueOf() > this.start.valueOf() || this.end.valueOf() > this.oldEnd.valueOf(),
           'start': new Date(this.start.valueOf()),
           'end': new Date(this.end.valueOf())
       };

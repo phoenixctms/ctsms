@@ -41,7 +41,6 @@ function zeroFill(integer,digits) {
     return result;
 }
 
-//var ajaxWait = true;
 var suppressWait = false;
 var showDialogQueue = [];
 function setSupressWait() {
@@ -59,7 +58,6 @@ function dequeueShowDialog() {
 				count++;
 			}
 			waitDialog[method]();
-			//console.log(method + " dequeued " + count + " times");
 		}
 	}
 }
@@ -101,13 +99,6 @@ function setErrorMessageText(error_message_id,output) {
 	var errorMessageSpanElement = _getElement(error_message_id);
 	if (errorMessageSpanElement != null) {
 		errorMessageSpanElement.html(output);
-		//var textElement = errorMessageSpanElement.contents()[0];
-
-		//if (typeof textElement.textContent !== 'undefined') {
-		//	textElement.textContent = msg;
-		//} else {
-		//	textElement.innerText = msg;
-		//}
 	}
 }
 
@@ -152,9 +143,9 @@ var sessionMaxInactiveInterval = null;
 function createSessionTimer(duration) {
 	if (duration != null && duration > 0) {
 		sessionMaxInactiveInterval = +duration;
-		var sessionExpiry = (new Date()); //.addSeconds(sessionMaxInactiveInterval);
+		var sessionExpiry = (new Date()); 
 		sessionExpiry.setSeconds(sessionExpiry.getSeconds() + sessionMaxInactiveInterval);
-		jQuery('#session_timer').countdown(sessionExpiry, { //.toString('yyyy/MM/dd HH:mm:ss'), {
+		jQuery('#session_timer').countdown(sessionExpiry, { 
 		    elapse : false, // Allow to continue after finishes
 		    precision : 1000, // The update rate in milliseconds
 		}).on('update.countdown', function(event) {
@@ -174,29 +165,18 @@ function resetSessionTimers(depth) {
 		depth = 0;
 	}
 	if (sessionMaxInactiveInterval != null) {
-		var sessionExpiry = (new Date()); //.addSeconds(sessionMaxInactiveInterval);
+		var sessionExpiry = (new Date()); 
 		sessionExpiry.setSeconds(sessionExpiry.getSeconds() + sessionMaxInactiveInterval);
-		jQuery('#session_timer').countdown(sessionExpiry); //.toString('yyyy/MM/dd HH:mm:ss'));
+		jQuery('#session_timer').countdown(sessionExpiry); 
 	}
 
 	if (window.opener && !window.opener.closed && window.opener.resetSessionTimers && depth < 10) {
 		try {
 			window.opener.resetSessionTimers(depth + 1);
 		} catch (e) {
-			//console.log(e);
+
 		}
 	}
-//	if (PORTAL_WINDOW_NAME != '_self' && window.name != PORTAL_WINDOW_NAME && typeof window['IS_LOGIN_WINDOW'] === 'undefined') {
-//		if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
-//
-//		} else if (_isTrustedReferrer(document.referrer)) { // (!jQuery.browser.safari) {
-//			window.open('javascript:if(window.resetSessionTimers){resetSessionTimers();}else{window.location.href=' + JSON.stringify(APPLICATION_URL + PORTAL_URL)
-//		        + ';}', PORTAL_WINDOW_NAME);
-//		//} else {
-//		//	//alert("safari");
-//		}
-//	}
-	
 }
 
 function enableTabs(tabView, firstIndex, enable) {
@@ -213,24 +193,6 @@ function enableTabs(tabView, firstIndex, enable) {
 
 }
 
-//function setExpanding(tableWidget) {
-//	if (tableWidget) {
-//		tableWidget.expanding = true;
-//		alert("expand");
-//	}
-//}
-//
-//function suppressExpandingItemSelect(y,tableWidget) {
-//	if (tableWidget) {
-//		var expanding = tableWidget.expanding;
-//		tableWidget.expanding = false;
-//		alert("select");
-//		if (y && expanding) {
-//			console.log(y.source);
-//			//xhr.abort();
-//		}
-//	}
-//}
 
 function setText(id, text) {
 
@@ -245,24 +207,9 @@ function setHiddenField(targetField,value) {
 	var targetFieldElement = _getElement(targetField);
 	if (targetFieldElement != null) {
 		targetFieldElement.val(value);
-		//console.log("value '" + value + "' set, val is " + targetFieldElement.val());
-	//} else {
-		//console.log("warning: field " + targetField + " not found");
 	}
 }
 
-//function handleLogout(xhr, status, args) {
-//
-//	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testFlag(args, AJAX_LOGGED_OUT)) {
-//
-//		if (_testPropertyExists(args, AJAX_REFERER_BASE64)) {
-//			_redirect(LOGIN_URL + '?' + REFERER + '=' + args[AJAX_REFERER_BASE64]);
-//		} else {
-//			_redirect(LOGIN_URL);
-//		}
-//	}
-//
-//}
 
 function handleReload(xhr, status, args) {
 
@@ -868,7 +815,6 @@ function _openEntityCallback(args) {
 
 function _openEntity(url, window) {
 
-	//alert(window);
 	keepAliveExec('_openEntityCallback', {
 	    'url' : encodeBase64(url, false),
 	    'window' : window
@@ -1395,8 +1341,6 @@ function openPortal() {
 
 function _openEcrfSectionCallback(args) {
 
-	//var openerWindow = window.open(decodeBase64(args.url), args.window);
-	//openerWindow.focus();
 	var openerWindow = window.open(decodeBase64(args.url), args.window,
 			'dependent=yes,location=0,menubar=0,resizable=1,status=1,toolbar=0,titlebar=1,scrollbars=1,height=' + args.height + ',width=' + args.width);
 	openerWindow.focus();
@@ -1447,34 +1391,6 @@ function handleUpdateEcrfSection(xhr, status, args) {
 
 }
 
-// var fNewDoc = false;
-// var EditDocumentButton = null;
-// try {
-// EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
-// if (EditDocumentButton != null) { fNewDoc = true; }
-// } catch(e) {
-// console.log(e);
-// }
-//
-// var L_EditDocumentError_Text = "Editing not supported.";
-// var L_EditDocumentRuntimeError_Text = "Sorry, couldn't open the document.";
-// function openEditOfficeDocument(strDocument) {
-//
-// if (fNewDoc) {
-// if (!EditDocumentButton.EditDocument(strDocument)) {
-// alert(L_EditDocumentRuntimeError_Text);
-// }
-// } else {
-// try {
-// var hownowPlugin = document.getElementById("winFirefoxPlugin");
-// hownowPlugin.EditDocument(strDocument, null);
-// } catch (e) {
-// console.log(e);
-// alert(L_EditDocumentError_Text);
-// }
-// }
-//
-// }
 
 var hyperlinkTitlePreset;
 
@@ -1589,7 +1505,6 @@ function calendarPrintPreview(title) {
 		printWindow.document.write('<html moznomarginboxes mozdisallowselectionprint><head><title>' + title + '</title>' + link + '<style>' + styles
 		        + '</style></head><body onload="setTimeout(window.print(),500);">')
 		printWindow.document.write(toPrint.innerHTML);
-		//printWindow.document.write('<script type="text/javascript">window.print();<' + '/script>');
 		printWindow.document.write('</body></html>');
 		printWindow.document.close();
 	}
@@ -1615,7 +1530,6 @@ function getCssRuleMap(classNameRegexp) {
 			// Note that SecurityError exception is specific to Firefox.
 			catch (e) {
 				if (e.name == 'SecurityError') {
-					//console.log("SecurityError. Cant readd: " + styleSheets[i].href);
 					continue;
 				}
 			}

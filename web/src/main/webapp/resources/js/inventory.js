@@ -165,7 +165,6 @@ function handleBookingDepartmentCategorySelected(xhr, status, args) {
 
 function updateBookingSchedule() {
 
-	//ajaxWait = false;
 	showWaitDialog();
 	bookingSchedule.update();
 	hideWaitDialog();

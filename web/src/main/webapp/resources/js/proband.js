@@ -1,5 +1,4 @@
 
-//var ecrfSectionToClear = null;
 
 var oldProbandTabIndex = 0;
 

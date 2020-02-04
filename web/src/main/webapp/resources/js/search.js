@@ -3,7 +3,6 @@ var oldSearchTabIndex = 0;
 function handleSearchTabChange(index) {
 
 	_deleteIntermediateSetsChartTooltip();
-	// FieldCalculation.resetInputFieldVariables();
 	switch (index) {
 	case 0:
 
@@ -11,13 +10,10 @@ function handleSearchTabChange(index) {
 		case 0:
 			break;
 		case 1:
-			// changeCriteriaByTag();
 			break;
 		case 2:
-			// changeCriteriaByTag();
 			break;
 		case 3:
-			// changeCriteriaByJournalEntry();
 			break;
 		default:
 			break;
@@ -87,7 +83,6 @@ function handleCriteriaChanged(xhr, status, args) {
 		handleUpdateCriteriaTabTitles(xhr, status, args);
 		if (!_testFlag(args, AJAX_PICKER)) {
 			document.title = decodeBase64(args[AJAX_WINDOW_TITLE_BASE64]);
-			// changeCriteriaJournalEntry();
 		}
 	}
 
@@ -125,13 +120,11 @@ function handleUpdateIntermediateSets(xhr, status, args) {
 		if (_testPropertyExists(args, AJAX_INTERMEDIATE_SETS_BASE64)) {
 			intermediateSets = JSON.parse(decodeBase64(args[AJAX_INTERMEDIATE_SETS_BASE64]));
 		}
-		// console.log(intermediateSets);
 
 		var criterionRowColors = null;
 		if (_testPropertyExists(args, AJAX_CRITERION_ROW_COLORS_BASE64)) {
 			criterionRowColors = JSON.parse(decodeBase64(args[AJAX_CRITERION_ROW_COLORS_BASE64]));
 		}
-		// console.log(criterionRowColors);
 
 		var criterionTieMap = null;
 		if (_testPropertyExists(args, AJAX_CRITERION_TIE_MAP_BASE64)) {
@@ -148,9 +141,7 @@ function handleUpdateIntermediateSets(xhr, status, args) {
 		_createIntermediateSetChart();
 		_updateIntermediateSetChartCanvasSize(intermediateSets);
 
-		// console.log(cssColorMap);
 		var maps = _updateIntermediateSetChart(intermediateSets, criterionRowColors, criterionTieMap, resultItemLabel);
-		// console.log(maps);
 		_styleIntermediateSetChart(maps);
 		_registerIntermediateSetChartTooltip(maps);
 	}
@@ -165,9 +156,6 @@ function _formatCountTooltipText(count) {
 }
 
 function _updateIntermediateSetChart(intermediateSets, criterionColorClasses, criterionTieMap, resultItemLabel) {
-	// var sets = [ {sets: ['A'], size: 12},
-	// {sets: ['B'], size: 12},
-	// {sets: ['A','B'], size: 2}];
 	var colorMap = {};
 	var tooltipMap = {};
 	var isIntermediateMap = {};
@@ -246,12 +234,6 @@ function _updateIntermediateSetChart(intermediateSets, criterionColorClasses, cr
 			}
 		}
 
-		// intermediateSetsChart.colours(function(label) {
-		// return colorMap[label];
-		// });
-		// console.log(colorMap);
-		// console.log(sets);
-		// console.log(JSON.stringify(sets));
 		canvasD3.datum(sets).call(intermediateSetsChart);
 	} else {
 		canvasD3.text('');
@@ -311,28 +293,18 @@ function _createIntermediateSetChart() {
 		.attr("id", "intermediateSetsChartTooltip")
 		.attr("class", "ui-widget ctsms-intermediatesets-tooltip");
 		tooltip = document.getElementById('intermediateSetsChartTooltip');
-//		if (tooltip == null) {
-//			// tooltipD3 = d3.select("body").append("div") //must be appendend
-//			// to body, otherwise mouse coords are relative to tabview's bb
-//			tooltipD3 = canvasD3.append("div").attr("id", "intermediateSetsChartTooltip").attr("class", "ui-widget ctsms-intermediatesets-tooltip");
-//			tooltip = document.getElementById('intermediateSetsChartTooltip');
-//			// tooltipD3 = d3.select("#intermediateSetsChartTooltip");
-//		}
-//		tooltip.setAttribute("style", "position:relative; left:0px; top:0px;");
 		if (intermediateSetsChart == null) {
-			// var padding = 10;
 			intermediateSetsChart = venn.VennDiagram();
 			intermediateSetsChart.padding(30); // border only
 			intermediateSetsChart.duration(1000); // transition fx
-			intermediateSetsChart.normalize(true); // true); // = true,
+			intermediateSetsChart.normalize(true); 
 			intermediateSetsChart.wrap(true); // labels
 			intermediateSetsChart.styled(false);
-			// intermediateSetsChart.fontSize('20px'); // = null,
 			intermediateSetsChart.orientation(2 * Math.PI / 6);
 			// consistent operand order:
 			intermediateSetsChart.orientationOrder(function(a, b) {
 				return 0.0;
-			}); // function (a, b) { return b.radius - a.radius; }
+			}); 
 			intermediateSetsChart.layoutFunction(function(d) {
 				return venn.venn(d, {
 					initialLayout : venn.classicMDSLayout
@@ -347,11 +319,8 @@ function _createIntermediateSetChart() {
 function _updateIntermediateSetChartCanvasSize(intermediateSets) {
 	if (intermediateSetsChart != null) {
 		var rows = (intermediateSets != null && intermediateSets.length > 0 ? intermediateSets.length : 0);
-		// canvas.setAttribute("style","height:" + height + "px");
-		// canvas.style.height = height + "px";
 		var bb = canvas.getBoundingClientRect();
 		var height = Math.min(bb.width, Math.ceil(380.0 * Math.max(1.0, rows / 2.5)));
-		// console.log(bb);
 		intermediateSetsChart.width(bb.width);
 		intermediateSetsChart.height(height);
 	}
@@ -359,8 +328,6 @@ function _updateIntermediateSetChartCanvasSize(intermediateSets) {
 
 function _styleIntermediateSetChart(maps) {
 	if (intermediateSetsChart != null) {
-		// var abStrokeColor =
-		// _getCssColor('ctsms-search-intermediateset-highlightstroke-color');
 		d3.selectAll("#intermediateSetsChartCanvas .venn-area path").style("fill", function(d, i) {
 			return maps.colorMap[d.sets.toString()];
 		}).style("fill-opacity", function(d, i) {
@@ -375,31 +342,22 @@ function _styleIntermediateSetChart(maps) {
 
 function _registerIntermediateSetChartTooltip(maps) {
 	if (intermediateSetsChart != null) {
-		// add listeners to all the groups to display tooltip on mouseover
-		//var svg = canvasD3.select("svg").node();
-		var svgBb = null; //canvasD3.select("svg").node().getBoundingClientRect();
-		var tooltipBb = null; //tooltip.getBoundingClientRect();
+		var svgBb = null; 
+		var tooltipBb = null; 
 		var tooltipBbMap = {};
-		// var abStrokeColor =
-		// _getCssColor('ctsms-search-intermediateset-highlightstroke-color');
 		var highlightCircleStrokeColor = _getCssColor('ctsms-search-intermediateset-highlight-circle-stroke-color');
 		var highlightCircleIntermediateStrokeColor = _getCssColor('ctsms-search-intermediateset-highlight-circle-intermediate-stroke-color');
 		var highlightIntersectionStrokeColor = _getCssColor('ctsms-search-intermediateset-highlight-intersection-stroke-color');
-		canvasD3.selectAll("g").on( //canvasD3.selectAll("venn-area").on(
+		canvasD3.selectAll("g").on( 
 		        "mouseover",
 		        function(d, i) {
 		        	var setId = d.sets.toString();
-			        // console.log("mouseover: " + d.sets.toString());
 			        // sort all the areas relative to the current item
 			        venn.sortAreas(canvasD3, d);
 
 			        // Display a tooltip with the current size
 			        tooltipD3.transition().duration(400).style("opacity", .8);
 			        tooltipD3.text(maps.tooltipMap[setId]);
-			        // while (tooltip.childNodes.length >= 1) {
-			        // tooltip.removeChild(tooltip.firstChild);
-			        // }
-			        // tooltip.appendChild(document.createTextNode(maps.tooltipMap[d.sets.toString()]));
 			        if (svgBb == null) {
 			        	svgBb = canvasD3.select("svg").node().getBoundingClientRect();
 			        }
@@ -418,26 +376,12 @@ function _registerIntermediateSetChartTooltip(maps) {
 				                return d.sets.length == 1 ? (maps.isIntermediateMap[d.sets.toString()] ? highlightCircleIntermediateStrokeColor
 				                        : highlightCircleStrokeColor) : highlightIntersectionStrokeColor;
 			                });
-			        // .style("stroke-width", 3)
-			        // .style("stroke-opacity", 1);
-			        // .style("fill-opacity", function(d,i) { return
-					// d.sets.length == 1 ? 1 : 0.4; })
-			        // .style("stroke-width", 3)
-			        // .style("stroke-opacity", function(d,i) { return
-					// d.sets.length == 1 ? 0.75 : 0.1; })
 		        })
 
 		.on("mousemove", function() {
 
-			// console.log(rect.top, rect.right, rect.bottom, rect.left);
-			//var coords = d3.mouse(this);
-			//tooltipD3.style("left", (svgBb.left + coords[0]) + "px")
-			 //.style("top", (svgBb.top + coords[1] - tooltipBb.height) + "px");
-			//.style("top", (svgBb.top + coords[1]) + "px");
-			//tooltipD3.style("style", "position:relative; left:" + coords[0] + "px; top:" + coords[1] + "px;");
 			var left;
 			var top;
-			//console.log(svgBb.width,svgBb.height,d3.event.pageX,d3.event.pageY);
 			if (d3.event.pageX > svgBb.left + (svgBb.width / 2.0)) { //right
 				left = d3.event.pageX - tooltipBb.width;
 				if (d3.event.pageY > svgBb.top + (svgBb.height / 2.0)) { //bottom
@@ -464,16 +408,6 @@ function _registerIntermediateSetChartTooltip(maps) {
 			selection.select("path").style("stroke", function(d, i) {
 				return maps.colorMap[d.sets.toString()];
 			});
-			// .style("stroke-width", 0)
-			// .style("stroke", function(d,i) { return d.sets.length == 1 ?
-			// maps.colorMap[d.sets.toString()] : abStrokeColor; })
-			// .style("stroke-opacity", function(d,i) { return d.sets.length ==
-			// 1 ? 1 : 0.5; });
-			// .style("stroke-opacity", function(d,i) { return d.sets.length ==
-			// 1 ? 1 : 0.4; })
-			// .style("stroke-width", 2)
-			// .style("fill-opacity", function(d,i) { return d.sets.length == 1
-			// ? 0.75 : 0.1; })
 		});
 	}
 }

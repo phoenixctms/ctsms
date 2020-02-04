@@ -267,10 +267,7 @@ var Sketch = Sketch || {};
 										var intersection = intersections[j];
 										var x = intersection[0];
 										var y = intersection[1];
-										if (Raphael.isPointInsideBBox(regionBB, x, y) && _isPointInsidePath(region.path, x, y)) { // Raphael.isPointInsidePath(regionSVG,
-																																	// x,
-																																	// y))
-																																	// {
+										if (Raphael.isPointInsideBBox(regionBB, x, y) && _isPointInsidePath(region.path, x, y)) { 
 											ids.push(selectionSetValueStrokesId);
 											idMap[selectionSetValueStrokesId] = true;
 											if (debug_level >= 1) {
@@ -296,13 +293,6 @@ var Sketch = Sketch || {};
 
 						input.val(JSON.stringify(ink));
 
-//						if (onChange != null && onChange.length > 0) {
-//							(new Function(onChange)).call({
-//							    'sketchpad' : sketchpad,
-//							    'ids' : ids,
-//							    'ink' : input.val()
-//							});
-//						}
 
 						if (onChange != null && onChange.length > 0) {
 							(new Function(onChange)).call(sketchpad);
@@ -700,18 +690,6 @@ var Sketch = Sketch || {};
 		}
 	}
 
-//	function _pointsToSVG(path) {
-//		var svgStr = "";
-//		for ( var i = 0; i < path.length; i++) {
-//			var point = path[i];
-//			if (point.length == 3) {
-//				svgStr += point[0] + point[1] + "," + point[2];
-//			} else {
-//				svgStr += point[0];
-//			}
-//		}
-//		return svgStr;
-//	}
 
 	Sketch.initSketch = initSketch;
 	Sketch.setSketchValue = setSketchValue;

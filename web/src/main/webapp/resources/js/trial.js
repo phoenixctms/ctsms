@@ -1,5 +1,4 @@
 
-//var ecrfSectionToClear = null;
 
 var oldTrialTabIndex = 0;
 
@@ -60,8 +59,6 @@ function handleTrialTabChange(index) {
 			break;
 		case 17:
 			break;
-//		case 18:
-//			break;
 		case 18:
 			break;
 
@@ -158,9 +155,6 @@ function handleTrialTabChange(index) {
 		changeReimbursements();
 		break;
 
-	//case 18:
-	//	changeEnrollmentChart();
-	//	break;
 
 	case 19:
 		changeTrialAssociation();
@@ -457,27 +451,12 @@ function handleTrialTimelineDelete() {
 
 }
 
-//var oldTrialAssociationTabIndex = 0;
 
 function handleTrialAssociationTabChange(index) {
 
 	switch (index) {
 	case 0:
 
-//		switch (oldTrialAssociationTabIndex) {
-//		case 0:
-//			break;
-//		case 1:
-//			// changeCriteriaByTag();
-//			break;
-//		case 2:
-//			// changeCriteriaByJournalEntry();
-//			break;
-//		case 3:
-//			break;
-//		default:
-//			break;
-//		}
 		changeTrialCourses();
 		break;
 	case 1:
@@ -500,7 +479,6 @@ function handleTrialAssociationTabChange(index) {
 	default:
 		break;
 	}
-	//oldTrialAssociationTabIndex = index;
 	return true;
 
 }
