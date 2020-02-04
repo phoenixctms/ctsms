@@ -50,15 +50,6 @@ function decodeBase64(base64String) {
 	return jQuery.base64Decode(encoded);
 
 }
-//function encodeBase64(string, urlSafe) {
-//
-//	var encoded = jQuery.base64Encode(string);
-//	if (urlSafe) {
-//		return encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-//	}
-//	return encoded;
-//
-//}
 
 function _getElement(pickTargetField) {
 
@@ -139,7 +130,7 @@ function setErrorMessageTexts(error_message_id,msgs) {
 
 
 function _getOutputId(value) {
-    return INPUT_FIELD_OUTPUT_ID_PREFIX + value.inquiry.id; // + (value.inquiry.series ? INPUT_FIELD_OUTPUT_ID_INDEX_SEPARATOR + value.index : '');
+    return INPUT_FIELD_OUTPUT_ID_PREFIX + value.inquiry.id;
 }
 
 
@@ -158,7 +149,6 @@ var AJAX_INPUT_FIELD_PROBAND_BASE64 = 'inputFieldProbandBase64';
 var AJAX_INPUT_FIELD_TRIAL_BASE64 = 'inputFieldTrialBase64';
 
 var AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64 = 'inputFieldProbandAddressesBase64';
-//var AJAX_INPUT_FIELD_LAST_PROBAND_LIST_STATUS_ENTRY_BASE64 = 'inputFieldLastProbandListStatusEntryBase64';
 var AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64 = 'inputFieldProbandListEntryBase64';
 var AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64 = 'inputFieldVisitScheduleItemsBase64';
 var AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64 = 'inputFieldProbandGroupsBase64';
